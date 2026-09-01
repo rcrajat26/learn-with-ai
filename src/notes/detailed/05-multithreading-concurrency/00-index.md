@@ -153,41 +153,41 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 67b | `observability/03-internals-profiling-and-metrics.md` | §3.13 | 3.13.8–3.13.12 (5) | X | D-197 | 380 | written | 464 |
 | 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 391 |
 | 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | written | 579 |
-| 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.7 (3) | BLD | D-200 | 400 | written | 622 |
-| 69c | `build-it/01c-backoff-reentrancy-and-diffs.md` | §4.1 | 4.1.8–4.1.10 (3) | BLD | — | 400 | written | 394 |
-| 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.2 (2) | BLD | D-202 | 420 | planned | |
-| 70b | `build-it/02a-latch-and-reentrant-mutex.md` | §4.2 | 4.2.3–4.2.4 (2) | BLD | D-202 | 420 | planned | |
-| 70c | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.6 (2) | BLD | — | 450 | planned | |
-| 70d | `build-it/02c-aqs-consolidated-diff.md` | §4.2 | 4.2.7 (1) | BLD | — | 280 | planned | |
+| 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.10 (6) | BLD | D-200 | 480 | written | 597 |
+| — | `build-it/01c-backoff-reentrancy-and-diffs.md` | — | **retired**, subsumed by 69b | — | — | — | retired | 8 |
+| 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.4 (4) | BLD | D-202 | 450 | written | 600 |
+| — | `build-it/02a-latch-and-reentrant-mutex.md` | — | **retired**, subsumed by 70a | — | — | — | retired | 8 |
+| 70b | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.6 (2) | BLD | — | 450 | written | 598 |
+| 70c | `build-it/02c-aqs-consolidated-diff.md` | §4.2 | 4.2.7 (1) | BLD | — | 280 | written | 252 |
 | 71a | `build-it/03-bounded-blocking-queue.md` | §4.3 | 4.3.1–4.3.2 (2) | BLD | D-203 | 450 | written | 575 |
 | 71b | `build-it/03b-two-lock-queue-and-timed-ops.md` | §4.3 | 4.3.3–4.3.4 (2) | BLD | — | 450 | written | 586 |
 | 71c | `build-it/03c-drainto-and-the-spsc-ring.md` | §4.3 | 4.3.5–4.3.6 (2) | BLD | D-204 | 450 | written | 591 |
 | 71d | `build-it/03d-queue-consolidated-diff.md` | §4.3 | 4.3.7 (1) | BLD | — | 280 | written | 454 |
 | 72a | `build-it/04-treiber-stack-and-aba.md` | §4.4 | 4.4.1–4.4.2 (2) | BLD | D-205 | 450 | written | 506 |
-| 72b | `build-it/04b-why-java-is-aba-safe.md` | §4.4 | 4.4.3–4.4.4 (2) | BLD | — | 380 | planned | |
-| 72c | `build-it/04c-michael-scott-queue.md` | §4.4 | 4.4.5–4.4.6 (2) | BLD | D-178 | 450 | planned | |
-| 72d | `build-it/04d-striped-counter-and-measurement.md` | §4.4 | 4.4.7–4.4.8 (2) | BLD | — | 450 | planned | |
-| 72e | `build-it/04e-cow-list-and-mini-chm.md` | §4.4 | 4.4.9–4.4.10 (2) | BLD | — | 450 | planned | |
-| 72f | `build-it/04f-non-blocking-consolidated-diff.md` | §4.4 | 4.4.11 (1) | BLD | — | 280 | planned | |
-| 73a | `build-it/05-a-thread-pool-from-scratch.md` | §4.5 | 4.5.1–4.5.2 (2) | BLD | D-206 | 450 | planned | |
-| 73b | `build-it/05b-packed-ctl-and-rejection.md` | §4.5 | 4.5.3–4.5.4 (2) | BLD | D-206 | 470 | planned | |
-| 73c | `build-it/05c-hooks-and-thread-factories.md` | §4.5 | 4.5.5–4.5.6 (2) | BLD | — | 420 | planned | |
-| 73d | `build-it/05d-context-propagation-and-completion.md` | §4.5 | 4.5.7–4.5.8 (2) | BLD | — | 420 | planned | |
-| 73e | `build-it/05e-pool-consolidated-diff.md` | §4.5 | 4.5.9 (1) | BLD | — | 280 | planned | |
-| 74a | `build-it/06-work-stealing-deque.md` | §4.6 | 4.6.1–4.6.2 (2) | BLD | D-207 | 450 | planned | |
-| 74b | `build-it/06b-growing-and-the-mini-pool.md` | §4.6 | 4.6.3–4.6.4 (2) | BLD | — | 450 | planned | |
-| 74c | `build-it/06c-recursive-tasks-and-tuning.md` | §4.6 | 4.6.5–4.6.6 (2) | BLD | — | 450 | planned | |
-| 74d | `build-it/06d-forkjoin-consolidated-diff.md` | §4.6 | 4.6.7 (1) | BLD | — | 280 | planned | |
-| 75a | `build-it/07-structured-concurrency-from-scratch.md` | §4.7 | 4.7.1–4.7.2 (2) | BLD | D-208 | 450 | planned | |
-| 75b | `build-it/07b-hedging-and-deadlines.md` | §4.7 | 4.7.3–4.7.4 (2) | BLD | D-208 | 420 | planned | |
-| 75c | `build-it/07c-a-minimal-completablefuture.md` | §4.7 | 4.7.5–4.7.6 (2) | BLD | — | 470 | planned | |
-| 76a | `build-it/08-visibility-and-lost-update.md` | §4.8 | 4.8.1–4.8.2 (2) | BLD | D-209, D-210 | 450 | planned | |
-| 76b | `build-it/08b-deadlock-and-livelock.md` | §4.8 | 4.8.3–4.8.4 (2) | BLD | — | 420 | planned | |
-| 76c | `build-it/08c-false-sharing-and-starvation.md` | §4.8 | 4.8.5–4.8.6 (2) | BLD | — | 420 | planned | |
-| 76d | `build-it/08d-threadlocal-leak-and-pinning.md` | §4.8 | 4.8.7–4.8.8 (2) | BLD | — | 450 | planned | |
-| 76e | `build-it/08e-jcstress-publication-and-dcl.md` | §4.8 | 4.8.9–4.8.10 (2) | BLD | — | 450 | planned | |
-| 76f | `build-it/08f-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 450 | planned | |
-| 77 | `93-interview-build-it.md` | Part 4 wrap-up over §4.1–§4.8 | — | Q | — | 420 | planned | |
+| 72b | `build-it/04b-why-java-is-aba-safe.md` | §4.4 | 4.4.3–4.4.4 (2) | BLD | — | 380 | written | 339 |
+| 72c | `build-it/04c-michael-scott-queue.md` | §4.4 | 4.4.5–4.4.6 (2) | BLD | D-178 | 450 | written | 508 |
+| 72d | `build-it/04d-striped-counter-and-measurement.md` | §4.4 | 4.4.7–4.4.8 (2) | BLD | — | 450 | written | 579 |
+| 72e | `build-it/04e-cow-list-and-mini-chm.md` | §4.4 | 4.4.9–4.4.10 (2) | BLD | — | 450 | written | 550 |
+| 72f | `build-it/04f-non-blocking-consolidated-diff.md` | §4.4 | 4.4.11 (1) | BLD | — | 280 | written | 180 |
+| 73a | `build-it/05-a-thread-pool-from-scratch.md` | §4.5 | 4.5.1–4.5.2 (2) | BLD | D-206 | 450 | written | 578 |
+| 73b | `build-it/05b-packed-ctl-and-rejection.md` | §4.5 | 4.5.3–4.5.4 (2) | BLD | D-206 | 470 | written | 599 |
+| 73c | `build-it/05c-hooks-and-thread-factories.md` | §4.5 | 4.5.5–4.5.6 (2) | BLD | — | 420 | written | 408 |
+| 73d | `build-it/05d-context-propagation-and-completion.md` | §4.5 | 4.5.7–4.5.8 (2) | BLD | — | 420 | written | 473 |
+| 73e | `build-it/05e-pool-consolidated-diff.md` | §4.5 | 4.5.9 (1) | BLD | — | 280 | written | 309 |
+| 74a | `build-it/06-work-stealing-deque.md` | §4.6 | 4.6.1–4.6.2 (2) | BLD | D-207 | 450 | written | 357 |
+| 74b | `build-it/06b-growing-and-the-mini-pool.md` | §4.6 | 4.6.3–4.6.4 (2) | BLD | — | 450 | written | 524 |
+| 74c | `build-it/06c-recursive-tasks-and-tuning.md` | §4.6 | 4.6.5–4.6.6 (2) | BLD | — | 450 | written | 521 |
+| 74d | `build-it/06d-forkjoin-consolidated-diff.md` | §4.6 | 4.6.7 (1) | BLD | — | 280 | written | 231 |
+| 75a | `build-it/07-structured-concurrency-from-scratch.md` | §4.7 | 4.7.1–4.7.2 (2) | BLD | D-208 | 450 | written | 467 |
+| 75b | `build-it/07b-hedging-and-deadlines.md` | §4.7 | 4.7.3–4.7.4 (2) | BLD | D-208 | 420 | written | 369 |
+| 75c | `build-it/07c-a-minimal-completablefuture.md` | §4.7 | 4.7.5–4.7.6 (2) | BLD | — | 470 | written | 445 |
+| 76a | `build-it/08-visibility-and-lost-update.md` | §4.8 | 4.8.1–4.8.2 (2) | BLD | D-209, D-210 | 450 | written | 503 |
+| 76b | `build-it/08b-deadlock-and-livelock.md` | §4.8 | 4.8.3–4.8.4 (2) | BLD | — | 420 | written | 565 |
+| 76c | `build-it/08c-false-sharing-and-starvation.md` | §4.8 | 4.8.5–4.8.6 (2) | BLD | — | 420 | written | 524 |
+| 76d | `build-it/08d-threadlocal-leak-and-pinning.md` | §4.8 | 4.8.7–4.8.8 (2) | BLD | — | 450 | written | 521 |
+| 76e | `build-it/08e-jcstress-publication-and-dcl.md` | §4.8 | 4.8.9–4.8.10 (2) | BLD | — | 450 | written | 455 |
+| 76f | `build-it/08f-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 450 | written | 476 |
+| 77 | `93-interview-build-it.md` | Part 4 wrap-up over §4.1–§4.8 | — | Q | — | 420 | written | 382 |
 | 78a | `94a-interview-questions-fundamentals.md` | §5.1 | 5.1.1–5.1.17 (17) | Q | — | 460 | planned | |
 | 78b | `94a2-interview-questions-fundamentals-ii.md` | §5.1 | 5.1.18–5.1.33 (16) | Q | — | 440 | planned | |
 | 79a | `94b-interview-questions-locks-and-atomics.md` | §5.1 | 5.1.34–5.1.47 (14) | Q | — | 440 | planned | |

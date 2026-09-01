@@ -1,7 +1,7 @@
 # 05 Multithreading and Concurrency — AQS fairness and conditions — BUILD IT (§4.2, leaves 4.2.5–4.2.6)
 
 **Target version: Java 21 LTS.** | **Part 4 of 5** | [Index](../00-index.md)
-Previous: [Latch and reentrant mutex](02a-latch-and-reentrant-mutex.md) · Next: [The consolidated AQS diff table](02c-aqs-consolidated-diff.md)
+Previous: [Building on AQS](02-building-on-aqs.md) · Next: [The consolidated AQS diff table](02c-aqs-consolidated-diff.md)
 
 ## Recap: the reentrant AQS mutex you already have
 
