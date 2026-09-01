@@ -176,7 +176,13 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 82 | `94e-interview-design-and-judgement.md` | §5.1 | 5.1.116–5.1.132 (17) | Q | — | 500 | planned | |
 | 83 | `94f-trap-index-and-drills.md` | §5.2, §5.3 + Part 5 wrap-up | 5.2.1–5.2.55, 5.3.1–5.3.10 (65) | Q | D-213, D-214, D-215, D-216, D-217, D-218 | 550 | planned | |
 
-Row count is 83 because the contract's 70 files became 77 after the splits, plus this index.
+Row count grew past the original 83 because Parts 3 and 4 needed finer splits than first planned. The
+governing evidence is measured, not guessed: `build-it/01-locks-from-first-principles.md` runs **579
+lines for four `[BUILD]` leaves**, because a BUILD leaf ships a complete compiling implementation plus
+its diff table. At that density every §4.x section of six leaves or more breaches the 600-line cap as
+a single file, so Part 4 is planned as 22 rows rather than 8. Each split is at a concept boundary —
+spinning versus queue locks, the data structure versus its measurement, one harness family per file.
+§3.12 and §3.13 split for the same reason.
 
 ### Folds recorded
 
