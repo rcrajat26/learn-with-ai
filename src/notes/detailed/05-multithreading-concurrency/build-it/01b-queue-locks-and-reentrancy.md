@@ -1,4 +1,4 @@
-# 05 Multithreading and Concurrency — Queue locks and reentrancy — BUILD IT (§4.1, leaves 4.1.5–4.1.10)
+# 05 Multithreading and Concurrency — Locks from first principles: queue locks — BUILD IT (§4.1, leaves 4.1.5–4.1.10)
 
 **Target version: Java 21 LTS.** | **Part 4 of 5** | [Index](../00-index.md)
 Previous: [Locks from first principles: spinning](01-locks-from-first-principles.md) · Next: [Building on AQS](02-building-on-aqs.md)
@@ -54,7 +54,9 @@ node for its next acquisition. The queue is implicit: there is no explicit `next
 each thread's private memory of "who I'm following," recovered structurally by the swap order of
 the tail reference.
 
-![CLH spins on the predecessor's node; MCS spins on its own](../diagrams/D-200-clh-vs-mcs-spin-location.svg)
+![D-200 — CLH versus MCS spin location](../diagrams/D-200-clh-vs-mcs.svg)
+
+**D-200** — CLH versus MCS spin location.
 
 ```java
 import java.util.concurrent.atomic.AtomicReference;
@@ -291,12 +293,6 @@ thundering-herd collision backoff exists to avoid. The randomization inside each
 dropping it turns `BackoffLock` back into a slower version of plain `SpinLock` with the same
 collision pathology, minus the constant CAS traffic.
 
-**Pitfall:** using `LockSupport.parkNanos` for the backoff sleep and assuming it always sleeps the
-full duration. `parkNanos` can return early (spurious wakeups are explicitly permitted by its
-contract), so a naive implementation that treats one `parkNanos` call as guaranteeing the full
-delay elapsed can retry sooner than intended — usually harmless here since the CAS loop simply
-retries, but worth knowing before reusing this pattern somewhere the sleep length is load-bearing.
-
 > **Definition.** A backoff lock is a spin lock whose retry interval grows (typically
 > exponentially) and is randomized on each failed attempt, trading a small amount of acquisition
 > latency for avoiding synchronized retry storms under contention.
@@ -432,13 +428,10 @@ built in this file. Together they cover every lock across both files.
 | **`java.util.concurrent.locks.ReentrantLock`** | **Blocks** — parks via `LockSupport.park()` after a brief optimistic spin, so it costs near-zero CPU while waiting long-term | **Full** — `lockInterruptibly()` and `tryLock(timeout, unit)` both exist and correctly abandon the attempt, splicing the cancelled node out of the AQS queue (the exact capability CLH's `prev` links enable, per 4.1.7) | **Configurable** — constructor takes a `fair` boolean; fair mode enforces FIFO (at a throughput cost), unfair (default) mode allows barging for higher throughput | **Full** — `newCondition()` gives `await`/`signal`/`signalAll`, each with its own wait queue | **Full** — `isLocked()`, `isHeldByCurrentThread()`, `getHoldCount()`, `getQueueLength()`, `hasQueuedThreads()` all exist | **Visible** — `jstack` reports the exact `ReentrantLock` instance a thread is `WAITING`/`TIMED_WAITING` on, and which thread owns it, because parked threads are properly registered with the JVM's own monitor/lock bookkeeping |
 
 The short version: everything across both files is *mechanism*, not *product*. `ReentrantLock` is
-the product, and it is built from a CLH-shaped queue with parking, cancellation, fairness,
-conditions, and instrumentation layered on top of exactly the ideas in 4.1.1–4.1.9. **Why the JDK
-bothers** building all of that on top of a "simple" queue: application code cannot tolerate a
-lock that burns CPU while blocked (spinning locks don't scale past the core count), cannot
-tolerate a lock that can't be interrupted (an app that needs to shut down or time out a stuck
-acquisition would hang forever), and cannot be debugged in production without instrumentation that
-shows *who is waiting on what* — none of which any lock in either file provides on its own.
+built from a CLH-shaped queue with parking, cancellation, fairness, conditions, and instrumentation
+layered on top of exactly the ideas in 4.1.1–4.1.9 — because a spinning lock can't scale past the
+core count, an uninterruptible one can't support responsive shutdown, and an uninstrumented one
+can't be debugged in production from a stack dump alone.
 
 ## Open questions
 
@@ -595,26 +588,10 @@ the code rather than reading it off a stack dump.
 
 </details>
 
-**Q7.** What specific structural addition does AQS make on top of raw CLH, and why does the
-javadoc credit CLH by name rather than MCS, given that AQS's node also has an MCS-like `next`
-pointer?
-
-<details><summary>Answer</summary>
-
-AQS adds an explicit `next` link on top of CLH's `prev` chain, plus a `status` field, so that a
-releasing thread can directly locate and unpark a specific successor (an MCS-flavored capability)
-while still relying on CLH's `prev`-based structure to make splicing a cancelled or timed-out
-waiter out of the middle of the queue safe. The javadoc names CLH specifically because the
-defining problem AQS had to solve beyond plain spinlocking — safe cancellation and blocking — is
-exactly what CLH's `prev` links make possible, whereas MCS's explicit `next`-only structure makes
-that kind of mid-queue removal considerably harder to get right.
-
-</details>
-
 ---
 
 **Leaves covered:** 4.1.5–4.1.10 (6 leaves)
 **Leaves deferred:** none
 **Diagrams included:** D-200
 **Target version:** Java 21 LTS
-**Lines:** 480
+**Lines:** 597

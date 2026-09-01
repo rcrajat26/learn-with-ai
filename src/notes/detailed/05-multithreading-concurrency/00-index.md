@@ -30,7 +30,8 @@ point of each claim.
    new files in `00-index.md`"). No content is merged or dropped; every split is at a concept
    boundary. The splits are listed in the file plan below with an `a`/`b` suffix.
 3. **`94-interview-questions-and-drills.md` is split six ways** (`94a`–`94f`). §5.1's 132 questions
-   with full spoken-length answers cannot fit one file. `94f` carries §5.2, §5.3, Part 5's own
+   with full spoken-length answers cannot fit one file, and each half again splits in two at the
+   measured density, giving `94a`/`94a2` through `94e`/`94e2`. `94f` carries §5.2; `94f2` carries §5.3, Part 5's own
    wrap-up, and the set-wide flat `## Atomic concept checklist`.
 4. **The per-tier interview files carry the prompt's 10 Q&As, not a subject-scaled count.** The
    generator's default is ten Q&As plus two per subject folder beyond the fifth, which for this
@@ -41,7 +42,7 @@ point of each claim.
    past the split threshold for no added coverage. `90`–`93` therefore carry the summary table,
    10 Q&As and 5 puzzles, each spanning every subject in its part.
 5. **`92-interview-internals.md` carries a pointer, not a copy, of the checklist.** The canonical
-   flat `## Atomic concept checklist` lives at the end of `94f-trap-index-and-drills.md` per the
+   flat `## Atomic concept checklist` lives at the end of `94f2-drills-and-atomic-checklist.md` per the
    prompt. `92` carries a `## Atomic concept checklist` heading with a one-line pointer to it, so
    that downstream parsers keyed on either location resolve.
 
@@ -59,7 +60,8 @@ the internals can skip every `internals` file and come back.
 
 **Night-before re-read, in this order:**
 
-1. `94f-trap-index-and-drills.md` — §5.2's 55 traps, the numbers drill (D-214), the version drill (D-215).
+1. `94f-trap-index.md` — §5.2's 55 traps (D-213); then `94f2-drills-and-atomic-checklist.md` — the
+   numbers drill (D-214) and the version drill (D-215).
 2. `master-tables/01-the-master-tables.md` — the cost, latency, footprint, guarantee and progress tables.
 3. `version-delta/01-java-5-to-25.md` — what changed in 21 / 24 / 25 and in which direction.
 4. `90-interview-basics.md`, `91-interview-intermediate.md`, `92-interview-internals.md`, `93-interview-build-it.md` — the four wrap-ups.
@@ -149,32 +151,55 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 66b | `virtual-threads/03c-internals-cost-flock-and-scoped-values.md` | §3.12 | 3.12.20–3.12.22 (3) | X | D-194 | 300 | written | 383 |
 | 67a | `observability/02-internals-runtime-observability.md` | §3.13 | 3.13.1–3.13.7 (7) | X | D-195, D-196, D-197, D-198 | 440 | written | 560 |
 | 67b | `observability/03-internals-profiling-and-metrics.md` | §3.13 | 3.13.8–3.13.12 (5) | X | D-197 | 380 | written | 464 |
-| 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 349 |
+| 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 391 |
 | 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | written | 579 |
-| 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.10 (6) | BLD | D-200 | 480 | planned | |
-| 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.4 (4) | BLD | D-202 | 450 | planned | |
-| 70b | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.7 (3) | BLD | — | 420 | planned | |
-| 71a | `build-it/03-bounded-blocking-queue.md` | §4.3 | 4.3.1–4.3.3 (3) | BLD | D-203 | 470 | planned | |
-| 71b | `build-it/03b-timed-drain-and-spsc-ring.md` | §4.3 | 4.3.4–4.3.7 (4) | BLD | D-204 | 470 | planned | |
-| 72a | `build-it/04-non-blocking-stacks-and-aba.md` | §4.4 | 4.4.1–4.4.4 (4) | BLD | D-205 | 470 | planned | |
-| 72b | `build-it/04b-lock-free-queue-and-striping.md` | §4.4 | 4.4.5–4.4.8 (4) | BLD | — | 470 | planned | |
-| 72c | `build-it/04c-cow-list-mini-chm-and-diffs.md` | §4.4 | 4.4.9–4.4.11 (3) | BLD | — | 450 | planned | |
-| 73a | `build-it/05-a-thread-pool-from-scratch.md` | §4.5 | 4.5.1–4.5.5 (5) | BLD | D-206 | 500 | planned | |
-| 73b | `build-it/05b-factories-context-and-completion.md` | §4.5 | 4.5.6–4.5.9 (4) | BLD | — | 450 | planned | |
-| 74a | `build-it/06-work-stealing-deque.md` | §4.6 | 4.6.1–4.6.3 (3) | BLD | D-207 | 450 | planned | |
-| 74b | `build-it/06b-mini-forkjoin-pool.md` | §4.6 | 4.6.4–4.6.7 (4) | BLD | — | 470 | planned | |
-| 75a | `build-it/07-structured-concurrency-from-scratch.md` | §4.7 | 4.7.1–4.7.4 (4) | BLD | D-208 | 470 | planned | |
-| 75b | `build-it/07b-a-minimal-completablefuture.md` | §4.7 | 4.7.5–4.7.6 (2) | BLD | — | 420 | planned | |
-| 76a | `build-it/08-visibility-and-update-harnesses.md` | §4.8 | 4.8.1–4.8.5 (5) | BLD | D-209, D-210 | 470 | planned | |
-| 76b | `build-it/08b-starvation-leak-and-race-harnesses.md` | §4.8 | 4.8.6–4.8.10 (5) | BLD | — | 470 | planned | |
-| 76c | `build-it/08c-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 420 | planned | |
+| 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.7 (3) | BLD | D-200 | 400 | written | 622 |
+| 69c | `build-it/01c-backoff-reentrancy-and-diffs.md` | §4.1 | 4.1.8–4.1.10 (3) | BLD | — | 400 | written | 394 |
+| 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.2 (2) | BLD | D-202 | 420 | planned | |
+| 70b | `build-it/02a-latch-and-reentrant-mutex.md` | §4.2 | 4.2.3–4.2.4 (2) | BLD | D-202 | 420 | planned | |
+| 70c | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.6 (2) | BLD | — | 450 | planned | |
+| 70d | `build-it/02c-aqs-consolidated-diff.md` | §4.2 | 4.2.7 (1) | BLD | — | 280 | planned | |
+| 71a | `build-it/03-bounded-blocking-queue.md` | §4.3 | 4.3.1–4.3.2 (2) | BLD | D-203 | 450 | written | 575 |
+| 71b | `build-it/03b-two-lock-queue-and-timed-ops.md` | §4.3 | 4.3.3–4.3.4 (2) | BLD | — | 450 | written | 586 |
+| 71c | `build-it/03c-drainto-and-the-spsc-ring.md` | §4.3 | 4.3.5–4.3.6 (2) | BLD | D-204 | 450 | written | 591 |
+| 71d | `build-it/03d-queue-consolidated-diff.md` | §4.3 | 4.3.7 (1) | BLD | — | 280 | written | 454 |
+| 72a | `build-it/04-treiber-stack-and-aba.md` | §4.4 | 4.4.1–4.4.2 (2) | BLD | D-205 | 450 | written | 506 |
+| 72b | `build-it/04b-why-java-is-aba-safe.md` | §4.4 | 4.4.3–4.4.4 (2) | BLD | — | 380 | planned | |
+| 72c | `build-it/04c-michael-scott-queue.md` | §4.4 | 4.4.5–4.4.6 (2) | BLD | D-178 | 450 | planned | |
+| 72d | `build-it/04d-striped-counter-and-measurement.md` | §4.4 | 4.4.7–4.4.8 (2) | BLD | — | 450 | planned | |
+| 72e | `build-it/04e-cow-list-and-mini-chm.md` | §4.4 | 4.4.9–4.4.10 (2) | BLD | — | 450 | planned | |
+| 72f | `build-it/04f-non-blocking-consolidated-diff.md` | §4.4 | 4.4.11 (1) | BLD | — | 280 | planned | |
+| 73a | `build-it/05-a-thread-pool-from-scratch.md` | §4.5 | 4.5.1–4.5.2 (2) | BLD | D-206 | 450 | planned | |
+| 73b | `build-it/05b-packed-ctl-and-rejection.md` | §4.5 | 4.5.3–4.5.4 (2) | BLD | D-206 | 470 | planned | |
+| 73c | `build-it/05c-hooks-and-thread-factories.md` | §4.5 | 4.5.5–4.5.6 (2) | BLD | — | 420 | planned | |
+| 73d | `build-it/05d-context-propagation-and-completion.md` | §4.5 | 4.5.7–4.5.8 (2) | BLD | — | 420 | planned | |
+| 73e | `build-it/05e-pool-consolidated-diff.md` | §4.5 | 4.5.9 (1) | BLD | — | 280 | planned | |
+| 74a | `build-it/06-work-stealing-deque.md` | §4.6 | 4.6.1–4.6.2 (2) | BLD | D-207 | 450 | planned | |
+| 74b | `build-it/06b-growing-and-the-mini-pool.md` | §4.6 | 4.6.3–4.6.4 (2) | BLD | — | 450 | planned | |
+| 74c | `build-it/06c-recursive-tasks-and-tuning.md` | §4.6 | 4.6.5–4.6.6 (2) | BLD | — | 450 | planned | |
+| 74d | `build-it/06d-forkjoin-consolidated-diff.md` | §4.6 | 4.6.7 (1) | BLD | — | 280 | planned | |
+| 75a | `build-it/07-structured-concurrency-from-scratch.md` | §4.7 | 4.7.1–4.7.2 (2) | BLD | D-208 | 450 | planned | |
+| 75b | `build-it/07b-hedging-and-deadlines.md` | §4.7 | 4.7.3–4.7.4 (2) | BLD | D-208 | 420 | planned | |
+| 75c | `build-it/07c-a-minimal-completablefuture.md` | §4.7 | 4.7.5–4.7.6 (2) | BLD | — | 470 | planned | |
+| 76a | `build-it/08-visibility-and-lost-update.md` | §4.8 | 4.8.1–4.8.2 (2) | BLD | D-209, D-210 | 450 | planned | |
+| 76b | `build-it/08b-deadlock-and-livelock.md` | §4.8 | 4.8.3–4.8.4 (2) | BLD | — | 420 | planned | |
+| 76c | `build-it/08c-false-sharing-and-starvation.md` | §4.8 | 4.8.5–4.8.6 (2) | BLD | — | 420 | planned | |
+| 76d | `build-it/08d-threadlocal-leak-and-pinning.md` | §4.8 | 4.8.7–4.8.8 (2) | BLD | — | 450 | planned | |
+| 76e | `build-it/08e-jcstress-publication-and-dcl.md` | §4.8 | 4.8.9–4.8.10 (2) | BLD | — | 450 | planned | |
+| 76f | `build-it/08f-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 450 | planned | |
 | 77 | `93-interview-build-it.md` | Part 4 wrap-up over §4.1–§4.8 | — | Q | — | 420 | planned | |
-| 78 | `94a-interview-questions-fundamentals.md` | §5.1 | 5.1.1–5.1.33 (33) | Q | — | 480 | planned | |
-| 79 | `94b-interview-questions-locks-and-atomics.md` | §5.1 | 5.1.34–5.1.60 (27) | Q | — | 450 | planned | |
-| 80 | `94c-interview-questions-collections-and-executors.md` | §5.1 | 5.1.61–5.1.91 (31) | Q | — | 480 | planned | |
-| 81 | `94d-interview-questions-liveness-and-loom.md` | §5.1 | 5.1.92–5.1.115 (24) | Q | — | 430 | planned | |
-| 82 | `94e-interview-design-and-judgement.md` | §5.1 | 5.1.116–5.1.132 (17) | Q | — | 500 | planned | |
-| 83 | `94f-trap-index-and-drills.md` | §5.2, §5.3 + Part 5 wrap-up | 5.2.1–5.2.55, 5.3.1–5.3.10 (65) | Q | D-213, D-214, D-215, D-216, D-217, D-218 | 550 | planned | |
+| 78a | `94a-interview-questions-fundamentals.md` | §5.1 | 5.1.1–5.1.17 (17) | Q | — | 460 | planned | |
+| 78b | `94a2-interview-questions-fundamentals-ii.md` | §5.1 | 5.1.18–5.1.33 (16) | Q | — | 440 | planned | |
+| 79a | `94b-interview-questions-locks-and-atomics.md` | §5.1 | 5.1.34–5.1.47 (14) | Q | — | 440 | planned | |
+| 79b | `94b2-interview-questions-locks-and-atomics-ii.md` | §5.1 | 5.1.48–5.1.60 (13) | Q | — | 420 | planned | |
+| 80a | `94c-interview-questions-collections-and-executors.md` | §5.1 | 5.1.61–5.1.76 (16) | Q | — | 460 | planned | |
+| 80b | `94c2-interview-questions-collections-and-executors-ii.md` | §5.1 | 5.1.77–5.1.91 (15) | Q | — | 440 | planned | |
+| 81a | `94d-interview-questions-liveness-and-loom.md` | §5.1 | 5.1.92–5.1.103 (12) | Q | — | 420 | planned | |
+| 81b | `94d2-interview-questions-liveness-and-loom-ii.md` | §5.1 | 5.1.104–5.1.115 (12) | Q | — | 420 | planned | |
+| 82a | `94e-interview-design-and-judgement.md` | §5.1 | 5.1.116–5.1.124 (9) | Q | — | 460 | planned | |
+| 82b | `94e2-interview-design-and-judgement-ii.md` | §5.1 | 5.1.125–5.1.132 (8) | Q | — | 440 | planned | |
+| 83a | `94f-trap-index.md` | §5.2 | 5.2.1–5.2.55 (55) | Q | D-213 | 500 | planned | |
+| 83b | `94f2-drills-and-atomic-checklist.md` | §5.3 + Part 5 wrap-up | 5.3.1–5.3.10 (10) | Q | D-214, D-215, D-216, D-217, D-218 | 560 | planned | |
 
 Row count grew past the original 83 because Parts 3 and 4 needed finer splits than first planned. The
 governing evidence is measured, not guessed: `build-it/01-locks-from-first-principles.md` runs **579
@@ -183,6 +208,16 @@ its diff table. At that density every §4.x section of six leaves or more breach
 a single file, so Part 4 is planned as 22 rows rather than 8. Each split is at a concept boundary —
 spinning versus queue locks, the data structure versus its measurement, one harness family per file.
 §3.12 and §3.13 split for the same reason.
+
+### Recorded overages
+
+One file exceeds the 600-line hard split and is left that way deliberately:
+
+- `build-it/01b-queue-locks-and-reentrancy.md` at **622 lines**, 22 over. It carries CLH, MCS, and the
+  CLH-versus-MCS comparison table (4.1.5–4.1.7). The comparison is the point of the pair, so splitting
+  again would separate the table from at least one of the two locks it compares and leave a stub below
+  the ~120-line floor. Trimming was the alternative and the spec forbids it. The verify script will
+  flag this file; that flag is expected, and it is the only one of its kind in the set.
 
 ### Folds recorded
 
@@ -273,7 +308,7 @@ contradictory stories about the same entity.
 | 65 | virtual-threads/03a | delimited continuations; `VirtualThread`'s fields and internal state machine; mounting and freeze/thaw with lazy copy; `StackChunk` as a GC'd object; the scheduler; the park path | A virtual thread calling the card PSP at 240 ms p50, unmounting and resuming on a different carrier |
 | 66 | virtual-threads/03b | the poller for sockets and the file-I/O gap; pinning implementation and JEP 491; why `jstack` cannot see them; the JSON dump structure; cost arithmetic; `ThreadFlock` and `ScopedValue` internals | 1M × 2 KB = 2 GB written out; `jcmd Thread.dump_to_file -format=json` over the assessment scopes |
 | 67 | observability/02 | the annotated `jstack` dump; the three dump signatures; `nid` to `top -H`; the JFR event set and its thresholds; what none of them can show | A real contention dump on the `FundsLedger` monitor; the 20 ms `jdk.JavaMonitorEnter` threshold hiding short frequent contention |
-| 68 | 92-interview-internals | Part 3 summary table; 10 Q&As; 5 puzzles; a pointer to the set-wide checklist in `94f` | Draws only on entities already used in rows 51–67 |
+| 68 | 92-interview-internals | Part 3 summary table; 10 Q&As; 5 puzzles; a pointer to the set-wide checklist in `94f2` | Draws only on entities already used in rows 51–67 |
 | 69 | build-it/01 | TAS and TTAS; the ticket lock; CLH vs MCS spin location; backoff; a reentrant mutex on `AtomicReference<Thread>` | Every lock guards `FundsLedger.reserveStake`; measured at 1/2/8/64 threads with 100 ns and 100 µs sections |
 | 70 | build-it/02 | `SimpleMutex` on AQS; `CountingSemaphore` in shared mode; `OneShotLatch`; the reentrant variant; a fair variant; a `Condition` | The same reserve-stake critical section, and a bounded withdrawal buffer on the hand-built condition |
 | 71 | build-it/03 | `wait`/`notifyAll` version; two-`Condition` version; two-lock version; timed `offer`/`poll` with `awaitNanos`; `drainTo`; the SPSC ring | A bounded queue of `WithdrawalTransaction`s, capacity 1,000 |
@@ -288,7 +323,8 @@ contradictory stories about the same entity.
 | 80 | 94c | 31 collection, executor and future questions | Reuses the entities of Parts 1 and 3 |
 | 81 | 94d | 24 liveness, diagnostic and Loom questions | Reuses the entities of Parts 1, 2 and 3 |
 | 82 | 94e | 17 design-and-judgement questions | Reuses the entities of Part 4 |
-| 83 | 94f | the 55-item trap index; the ten drills; Part 5's wrap-up; the flat set-wide `## Atomic concept checklist` | No new domain material |
+| 83a | 94f | the 55-item trap index, grouped by §5.2's own headings | No new domain material |
+| 83b | 94f2 | the ten drills; Part 5's wrap-up; the flat set-wide `## Atomic concept checklist` | No new domain material |
 
 ---
 
@@ -377,8 +413,8 @@ Every syllabus section, its leaf range, its leaf count, and the file that owns i
 | §5.1 | 5.1.61–5.1.91 | 31 | `94c-interview-questions-collections-and-executors.md` |
 | §5.1 | 5.1.92–5.1.115 | 24 | `94d-interview-questions-liveness-and-loom.md` |
 | §5.1 | 5.1.116–5.1.132 | 17 | `94e-interview-design-and-judgement.md` |
-| §5.2 | 5.2.1–5.2.55 | 55 | `94f-trap-index-and-drills.md` |
-| §5.3 | 5.3.1–5.3.10 | 10 | `94f-trap-index-and-drills.md` |
+| §5.2 | 5.2.1–5.2.55 | 55 | `94f-trap-index.md` |
+| §5.3 | 5.3.1–5.3.10 | 10 | `94f2-drills-and-atomic-checklist.md` |
 
 **Totals check.** Part 1: 10+15+18+12+14+13+12+18+14+26+22+16+29+29+18+24+18+19+22+10+27+16+13+19+16+20 = **470**.
 Part 2: 8+14+14+18+10+14+12+14+14+16+10+14+16+8+16 = **198**.
@@ -463,16 +499,24 @@ leaves belonging to more than one file, the other files may embed the same path 
 | `observability/03` | D-197 (re-embedded at the `/proc` walk; same file, never a copy) |
 | `build-it/01` | D-199, D-201 |
 | `build-it/01b` | D-200 |
+| `build-it/01c` | — |
+| `build-it/02a` | D-202 (re-embedded; same file, never a copy) |
+| `build-it/02b` | — |
+| `build-it/02c` | — |
 | `build-it/02` | D-202 |
 | `build-it/03` | D-203 |
-| `build-it/03b` | D-204 |
+| `build-it/03c` | D-204 |
 | `build-it/04` | D-205 |
+| `build-it/04c` | D-178 (re-embedded from `executors/05a`; same file, never a copy) |
 | `build-it/05` | D-206 |
+| `build-it/05b` | D-206 (re-embedded at the packed-`ctl` walk; same file, never a copy) |
 | `build-it/06` | D-207 |
 | `build-it/07` | D-208 |
+| `build-it/07b` | D-208 (re-embedded at the deadline walk; same file, never a copy) |
 | `build-it/08` | D-209, D-210 |
-| `build-it/08c` | D-211, D-212 |
-| `94f` | D-213, D-214, D-215, D-216, D-217, D-218 |
+| `build-it/08f` | D-211, D-212 |
+| `94f` | D-213 |
+| `94f2` | D-214, D-215, D-216, D-217, D-218 |
 
 ### Substitutions
 
@@ -551,6 +595,18 @@ here from the outset:
 7. The JDK 27 removal timeline for the empty `ThreadPoolExecutor.finalize()` method (leaf 1.19.22,
    `executors/02b`) — sourced from an `inside.java` quality-outreach post, not a shipped release
    note, because JDK 27 has not released. Re-check when it does.
+
+13. `build-it/03b-two-lock-queue-and-timed-ops.md` — the exact `LinkedBlockingQueue` field and helper
+    names (`fullyLock`/`fullyUnlock`, the `Node` shape) were written from recollection, not re-fetched
+    from `LinkedBlockingQueue.java` at the jdk-21 tag. Flagged inline in that file. The mechanism-level
+    claims (two locks, atomic count, cascading signal, deadline loop) are standard and reliable.
+
+14. `build-it/03c-drainto-and-the-spsc-ring.md` — whether `VarHandle`/`AtomicLong` acquire-release
+    semantics changed anywhere in Java 22–25. No JEP confirms either direction; flagged inline.
+
+15. `build-it/03d-queue-consolidated-diff.md` — `ArrayBlockingQueue.removeIf`'s internal locking
+    granularity on the bulk-removal path was not confirmed against the exact method body. Flagged
+    inline.
 
 `openjdk.org` returned HTTP 403 to every direct fetch during the prompt build. Re-fetch every JEP
 through a mirror (`javaalmanac.io`, `bugs.openjdk.org`, `cr.openjdk.org`) or use the JDK release

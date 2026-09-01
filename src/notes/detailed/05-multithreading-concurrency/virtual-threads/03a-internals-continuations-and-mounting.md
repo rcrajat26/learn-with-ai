@@ -62,6 +62,33 @@ private volatile int state;              // internal state — see below
 
 `runContinuation` is the unit of work the scheduler actually sees: a small `Runnable` closure that, when invoked by whichever carrier thread the pool assigns, calls `cont.run()`. The scheduler has no idea what a virtual thread is — it only ever runs `Runnable`s.
 
+**`cont`'s actual runtime type — quoted source.** The field is declared `Continuation` but `VirtualThread` never constructs a bare one; it constructs a private nested subclass:
+
+```java
+private static class VThreadContinuation extends Continuation {
+    VThreadContinuation(VirtualThread vthread, Runnable task) {
+        super(VTHREAD_SCOPE, wrap(vthread, task));
+    }
+    @Override
+    protected void onPinned(Continuation.Pinned reason) {
+        if (TRACE_PINNING_MODE > 0) {
+            boolean printAll = (TRACE_PINNING_MODE == 1);
+            PinnedThreadPrinter.printStackTrace(System.out, printAll);
+        }
+    }
+    private static Runnable wrap(VirtualThread vthread, Runnable task) {
+        return new Runnable() {
+            @Hidden
+            public void run() {
+                vthread.run(task);
+            }
+        };
+    }
+}
+```
+
+Read it line by line. The constructor passes a single shared `VTHREAD_SCOPE` token as the `ContinuationScope` — every `VirtualThread` in the JVM freezes and thaws against the *same* scope object, which is safe because `Continuation.yield(scope)` only ever unwinds the calling thread's own nested `run()` frame for that scope, not some other thread's. `wrap` exists only to give the continuation's target a `@Hidden` `run()` method — a JVM annotation that tells stack-walking APIs (`StackWalker`, exception printing) to skip this frame, so a stack trace inside application code run on a virtual thread doesn't show `VThreadContinuation$1.run()` as noise above `VirtualThread.run(task)`. `onPinned` is the callback the continuation machinery invokes instead of successfully freezing, when the freeze walk hits a frame it cannot copy — a native frame, or one inside a `synchronized` block on Java 21. That is the entire hook the next file (03b) builds pinning and `-Djdk.tracePinnedThreads` detection on top of: `TRACE_PINNING_MODE` gates whether `onPinned` prints anything at all, and whether it prints just the pinning frame or the full stack.
+
 **The state machine (3.12.4).** These `int` constants are distinct from `java.lang.Thread.State` and are never returned by `Thread.getState()` directly — they're translated. Confirmed values from source:
 
 | Constant | Value | Meaning |
@@ -75,7 +102,9 @@ private volatile int state;              // internal state — see below
 | `PINNED` | 6 | Parked but still mounted (see next file — 03b) |
 | `YIELDING` | 7 | In the middle of `Thread.yield()` (cooperative give-up, not park) |
 | `TERMINATED` | 99 | Run method returned |
-| `SUSPENDED` bit | `1 << 8` (256) | OR'd onto any of the above while a debugger/JVMTI agent has it suspended |
+| `SUSPENDED` bit | `1 << 8` (256) | OR'd on while a debugger/JVMTI agent has it suspended |
+
+**`[SOURCE]`** The source declares only two combined constants — `RUNNABLE_SUSPENDED = (RUNNABLE | SUSPENDED)` and `PARKED_SUSPENDED = (PARKED | SUSPENDED)` — not a generic `state | SUSPENDED` for every row. That is not an oversight to generalize past: a debugger can only suspend a virtual thread at the two points where it is safe to leave parked without corrupting the freeze/thaw bookkeeping — already `RUNNABLE` (queued, not mid-transition) or already `PARKED` (fully unmounted). It cannot suspend one that is mid-`PARKING`, mid-`YIELDING`, or `RUNNING`, because those are transient states where a `Continuation` freeze or the carrier's own bookkeeping is actively in flight.
 
 **Interview:** if someone says "what state is a virtual thread in while blocked on I/O," the honest answer is `PARKED` internally, which `Thread.getState()` reports back to Java code as `WAITING` or `TIMED_WAITING` — the public API deliberately collapses the richer internal machine into the six historical `Thread.State` values so existing tooling and code keep working.
 
@@ -115,6 +144,71 @@ The `state` field shown by the dump tool is the *public* `Thread.State`; the int
 
 **Unmounting (3.12.6).** When the running code calls something that would block — `LockSupport.park()`, blocking I/O, `Object.wait()` — the virtual-thread-aware code path (not the blocking call directly) invokes `Continuation.yield(VTHREAD_SCOPE)`. That walks the live frames on the carrier's native stack, from the top down to the continuation's entry frame, and copies them into a `StackChunk` object allocated on the Java heap. Once the copy completes, `yield` returns `true` to the point that requested it, and separately, `Continuation.run()` (which is still on the carrier's own call stack, one frame below the whole virtual-thread frame slice) returns normally back to `runContinuation`, back to the scheduler's worker loop, which is now free to pick up other work — including another virtual thread's `runContinuation`.
 
+**Source walk — `mount()`, `unmount()`, `yieldContinuation()` (`[SOURCE]`).** The prose above describes the behavior; here is the actual code from `VirtualThread.java` at `jdk-21+35`, quoted and read line by line.
+
+```java
+@ChangesCurrentThread
+@ReservedStackAccess
+private void mount() {
+    // sets the carrier thread
+    Thread carrier = Thread.currentCarrierThread();
+    setCarrierThread(carrier);
+
+    // sync up carrier thread interrupt status if needed
+    if (interrupted) {
+        carrier.setInterrupt();
+    } else if (carrier.isInterrupted()) {
+        synchronized (interruptLock) {
+            if (!interrupted) {
+                carrier.clearInterrupt();
+            }
+        }
+    }
+
+    // set Thread.currentThread() to return this virtual thread
+    carrier.setCurrentThread(this);
+}
+```
+
+`Thread.currentCarrierThread()` reads the real, OS-backed platform thread the JVM is executing on right now — the one from `ForkJoinPool`, never the virtual thread itself, which is why the JDK needs a *separate* accessor from the ordinary `Thread.currentThread()`. `setCarrierThread(carrier)` publishes that into the `volatile carrierThread` field so anything reading it (a debugger, `unpark`, JFR) sees the mount immediately. The interrupt block exists because interrupt status is logically a property of the *virtual* thread, not the carrier, but Java's interrupt mechanism is built into `Thread` at the OS level — so on every mount the code reconciles the carrier's raw interrupt bit against the virtual thread's own `interrupted` field, clearing a stray carrier-level interrupt that doesn't belong to this virtual thread and raising one that does. The last line is the payload: it repoints what `Thread.currentThread()` returns on this OS thread to `this` — the virtual thread — so any code running from here on, including all of application code's `Thread.currentThread()` calls, sees the virtual thread, not the carrier, even though nothing about the OS thread itself has changed.
+
+```java
+@ChangesCurrentThread
+@ReservedStackAccess
+private void unmount() {
+    // set Thread.currentThread() to return the platform thread
+    Thread carrier = this.carrierThread;
+    carrier.setCurrentThread(carrier);
+
+    // break connection to carrier thread, synchronized with interrupt
+    synchronized (interruptLock) {
+        setCarrierThread(null);
+    }
+    carrier.clearInterrupt();
+}
+```
+
+Exact mirror image: `carrier.setCurrentThread(carrier)` repoints `Thread.currentThread()` back to the platform thread before the connection is severed, so nothing observing the carrier mid-unmount ever sees a dangling reference to a virtual thread that no longer owns it. `setCarrierThread(null)` is guarded by `interruptLock` specifically because `interrupt()` (called from a possibly different thread entirely, targeting this virtual thread) also touches `carrierThread` and `interruptLock` together — without the lock, a racing `interrupt()` call could set the interrupt flag on a carrier that has already been reassigned to a different virtual thread. `clearInterrupt()` on the way out resets the carrier's raw OS-level interrupt bit so the next virtual thread mounted onto this same carrier doesn't inherit a stray interrupt that was never meant for it.
+
+```java
+@Hidden
+@ChangesCurrentThread
+private boolean yieldContinuation() {
+    // unmount
+    notifyJvmtiUnmount(/*hide*/true);
+    unmount();
+    try {
+        return Continuation.yield(VTHREAD_SCOPE);
+    } finally {
+        // re-mount
+        mount();
+        notifyJvmtiMount(/*hide*/false);
+    }
+}
+```
+
+This is the method that actually calls the primitive from §3.12.1. `unmount()` runs *first* — the `Thread.currentThread()` identity is fixed up before the freeze even starts, so if a debugger or profiler interrupts between these two lines it never observes a virtual thread that thinks it's mounted but has no carrier bookkeeping backing that claim. `Continuation.yield(VTHREAD_SCOPE)` is the freeze call proper — it returns `true` if the freeze succeeded, `false` if the frame walk hit something unfreezable and had to give up (pinning, next file). The `finally` block is the surprising part: `mount()` runs **every time this method returns**, including the call that returns `true` because a freeze just happened — but that's not a bug, it's describing *resumption*: when this same call frame is thawed back in later (potentially on a different carrier), execution resumes inside this `finally` block, and `mount()` there is what re-establishes `Thread.currentThread()` identity on whichever carrier picked it up. One physical method body, two logically different moments in time, joined by the freeze/thaw round trip — this is the single line of code where "unmount now, remount later, possibly elsewhere" is actually implemented.
+
 **Lazy copy — why this is not O(stack depth) in practice (3.12.7 — `[PROVE]`, `[NUM]`).** A naive implementation would copy every frame from the top of the stack down to the very first frame the virtual thread ever pushed, every single unmount — meaning a virtual thread ten calls deep into a request-processing pipeline pays for freezing all ten calls even if a deposit only ever touches the top two. The JDK does not do this. Freeze walks the stack top-down and stops as soon as it reaches a frame it has already frozen in a *previous* unmount that hasn't since been popped and re-pushed — i.e., only frames that changed since the last freeze are copied. Thaw is the mirror image: it does not eagerly copy the whole `StackChunk` back onto the carrier at mount time. It installs **return barriers** — the topmost frames are thawed eagerly enough to resume execution, and deeper frames are thawed incrementally, lazily, as execution actually returns into them. The asymptotic argument: cost is proportional to the *working set* of frames that changed between one unmount and the next mount, not to total stack depth. For QuizStakes, `AssessmentService`'s eligibility check might sit six frames below `CardPayments.authorizeAndCapture`, but if the PSP round trip only touches the top two or three frames repeatedly (loop of retries, response parsing), only those get re-copied on each freeze — the deep, quiescent frames are frozen once and left alone.
 
 **Numbers, stated as order of magnitude only.** A shallow park/unpark round trip (a handful of frames, no deep call chain) costs on the order of a few hundred nanoseconds to low microseconds of freeze/thaw and scheduler resubmission work — this is a documented order-of-magnitude figure from the Loom project's own measurements, not a number this file re-measures, and it will vary by JIT state, stack depth, and hardware. Do not treat it as a guaranteed constant: it is the reason virtual threads are viable at 55,000-way concurrency (a platform-thread context switch, by comparison, is dominated by OS scheduler and cache-effects overhead an order of magnitude or more larger), but it is not a number you should hardcode into a capacity plan.
@@ -152,6 +246,46 @@ At 240 ms p50 this round trip is cheap for the pool: the virtual thread occupies
 - worker threads are instances of an internal `CarrierThread` class — a `ForkJoinWorkerThread` subclass — not plain `Thread`.
 
 FIFO mode matters specifically for virtual threads: work-stealing deques normally run LIFO locally (better cache locality, worse fairness) and steal FIFO from other queues; virtual-thread scheduling instead runs every queue FIFO, which favors fairness across the huge number of resubmitted `runContinuation`s over cache locality for any one of them — with a million virtual threads potentially resubmitting, starving the ones queued earliest would be worse than a small cache-locality loss.
+
+**Source walk — `createDefaultScheduler()` (`[SOURCE]`).**
+
+```java
+private static ForkJoinPool createDefaultScheduler() {
+    ForkJoinWorkerThreadFactory factory = pool -> {
+        PrivilegedAction<ForkJoinWorkerThread> pa = () -> new CarrierThread(pool);
+        return AccessController.doPrivileged(pa);
+    };
+    PrivilegedAction<ForkJoinPool> pa = () -> {
+        int parallelism, maxPoolSize, minRunnable;
+        String parallelismValue  = System.getProperty("jdk.virtualThreadScheduler.parallelism");
+        String maxPoolSizeValue  = System.getProperty("jdk.virtualThreadScheduler.maxPoolSize");
+        String minRunnableValue  = System.getProperty("jdk.virtualThreadScheduler.minRunnable");
+        if (parallelismValue != null) {
+            parallelism = Integer.parseInt(parallelismValue);
+        } else {
+            parallelism = Runtime.getRuntime().availableProcessors();
+        }
+        if (maxPoolSizeValue != null) {
+            maxPoolSize = Integer.parseInt(maxPoolSizeValue);
+            parallelism = Integer.min(parallelism, maxPoolSize);
+        } else {
+            maxPoolSize = Integer.max(parallelism, 256);
+        }
+        if (minRunnableValue != null) {
+            minRunnable = Integer.parseInt(minRunnableValue);
+        } else {
+            minRunnable = Integer.max(parallelism / 2, 1);
+        }
+        Thread.UncaughtExceptionHandler handler = (t, e) -> { };
+        boolean asyncMode = true; // FIFO
+        return new ForkJoinPool(parallelism, factory, handler, asyncMode,
+                     0, maxPoolSize, minRunnable, pool -> true, 30, SECONDS);
+    };
+    return AccessController.doPrivileged(pa);
+}
+```
+
+The `factory` lambda is the whole reason worker threads come out as `CarrierThread` instead of the plain `ForkJoinWorkerThread` the common pool uses — `CarrierThread` is a thin subclass that exists mainly so `Thread.currentCarrierThread()` and virtual-thread-aware code (`instanceof CarrierThread` checks appear in `afterYield`, quoted below) can recognize "this platform thread is a Loom carrier" cheaply, without a `ThreadLocal` or an `InheritableThreadLocal` lookup. The three system properties are read once, at pool-construction time — this is why they must be set as `-D` JVM flags at startup, not via `System.setProperty` at runtime; the pool is already built by the time application code runs. Note the asymmetry in the `maxPoolSizeValue != null` branch: if you *do* set `maxPoolSize` explicitly, `parallelism` gets clamped down to it (`Integer.min`), but if you don't, `maxPoolSize` gets computed *up* to `max(parallelism, 256)` — the 256 floor only ever applies to the derived default, never overriding an explicit, smaller `maxPoolSize` you asked for. `asyncMode = true` is the literal FIFO switch — this single boolean, passed straight into the `ForkJoinPool` constructor's `asyncMode` parameter, is the entire difference from `ForkJoinPool.commonPool()`'s LIFO deques; nothing else about the pool's task-stealing algorithm changes. The trailing `30, SECONDS` is the keep-alive for excess worker threads above core parallelism — carriers spun up temporarily (to cover pinning) that go idle for 30 seconds get reclaimed, so the pool doesn't permanently sit at `maxPoolSize` after a transient pinning spike passes.
 
 **System properties (3.12.10 — `[NUM]`).**
 
@@ -203,6 +337,39 @@ LockSupport.park()
     signals the condition variable, which the kernel scheduler uses to make
     the OS thread runnable again on some CPU
 ```
+
+**Source walk — the real `park()` (`[SOURCE]`).** The ASCII trace above is the shape; this is the literal method from `VirtualThread.java`:
+
+```java
+@Override
+void park() {
+    assert Thread.currentThread() == this;
+
+    // complete immediately if parking permit available or interrupted
+    if (getAndSetParkPermit(false) || interrupted)
+        return;
+
+    // park the thread
+    boolean yielded = false;
+    setState(PARKING);
+    try {
+        yielded = yieldContinuation();  // may throw
+    } finally {
+        assert (Thread.currentThread() == this) && (yielded == (state() == RUNNING));
+        if (!yielded) {
+            assert state() == PARKING;
+            setState(RUNNING);
+        }
+    }
+
+    // park on the carrier thread when pinned
+    if (!yielded) {
+        parkOnCarrierThread(false, 0);
+    }
+}
+```
+
+`getAndSetParkPermit(false)` is `LockSupport`'s permit — a single boolean "you're allowed to proceed once" flag, exactly like `LockSupport.unpark()` on a platform thread. If a matching `unpark()` already ran before this `park()` call reached this line (the PSP responded unusually fast, or an unrelated caller pre-unparked), the permit is already `true`; this call consumes it and returns immediately without ever touching a `Continuation` — no freeze happens at all for a park that never actually blocks. That is the fast path, and it is why `park()`/`unpark()` are not symmetric with each other in cost: an uncontended park can be cheaper than a mounted method call that touches memory barriers, because it may do nothing but a CAS. If no permit is available, `setState(PARKING)` publishes the transitional state, then `yieldContinuation()` (walked above) attempts the freeze. The `finally` block is where pinning surfaces structurally: if `yieldContinuation()` returned `false` — the freeze walk hit an unfreezable frame — `yielded` is `false`, the state is forced back from `PARKING` to `RUNNING` (never reaching `PARKED` at all), and the method falls through to `parkOnCarrierThread(false, 0)`, which parks the *carrier* the ordinary platform-thread way, keeping it attached for the whole wait. Compare that fallback against §3.12.9's insight about the 256-worker ceiling: this is exactly the situation that ceiling exists to bound — every pinned park takes a carrier out of circulation for the duration, and the pool grows extra carriers (up to `maxPoolSize`) to compensate.
 
 **`[PROVE]` the structural difference.** The platform-thread path never releases the OS thread — the kernel scheduler is still holding a full stack (typically ~1 MB reserved by default) and a kernel thread-control-block idle in the wait queue for the entire 11-second p99 tail. The virtual-thread path's `Continuation.yield` call physically detaches the *entire logical unit of work* from any OS thread at all during that same 11 seconds — there is no OS-level entity blocked, only a `StackChunk` sitting on the heap and a scheduling record waiting for `unpark`. This is the proof, not an assertion: count OS threads via `jstack` or `ps -T` during a slow PSP window under each model. Under the platform-thread model, OS thread count tracks concurrent-in-flight-PSP-calls 1:1. Under the virtual-thread model, OS thread count (carrier count) stays flat near `availableProcessors()`/`maxPoolSize` regardless of how many of the 55,000 sessions are mid-PSP-call, because none of them are occupying a carrier while parked.
 
@@ -348,4 +515,4 @@ A platform thread's park keeps its OS thread — its kernel thread-control-block
 **Leaves deferred:** none
 **Diagrams included:** D-190, D-191
 **Target version:** Java 21 LTS
-**Lines:** 400
+**Lines:** 518
