@@ -142,15 +142,15 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 60 | `concurrent-collections/03b-internals-chm-trees-counting-traversal.md` | §3.8 | 3.8.13–3.8.24 (12) | X | D-173, D-174, D-175 | 410 | written | 424 |
 | 61 | `atomics/03-internals-striped64-and-false-sharing.md` | §3.9 | 3.9.1–3.9.14 (14) | X | D-176, D-177 | 400 | written | 600 |
 | 62 | `executors/05a-internals-queue-internals.md` | §3.10 | 3.10.1–3.10.11 (11) | X | D-178 | 390 | written | 599 |
-| 63 | `executors/05b-internals-executor-and-future-internals.md` | §3.10 | 3.10.12–3.10.24 (13) | X | D-179, D-180, D-181, D-182, D-183, D-184 | 450 | written | 719 |
+| 63 | `executors/05b-internals-executor-and-future-internals.md` | §3.10 | 3.10.12–3.10.24 (13) | X | D-179, D-180, D-181, D-182, D-183, D-184 | 450 | written | 600 |
 | 64 | `fork-join/02-internals-work-stealing.md` | §3.11 | 3.11.1–3.11.16 (16) | X | D-185, D-186, D-187, D-188, D-189 | 450 | written | 599 |
 | 65 | `virtual-threads/03a-internals-continuations-and-mounting.md` | §3.12 | 3.12.1–3.12.11 (11) | X | D-190, D-191 | 400 | written | 351 |
-| 66a | `virtual-threads/03b-internals-io-pinning-and-dumps.md` | §3.12 | 3.12.12–3.12.19 (8) | X | D-192, D-193 | 430 | planned | |
-| 66b | `virtual-threads/03c-internals-cost-flock-and-scoped-values.md` | §3.12 | 3.12.20–3.12.22 (3) | X | D-194 | 300 | planned | |
-| 67a | `observability/02-internals-runtime-observability.md` | §3.13 | 3.13.1–3.13.7 (7) | X | D-195, D-196, D-197, D-198 | 440 | planned | |
-| 67b | `observability/03-internals-profiling-and-metrics.md` | §3.13 | 3.13.8–3.13.12 (5) | X | D-197 | 380 | planned | |
+| 66a | `virtual-threads/03b-internals-io-pinning-and-dumps.md` | §3.12 | 3.12.12–3.12.19 (8) | X | D-192, D-193 | 430 | written | 460 |
+| 66b | `virtual-threads/03c-internals-cost-flock-and-scoped-values.md` | §3.12 | 3.12.20–3.12.22 (3) | X | D-194 | 300 | written | 383 |
+| 67a | `observability/02-internals-runtime-observability.md` | §3.13 | 3.13.1–3.13.7 (7) | X | D-195, D-196, D-197, D-198 | 440 | written | 560 |
+| 67b | `observability/03-internals-profiling-and-metrics.md` | §3.13 | 3.13.8–3.13.12 (5) | X | D-197 | 380 | written | 464 |
 | 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 349 |
-| 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | planned | |
+| 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | written | 579 |
 | 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.10 (6) | BLD | D-200 | 480 | planned | |
 | 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.4 (4) | BLD | D-202 | 450 | planned | |
 | 70b | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.7 (3) | BLD | — | 420 | planned | |
