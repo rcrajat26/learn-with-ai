@@ -1,0 +1,146 @@
+<svg viewBox="0 0 1180 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Operation order changes both the answer and the cost. Left lane: sorted then limit over 2,800,000 stake reservations buffers and sorts all 2.8 million elements, cost O of n log n, then returns the true top 10 by amount. Right lane: limit then sorted buffers only the first 10 elements encountered, sorts those 10 cheaply, but returns a different, not globally correct, answer. Third comparison: filtering 7,200 daily applications down to 792 needing manual review before mapping invokes the mapper 792 times, while mapping before filtering invokes the mapper all 7,200 times, wasting 6,408 calls.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #374151; }
+    .strong{ font-size: 12.5px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">OPERATION ORDER CHANGES BOTH THE ANSWER AND THE COST</text>
+  <line x1="20" y1="42" x2="1160" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="lbl h2">.sorted(byAmount).limit(10) — SORT EVERYTHING FIRST</text>
+  <text x="610" y="62" class="lbl h2">.limit(10).sorted(byAmount) — TAKE FIRST, THEN SORT</text>
+  <line x1="590" y1="55" x2="590" y2="430" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: sorted then limit -->
+  <rect x="40" y="80" width="520" height="50" rx="6" class="boxP"/>
+  <text x="300" y="101" text-anchor="middle" class="lbl body">Stream&lt;Reservation&gt; — 2,800,000 stake reservations</text>
+  <text x="300" y="118" text-anchor="middle" class="lbl sub">avg value 4.20 (Appendix A)</text>
+
+  <path class="flow" d="M 300 130 V 160"/>
+
+  <rect x="40" y="160" width="520" height="80" rx="6" class="boxH"/>
+  <text x="300" y="181" text-anchor="middle" class="lbl body">sorted(byAmount)</text>
+  <text x="300" y="199" text-anchor="middle" class="lbl sub">buffers ALL 2,800,000 elements, then sorts</text>
+  <text x="300" y="215" text-anchor="middle" class="lbl sub">cost: O(n log n) = O(2,800,000 · log 2,800,000)</text>
+  <text x="300" y="232" text-anchor="middle" class="lbl strong">elements buffered = 2,800,000</text>
+
+  <path class="flow" d="M 300 240 V 280"/>
+  <text x="330" y="264" class="lbl sub">limit(10)</text>
+
+  <rect x="40" y="280" width="520" height="60" rx="6" class="boxR"/>
+  <text x="300" y="303" text-anchor="middle" class="lbl body">top 10 reservations by amount — globally correct</text>
+  <text x="300" y="321" text-anchor="middle" class="lbl sub">true smallest/largest 10 across all 2.8M</text>
+
+  <!-- RIGHT: limit then sorted -->
+  <rect x="630" y="80" width="520" height="50" rx="6" class="boxP"/>
+  <text x="890" y="101" text-anchor="middle" class="lbl body">Stream&lt;Reservation&gt; — 2,800,000 stake reservations</text>
+  <text x="890" y="118" text-anchor="middle" class="lbl sub">avg value 4.20 (Appendix A)</text>
+
+  <path class="flow" d="M 890 130 V 160"/>
+  <text x="920" y="150" class="lbl sub">limit(10)</text>
+
+  <rect x="630" y="160" width="520" height="80" rx="6" class="boxW"/>
+  <text x="890" y="181" text-anchor="middle" class="lbl body">limit(10)</text>
+  <text x="890" y="199" text-anchor="middle" class="lbl sub">buffers only the FIRST 10 elements encountered</text>
+  <text x="890" y="215" text-anchor="middle" class="lbl sub">cost: O(10), no global view of amounts</text>
+  <text x="890" y="232" text-anchor="middle" class="lbl strong">elements buffered = 10</text>
+
+  <path class="flow" d="M 890 240 V 280"/>
+  <text x="920" y="264" class="lbl sub">sorted(byAmount)</text>
+
+  <rect x="630" y="280" width="520" height="60" rx="6" class="boxD"/>
+  <text x="890" y="303" text-anchor="middle" class="lbl body">sorted first-10 — NOT the top 10 by amount</text>
+  <text x="890" y="321" text-anchor="middle" class="lbl sub">different answer from the left lane, same input</text>
+
+  <rect x="40" y="360" width="1110" height="56" rx="6" class="boxA"/>
+  <text x="56" y="380" class="lbl tiny">Same input, same two operations, different order -&gt; different result AND different cost.</text>
+  <text x="56" y="398" class="lbl tiny">sorted-then-limit pays O(n log n) over 2.8M; limit-then-sorted pays only O(10 log 10) but answers a different question.</text>
+
+  <!-- THIRD PANEL: filter/map order -->
+  <text x="20" y="446" class="lbl h1">THIRD COMPARISON — MAPPER INVOCATION COUNT DEPENDS ON OPERATION ORDER</text>
+  <line x1="20" y1="454" x2="1160" y2="454" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="474" class="lbl h2">FILTER BEFORE MAP</text>
+  <text x="610" y="474" class="lbl h2">MAP BEFORE FILTER</text>
+  <line x1="590" y1="466" x2="590" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="486" width="520" height="50" rx="6" class="boxP"/>
+  <text x="300" y="507" text-anchor="middle" class="lbl body">Stream&lt;Application&gt; — 7,200 submissions/day (steady)</text>
+  <text x="300" y="524" text-anchor="middle" class="lbl sub">Appendix A: applications reaching AO-400/day</text>
+
+  <path class="flow" d="M 300 536 V 566"/>
+  <text x="330" y="556" class="lbl sub">filter(needsManualReview)</text>
+
+  <rect x="40" y="566" width="520" height="50" rx="6" class="boxH"/>
+  <text x="300" y="587" text-anchor="middle" class="lbl body">792 applications pass</text>
+  <text x="300" y="604" text-anchor="middle" class="lbl sub">11% manual review rate of 7,200</text>
+
+  <path class="flow" d="M 300 616 V 646"/>
+  <text x="330" y="636" class="lbl sub">map(buildReviewCase)</text>
+
+  <rect x="40" y="646" width="520" height="60" rx="6" class="boxR"/>
+  <text x="300" y="669" text-anchor="middle" class="lbl body" font-weight="700">mapper invoked 792 times</text>
+  <text x="300" y="687" text-anchor="middle" class="lbl sub">only on elements that passed the filter</text>
+
+  <rect x="630" y="486" width="520" height="50" rx="6" class="boxP"/>
+  <text x="890" y="507" text-anchor="middle" class="lbl body">Stream&lt;Application&gt; — 7,200 submissions/day (steady)</text>
+  <text x="890" y="524" text-anchor="middle" class="lbl sub">Appendix A: applications reaching AO-400/day</text>
+
+  <path class="flow" d="M 890 536 V 566"/>
+  <text x="920" y="556" class="lbl sub">map(buildReviewCase)</text>
+
+  <rect x="630" y="566" width="520" height="50" rx="6" class="boxD"/>
+  <text x="890" y="587" text-anchor="middle" class="lbl body" font-weight="700">mapper invoked 7,200 times</text>
+  <text x="890" y="604" text-anchor="middle" class="lbl sub">every submission, before filtering</text>
+
+  <path class="flow" d="M 890 616 V 646"/>
+  <text x="920" y="636" class="lbl sub">filter(needsManualReview)</text>
+
+  <rect x="630" y="646" width="520" height="60" rx="6" class="boxR"/>
+  <text x="890" y="669" text-anchor="middle" class="lbl body">792 ReviewCase objects kept</text>
+  <text x="890" y="687" text-anchor="middle" class="lbl sub">6,408 mapper calls were wasted work</text>
+
+  <rect x="40" y="726" width="1110" height="46" rx="6" class="boxA"/>
+  <text x="56" y="754" class="lbl tiny">Filter-before-map invokes the mapper 792 times; map-before-filter invokes it 7,200 times for the same 792 kept — 6,408 wasted calls.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="794" x2="1160" y2="794" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="806" width="22" height="16" rx="3" class="boxP"/>
+  <text x="70" y="819" class="lbl tiny">pipeline source</text>
+  <rect x="220" y="806" width="22" height="16" rx="3" class="boxH"/>
+  <text x="250" y="819" class="lbl tiny">expensive step / filtered-down result</text>
+  <rect x="520" y="806" width="22" height="16" rx="3" class="boxW"/>
+  <text x="550" y="819" class="lbl tiny">cheap, small-buffer step</text>
+  <rect x="760" y="806" width="22" height="16" rx="3" class="boxD"/>
+  <text x="790" y="819" class="lbl tiny">wrong/different answer or wasted work</text>
+
+  <rect x="40" y="830" width="22" height="16" rx="3" class="boxR"/>
+  <text x="70" y="843" class="lbl tiny">final outcome</text>
+  <path class="flow" d="M 300 838 H 340"/>
+  <text x="350" y="843" class="lbl tiny">A → B : B is produced from A</text>
+</svg>

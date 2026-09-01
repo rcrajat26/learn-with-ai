@@ -1,0 +1,67 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Heap strip comparing 2x versus 1.5x growth: with 2x, freed blocks of 16, 32 and 64 bytes coalesce to only 112 bytes and cannot satisfy the next 128 byte request; with 1.5x, freed blocks of 16, 24 and 36 bytes coalesce to 76 bytes and do satisfy the next 54 byte request">
+
+  <rect x="20" y="20" width="760" height="36" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="44" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Free-list coalescing: why 1.5x growth reuses memory that 2x growth cannot</text>
+
+  <!-- 2x panel -->
+  <text x="40" y="80" font-family="sans-serif" font-size="13" fill="#1f2937"></text>
+  <rect x="40" y="65" width="120" height="22" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="100" y="81" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">g = 2 (freed history)</text>
+
+  <!-- heap strip for 2x: blocks 16,32,64 freed, gaps between (not adjacent) -->
+  <rect x="40" y="100" width="720" height="60" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="50" y="110" width="32" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="66" y="134" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">16B</text>
+  <rect x="100" y="110" width="30" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="134" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">live</text>
+  <rect x="140" y="110" width="64" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="172" y="134" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">32B</text>
+  <rect x="220" y="110" width="30" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="235" y="134" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">live</text>
+  <rect x="260" y="110" width="128" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="324" y="134" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">64B</text>
+
+  <rect x="420" y="110" width="220" height="40" fill="#fee2e2" stroke="#525252" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="530" y="128" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next request: 128B</text>
+  <text x="530" y="144" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">freed 16+32+64 = 112B, non-adjacent</text>
+
+  <rect x="40" y="168" width="400" height="20" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="240" y="183" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Freed blocks separated by still-live neighbors → cannot coalesce → 128B request FAILS</text>
+
+  <!-- divider -->
+  <line x1="40" y1="215" x2="760" y2="215" stroke="#737373" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- 1.5x panel -->
+  <rect x="40" y="235" width="120" height="22" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="100" y="251" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">g = 1.5 (freed history)</text>
+
+  <rect x="40" y="270" width="720" height="60" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="50" y="280" width="32" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="66" y="304" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">16B</text>
+  <rect x="82" y="280" width="48" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="106" y="304" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">24B</text>
+  <rect x="130" y="280" width="72" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="166" y="304" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">36B</text>
+  <rect x="202" y="280" width="30" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="217" y="304" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">live</text>
+
+  <!-- coalesced brace over the three adjacent freed blocks -->
+  <path d="M 50 275 Q 116 260 202 275" fill="none" stroke="#525252" stroke-width="2"/>
+  <rect x="76" y="240" width="160" height="20" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="156" y="255" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">coalesced: 16+24+36 = 76B</text>
+
+  <rect x="420" y="280" width="120" height="40" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="480" y="298" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next request: 54B</text>
+  <text x="480" y="314" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">fits in 76B</text>
+
+  <rect x="40" y="338" width="500" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="290" y="353" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Adjacent freed blocks coalesce into one 76B run → 54B request SUCCEEDS</text>
+
+  <rect x="20" y="380" width="760" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="400" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Rule of thumb: for growth factor g, a freed block's cumulative earlier history</text>
+  <text x="400" y="418" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">sums to less than the next allocation only when g &lt; golden ratio (~1.618) — hence 1.5x, not 2x</text>
+
+  <rect x="20" y="455" width="760" height="20" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="400" y="469" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Green = freed/reclaimed block, blue = still-live neighbor, amber = coalesced free run</text>
+</svg>

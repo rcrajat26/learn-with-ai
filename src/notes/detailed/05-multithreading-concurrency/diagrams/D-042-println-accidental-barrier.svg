@@ -1,0 +1,168 @@
+<svg viewBox="0 0 1120 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of BonusService's plain boolean sweeping flag. Left:
+     bonus-sweep-1 loops while(sweeping); C2 hoists the field read out of the loop, so after
+     settlement-ingest-3 calls stop(), which sets sweeping to false, the worker never re-reads
+     memory and spins forever — the test fails. Right: the same loop with a System.out.println
+     call added inside it; PrintStream.println enters and exits an internal synchronized(this)
+     block on every call, and that monitor enter/exit forces the compiler to revalidate sweeping
+     on the next iteration, so the same stop() call is observed and the worker exits — the test
+     passes. A bottom panel explains that println supplies this only as a side effect of its own
+     internal locking: no part of the Java Memory Model ties println to sweeping, so removing the
+     print statement, buffering stdout, or a different JIT decision can silently bring the bug
+     back.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY println MAKES THE BUG DISAPPEAR</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Section band headers -->
+  <rect x="20" y="56" width="520" height="26" rx="4" class="boxD"/>
+  <text x="280" y="74" text-anchor="middle" class="lbl h2">NO println — bonus-sweep-1 NEVER STOPS (FAILS)</text>
+
+  <rect x="580" y="56" width="520" height="26" rx="4" class="boxR"/>
+  <text x="840" y="74" text-anchor="middle" class="lbl h2">println INSERTED — bonus-sweep-1 STOPS (PASSES)</text>
+
+  <!-- LEFT COLUMN -->
+  <rect x="40" y="98" width="480" height="120" rx="6" class="boxP"/>
+  <text x="60" y="120" class="lbl body mono" font-weight="600">class BonusService {</text>
+  <text x="76" y="140" class="lbl body mono">boolean sweeping = true;</text>
+  <text x="76" y="160" class="lbl body mono">void sweep() {</text>
+  <text x="92" y="178" class="lbl body mono">while (sweeping) {</text>
+  <text x="108" y="196" class="lbl sub mono">processNextBonusCandidate();</text>
+  <text x="60" y="212" class="lbl body mono">} }</text>
+
+  <path class="flow" d="M 280 218 V 240"/>
+  <text x="290" y="235" class="lbl sub">C2 hoists the read</text>
+
+  <rect x="40" y="248" width="480" height="150" rx="6" class="boxD"/>
+  <text x="60" y="270" class="lbl body mono" font-weight="600">; C2-compiled, sweeping hoisted out</text>
+  <text x="76" y="292" class="lbl body mono">LOAD  r1, [this.sweeping]</text>
+  <text x="76" y="310" class="lbl sub mono">; read happens ONCE, before the loop</text>
+  <text x="76" y="330" class="lbl body mono">L1:</text>
+  <text x="92" y="348" class="lbl body mono">CMP   r1, 0</text>
+  <text x="92" y="366" class="lbl body mono">JZ    exit</text>
+  <text x="92" y="384" class="lbl body mono">CALL  processNextBonusCandidate</text>
+
+  <rect x="40" y="410" width="480" height="60" rx="6" class="boxD"/>
+  <text x="60" y="432" class="lbl body mono">JMP   L1</text>
+  <text x="60" y="452" class="lbl sub mono">; r1 never reloaded &#8594; effectively while (true)</text>
+
+  <path class="flow" d="M 280 470 V 492"/>
+
+  <rect x="40" y="500" width="480" height="60" rx="6" class="boxW"/>
+  <text x="60" y="524" class="lbl body">settlement-ingest-3 calls service.stop()</text>
+  <text x="60" y="544" class="lbl sub">sets this.sweeping = false in main memory</text>
+
+  <path class="weak" d="M 280 560 V 590"/>
+  <text x="290" y="580" class="lbl sub">no effect on r1</text>
+
+  <rect x="40" y="598" width="480" height="96" rx="6" class="boxA"/>
+  <text x="60" y="620" class="lbl body" font-weight="600">Observed:</text>
+  <text x="60" y="640" class="lbl dense">sweep() spins forever consuming a core;</text>
+  <text x="60" y="658" class="lbl dense">bonus-sweep-1 never exits sweep(), the test's</text>
+  <text x="60" y="676" class="lbl dense">await-termination assertion times out &#8212; FAILS.</text>
+
+  <!-- RIGHT COLUMN -->
+  <rect x="600" y="98" width="480" height="140" rx="6" class="boxP"/>
+  <text x="620" y="120" class="lbl body mono" font-weight="600">class BonusService {</text>
+  <text x="636" y="140" class="lbl body mono">boolean sweeping = true;</text>
+  <text x="636" y="160" class="lbl body mono">void sweep() {</text>
+  <text x="652" y="178" class="lbl body mono">while (sweeping) {</text>
+  <text x="668" y="196" class="lbl sub mono">processNextBonusCandidate();</text>
+  <text x="668" y="212" class="lbl sub mono" font-weight="700">System.out.println("sweeping");</text>
+  <text x="620" y="230" class="lbl body mono">} }</text>
+
+  <path class="flow" d="M 840 238 V 260"/>
+  <text x="850" y="255" class="lbl sub">call reaches PrintStream.println</text>
+
+  <rect x="600" y="268" width="480" height="110" rx="6" class="boxH"/>
+  <text x="620" y="290" class="lbl body mono" font-weight="600">PrintStream.println(String) {</text>
+  <text x="636" y="310" class="lbl body mono" font-weight="700">synchronized (this) {</text>
+  <text x="652" y="328" class="lbl sub mono">write(s); newLine();</text>
+  <text x="636" y="346" class="lbl body mono">}</text>
+  <text x="620" y="366" class="lbl sub" fill="#b45309" font-weight="700">the accidental barrier: monitor enter/exit here</text>
+
+  <path class="flow" d="M 840 378 V 400"/>
+  <text x="850" y="393" class="lbl sub">exit flushes; next enter invalidates cache</text>
+
+  <rect x="600" y="410" width="480" height="60" rx="6" class="boxR"/>
+  <text x="620" y="432" class="lbl body mono">L1: LOAD r1,[this.sweeping]  ; revalidated</text>
+  <text x="620" y="452" class="lbl sub mono">; forced by the surrounding monitor ops, not by sweeping itself</text>
+
+  <path class="flow" d="M 840 470 V 492"/>
+
+  <rect x="600" y="500" width="480" height="60" rx="6" class="boxW"/>
+  <text x="620" y="524" class="lbl body">settlement-ingest-3 calls service.stop()</text>
+  <text x="620" y="544" class="lbl sub">sets this.sweeping = false</text>
+
+  <path class="flow" d="M 840 560 V 590"/>
+  <text x="850" y="580" class="lbl sub">next println's monitor enter sees it</text>
+
+  <rect x="600" y="598" width="480" height="96" rx="6" class="boxA"/>
+  <text x="620" y="620" class="lbl body" font-weight="600">Observed:</text>
+  <text x="620" y="640" class="lbl dense">on the next iteration's println call, the monitor</text>
+  <text x="620" y="658" class="lbl dense">enter revalidates sweeping and sees false; sweep()</text>
+  <text x="620" y="676" class="lbl dense">exits &#8212; bonus-sweep-1 stops, the test PASSES.</text>
+
+  <!-- Bottom callout: the point of the whole diagram -->
+  <rect x="40" y="712" width="1040" height="94" rx="6" class="boxA"/>
+  <text x="560" y="736" text-anchor="middle" class="lbl body" font-weight="700" fill="#b45309">THE FIX IS A SIDE EFFECT, NOT A FIX</text>
+  <text x="560" y="758" text-anchor="middle" class="lbl dense">PrintStream.println happens to enter a monitor, and monitor enter/exit happens to force a fresh read &#8212;</text>
+  <text x="560" y="776" text-anchor="middle" class="lbl dense">but no rule of the Java Memory Model ties println to sweeping. Delete the print, buffer stdout, or let C2</text>
+  <text x="560" y="794" text-anchor="middle" class="lbl dense">inline differently, and the hang returns. The only real fix is a volatile sweeping field.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="822" x2="1100" y2="822" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="834" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="847" class="lbl tiny">source code</text>
+
+  <rect x="190" y="834" width="22" height="16" rx="3" class="boxD"/>
+  <text x="220" y="847" class="lbl tiny">misbehaving compiled form (hoisted read)</text>
+
+  <rect x="560" y="834" width="22" height="16" rx="3" class="boxH"/>
+  <text x="590" y="847" class="lbl tiny">the accidental barrier (PrintStream's monitor)</text>
+
+  <rect x="20" y="860" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="873" class="lbl tiny">compiled form that incidentally behaves</text>
+
+  <rect x="380" y="860" width="22" height="16" rx="3" class="boxW"/>
+  <text x="410" y="873" class="lbl tiny">external actor / event</text>
+
+  <rect x="620" y="860" width="22" height="16" rx="3" class="boxA"/>
+  <text x="650" y="873" class="lbl tiny">annotation: observation / takeaway</text>
+
+  <path class="flow" d="M 20 897 H 60"/>
+  <text x="68" y="902" class="lbl tiny">A &#8594; B : B happens after A (sequential step)</text>
+
+  <path class="weak" d="M 480 897 H 520"/>
+  <text x="528" y="902" class="lbl tiny">write has no effect on A (stale register)</text>
+</svg>

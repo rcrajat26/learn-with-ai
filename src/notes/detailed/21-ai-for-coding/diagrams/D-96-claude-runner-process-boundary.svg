@@ -1,0 +1,196 @@
+<svg viewBox="0 0 1200 1420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy diagram of ClaudeRunner against the process boundary. Left of a hard vertical line: the Java side, showing ClaudeRunner, a Semaphore bulkhead, a raw-returns box, the ClaudeEnvelope record with its fields exit_code, stdout_json, is_error, total_cost_usd and usage, the three distinct exception types AgentTimeoutException, AgentTurnLimitException and AgentBudgetExceededException, a bounded retry box that holds the last parsed error envelope, and a parse-failure path. Right of the line: the process side, showing the assembled claude -p command line with flags --output-format json, --max-turns, --max-budget-usd, --settings with an absolute path, --agent and --permission-mode, the claude -p subprocess, and stdout, stderr and exit code returning across the boundary, with a parse-failure path capturing a 500-character unparseable-input snippet.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR    { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxDeg  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="1420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ClaudeRunner AGAINST THE PROCESS BOUNDARY</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="270" y="66" text-anchor="middle" class="lbl h2">JAVA SIDE</text>
+  <text x="900" y="66" text-anchor="middle" class="lbl h2">PROCESS SIDE</text>
+
+  <!-- hard boundary line -->
+  <line x1="580" y1="56" x2="580" y2="1100" stroke="#1f2937" stroke-width="3"/>
+  <text x="586" y="52" class="lbl tiny" font-weight="700">process boundary</text>
+
+  <!-- JAVA: ClaudeRunner -->
+  <rect x="60" y="80" width="420" height="60" rx="6" class="boxP"/>
+  <text x="270" y="106" text-anchor="middle" class="lbl node">ClaudeRunner</text>
+  <text x="270" y="126" text-anchor="middle" class="lbl sub">owns the subprocess lifecycle</text>
+
+  <!-- JAVA: Semaphore bulkhead -->
+  <path class="flow" d="M 270 140 V 164"/>
+  <rect x="60" y="164" width="420" height="60" rx="6" class="boxHi"/>
+  <text x="270" y="188" text-anchor="middle" class="lbl body" font-weight="700">Semaphore bulkhead</text>
+  <text x="270" y="206" text-anchor="middle" class="lbl sub">bounds concurrent claude -p subprocesses</text>
+
+  <!-- PROCESS: assembled command line -->
+  <rect x="640" y="164" width="500" height="150" rx="6" class="boxHi"/>
+  <text x="890" y="188" text-anchor="middle" class="lbl node">assembled claude -p command line</text>
+  <text x="660" y="212" class="lbl dense">--output-format json</text>
+  <text x="660" y="232" class="lbl dense">--max-turns</text>
+  <text x="660" y="252" class="lbl dense">--max-budget-usd</text>
+  <text x="660" y="272" class="lbl dense">--settings &lt;absolute path&gt;</text>
+  <text x="660" y="292" class="lbl dense">--agent</text>
+  <text x="900" y="212" class="lbl dense">--permission-mode</text>
+
+  <!-- Semaphore -> command line, crossing boundary -->
+  <path class="flow" d="M 480 194 H 640"/>
+
+  <!-- PROCESS: claude -p subprocess -->
+  <path class="flow" d="M 890 314 V 340"/>
+  <rect x="740" y="340" width="300" height="60" rx="6" class="boxP"/>
+  <text x="890" y="364" text-anchor="middle" class="lbl node">claude -p subprocess</text>
+  <text x="890" y="384" text-anchor="middle" class="lbl sub">runs the agent, produces JSON on stdout</text>
+
+  <!-- fan out on a bus to stdout/stderr/exit -->
+  <path class="flow" d="M 890 400 V 410"/>
+  <path d="M 775 410 H 1125" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 775 410 V 424"/>
+  <path class="flow" d="M 965 410 V 424"/>
+  <path class="flow" d="M 1125 410 V 424"/>
+
+  <rect x="700" y="424" width="150" height="56" rx="6" class="boxR"/>
+  <text x="775" y="448" text-anchor="middle" class="lbl body">stdout</text>
+  <text x="775" y="466" text-anchor="middle" class="lbl sub">JSON envelope body</text>
+
+  <rect x="890" y="424" width="150" height="56" rx="6" class="boxDeg"/>
+  <text x="965" y="448" text-anchor="middle" class="lbl body">stderr</text>
+  <text x="965" y="466" text-anchor="middle" class="lbl sub">diagnostic text</text>
+
+  <rect x="1080" y="424" width="90" height="56" rx="6" class="boxWeak"/>
+  <text x="1125" y="448" text-anchor="middle" class="lbl body">exit</text>
+  <text x="1125" y="466" text-anchor="middle" class="lbl sub">code</text>
+
+  <!-- return fan: each source drops at its own y then crosses into raw-returns at its own x -->
+  <path class="flow" d="M 775 480 V 496 H 150 V 530"/>
+  <path class="flow" d="M 965 480 V 506 H 270 V 530"/>
+  <path class="flow" d="M 1125 480 V 516 H 390 V 530"/>
+
+  <!-- JAVA: raw returns received -->
+  <rect x="60" y="530" width="420" height="56" rx="6" class="boxR"/>
+  <text x="270" y="552" text-anchor="middle" class="lbl body" font-weight="700">stdout / stderr / exit code received</text>
+  <text x="270" y="570" text-anchor="middle" class="lbl sub">crosses back into ClaudeRunner</text>
+
+  <!-- JAVA: ClaudeEnvelope record -->
+  <path class="flow" d="M 270 586 V 610"/>
+  <rect x="40" y="610" width="460" height="150" rx="6" class="boxR"/>
+  <text x="270" y="634" text-anchor="middle" class="lbl node">ClaudeEnvelope (record)</text>
+  <text x="60" y="658" class="lbl dense">exit_code : int</text>
+  <text x="60" y="678" class="lbl dense">stdout_json : String</text>
+  <text x="60" y="698" class="lbl dense">is_error : boolean</text>
+  <text x="60" y="718" class="lbl dense">total_cost_usd : double</text>
+  <text x="60" y="738" class="lbl dense">usage : Map&lt;String,Integer&gt;</text>
+
+  <!-- three ceiling exceptions on a bus -->
+  <path class="flow" d="M 270 760 V 784"/>
+  <path d="M 100 784 H 440" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 100 784 V 808"/>
+  <path class="flow" d="M 270 784 V 808"/>
+  <path class="flow" d="M 440 784 V 808"/>
+
+  <rect x="20" y="808" width="160" height="72" rx="6" class="boxDeg"/>
+  <text x="100" y="832" text-anchor="middle" class="lbl dense" font-weight="700">AgentTimeout-</text>
+  <text x="100" y="848" text-anchor="middle" class="lbl dense" font-weight="700">Exception</text>
+  <text x="100" y="866" text-anchor="middle" class="lbl sub">DEFAULT_TIMEOUT = 1800</text>
+
+  <rect x="190" y="808" width="160" height="72" rx="6" class="boxDeg"/>
+  <text x="270" y="832" text-anchor="middle" class="lbl dense" font-weight="700">AgentTurnLimit-</text>
+  <text x="270" y="848" text-anchor="middle" class="lbl dense" font-weight="700">Exception</text>
+  <text x="270" y="866" text-anchor="middle" class="lbl sub">DEFAULT_MAX_TURNS = 160</text>
+
+  <rect x="360" y="808" width="160" height="72" rx="6" class="boxDeg"/>
+  <text x="440" y="832" text-anchor="middle" class="lbl dense" font-weight="700">AgentBudget-</text>
+  <text x="440" y="848" text-anchor="middle" class="lbl dense" font-weight="700">ExceededException</text>
+  <text x="440" y="866" text-anchor="middle" class="lbl sub">--max-budget-usd ceiling</text>
+
+  <!-- bounded retry -->
+  <path class="flow" d="M 270 880 V 904"/>
+  <rect x="40" y="904" width="460" height="90" rx="6" class="boxWeak"/>
+  <text x="270" y="926" text-anchor="middle" class="lbl body" font-weight="700">bounded retry</text>
+  <text x="270" y="946" text-anchor="middle" class="lbl sub">holds the last parsed error envelope</text>
+  <text x="270" y="962" text-anchor="middle" class="lbl sub">across attempts so cost/usage is never lost</text>
+  <text x="270" y="980" text-anchor="middle" class="lbl sub">retries capped, not unbounded</text>
+
+  <!-- parse-failure snippet -->
+  <path class="flow" d="M 270 994 V 1018"/>
+  <rect x="40" y="1018" width="460" height="70" rx="6" class="boxDeg"/>
+  <text x="270" y="1040" text-anchor="middle" class="lbl body" font-weight="700">parse-failure path</text>
+  <text x="270" y="1060" text-anchor="middle" class="lbl sub">captures a 500-character unparseable-input</text>
+  <text x="270" y="1076" text-anchor="middle" class="lbl sub">snippet, labelled with the number 500</text>
+
+  <!-- PROCESS SIDE annotation panel, clear of all arrows -->
+  <rect x="620" y="610" width="540" height="240" rx="6" class="panel"/>
+  <text x="636" y="634" class="lbl h2">WHY THE BOUNDARY IS DRAWN HARD</text>
+  <text x="636" y="658" class="lbl dense">Everything left of the line is typed Java: ClaudeRunner, ClaudeEnvelope,</text>
+  <text x="636" y="676" class="lbl dense">and the three ceiling exceptions. Everything right of the line is an</text>
+  <text x="636" y="694" class="lbl dense">untyped OS process boundary &#8212; a command line out, three raw</text>
+  <text x="636" y="712" class="lbl dense">channels back (stdout, stderr, exit code). ClaudeRunner's whole job is</text>
+  <text x="636" y="730" class="lbl dense">converting the untyped side into the typed side, or throwing one of</text>
+  <text x="636" y="748" class="lbl dense">AgentTimeoutException, AgentTurnLimitException or</text>
+  <text x="636" y="766" class="lbl dense">AgentBudgetExceededException when it cannot.</text>
+  <text x="636" y="784" class="lbl dense">Semaphore bounds how many of these boundary crossings run at once.</text>
+  <text x="636" y="806" class="lbl dense">exit_code alone is not trustworthy: a 0 exit can still carry</text>
+  <text x="636" y="824" class="lbl dense">is_error: true inside the parsed JSON body.</text>
+
+  <line x1="20" y1="1120" x2="1180" y2="1120" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="1140" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="1152" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="1165" class="lbl tiny">runner / process entry</text>
+
+  <rect x="260" y="1152" width="22" height="16" rx="3" class="boxR"/>
+  <text x="290" y="1165" class="lbl tiny">envelope / resolved data</text>
+
+  <rect x="520" y="1152" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="550" y="1165" class="lbl tiny">bulkhead / command assembly</text>
+
+  <rect x="820" y="1152" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="850" y="1165" class="lbl tiny">exception / failure channel</text>
+
+  <rect x="1060" y="1152" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="1090" y="1165" class="lbl tiny">retry state</text>
+
+  <rect x="20" y="1180" width="22" height="16" rx="3" class="panel"/>
+  <text x="50" y="1193" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 260 1188 H 300"/>
+  <text x="340" y="1193" text-anchor="middle" class="lbl tiny">flow / crosses boundary</text>
+
+  <line x1="580" y1="1180" x2="580" y2="1200" stroke="#1f2937" stroke-width="3"/>
+  <text x="592" y="1193" class="lbl tiny">hard process boundary</text>
+
+  <rect x="20" y="1218" width="1160" height="182" rx="6" class="panel"/>
+  <text x="36" y="1240" class="lbl h2">FIELD-BY-FIELD, ONE LINE EACH</text>
+  <text x="36" y="1262" class="lbl dense">ClaudeEnvelope.exit_code mirrors the OS exit code returned across the boundary; 0 means the process itself completed.</text>
+  <text x="36" y="1280" class="lbl dense">ClaudeEnvelope.stdout_json is the raw JSON text read from stdout before parsing &#8212; kept even on parse failure.</text>
+  <text x="36" y="1298" class="lbl dense">ClaudeEnvelope.is_error and total_cost_usd/usage come from the parsed JSON, not from exit_code &#8212; a 0 exit can still carry is_error: true.</text>
+  <text x="36" y="1316" class="lbl dense">The 500-character unparseable-input snippet is stdout_json truncated at 500 chars when JSON parsing itself throws.</text>
+  <text x="36" y="1334" class="lbl dense">The three exceptions are distinct types, not one generic RunnerException, so callers can catch and handle each ceiling differently.</text>
+  <text x="36" y="1352" class="lbl dense">The bounded retry keeps the previous attempt's ClaudeEnvelope so a failed retry still reports the cost the failed attempt actually incurred.</text>
+  <text x="36" y="1370" class="lbl dense">The Semaphore bulkhead caps concurrent claude -p subprocesses so one runaway invocation cannot starve the others.</text>
+</svg>

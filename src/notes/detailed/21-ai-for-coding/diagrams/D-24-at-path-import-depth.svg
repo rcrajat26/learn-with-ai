@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy of at-path imports in CLAUDE.md, five hops deep. Hops 1 through 4 are followed and loaded: CLAUDE.md imports architecture.md at hop 1, which imports rules/backend.md at hop 2, which imports rules/database.md at hop 3, which imports rules/legacy-notes.md at hop 4. Hop 5, rules/legacy-notes.md importing rules/archive.md, is drawn weak and labelled not followed because it exceeds the maximum of four hops. Two sibling cases are shown skipped: an at-path reference inside a code span, and one inside a fenced code block. An annotation panel states the counter-intuitive fact that an import does not save context because the imported file loads at launch too, so splitting only buys organisation.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow    { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weakE   { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+    .badE    { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triB); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">@path IMPORTS — MAX DEPTH OF FOUR HOPS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- chain of 6 nodes: root + hop1..hop5(weak) -->
+  <rect x="30" y="70" width="150" height="60" rx="6" class="boxRoot"/>
+  <text x="105" y="94" text-anchor="middle" class="lbl node">CLAUDE.md</text>
+  <text x="105" y="112" text-anchor="middle" class="lbl sub">@architecture.md</text>
+
+  <path class="flow" d="M 180 100 H 210"/>
+  <text x="195" y="90" text-anchor="middle" class="lbl sub">hop 1</text>
+  <rect x="210" y="70" width="150" height="60" rx="6" class="boxOk"/>
+  <text x="285" y="94" text-anchor="middle" class="lbl node">architecture.md</text>
+  <text x="285" y="112" text-anchor="middle" class="lbl sub">@rules/backend.md</text>
+
+  <path class="flow" d="M 360 100 H 390"/>
+  <text x="375" y="90" text-anchor="middle" class="lbl sub">hop 2</text>
+  <rect x="390" y="70" width="150" height="60" rx="6" class="boxOk"/>
+  <text x="465" y="94" text-anchor="middle" class="lbl node">rules/backend.md</text>
+  <text x="465" y="112" text-anchor="middle" class="lbl sub">@rules/database.md</text>
+
+  <path class="flow" d="M 540 100 H 570"/>
+  <text x="555" y="90" text-anchor="middle" class="lbl sub">hop 3</text>
+  <rect x="570" y="70" width="150" height="60" rx="6" class="boxOk"/>
+  <text x="645" y="94" text-anchor="middle" class="lbl node">rules/database.md</text>
+  <text x="645" y="112" text-anchor="middle" class="lbl sub">@rules/legacy-notes.md</text>
+
+  <path class="flow" d="M 720 100 H 750"/>
+  <text x="735" y="90" text-anchor="middle" class="lbl sub">hop 4</text>
+  <rect x="750" y="70" width="160" height="60" rx="6" class="boxOk"/>
+  <text x="830" y="94" text-anchor="middle" class="lbl node">rules/legacy-notes.md</text>
+  <text x="830" y="112" text-anchor="middle" class="lbl sub">@rules/archive.md</text>
+
+  <path class="weakE" d="M 830 130 V 160"/>
+  <text x="890" y="150" text-anchor="middle" class="lbl sub">hop 5</text>
+  <rect x="750" y="160" width="160" height="60" rx="6" class="boxWeak"/>
+  <text x="830" y="184" text-anchor="middle" class="lbl node">rules/archive.md</text>
+  <text x="830" y="202" text-anchor="middle" class="lbl sub">not followed: max 4 hops</text>
+
+  <!-- Skipped cases -->
+  <text x="30" y="270" class="lbl h2">Two forms that are never expanded</text>
+
+  <rect x="30" y="286" width="440" height="70" rx="6" class="boxBad"/>
+  <text x="50" y="308" class="lbl node">inline code span</text>
+  <text x="50" y="330" class="lbl sub">`see @rules/database.md for schema`</text>
+  <path class="badE" d="M 470 320 H 500"/>
+  <text x="530" y="308" class="lbl tiny">skipped:</text>
+  <text x="530" y="324" class="lbl tiny">inside a code</text>
+  <text x="530" y="340" class="lbl tiny">span, not expanded</text>
+
+  <rect x="30" y="376" width="440" height="90" rx="6" class="boxBad"/>
+  <text x="50" y="398" class="lbl node">fenced code block</text>
+  <text x="50" y="418" class="lbl sub">```</text>
+  <text x="50" y="434" class="lbl sub">@rules/database.md</text>
+  <text x="50" y="450" class="lbl sub">```</text>
+  <path class="badE" d="M 470 420 H 500"/>
+  <text x="530" y="398" class="lbl tiny">skipped:</text>
+  <text x="530" y="414" class="lbl tiny">inside a fence,</text>
+  <text x="530" y="430" class="lbl tiny">treated as literal text</text>
+
+  <line x1="20" y1="500" x2="1020" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Legend -->
+  <rect x="20" y="512" width="22" height="16" rx="3" class="boxRoot"/>
+  <text x="50" y="525" class="lbl tiny">root file (CLAUDE.md)</text>
+
+  <rect x="220" y="512" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="250" y="525" class="lbl tiny">followed &amp; loaded (hops 1–4)</text>
+
+  <rect x="460" y="512" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="490" y="525" class="lbl tiny">hop 5: not followed</text>
+
+  <rect x="700" y="512" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="730" y="525" class="lbl tiny">skipped: code span / fence</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="546" width="1000" height="80" rx="6" class="boxAnn"/>
+  <text x="36" y="568" class="lbl h2">Counter-intuitive: an import does not save context</text>
+  <text x="36" y="588" class="lbl tiny">The imported file is loaded into context at launch too — @rules/backend.md's tokens are spent the moment CLAUDE.md is read, not deferred.</text>
+  <text x="36" y="606" class="lbl tiny">Splitting a CLAUDE.md into imported files buys organisation and reuse across repos, never a smaller prompt or a lazily-loaded budget.</text>
+
+  <rect x="20" y="640" width="1000" height="70" rx="6" class="boxAnn"/>
+  <text x="36" y="662" class="lbl h2">Depth rule</text>
+  <text x="36" y="682" class="lbl tiny">Hops are counted from CLAUDE.md itself: hop 1 through hop 4 are expanded and concatenated in; the file reached at hop 5 is referenced</text>
+  <text x="36" y="698" class="lbl tiny">but its own content is never pulled in, so any @import written inside it is moot — the chain is cut at exactly four.</text>
+</svg>

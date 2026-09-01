@@ -1,0 +1,67 @@
+<svg viewBox="0 0 940 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3 in the directory discovery walk. Two groups of artefacts, contrasted: nested CLAUDE.md files and nested skills directories load from subdirectories on demand as work touches them, while settings.json, hooks, and agents load only from their fixed locations and never walk up or load on demand from subdirectories.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxG  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="940" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 3 / 3 — ON-DEMAND VS. FIXED-LOCATION ARTEFACTS</text>
+  <line x1="20" y1="42" x2="920" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <rect x="20" y="56" width="430" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="235" y="76" text-anchor="middle" class="lbl h2">LOAD FROM SUBDIRECTORIES ON DEMAND</text>
+  <rect x="470" y="56" width="450" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="695" y="76" text-anchor="middle" class="lbl h2">NEITHER WALK NOR LOAD ON DEMAND</text>
+
+  <!-- on-demand panel -->
+  <rect x="20" y="100" width="430" height="260" rx="6" class="boxR"/>
+  <text x="36" y="126" class="lbl node">nested CLAUDE.md</text>
+  <text x="36" y="148" class="lbl body">e.g. services/payments/CLAUDE.md</text>
+  <text x="36" y="168" class="lbl sub">loaded only once the agent reads or edits</text>
+  <text x="36" y="182" class="lbl sub">a file inside that subdirectory</text>
+
+  <line x1="36" y1="204" x2="434" y2="204" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="36" y="230" class="lbl node">nested skills/</text>
+  <text x="36" y="252" class="lbl body">e.g. services/payments/.claude/skills/</text>
+  <text x="36" y="272" class="lbl sub">its skill listing is fetched only when work</text>
+  <text x="36" y="286" class="lbl sub">enters that subtree, not at session start</text>
+
+  <text x="36" y="332" class="lbl sub" font-weight="700">trigger: proximity to the work, not cwd at</text>
+  <text x="36" y="346" class="lbl sub" font-weight="700">session start</text>
+
+  <!-- fixed-location panel -->
+  <rect x="470" y="100" width="450" height="260" rx="6" class="boxG"/>
+  <text x="486" y="126" class="lbl node">settings.json</text>
+  <text x="486" y="148" class="lbl body">read once, from project root and user home only</text>
+
+  <line x1="486" y1="170" x2="904" y2="170" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="486" y="196" class="lbl node">hooks/</text>
+  <text x="486" y="218" class="lbl body">registered from settings at startup, fixed location</text>
+
+  <line x1="486" y1="240" x2="904" y2="240" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="486" y="266" class="lbl node">agents/</text>
+  <text x="486" y="288" class="lbl body">enumerated once from project or user .claude/agents/</text>
+
+  <text x="486" y="332" class="lbl sub" font-weight="700">a nested services/payments/.claude/hooks/ is never</text>
+  <text x="486" y="346" class="lbl sub" font-weight="700">discovered — only the two fixed roots are read</text>
+
+  <line x1="20" y1="392" x2="920" y2="392" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="404" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="417" class="lbl tiny">on-demand, subtree-scoped artefact</text>
+  <rect x="330" y="404" width="22" height="16" rx="3" class="boxG"/>
+  <text x="360" y="417" class="lbl tiny">fixed-location artefact — read once, never walked</text>
+</svg>

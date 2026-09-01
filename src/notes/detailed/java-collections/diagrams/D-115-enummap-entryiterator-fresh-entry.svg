@@ -1,0 +1,96 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="EnumMap.EntryIterator allocates a fresh Entry object on every next() call, per EnumMap.java line 567, correcting the folklore claim that it reuses a single mutated Entry">
+
+  <defs>
+    <marker id="arrow115" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Title banner -->
+  <rect x="20" y="20" width="760" height="34" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">EnumMap.EntryIterator allocates a fresh Entry per next() (:567)</text>
+
+  <!-- LEFT PANEL: folklore, wrong -->
+  <rect x="20" y="64" width="360" height="330" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <rect x="34" y="76" width="332" height="24" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="200" y="93" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">FOLKLORE MODEL &#8212; WRONG</text>
+
+  <rect x="40" y="110" width="150" height="35" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="132" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() call 1</text>
+
+  <rect x="40" y="155" width="150" height="35" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="177" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() call 2</text>
+
+  <rect x="40" y="200" width="150" height="35" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() call 3</text>
+
+  <line x1="190" y1="127" x2="228" y2="150" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+  <line x1="190" y1="172" x2="228" y2="175" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+  <line x1="190" y1="217" x2="228" y2="200" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+
+  <rect x="230" y="140" width="130" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="295" y="165" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">ONE Entry</text>
+  <text x="295" y="181" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">.index mutated</text>
+  <text x="295" y="196" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">in place each call</text>
+
+  <rect x="40" y="245" width="320" height="46" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="200" y="263" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">list.get(0) == list.get(1) == list.get(2)</text>
+  <text x="200" y="281" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">NOT TRUE FOR EnumMap &#8212; this is the myth</text>
+
+  <rect x="40" y="304" width="320" height="72" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="50" y="322" font-family="sans-serif" font-size="11" fill="#1f2937">Claimed for: EnumMap.EntryIterator</text>
+  <text x="50" y="340" font-family="sans-serif" font-size="11" fill="#1f2937">Actually true for: HashMap.HashIterator's</text>
+  <text x="50" y="356" font-family="sans-serif" font-size="11" fill="#1f2937">Node views in some JDKs &#8212; NOT EnumMap.</text>
+  <text x="50" y="372" font-family="sans-serif" font-size="11" fill="#1f2937">No JDK 8&#8211;25 EnumMap does this.</text>
+
+  <!-- RIGHT PANEL: actual, source-verified -->
+  <rect x="420" y="64" width="360" height="330" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <rect x="434" y="76" width="332" height="24" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="600" y="93" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ACTUAL &#8212; verified :567</text>
+
+  <rect x="440" y="110" width="140" height="35" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="132" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() call 1</text>
+
+  <rect x="440" y="155" width="140" height="35" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="177" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() call 2</text>
+
+  <rect x="440" y="200" width="140" height="35" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() call 3</text>
+
+  <line x1="580" y1="127" x2="610" y2="127" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+  <line x1="580" y1="172" x2="610" y2="172" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+  <line x1="580" y1="217" x2="610" y2="217" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+
+  <rect x="610" y="110" width="150" height="35" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="685" y="132" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">new Entry(index=0)</text>
+
+  <rect x="610" y="155" width="150" height="35" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="685" y="177" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">new Entry(index=1)</text>
+
+  <rect x="610" y="200" width="150" height="35" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="685" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">new Entry(index=2)</text>
+
+  <line x1="685" y1="235" x2="685" y2="256" stroke="#525252" stroke-width="2" marker-end="url(#arrow115)"/>
+  <rect x="580" y="256" width="180" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">lastReturnedEntry field</text>
+
+  <rect x="440" y="245" width="320" height="46" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="600" y="263" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">lastReturnedEntry = new Entry(index++);  (:567)</text>
+  <text x="600" y="281" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">3 next() calls &#8594; 3 DISTINCT Entry objects</text>
+
+  <rect x="440" y="304" width="320" height="72" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="322" font-family="sans-serif" font-size="11" fill="#1f2937">lastReturnedEntry is a remove()-support field:</text>
+  <text x="450" y="340" font-family="sans-serif" font-size="11" fill="#1f2937">remove() reads .index, calls super.remove(),</text>
+  <text x="450" y="356" font-family="sans-serif" font-size="11" fill="#1f2937">writes the repaired index back, then nulls the</text>
+  <text x="450" y="372" font-family="sans-serif" font-size="11" fill="#1f2937">field &#8212; not an allocation-reuse optimisation.</text>
+
+  <!-- Bottom callout -->
+  <rect x="20" y="404" width="760" height="76" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="30" y="422" font-family="sans-serif" font-size="12" fill="#1f2937">FOLKLORE IS FALSE in every JDK 8&#8211;25: EntryIterator.next() allocates a NEW Entry each call (EnumMap.java:567).</text>
+  <text x="30" y="440" font-family="sans-serif" font-size="12" fill="#1f2937">Collecting entrySet() into a List yields n DISTINCT Entry objects, not n aliases of one mutated object.</text>
+  <text x="30" y="458" font-family="sans-serif" font-size="12" fill="#1f2937">Subtlety that survives: each Entry is a LIVE VIEW on vals[index] &#8212; getValue() reflects later writes to the map.</text>
+  <text x="30" y="474" font-family="sans-serif" font-size="11" fill="#1f2937">(The reused-mutable-entry pattern is real elsewhere in the JDK, e.g. some HashMap iterator paths &#8212; just not here.)</text>
+
+</svg>

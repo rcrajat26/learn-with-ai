@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Left: for (int i = 0; i &lt; 3; i++) reuses one slot for i, mutated to 0, 1, 2 in turn, so a lambda closing over i fails to compile because i is not effectively final. Right: for (Reservation r : reservations) creates a fresh slot per iteration bound to RES-1, RES-2 and RES-3, each 4.20, so three lambdas each capture their own distinct r successfully.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGray); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triRed); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHICH LOOP VARIABLE IS CAPTURABLE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT BAND -->
+  <text x="40" y="66" class="lbl h2">INDEX LOOP — for (int i = 0; i &lt; 3; i++)</text>
+
+  <rect x="40" y="82" width="500" height="52" rx="6" class="boxP"/>
+  <text x="290" y="104" text-anchor="middle" class="lbl node">int i</text>
+  <text x="290" y="122" text-anchor="middle" class="lbl sub">one slot, reassigned by i++ on every iteration</text>
+
+  <path class="weak" d="M 290 134 V 154"/>
+  <text x="330" y="150" class="lbl sub">same slot, mutated</text>
+
+  <rect x="60" y="160" width="130" height="52" rx="6" class="boxP"/>
+  <text x="125" y="182" text-anchor="middle" class="lbl body">i = 0</text>
+  <text x="125" y="198" text-anchor="middle" class="lbl sub">iteration 1</text>
+
+  <path class="weak" d="M 190 186 H 250"/>
+  <rect x="250" y="160" width="130" height="52" rx="6" class="boxP"/>
+  <text x="315" y="182" text-anchor="middle" class="lbl body">i = 1</text>
+  <text x="315" y="198" text-anchor="middle" class="lbl sub">iteration 2</text>
+
+  <path class="weak" d="M 380 186 H 440"/>
+  <rect x="440" y="160" width="130" height="52" rx="6" class="boxP"/>
+  <text x="505" y="182" text-anchor="middle" class="lbl body">i = 2</text>
+  <text x="505" y="198" text-anchor="middle" class="lbl sub">iteration 3</text>
+
+  <path class="fail" d="M 290 212 V 260"/>
+  <text x="330" y="252" class="lbl sub" fill="#b91c1c">capture attempted</text>
+
+  <rect x="80" y="266" width="420" height="56" rx="6" class="boxD"/>
+  <text x="290" y="290" text-anchor="middle" class="lbl node">() -&gt; reservations.get(i)</text>
+  <text x="290" y="308" text-anchor="middle" class="lbl sub">i is not effectively final — reassigned by i++</text>
+
+  <rect x="60" y="340" width="460" height="76" rx="6" class="boxD"/>
+  <text x="80" y="362" class="lbl body" font-weight="700" fill="#b91c1c">error:</text>
+  <text x="80" y="382" class="lbl sub" fill="#b91c1c">local variables referenced from a lambda expression</text>
+  <text x="80" y="398" class="lbl sub" fill="#b91c1c">must be final or effectively final</text>
+
+  <!-- vertical divider -->
+  <line x1="560" y1="56" x2="560" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- RIGHT BAND -->
+  <text x="580" y="66" class="lbl h2">FOR-EACH LOOP — for (Reservation r : reservations)</text>
+
+  <rect x="580" y="82" width="500" height="40" rx="6" class="panel"/>
+  <text x="600" y="107" class="lbl sub">List&lt;Reservation&gt; reservations = [ RES-1 (4.20), RES-2 (4.20), RES-3 (4.20) ]</text>
+
+  <rect x="600" y="150" width="140" height="60" rx="6" class="boxR"/>
+  <text x="670" y="172" text-anchor="middle" class="lbl body">Reservation r</text>
+  <text x="670" y="188" text-anchor="middle" class="lbl sub">slot #1 = RES-1 (4.20)</text>
+
+  <rect x="790" y="150" width="140" height="60" rx="6" class="boxR"/>
+  <text x="860" y="172" text-anchor="middle" class="lbl body">Reservation r</text>
+  <text x="860" y="188" text-anchor="middle" class="lbl sub">slot #2 = RES-2 (4.20)</text>
+
+  <rect x="940" y="150" width="140" height="60" rx="6" class="boxR"/>
+  <text x="1010" y="172" text-anchor="middle" class="lbl body">Reservation r</text>
+  <text x="1010" y="188" text-anchor="middle" class="lbl sub">slot #3 = RES-3 (4.20)</text>
+
+  <path class="flow" d="M 670 210 V 260"/>
+  <rect x="600" y="260" width="140" height="56" rx="6" class="boxR"/>
+  <text x="670" y="282" text-anchor="middle" class="lbl sub" font-weight="600">() -&gt; log(r)</text>
+  <text x="670" y="298" text-anchor="middle" class="lbl sub">captures slot #1</text>
+
+  <path class="flow" d="M 860 210 V 260"/>
+  <rect x="790" y="260" width="140" height="56" rx="6" class="boxR"/>
+  <text x="860" y="282" text-anchor="middle" class="lbl sub" font-weight="600">() -&gt; log(r)</text>
+  <text x="860" y="298" text-anchor="middle" class="lbl sub">captures slot #2</text>
+
+  <path class="flow" d="M 1010 210 V 260"/>
+  <rect x="940" y="260" width="140" height="56" rx="6" class="boxR"/>
+  <text x="1010" y="282" text-anchor="middle" class="lbl sub" font-weight="600">() -&gt; log(r)</text>
+  <text x="1010" y="298" text-anchor="middle" class="lbl sub">captures slot #3</text>
+
+  <rect x="600" y="340" width="480" height="76" rx="6" class="panel"/>
+  <text x="620" y="362" class="lbl body" font-weight="700">why this compiles</text>
+  <text x="620" y="382" class="lbl sub">each iteration of a for-each introduces a brand-new local r;</text>
+  <text x="620" y="398" class="lbl sub">r is never reassigned within its own iteration, so it is effectively final.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="726" x2="1100" y2="726" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="738" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="751" class="lbl tiny">reused index slot</text>
+  <rect x="190" y="738" width="22" height="16" rx="3" class="boxR"/>
+  <text x="220" y="751" class="lbl tiny">fresh per-iteration slot</text>
+  <rect x="390" y="738" width="22" height="16" rx="3" class="boxD"/>
+  <text x="420" y="751" class="lbl tiny">capture failure / compile error</text>
+  <rect x="640" y="738" width="22" height="16" rx="3" class="panel"/>
+  <text x="670" y="751" class="lbl tiny">annotation panel</text>
+
+  <line x1="20" y1="764" x2="1100" y2="764" stroke="#d1d5db" stroke-width="0.5" opacity="0"/>
+  <path class="weak" d="M 20 772 H 60"/>
+  <text x="68" y="777" class="lbl tiny">A → B : same slot mutated across iterations</text>
+  <path class="fail" d="M 330 772 H 370"/>
+  <text x="378" y="777" class="lbl tiny">A → B : capture attempt fails</text>
+  <path class="flow" d="M 600 772 H 640"/>
+  <text x="648" y="777" class="lbl tiny">A → B : slot captured into lambda</text>
+</svg>

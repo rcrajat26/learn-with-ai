@@ -1,0 +1,88 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 2: findClient(id) returns a present Optional of Client. Calling .orElseGet(this::loadDefaultFromDatabase) never invokes the supplier because Optional short-circuits before calling get on it when a value is present. The call counter for loadDefaultFromDatabase reads 0. The final value is identical to frame 1, but the cost differs.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGr); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <rect x="770" y="16" width="34" height="22" rx="11" class="pill"/>
+  <text x="787" y="32" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+
+  <text x="20" y="32" class="lbl h1">FRAME 2 / 2 — findClient(id).orElseGet(this::loadDefaultFromDatabase)</text>
+  <line x1="20" y1="42" x2="820" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="70" width="220" height="60" rx="6" class="boxG"/>
+  <text x="150" y="94" text-anchor="middle" class="lbl node">findClient(id)</text>
+  <text x="150" y="114" text-anchor="middle" class="lbl sub">Optional[Client CLI-9214], present</text>
+
+  <path class="flow" d="M 260 100 H 340"/>
+
+  <rect x="344" y="70" width="260" height="60" rx="6" class="boxY"/>
+  <text x="474" y="94" text-anchor="middle" class="lbl node">.orElseGet(supplier)</text>
+  <text x="474" y="114" text-anchor="middle" class="lbl sub">supplier reference is passed, not invoked</text>
+
+  <path class="flow" d="M 474 130 V 156"/>
+  <text x="470" y="146" class="lbl sub">isPresent() checked first</text>
+
+  <rect x="374" y="160" width="200" height="52" rx="6" class="boxG"/>
+  <text x="474" y="182" text-anchor="middle" class="lbl dense">present → short-circuit</text>
+  <text x="474" y="198" text-anchor="middle" class="lbl sub">supplier.get() is skipped entirely</text>
+
+  <path class="weak" d="M 574 186 H 605"/>
+  <text x="655" y="146" class="lbl sub" text-anchor="middle">never called</text>
+
+  <rect x="605" y="150" width="265" height="90" rx="6" class="boxW"/>
+  <text x="737" y="176" text-anchor="middle" class="lbl dense">this::loadDefaultFromDatabase</text>
+  <text x="737" y="196" text-anchor="middle" class="lbl sub">method reference, not executed</text>
+  <text x="737" y="212" text-anchor="middle" class="lbl sub">no FundsLedger query issued</text>
+
+  <path class="flow" d="M 474 212 V 256"/>
+
+  <rect x="344" y="260" width="260" height="56" rx="6" class="boxP"/>
+  <text x="474" y="284" text-anchor="middle" class="lbl node">Client CLI-9214</text>
+  <text x="474" y="300" text-anchor="middle" class="lbl sub">identical value to Frame 1, zero DB cost</text>
+
+  <rect x="660" y="260" width="200" height="70" rx="6" class="boxG"/>
+  <text x="760" y="284" text-anchor="middle" class="lbl node" font-weight="700">call counter</text>
+  <text x="760" y="310" text-anchor="middle" class="lbl h1">0</text>
+
+  <line x1="20" y1="350" x2="880" y2="350" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="360" width="22" height="16" rx="3" class="boxG"/>
+  <text x="50" y="373" class="lbl tiny">present / cheap path</text>
+
+  <rect x="220" y="360" width="22" height="16" rx="3" class="boxY"/>
+  <text x="250" y="373" class="lbl tiny">orElseGet call site</text>
+
+  <rect x="400" y="360" width="22" height="16" rx="3" class="boxW"/>
+  <text x="430" y="373" class="lbl tiny">unused / not invoked</text>
+
+  <path class="flow" d="M 600 368 H 640"/>
+  <text x="648" y="373" class="lbl tiny">A → B : B is produced from A</text>
+
+  <path class="weak" d="M 20 388 H 60"/>
+  <text x="68" y="393" class="lbl tiny">A → B : B is referenced but not invoked</text>
+</svg>

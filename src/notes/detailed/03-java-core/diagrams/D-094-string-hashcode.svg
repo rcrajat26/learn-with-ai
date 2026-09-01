@@ -1,0 +1,115 @@
+<svg viewBox="0 0 900 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="String.hashCode for AA-801 computed character by character with running totals, the hash field cached after first call, and the hashIsZero flag protecting the empty string from recomputing every call.">
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#1f2937">String.hashCode and the hashIsZero flag</text>
+
+  <!-- Frame 1 -->
+  <rect x="20" y="54" width="860" height="230" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="66" width="340" height="24" rx="3" fill="#dbeafe"/>
+  <text x="204" y="83" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Frame 1: hashing &quot;AA-801&quot; char by char</text>
+
+  <rect x="40" y="100" width="820" height="24" rx="3" fill="#fef3c7"/>
+  <text x="450" y="117" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">recurrence: h = 31 * h + c   (identity: 31 * i == (i &lt;&lt; 5) - i)</text>
+
+  <!-- table header -->
+  <rect x="40" y="132" width="120" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="100" y="149" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">char</text>
+  <rect x="164" y="132" width="120" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="224" y="149" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ASCII</text>
+  <rect x="288" y="132" width="540" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="558" y="149" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">running h after this char</text>
+
+  <!-- row A -->
+  <rect x="40" y="160" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="100" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">'A'</text>
+  <rect x="164" y="160" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="224" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">65</text>
+  <rect x="288" y="160" width="540" height="22" rx="3" fill="#dbeafe"/>
+  <text x="558" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h = 65</text>
+
+  <!-- row A -->
+  <rect x="40" y="184" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="100" y="200" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">'A'</text>
+  <rect x="164" y="184" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="224" y="200" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">65</text>
+  <rect x="288" y="184" width="540" height="22" rx="3" fill="#dbeafe"/>
+  <text x="558" y="200" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h = 31*65 + 65 = 2080</text>
+
+  <!-- row - -->
+  <rect x="40" y="208" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="100" y="224" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">'-'</text>
+  <rect x="164" y="208" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="224" y="224" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">45</text>
+  <rect x="288" y="208" width="540" height="22" rx="3" fill="#dbeafe"/>
+  <text x="558" y="224" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h = 31*2080 + 45 = 64525</text>
+
+  <!-- row 8 -->
+  <rect x="40" y="232" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="100" y="248" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">'8'</text>
+  <rect x="164" y="232" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="224" y="248" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">56</text>
+  <rect x="288" y="232" width="540" height="22" rx="3" fill="#dbeafe"/>
+  <text x="558" y="248" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h = 31*64525 + 56 = 2000331</text>
+
+  <!-- row 0 -->
+  <rect x="40" y="256" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="100" y="272" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">'0'</text>
+  <rect x="164" y="256" width="120" height="22" rx="3" fill="#dbeafe"/>
+  <text x="224" y="272" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">48</text>
+  <rect x="288" y="256" width="540" height="22" rx="3" fill="#dbeafe"/>
+  <text x="558" y="272" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h = 31*2000331 + 48 = 62010309</text>
+
+  <!-- Frame 2 -->
+  <rect x="20" y="298" width="860" height="150" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="310" width="360" height="24" rx="3" fill="#dcfce7"/>
+  <text x="214" y="327" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Frame 2: hash field caching</text>
+
+  <rect x="40" y="344" width="140" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="100" y="360" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">'1' → 49</text>
+  <rect x="188" y="344" width="300" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="338" y="360" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h = 31*62010309 + 49 = 1922319628</text>
+
+  <rect x="40" y="378" width="250" height="50" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="165" y="398" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">first call:</text>
+  <text x="165" y="416" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">hash field 0 → 1922319628</text>
+
+  <line x1="300" y1="403" x2="380" y2="403" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <rect x="390" y="378" width="440" height="50" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="610" y="398" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">every later call: return cached hash field</text>
+  <text x="610" y="416" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(no re-scan of &quot;AA-801&quot; chars)</text>
+
+  <!-- Frame 3 -->
+  <rect x="20" y="464" width="860" height="270" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="476" width="380" height="24" rx="3" fill="#fee2e2"/>
+  <text x="224" y="493" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Frame 3: hashIsZero flag (Java 13+)</text>
+
+  <rect x="40" y="512" width="380" height="70" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="534" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">String s = &quot;&quot;  (empty string)</text>
+  <text x="230" y="552" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">true hashCode() == 0</text>
+  <text x="230" y="570" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">genuinely, not just uninitialised</text>
+
+  <rect x="440" y="512" width="380" height="70" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="630" y="534" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Java 13+: hashIsZero = true</text>
+  <text x="630" y="552" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">separate boolean flag records</text>
+  <text x="630" y="570" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;hash already computed, and it is 0&quot;</text>
+
+  <rect x="40" y="596" width="380" height="70" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="618" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">pre-Java 13 behaviour</text>
+  <text x="230" y="636" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">hash == 0 is ambiguous: &quot;never computed&quot;</text>
+  <text x="230" y="654" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">or computed value happens to be 0</text>
+
+  <rect x="440" y="596" width="380" height="70" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="618" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">result: pre-Java 13 recomputes the</text>
+  <text x="630" y="636" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">loop every single call for &quot;&quot;;</text>
+  <text x="630" y="654" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Java 13+ skips it via hashIsZero</text>
+
+  <rect x="40" y="680" width="780" height="40" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="430" y="705" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">hashIsZero closes the one gap where caching alone could not distinguish &quot;uncomputed&quot; from &quot;zero&quot;</text>
+</svg>

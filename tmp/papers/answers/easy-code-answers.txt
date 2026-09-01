@@ -1,0 +1,24 @@
+E2Q2. [CODE — 10 min] Write a method boolean isPalindrome(String s) that ignores case and non-alphanumeric characters
+("A man, a plan, a canal: Panama" → true).
+- let str be the input string ex: "A man, a plan, a canal: Panama"
+- str.toLowerCase()
+- loop through characters and keep only alpha-numeric
+- reverse string, compare with original string return the comparison value
+
+E4Q2. [CODE — 10 min] Write a method Map<Character, Integer> charFrequencies(String s) returning how often each character appears in s.
+Then state its time and space complexity.
+
+Map<Character, Integer> charFrequencies(String s) {
+ Map<Character, Integer> cf = new HashMap<>();
+ for (char c:s.toCharArray()) { // checked for function name
+  if (cf.containsKey(c)) { // checked for function name
+    cf.put(c,cf.get(c)+1);
+  } else {
+   cf.put(c,1);
+  }
+ }
+}
+
+E5Q10. [CODE] Table orders(id, customer_id, amount, created_at). Write the query: total order amount per customer in 2025,
+largest total first, only customers whose total exceeds 10,000.
+select * from table where created_at>'2025-01-01' and amount>10000 order by amount desc;

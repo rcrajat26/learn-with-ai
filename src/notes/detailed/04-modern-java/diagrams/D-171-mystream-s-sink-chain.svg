@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of MyStream's hand-rolled sink chain against the JDK Stream's real machinery,
+     for the same pipeline: reservations.stream().filter(amount at least 4.20).map(stakeSplit).findFirst(). Left,
+     MyStream pushes each Reservation through three MySink stages in one traversal, each sink exposing begin, accept,
+     cancellationRequested and end. Right, the JDK adds four stream shapes, StreamOpFlag bits, a Spliterator, ForkJoin
+     integration for parallel(), resource closing, and unchecked short-circuit exception semantics around the same
+     three stages.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MYSTREAM'S SINK CHAIN NEXT TO THE JDK'S</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="58" class="lbl sub">Same pipeline both sides: reservations.stream().filter(r -&gt; r.amount() &gt;= 4.20).map(Reservation::stakeSplit).findFirst()</text>
+
+  <!-- divider -->
+  <line x1="558" y1="70" x2="558" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <text x="20" y="90" class="lbl h2">MYSTREAM — HAND-ROLLED, ONE SHAPE, ONE TRAVERSAL</text>
+
+  <rect x="20" y="102" width="500" height="46" rx="6" class="boxW"/>
+  <text x="270" y="122" text-anchor="middle" class="lbl node">source : List&lt;Reservation&gt;</text>
+  <text x="270" y="140" text-anchor="middle" class="lbl sub">2.8M/day, avg 4.20 — pushed one element at a time</text>
+
+  <path class="flow" d="M 270 148 V 168"/>
+
+  <rect x="20" y="170" width="500" height="118" rx="6" class="boxP"/>
+  <text x="270" y="190" text-anchor="middle" class="lbl node">Stage 1 — FilterSink (amount &gt;= 4.20)</text>
+  <text x="40" y="210" class="lbl body">begin(size) — no-op, filter cannot pre-size</text>
+  <text x="40" y="228" class="lbl body">accept(Reservation r) — test, then downstream.accept(r)</text>
+  <text x="40" y="246" class="lbl body">cancellationRequested() — delegates to downstream</text>
+  <text x="40" y="264" class="lbl body">end() — delegates to downstream.end()</text>
+
+  <path class="flow" d="M 270 288 V 308"/>
+
+  <rect x="20" y="310" width="500" height="118" rx="6" class="boxP"/>
+  <text x="270" y="330" text-anchor="middle" class="lbl node">Stage 2 — MapSink (Reservation::stakeSplit)</text>
+  <text x="40" y="350" class="lbl body">begin(size) — forwarded unchanged (size-preserving)</text>
+  <text x="40" y="368" class="lbl body">accept(Reservation r) — downstream.accept(stakeSplit(r))</text>
+  <text x="40" y="386" class="lbl body">cancellationRequested() — delegates to downstream</text>
+  <text x="40" y="404" class="lbl body">end() — delegates to downstream.end()</text>
+
+  <path class="flow" d="M 270 428 V 448"/>
+
+  <rect x="20" y="450" width="500" height="118" rx="6" class="boxP"/>
+  <text x="270" y="470" text-anchor="middle" class="lbl node">Stage 3 — FindFirstSink (terminal)</text>
+  <text x="40" y="490" class="lbl body">begin(size) — resets found = false, result = null</text>
+  <text x="40" y="508" class="lbl body">accept(StakeSplit s) — if !found: result = s; found = true</text>
+  <text x="40" y="526" class="lbl body">cancellationRequested() — returns found (true stops the pull)</text>
+  <text x="40" y="544" class="lbl body">end() — no-op; result already captured</text>
+
+  <rect x="20" y="580" width="500" height="90" rx="6" class="boxA"/>
+  <text x="36" y="600" class="lbl h2" style="font-size:11px;">ONE TRAVERSAL</text>
+  <text x="36" y="618" class="lbl tiny">source.forEachRemaining(stage1) pushes each Reservation</text>
+  <text x="36" y="634" class="lbl tiny">through all three sinks before the source advances — no</text>
+  <text x="36" y="650" class="lbl tiny">intermediate list is ever built between stages 1, 2 and 3.</text>
+
+  <!-- RIGHT -->
+  <text x="580" y="90" class="lbl h2">THE JDK — SAME PIPELINE, FOUR SHAPES OF EXTRA MACHINERY</text>
+
+  <rect x="580" y="102" width="230" height="120" rx="6" class="boxR"/>
+  <text x="695" y="122" text-anchor="middle" class="lbl node">4 stream shapes</text>
+  <text x="600" y="142" class="lbl body">REFERENCE</text>
+  <text x="600" y="160" class="lbl body">INT_VALUE</text>
+  <text x="600" y="178" class="lbl body">LONG_VALUE</text>
+  <text x="600" y="196" class="lbl body">DOUBLE_VALUE</text>
+  <text x="600" y="214" class="lbl sub">each shape has its own Sink subtype</text>
+
+  <rect x="850" y="102" width="230" height="120" rx="6" class="boxR"/>
+  <text x="965" y="122" text-anchor="middle" class="lbl node">StreamOpFlag</text>
+  <text x="870" y="142" class="lbl body">SIZED, ORDERED, DISTINCT,</text>
+  <text x="870" y="160" class="lbl body">SORTED, SHORT_CIRCUIT bits</text>
+  <text x="870" y="178" class="lbl body">threaded stage-to-stage on</text>
+  <text x="870" y="196" class="lbl body">PipelineHelper, not per-Sink</text>
+  <text x="870" y="214" class="lbl sub">findFirst sets SHORT_CIRCUIT</text>
+
+  <rect x="580" y="238" width="230" height="120" rx="6" class="boxR"/>
+  <text x="695" y="258" text-anchor="middle" class="lbl node">Spliterator&lt;Reservation&gt;</text>
+  <text x="600" y="278" class="lbl body">trySplit()</text>
+  <text x="600" y="296" class="lbl body">tryAdvance(Consumer)</text>
+  <text x="600" y="314" class="lbl body">estimateSize()</text>
+  <text x="600" y="332" class="lbl body">characteristics()</text>
+  <text x="600" y="350" class="lbl sub">replaces MyStream's plain Iterator</text>
+
+  <rect x="850" y="238" width="230" height="120" rx="6" class="boxR"/>
+  <text x="965" y="258" text-anchor="middle" class="lbl node">ForkJoin integration</text>
+  <text x="870" y="278" class="lbl body">parallel() wraps the same</text>
+  <text x="870" y="296" class="lbl body">3 sinks in an AbstractTask</text>
+  <text x="870" y="314" class="lbl body">and forks on the common pool</text>
+  <text x="870" y="332" class="lbl sub">LEAF_TARGET = parallelism &lt;&lt; 2</text>
+  <text x="870" y="350" class="lbl sub">— see D-142 work-stealing</text>
+
+  <rect x="580" y="374" width="230" height="110" rx="6" class="boxR"/>
+  <text x="695" y="394" text-anchor="middle" class="lbl node">close()</text>
+  <text x="600" y="414" class="lbl body">runs every registered</text>
+  <text x="600" y="432" class="lbl body">onClose(Runnable), then</text>
+  <text x="600" y="450" class="lbl body">propagates to the upstream</text>
+  <text x="600" y="468" class="lbl sub">and downstream stages</text>
+
+  <rect x="850" y="374" width="230" height="110" rx="6" class="boxR"/>
+  <text x="965" y="394" text-anchor="middle" class="lbl node">Exception semantics</text>
+  <text x="870" y="414" class="lbl body">findFirst's short-circuit</text>
+  <text x="870" y="432" class="lbl body">unwinds the stack with a</text>
+  <text x="870" y="450" class="lbl body">private unchecked signal —</text>
+  <text x="870" y="468" class="lbl sub">not a declared checked type</text>
+
+  <rect x="580" y="500" width="500" height="170" rx="6" class="boxA"/>
+  <text x="596" y="520" class="lbl h2" style="font-size:11px;">THE GAP</text>
+  <text x="596" y="540" class="lbl tiny">MyStream's FindFirstSink returns true from</text>
+  <text x="596" y="556" class="lbl tiny">cancellationRequested() and stops the pull — that part</text>
+  <text x="596" y="572" class="lbl tiny">MyStream gets right (see D-172 frame 3). What it never</text>
+  <text x="596" y="588" class="lbl tiny">builds: a shape per primitive, StreamOpFlag propagation,</text>
+  <text x="596" y="604" class="lbl tiny">a splittable source, a ForkJoin bridge for parallel(), a</text>
+  <text x="596" y="620" class="lbl tiny">close() chain, and an unchecked short-circuit signal that</text>
+  <text x="596" y="636" class="lbl tiny">survives across arbitrarily many intermediate stages.</text>
+  <text x="596" y="652" class="lbl tiny">The 3-stage sink chain itself is not the hard 20%.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="712" x2="1100" y2="712" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="724" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="737" class="lbl tiny">MySink stage (hand-rolled)</text>
+  <rect x="250" y="724" width="22" height="16" rx="3" class="boxR"/>
+  <text x="280" y="737" class="lbl tiny">JDK machinery (concrete, real class)</text>
+  <rect x="560" y="724" width="22" height="16" rx="3" class="boxW"/>
+  <text x="590" y="737" class="lbl tiny">source / secondary detail</text>
+  <rect x="790" y="724" width="22" height="16" rx="3" class="boxA"/>
+  <text x="820" y="737" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 762 H 60"/>
+  <text x="70" y="767" class="lbl tiny">A → B : one element pushed from A into B (traversal order)</text>
+</svg>

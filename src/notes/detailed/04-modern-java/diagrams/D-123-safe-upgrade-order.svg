@@ -1,0 +1,116 @@
+<svg viewBox="0 0 1000 1010" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The safe JDK upgrade order in five steps. Step 1: run FundsLedger on the new JDK
+     compiled with the old --release. Step 2: fix what breaks at runtime, using jdeps
+     --jdk-internals and jdeprscan as inputs. Step 3: raise --release. Step 4: fix the resulting
+     compile errors. Step 5: adopt new language features. Each forward edge carries a gate
+     condition that must hold before advancing, and each step from 2 to 5 has a rollback edge
+     back to the previous step for when the gate fails.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .step { font-size: 13.5px; font-weight: 700; }
+    .body { font-size: 12px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .gate { font-size: 11px; font-weight: 700; fill: #b45309; }
+    .rb   { font-size: 10.5px; fill: #57534e; }
+    .tiny { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="1010" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE SAFE UPGRADE ORDER</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- STEP 1 -->
+  <rect x="270" y="60" width="460" height="100" rx="6" class="boxP"/>
+  <text x="500" y="86" text-anchor="middle" class="lbl step">STEP 1 — RUN ON NEW JDK, OLD --release</text>
+  <text x="500" y="108" text-anchor="middle" class="lbl body">Run FundsLedger on the new JDK, compiled with the</text>
+  <text x="500" y="126" text-anchor="middle" class="lbl body">old --release N. Only the runtime underneath changes.</text>
+  <text x="500" y="146" text-anchor="middle" class="lbl sub">bytecode target and API surface are unchanged</text>
+
+  <!-- forward 1->2 -->
+  <path class="flow" d="M 500 160 V 250"/>
+  <text x="512" y="192" class="lbl gate">gate: old-release build runs clean on new JDK</text>
+  <text x="512" y="210" class="lbl tiny">then →</text>
+
+  <!-- STEP 2 -->
+  <rect x="270" y="250" width="460" height="100" rx="6" class="boxP"/>
+  <text x="500" y="276" text-anchor="middle" class="lbl step">STEP 2 — FIX WHAT BREAKS AT RUNTIME</text>
+  <text x="500" y="298" text-anchor="middle" class="lbl body">Inputs: jdeps --jdk-internals and jdeprscan against</text>
+  <text x="500" y="316" text-anchor="middle" class="lbl body">FundsLedger's classes flag every internal API in use.</text>
+  <text x="500" y="336" text-anchor="middle" class="lbl sub">--release is still the OLD value here</text>
+
+  <!-- forward 2->3 -->
+  <path class="flow" d="M 500 350 V 440"/>
+  <text x="512" y="382" class="lbl gate">gate: jdeps --jdk-internals and jdeprscan report zero blockers</text>
+  <text x="512" y="400" class="lbl tiny">then →</text>
+
+  <!-- STEP 3 -->
+  <rect x="270" y="440" width="460" height="100" rx="6" class="boxP"/>
+  <text x="500" y="466" text-anchor="middle" class="lbl step">STEP 3 — RAISE --release</text>
+  <text x="500" y="488" text-anchor="middle" class="lbl body">Move FundsLedger's build to --release 21. Module</text>
+  <text x="500" y="506" text-anchor="middle" class="lbl body">strong encapsulation now applies at compile time.</text>
+  <text x="500" y="526" text-anchor="middle" class="lbl sub">API surface changes; language target does not yet</text>
+
+  <!-- forward 3->4 -->
+  <path class="flow" d="M 500 540 V 630"/>
+  <text x="512" y="572" class="lbl gate">gate: --release 21 build produces only encapsulation errors</text>
+  <text x="512" y="590" class="lbl tiny">then →</text>
+
+  <!-- STEP 4 -->
+  <rect x="270" y="630" width="460" height="100" rx="6" class="boxP"/>
+  <text x="500" y="656" text-anchor="middle" class="lbl step">STEP 4 — FIX COMPILE ERRORS</text>
+  <text x="500" y="678" text-anchor="middle" class="lbl body">Replace flagged internal APIs in FundsLedger with</text>
+  <text x="500" y="696" text-anchor="middle" class="lbl body">supported public equivalents until the build is clean.</text>
+  <text x="500" y="716" text-anchor="middle" class="lbl sub">no new language features used yet</text>
+
+  <!-- forward 4->5 -->
+  <path class="flow" d="M 500 730 V 820"/>
+  <text x="512" y="762" class="lbl gate">gate: --release 21 build compiles clean</text>
+  <text x="512" y="780" class="lbl tiny">then →</text>
+
+  <!-- STEP 5 -->
+  <rect x="270" y="820" width="460" height="100" rx="6" class="boxR"/>
+  <text x="500" y="846" text-anchor="middle" class="lbl step">STEP 5 — ADOPT FEATURES</text>
+  <text x="500" y="868" text-anchor="middle" class="lbl body">Only now rewrite FundsLedger.reserveStake with</text>
+  <text x="500" y="886" text-anchor="middle" class="lbl body">records, pattern-switch, and sequenced collections.</text>
+  <text x="500" y="906" text-anchor="middle" class="lbl sub">final state: on target language level, no legacy APIs</text>
+
+  <!-- rollback edges, routed on the right corridor -->
+  <path class="weak" d="M 730 320 H 850 V 130 H 730"/>
+  <text x="856" y="225" text-anchor="middle" class="lbl rb" transform="rotate(90 856 225)">rollback: runtime break</text>
+
+  <path class="weak" d="M 730 510 H 890 V 300 H 730"/>
+  <text x="896" y="405" text-anchor="middle" class="lbl rb" transform="rotate(90 896 405)">rollback: fails to compile</text>
+
+  <path class="weak" d="M 730 700 H 930 V 490 H 730"/>
+  <text x="936" y="595" text-anchor="middle" class="lbl rb" transform="rotate(90 936 595)">rollback: new runtime break</text>
+
+  <path class="weak" d="M 730 890 H 970 V 680 H 730"/>
+  <text x="976" y="785" text-anchor="middle" class="lbl rb" transform="rotate(90 976 785)">rollback: feature regresses</text>
+
+  <!-- legend -->
+  <line x1="20" y1="945" x2="980" y2="945" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="958" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="971" class="lbl tiny">in-progress step</text>
+  <rect x="200" y="958" width="22" height="16" rx="3" class="boxR"/>
+  <text x="230" y="971" class="lbl tiny">terminal step (target state reached)</text>
+  <path class="flow" d="M 470 966 H 520"/>
+  <text x="528" y="971" class="lbl tiny">forward, gate on the line</text>
+  <path class="weak" d="M 760 966 H 810"/>
+  <text x="818" y="971" class="lbl tiny">rollback on gate failure</text>
+</svg>

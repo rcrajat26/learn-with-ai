@@ -1,0 +1,131 @@
+Section 1 — DSA & Data Structures
+Q1. State the equals/hashCode contract, then describe concretely what goes wrong inside a HashMap when a class overrides equals but not hashCode and instances are used as keys.
+(I need to recollect the concept, but will attempt this)
+- equals checks for the value wise equality and hashcode naturally gives the address of the location where the member is stored on heap. We can override these methods and give our definition.
+- If we dont override a class's hashcode each member will reply with its own address and the bucket allocation for each object will be different, hence a propper redistribution wont happen.
+-----------------
+Q2. Walk through what happens internally on map.put(key, value) for a HashMap: how the bucket is chosen, what happens on a collision, and what happens when the map gets "too full."
+- The hashcode of key is computed, based on the hash code result a bucket is chosen and a node with key-value is added.
+- Next time if a key's hashcode turns out to be same a collision is said to have occurred and this element is added as next node at the same bucket not the bucket contains a linked list of 2 elements.
+- when map gets too full redistribution happens to make more buckets 1.5x the current size and elements are redistributed, we cant say for sure that 2 elements that were on the list previously also remain together it depends if the remainder comes out to be same.
+-----------------
+=================
+Section 2 — Java Core
+Q3. Predict the output and explain precisely:
+
+List<Integer> list = new ArrayList<>(List.of(5, 10, 15));
+list.remove(10);
+System.out.println(list);
+- We will get indexOutOfBoundException as it tries to remove 10th index, to remove 10 we'll have to give the object.
+(I need this topic to be added in the notes, I feel I might forget)
+-----------------
+Q4. Predict the outputs and explain the difference:
+
+Integer a = 127, b = 127;
+Integer c = 500, d = 500;
+System.out.println(a == b);
+System.out.println(c == d);
+System.out.println(c.equals(d));
+- these are objects and not primitives hence == operator compares the references which turn out to be different hence false for first 2
+- .equals method on integer class checks the value of Integer member hence the output would be true
+-----------------
+=================
+Section 3 — Concurrency & JVM
+Q5. synchronized vs volatile: state exactly what each guarantees (two properties are in play). Give one example where volatile alone is sufficient and one where it is not.
+- Synchronized makes sure only one thread gets into the code block which has gained lock on the object specified.
+- Volatile ensures the value of object is fetched from main memory and not cache
+- Not sure about the examples
+-----------------
+Q6. Spot the bug and fix it:
+
+private final Map<String, Config> cache = new ConcurrentHashMap<>();
+Config get(String key) {
+    if (!cache.containsKey(key)) {
+        cache.put(key, loadFromDb(key));   // expensive call
+    }
+    return cache.get(key);
+}
+- Probably we can make the cache call async in order not to make the client wait?
+-----------------
+=================
+Section 4 — Spring & JPA
+Q7. How do @Transactional and @Cacheable actually work at runtime? Describe the mechanism Spring uses and one concrete limitation that mechanism imposes on your code.
+(Not entirely sure on this)
+-----------------
+Q8. Predict the behavior and explain:
+
+@Service
+public class OrderService {
+    @Transactional
+    public void process(Order o) { repo.save(o); this.audit(o); }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void audit(Order o) { auditRepo.save(auditOf(o)); }
+}
+process() is called from a controller. Does audit get its own transaction? Give two fixes.
+- these are nested transactional blocks if audit fails the main order processing also fails.
+- We can make the audit flow async or not make it transactional
+-----------------
+=================
+Section 5 — SQL & Databases
+Q9. [CODE] Tables: employees(id, name, dept_id, salary), departments(id, name). Write the query: the top 2 earners in each department (employee name, department name, salary).
+(Park it, this will be done later for all Medium papers together)
+-----------------
+Q10. A composite index exists on (customer_id, created_at). For each query, say whether the index can be used efficiently and why: (a) WHERE customer_id = 42 (b) WHERE customer_id = 42 AND created_at > '2025-01-01' (c) WHERE created_at > '2025-01-01'
+(Not entirely sure about this)
+- a,c - is not that efficient as the index is not on individual columns they are sorted based on group hash and not individual
+- b - is efficient as the group of columns are indexed
+-----------------
+=================
+Section 6 — Networking & OS
+Q11. Walk through everything that happens between typing https://shop.example.com and the page rendering. Cover at minimum: DNS (with caching), TCP, TLS, and the HTTP exchange — in order, with one sentence of mechanism each.
+TCP, TLS, and the HTTP exchange — in order, with one sentence of mechanism each.
+- DNS resolution is done to check if local/SP level cache already have a value, if not a DNS server is queried to get the IP to which the call needs to be made
+- Once the host is known 3-way handshake is done with the host (I'm not fully aware of what happens in 3-way handshake)
+- Then a TLS connection is established to send the HTTP data on secured channel (not aware of what happens in TLS)
+- Finally the packet is formed to request the required resource browser receives the html and renders the page
+-----------------
+Q12. Your HTTP client calling a downstream service "hangs." Explain the difference between connect timeout and read timeout, what each one's firing tells you about the failure, and what the default is in many Java clients if you configure neither.
+- Connect timeout is when the TCP connection establishment itself exceeded the configured time (I guess) - could be due to n/w latency
+- Read timeout is when the data transfer take more than configured time, could be due to latency/ data being too huge
+- 10, 30 seconds I guess
+-----------------
+=================
+Section 7 — API & Web Security
+Q13. PUT vs PATCH vs POST for updates: semantic difference, which are idempotent, and why idempotency matters when a client retries after a timeout.
+- PUT updates entire object with replacement object
+- PATCH only updates the updates section of the resource
+- POST creates a new object
+- PUT alone is idempotent, as it replaces the object hence no harm is done. POST creates new one hence a duplicate is possible, when retried. PATCH say is adding a new submember to array can create a duplicate one.
+-----------------
+Q14. Design the pagination for GET /orders (high-volume, frequently inserted). Offset-based vs cursor-based: how each works, two failure modes of offset at scale, and what the response body should contain in your chosen design.
+- Not aware of this
+-----------------
+=================
+Section 8 — Messaging & Caching
+Q15. At-most-once vs at-least-once vs exactly-once delivery: define each via WHERE the acknowledgment happens relative to processing. Which is the practical default, and what obligation does it place on the consumer?
+- Now aware of this
+-----------------
+Q16. Describe the cache-aside pattern's read path and write path. On writes, why is deleting the cache key generally preferred over updating the cached value in place?
+- Now entirely aware of this, would need a chapter for this
+-----------------
+=================
+Section 9 — Testing & Craft
+Q17. Mock vs stub vs fake — define each. A service uses (a) a repository interface, (b) an HTTP client for a third-party API, (c) a pure TaxCalculator class. In a unit test, what do you do with each and why?
+- Not aware of this, would need a chapter
+-----------------
+Q18. Your business logic calls LocalDate.now() internally. Why is that a testing problem (give the concrete bug class), and what's the standard fix — show the shape of the fixed code and the test.
+- Not aware of this
+-----------------
+=================
+Section 10 — Cloud & DevOps
+Q19. Why do cloud services (ECS tasks, EC2 instances) use IAM roles instead of an access key + secret in configuration? Explain what a role gives you mechanically.
+- Role gives a cleaner way of what exactly can be accessed and what cant be, while with an access key its difficult to manage that level of granularity
+- Not aware of the other part
+-----------------
+Q20. Liveness vs readiness checks: what question does each answer, who acts on each, and describe the failure storm caused by wiring a dependency outage into the liveness check.
+- liveness gives whether the node is up, readiness gives whether the node can actually process the request
+- Not aware on who acts on each
+- Not aware of this
+-----------------
+=================

@@ -1,0 +1,125 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Why heapify is O(n): node count halves each level up while max sift distance grows by one, so the weighted sum of work converges to 2n instead of growing as n log n">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="760" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">heapify (n = 15): work per level shrinks as sift distance grows -&gt; total work is O(n), not O(n log n)</text>
+
+  <!-- Level legend boxes on the left -->
+  <rect x="15" y="45" width="140" height="28" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="85" y="63" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">~n/16 nodes . dist 3</text>
+
+  <rect x="15" y="115" width="140" height="28" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="85" y="133" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n/8 nodes . dist 2</text>
+
+  <rect x="15" y="185" width="140" height="28" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="85" y="203" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n/4 nodes . dist 1</text>
+
+  <rect x="15" y="255" width="140" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="85" y="273" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n/2 nodes . dist 0 (leaves)</text>
+
+  <!-- Edges: level0-level1 -->
+  <line x1="477.5" y1="60" x2="307.5" y2="130" stroke="#737373" stroke-width="2"/>
+  <line x1="477.5" y1="60" x2="647.5" y2="130" stroke="#737373" stroke-width="2"/>
+  <!-- level1-level2 -->
+  <line x1="307.5" y1="130" x2="222.5" y2="200" stroke="#737373" stroke-width="2"/>
+  <line x1="307.5" y1="130" x2="392.5" y2="200" stroke="#737373" stroke-width="2"/>
+  <line x1="647.5" y1="130" x2="562.5" y2="200" stroke="#737373" stroke-width="2"/>
+  <line x1="647.5" y1="130" x2="732.5" y2="200" stroke="#737373" stroke-width="2"/>
+  <!-- level2-level3 -->
+  <line x1="222.5" y1="200" x2="180" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="222.5" y1="200" x2="265" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="392.5" y1="200" x2="350" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="392.5" y1="200" x2="435" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="562.5" y1="200" x2="520" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="562.5" y1="200" x2="605" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="732.5" y1="200" x2="690" y2="270" stroke="#737373" stroke-width="2"/>
+  <line x1="732.5" y1="200" x2="775" y2="270" stroke="#737373" stroke-width="2"/>
+
+  <!-- Nodes level0 -->
+  <circle cx="477.5" cy="60" r="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="477.5" y="65" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">0</text>
+
+  <!-- Nodes level1 -->
+  <circle cx="307.5" cy="130" r="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="307.5" y="135" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1</text>
+  <circle cx="647.5" cy="130" r="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="647.5" y="135" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2</text>
+
+  <!-- Nodes level2 -->
+  <circle cx="222.5" cy="200" r="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="222.5" y="205" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">3</text>
+  <circle cx="392.5" cy="200" r="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="392.5" y="205" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4</text>
+  <circle cx="562.5" cy="200" r="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="562.5" y="205" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">5</text>
+  <!-- index 6 is the loop bound: (size >>> 1) - 1 for size=15 -->
+  <circle cx="732.5" cy="200" r="18" fill="#fee2e2" stroke="#525252" stroke-width="3"/>
+  <text x="732.5" y="205" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">6</text>
+
+  <!-- Nodes level3 (leaves) -->
+  <circle cx="180" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="275" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">7</text>
+  <circle cx="265" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="265" y="275" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">8</text>
+  <circle cx="350" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="350" y="275" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">9</text>
+  <circle cx="435" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="435" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">10</text>
+  <circle cx="520" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="520" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">11</text>
+  <circle cx="605" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">12</text>
+  <circle cx="690" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="690" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">13</text>
+  <circle cx="775" cy="270" r="15" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="775" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">14</text>
+
+  <!-- Loop bound callout -->
+  <line x1="660" y1="330" x2="725" y2="212" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="480" y="330" width="270" height="42" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="615" y="347" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">loop bound: (size &gt;&gt;&gt; 1) - 1 = 6</text>
+  <text x="615" y="363" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">heapify starts at last non-leaf, index 6</text>
+
+  <!-- Bar chart: term h / 2^h and running total converging to 2 -->
+  <text x="400" y="405" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Sum over levels: h / 2^h per level, running total -&gt; converges to 2</text>
+
+  <!-- baseline and asymptote -->
+  <line x1="60" y1="560" x2="760" y2="560" stroke="#737373" stroke-width="2"/>
+  <line x1="60" y1="380" x2="760" y2="380" stroke="#737373" stroke-width="2" stroke-dasharray="6,5"/>
+  <rect x="620" y="382" width="120" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="398" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Sigma h/2^h = 2</text>
+
+  <!-- bars: h=0..5, values 0, 0.5, 0.5, 0.375, 0.25, 0.15625 (scale: 90px per unit) -->
+  <rect x="100" y="558" width="60" height="2" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <rect x="200" y="515" width="60" height="45" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <rect x="300" y="515" width="60" height="45" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <rect x="400" y="526" width="60" height="34" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <rect x="500" y="538" width="60" height="22" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <rect x="600" y="546" width="60" height="14" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+
+  <text x="130" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">h=0: 0</text>
+  <text x="230" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">h=1: 0.5</text>
+  <text x="330" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">h=2: 0.5</text>
+  <text x="430" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">h=3: .375</text>
+  <text x="530" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">h=4: .25</text>
+  <text x="630" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">h=5: .156</text>
+
+  <!-- running total line -->
+  <polyline points="130,560 230,515 330,470 430,436 530,414 630,400"
+            fill="none" stroke="#525252" stroke-width="2"/>
+  <circle cx="130" cy="560" r="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <circle cx="230" cy="515" r="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <circle cx="330" cy="470" r="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <circle cx="430" cy="436" r="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <circle cx="530" cy="414" r="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <circle cx="630" cy="400" r="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+
+  <rect x="655" y="388" width="90" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="700" y="402" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">running total</text>
+</svg>

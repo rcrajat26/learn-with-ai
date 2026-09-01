@@ -1,0 +1,86 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ArrayBlockingQueue uses one ReentrantLock shared by producer and consumer over a ring buffer; LinkedBlockingQueue uses separate putLock and takeLock at opposite ends of the linked chain with a shared AtomicInteger count and cascading signals, letting producer and consumer proceed in parallel">
+  <defs>
+    <marker id="arrow134" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Left: ArrayBlockingQueue -->
+  <rect x="20" y="20" width="370" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="205" y="38" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ArrayBlockingQueue — one lock</text>
+
+  <rect x="40" y="60" width="330" height="34" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="205" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">final ReentrantLock lock (L121)</text>
+
+  <rect x="40" y="104" width="150" height="26" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="122" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">notFull Condition (L129)</text>
+  <rect x="220" y="104" width="150" height="26" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="122" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">notEmpty Condition (L125)</text>
+
+  <line x1="115" y1="94" x2="115" y2="104" stroke="#737373" stroke-width="2"/>
+  <line x1="295" y1="94" x2="295" y2="104" stroke="#737373" stroke-width="2"/>
+
+  <!-- ring buffer -->
+  <rect x="60" y="150" width="290" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="172" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">final Object[] items (L104) — ring buffer</text>
+  <text x="205" y="194" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">takeIndex (L107) / putIndex (L110) / count (L113)</text>
+
+  <rect x="40" y="230" width="150" height="30" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="250" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Producer thread</text>
+  <rect x="220" y="230" width="150" height="30" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="250" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Consumer thread</text>
+
+  <line x1="115" y1="230" x2="150" y2="90" stroke="#737373" stroke-width="2" marker-end="url(#arrow134)"/>
+  <line x1="295" y1="230" x2="260" y2="90" stroke="#737373" stroke-width="2" marker-end="url(#arrow134)"/>
+
+  <rect x="40" y="270" width="330" height="44" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="288" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Producer and consumer serialise on the SAME lock —</text>
+  <text x="205" y="304" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">put() and take() can never run concurrently</text>
+
+  <rect x="40" y="326" width="330" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="205" y="344" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">fairness flag in constructor (L270, L295)</text>
+
+  <!-- divider -->
+  <line x1="400" y1="20" x2="400" y2="480" stroke="#737373" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Right: LinkedBlockingQueue -->
+  <rect x="410" y="20" width="370" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="595" y="38" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">LinkedBlockingQueue — two locks</text>
+
+  <rect x="430" y="60" width="150" height="34" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="505" y="82" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">putLock (L163)</text>
+  <rect x="610" y="60" width="150" height="34" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="685" y="82" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">takeLock (L156)</text>
+
+  <rect x="430" y="104" width="150" height="26" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="505" y="122" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">notFull (L167, on putLock)</text>
+  <rect x="610" y="104" width="150" height="26" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="685" y="122" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">notEmpty (L160, on takeLock)</text>
+
+  <!-- linked chain -->
+  <rect x="430" y="150" width="330" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="174" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">head → Node → Node → Node ← last (linked chain)</text>
+
+  <rect x="450" y="196" width="290" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="595" y="214" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">private final AtomicInteger count (L141) — shared</text>
+
+  <rect x="430" y="230" width="150" height="30" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="505" y="250" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Producer (putLock)</text>
+  <rect x="610" y="230" width="150" height="30" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="685" y="250" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Consumer (takeLock)</text>
+
+  <line x1="505" y1="230" x2="505" y2="94" stroke="#737373" stroke-width="2" marker-end="url(#arrow134)"/>
+  <line x1="685" y1="230" x2="685" y2="94" stroke="#737373" stroke-width="2" marker-end="url(#arrow134)"/>
+
+  <rect x="430" y="270" width="330" height="44" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="288" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Different locks at opposite ends of the chain —</text>
+  <text x="595" y="304" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">put() and take() proceed IN PARALLEL</text>
+
+  <rect x="430" y="326" width="330" height="70" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="440" y="344" font-family="sans-serif" font-size="12" fill="#1f2937">Cascading signal, put() (L347-353):</text>
+  <text x="440" y="360" font-family="sans-serif" font-size="12" fill="#1f2937">if (c + 1 &lt; capacity) notFull.signal();  // self-cascade</text>
+  <text x="440" y="376" font-family="sans-serif" font-size="12" fill="#1f2937">if (c == 0) signalNotEmpty();  // outside putLock, on takeLock</text>
+  <text x="440" y="390" font-family="sans-serif" font-size="11" fill="#1f2937">signalNotEmpty()/signalNotFull() acquire the OTHER lock (L173-192)</text>
+</svg>

@@ -1,0 +1,126 @@
+<svg viewBox="0 0 1040 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A platform thread's real footprint drawn across four regions: a roughly 1 megabyte
+     reserved stack that is virtual address space committed page by page, plus a guard page below
+     it; the roughly 1 kilobyte java.lang.Thread heap object; the JVM's internal JavaThread
+     structure; and the OS task_struct. Below, the arithmetic for 10000 such threads: 10000 times
+     approximately 1 megabyte is approximately 10 gigabytes of reserved virtual address space,
+     which is reserved, not necessarily resident.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A PLATFORM THREAD'S REAL FOOTPRINT — SETTLE-STAKE WORKER</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Four regions side by side -->
+  <text x="20" y="64" class="lbl h2">ONE THREAD, FOUR OWNING REGIONS</text>
+
+  <!-- Region 1: OS stack -->
+  <rect x="30" y="80" width="220" height="330" rx="6" class="boxH"/>
+  <text x="140" y="102" text-anchor="middle" class="lbl node">Reserved stack</text>
+  <text x="140" y="120" text-anchor="middle" class="lbl body">~1 MB virtual</text>
+  <rect x="46" y="132" width="188" height="180" rx="4" class="boxW"/>
+  <text x="140" y="150" text-anchor="middle" class="lbl dense">committed page-by-page</text>
+  <text x="140" y="168" text-anchor="middle" class="lbl sub">only touched pages become</text>
+  <text x="140" y="182" text-anchor="middle" class="lbl sub">resident (RSS)</text>
+  <line x1="60" y1="196" x2="220" y2="196" stroke="#9ca3af" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="60" y1="220" x2="220" y2="220" stroke="#9ca3af" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="60" y1="244" x2="220" y2="244" stroke="#9ca3af" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="60" y1="268" x2="220" y2="268" stroke="#9ca3af" stroke-width="1" stroke-dasharray="2 2"/>
+  <text x="140" y="290" text-anchor="middle" class="lbl sub">frames: ReserveStake, SettleStake…</text>
+  <rect x="46" y="322" width="188" height="70" rx="4" class="boxDeg"/>
+  <text x="140" y="344" text-anchor="middle" class="lbl dense">Guard page</text>
+  <text x="140" y="362" text-anchor="middle" class="lbl sub">unmapped — overrun raises</text>
+  <text x="140" y="378" text-anchor="middle" class="lbl sub">StackOverflowError</text>
+
+  <!-- Region 2: java.lang.Thread heap object -->
+  <rect x="290" y="80" width="200" height="330" rx="6" class="boxP"/>
+  <text x="390" y="102" text-anchor="middle" class="lbl node">java.lang.Thread</text>
+  <text x="390" y="120" text-anchor="middle" class="lbl body">heap object</text>
+  <rect x="306" y="140" width="168" height="140" rx="4" class="boxW"/>
+  <text x="390" y="160" text-anchor="middle" class="lbl dense">~1 KB</text>
+  <text x="390" y="180" text-anchor="middle" class="lbl sub">name, priority, state</text>
+  <text x="390" y="198" text-anchor="middle" class="lbl sub">ThreadLocalMap ref</text>
+  <text x="390" y="216" text-anchor="middle" class="lbl sub">interrupt flag</text>
+  <text x="390" y="234" text-anchor="middle" class="lbl sub">GC-managed like any object</text>
+
+  <!-- Region 3: JVM JavaThread -->
+  <rect x="530" y="80" width="220" height="330" rx="6" class="boxR"/>
+  <text x="640" y="102" text-anchor="middle" class="lbl node">JVM JavaThread</text>
+  <text x="640" y="120" text-anchor="middle" class="lbl body">native VM structure</text>
+  <rect x="546" y="140" width="188" height="140" rx="4" class="boxW"/>
+  <text x="640" y="160" text-anchor="middle" class="lbl dense">off-heap C++ object</text>
+  <text x="640" y="180" text-anchor="middle" class="lbl sub">handle area, TLAB pointers</text>
+  <text x="640" y="198" text-anchor="middle" class="lbl sub">safepoint state</text>
+  <text x="640" y="216" text-anchor="middle" class="lbl sub">JNI environment</text>
+  <text x="640" y="234" text-anchor="middle" class="lbl sub">links Thread ↔ OS thread</text>
+
+  <!-- Region 4: OS task_struct -->
+  <rect x="790" y="80" width="220" height="330" rx="6" class="boxW"/>
+  <text x="900" y="102" text-anchor="middle" class="lbl node">OS task_struct</text>
+  <text x="900" y="120" text-anchor="middle" class="lbl body">kernel scheduling entity</text>
+  <rect x="806" y="140" width="188" height="140" rx="4" class="boxW"/>
+  <text x="900" y="160" text-anchor="middle" class="lbl dense">kernel memory</text>
+  <text x="900" y="180" text-anchor="middle" class="lbl sub">PID, scheduling class</text>
+  <text x="900" y="198" text-anchor="middle" class="lbl sub">saved registers on switch</text>
+  <text x="900" y="216" text-anchor="middle" class="lbl sub">counted against pid_max,</text>
+  <text x="900" y="232" text-anchor="middle" class="lbl sub">threads-max, ulimit -u</text>
+
+  <!-- connecting arrows across regions -->
+  <path class="flow" d="M 250 245 H 290"/>
+  <path class="flow" d="M 490 245 H 530"/>
+  <path class="flow" d="M 750 245 H 790"/>
+
+  <!-- arithmetic panel -->
+  <rect x="30" y="432" width="980" height="120" rx="6" class="boxAnn"/>
+  <text x="46" y="456" class="lbl h2">THE ARITHMETIC — WHY THREAD COUNT IS A MEMORY BUDGET, NOT JUST A CONCURRENCY KNOB</text>
+  <text x="46" y="484" class="lbl body" font-weight="700">10 000 × ~1 MB ≈ 10 GB reserved virtual address space</text>
+  <text x="46" y="506" class="lbl tiny">Each settle-stake worker reserves ~1 MB of stack up front even if only a few KB are ever touched.</text>
+  <text x="46" y="524" class="lbl tiny">At 2.8M stake settlements/day and 3,400/sec burst, a thread-per-settlement design pushes thread</text>
+  <text x="46" y="540" class="lbl tiny">counts toward this order of magnitude — reserved space, not resident, but still a real ceiling.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="574" x2="1020" y2="574" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="586" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="599" class="lbl tiny">virtual, reserved region</text>
+  <rect x="200" y="586" width="22" height="16" rx="3" class="boxP"/>
+  <text x="230" y="599" class="lbl tiny">managed heap object — subject</text>
+  <rect x="420" y="586" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="599" class="lbl tiny">JVM-native structure</text>
+  <rect x="620" y="586" width="22" height="16" rx="3" class="boxW"/>
+  <text x="650" y="599" class="lbl tiny">nested / secondary detail</text>
+  <rect x="820" y="586" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="850" y="599" class="lbl tiny">failure boundary — guard page</text>
+
+  <path class="flow" d="M 20 620 H 60"/>
+  <text x="70" y="625" class="lbl tiny">A → B : B is the next owning region for the same thread</text>
+  <rect x="20" y="638" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="50" y="651" class="lbl tiny">annotation panel — arithmetic / cost</text>
+</svg>

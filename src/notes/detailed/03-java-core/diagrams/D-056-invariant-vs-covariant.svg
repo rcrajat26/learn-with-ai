@@ -1,0 +1,92 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Comparison diagram. Left lane, arrays are covariant: LedgerEntry array entries assigned a new CashEntry array of length 2 compiles fine; the write entries[0] = new BonusEntry(...) then flows into a runtime element-type check gate that throws ArrayStoreException, labelled runtime error. Right lane, generics are invariant: List of LedgerEntry assigned a new ArrayList of CashEntry is rejected directly at compile time, labelled compile error. A blue annotation panel explains that CashEntry array IS-A LedgerEntry array at runtime, but List of CashEntry is not List of LedgerEntry because generics use erasure with no runtime check.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .bold  { font-weight: 700; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .red   { fill: #b91c1c; }
+    .green { fill: #15803d; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">GENERICS ARE INVARIANT; ARRAYS ARE COVARIANT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="64" text-anchor="middle" class="lbl h2">ARRAYS &#8212; COVARIANT</text>
+  <text x="850" y="64" text-anchor="middle" class="lbl h2">GENERICS &#8212; INVARIANT</text>
+  <line x1="560" y1="56" x2="560" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT COLUMN: arrays -->
+  <rect x="60" y="90" width="420" height="70" rx="4" class="boxR"/>
+  <text x="80" y="118" class="lbl body">LedgerEntry[] entries = new CashEntry[2];</text>
+  <text x="80" y="140" class="lbl sub">// compiles &#8212; CashEntry[] IS-A LedgerEntry[]</text>
+
+  <path class="flow" d="M 270 160 V 190"/>
+
+  <rect x="60" y="190" width="420" height="70" rx="4" class="boxH"/>
+  <text x="80" y="218" class="lbl body">entries[0] = new BonusEntry(...);</text>
+  <text x="80" y="240" class="lbl sub">// element write &#8212; still compiles</text>
+
+  <path class="flow" d="M 270 260 V 290"/>
+
+  <path d="M 270 290 L 420 330 L 270 370 L 120 330 Z" class="panel"/>
+  <text x="270" y="325" text-anchor="middle" class="lbl tiny bold">runtime element-type</text>
+  <text x="270" y="340" text-anchor="middle" class="lbl tiny bold">check (per store)</text>
+
+  <path class="flow" d="M 270 370 V 400"/>
+
+  <rect x="60" y="400" width="420" height="80" rx="4" class="boxD"/>
+  <text x="80" y="428" class="lbl body red">throws ArrayStoreException;</text>
+  <text x="80" y="450" class="lbl sub red bold">// RUNTIME ERROR</text>
+  <text x="80" y="468" class="lbl sub red">BonusEntry is not a CashEntry &#8212; actual array type</text>
+
+  <!-- RIGHT COLUMN: generics -->
+  <rect x="620" y="190" width="440" height="90" rx="4" class="boxD"/>
+  <text x="640" y="218" class="lbl body red">List&lt;LedgerEntry&gt; l =</text>
+  <text x="640" y="238" class="lbl body red">&#160;&#160;new ArrayList&lt;CashEntry&gt;();</text>
+  <text x="640" y="260" class="lbl sub red bold">// COMPILE ERROR: incompatible types</text>
+
+  <rect x="620" y="320" width="440" height="150" rx="4" class="panel"/>
+  <text x="640" y="345" class="lbl tiny bold">WHY THE DIFFERENCE</text>
+  <text x="640" y="368" class="lbl tiny">Arrays: CashEntry[] IS-A LedgerEntry[] at runtime</text>
+  <text x="640" y="386" class="lbl tiny">(covariant) &#8212; checked per-store via ArrayStoreException.</text>
+  <text x="640" y="410" class="lbl tiny">Generics: List&lt;CashEntry&gt; is NOT List&lt;LedgerEntry&gt;</text>
+  <text x="640" y="428" class="lbl tiny">(invariant) &#8212; erasure removes the runtime check that</text>
+  <text x="640" y="446" class="lbl tiny">arrays rely on, so the compiler must reject it up front.</text>
+
+  <text x="270" y="500" text-anchor="middle" class="lbl node red">runtime error</text>
+  <text x="840" y="500" text-anchor="middle" class="lbl node red">compile error</text>
+
+  <line x1="20" y1="600" x2="1100" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="622" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="636" width="20" height="14" class="boxR"/>
+  <text x="46" y="647" class="lbl tiny">accepted / compiles cleanly</text>
+
+  <rect x="270" y="636" width="20" height="14" class="boxH"/>
+  <text x="296" y="647" class="lbl tiny">the write that triggers the check</text>
+
+  <rect x="540" y="636" width="20" height="14" class="panel"/>
+  <text x="566" y="647" class="lbl tiny">check point / explanatory prose</text>
+
+  <rect x="820" y="636" width="20" height="14" class="boxD"/>
+  <text x="846" y="647" class="lbl tiny">thrown exception or compile-time rejection</text>
+
+  <path class="flow" d="M 20 672 H 70"/>
+  <text x="80" y="676" class="lbl tiny">solid arrow, A &#8594; B: B happens after A (sequential flow)</text>
+</svg>

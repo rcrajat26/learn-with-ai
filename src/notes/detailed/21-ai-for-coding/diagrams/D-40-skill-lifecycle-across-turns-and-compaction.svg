@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1080 710" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A single time axis with four marks: invocation, where rendered skill content enters the conversation as one message; later turns, where it stays resident and the file is not re-read; a re-invocation with identical content, which adds a note rather than a second copy; and compaction, where only the most recent invocation of each skill is re-attached after the summary, capped at 5000 tokens each and 25000 tokens combined, newest first. Two older skills are drawn falling outside that budget and vanishing.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGr); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="710" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SKILL CONTENT LIFECYCLE ACROSS TURNS AND A COMPACTION</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Time axis -->
+  <line x1="60" y1="150" x2="1020" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="1000" y="140" class="lbl tiny">time</text>
+
+  <!-- Mark 1: invocation -->
+  <circle cx="140" cy="150" r="6" fill="#2563eb"/>
+  <line x1="140" y1="150" x2="140" y2="190" stroke="#9ca3af" stroke-width="1.3"/>
+  <rect x="50" y="196" width="180" height="90" rx="6" class="boxP"/>
+  <text x="140" y="216" text-anchor="middle" class="lbl body" font-weight="600">invocation</text>
+  <text x="140" y="236" text-anchor="middle" class="lbl sub">rendered content enters</text>
+  <text x="140" y="250" text-anchor="middle" class="lbl sub">the conversation as one</text>
+  <text x="140" y="264" text-anchor="middle" class="lbl sub">message</text>
+
+  <!-- Mark 2: later turns -->
+  <circle cx="360" cy="150" r="6" fill="#2563eb"/>
+  <line x1="360" y1="150" x2="360" y2="190" stroke="#9ca3af" stroke-width="1.3"/>
+  <rect x="270" y="196" width="180" height="90" rx="6" class="boxR"/>
+  <text x="360" y="216" text-anchor="middle" class="lbl body" font-weight="600">later turns</text>
+  <text x="360" y="236" text-anchor="middle" class="lbl sub">the message stays</text>
+  <text x="360" y="250" text-anchor="middle" class="lbl sub">resident — SKILL.md is</text>
+  <text x="360" y="264" text-anchor="middle" class="lbl sub">NOT re-read from disk</text>
+
+  <!-- Mark 3: re-invocation identical -->
+  <circle cx="580" cy="150" r="6" fill="#2563eb"/>
+  <line x1="580" y1="150" x2="580" y2="190" stroke="#9ca3af" stroke-width="1.3"/>
+  <rect x="480" y="196" width="200" height="100" rx="6" class="boxH"/>
+  <text x="580" y="216" text-anchor="middle" class="lbl body" font-weight="600">re-invocation, identical content</text>
+  <text x="580" y="238" text-anchor="middle" class="lbl sub">adds a NOTE to the transcript,</text>
+  <text x="580" y="252" text-anchor="middle" class="lbl sub">not a second copy of the</text>
+  <text x="580" y="266" text-anchor="middle" class="lbl sub">skill content</text>
+  <text x="580" y="284" text-anchor="middle" class="lbl sub">(dedup by content)</text>
+
+  <!-- Mark 4: compaction -->
+  <circle cx="820" cy="150" r="7" fill="#b91c1c"/>
+  <line x1="820" y1="150" x2="820" y2="190" stroke="#9ca3af" stroke-width="1.3"/>
+  <rect x="700" y="196" width="240" height="100" rx="6" class="boxD"/>
+  <text x="820" y="216" text-anchor="middle" class="lbl body" font-weight="600">compaction</text>
+  <text x="820" y="236" text-anchor="middle" class="lbl sub">most recent invocation of EACH</text>
+  <text x="820" y="250" text-anchor="middle" class="lbl sub">skill is re-attached after the</text>
+  <text x="820" y="264" text-anchor="middle" class="lbl sub">summary, newest-first</text>
+  <text x="820" y="282" text-anchor="middle" class="lbl sub" font-weight="600">5,000 tokens each / 25,000 combined</text>
+
+  <path class="flow" d="M 230 240 H 268"/>
+  <path class="flow" d="M 450 240 H 478"/>
+  <path class="flow" d="M 680 246 H 698"/>
+
+  <!-- Budget after compaction: surviving vs falling out skills -->
+  <text x="60" y="332" class="lbl h2">AFTER COMPACTION — BUDGET APPLIED NEWEST-FIRST</text>
+
+  <path d="M 820 296 V 346" stroke="#475569" stroke-width="2" fill="none"/>
+  <path d="M 170 346 H 890" stroke="#475569" stroke-width="2" fill="none"/>
+  <path class="flow" d="M 170 346 V 440"/>
+  <path class="flow" d="M 410 346 V 440"/>
+  <path class="weak" d="M 650 346 V 440"/>
+  <path class="weak" d="M 890 346 V 440"/>
+
+  <rect x="60" y="440" width="220" height="70" rx="6" class="boxR"/>
+  <text x="170" y="464" text-anchor="middle" class="lbl body" font-weight="600">deploy skill</text>
+  <text x="170" y="484" text-anchor="middle" class="lbl sub">newest invocation, ~4,200 tokens</text>
+  <text x="170" y="500" text-anchor="middle" class="lbl sub">re-attached after summary</text>
+
+  <rect x="300" y="440" width="220" height="70" rx="6" class="boxR"/>
+  <text x="410" y="464" text-anchor="middle" class="lbl body" font-weight="600">progress-verifier skill</text>
+  <text x="410" y="484" text-anchor="middle" class="lbl sub">newest invocation, ~4,800 tokens</text>
+  <text x="410" y="500" text-anchor="middle" class="lbl sub">re-attached after summary</text>
+
+  <rect x="540" y="440" width="220" height="70" rx="6" class="boxD"/>
+  <text x="650" y="464" text-anchor="middle" class="lbl body" font-weight="600">check-init skill (older)</text>
+  <text x="650" y="484" text-anchor="middle" class="lbl sub">falls outside the 25,000</text>
+  <text x="650" y="500" text-anchor="middle" class="lbl sub">combined budget — vanishes</text>
+
+  <rect x="780" y="440" width="220" height="70" rx="6" class="boxD"/>
+  <text x="890" y="464" text-anchor="middle" class="lbl body" font-weight="600">bootstrap-uv skill (older)</text>
+  <text x="890" y="484" text-anchor="middle" class="lbl sub">falls outside the 25,000</text>
+  <text x="890" y="500" text-anchor="middle" class="lbl sub">combined budget — vanishes</text>
+
+  <rect x="60" y="530" width="960" height="56" rx="6" class="boxA"/>
+  <text x="80" y="552" class="lbl tiny" font-weight="700">25,000 tokens combined ceiling</text>
+  <text x="80" y="570" class="lbl tiny">each retained skill capped at 5,000 tokens; newest invocation of each distinct skill wins the slot</text>
+
+  <line x1="20" y1="608" x2="1060" y2="608" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="630" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="640" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="653" class="lbl tiny">invocation event</text>
+
+  <rect x="240" y="640" width="22" height="16" rx="3" class="boxR"/>
+  <text x="270" y="653" class="lbl tiny">resident / survives compaction, under budget</text>
+
+  <rect x="640" y="640" width="22" height="16" rx="3" class="boxH"/>
+  <text x="670" y="653" class="lbl tiny">re-invocation, deduplicated to a note</text>
+
+  <rect x="20" y="666" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="679" class="lbl tiny">compaction event, or a skill falling outside budget and vanishing</text>
+
+</svg>

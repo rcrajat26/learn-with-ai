@@ -1,0 +1,120 @@
+<svg viewBox="0 0 900 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline with two lanes over a downward time axis. Lane settlement-ingest-3: step 1 writes CLIENT_CASH_AVAILABLE to 46.67 inside monitor m, step 2 unlocks m. Lane balance-view-2: step 3 locks m, step 4 reads CLIENT_CASH_AVAILABLE and observes 46.67. A labelled happens-before edge runs from the unlock at step 2 to the lock at step 3. A second, wider arrow shows that everything program-ordered before the unlock in settlement-ingest-3 becomes visible to everything after the lock in balance-view-2 — not just the guarded field.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .hb    { fill: none; stroke: #15803d; stroke-width: 2.4; stroke-dasharray: 6 4; marker-end: url(#triG); }
+    .wide  { fill: none; stroke: #b45309; stroke-width: 2.4; stroke-dasharray: 3 3; marker-end: url(#triO); }
+    .axis  { stroke: #9ca3af; stroke-width: 1.4; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">UNLOCK HAPPENS-BEFORE THE NEXT LOCK ON THE SAME MONITOR</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- lane headers -->
+  <rect x="60" y="56" width="330" height="30" rx="6" class="boxP"/>
+  <text x="225" y="76" text-anchor="middle" class="lbl node">settlement-ingest-3 — holds monitor m</text>
+
+  <rect x="510" y="56" width="330" height="30" rx="6" class="boxR"/>
+  <text x="675" y="76" text-anchor="middle" class="lbl node">balance-view-2 — waits, then acquires m</text>
+
+  <!-- time axis -->
+  <line x1="30" y1="100" x2="30" y2="660" class="axis"/>
+  <text x="30" y="678" text-anchor="middle" class="lbl sub">time</text>
+
+  <!-- step 1 -->
+  <rect x="90" y="104" width="270" height="56" rx="6" class="boxP"/>
+  <text x="105" y="123" class="lbl node">step 1</text>
+  <text x="105" y="141" class="lbl mono">CLIENT_CASH_AVAILABLE = 46.67</text>
+  <text x="105" y="154" class="lbl sub">write inside the critical section, guarded by m</text>
+
+  <path class="flow" d="M 225 160 V 180"/>
+
+  <!-- step 2: unlock -->
+  <rect x="90" y="180" width="270" height="56" rx="6" class="boxH"/>
+  <text x="105" y="199" class="lbl node">step 2 — unlock(m)</text>
+  <text x="105" y="217" class="lbl mono">exit synchronized(m) block</text>
+  <text x="105" y="230" class="lbl sub">flushes this thread's writes to main memory</text>
+
+  <!-- happens-before edge: unlock -> lock, routed through the empty corridor between the lanes -->
+  <path class="hb" d="M 360 208 H 450 V 312 H 540"/>
+  <text x="438" y="250" text-anchor="end" class="lbl tiny" fill="#15803d" font-weight="700">happens-before</text>
+  <text x="438" y="266" text-anchor="end" class="lbl tiny" fill="#15803d">unlock(m) &#8594; lock(m)</text>
+
+  <!-- step 3: lock -->
+  <rect x="540" y="284" width="270" height="56" rx="6" class="boxH"/>
+  <text x="555" y="303" class="lbl node">step 3 — lock(m)</text>
+  <text x="555" y="321" class="lbl mono">enter synchronized(m) block</text>
+  <text x="555" y="334" class="lbl sub">invalidates this thread's cached view, forces a fresh read</text>
+
+  <path class="flow" d="M 675 340 V 360"/>
+
+  <!-- step 4: read -->
+  <rect x="540" y="360" width="270" height="56" rx="6" class="boxR"/>
+  <text x="555" y="379" class="lbl node">step 4</text>
+  <text x="555" y="397" class="lbl mono">read CLIENT_CASH_AVAILABLE</text>
+  <text x="555" y="410" class="lbl sub">observes 46.67 — the value from step 1, guaranteed visible</text>
+
+  <!-- wide arrow: everything program-ordered before the unlock is visible after the lock. Routed
+       below both step columns so it crosses no box. -->
+  <path class="wide" d="M 225 236 V 478 H 675 V 416"/>
+
+  <!-- annotation panel: the wide arrow's label, sitting in open canvas below the step columns -->
+  <rect x="230" y="490" width="440" height="52" rx="6" class="boxA"/>
+  <text x="450" y="509" text-anchor="middle" class="lbl tiny" fill="#b45309" font-weight="700">not just the guarded field</text>
+  <text x="450" y="526" text-anchor="middle" class="lbl tiny">every write program-ordered before step 2's unlock is visible to</text>
+  <text x="450" y="539" text-anchor="middle" class="lbl tiny">every read program-ordered after step 3's lock</text>
+
+  <!-- annotation panel: why this matters -->
+  <rect x="60" y="562" width="780" height="106" rx="6" class="boxA"/>
+  <text x="76" y="582" class="lbl node">why this matters beyond CLIENT_CASH_AVAILABLE</text>
+  <text x="76" y="602" class="lbl body">step 1 could also update reservationCount or lastSettlementId — any other field settlement-ingest-3 wrote</text>
+  <text x="76" y="620" class="lbl body">before step 2's unlock. The JMM's happens-before edge covers the releasing thread's whole prior program</text>
+  <text x="76" y="638" class="lbl body">order, not one variable — balance-view-2 sees a consistent snapshot of all of it, the same guarantee</text>
+  <text x="76" y="656" class="lbl sub">volatile gives per-field and synchronized gives per-critical-section-boundary. Same monitor m required on both sides.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="692" x2="880" y2="692" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="704" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="717" class="lbl tiny">write / read of shared state</text>
+  <rect x="220" y="704" width="22" height="16" rx="3" class="boxH"/>
+  <text x="250" y="717" class="lbl tiny">unlock / lock operation on monitor m</text>
+  <rect x="470" y="704" width="22" height="16" rx="3" class="boxA"/>
+  <text x="500" y="717" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 736 H 60"/>
+  <text x="68" y="741" class="lbl tiny">program order within one thread</text>
+  <path class="hb" d="M 300 736 H 340"/>
+  <text x="348" y="741" class="lbl tiny">happens-before edge (release-acquire)</text>
+  <path class="wide" d="M 610 736 H 650"/>
+  <text x="658" y="741" class="lbl tiny">full prior-write visibility</text>
+</svg>

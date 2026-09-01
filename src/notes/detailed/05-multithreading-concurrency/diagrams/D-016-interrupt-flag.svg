@@ -1,0 +1,136 @@
+<svg viewBox="0 0 1280 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The interrupt flag is a single boolean per thread, not a queued event. interrupt() sets it from
+     false to true. isInterrupted() reads it on either state without changing it. The static Thread.interrupted()
+     reads and clears it in one step, returning it to false. A blocking method that throws InterruptedException has
+     already had the flag cleared by the JVM before the throw. From there, catching it and propagating (or calling
+     Thread.currentThread().interrupt() and returning) is handled correctly and the flag stays false. But an empty
+     catch (InterruptedException e) block swallows it: the cancellation request no longer exists, with no exception,
+     no flag, and no record that it ever happened.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE INTERRUPT FLAG IS A BIT, NOT AN EVENT</text>
+  <line x1="20" y1="42" x2="1260" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- self loops -->
+  <path class="weak" d="M 150 90 V 65 H 270 V 90"/>
+  <text x="210" y="58" text-anchor="middle" class="lbl tiny">isInterrupted() reads it (no change)</text>
+  <path class="weak" d="M 890 90 V 65 H 1090 V 90"/>
+  <text x="1030" y="58" text-anchor="middle" class="lbl tiny">isInterrupted() reads it (no change)</text>
+
+  <!-- states -->
+  <rect x="80" y="90" width="260" height="80" rx="6" class="boxW"/>
+  <text x="210" y="112" text-anchor="middle" class="lbl tinyB">STATE</text>
+  <text x="210" y="134" text-anchor="middle" class="lbl node">interrupt flag = false</text>
+  <text x="210" y="154" text-anchor="middle" class="lbl sub">no pending interrupt request</text>
+
+  <rect x="820" y="90" width="260" height="80" rx="6" class="boxH"/>
+  <text x="950" y="112" text-anchor="middle" class="lbl tinyB">STATE</text>
+  <text x="950" y="134" text-anchor="middle" class="lbl node">interrupt flag = true</text>
+  <text x="950" y="154" text-anchor="middle" class="lbl sub">an interrupt() call is pending</text>
+
+  <path class="flow" d="M 340 130 H 820"/>
+  <text x="580" y="122" text-anchor="middle" class="lbl tiny">interrupt() sets it</text>
+
+  <!-- level1: children of TRUE -->
+  <path class="bus" d="M 950 170 V 220"/>
+  <path class="bus" d="M 830 220 H 1110"/>
+  <path class="flow" d="M 830 220 V 260"/>
+  <path class="flow" d="M 1110 220 V 260"/>
+
+  <rect x="700" y="260" width="260" height="100" rx="6" class="boxP"/>
+  <text x="830" y="282" text-anchor="middle" class="lbl tinyB">PAIRED READ + CLEAR</text>
+  <text x="830" y="304" text-anchor="middle" class="lbl node">Thread.interrupted()</text>
+  <text x="830" y="324" text-anchor="middle" class="lbl sub">[static] reads AND clears the flag</text>
+  <text x="830" y="342" text-anchor="middle" class="lbl sub">returns old value; flag now false</text>
+
+  <rect x="1000" y="260" width="220" height="100" rx="6" class="boxP"/>
+  <text x="1110" y="282" text-anchor="middle" class="lbl tinyB">SIDE EFFECT OF THE THROW</text>
+  <text x="1110" y="304" text-anchor="middle" class="lbl node">blocking call throws</text>
+  <text x="1110" y="324" text-anchor="middle" class="lbl sub">InterruptedException</text>
+  <text x="1110" y="342" text-anchor="middle" class="lbl sub">JVM clears flag before throw</text>
+
+  <!-- level2: children of the throw node -->
+  <path class="bus" d="M 1110 360 V 400"/>
+  <path class="bus" d="M 860 400 H 1110"/>
+  <path class="flow" d="M 860 400 V 440"/>
+  <path class="flow" d="M 1110 400 V 440"/>
+
+  <rect x="760" y="440" width="200" height="110" rx="6" class="boxR"/>
+  <text x="860" y="462" text-anchor="middle" class="lbl tinyB">HANDLED CORRECTLY</text>
+  <text x="860" y="480" text-anchor="middle" class="lbl sub">(see D-018)</text>
+  <text x="860" y="502" text-anchor="middle" class="lbl node">catch, propagate</text>
+  <text x="860" y="520" text-anchor="middle" class="lbl sub">flag stays false,</text>
+  <text x="860" y="536" text-anchor="middle" class="lbl sub">nothing lost</text>
+
+  <rect x="985" y="440" width="250" height="110" rx="6" class="boxD"/>
+  <text x="1110" y="462" text-anchor="middle" class="lbl tinyB">THE BUG</text>
+  <text x="1110" y="484" text-anchor="middle" class="lbl body">catch (InterruptedException e)</text>
+  <text x="1110" y="502" text-anchor="middle" class="lbl body">{ } — swallow, nothing happens</text>
+  <text x="1110" y="522" text-anchor="middle" class="lbl sub">do nothing, keep looping</text>
+
+  <path class="flow" d="M 1110 550 V 620"/>
+  <rect x="985" y="620" width="250" height="100" rx="6" class="boxD"/>
+  <text x="1110" y="642" text-anchor="middle" class="lbl tinyB">RESULT</text>
+  <text x="1110" y="664" text-anchor="middle" class="lbl node">the cancellation request</text>
+  <text x="1110" y="684" text-anchor="middle" class="lbl node">no longer exists</text>
+  <text x="1110" y="702" text-anchor="middle" class="lbl sub">no exception, no flag, no record</text>
+
+  <!-- annotation -->
+  <rect x="80" y="440" width="340" height="140" rx="6" class="ann"/>
+  <text x="100" y="462" class="lbl tinyB">WHY THIS MATTERS</text>
+  <text x="100" y="482" class="lbl tiny">The flag is one boolean per thread —</text>
+  <text x="100" y="498" class="lbl tiny">not a queued event.</text>
+  <text x="100" y="518" class="lbl tiny">interrupt() only flips a bit; it never</text>
+  <text x="100" y="534" class="lbl tiny">invokes a callback or throws by itself.</text>
+  <text x="100" y="554" class="lbl tiny">An empty catch block destroys that bit —</text>
+  <text x="100" y="570" class="lbl tiny">see D-018 for the two legal responses.</text>
+
+  <line x1="20" y1="800" x2="1260" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="818" width="22" height="16" rx="3" class="boxW"/>
+  <text x="70" y="830" class="lbl tiny">flag state: false</text>
+  <rect x="260" y="818" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="830" class="lbl tiny">flag state: true (pending)</text>
+  <rect x="520" y="818" width="22" height="16" rx="3" class="boxP"/>
+  <text x="550" y="830" class="lbl tiny">reads the flag (mechanism)</text>
+  <rect x="780" y="818" width="22" height="16" rx="3" class="boxR"/>
+  <text x="810" y="830" class="lbl tiny">correct response (see D-018)</text>
+  <rect x="1040" y="818" width="22" height="16" rx="3" class="boxD"/>
+  <text x="1070" y="830" class="lbl tiny">always a bug</text>
+  <path class="flow" d="M 40 858 H 90"/>
+  <text x="100" y="862" class="lbl tiny">A → B : A causes / produces B</text>
+  <path class="weak" d="M 340 858 H 390"/>
+  <text x="400" y="862" class="lbl tiny">dashed A → A : reads without changing state</text>
+</svg>

@@ -1,0 +1,75 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 2: findClient(id) returns a present Optional of Client. Calling .orElse(loadDefaultFromDatabase()) still evaluates loadDefaultFromDatabase() first, as a plain Java argument, before orElse ever inspects the Optional. Its result is computed then discarded because the Optional was present. The call counter for loadDefaultFromDatabase reads 1.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <rect x="770" y="16" width="34" height="22" rx="11" class="pill"/>
+  <text x="787" y="32" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+
+  <text x="20" y="32" class="lbl h1">FRAME 1 / 2 — findClient(id).orElse(loadDefaultFromDatabase())</text>
+  <line x1="20" y1="42" x2="750" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="70" width="220" height="60" rx="6" class="boxG"/>
+  <text x="150" y="94" text-anchor="middle" class="lbl node">findClient(id)</text>
+  <text x="150" y="114" text-anchor="middle" class="lbl sub">Optional[Client CLI-9214], present</text>
+
+  <path class="flow" d="M 260 100 H 340"/>
+
+  <rect x="344" y="70" width="240" height="60" rx="6" class="boxY"/>
+  <text x="464" y="94" text-anchor="middle" class="lbl node">.orElse(arg)</text>
+  <text x="464" y="114" text-anchor="middle" class="lbl sub">arg is a plain method-call argument</text>
+
+  <path class="flow" d="M 464 130 V 156"/>
+  <text x="560" y="150" class="lbl sub">arg evaluated before orElse runs</text>
+
+  <rect x="304" y="160" width="320" height="70" rx="6" class="boxD"/>
+  <text x="464" y="184" text-anchor="middle" class="lbl node">loadDefaultFromDatabase()</text>
+  <text x="464" y="204" text-anchor="middle" class="lbl dense">runs unconditionally — queries FundsLedger</text>
+  <text x="464" y="220" text-anchor="middle" class="lbl sub">for a default Client, cost paid regardless</text>
+
+  <path class="flow" d="M 464 230 V 256"/>
+  <text x="560" y="250" class="lbl sub">result discarded</text>
+
+  <rect x="344" y="260" width="240" height="56" rx="6" class="boxP"/>
+  <text x="464" y="284" text-anchor="middle" class="lbl node">Client CLI-9214</text>
+  <text x="464" y="300" text-anchor="middle" class="lbl sub">the present value wins — DB result thrown away</text>
+
+  <rect x="660" y="160" width="200" height="70" rx="6" class="boxD"/>
+  <text x="760" y="184" text-anchor="middle" class="lbl node" font-weight="700">call counter</text>
+  <text x="760" y="210" text-anchor="middle" class="lbl h1">1</text>
+
+  <line x1="20" y1="350" x2="880" y2="350" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="360" width="22" height="16" rx="3" class="boxG"/>
+  <text x="50" y="373" class="lbl tiny">present / cheap path</text>
+
+  <rect x="220" y="360" width="22" height="16" rx="3" class="boxY"/>
+  <text x="250" y="373" class="lbl tiny">orElse call site</text>
+
+  <rect x="400" y="360" width="22" height="16" rx="3" class="boxD"/>
+  <text x="430" y="373" class="lbl tiny">unconditional / wasted cost</text>
+
+  <path class="flow" d="M 620 368 H 660"/>
+  <text x="668" y="373" class="lbl tiny">A → B : B is produced from A</text>
+</svg>

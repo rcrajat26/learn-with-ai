@@ -1,0 +1,62 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 4: --setting-sources project resolves &lt;cwd&gt;/.claude/settings.json against the worktree, where the file does not exist, leaving the harness's permissions.allow Bash(*) and its destructive-command deny-list unloaded in the other directory.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .miss  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">D-83 · FRAME 2 OF 4 — THE FLAG RESOLVES AGAINST THE WRONG DIRECTORY</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="60" width="300" height="70" rx="6" class="boxW"/>
+  <text x="170" y="88" text-anchor="middle" class="lbl node">--setting-sources project</text>
+  <text x="170" y="110" text-anchor="middle" class="lbl sub">resolves &lt;cwd&gt;/.claude/settings.json</text>
+
+  <text x="500" y="66" class="lbl h2">worktree (cwd)</text>
+  <rect x="500" y="80" width="380" height="90" rx="6" class="boxD"/>
+  <text x="690" y="108" text-anchor="middle" class="lbl node">/worktrees/story-4471/.claude/settings.json</text>
+  <text x="690" y="130" text-anchor="middle" class="lbl body">MISSING</text>
+  <text x="690" y="150" text-anchor="middle" class="lbl sub">nothing resolves; no allow/deny rules load</text>
+
+  <path class="miss" d="M 320 95 H 400 V 125 H 496"/>
+  <text x="342" y="188" class="lbl tiny" fill="#b91c1c">file does not exist here</text>
+
+  <text x="500" y="200" class="lbl h2">sdlc-harness (unreached)</text>
+  <rect x="500" y="214" width="380" height="130" rx="6" class="boxP"/>
+  <text x="690" y="240" text-anchor="middle" class="lbl node">sdlc-harness/.claude/settings.json</text>
+  <text x="690" y="264" text-anchor="middle" class="lbl body">permissions.allow: Bash(*)</text>
+  <text x="690" y="286" text-anchor="middle" class="lbl body">permissions.deny: destructive-command list</text>
+  <text x="690" y="308" text-anchor="middle" class="lbl sub">sits unloaded — never referenced by cwd</text>
+  <text x="690" y="328" class="lbl sub" text-anchor="middle">(mvn, git commit, chmod, java rules live here)</text>
+
+  <rect x="20" y="360" width="860" height="46" rx="6" class="boxAnn"/>
+  <text x="36" y="378" class="lbl h2">Annotation</text>
+  <text x="36" y="396" class="lbl tiny">--setting-sources project is evaluated relative to cwd, not to the repo the harness lives in — it silently misses.</text>
+</svg>

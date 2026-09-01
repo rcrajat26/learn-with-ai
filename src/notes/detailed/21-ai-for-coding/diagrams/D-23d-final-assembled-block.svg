@@ -1,0 +1,64 @@
+<svg viewBox="0 0 1040 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 5 in the CLAUDE.md load order. The final assembled block at launch stacks all four sources root-down, nearest-last: managed policy, then user level, then project level, then the untracked local override, so the project's own instructions land closest to the end of the prompt block.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxWeak { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLAUDE.md LOAD ORDER — FRAME 4 OF 5</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl h2">Root-down, nearest-last: the assembled block at launch</text>
+
+  <rect x="300" y="84" width="440" height="44" rx="6" class="boxRoot"/>
+  <text x="520" y="102" text-anchor="middle" class="lbl node">managed policy CLAUDE.md</text>
+  <text x="520" y="118" text-anchor="middle" class="lbl sub">org-wide, read first (furthest from cwd)</text>
+
+  <path class="flow" d="M 520 128 V 140"/>
+  <rect x="300" y="140" width="440" height="44" rx="6" class="boxWeak"/>
+  <text x="520" y="158" text-anchor="middle" class="lbl node">~/.claude/CLAUDE.md</text>
+  <text x="520" y="174" text-anchor="middle" class="lbl sub">user-level</text>
+
+  <path class="flow" d="M 520 184 V 196"/>
+  <rect x="300" y="196" width="440" height="44" rx="6" class="boxOk"/>
+  <text x="520" y="214" text-anchor="middle" class="lbl node">./CLAUDE.md or ./.claude/CLAUDE.md</text>
+  <text x="520" y="230" text-anchor="middle" class="lbl sub">project-level</text>
+
+  <path class="flow" d="M 520 240 V 252"/>
+  <rect x="300" y="252" width="440" height="44" rx="6" class="boxHi"/>
+  <text x="520" y="270" text-anchor="middle" class="lbl node">./CLAUDE.local.md</text>
+  <text x="520" y="286" text-anchor="middle" class="lbl sub">nearest to cwd, read last</text>
+
+  <line x1="750" y1="84" x2="750" y2="296" stroke="#475569" stroke-width="2"/>
+  <text x="762" y="120" class="lbl tiny">root</text>
+  <text x="762" y="200" class="lbl tiny">↓</text>
+  <text x="762" y="280" class="lbl tiny">nearest</text>
+
+  <line x1="20" y1="326" x2="1020" y2="326" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="336" width="1000" height="110" rx="6" class="boxAnn"/>
+  <text x="36" y="356" class="lbl h2">Concatenated, not overriding</text>
+  <text x="36" y="376" class="lbl tiny">All four texts are present in the model's context simultaneously — the block is one long concatenation, top to bottom in the order shown.</text>
+  <text x="36" y="392" class="lbl tiny">"Nearest-last" only affects position in the prompt, which can bias attention toward the project's own rules — it does not delete or replace</text>
+  <text x="36" y="408" class="lbl tiny">any earlier text the way settings.json's permissions layers replace each other by key. Every CLAUDE.md file's content survives to the model.</text>
+  <text x="36" y="428" class="lbl tiny">Contrast with settings.json precedence (D-20): that mechanism resolves conflicting keys; this mechanism just concatenates prose in order.</text>
+</svg>

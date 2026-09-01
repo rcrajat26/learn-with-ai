@@ -1,0 +1,113 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A hierarchy diagram of two marketplace boxes, each with its own .claude-plugin/marketplace.json. The first marketplace declares allowCrossMarketplaceDependenciesOn naming ig-superclaude, and contains a plugin at version 0.10.2 whose dependencies field names ig-superclaude in the ig-superclaude marketplace. A weak-style dependency edge crosses from that plugin to the second marketplace, labelled as refused to auto-add until the user explicitly trusts it. A failure panel below shows the resulting unresolved state, the cryptic slash reload-plugins error, and the claude plugin list --json output exposing a per-plugin errors array.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE PLUGIN AND MARKETPLACE DEPENDENCY GRAPH</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="66" text-anchor="middle" class="lbl h2">MARKETPLACE 1</text>
+  <text x="820" y="66" text-anchor="middle" class="lbl h2">MARKETPLACE 2 (ig-superclaude)</text>
+  <line x1="560" y1="50" x2="560" y2="470" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- Marketplace 1 box -->
+  <rect x="60" y="80" width="440" height="230" rx="6" class="boxP"/>
+  <text x="80" y="104" class="lbl node">marketplace 1</text>
+  <text x="80" y="122" class="lbl sub mono">.claude-plugin/marketplace.json</text>
+  <text x="80" y="142" class="lbl body mono">allowCrossMarketplaceDependenciesOn:</text>
+  <text x="96" y="160" class="lbl body mono">["ig-superclaude"]</text>
+
+  <!-- nested plugin box -->
+  <rect x="80" y="176" width="400" height="118" rx="6" class="boxH"/>
+  <text x="100" y="198" class="lbl node">plugin (version 0.10.2)</text>
+  <text x="100" y="216" class="lbl body mono">dependencies:</text>
+  <text x="116" y="234" class="lbl body mono">{ name: "ig-superclaude",</text>
+  <text x="116" y="250" class="lbl body mono">&#160;&#160;marketplace: "ig-superclaude" }</text>
+  <text x="100" y="270" class="lbl sub">declares the cross-marketplace need</text>
+  <text x="100" y="286" class="lbl sub">named in the allow-list above</text>
+
+  <!-- Marketplace 2 box -->
+  <rect x="620" y="80" width="440" height="140" rx="6" class="boxP"/>
+  <text x="640" y="104" class="lbl node">marketplace 2</text>
+  <text x="640" y="122" class="lbl sub mono">.claude-plugin/marketplace.json</text>
+  <text x="640" y="146" class="lbl body">holds the ig-superclaude plugin that</text>
+  <text x="640" y="164" class="lbl body">marketplace 1's plugin depends on</text>
+  <text x="640" y="188" class="lbl sub">target of the cross-marketplace edge</text>
+
+  <!-- weak dependency edge crossing marketplaces, routed via corridor below both boxes -->
+  <path class="weak" d="M 280 294 V 340 H 840 V 220"/>
+  <text x="560" y="332" text-anchor="middle" class="lbl tiny" fill="#4b5563">cross-marketplace dependency edge (weak until trusted)</text>
+
+  <!-- annotation: refusal to auto-add -->
+  <rect x="140" y="360" width="840" height="80" rx="6" class="boxAnn"/>
+  <text x="160" y="382" class="lbl h2">REFUSAL TO AUTO-ADD</text>
+  <text x="160" y="402" class="lbl body">Even though marketplace 1 allow-lists "ig-superclaude" and the plugin names it in <tspan class="mono">dependencies</tspan>,</text>
+  <text x="160" y="420" class="lbl body">Claude Code will not silently add marketplace 2 as a source — it stays in the weak/untrusted state until the user explicitly trusts it.</text>
+
+  <!-- Failure panel band -->
+  <line x1="20" y1="480" x2="1100" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="560" y="504" text-anchor="middle" class="lbl h2" fill="#b91c1c">FAILURE PANEL: WHAT AN UNRESOLVED DEPENDENCY LOOKS LIKE</text>
+
+  <rect x="60" y="524" width="320" height="110" rx="6" class="boxD"/>
+  <text x="80" y="548" class="lbl node">unresolved state</text>
+  <text x="80" y="568" class="lbl body">marketplace 2 never trusted</text>
+  <text x="80" y="586" class="lbl body">&#8594; dependency stays unmet</text>
+  <text x="80" y="604" class="lbl body">&#8594; plugin install/enable stalls</text>
+  <text x="80" y="622" class="lbl sub">no automatic remediation occurs</text>
+
+  <rect x="400" y="524" width="320" height="110" rx="6" class="boxD"/>
+  <text x="420" y="548" class="lbl node">cryptic error</text>
+  <text x="420" y="572" class="lbl body mono">/reload-plugins</text>
+  <text x="420" y="592" class="lbl body">fails with a message that does not</text>
+  <text x="420" y="610" class="lbl body">name the missing marketplace trust</text>
+  <text x="420" y="626" class="lbl sub">the real cause is buried, not surfaced</text>
+
+  <rect x="740" y="524" width="320" height="150" rx="6" class="boxD"/>
+  <text x="760" y="548" class="lbl node">diagnose it directly</text>
+  <text x="760" y="568" class="lbl body mono">claude plugin list --json</text>
+  <text x="760" y="590" class="lbl body">exposes a per-plugin</text>
+  <text x="760" y="608" class="lbl body mono">"errors": [ ... ]</text>
+  <text x="760" y="628" class="lbl body">array — this is where the real</text>
+  <text x="760" y="646" class="lbl body">unresolved-dependency reason shows</text>
+  <text x="760" y="664" class="lbl sub">read this before /reload-plugins</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="750" x2="1100" y2="750" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="766" width="20" height="14" rx="3" class="boxP"/>
+  <text x="48" y="778" class="lbl tiny">marketplace box</text>
+  <rect x="220" y="766" width="20" height="14" rx="3" class="boxH"/>
+  <text x="248" y="778" class="lbl tiny">dependent plugin (v0.10.2)</text>
+  <rect x="460" y="766" width="20" height="14" rx="3" class="boxAnn"/>
+  <text x="488" y="778" class="lbl tiny">annotation panel</text>
+  <rect x="640" y="766" width="20" height="14" rx="3" class="boxD"/>
+  <text x="668" y="778" class="lbl tiny">failure-panel element</text>
+  <line x1="20" y1="792" x2="42" y2="792" class="weak"/>
+  <text x="50" y="797" class="lbl tiny">A &#8594; B : weak/untrusted cross-marketplace dependency, not auto-added</text>
+</svg>

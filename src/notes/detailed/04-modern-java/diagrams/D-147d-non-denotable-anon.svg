@@ -1,0 +1,68 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Second panel. When the initialiser is an anonymous class expression, the
+     inferred type is genuinely non-denotable — no name for it exists anywhere in the
+     language. Because var captures the anonymous class itself rather than a supertype,
+     extra members declared only in the anonymous body, logStake and callCount, remain
+     directly callable on probe.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node { font-size: 15px; font-weight: 600; }
+    .body { font-size: 13px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">D-147d — SECOND PANEL — A GENUINELY NON-DENOTABLE INITIALISER</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="750" y="20" width="30" height="20" rx="4" class="pill"/>
+  <text x="765" y="35" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+
+  <rect x="40" y="58" width="820" height="86" rx="6" class="boxA"/>
+  <text x="60" y="80" class="lbl body mono">var probe = new Object() {</text>
+  <text x="80" y="98" class="lbl body mono">  void logStake(StakeSplit split) { audit.add(split); }</text>
+  <text x="80" y="116" class="lbl body mono">  int callCount = 0;</text>
+  <text x="60" y="134" class="lbl body mono">};</text>
+
+  <rect x="40" y="170" width="330" height="110" rx="6" class="boxH"/>
+  <text x="205" y="200" text-anchor="middle" class="lbl node mono">probe</text>
+  <text x="205" y="222" text-anchor="middle" class="lbl sub">type: anonymous subclass of Object</text>
+  <text x="205" y="238" text-anchor="middle" class="lbl sub">declared inline, no source name</text>
+  <text x="205" y="254" text-anchor="middle" class="lbl sub">only var can hold it directly</text>
+
+  <path class="flow" d="M 375 200 H 470"/>
+  <text x="422" y="192" text-anchor="middle" class="lbl tiny" font-weight="700">extra members</text>
+  <text x="422" y="216" text-anchor="middle" class="lbl tiny">stay reachable</text>
+
+  <rect x="480" y="170" width="380" height="130" rx="6" class="boxW"/>
+  <text x="500" y="196" class="lbl body" font-weight="700">callable members panel</text>
+  <text x="500" y="216" class="lbl tiny mono">logStake(StakeSplit) · void</text>
+  <text x="500" y="234" class="lbl tiny mono">callCount · int field</text>
+  <text x="500" y="252" class="lbl tiny mono">probe.logStake(split); probe.callCount++;</text>
+  <text x="500" y="270" class="lbl sub">neither is on Object — only reachable</text>
+  <text x="500" y="284" class="lbl sub">via probe's real (anonymous) type</text>
+
+  <rect x="40" y="300" width="800" height="86" rx="6" class="boxA"/>
+  <text x="60" y="322" class="lbl body" font-weight="700">why var is required here, not optional</text>
+  <text x="60" y="342" class="lbl tiny">Object probe = new Object() {...} would type probe as Object — logStake and callCount become uncallable.</text>
+  <text x="60" y="358" class="lbl tiny">var lets javac record the true, unwriteable anonymous-class type in the LocalVariableTable instead,</text>
+  <text x="60" y="374" class="lbl tiny">which is the one case where var captures a type the language has no syntax to spell out.</text>
+
+  <line x1="20" y1="398" x2="880" y2="398" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="404" width="20" height="12" rx="3" class="boxH"/>
+  <text x="46" y="414" class="lbl tiny">the subject of this panel — non-denotable inferred type</text>
+  <rect x="420" y="404" width="20" height="12" rx="3" class="boxW"/>
+  <text x="446" y="414" class="lbl tiny">detail panel</text>
+</svg>

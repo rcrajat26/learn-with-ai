@@ -1,0 +1,152 @@
+<svg viewBox="0 0 1120 840" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Class-initialisation deadlock, invisible to jstack. Left: withdrawal-intake-1
+     loads ClientRestrictions and its static initialiser references AccountActivation;
+     payment-run-worker-2 loads AccountActivation and its static initialiser references
+     ClientRestrictions. Each thread holds its own class's per-class init lock and wants the
+     other's, forming a cycle. Right: a jstack excerpt shows both threads with
+     Thread.State RUNNABLE, parked inside a static initialiser, and jstack's own deadlock
+     detector reports No deadlocks found, because the per-class init lock is a JVM-internal
+     lock, not an Object monitor or a java.util.concurrent lock, so jstack's cycle walker never
+     sees it.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2     { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 11px; fill: #4b5563; }
+    .floor  { font-size: 10.5px; fill: #4b5563; }
+    .mono   { font-size: 11px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .cap    { font-size: 11px; fill: #4b5563; font-style: italic; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+    .boxA   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri475); }
+    .weak   { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#tri9ca); }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="tri9ca" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="840" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLASS-INITIALISATION DEADLOCK IS INVISIBLE TO jstack</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="562" y1="54" x2="562" y2="730" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <!-- LEFT: the cycle -->
+  <text x="30" y="62" class="lbl h2">THE CYCLE — TWO PER-CLASS &lt;clinit&gt; LOCKS</text>
+
+  <rect x="50" y="80" width="240" height="50" rx="6" class="boxP"/>
+  <text x="170" y="102" text-anchor="middle" class="lbl node">withdrawal-intake-1</text>
+  <text x="170" y="120" text-anchor="middle" class="lbl body">loads ClientRestrictions</text>
+
+  <rect x="330" y="80" width="240" height="50" rx="6" class="boxP"/>
+  <text x="450" y="102" text-anchor="middle" class="lbl node">payment-run-worker-2</text>
+  <text x="450" y="120" text-anchor="middle" class="lbl body">loads AccountActivation</text>
+
+  <path class="flow" d="M 170 130 V 190"/>
+  <path class="flow" d="M 450 130 V 190"/>
+
+  <rect x="50" y="190" width="240" height="90" rx="6" class="boxH"/>
+  <text x="170" y="212" text-anchor="middle" class="lbl node">ClientRestrictions</text>
+  <text x="170" y="232" text-anchor="middle" class="lbl body">static {</text>
+  <text x="170" y="250" text-anchor="middle" class="lbl floor">AccountActivation.HOLD_MS }</text>
+  <text x="170" y="270" text-anchor="middle" class="lbl sub">&lt;clinit&gt; running</text>
+
+  <rect x="330" y="190" width="240" height="90" rx="6" class="boxH"/>
+  <text x="450" y="212" text-anchor="middle" class="lbl node">AccountActivation</text>
+  <text x="450" y="232" text-anchor="middle" class="lbl body">static {</text>
+  <text x="450" y="250" text-anchor="middle" class="lbl floor">ClientRestrictions.MAX_HOLDS }</text>
+  <text x="450" y="270" text-anchor="middle" class="lbl sub">&lt;clinit&gt; running</text>
+
+  <path class="flow" d="M 170 280 V 350"/>
+  <path class="flow" d="M 450 280 V 350"/>
+
+  <rect x="50" y="350" width="240" height="70" rx="6" class="boxH"/>
+  <text x="170" y="372" text-anchor="middle" class="lbl node">ClientRestrictions</text>
+  <text x="170" y="391" text-anchor="middle" class="lbl body">init lock — held by:</text>
+  <text x="170" y="408" text-anchor="middle" class="lbl floor">withdrawal-intake-1</text>
+
+  <rect x="330" y="350" width="240" height="70" rx="6" class="boxH"/>
+  <text x="450" y="372" text-anchor="middle" class="lbl node">AccountActivation</text>
+  <text x="450" y="391" text-anchor="middle" class="lbl body">init lock — held by:</text>
+  <text x="450" y="408" text-anchor="middle" class="lbl floor">payment-run-worker-2</text>
+
+  <path class="weak" d="M 290 372 H 330"/>
+  <path class="weak" d="M 330 398 H 290"/>
+
+  <rect x="50" y="445" width="520" height="150" rx="6" class="boxA"/>
+  <text x="65" y="468" class="lbl tiny" font-weight="700">WHY jstack MISSES THIS CYCLE</text>
+  <text x="65" y="490" class="lbl sub">withdrawal-intake-1 holds ClientRestrictions' init lock and blocks entering</text>
+  <text x="65" y="506" class="lbl sub">AccountActivation.&lt;clinit&gt; — it wants that class's init lock next.</text>
+  <text x="65" y="526" class="lbl sub">payment-run-worker-2 holds AccountActivation's init lock and blocks entering</text>
+  <text x="65" y="542" class="lbl sub">ClientRestrictions.&lt;clinit&gt; — it wants that class's init lock next.</text>
+  <text x="65" y="566" class="lbl sub" font-weight="700">Both locks are JVM-internal per-class init locks, not Object monitors.</text>
+  <text x="65" y="582" class="lbl floor">jstack's deadlock walker never inspects this lock kind — see right panel.</text>
+
+  <!-- RIGHT: jstack output -->
+  <text x="580" y="62" class="lbl h2">jstack -l OUTPUT — NO "FOUND ONE JAVA-LEVEL DEADLOCK"</text>
+  <text x="580" y="78" class="lbl cap">Both threads report Thread.State: RUNNABLE — never BLOCKED — while parked in &lt;clinit&gt;.</text>
+
+  <rect x="590" y="90" width="500" height="230" rx="6" class="boxW"/>
+  <text x="605" y="112" class="lbl mono" font-weight="700">jstack 51234 — excerpt</text>
+  <text x="605" y="134" class="lbl mono">"withdrawal-intake-1" #21 daemon prio=5</text>
+  <text x="605" y="150" class="lbl mono">   java.lang.Thread.State: RUNNABLE</text>
+  <text x="605" y="166" class="lbl mono">   at AccountActivation.&lt;clinit&gt;(AccountActivation.java:9)</text>
+  <text x="605" y="182" class="lbl mono">   - waiting for AccountActivation to finish initializing</text>
+  <text x="605" y="206" class="lbl mono">"payment-run-worker-2" #22 daemon prio=5</text>
+  <text x="605" y="222" class="lbl mono">   java.lang.Thread.State: RUNNABLE</text>
+  <text x="605" y="238" class="lbl mono">   at ClientRestrictions.&lt;clinit&gt;(ClientRestrictions.java:11)</text>
+  <text x="605" y="254" class="lbl mono">   - waiting for ClientRestrictions to finish initializing</text>
+  <text x="605" y="278" class="lbl mono" font-style="italic">(No "Found one Java-level deadlock" section follows.)</text>
+
+  <path class="flow" d="M 840 320 V 350"/>
+
+  <rect x="590" y="350" width="500" height="90" rx="6" class="boxD"/>
+  <text x="840" y="374" text-anchor="middle" class="lbl node">Deadlock Detection: "No deadlocks found."</text>
+  <text x="840" y="394" text-anchor="middle" class="lbl sub">jstack's cycle-finder walks j.u.c. locks and Object monitors only.</text>
+  <text x="840" y="410" text-anchor="middle" class="lbl sub">A per-class &lt;clinit&gt; lock is neither — the cycle above never surfaces.</text>
+
+  <rect x="590" y="460" width="500" height="130" rx="6" class="boxA"/>
+  <text x="605" y="483" class="lbl tiny" font-weight="700">READING THE DUMP</text>
+  <text x="605" y="505" class="lbl sub">Both threads sit idle, CPU near zero, yet no monitor is BLOCKED or WAITING —</text>
+  <text x="605" y="521" class="lbl sub">the giveaway is a stack frame stuck at a &lt;clinit&gt; line with no forward progress</text>
+  <text x="605" y="537" class="lbl sub">across repeated jstack dumps taken a few seconds apart.</text>
+  <text x="605" y="561" class="lbl sub" font-weight="700">Fix: never call back into a sibling class from inside a static initialiser.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="742" x2="1100" y2="742" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="755" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="768" class="lbl tiny">thread entering class-loading</text>
+
+  <rect x="270" y="755" width="22" height="16" rx="3" class="boxH"/>
+  <text x="300" y="768" class="lbl tiny">class mid-&lt;clinit&gt; / its init lock (JVM-internal)</text>
+
+  <rect x="610" y="755" width="22" height="16" rx="3" class="boxW"/>
+  <text x="640" y="768" class="lbl tiny">raw jstack -l output excerpt</text>
+
+  <rect x="850" y="755" width="22" height="16" rx="3" class="boxD"/>
+  <text x="880" y="768" class="lbl tiny">deadlock verdict (misses it)</text>
+
+  <path class="flow" d="M 30 795 H 62"/>
+  <text x="70" y="800" class="lbl tiny">A → B : A loads / triggers B's &lt;clinit&gt;</text>
+
+  <path class="weak" d="M 400 795 H 432"/>
+  <text x="440" y="800" class="lbl tiny">A ⇢ B : thread holding A's lock wants B's lock</text>
+
+  <rect x="850" y="787" width="22" height="16" rx="3" class="boxA"/>
+  <text x="880" y="800" class="lbl tiny">explanatory note</text>
+</svg>

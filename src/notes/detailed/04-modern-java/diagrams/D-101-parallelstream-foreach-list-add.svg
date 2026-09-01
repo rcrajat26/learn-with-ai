@@ -1,0 +1,156 @@
+<svg viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing ledgerEntries.parallelStream().forEach(list colon colon add) corrupting a plain ArrayList of LedgerEntry. Frame 1: worker-1 and worker-2, both carrier threads, read list.size() and both see 40. Frame 2: both threads write to index 40; worker-2's write overwrites worker-1's entry, a lost update, and size still reports 41. Frame 3: worker-1's add() triggers grow(), allocating a new array of capacity 60 and copying the old one, while worker-2 still holds a reference to the old, now-discarded array and writes into it at index 40, throwing ArrayIndexOutOfBoundsException from inside ArrayList.add; a related but separate symptom, interspersed null, occurs when a reader observes a null slot mid-resize before the new array and size are published. A closing panel names all three symptoms: lost update, ArrayIndexOutOfBoundsException, interspersed null.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxR  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PARALLELSTREAM().FOREACH(LIST::ADD) CORRUPTS A PLAIN ArrayList</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl dense">ledgerEntries.parallelStream().forEach(list::add) — list is a plain ArrayList&lt;LedgerEntry&gt;, not synchronized</text>
+
+  <!-- vertical dividers between frames -->
+  <line x1="470" y1="90" x2="470" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="930" y1="90" x2="930" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== FRAME 1 ===================== -->
+  <text x="40" y="96" class="lbl h2">FRAME 1 — BOTH THREADS READ size AS 40</text>
+  <line x1="20" y1="104" x2="460" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="120" width="340" height="80" rx="6" class="boxP"/>
+  <text x="230" y="146" text-anchor="middle" class="lbl node">ledgerEntries</text>
+  <text x="230" y="166" text-anchor="middle" class="lbl body">ArrayList&lt;LedgerEntry&gt;, size = 40</text>
+  <text x="230" y="184" text-anchor="middle" class="lbl sub">shared across all parallel leaves</text>
+
+  <rect x="60" y="260" width="150" height="70" rx="6" class="boxY"/>
+  <text x="135" y="286" text-anchor="middle" class="lbl node">worker-1</text>
+  <text x="135" y="304" text-anchor="middle" class="lbl body">carrier thread</text>
+  <text x="135" y="320" text-anchor="middle" class="lbl sub">reads size → 40</text>
+
+  <rect x="250" y="260" width="150" height="70" rx="6" class="boxY"/>
+  <text x="325" y="286" text-anchor="middle" class="lbl node">worker-2</text>
+  <text x="325" y="304" text-anchor="middle" class="lbl body">carrier thread</text>
+  <text x="325" y="320" text-anchor="middle" class="lbl sub">reads size → 40</text>
+
+  <path class="flow" d="M 135 260 V 200"/>
+  <path class="flow" d="M 325 260 V 200"/>
+  <text x="149" y="232" class="lbl tiny">reads</text>
+  <text x="339" y="232" class="lbl tiny">reads</text>
+
+  <text x="240" y="360" text-anchor="middle" class="lbl tiny">both observe size == 40 before either add() runs</text>
+
+  <!-- ===================== FRAME 2 ===================== -->
+  <text x="500" y="96" class="lbl h2">FRAME 2 — BOTH WRITE TO INDEX 40 — ONE ENTRY LOST</text>
+  <line x1="480" y1="104" x2="920" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="520" y="120" width="340" height="80" rx="6" class="boxP"/>
+  <text x="690" y="146" text-anchor="middle" class="lbl node">elementData[40]</text>
+  <text x="690" y="166" text-anchor="middle" class="lbl body">target slot both threads target</text>
+  <text x="690" y="184" text-anchor="middle" class="lbl sub">size still read as 40 by both</text>
+
+  <rect x="520" y="260" width="150" height="70" rx="6" class="boxY"/>
+  <text x="595" y="286" text-anchor="middle" class="lbl node">worker-1</text>
+  <text x="595" y="304" text-anchor="middle" class="lbl body">add(EntryA)</text>
+  <text x="595" y="320" text-anchor="middle" class="lbl sub">index 40 = EntryA</text>
+
+  <rect x="710" y="260" width="150" height="70" rx="6" class="boxY"/>
+  <text x="785" y="286" text-anchor="middle" class="lbl node">worker-2</text>
+  <text x="785" y="304" text-anchor="middle" class="lbl body">add(EntryB)</text>
+  <text x="785" y="320" text-anchor="middle" class="lbl sub">index 40 = EntryB (wins)</text>
+
+  <path class="flow" d="M 595 260 V 200"/>
+  <path class="flow" d="M 785 260 V 200"/>
+  <text x="609" y="232" class="lbl tiny">t0 write</text>
+  <text x="799" y="232" class="lbl tiny">t1 write</text>
+
+  <rect x="520" y="360" width="340" height="70" rx="6" class="boxR"/>
+  <text x="690" y="384" text-anchor="middle" class="lbl node">LOST UPDATE</text>
+  <text x="690" y="402" text-anchor="middle" class="lbl body">EntryA overwritten by EntryB</text>
+  <text x="690" y="418" text-anchor="middle" class="lbl sub">size says 41; one add() vanished — lost update</text>
+
+  <!-- ===================== FRAME 3 ===================== -->
+  <text x="960" y="96" class="lbl h2">FRAME 3 — GROW RACES A WRITE</text>
+  <line x1="940" y1="104" x2="1380" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="980" y="120" width="340" height="60" rx="6" class="boxP"/>
+  <text x="1150" y="146" text-anchor="middle" class="lbl node">elementData (old array)</text>
+  <text x="1150" y="166" text-anchor="middle" class="lbl sub">capacity 40, about to be discarded</text>
+
+  <rect x="980" y="210" width="170" height="70" rx="6" class="boxY"/>
+  <text x="1065" y="236" text-anchor="middle" class="lbl node">worker-1</text>
+  <text x="1065" y="254" text-anchor="middle" class="lbl body">triggers grow()</text>
+  <text x="1065" y="270" text-anchor="middle" class="lbl sub">new array cap 60</text>
+
+  <rect x="1170" y="210" width="170" height="70" rx="6" class="boxY"/>
+  <text x="1255" y="236" text-anchor="middle" class="lbl node">worker-2</text>
+  <text x="1255" y="254" text-anchor="middle" class="lbl body">writes index 40</text>
+  <text x="1255" y="270" text-anchor="middle" class="lbl sub">stale array ref</text>
+
+  <path class="flow" d="M 1230 210 V 180"/>
+  <text x="1244" y="198" class="lbl tiny">still refs old</text>
+
+  <path class="flow" d="M 1065 280 V 310"/>
+
+  <rect x="980" y="310" width="340" height="50" rx="6" class="boxG"/>
+  <text x="1150" y="340" text-anchor="middle" class="lbl body">new elementData, cap 60, copied from old</text>
+
+  <path class="flow" d="M 1340 245 H 1360 V 415 H 1320"/>
+
+  <rect x="980" y="380" width="340" height="70" rx="6" class="boxR"/>
+  <text x="1150" y="404" text-anchor="middle" class="lbl node">ArrayIndexOutOfBoundsException</text>
+  <text x="1150" y="422" text-anchor="middle" class="lbl body">thrown from ArrayList.add(Object)</text>
+  <text x="1150" y="438" text-anchor="middle" class="lbl sub">worker-2 wrote into the old, discarded array</text>
+
+  <rect x="980" y="470" width="340" height="90" rx="6" class="panel"/>
+  <text x="1000" y="492" class="lbl body" font-weight="700">interspersed null</text>
+  <text x="1000" y="512" class="lbl tiny">reader sees elementData[i] as null</text>
+  <text x="1000" y="530" class="lbl tiny">mid-resize, before publish — no exception thrown</text>
+  <text x="1000" y="548" class="lbl tiny">size is nonatomic w.r.t. the array reference</text>
+
+  <!-- Bottom summary panel -->
+  <rect x="20" y="590" width="1360" height="90" rx="6" class="panel"/>
+  <text x="40" y="614" class="lbl body" font-weight="700">Three symptoms of the same race</text>
+  <text x="40" y="636" class="lbl tiny">(1) lost update — an add() vanishes   (2) ArrayIndexOutOfBoundsException thrown from inside ArrayList.add   (3) interspersed null — a reader observes a null LedgerEntry mid-resize</text>
+  <text x="40" y="656" class="lbl tiny">ArrayList performs no synchronization; parallelStream().forEach(list::add) is unsafe regardless of encounter order — use collect(toList()) or synchronize externally.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="700" x2="1380" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="725" class="lbl tiny">shared ArrayList / backing array state</text>
+
+  <rect x="330" y="712" width="22" height="16" rx="3" class="boxY"/>
+  <text x="360" y="725" class="lbl tiny">carrier thread performing the racy call</text>
+
+  <rect x="650" y="712" width="22" height="16" rx="3" class="boxG"/>
+  <text x="680" y="725" class="lbl tiny">post-grow, resolved array</text>
+
+  <rect x="900" y="712" width="22" height="16" rx="3" class="boxR"/>
+  <text x="930" y="725" class="lbl tiny">failure / lost-data outcome</text>
+
+  <rect x="1140" y="712" width="22" height="16" rx="3" class="panel"/>
+  <text x="1170" y="725" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 748 H 60"/>
+  <text x="68" y="753" class="lbl tiny">A → B : A reads from / writes into B</text>
+</svg>

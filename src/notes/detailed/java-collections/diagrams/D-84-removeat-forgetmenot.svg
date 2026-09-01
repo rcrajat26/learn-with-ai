@@ -1,0 +1,179 @@
+<svg viewBox="0 0 800 950" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing PriorityQueue removeAt moving the last element behind an in-progress iterator, and forgetMeNot capturing it so next() still returns it instead of silently skipping it">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- ================= FRAME 1 ================= -->
+  <rect x="20" y="10" width="760" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 1: iterator has returned indices 0-4; cursor points at index 5 next</text>
+
+  <!-- array boxes index 0-8, values A..I, X = last element -->
+  <!-- returned (green): A B C D E ; not yet returned (blue): F G H X -->
+  <g id="f1-array">
+    <rect x="55" y="70" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="90" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+    <text x="90" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 0</text>
+
+    <rect x="130" y="70" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="165" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+    <text x="165" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 1</text>
+
+    <rect x="205" y="70" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="240" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">C</text>
+    <text x="240" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 2</text>
+
+    <rect x="280" y="70" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="315" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">D</text>
+    <text x="315" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 3</text>
+
+    <rect x="355" y="70" width="70" height="50" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+    <text x="390" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">E</text>
+    <text x="390" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 4</text>
+
+    <rect x="430" y="70" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="465" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">F</text>
+    <text x="465" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 5</text>
+
+    <rect x="505" y="70" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">G</text>
+    <text x="540" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 6</text>
+
+    <rect x="580" y="70" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="615" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">H</text>
+    <text x="615" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 7</text>
+
+    <rect x="655" y="70" width="70" height="50" fill="#fef3c7" stroke="#525252" stroke-width="3"/>
+    <text x="690" y="99" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">X</text>
+    <text x="690" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 8 (last)</text>
+  </g>
+
+  <!-- cursor arrow pointing at idx5 (next to return) -->
+  <line x1="465" y1="155" x2="465" y2="122" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="380" y="158" width="170" height="24" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="465" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">cursor = 5 (lastRet = 4)</text>
+
+  <rect x="20" y="200" width="760" height="24" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="217" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">green = already returned by next() . blue = not yet visited . amber = last element X, about to move</text>
+
+  <line x1="20" y1="245" x2="780" y2="245" stroke="#737373" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- ================= FRAME 2 ================= -->
+  <rect x="20" y="260" width="760" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="278" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 2: removeAt(2) removes C; last element X moves from idx 8 into idx 2</text>
+
+  <g id="f2-array">
+    <rect x="55" y="320" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="90" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+    <text x="90" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 0</text>
+
+    <rect x="130" y="320" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="165" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+    <text x="165" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 1</text>
+
+    <!-- idx 2: C removed, X moves here -->
+    <rect x="205" y="320" width="70" height="50" fill="#fef3c7" stroke="#525252" stroke-width="3"/>
+    <text x="240" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">X</text>
+    <text x="240" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 2 (was C)</text>
+
+    <rect x="280" y="320" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="315" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">D</text>
+    <text x="315" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 3</text>
+
+    <rect x="355" y="320" width="70" height="50" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+    <text x="390" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">E</text>
+    <text x="390" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 4</text>
+
+    <rect x="430" y="320" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="465" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">F</text>
+    <text x="465" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 5</text>
+
+    <rect x="505" y="320" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">G</text>
+    <text x="540" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 6</text>
+
+    <rect x="580" y="320" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="615" y="349" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">H</text>
+    <text x="615" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 7</text>
+
+    <!-- idx 8 now empty (size shrank) -->
+    <rect x="655" y="320" width="70" height="50" fill="#e5e7eb" stroke="#737373" stroke-width="2" stroke-dasharray="4,4"/>
+    <text x="690" y="349" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(gone)</text>
+    <text x="690" y="385" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 8</text>
+  </g>
+
+  <!-- move arrow from old idx8 position to idx2 -->
+  <path d="M 690 315 C 690 270, 240 270, 240 315" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="330" y="255" width="240" height="24" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="272" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">X moved to idx 2 -- behind cursor (5)!</text>
+
+  <rect x="20" y="405" width="760" height="40" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="421" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">X sits at idx 2, which the iterator already passed (lastRet was 4); cursor only ever moves forward from 5.</text>
+  <text x="400" y="437" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Without help, X (never yet returned) would never be visited again -- a silent skip.</text>
+
+  <line x1="20" y1="465" x2="780" y2="465" stroke="#737373" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- ================= FRAME 3 ================= -->
+  <rect x="20" y="480" width="760" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="498" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 3: removeAt pushes X onto forgetMeNot; next() drains it before advancing cursor</text>
+
+  <g id="f3-array">
+    <rect x="55" y="540" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="90" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+    <text x="90" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 0</text>
+
+    <rect x="130" y="540" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="165" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+    <text x="165" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 1</text>
+
+    <rect x="205" y="540" width="70" height="50" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="240" y="569" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(X gone)</text>
+    <text x="240" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 2</text>
+
+    <rect x="280" y="540" width="70" height="50" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="315" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">D</text>
+    <text x="315" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 3</text>
+
+    <rect x="355" y="540" width="70" height="50" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+    <text x="390" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">E</text>
+    <text x="390" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 4</text>
+
+    <rect x="430" y="540" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="465" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">F</text>
+    <text x="465" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 5</text>
+
+    <rect x="505" y="540" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">G</text>
+    <text x="540" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 6</text>
+
+    <rect x="580" y="540" width="70" height="50" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="615" y="569" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">H</text>
+    <text x="615" y="605" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">idx 7</text>
+  </g>
+
+  <!-- cursor still at 5 -->
+  <line x1="465" y1="625" x2="465" y2="592" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="390" y="628" width="150" height="22" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="465" y="644" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">cursor unchanged: 5</text>
+
+  <!-- forgetMeNot queue -->
+  <text x="655" y="540" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">forgetMeNot</text>
+  <rect x="620" y="550" width="150" height="46" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="3"/>
+  <text x="695" y="578" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">[ X ]</text>
+
+  <path d="M 240 538 C 350 480, 550 480, 660 550" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="450" y="490" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">removeAt pushes displaced X here</text>
+
+  <rect x="20" y="660" width="760" height="60" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="680" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">next() logic: if forgetMeNot is non-empty, poll and return from it FIRST, before touching cursor.</text>
+  <text x="400" y="698" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">So the very next call returns X -- it is not lost, even though its slot (idx 2) is behind the cursor.</text>
+  <text x="400" y="714" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Only after forgetMeNot drains does next() resume from idx 5 (F, G, H).</text>
+
+  <rect x="20" y="735" width="760" height="60" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="755" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Bug this prevents: without forgetMeNot, X would sit at idx 2 (already passed) and the cursor</text>
+  <text x="400" y="771" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">would keep moving forward from idx 5 -- X is never returned. The iterator silently skips an</text>
+  <text x="400" y="787" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">element that was never removed, with no exception thrown.</text>
+</svg>

@@ -1,0 +1,132 @@
+<svg viewBox="0 0 900 1320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing exception translation preserving the cause. Frame 1: FundsLedger.append catches java.sql.SQLException, duplicate key value violates unique constraint ledger_entry_idempotency_key, and wraps it as LedgerImbalanceException, ledger append rejected for run PR-2026-08-29, passing the SQLException as the cause. Frame 2: PaymentService.execute catches that LedgerImbalanceException and wraps it again as PaymentFailedException, payment run PR-2026-08-29 aborted, passing the LedgerImbalanceException as the cause. Frame 3 shows the actual printed stack trace as printStackTrace emits it top to bottom: PaymentFailedException at PaymentService.execute, a Suppressed IOException from PaymentRunFileWriter.close, then Caused by LedgerImbalanceException at FundsLedger.append, then Caused by the original SQLException; a dotted arrow marks that the causal chain must be read bottom-up, from the deepest Caused by upward to the outermost exception. A final degraded panel shows the variant that drops the cause: throw new LedgerImbalanceException with only a message and no cause argument, whose printed trace has no Caused by line at all, so the unique-constraint name never reaches the log, labeled root cause GONE.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+    </style>
+    <marker id="arr082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arr082dot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="1320" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Exception translation preserves the cause &#8212; and the variant that drops it</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; FundsLedger WRAPS</text>
+  <line x1="20" y1="74" x2="880" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="90" width="740" height="60" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="76" y="112" class="code">java.sql.SQLException: duplicate key value violates unique</text>
+  <text x="76" y="130" class="code">constraint "ledger_entry_idempotency_key"</text>
+
+  <path d="M 430 150 V 170" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr082)"/>
+
+  <rect x="60" y="170" width="740" height="110" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="190" class="small" font-weight="bold">FundsLedger.append &#8212; catch and wrap</text>
+  <text x="76" y="212" class="code">catch (SQLException e) {</text>
+  <text x="76" y="230" class="code">    throw new LedgerImbalanceException(</text>
+  <text x="76" y="248" class="code">        "ledger append rejected for run PR-2026-08-29", e);</text>
+  <text x="76" y="266" class="code">}</text>
+
+  <path d="M 430 280 V 300" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr082)"/>
+
+  <rect x="60" y="300" width="740" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="76" y="322" class="code" font-weight="bold">LedgerImbalanceException: ledger append rejected for run PR-2026-08-29</text>
+  <text x="76" y="340" class="small">cause = the SQLException above (cause preserved)</text>
+
+  <text x="76" y="366" class="small">&#8594; wrapped again in Frame 2 as PaymentFailedException</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="396" class="h2">FRAME 2 &#8212; PaymentService WRAPS AGAIN</text>
+  <line x1="20" y1="404" x2="880" y2="404" stroke="#d1d5db" stroke-width="1"/>
+  <text x="76" y="420" class="small">&#8592; cause: the LedgerImbalanceException from Frame 1</text>
+
+  <rect x="60" y="430" width="740" height="110" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="450" class="small" font-weight="bold">PaymentService.execute &#8212; catch and wrap again</text>
+  <text x="76" y="472" class="code">catch (LedgerImbalanceException e) {</text>
+  <text x="76" y="490" class="code">    throw new PaymentFailedException(</text>
+  <text x="76" y="508" class="code">        "payment run PR-2026-08-29 aborted", e);</text>
+  <text x="76" y="526" class="code">}</text>
+
+  <path d="M 430 540 V 560" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr082)"/>
+
+  <rect x="60" y="560" width="740" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="76" y="582" class="code" font-weight="bold">PaymentFailedException: payment run PR-2026-08-29 aborted</text>
+  <text x="76" y="600" class="small">cause = the LedgerImbalanceException above (cause preserved)</text>
+
+  <text x="76" y="626" class="small">&#8594; printed trace shown in Frame 3, read bottom-up</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <text x="20" y="656" class="h2">FRAME 3 &#8212; THE PRINTED TRACE (printStackTrace emits top &#8594; bottom)</text>
+  <line x1="20" y1="664" x2="880" y2="664" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="680" width="740" height="220" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="76" y="702" class="code">PaymentFailedException: payment run PR-2026-08-29 aborted</text>
+  <text x="76" y="720" class="code">    at PaymentService.execute(PaymentService.java:118)</text>
+  <text x="76" y="738" class="code">    Suppressed: java.io.IOException: payment-run file handle already released</text>
+  <text x="76" y="756" class="code">        at PaymentRunFileWriter.close(PaymentRunFileWriter.java:64)</text>
+  <text x="76" y="774" class="code" font-weight="bold">Caused by: LedgerImbalanceException: ledger append rejected for run PR-2026-08-29</text>
+  <text x="76" y="792" class="code">    at FundsLedger.append(FundsLedger.java:212)</text>
+  <text x="76" y="810" class="code" font-weight="bold">Caused by: java.sql.SQLException: duplicate key value violates unique constraint...</text>
+  <text x="76" y="828" class="code">    at ...</text>
+  <text x="76" y="852" class="small">the deepest "Caused by:" (line 810) is the true origin &#8212; the SQLException</text>
+  <text x="76" y="868" class="small">the outermost line (line 702) is only what the top-level caller saw</text>
+
+  <path d="M 820 866 V 700" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arr082dot)"/>
+  <text x="833" y="790" class="small" transform="rotate(-90 833 790)">read bottom-up</text>
+
+  <!-- ================= DEGRADED VARIANT ================= -->
+  <text x="20" y="934" class="h2">THE VARIANT THAT DROPS THE CAUSE</text>
+  <line x1="20" y1="942" x2="880" y2="942" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="958" width="340" height="110" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="76" y="980" class="small" font-weight="bold">no cause argument passed</text>
+  <text x="76" y="1002" class="code">throw new LedgerImbalanceException(</text>
+  <text x="76" y="1020" class="code">    "ledger append rejected");</text>
+  <text x="76" y="1042" class="small">// no cause argument &#8212; the</text>
+  <text x="76" y="1058" class="small">// SQLException is discarded</text>
+
+  <path d="M 400 1013 H 440" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr082)"/>
+
+  <rect x="440" y="958" width="340" height="110" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="456" y="980" class="codeR" font-weight="bold">root cause GONE</text>
+  <text x="456" y="1000" class="code">LedgerImbalanceException:</text>
+  <text x="456" y="1016" class="code">ledger append rejected</text>
+  <text x="456" y="1038" class="small">no "Caused by:" line at all &#8212;</text>
+  <text x="456" y="1054" class="small">the unique-constraint name never</text>
+  <text x="456" y="1064" class="small">reaches the log</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1108" class="h2">LEGEND</text>
+  <line x1="20" y1="1116" x2="880" y2="1116" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="42" y="1130" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="70" y="1143" class="small">degraded &#8212; the thrown exception at each hop, and the drop-the-cause variant</text>
+
+  <rect x="42" y="1154" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="70" y="1167" class="small">weak/nested &#8212; the catch-and-wrap code detail at each frame</text>
+
+  <rect x="42" y="1178" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="70" y="1191" class="small">highlight &#8212; the point: the new exception with the cause passed through</text>
+
+  <rect x="42" y="1202" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="70" y="1215" class="small">resolved &#8212; the correct printed trace, full causal chain intact</text>
+
+  <line x1="42" y1="1234" x2="68" y2="1234" stroke="#475569" stroke-width="2" marker-end="url(#arr082)"/>
+  <text x="76" y="1238" class="small">primary flow &#8212; catch/throw sequence, arrowhead lands on the resulting exception</text>
+
+  <line x1="42" y1="1258" x2="68" y2="1258" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arr082dot)"/>
+  <text x="76" y="1262" class="small">weak/inferred &#8212; reading direction annotation, not a data flow</text>
+</svg>

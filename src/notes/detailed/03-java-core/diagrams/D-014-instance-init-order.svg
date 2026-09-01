@@ -1,0 +1,118 @@
+<svg viewBox="0 0 1120 1200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Five-frame sequence showing the order of instance initialization for new Reservation(...), where Reservation extends LedgerRecord, tracking four fields across all frames: LedgerRecord.entryId, LedgerRecord.createdAt, Reservation.stake, and Reservation.split. Frame 1: allocation zeroes every field to null. Frame 2: super(...) runs LedgerRecord's field initializers then its constructor body, setting entryId to 4f2a7c9e-51ab-4d3a-9c2e-118dfe2a77b0 and createdAt to 2026-08-29T10:15:30Z, while stake and split remain null. Frame 3: Reservation's own field initializers and instance blocks run in textual order, setting split to StakeSplit(bonus=0.33 GBP, cash=3.00 GBP), while stake remains null. Frame 4: Reservation's constructor body runs last, setting stake to 3.33 GBP. Frame 5: the fully populated object is returned as a Reservation reference to the caller. Each frame highlights in amber the field or fields that changed since the previous frame, and shows already-set fields in green as stable.">
+  <defs>
+    <marker id="arrow014" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1200" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">The order of instance initialisation</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="560" y="56" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">class Reservation extends LedgerRecord</text>
+
+  <!-- ============ FRAME 1 ============ -->
+  <text x="20" y="74" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 1 &#8212; new Reservation(...) allocates and zeroes every field</text>
+  <line x1="20" y1="82" x2="1100" y2="82" stroke="#d1d5db" stroke-width="1"/>
+  <text x="20" y="98" font-family="sans-serif" font-size="12" fill="#4b5563">Raw storage is allocated; every declared field, in LedgerRecord and Reservation, is zeroed to its default (null) before any code runs.</text>
+
+  <rect x="210" y="104" width="700" height="26" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="560" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">Reservation instance &#8212; field state</text>
+  <rect x="218" y="132" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="149" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.entryId = null</text>
+  <rect x="218" y="160" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="177" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.createdAt = null</text>
+  <rect x="218" y="188" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="205" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.stake = null</text>
+  <rect x="218" y="216" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="233" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.split = null</text>
+
+  <!-- ============ FRAME 2 ============ -->
+  <text x="20" y="272" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 2 &#8212; super(...): LedgerRecord's initializers, then its constructor body</text>
+  <line x1="20" y1="280" x2="1100" y2="280" stroke="#d1d5db" stroke-width="1"/>
+  <text x="20" y="296" font-family="sans-serif" font-size="12" fill="#4b5563">super(...) runs first: LedgerRecord's field initializers run, then LedgerRecord's constructor body sets entryId and createdAt.</text>
+
+  <rect x="210" y="302" width="700" height="26" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="560" y="319" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">Reservation instance &#8212; field state</text>
+  <rect x="218" y="330" width="684" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="226" y="347" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.entryId = 4f2a7c9e-51ab-4d3a-9c2e-118dfe2a77b0</text>
+  <rect x="218" y="358" width="684" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="226" y="375" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.createdAt = 2026-08-29T10:15:30Z</text>
+  <rect x="218" y="386" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="403" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.stake = null</text>
+  <rect x="218" y="414" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="431" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.split = null</text>
+
+  <!-- ============ FRAME 3 ============ -->
+  <text x="20" y="470" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 3 &#8212; Reservation's field initializers and instance blocks (textual order)</text>
+  <line x1="20" y1="478" x2="1100" y2="478" stroke="#d1d5db" stroke-width="1"/>
+  <text x="20" y="494" font-family="sans-serif" font-size="12" fill="#4b5563">Control returns to Reservation. Its own field initializers and instance blocks run next, before its constructor body. split is set here.</text>
+
+  <rect x="210" y="500" width="700" height="26" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="560" y="517" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">Reservation instance &#8212; field state</text>
+  <rect x="218" y="528" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="545" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.entryId = 4f2a7c9e-51ab-4d3a-9c2e-118dfe2a77b0</text>
+  <rect x="218" y="556" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="573" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.createdAt = 2026-08-29T10:15:30Z</text>
+  <rect x="218" y="584" width="684" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="226" y="601" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.stake = null</text>
+  <rect x="218" y="612" width="684" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="226" y="629" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.split = StakeSplit(bonus=0.33 GBP, cash=3.00 GBP)</text>
+
+  <!-- ============ FRAME 4 ============ -->
+  <text x="20" y="668" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 4 &#8212; Reservation's own constructor body</text>
+  <line x1="20" y1="676" x2="1100" y2="676" stroke="#d1d5db" stroke-width="1"/>
+  <text x="20" y="692" font-family="sans-serif" font-size="12" fill="#4b5563">Reservation's constructor body executes last, after all initializers on both classes. It sets stake = 3.33 GBP.</text>
+
+  <rect x="210" y="698" width="700" height="26" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="560" y="715" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">Reservation instance &#8212; field state</text>
+  <rect x="218" y="726" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="743" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.entryId = 4f2a7c9e-51ab-4d3a-9c2e-118dfe2a77b0</text>
+  <rect x="218" y="754" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="771" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.createdAt = 2026-08-29T10:15:30Z</text>
+  <rect x="218" y="782" width="684" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="226" y="799" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.stake = 3.33 GBP</text>
+  <rect x="218" y="810" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="827" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.split = StakeSplit(bonus=0.33 GBP, cash=3.00 GBP)</text>
+
+  <!-- ============ FRAME 5 ============ -->
+  <text x="20" y="866" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 5 &#8212; the constructed reference is returned</text>
+  <line x1="20" y1="874" x2="1100" y2="874" stroke="#d1d5db" stroke-width="1"/>
+  <text x="20" y="890" font-family="sans-serif" font-size="12" fill="#4b5563">Construction is complete. No field changes this frame; the fully-populated Reservation is handed back as the value of the new expression.</text>
+
+  <rect x="210" y="896" width="700" height="26" fill="#ffffff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="560" y="913" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">Reservation instance &#8212; field state</text>
+  <rect x="218" y="924" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="941" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.entryId = 4f2a7c9e-51ab-4d3a-9c2e-118dfe2a77b0</text>
+  <rect x="218" y="952" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="969" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerRecord.createdAt = 2026-08-29T10:15:30Z</text>
+  <rect x="218" y="980" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="997" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.stake = 3.33 GBP</text>
+  <rect x="218" y="1008" width="684" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="226" y="1025" font-family="sans-serif" font-size="12" fill="#1f2937">Reservation.split = StakeSplit(bonus=0.33 GBP, cash=3.00 GBP)</text>
+
+  <line x1="910" y1="965" x2="930" y2="965" stroke="#475569" stroke-width="2" marker-end="url(#arrow014)"/>
+  <rect x="930" y="935" width="160" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1010" y="960" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">Reservation ref</text>
+  <text x="1010" y="978" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(returned to caller)</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="1064" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="20" y1="1072" x2="1100" y2="1072" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1086" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="1099" font-family="sans-serif" font-size="11" fill="#4b5563">field still at its default (null) &#8212; not yet initialized</text>
+
+  <rect x="30" y="1110" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1123" font-family="sans-serif" font-size="11" fill="#4b5563">field written in THIS frame &#8212; what changed since the previous frame</text>
+
+  <rect x="600" y="1086" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="628" y="1099" font-family="sans-serif" font-size="11" fill="#4b5563">field written in an earlier frame &#8212; stable, unchanged this frame</text>
+
+  <rect x="600" y="1110" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="628" y="1123" font-family="sans-serif" font-size="11" fill="#4b5563">the field-state panel header, and the returned reference</text>
+</svg>

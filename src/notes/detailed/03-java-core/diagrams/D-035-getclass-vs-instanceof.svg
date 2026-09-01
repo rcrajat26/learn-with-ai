@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1160 520" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two side-by-side panels comparing equals() implementations for Restriction and its subclass TimedRestriction, which adds an expiresAt field. Left panel, using instanceof: r.equals(t) is true because r's equals only requires t to be an instanceof Restriction and the shared fields match, but t.equals(r) is false because t's equals requires an instanceof TimedRestriction and a plain Restriction fails that check — the result is asymmetric, depending on which object's equals() is called. Right panel, using getClass(): both r.equals(t) and t.equals(r) are false because the two objects have different runtime classes, so the relation is symmetric but a TimedRestriction can never equal an otherwise-identical Restriction, meaning it cannot substitute into a Set of Restriction without breaking equals expectations, the Liskov substitution cost.">
+  <defs>
+    <marker id="arrow035" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="520" fill="#ffffff"/>
+
+  <text x="20" y="32" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">getClass() versus instanceof in equals</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="64" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">LEFT — equals() uses instanceof: asymmetric</text>
+  <text x="580" y="64" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">RIGHT — equals() uses getClass(): symmetric, but costly</text>
+
+  <line x1="560" y1="56" x2="560" y2="430" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- LEFT PANEL -->
+  <rect x="100" y="104" width="200" height="56" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">r : Restriction</text>
+  <text x="200" y="140" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">type = STAKE_BLOCKED</text>
+  <text x="200" y="154" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">source = ADMIN</text>
+
+  <rect x="100" y="204" width="200" height="100" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="224" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">t : TimedRestriction</text>
+  <text x="200" y="240" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">type = STAKE_BLOCKED</text>
+  <text x="200" y="254" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">source = ADMIN</text>
+  <text x="200" y="268" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">expiresAt = 2026-09-01T00:00Z</text>
+  <text x="200" y="284" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">(extends Restriction)</text>
+
+  <path d="M 200 204 V 160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+  <text x="210" y="186" font-family="sans-serif" font-size="11" fill="#4b5563">extends</text>
+
+  <rect x="340" y="104" width="190" height="64" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="435" y="126" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">r.equals(t)</text>
+  <text x="435" y="142" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">&#8594; true</text>
+  <text x="435" y="158" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(instanceof passes)</text>
+  <path d="M 300 136 H 340" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+
+  <rect x="340" y="190" width="190" height="64" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="435" y="210" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">t.equals(r)</text>
+  <text x="435" y="226" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">&#8594; false</text>
+  <text x="435" y="242" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(r fails instanceof check)</text>
+  <path d="M 300 222 H 340" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+
+  <text x="100" y="322" font-family="sans-serif" font-size="11" fill="#4b5563">asymmetric: the same pair of objects gives</text>
+  <text x="100" y="338" font-family="sans-serif" font-size="11" fill="#4b5563">opposite results depending on which one calls equals()</text>
+
+  <!-- RIGHT PANEL -->
+  <rect x="640" y="104" width="200" height="56" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="740" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">r : Restriction</text>
+  <text x="740" y="140" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">type = STAKE_BLOCKED</text>
+  <text x="740" y="154" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">source = ADMIN</text>
+
+  <rect x="640" y="204" width="200" height="100" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="740" y="224" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">t : TimedRestriction</text>
+  <text x="740" y="240" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">type = STAKE_BLOCKED</text>
+  <text x="740" y="254" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">source = ADMIN</text>
+  <text x="740" y="268" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">expiresAt = 2026-09-01T00:00Z</text>
+  <text x="740" y="284" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">(extends Restriction)</text>
+
+  <path d="M 740 204 V 160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+  <text x="750" y="186" font-family="sans-serif" font-size="11" fill="#4b5563">extends</text>
+
+  <rect x="880" y="104" width="190" height="64" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="975" y="126" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">r.equals(t)</text>
+  <text x="975" y="142" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">&#8594; false</text>
+  <text x="975" y="158" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(getClass differs)</text>
+  <path d="M 840 136 H 880" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+
+  <rect x="880" y="190" width="190" height="64" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="975" y="210" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">t.equals(r)</text>
+  <text x="975" y="226" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">&#8594; false</text>
+  <text x="975" y="242" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(getClass differs)</text>
+  <path d="M 840 222 H 880" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+
+  <text x="640" y="322" font-family="sans-serif" font-size="11" fill="#4b5563">symmetric: both directions agree — both false</text>
+  <text x="640" y="338" font-family="sans-serif" font-size="11" fill="#4b5563">for an otherwise-identical Restriction and TimedRestriction</text>
+
+  <rect x="600" y="356" width="500" height="64" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="616" y="376" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">The Liskov cost of getClass()</text>
+  <text x="616" y="394" font-family="sans-serif" font-size="11"
+        fill="#1f2937">A TimedRestriction can never equal an otherwise-identical Restriction —</text>
+  <text x="616" y="410" font-family="sans-serif" font-size="11"
+        fill="#1f2937">it cannot substitute into a Set&lt;Restriction&gt; without breaking equals().</text>
+
+  <!-- legend -->
+  <line x1="20" y1="452" x2="1140" y2="452" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="466" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="479" font-family="sans-serif" font-size="11" fill="#4b5563">Restriction / TimedRestriction instance</text>
+  <rect x="320" y="466" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="350" y="479" font-family="sans-serif" font-size="11" fill="#4b5563">equals() result: true</text>
+  <rect x="520" y="466" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="550" y="479" font-family="sans-serif" font-size="11" fill="#4b5563">equals() result: false</text>
+  <rect x="720" y="466" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="750" y="479" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel</text>
+  <line x1="40" y1="494" x2="76" y2="494" stroke="#475569" stroke-width="2" marker-end="url(#arrow035)"/>
+  <text x="86" y="499" font-family="sans-serif" font-size="11"
+        fill="#4b5563">solid arrow: TimedRestriction &#8594; Restriction is extends, or an equals() call aimed at its argument</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1040 860" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline explaining why a production NullPointerException has no stack trace. One implicit NPE site runs repeatedly in the stake-reservation hot path at 1,200 reservations per second: reservation.split().bonusPortion(), where split() returns null for a partially-built Reservation. In the interpreter and C1 phase, early throws carry a full stack trace with the helpful NPE message: Cannot invoke StakeSplit.bonusPortion() because the return value of Reservation.split() is null. After C2 recompiles the site past its trap limits, a preallocated stackless NullPointerException instance is substituted; from that point the logged trace is empty, message null, zero-length stack trace. A measured flag panel from Oracle JDK 21.0.7 build 21.0.7+8-LTS-245 on macOS aarch64 shows OmitStackTraceInFastThrow true by default, PerBytecodeTrapLimit 4, PerMethodTrapLimit 100. An annotation panel marks -XX:-OmitStackTraceInFastThrow as the diagnostic switch that restores the trace, notes it is on by default, and states that the exact throw-count threshold is not a documented constant but a C2 trap-recompilation heuristic driven by the two trap limits.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+    <marker id="arr116" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="860" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Why a production NPE has no stack trace &#8212; one site, timed</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- SITE -->
+  <rect x="60" y="60" width="920" height="70" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="82" class="small" font-weight="bold">hot path &#8212; stake reservation, 1,200 reservations/sec</text>
+  <text x="80" y="104" class="code">reservation.split().bonusPortion()</text>
+  <text x="80" y="120" class="small">split() returns null for a partially-built Reservation &#8212; one implicit NPE site, executed repeatedly</text>
+
+  <path d="M 520 130 V 155 H 250 V 180" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr116)"/>
+
+  <!-- PHASE 1 -->
+  <rect x="60" y="180" width="380" height="198" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="250" y="204" text-anchor="middle" class="h2">INTERPRETER / C1 &#8212; EARLY THROWS</text>
+  <text x="80" y="228" class="code">java.lang.NullPointerException:</text>
+  <text x="80" y="246" class="code">Cannot invoke "StakeSplit.</text>
+  <text x="80" y="264" class="code">bonusPortion()" because the</text>
+  <text x="80" y="282" class="code">return value of "Reservation.</text>
+  <text x="80" y="300" class="code">split()" is null</text>
+  <text x="80" y="330" class="smallb" fill="#15803d">full stack trace present</text>
+  <text x="80" y="348" class="small">helpful NPE message names the</text>
+  <text x="80" y="362" class="small">exact null expression</text>
+
+  <!-- TRANSITION ARROW (gap widened so the label never touches either box or the arrowhead) -->
+  <text x="510" y="238" text-anchor="middle" class="small">after C2</text>
+  <text x="510" y="252" text-anchor="middle" class="small">recompiles past</text>
+  <text x="510" y="266" text-anchor="middle" class="small">trap limits</text>
+  <path d="M 440 284 H 580" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr116)"/>
+
+  <!-- PHASE 2 -->
+  <rect x="580" y="180" width="400" height="198" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="780" y="204" text-anchor="middle" class="h2">C2 COMPILED &#8212; STACKLESS FAST THROW</text>
+  <text x="600" y="228" class="code">java.lang.NullPointerException</text>
+  <text x="600" y="246" class="code">message: null</text>
+  <text x="600" y="264" class="code">stack trace: []  (zero-length)</text>
+  <text x="600" y="282" class="small">a preallocated, stackless instance is</text>
+  <text x="600" y="296" class="small">substituted &#8212; the same instance is</text>
+  <text x="600" y="310" class="small">reused on every throw from here on</text>
+  <text x="600" y="332" class="smallb" fill="#b91c1c">empty trace &#8212; nothing to log</text>
+  <text x="600" y="348" class="small">the only clue left is the NPE type itself</text>
+
+  <!-- TIME AXIS -->
+  <line x1="60" y1="392" x2="960" y2="392" stroke="#475569" stroke-width="2" marker-end="url(#arr116)"/>
+  <text x="60" y="410" class="small">time &#8212; repeated invocations of this one call site</text>
+
+  <!-- FLAGS -->
+  <rect x="60" y="432" width="920" height="130" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="454" class="small" font-weight="bold">measured &#8212; Oracle JDK 21.0.7 (build 21.0.7+8-LTS-245, macOS aarch64), java -XX:+PrintFlagsFinal -version</text>
+  <text x="80" y="480" class="code">bool OmitStackTraceInFastThrow = true   {product} {default}</text>
+  <text x="80" y="500" class="code">intx PerBytecodeTrapLimit      = 4      {product} {default}</text>
+  <text x="80" y="520" class="code">intx PerMethodTrapLimit        = 100    {product} {default}</text>
+  <text x="80" y="546" class="small">both trap limits are the C2 recompilation heuristic that decides when the site goes stackless &#8212; not a fixed throw count</text>
+
+  <!-- ANNOTATION -->
+  <rect x="60" y="580" width="920" height="90" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="602" class="smallb" fill="#2563eb">THE DIAGNOSTIC SWITCH</text>
+  <text x="80" y="624" class="small">-XX:-OmitStackTraceInFastThrow restores the trace for debugging &#8212; and OmitStackTraceInFastThrow is ON BY DEFAULT in production</text>
+  <text x="80" y="644" class="small">the exact throw-count threshold is NOT a documented constant &#8212; it is a C2 trap-recompilation heuristic driven by the two trap limits above</text>
+
+  <!-- LEGEND -->
+  <text x="20" y="704" class="h2">LEGEND</text>
+  <line x1="20" y1="712" x2="1020" y2="712" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="42" y="726" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="70" y="739" class="small">weak/nested &#8212; the call site itself, and the measured flag output</text>
+
+  <rect x="42" y="750" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="70" y="763" class="small">resolved &#8212; the interpreter/C1 phase, full trace still present</text>
+
+  <rect x="42" y="774" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="70" y="787" class="small">degraded &#8212; the C2 stackless phase, trace lost</text>
+
+  <rect x="42" y="798" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="811" class="small">annotation &#8212; the diagnostic switch and the trap-limit caveat</text>
+
+  <line x1="600" y1="732" x2="626" y2="732" stroke="#475569" stroke-width="2" marker-end="url(#arr116)"/>
+  <text x="634" y="737" class="small">primary flow / time progression &#8212; arrowhead points forward in time</text>
+</svg>

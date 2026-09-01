@@ -1,0 +1,225 @@
+<svg viewBox="0 0 1200 1220" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Full permission-evaluation pipeline for one tool call, entry to outcome, in five stages. Stage 1 collects rules across managed settings, CLI flags, local settings.local.json, project settings.json, and user settings.json into one merged deny, ask, and allow list. A branch off Stage 2 checks whether the command is a recognised read-only command: if so it takes a fast path that skips deny, ask, and allow matching and runs immediately, unless the command has a write-capable flag with an unquoted glob or contains an output redirect, either of which sends it back into Stage 2 evaluation. Stage 2 checks deny, then ask, then allow, first match wins: deny blocks the call, ask routes to Stage 5's interactive prompt, allow routes to Stage 3's PreToolUse hook, and no match falls to Stage 4, the active mode's default. The interactive prompt's approval and the mode's default both can still lead to the PreToolUse hook, which may itself allow the call to run or block it. A terminal note states that a deny match at any level cannot be overridden by any other level, including the CLI's --allowedTools flag or managed settings.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .flowD { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 5 3; stroke-linejoin: round; marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="1220" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-74 — THE FULL PERMISSION-EVALUATION PIPELINE, ONE TOOL CALL</text>
+  <line x1="20" y1="40" x2="1180" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- entry -->
+  <rect x="490" y="52" width="220" height="32" rx="6" class="boxP"/>
+  <text x="600" y="73" text-anchor="middle" class="lbl body">tool call requested, e.g. Bash(...)</text>
+
+  <!-- STAGE 1 -->
+  <text x="40" y="112" class="lbl h2">STAGE 1 — RULE COLLECTION (merged in this order)</text>
+
+  <rect x="40" y="118" width="210" height="52" rx="6" class="boxP"/>
+  <text x="145" y="140" text-anchor="middle" class="lbl node">managed settings</text>
+  <text x="145" y="158" text-anchor="middle" class="lbl sub">org-wide managed policy</text>
+
+  <rect x="265" y="118" width="210" height="52" rx="6" class="boxP"/>
+  <text x="370" y="140" text-anchor="middle" class="lbl node">CLI flags</text>
+  <text x="370" y="158" text-anchor="middle" class="lbl sub">--allowedTools / --disallowedTools</text>
+
+  <rect x="490" y="118" width="210" height="52" rx="6" class="boxP"/>
+  <text x="595" y="140" text-anchor="middle" class="lbl node">local settings.local.json</text>
+  <text x="595" y="158" text-anchor="middle" class="lbl sub">gitignored, per-checkout</text>
+
+  <rect x="715" y="118" width="210" height="52" rx="6" class="boxP"/>
+  <text x="820" y="140" text-anchor="middle" class="lbl node">project settings.json</text>
+  <text x="820" y="158" text-anchor="middle" class="lbl sub">committed, repo-wide</text>
+
+  <rect x="940" y="118" width="210" height="52" rx="6" class="boxP"/>
+  <text x="1045" y="140" text-anchor="middle" class="lbl node">user settings.json</text>
+  <text x="1045" y="158" text-anchor="middle" class="lbl sub">~/.claude/settings.json</text>
+
+  <path d="M 145 170 V 184" fill="none" stroke="#475569" stroke-width="1.6"/>
+  <path d="M 370 170 V 184" fill="none" stroke="#475569" stroke-width="1.6"/>
+  <path d="M 595 170 V 184" fill="none" stroke="#475569" stroke-width="1.6"/>
+  <path d="M 820 170 V 184" fill="none" stroke="#475569" stroke-width="1.6"/>
+  <path d="M 1045 170 V 184" fill="none" stroke="#475569" stroke-width="1.6"/>
+  <path d="M 145 184 H 1045" fill="none" stroke="#475569" stroke-width="1.6"/>
+  <path class="flow" d="M 595 184 V 206"/>
+
+  <rect x="420" y="206" width="350" height="48" rx="6" class="boxP"/>
+  <text x="595" y="226" text-anchor="middle" class="lbl node">MERGED RULE SET</text>
+  <text x="595" y="244" text-anchor="middle" class="lbl sub">deny / ask / allow lists, evaluated in that precedence order</text>
+
+  <path class="flow" d="M 595 254 V 282"/>
+
+  <!-- branch off stage 2: read-only fast path -->
+  <text x="40" y="278" class="lbl h2">BRANCH OFF STAGE 2 — READ-ONLY FAST PATH</text>
+
+  <polygon points="595,282 685,342 595,402 505,342" class="boxP"/>
+  <text x="595" y="337" text-anchor="middle" class="lbl node">read-only</text>
+  <text x="595" y="353" text-anchor="middle" class="lbl node">command?</text>
+
+  <path class="flow" d="M 685 342 H 740"/>
+  <text x="700" y="334" class="lbl tiny">yes</text>
+  <path class="flow" d="M 595 402 V 490"/>
+  <text x="607" y="440" class="lbl tiny">no</text>
+
+  <rect x="740" y="284" width="380" height="188" rx="6" class="boxOk"/>
+  <text x="756" y="306" class="lbl h2">READ-ONLY FAST PATH</text>
+  <text x="756" y="324" class="lbl tiny">recognised commands (ls, cat, git status, grep, ...) skip</text>
+  <text x="756" y="338" class="lbl tiny">deny / ask / allow matching and run immediately, unless:</text>
+
+  <text x="756" y="360" class="lbl body" style="font-weight:700">LEAVES FAST PATH:</text>
+  <text x="756" y="376" class="lbl tiny">write-capable flag + unquoted glob</text>
+  <text x="756" y="390" class="lbl tiny">e.g. rm -rf *, cp -r * dest/</text>
+
+  <text x="756" y="412" class="lbl body" style="font-weight:700">LEAVES FAST PATH:</text>
+  <text x="756" y="428" class="lbl tiny">output redirect present, e.g. &gt;, &gt;&gt;</text>
+
+  <text x="756" y="458" class="lbl tiny" style="font-weight:700">otherwise: runs immediately</text>
+
+  <path class="flowD" d="M 740 402 H 705 V 490"/>
+  <text x="735" y="396" text-anchor="end" class="lbl tiny">exception</text>
+  <path class="flow" d="M 990 462 V 480"/>
+
+  <rect x="980" y="480" width="140" height="44" rx="6" class="boxOk"/>
+  <text x="1050" y="498" text-anchor="middle" class="lbl node">RUNS</text>
+  <text x="1050" y="514" text-anchor="middle" class="lbl sub">fast path, no exception</text>
+
+  <rect x="520" y="490" width="370" height="50" rx="6" class="boxWeak"/>
+  <text x="705" y="510" text-anchor="middle" class="lbl tiny">RE-ENTERS STAGE 2 EVALUATION</text>
+  <text x="705" y="528" text-anchor="middle" class="lbl tiny">(exception hit, or diamond said "no")</text>
+
+  <path class="flow" d="M 595 540 V 560"/>
+
+  <!-- STAGE 2 -->
+  <text x="40" y="558" class="lbl h2">STAGE 2 — DENY / ASK / ALLOW, FIRST MATCH WINS</text>
+
+  <polygon points="595,560 685,620 595,680 505,620" class="boxP"/>
+  <text x="595" y="615" text-anchor="middle" class="lbl node">matches</text>
+  <text x="595" y="631" text-anchor="middle" class="lbl node">deny?</text>
+
+  <path class="flow" d="M 685 620 H 1080"/>
+  <text x="700" y="612" class="lbl tiny">yes</text>
+  <path class="flow" d="M 595 680 V 740"/>
+  <text x="607" y="714" class="lbl tiny">no</text>
+
+  <polygon points="595,740 685,800 595,860 505,800" class="boxP"/>
+  <text x="595" y="795" text-anchor="middle" class="lbl node">matches</text>
+  <text x="595" y="811" text-anchor="middle" class="lbl node">ask?</text>
+
+  <path class="flow" d="M 685 800 H 740"/>
+  <text x="700" y="792" class="lbl tiny">yes</text>
+  <path class="flow" d="M 595 860 V 920"/>
+  <text x="607" y="894" class="lbl tiny">no</text>
+
+  <polygon points="595,920 685,980 595,1040 505,980" class="boxP"/>
+  <text x="595" y="975" text-anchor="middle" class="lbl node">matches</text>
+  <text x="595" y="991" text-anchor="middle" class="lbl node">allow?</text>
+
+  <path class="flow" d="M 685 980 H 740"/>
+  <text x="700" y="972" class="lbl tiny">yes</text>
+  <path class="flow" d="M 595 1040 V 1070"/>
+  <text x="607" y="1060" class="lbl tiny">no</text>
+
+  <!-- Stage 5 prompt -->
+  <rect x="740" y="770" width="300" height="60" rx="6" class="boxHi"/>
+  <text x="890" y="792" text-anchor="middle" class="lbl node">STAGE 5 — INTERACTIVE PROMPT</text>
+  <text x="890" y="810" text-anchor="middle" class="lbl sub">user approves or denies at the terminal</text>
+
+  <path class="flow" d="M 890 830 V 950"/>
+  <text x="902" y="916" class="lbl tiny">approve</text>
+  <path class="flow" d="M 1040 800 H 1080"/>
+  <text x="1044" y="792" class="lbl tiny">deny</text>
+
+  <!-- Stage 3 hook -->
+  <rect x="740" y="950" width="300" height="60" rx="6" class="boxP"/>
+  <text x="890" y="972" text-anchor="middle" class="lbl node">STAGE 3 — PreToolUse HOOK</text>
+  <text x="890" y="990" text-anchor="middle" class="lbl sub">hook script may itself allow or block</text>
+
+  <path class="flow" d="M 1040 980 H 1080"/>
+  <text x="1044" y="972" class="lbl tiny">blocks</text>
+  <path class="flow" d="M 830 1010 V 1070"/>
+  <text x="838" y="1044" class="lbl tiny">allows</text>
+
+  <!-- RUNS main -->
+  <rect x="810" y="1070" width="200" height="60" rx="6" class="boxOk"/>
+  <text x="910" y="1094" text-anchor="middle" class="lbl node">RUNS</text>
+  <text x="910" y="1112" text-anchor="middle" class="lbl sub">hook allowed — tool executes</text>
+
+  <!-- Stage 4 mode default -->
+  <rect x="400" y="1070" width="390" height="70" rx="6" class="boxWeak"/>
+  <text x="595" y="1092" text-anchor="middle" class="lbl node">STAGE 4 — MODE'S DEFAULT</text>
+  <text x="595" y="1108" text-anchor="middle" class="lbl sub">no rule matched — outcome depends on active mode</text>
+  <text x="595" y="1124" text-anchor="middle" class="lbl sub">default/plan &#8594; prompt; acceptEdits/bypassPermissions &#8594; hook</text>
+
+  <!-- BLOCKED terminal -->
+  <rect x="1080" y="590" width="100" height="450" rx="6" class="boxBad"/>
+  <text x="1130" y="616" text-anchor="middle" class="lbl node">BLOCKED</text>
+  <text x="1130" y="632" text-anchor="middle" class="lbl sub">tool call</text>
+  <text x="1130" y="646" text-anchor="middle" class="lbl sub">stops here</text>
+  <text x="1130" y="672" text-anchor="middle" class="lbl tiny">&#8592; Stage 2 deny</text>
+  <text x="1130" y="816" text-anchor="middle" class="lbl tiny">&#8592; Stage 5</text>
+  <text x="1130" y="830" text-anchor="middle" class="lbl tiny">prompt deny</text>
+  <text x="1130" y="996" text-anchor="middle" class="lbl tiny">&#8592; Stage 3</text>
+  <text x="1130" y="1010" text-anchor="middle" class="lbl tiny">hook block</text>
+
+  <!-- terminal note: deny is final, placed in the clear column left of the diamonds -->
+  <rect x="40" y="760" width="420" height="112" rx="6" class="boxAnn"/>
+  <text x="56" y="784" class="lbl h2">DENY IS FINAL</text>
+  <text x="56" y="806" class="lbl tiny">A deny match at any level — managed, CLI,</text>
+  <text x="56" y="822" class="lbl tiny">local, project, or user — cannot be overridden</text>
+  <text x="56" y="838" class="lbl tiny">by any other level, including --allowedTools</text>
+  <text x="56" y="854" class="lbl tiny">on the CLI and managed settings' own allow entries.</text>
+
+  <!-- other note: mode-default annotation -->
+  <rect x="40" y="1010" width="350" height="140" rx="6" class="boxAnn"/>
+  <text x="56" y="1032" class="lbl h2">Fast path vs. Stage 2</text>
+  <text x="56" y="1052" class="lbl tiny">The fast path is a branch OFF Stage 2, not a</text>
+  <text x="56" y="1068" class="lbl tiny">separate rule list: recognised read-only commands</text>
+  <text x="56" y="1084" class="lbl tiny">avoid deny/ask/allow matching entirely, but a write-</text>
+  <text x="56" y="1100" class="lbl tiny">capable flag with an unquoted glob, or a redirect,</text>
+  <text x="56" y="1116" class="lbl tiny">sends the same command back into normal matching.</text>
+  <text x="56" y="1136" class="lbl tiny">Deny can still catch it there — the fast path never bypasses a deny.</text>
+
+  <line x1="20" y1="1170" x2="1180" y2="1170" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="1180" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="1193" class="lbl tiny">rule / evaluation stage</text>
+  <rect x="220" y="1180" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="250" y="1193" class="lbl tiny">runs</text>
+  <rect x="320" y="1180" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="350" y="1193" class="lbl tiny">interactive prompt</text>
+  <rect x="480" y="1180" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="510" y="1193" class="lbl tiny">blocked (terminal)</text>
+  <rect x="640" y="1180" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="670" y="1193" class="lbl tiny">mode default / merge-back</text>
+  <rect x="860" y="1180" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="890" y="1193" class="lbl tiny">annotation panel</text>
+
+  <line x1="20" y1="1206" x2="60" y2="1206" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="70" y="1211" class="lbl tiny">A &#8594; B : evaluation proceeds to B</text>
+  <line x1="360" y1="1206" x2="400" y2="1206" stroke="#b45309" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#triO)"/>
+  <text x="410" y="1211" class="lbl tiny">A &#8594; B : exception leaves the fast path, re-entering Stage 2</text>
+</svg>

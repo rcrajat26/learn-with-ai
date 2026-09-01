@@ -1,0 +1,91 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frame sequence: Object array a backed by a runtime String array; storing 42 into it passes compile time but fails the runtime store check; ArrayStoreException is thrown at runtime, while the equivalent List of String rejects the same store at compile time instead">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="18" width="860" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="35" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ARRAY COVARIANCE HOLE -&gt; ArrayStoreException</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="55" width="220" height="315" rx="6" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <rect x="30" y="65" width="200" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="85" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">FRAME 1: declare</text>
+
+  <rect x="30" y="105" width="200" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="123" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Object[] a = new String[2];</text>
+
+  <rect x="30" y="145" width="200" height="24" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="162" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">runtime element type: String</text>
+
+  <rect x="30" y="185" width="95" height="45" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="77" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a[0]=null</text>
+  <rect x="135" y="185" width="95" height="45" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="182" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a[1]=null</text>
+
+  <rect x="30" y="245" width="200" height="50" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="264" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Compiles fine: array reference</text>
+  <text x="130" y="281" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">typed Object[], covariant with String[]</text>
+
+  <!-- arrow frame1 -> frame2 -->
+  <line x1="240" y1="212" x2="278" y2="212" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- FRAME 2 -->
+  <rect x="280" y="55" width="240" height="315" rx="6" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <rect x="290" y="65" width="220" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="85" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">FRAME 2: since last frame</text>
+
+  <rect x="290" y="105" width="220" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="123" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">a[0] = 42;  // an Integer</text>
+
+  <rect x="290" y="145" width="220" height="24" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="162" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">runtime element type still: String</text>
+
+  <line x1="400" y1="169" x2="400" y2="188" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <rect x="300" y="190" width="200" height="60" rx="10" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="212" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">RUNTIME STORE CHECK (gate)</text>
+  <text x="400" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">is 42 instanceof String?</text>
+  <text x="400" y="245" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">NO -&gt; reject the store</text>
+
+  <rect x="300" y="265" width="200" height="55" rx="4" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="285" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">JVM checks every array store</text>
+  <text x="400" y="302" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">against the array's real component type</text>
+
+  <!-- arrow frame2 -> frame3 -->
+  <line x1="520" y1="212" x2="558" y2="212" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- FRAME 3 -->
+  <rect x="560" y="55" width="320" height="315" rx="6" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <rect x="570" y="65" width="300" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="720" y="85" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">FRAME 3: outcome, array vs generic list</text>
+
+  <rect x="570" y="105" width="140" height="70" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="640" y="126" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ArrayStoreException</text>
+  <text x="640" y="143" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">thrown when the</text>
+  <text x="640" y="160" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">store executes</text>
+
+  <rect x="590" y="182" width="100" height="20" rx="3" fill="#fee2e2"/>
+  <text x="640" y="197" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">runtime error</text>
+
+  <rect x="730" y="105" width="140" height="70" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="800" y="122" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">List&lt;String&gt; list = ...;</text>
+  <text x="800" y="139" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">list.add(42);</text>
+  <text x="800" y="156" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">// does not typecheck</text>
+
+  <rect x="755" y="182" width="90" height="20" rx="3" fill="#dcfce7"/>
+  <text x="800" y="197" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">compile error</text>
+
+  <rect x="570" y="215" width="300" height="65" rx="4" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="720" y="235" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Arrays are reified and covariant: the hole</text>
+  <text x="720" y="252" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">surfaces at runtime. Generics are erased and</text>
+  <text x="720" y="269" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">invariant: the compiler closes the hole earlier</text>
+
+  <rect x="570" y="295" width="300" height="55" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="720" y="315" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">compile error (List&lt;String&gt;) vs runtime error</text>
+  <text x="720" y="332" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(Object[] backed by String[]) - same mistake,</text>
+  <text x="720" y="349" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">caught at two different phases</text>
+</svg>

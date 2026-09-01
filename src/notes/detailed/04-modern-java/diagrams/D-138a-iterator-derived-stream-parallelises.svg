@@ -1,0 +1,71 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3: IteratorSpliterator's batching fallback for an iterator-derived stream, such as LinkedList.spliterator() or Files.lines(). The first call to trySplit pulls a batch of 1024 elements out of the source iterator into a plain array, and hands that array-backed batch to one side while the running iterator keeps the rest. The batch size 1024 is the fixed starting constant BATCH_UNIT.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 1/3 — FIRST trySplit() PULLS A 1,024-ELEMENT BATCH</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="380" height="66" rx="6" class="boxP"/>
+  <text x="230" y="90" text-anchor="middle" class="lbl node">source Iterator&lt;Reservation&gt;</text>
+  <text x="230" y="110" text-anchor="middle" class="lbl sub">LinkedList.spliterator() or Files.lines() — no random access</text>
+
+  <path class="flow" d="M 230 132 V 168"/>
+  <text x="280" y="158" class="lbl sub">trySplit() #1</text>
+
+  <rect x="40" y="168" width="380" height="70" rx="6" class="boxH"/>
+  <text x="230" y="192" text-anchor="middle" class="lbl node code">BATCH_UNIT = 1024</text>
+  <text x="230" y="212" text-anchor="middle" class="lbl body">copies next 1,024 elements into Object[]</text>
+  <text x="230" y="228" text-anchor="middle" class="lbl sub">the array-backed batch is SIZED and SUBSIZED</text>
+
+  <path class="flow" d="M 230 238 V 270"/>
+
+  <rect x="40" y="270" width="380" height="60" rx="6" class="boxR"/>
+  <text x="230" y="293" text-anchor="middle" class="lbl node">ArraySpliterator, size 1,024</text>
+  <text x="230" y="310" text-anchor="middle" class="lbl sub">handed off to one fork</text>
+
+  <rect x="460" y="66" width="400" height="264" rx="6" class="panel"/>
+  <text x="476" y="90" class="lbl node" font-size="13px">why an array, not the live iterator</text>
+  <text x="476" y="112" class="lbl tiny">A raw Iterator has no size, no index and no</text>
+  <text x="476" y="128" class="lbl tiny">random access — it cannot be split in place.</text>
+  <text x="476" y="146" class="lbl tiny">IteratorSpliterator's only move is to drain a</text>
+  <text x="476" y="162" class="lbl tiny">fixed-size batch into a real array, which then</text>
+  <text x="476" y="178" class="lbl tiny">splits like any array-backed source.</text>
+  <text x="476" y="200" class="lbl tiny">Named cases hitting this path:</text>
+  <text x="476" y="220" class="lbl code">LinkedList.spliterator()</text>
+  <text x="476" y="238" class="lbl code">Files.lines(path)</text>
+  <text x="476" y="258" class="lbl tiny">Both wrap a plain Iterator with no size hint,</text>
+  <text x="476" y="274" class="lbl tiny">so every split pays this batching cost instead</text>
+  <text x="476" y="290" class="lbl tiny">of the O(1) index split an ArrayList gets.</text>
+
+  <line x1="20" y1="360" x2="880" y2="360" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="374" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="387" class="lbl tiny">iterator-backed state</text>
+  <rect x="300" y="374" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="387" class="lbl tiny">batch pulled this step</text>
+  <rect x="540" y="374" width="22" height="16" rx="3" class="boxR"/>
+  <text x="570" y="387" class="lbl tiny">array-backed spliterator produced</text>
+  <path class="flow" d="M 780 382 H 820"/>
+  <text x="828" y="387" class="lbl tiny">A → B</text>
+</svg>

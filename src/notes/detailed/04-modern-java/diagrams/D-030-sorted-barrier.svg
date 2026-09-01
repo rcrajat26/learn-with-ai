@@ -1,0 +1,131 @@
+<svg viewBox="0 0 1040 580" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="sorted() is a barrier over a Stream of Reservation amounts 4.20, 1.10, 6.00, 2.75.
+     Frame 1: elements stream in and accumulate in the sorted() buffer while the downstream forEach
+     is idle. Frame 2: the source is exhausted and TimSort runs over the full buffer. Frame 3: the
+     buffer drains and forEach receives the elements in sorted order 1.10, 2.75, 4.20, 6.00. A
+     callout explains that a non-Comparable AuditNote is accepted silently at the sorted() call
+     site in frame 1, but throws ClassCastException inside TimSort's compare at frame 2 — terminal
+     time, not call-site time.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .panelh { font-size: 13px; font-weight: 700; }
+    .warnrow{ font-size: 11px; fill: #b91c1c; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="580" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">SORTED() IS A BARRIER — BUFFER, THEN SORT, THEN RELEASE</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20"  y="66" class="lbl h2">FRAME 1 — ACCUMULATING</text>
+  <text x="360" y="66" class="lbl h2">FRAME 2 — SORT RUNS</text>
+  <text x="700" y="66" class="lbl h2">FRAME 3 — RELEASED</text>
+
+  <!-- Source row -->
+  <rect x="40"  y="82" width="280" height="60" rx="6" class="boxP"/>
+  <text x="180" y="107" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt;</text>
+  <text x="180" y="129" text-anchor="middle" class="lbl body">4.20 &#183; 1.10 &#183; 6.00 &#183; 2.75</text>
+
+  <rect x="380" y="82" width="280" height="60" rx="6" class="boxL"/>
+  <text x="520" y="107" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt;</text>
+  <text x="520" y="129" text-anchor="middle" class="lbl body">exhausted — 4/4</text>
+
+  <rect x="720" y="82" width="280" height="60" rx="6" class="boxL"/>
+  <text x="860" y="107" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt;</text>
+  <text x="860" y="129" text-anchor="middle" class="lbl body">exhausted</text>
+
+  <!-- Corridor 1 -->
+  <path class="flow" d="M 180 142 V 172"/>
+  <text x="195" y="160" class="lbl tiny">emits, one at a time</text>
+
+  <path class="flow" d="M 520 142 V 172"/>
+  <text x="535" y="160" class="lbl tiny">terminal op triggers sort</text>
+
+  <!-- Buffer row -->
+  <rect x="40" y="172" width="280" height="80" rx="6" class="boxH"/>
+  <text x="180" y="197" text-anchor="middle" class="lbl node">sorted() buffer</text>
+  <text x="180" y="219" text-anchor="middle" class="lbl body">2 of 4 buffered</text>
+
+  <rect x="380" y="172" width="280" height="80" rx="6" class="boxH"/>
+  <text x="520" y="197" text-anchor="middle" class="lbl node">sorted() buffer (full)</text>
+  <text x="520" y="219" text-anchor="middle" class="lbl body">4.20 &#183; 1.10 &#183; 6.00 &#183; 2.75</text>
+  <text x="520" y="237" text-anchor="middle" class="lbl sub">TimSort runs over full buffer</text>
+
+  <rect x="720" y="172" width="280" height="80" rx="6" class="boxR"/>
+  <text x="860" y="197" text-anchor="middle" class="lbl node">sorted() buffer (drained)</text>
+  <text x="860" y="219" text-anchor="middle" class="lbl body">released in order</text>
+
+  <!-- Corridor 2 -->
+  <path class="weak" d="M 180 252 V 282"/>
+  <text x="195" y="270" class="lbl tiny">no output yet</text>
+
+  <path class="weak" d="M 520 252 V 282"/>
+  <text x="535" y="270" class="lbl tiny">still idle</text>
+
+  <path class="flow" d="M 860 252 V 282"/>
+  <text x="875" y="270" class="lbl tiny">release, in order</text>
+
+  <!-- Downstream row -->
+  <rect x="40" y="282" width="280" height="60" rx="6" class="boxW"/>
+  <text x="180" y="307" text-anchor="middle" class="lbl node">forEach (downstream)</text>
+  <text x="180" y="329" text-anchor="middle" class="lbl body">idle</text>
+
+  <rect x="380" y="282" width="280" height="60" rx="6" class="boxW"/>
+  <text x="520" y="307" text-anchor="middle" class="lbl node">forEach (downstream)</text>
+  <text x="520" y="329" text-anchor="middle" class="lbl body">idle</text>
+
+  <rect x="720" y="282" width="280" height="60" rx="6" class="boxR"/>
+  <text x="860" y="307" text-anchor="middle" class="lbl node">forEach (downstream)</text>
+  <text x="860" y="329" text-anchor="middle" class="lbl body">1.10, 2.75, 4.20, 6.00</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="372" width="1000" height="90" rx="6" class="panel"/>
+  <text x="36" y="394" class="lbl panelh">WHAT IF THE STREAM CONTAINS A NON-COMPARABLE ELEMENT?</text>
+  <text x="36" y="416" class="lbl tiny">AuditNote implements nothing Comparable — sorted() accepts it silently at the call site (frame 1).</text>
+  <text x="36" y="436" class="lbl warnrow">ClassCastException is thrown inside TimSort's compare, at frame 2 — terminal time, not at sorted().</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="482" x2="1020" y2="482" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="497" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="509" class="lbl tiny">source stream (primary)</text>
+  <rect x="280" y="497" width="22" height="16" rx="3" class="boxH"/>
+  <text x="310" y="509" class="lbl tiny">operation under discussion</text>
+  <rect x="540" y="497" width="22" height="16" rx="3" class="boxR"/>
+  <text x="570" y="509" class="lbl tiny">resolved / success path</text>
+  <rect x="800" y="497" width="22" height="16" rx="3" class="boxL"/>
+  <text x="830" y="509" class="lbl tiny">exhausted / done</text>
+
+  <rect x="20" y="522" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="534" class="lbl tiny">idle downstream stage</text>
+  <rect x="280" y="522" width="22" height="16" rx="3" class="panel"/>
+  <text x="310" y="534" class="lbl tiny">callout / annotation</text>
+  <path d="M 540 530 H 570" class="flow"/>
+  <text x="580" y="534" class="lbl tiny">A &#8594; B : data flows</text>
+  <path d="M 800 530 H 830" class="weak"/>
+  <text x="840" y="534" class="lbl tiny">A &#8594; B : no data yet</text>
+</svg>

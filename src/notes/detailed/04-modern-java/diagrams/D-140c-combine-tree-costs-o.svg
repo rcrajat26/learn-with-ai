@@ -1,0 +1,64 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: the final combine step merges merged-1 (1,400,000 elements) and merged-2 (1,400,000 elements) into the full 2,800,000-element result, copying the right half's 1,400,000 elements into the left. Summed across the whole tree the copies are 700,000 plus 700,000 plus 1,400,000, equal to the total n of 2,800,000, which is why the combine phase costs O(n) overall rather than O(n log n).">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="460" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 3/3 — FINAL MERGE, THEN THE TREE-WIDE TOTAL</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="80" y="64" width="280" height="56" rx="6" class="boxH"/>
+  <text x="220" y="86" text-anchor="middle" class="lbl node">merged 1</text>
+  <text x="220" y="104" text-anchor="middle" class="lbl body code">1,400,000</text>
+
+  <rect x="540" y="64" width="280" height="56" rx="6" class="boxH"/>
+  <text x="680" y="86" text-anchor="middle" class="lbl node">merged 2</text>
+  <text x="680" y="104" text-anchor="middle" class="lbl body code">1,400,000</text>
+
+  <path class="flow" d="M 220 120 V 150"/>
+  <path class="flow" d="M 680 120 V 136 H 260 V 150"/>
+  <text x="450" y="130" text-anchor="middle" class="lbl sub">copy 1,400,000 right &#8594; left</text>
+
+  <rect x="110" y="152" width="330" height="60" rx="6" class="boxR"/>
+  <text x="275" y="176" text-anchor="middle" class="lbl node">final result</text>
+  <text x="275" y="196" text-anchor="middle" class="lbl body code">2,800,000 (1,400,000 copied this step)</text>
+
+  <rect x="60" y="228" width="820" height="100" rx="6" class="panel"/>
+  <text x="76" y="250" class="lbl node" font-size="13px">total element-copies across the whole combine tree</text>
+  <text x="76" y="272" class="lbl body code">frame 2: 700,000 + 700,000 = 1,400,000</text>
+  <text x="76" y="290" class="lbl body code">frame 3: 1,400,000</text>
+  <text x="76" y="310" class="lbl body code" font-weight="700">total = 1,400,000 + 1,400,000 = 2,800,000 = n</text>
+
+  <rect x="60" y="338" width="820" height="80" rx="6" class="panel"/>
+  <text x="76" y="360" class="lbl node" font-size="13px">why this is O(n) overall, not O(n log n)</text>
+  <text x="76" y="380" class="lbl tiny">Each level's copies halve in count but double in per-copy size, so the sum across all levels of a</text>
+  <text x="76" y="396" class="lbl tiny">balanced combine tree is exactly n, regardless of tree depth — the same geometric-series identity</text>
+  <text x="76" y="412" class="lbl tiny">applies verbatim to joining()'s StringBuilder.append(right) at every merge.</text>
+
+  <line x1="20" y1="426" x2="880" y2="426" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="432" width="22" height="12" rx="3" class="boxH"/>
+  <text x="50" y="442" class="lbl tiny">intermediate merge result</text>
+  <rect x="260" y="432" width="22" height="12" rx="3" class="boxR"/>
+  <text x="290" y="442" class="lbl tiny">final combined result</text>
+  <path class="flow" d="M 500 438 H 540"/>
+  <text x="548" y="442" class="lbl tiny">A → B : B's contents copied from A</text>
+</svg>

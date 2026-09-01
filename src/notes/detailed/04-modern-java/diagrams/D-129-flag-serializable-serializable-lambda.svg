@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1040 960" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of altMetafactory and the serializable-lambda path. altMetafactory takes a bitmask of three flags: FLAG_SERIALIZABLE=1, FLAG_MARKERS=2, FLAG_BRIDGES=4. When FLAG_SERIALIZABLE is set the spun lambda class also implements java.io.Serializable and gets a writeReplace method that returns a SerializedLambda capturing the implementation class, method name and descriptor as strings. On deserialization the JVM calls back into the capturing class's compiler-generated $deserializeLambda$ method, which re-runs the metafactory to relink the lambda. Each hop is labelled with its cost, ending in the named failure: renaming or moving the captured method silently breaks deserialization of any lambda serialized before the rename, because SerializedLambda stores the method name as a plain string with no compile-time check.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node { font-size: 14px; font-weight: 600; }
+    .body { font-size: 12.5px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .adapter { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="960" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FLAG_SERIALIZABLE AND THE SERIALIZABLE-LAMBDA PATH</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="58" class="lbl sub">Example: (Serializable &amp; Function&lt;Reservation,BigDecimal&gt;) r -&gt; r.amount(), captured in BonusService for a batch job</text>
+
+  <!-- altMetafactory -->
+  <rect x="320" y="76" width="400" height="72" rx="6" class="boxH"/>
+  <text x="520" y="98" text-anchor="middle" class="lbl node">LambdaMetafactory.altMetafactory</text>
+  <text x="520" y="116" text-anchor="middle" class="lbl body">bitmask flags parameter, cost: one-time link</text>
+  <text x="520" y="134" text-anchor="middle" class="lbl sub">used instead of metafactory whenever any flag != 0</text>
+
+  <!-- three flags on a bus -->
+  <path class="flow" d="M 520 148 V 168"/>
+  <line x1="230" y1="168" x2="810" y2="168" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 230 168 V 190"/>
+  <path class="flow" d="M 520 168 V 190"/>
+  <path class="flow" d="M 810 168 V 190"/>
+
+  <rect x="120" y="194" width="220" height="56" rx="6" class="boxP"/>
+  <text x="230" y="216" text-anchor="middle" class="lbl node">FLAG_SERIALIZABLE = 1</text>
+  <text x="230" y="234" text-anchor="middle" class="lbl sub">adds Serializable + writeReplace, cost: +1 interface</text>
+
+  <rect x="410" y="194" width="220" height="56" rx="6" class="boxP"/>
+  <text x="520" y="216" text-anchor="middle" class="lbl node">FLAG_MARKERS = 2</text>
+  <text x="520" y="234" text-anchor="middle" class="lbl sub">extra marker interfaces, cost: +1 per marker</text>
+
+  <rect x="700" y="194" width="220" height="56" rx="6" class="boxP"/>
+  <text x="810" y="216" text-anchor="middle" class="lbl node">FLAG_BRIDGES = 4</text>
+  <text x="810" y="234" text-anchor="middle" class="lbl sub">bridge MethodTypes, cost: +1 bridge method each</text>
+
+  <!-- serialization path, spine down from FLAG_SERIALIZABLE -->
+  <path class="flow" d="M 230 250 V 274"/>
+
+  <rect x="120" y="278" width="220" height="70" rx="6" class="boxH"/>
+  <text x="230" y="298" text-anchor="middle" class="lbl node">spun class implements</text>
+  <text x="230" y="316" text-anchor="middle" class="lbl body mono">Serializable</text>
+  <text x="230" y="334" text-anchor="middle" class="lbl sub">cost: JVM writes writeReplace()</text>
+
+  <path class="flow" d="M 230 348 V 372"/>
+
+  <rect x="120" y="376" width="220" height="86" rx="6" class="boxH"/>
+  <text x="230" y="396" text-anchor="middle" class="lbl node">writeReplace()</text>
+  <text x="230" y="414" text-anchor="middle" class="lbl body mono">returns new SerializedLambda</text>
+  <text x="230" y="432" text-anchor="middle" class="lbl sub">captures class, method name and</text>
+  <text x="230" y="448" text-anchor="middle" class="lbl sub">descriptor as strings, cost: one allocation</text>
+
+  <path class="flow" d="M 230 462 V 486"/>
+
+  <rect x="80" y="490" width="300" height="70" rx="6" class="boxP"/>
+  <text x="230" y="510" text-anchor="middle" class="lbl node">ObjectOutputStream / wire</text>
+  <text x="230" y="528" text-anchor="middle" class="lbl body">SerializedLambda serialized as data</text>
+  <text x="230" y="546" text-anchor="middle" class="lbl sub">cost: normal Java serialization I/O</text>
+
+  <path class="flow" d="M 230 560 V 584"/>
+
+  <rect x="80" y="588" width="300" height="70" rx="6" class="boxP"/>
+  <text x="230" y="608" text-anchor="middle" class="lbl node">ObjectInputStream / wire</text>
+  <text x="230" y="626" text-anchor="middle" class="lbl body">SerializedLambda deserialized as data</text>
+  <text x="230" y="644" text-anchor="middle" class="lbl sub">cost: normal Java deserialization I/O</text>
+
+  <path class="flow" d="M 230 658 V 682"/>
+
+  <rect x="60" y="686" width="340" height="86" rx="6" class="boxH"/>
+  <text x="230" y="706" text-anchor="middle" class="lbl node">readResolve() calls back</text>
+  <text x="230" y="724" text-anchor="middle" class="lbl body mono">$deserializeLambda$(SerializedLambda)</text>
+  <text x="230" y="742" text-anchor="middle" class="lbl sub">compiler-generated on the capturing class</text>
+  <text x="230" y="758" text-anchor="middle" class="lbl sub">cost: reflective lookup by name + descriptor</text>
+
+  <path class="flow" d="M 230 772 V 796"/>
+
+  <rect x="60" y="800" width="340" height="70" rx="6" class="boxR"/>
+  <text x="230" y="820" text-anchor="middle" class="lbl node">metafactory re-invoked</text>
+  <text x="230" y="838" text-anchor="middle" class="lbl body">re-links to a live lambda instance</text>
+  <text x="230" y="856" text-anchor="middle" class="lbl sub">cost: one relink, same as first-call linkage</text>
+
+  <!-- failure branch -->
+  <path class="adapter" d="M 400 723 H 460"/>
+  <rect x="460" y="686" width="500" height="184" rx="6" class="boxD"/>
+  <text x="476" y="708" class="lbl tiny" font-weight="700">FAILURE: REFACTORING FRAGILITY</text>
+  <text x="476" y="728" class="lbl tiny">$deserializeLambda$ resolves BonusService.calculateGrant</text>
+  <text x="476" y="746" class="lbl tiny">by matching the plain-string class + method name + descriptor</text>
+  <text x="476" y="764" class="lbl tiny">stored inside SerializedLambda — there is no compile-time link</text>
+  <text x="476" y="782" class="lbl tiny">back to that method.</text>
+  <text x="476" y="804" class="lbl tiny" font-weight="700">Renaming or moving calculateGrant after a lambda instance was</text>
+  <text x="476" y="822" class="lbl tiny" font-weight="700">already serialized (e.g. a queued PaymentRun job) breaks</text>
+  <text x="476" y="840" class="lbl tiny" font-weight="700">deserialization at read time, not at compile time.</text>
+  <text x="476" y="860" class="lbl tiny" font-style="italic">The rename compiles clean; the failure surfaces only when the old job runs.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="884" x2="1020" y2="884" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="896" width="20" height="14" rx="3" class="boxH"/>
+  <text x="46" y="908" class="lbl tiny">flag / metafactory step</text>
+  <rect x="230" y="896" width="20" height="14" rx="3" class="boxP"/>
+  <text x="256" y="908" class="lbl tiny">serialization I/O step</text>
+  <rect x="440" y="896" width="20" height="14" rx="3" class="boxR"/>
+  <text x="466" y="908" class="lbl tiny">successful relink</text>
+  <rect x="620" y="896" width="20" height="14" rx="3" class="boxD"/>
+  <text x="646" y="908" class="lbl tiny">named failure</text>
+  <path class="flow" d="M 780 903 H 820"/>
+  <text x="828" y="908" class="lbl tiny">A → B : B follows A</text>
+  <path class="adapter" d="M 20 928 H 60"/>
+  <text x="68" y="933" class="lbl tiny">dashed amber: triggers the failure branch (not inheritance)</text>
+</svg>

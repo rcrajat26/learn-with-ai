@@ -1,0 +1,193 @@
+<svg viewBox="0 0 2760 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of the Java Collections Framework from Java 1.0 to Java 25, one tick per release with the types and features it introduced, and the three version traps marked in amber and red: the JDK 9 ArrayDeque rewrite and the JDK 8 ConcurrentHashMap rewrite and Collections.sort delegation">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <rect x="980" y="15" width="800" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="1380" y="35" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Java Collections Framework: release timeline</text>
+
+  <!-- Legend -->
+  <rect x="1800" y="18" width="18" height="18" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <rect x="1824" y="15" width="120" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="1884" y="31" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">trap detail</text>
+
+  <rect x="1970" y="18" width="18" height="18" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <rect x="1994" y="15" width="150" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="2069" y="31" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">VERSION TRAP</text>
+
+  <!-- Axis -->
+  <line x1="60" y1="450" x2="2700" y2="450" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ================= TICK 0: Java 1.0/1.1 (above) ================= -->
+  <circle cx="190" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="190" y1="444" x2="190" y2="266" stroke="#737373" stroke-width="2"/>
+  <rect x="40" y="266" width="300" height="154" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="50" y="290" font-family="sans-serif" font-size="15" fill="#1f2937">Java 1.0 / 1.1</text>
+  <text x="50" y="311" font-family="sans-serif" font-size="13" fill="#1f2937">Vector</text>
+  <text x="50" y="329" font-family="sans-serif" font-size="13" fill="#1f2937">Hashtable</text>
+  <text x="50" y="347" font-family="sans-serif" font-size="13" fill="#1f2937">Stack</text>
+  <text x="50" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">Enumeration</text>
+  <text x="50" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">Dictionary</text>
+  <text x="50" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">BitSet</text>
+
+  <!-- ================= TICK 1: Java 1.2 (below) ================= -->
+  <circle cx="356" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="356" y1="456" x2="356" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="206" y="480" width="300" height="244" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="216" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 1.2 (the framework)</text>
+  <text x="216" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">Collection framework interfaces</text>
+  <text x="216" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayList</text>
+  <text x="216" y="561" font-family="sans-serif" font-size="13" fill="#1f2937">LinkedList</text>
+  <text x="216" y="579" font-family="sans-serif" font-size="13" fill="#1f2937">HashMap</text>
+  <text x="216" y="597" font-family="sans-serif" font-size="13" fill="#1f2937">TreeMap</text>
+  <text x="216" y="615" font-family="sans-serif" font-size="13" fill="#1f2937">HashSet</text>
+  <text x="216" y="633" font-family="sans-serif" font-size="13" fill="#1f2937">TreeSet</text>
+  <text x="216" y="651" font-family="sans-serif" font-size="13" fill="#1f2937">Collections</text>
+  <text x="216" y="669" font-family="sans-serif" font-size="13" fill="#1f2937">Arrays</text>
+  <text x="216" y="687" font-family="sans-serif" font-size="13" fill="#1f2937">Iterator</text>
+  <text x="216" y="705" font-family="sans-serif" font-size="13" fill="#1f2937">Comparator</text>
+
+  <!-- ================= TICK 2: Java 1.4 (above) ================= -->
+  <circle cx="522" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="522" y1="444" x2="522" y2="302" stroke="#737373" stroke-width="2"/>
+  <rect x="372" y="302" width="300" height="118" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="382" y="326" font-family="sans-serif" font-size="15" fill="#1f2937">Java 1.4</text>
+  <text x="382" y="347" font-family="sans-serif" font-size="13" fill="#1f2937">LinkedHashMap</text>
+  <text x="382" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">LinkedHashSet</text>
+  <text x="382" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">IdentityHashMap</text>
+  <text x="382" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">RandomAccess</text>
+
+  <!-- ================= TICK 3: Java 5 (below) ================= -->
+  <circle cx="688" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="688" y1="456" x2="688" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="538" y="480" width="300" height="190" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="548" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 5</text>
+  <text x="548" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">Generics</text>
+  <text x="548" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">Queue</text>
+  <text x="548" y="561" font-family="sans-serif" font-size="13" fill="#1f2937">EnumMap</text>
+  <text x="548" y="579" font-family="sans-serif" font-size="13" fill="#1f2937">EnumSet</text>
+  <text x="548" y="597" font-family="sans-serif" font-size="13" fill="#1f2937">PriorityQueue</text>
+  <text x="548" y="615" font-family="sans-serif" font-size="13" fill="#1f2937">java.util.concurrent</text>
+  <text x="548" y="633" font-family="sans-serif" font-size="13" fill="#1f2937">for-each loop</text>
+  <text x="548" y="651" font-family="sans-serif" font-size="13" fill="#1f2937">Iterable</text>
+
+  <!-- ================= TICK 4: Java 6 (above) ================= -->
+  <circle cx="854" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="854" y1="444" x2="854" y2="284" stroke="#737373" stroke-width="2"/>
+  <rect x="704" y="284" width="300" height="136" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="714" y="308" font-family="sans-serif" font-size="15" fill="#1f2937">Java 6</text>
+  <text x="714" y="329" font-family="sans-serif" font-size="13" fill="#1f2937">Deque</text>
+  <text x="714" y="347" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayDeque</text>
+  <text x="714" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">NavigableMap</text>
+  <text x="714" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">NavigableSet</text>
+  <text x="714" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">ConcurrentSkipListMap</text>
+
+  <!-- ================= TICK 5: Java 7 (below) ================= -->
+  <circle cx="1020" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="1020" y1="456" x2="1020" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="870" y="480" width="300" height="118" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="880" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 7</text>
+  <text x="880" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">TransferQueue</text>
+  <text x="880" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">Diamond inference</text>
+  <text x="880" y="561" font-family="sans-serif" font-size="13" fill="#1f2937">Objects</text>
+  <text x="880" y="579" font-family="sans-serif" font-size="13" fill="#1f2937">7u6 alternative hashing</text>
+
+  <!-- ================= TICK 6: Java 8 (above), TWO VERSION TRAPS ================= -->
+  <circle cx="1186" cy="450" r="7" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <line x1="1186" y1="443" x2="1186" y2="420" stroke="#737373" stroke-width="2"/>
+  <rect x="1036" y="194" width="300" height="226" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="1046" y="218" font-family="sans-serif" font-size="15" fill="#1f2937">Java 8</text>
+  <text x="1046" y="239" font-family="sans-serif" font-size="13" fill="#1f2937">Default methods</text>
+  <text x="1046" y="257" font-family="sans-serif" font-size="13" fill="#1f2937">Streams</text>
+  <text x="1046" y="275" font-family="sans-serif" font-size="13" fill="#1f2937">Spliterator</text>
+  <text x="1046" y="293" font-family="sans-serif" font-size="13" fill="#1f2937">Comparator combinators</text>
+  <text x="1046" y="311" font-family="sans-serif" font-size="13" fill="#1f2937">HashMap treeification</text>
+  <rect x="1040" y="316" width="292" height="17" fill="#fef3c7"/>
+  <text x="1046" y="329" font-family="sans-serif" font-size="13" fill="#1f2937">ConcurrentHashMap rewrite</text>
+  <rect x="1040" y="334" width="292" height="17" fill="#fee2e2"/>
+  <text x="1046" y="347" font-family="sans-serif" font-size="13" fill="#1f2937">VERSION TRAP</text>
+  <rect x="1040" y="352" width="292" height="17" fill="#fef3c7"/>
+  <text x="1046" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">Collections.sort delegates</text>
+  <rect x="1040" y="370" width="292" height="17" fill="#fef3c7"/>
+  <text x="1046" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">to List.sort</text>
+  <rect x="1040" y="388" width="292" height="17" fill="#fee2e2"/>
+  <text x="1046" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">VERSION TRAP</text>
+
+  <!-- ================= TICK 7: Java 9 (below), VERSION TRAP ================= -->
+  <circle cx="1352" cy="450" r="7" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <line x1="1352" y1="457" x2="1352" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="1202" y="480" width="300" height="136" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="1212" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 9</text>
+  <text x="1212" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">List.of / Set.of / Map.of</text>
+  <text x="1212" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">ImmutableCollections with SALT</text>
+  <text x="1212" y="561" font-family="sans-serif" font-size="13" fill="#1f2937">Enumeration.asIterator</text>
+  <rect x="1206" y="566" width="292" height="17" fill="#fef3c7"/>
+  <text x="1212" y="579" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayDeque rewrite (no power-of-two)</text>
+  <rect x="1206" y="584" width="292" height="17" fill="#fee2e2"/>
+  <text x="1212" y="597" font-family="sans-serif" font-size="13" fill="#1f2937">VERSION TRAP</text>
+
+  <!-- ================= TICK 8: Java 10 (above) ================= -->
+  <circle cx="1518" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="1518" y1="444" x2="1518" y2="338" stroke="#737373" stroke-width="2"/>
+  <rect x="1368" y="338" width="300" height="82" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1378" y="362" font-family="sans-serif" font-size="15" fill="#1f2937">Java 10</text>
+  <text x="1378" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">List.copyOf / Set.copyOf / Map.copyOf</text>
+  <text x="1378" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">Collectors.toUnmodifiable*</text>
+
+  <!-- ================= TICK 9: Java 11 (below) ================= -->
+  <circle cx="1684" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="1684" y1="456" x2="1684" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="1534" y="480" width="300" height="82" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1544" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 11</text>
+  <text x="1544" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">Collection.toArray(IntFunction)</text>
+  <text x="1544" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">ArraysSupport.newLength</text>
+
+  <!-- ================= TICK 10: Java 14-16 (above) ================= -->
+  <circle cx="1850" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="1850" y1="444" x2="1850" y2="320" stroke="#737373" stroke-width="2"/>
+  <rect x="1700" y="320" width="300" height="100" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1710" y="344" font-family="sans-serif" font-size="15" fill="#1f2937">Java 14-16</text>
+  <text x="1710" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">record</text>
+  <text x="1710" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">Stream.toList()</text>
+  <text x="1710" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">DualPivotQuicksort improvements</text>
+
+  <!-- ================= TICK 11: Java 17 (below) ================= -->
+  <circle cx="2016" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="2016" y1="456" x2="2016" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="1866" y="480" width="300" height="82" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1876" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 17</text>
+  <text x="1876" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">Map.Entry.copyOf</text>
+  <text x="1876" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">Sealed types</text>
+
+  <!-- ================= TICK 12: Java 19 (above) ================= -->
+  <circle cx="2182" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="2182" y1="444" x2="2182" y2="320" stroke="#737373" stroke-width="2"/>
+  <rect x="2032" y="320" width="300" height="100" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="2042" y="344" font-family="sans-serif" font-size="15" fill="#1f2937">Java 19</text>
+  <text x="2042" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">HashMap.newHashMap</text>
+  <text x="2042" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">HashSet.newHashSet</text>
+  <text x="2042" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">LinkedHashMap.newLinkedHashMap</text>
+
+  <!-- ================= TICK 13: Java 21 (below) ================= -->
+  <circle cx="2348" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="2348" y1="456" x2="2348" y2="480" stroke="#737373" stroke-width="2"/>
+  <rect x="2198" y="480" width="300" height="100" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="2208" y="504" font-family="sans-serif" font-size="15" fill="#1f2937">Java 21</text>
+  <text x="2208" y="525" font-family="sans-serif" font-size="13" fill="#1f2937">JEP 431 sequenced collections</text>
+  <text x="2208" y="543" font-family="sans-serif" font-size="13" fill="#1f2937">Collections.unmodifiableSequenced*</text>
+  <text x="2208" y="561" font-family="sans-serif" font-size="13" fill="#1f2937">List.reversed</text>
+
+  <!-- ================= TICK 14: Java 22-25 (above) ================= -->
+  <circle cx="2514" cy="450" r="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <line x1="2514" y1="444" x2="2514" y2="320" stroke="#737373" stroke-width="2"/>
+  <rect x="2364" y="320" width="300" height="100" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="2374" y="344" font-family="sans-serif" font-size="15" fill="#1f2937">Java 22-25</text>
+  <text x="2374" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">No new collection types</text>
+  <text x="2374" y="383" font-family="sans-serif" font-size="13" fill="#1f2937">Stream.gather / Gatherer (24)</text>
+  <text x="2374" y="401" font-family="sans-serif" font-size="13" fill="#1f2937">Compact object headers (24 exp / 25)</text>
+</svg>

@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1040 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline from Java 1.2 to Java 21 of the Thread lifecycle-control API's decline.
+     Java 1.2 deprecates stop, suspend and resume. Java 9 removes ThreadGroup.stop and degrades
+     countStackFrames to always throw UnsupportedOperationException. Java 19 deprecates getId
+     and adds threadId() as its replacement. Java 20 removes stop, suspend and resume entirely,
+     so calling any of them now throws UnsupportedOperationException instead of running.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxWk  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .pill   { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .axis  { stroke: #475569; stroke-width: 2; }
+    .stub  { stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">Thread LIFECYCLE-CONTROL API DECLINE — JAVA 1.2 TO JAVA 21</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- axis -->
+  <line class="axis" x1="60" y1="210" x2="980" y2="210"/>
+  <polygon points="980,210 968,204 968,216" fill="#475569"/>
+
+  <!-- axis release ticks -->
+  <line x1="120" y1="204" x2="120" y2="216" stroke="#475569" stroke-width="2"/>
+  <text x="120" y="234" text-anchor="middle" class="lbl tiny">Java 1.2</text>
+
+  <line x1="380" y1="204" x2="380" y2="216" stroke="#475569" stroke-width="2"/>
+  <text x="380" y="234" text-anchor="middle" class="lbl tiny">Java 9</text>
+
+  <line x1="660" y1="204" x2="660" y2="216" stroke="#475569" stroke-width="2"/>
+  <text x="660" y="234" text-anchor="middle" class="lbl tiny">Java 19</text>
+
+  <line x1="880" y1="204" x2="880" y2="216" stroke="#475569" stroke-width="2"/>
+  <text x="880" y="234" text-anchor="middle" class="lbl tiny">Java 20</text>
+
+  <rect x="936" y="196" width="42" height="26" rx="13" class="pill"/>
+  <text x="957" y="214" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+  <text x="957" y="234" text-anchor="middle" class="lbl tiny">no change</text>
+
+  <!-- marker above: Java 1.2 -->
+  <line class="stub" x1="120" y1="204" x2="120" y2="150"/>
+  <rect x="30" y="80" width="180" height="70" rx="6" class="boxWk"/>
+  <text x="120" y="102" text-anchor="middle" class="lbl node">Java 1.2</text>
+  <text x="120" y="120" text-anchor="middle" class="lbl sub">stop(), suspend(), resume()</text>
+  <text x="120" y="136" text-anchor="middle" class="lbl sub">deprecated (unsafe)</text>
+
+  <!-- marker below: Java 9 (ThreadGroup.stop) -->
+  <line class="stub" x1="360" y1="216" x2="360" y2="270"/>
+  <rect x="270" y="270" width="180" height="70" rx="6" class="boxWk"/>
+  <text x="360" y="292" text-anchor="middle" class="lbl node">Java 9</text>
+  <text x="360" y="310" text-anchor="middle" class="lbl sub">ThreadGroup.stop(Throwable)</text>
+  <text x="360" y="326" text-anchor="middle" class="lbl sub">overload removed</text>
+
+  <!-- marker above: Java 9 (countStackFrames) -->
+  <line class="stub" x1="400" y1="204" x2="400" y2="150"/>
+  <rect x="310" y="80" width="200" height="70" rx="6" class="boxWk"/>
+  <text x="410" y="102" text-anchor="middle" class="lbl node">Java 9</text>
+  <text x="410" y="120" text-anchor="middle" class="lbl sub">countStackFrames() degraded —</text>
+  <text x="410" y="136" text-anchor="middle" class="lbl sub">always throws UnsupportedOperationException</text>
+
+  <!-- marker below: Java 19 getId deprecated -->
+  <line class="stub" x1="640" y1="216" x2="640" y2="270"/>
+  <rect x="550" y="270" width="180" height="70" rx="6" class="boxWk"/>
+  <text x="640" y="292" text-anchor="middle" class="lbl node">Java 19</text>
+  <text x="640" y="310" text-anchor="middle" class="lbl sub">getId() deprecated</text>
+  <text x="640" y="326" text-anchor="middle" class="lbl sub">(forRemoval = false)</text>
+
+  <!-- marker above: Java 19 threadId() added -->
+  <line class="stub" x1="680" y1="204" x2="680" y2="150"/>
+  <rect x="590" y="80" width="180" height="70" rx="6" class="boxR"/>
+  <text x="680" y="102" text-anchor="middle" class="lbl node">Java 19</text>
+  <text x="680" y="120" text-anchor="middle" class="lbl sub">threadId() added</text>
+  <text x="680" y="136" text-anchor="middle" class="lbl sub">the replacement for getId()</text>
+
+  <!-- marker below: Java 20 removal -->
+  <line class="stub" x1="880" y1="216" x2="880" y2="270"/>
+  <rect x="780" y="270" width="200" height="86" rx="6" class="boxDeg"/>
+  <text x="880" y="292" text-anchor="middle" class="lbl node">Java 20</text>
+  <text x="880" y="310" text-anchor="middle" class="lbl sub">stop(), suspend(), resume()</text>
+  <text x="880" y="326" text-anchor="middle" class="lbl sub">REMOVED — now throw</text>
+  <text x="880" y="342" text-anchor="middle" class="lbl sub">UnsupportedOperationException</text>
+
+  <!-- legend -->
+  <line x1="20" y1="370" x2="1020" y2="370" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="382" width="22" height="14" rx="3" class="boxWk"/>
+  <text x="50" y="393" class="lbl tiny">deprecated / degraded (retained for compatibility)</text>
+  <rect x="360" y="382" width="22" height="14" rx="3" class="boxR"/>
+  <text x="390" y="393" class="lbl tiny">new replacement API</text>
+  <rect x="560" y="382" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="590" y="393" class="lbl tiny">removed — now throws at call time</text>
+  <rect x="850" y="382" width="30" height="18" rx="9" class="pill"/>
+  <text x="890" y="395" class="lbl tiny">release-number pill</text>
+</svg>

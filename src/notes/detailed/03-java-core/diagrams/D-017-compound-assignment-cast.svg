@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Compound assignment hides an implicit narrowing cast: byte retries = 10; retries += 300; compiles by inserting (byte) and truncates 310 to 54, while retries = retries + 300; fails to compile; the same pattern repeats for char rung += 1 versus rung = rung + 1">
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="560" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">retries += 300 quietly inserts a narrowing cast that retries = retries + 300 refuses to compile</text>
+
+  <!-- ROW 1: byte -->
+  <text x="60" y="58" font-family="sans-serif" font-size="13" fill="#4b5563">Row 1 — byte retries</text>
+
+  <!-- Row1 left panel: compound assignment compiles -->
+  <rect x="40" y="68" width="500" height="330" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="56" y="80" width="110" height="22" rx="3" fill="#dcfce7"/>
+  <text x="111" y="95" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">COMPILES</text>
+  <text x="290" y="95" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">byte retries = 10; retries += 300;</text>
+
+  <text x="290" y="118" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">expands to: retries = (byte)(retries + 300)</text>
+
+  <text x="290" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">10 + 300 = 310, held as a 32-bit int</text>
+
+  <rect x="60" y="150" width="105" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="112" y="169" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">0000 0000</text>
+  <rect x="170" y="150" width="105" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="222" y="169" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">0000 0000</text>
+  <rect x="280" y="150" width="105" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="332" y="169" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">0000 0001</text>
+  <rect x="390" y="150" width="105" height="30" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="442" y="169" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">0011 0110</text>
+
+  <text x="222" y="196" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">discarded — upper 24 bits</text>
+  <text x="442" y="196" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">kept — becomes the byte</text>
+
+  <line x1="442" y1="205" x2="442" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="238" width="300" height="46" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="300" y="257" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">retries = 54</text>
+  <text x="300" y="275" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0011 0110b = 54, fits signed byte range</text>
+
+  <text x="290" y="310" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the compiler-inserted cast makes this legal even though</text>
+  <text x="290" y="328" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the true arithmetic result, 310, cannot fit in a byte</text>
+  <text x="290" y="352" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">a stake retry counter silently wraps instead of failing loudly</text>
+  <text x="290" y="372" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">a bug that only shows up once retries actually climbs past 117</text>
+
+  <!-- Row1 right panel: plain assignment fails -->
+  <rect x="580" y="68" width="500" height="330" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="596" y="80" width="120" height="22" rx="3" fill="#fee2e2"/>
+  <text x="656" y="95" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">FAILS TO COMPILE</text>
+  <text x="830" y="95" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">retries = retries + 300;</text>
+
+  <text x="830" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">retries + 300 is an int expression;</text>
+  <text x="830" y="148" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">no implicit narrowing cast is inserted for a plain assignment</text>
+
+  <rect x="620" y="170" width="420" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="830" y="197" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">error: incompatible types:</text>
+  <text x="830" y="217" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">possible lossy conversion from int to byte</text>
+
+  <text x="830" y="270" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">same runtime arithmetic, opposite compile-time verdict:</text>
+  <text x="830" y="288" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the += form's implicit cast is exactly the danger, not a convenience</text>
+
+  <!-- ROW 2: char -->
+  <text x="60" y="428" font-family="sans-serif" font-size="13" fill="#4b5563">Row 2 — char rung</text>
+
+  <!-- Row2 left panel -->
+  <rect x="40" y="438" width="500" height="290" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="56" y="450" width="110" height="22" rx="3" fill="#dcfce7"/>
+  <text x="111" y="465" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">COMPILES</text>
+  <text x="290" y="465" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">char rung = 'a'; rung += 1;</text>
+
+  <text x="290" y="488" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">expands to: rung = (char)(rung + 1)</text>
+  <text x="290" y="508" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">'a' = 97, 97 + 1 = 98, held as a 32-bit int</text>
+
+  <rect x="70" y="520" width="440" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="290" y="539" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">0000 0000 0110 0010 (16-bit, nothing lost)</text>
+
+  <line x1="290" y1="550" x2="290" y2="575" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="150" y="583" width="280" height="46" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="290" y="602" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">rung = 98 = 'b'</text>
+  <text x="290" y="620" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">98 fits in 16 bits: no truncation this time</text>
+
+  <text x="290" y="655" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the cast is inserted regardless of whether data is actually lost;</text>
+  <text x="290" y="673" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">it just happens to be harmless here because 98 still fits in a char</text>
+  <text x="290" y="697" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">the same rung += 1 pattern truncates once the sum overflows 65,535</text>
+
+  <!-- Row2 right panel -->
+  <rect x="580" y="438" width="500" height="290" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="596" y="450" width="120" height="22" rx="3" fill="#fee2e2"/>
+  <text x="656" y="465" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">FAILS TO COMPILE</text>
+  <text x="850" y="465" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">rung = rung + 1;</text>
+
+  <text x="830" y="500" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">rung + 1 promotes rung to int; the plain assignment</text>
+  <text x="830" y="518" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">back into a char needs an explicit cast the source does not give</text>
+
+  <rect x="620" y="540" width="420" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="830" y="567" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">error: incompatible types:</text>
+  <text x="830" y="587" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">possible lossy conversion from int to char</text>
+
+  <text x="830" y="650" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">char behaves exactly like the other integral narrowing types here —</text>
+  <text x="830" y="668" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">it is unsigned 16-bit, but the compound-assignment cast rule is identical</text>
+
+  <!-- legend -->
+  <line x1="40" y1="758" x2="1080" y2="758" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="60" y="770" width="18" height="14" fill="#dcfce7" stroke="#737373" stroke-width="1.6"/>
+  <text x="86" y="782" font-family="sans-serif" font-size="11" fill="#4b5563">compiles / kept bits / final value</text>
+  <rect x="340" y="770" width="18" height="14" fill="#fef3c7" stroke="#737373" stroke-width="1.6"/>
+  <text x="366" y="782" font-family="sans-serif" font-size="11" fill="#4b5563">the low bits actually retained after truncation</text>
+  <rect x="680" y="770" width="18" height="14" fill="#fee2e2" stroke="#525252" stroke-width="1.6"/>
+  <text x="706" y="782" font-family="sans-serif" font-size="11" fill="#4b5563">discarded bits / compile error</text>
+
+  <text x="560" y="820" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">rule: for a compound assignment E1 op= E2, the compiler inserts an implicit cast</text>
+  <text x="560" y="838" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">equivalent to E1 = (T)((E1) op (E2)), where T is E1's declared type — every narrowing integral type is affected the same way</text>
+
+</svg>

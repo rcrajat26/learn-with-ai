@@ -1,0 +1,113 @@
+<svg viewBox="0 0 900 1320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing the defensive-copy ordering bug in PaymentRun(String runRef, List&lt;WithdrawalId&gt; itemIds), runRef PR-2026-08-29, with an incoming caller list [WD-9001, WD-9002], both approved withdrawals under the bank-withdrawal rail. Frame 1, the wrong order, validate-then-copy: the constructor calls validateAllApproved(itemIds), which checks 2 items, then between that call and this.itemIds = List.copyOf(itemIds) an attacker thread runs itemIds.add(WD-7777), a withdrawal belonging to a client carrying WITHDRAWAL_BLOCKED from SYSTEM_COMPLIANCE; that window is marked as the TOCTOU window, and the copy captures 3 items, so the field ends as [WD-9001, WD-9002, WD-7777] with the blocked item inside the run. Frame 2, the right order, copy-then-validate: this.itemIds = List.copyOf(itemIds) runs first, then validateAllApproved(this.itemIds) checks the copy itself; the attacker's add(WD-7777) after the copy only mutates the caller's own list, which is unreachable from the private copy, so the field ends as [WD-9001, WD-9002], both approved. Frame 3 shows the two resulting field states side by side, wrong with 3 items and one blocked, right with 2 items all approved, under a bold highlighted rule: correct order is copy first, then validate the copy.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+    </style>
+    <marker id="arr070" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="1320" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Defensive copy ordering and the TOCTOU window &#8212; PaymentRun(String runRef, List&lt;WithdrawalId&gt; itemIds)</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; WRONG: validate-then-copy</text>
+  <line x1="20" y1="74" x2="880" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="88" width="780" height="54" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="108" class="h2">PaymentRun("PR-2026-08-29", itemIds) &#8212; incoming caller list</text>
+  <text x="76" y="128" class="code">itemIds = [WD-9001, WD-9002]  // both approved, bank-withdrawal rail</text>
+
+  <path d="M 450 142 V 162" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr070)"/>
+
+  <rect x="60" y="162" width="780" height="172" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="184" class="smallb">PaymentRun constructor body &#8212; WRONG ORDER (validate-then-copy)</text>
+  <text x="76" y="204" class="code">validateAllApproved(itemIds);</text>
+  <text x="76" y="220" class="small">checks 2 items: WD-9001, WD-9002 &#8212; both approved</text>
+
+  <rect x="100" y="232" width="700" height="60" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="116" y="250" class="smallb">TOCTOU WINDOW</text>
+  <text x="116" y="266" class="small">attacker thread: itemIds.add(WD-7777)</text>
+  <text x="116" y="282" class="small">WD-7777 &#8212; client carries WITHDRAWAL_BLOCKED from SYSTEM_COMPLIANCE</text>
+
+  <text x="76" y="310" class="code">this.itemIds = List.copyOf(itemIds);  // copy now captures 3 items</text>
+
+  <path d="M 450 334 V 354" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr070)"/>
+
+  <rect x="60" y="354" width="780" height="54" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="76" y="374" class="codeR" font-weight="bold">this.itemIds = [WD-9001, WD-9002, WD-7777]</text>
+  <text x="76" y="392" class="small">3 items &#8212; WD-7777 is blocked but lands inside the run</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="464" class="h2">FRAME 2 &#8212; RIGHT: copy-then-validate</text>
+  <line x1="20" y1="472" x2="880" y2="472" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="488" width="780" height="112" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="508" class="smallb">PaymentRun constructor body &#8212; RIGHT ORDER (copy-then-validate)</text>
+  <text x="76" y="528" class="code">this.itemIds = List.copyOf(itemIds);  // copy captures exactly 2 items</text>
+  <text x="76" y="546" class="code">validateAllApproved(this.itemIds);  // checks the copy itself</text>
+  <text x="76" y="564" class="small">attacker's itemIds.add(WD-7777) after this point mutates only the</text>
+  <text x="76" y="580" class="small">caller's own list &#8212; this.itemIds is a private copy, unreachable to it</text>
+
+  <path d="M 450 600 V 620" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr070)"/>
+
+  <rect x="60" y="620" width="780" height="54" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="76" y="640" class="code" font-weight="bold">this.itemIds = [WD-9001, WD-9002]</text>
+  <text x="76" y="658" class="small">2 items &#8212; validated against exactly what was stored</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <text x="20" y="734" class="h2">FRAME 3 &#8212; THE TWO FIELD STATES SIDE BY SIDE</text>
+  <line x1="20" y1="742" x2="880" y2="742" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="758" width="380" height="140" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="76" y="778" class="smallb">WRONG &#8212; validate-then-copy</text>
+  <text x="76" y="798" class="codeR">this.itemIds =</text>
+  <text x="76" y="814" class="codeR">[WD-9001, WD-9002, WD-7777]</text>
+  <text x="76" y="832" class="small">3 items</text>
+  <text x="76" y="848" class="small">WD-7777 blocked (WITHDRAWAL_BLOCKED,</text>
+  <text x="76" y="864" class="small">SYSTEM_COMPLIANCE) &#8212; inside the run</text>
+  <text x="76" y="884" class="small">TOCTOU window let the attacker in</text>
+
+  <rect x="460" y="758" width="380" height="140" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="476" y="778" class="smallb">RIGHT &#8212; copy-then-validate</text>
+  <text x="476" y="798" class="code">this.itemIds =</text>
+  <text x="476" y="814" class="code">[WD-9001, WD-9002]</text>
+  <text x="476" y="832" class="small">2 items</text>
+  <text x="476" y="848" class="small">both approved, both under the</text>
+  <text x="476" y="864" class="small">bank-withdrawal rail</text>
+  <text x="476" y="884" class="small">no window &#8212; validated on the copy</text>
+
+  <rect x="60" y="914" width="780" height="44" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="76" y="942" class="h2">Correct order: copy first, then validate the copy.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1018" class="h2">LEGEND</text>
+  <line x1="20" y1="1026" x2="880" y2="1026" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="42" y="1040" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="1053" class="small">input &#8212; the caller's mutable itemIds list passed to the constructor</text>
+
+  <rect x="42" y="1064" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="70" y="1077" class="small">constructor body &#8212; the statement order inside PaymentRun, either order</text>
+
+  <rect x="42" y="1088" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="70" y="1101" class="small">degraded &#8212; the TOCTOU window, the wrong-order result, and the blocked outcome</text>
+
+  <rect x="42" y="1112" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="70" y="1125" class="small">resolved &#8212; the copy-then-validate result, all items approved</text>
+
+  <rect x="42" y="1136" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="70" y="1149" class="small">highlight &#8212; the binding rule: copy first, then validate the copy</text>
+
+  <line x1="42" y1="1176" x2="68" y2="1176" stroke="#475569" stroke-width="2" marker-end="url(#arr070)"/>
+  <text x="76" y="1180" class="small">primary flow &#8212; constructor execution order, top to bottom</text>
+</svg>

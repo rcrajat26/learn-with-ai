@@ -1,0 +1,102 @@
+<svg viewBox="0 0 1120 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Static hiding versus instance overriding. Left lane: PaymentRail and CardRail each declare a static String name(); a PaymentRail-typed reference holding a CardRail instance calls rail.name(), which compiles to invokestatic PaymentRail.name and resolves to PaymentRail's static method, ignoring CardRail's hidden version. Right lane: both declare instance String label(); rail.label() compiles to invokevirtual PaymentRail.label but the JVM dispatches to CardRail.label() at runtime. An annotation panel explains that the invokevirtual constant-pool target names the static type PaymentRail while the runtime class CardRail is what actually runs.">
+  <defs>
+    <marker id="arrow044" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowR044" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="arrowW044" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="700" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Static hiding versus instance overriding</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT LANE: STATIC -->
+  <text x="270" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">STATIC METHOD</text>
+  <text x="270" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">hidden, resolved by the compile-time type</text>
+  <line x1="90" y1="88" x2="450" y2="88" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="90" y="100" width="360" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="270" y="122" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PaymentRail</text>
+  <text x="270" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">static String name()</text>
+  <text x="270" y="158" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">String label()</text>
+
+  <line x1="270" y1="170" x2="270" y2="200" stroke="#475569" stroke-width="2" marker-end="url(#arrow044)"/>
+
+  <rect x="90" y="200" width="360" height="70" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="270" y="222" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardRail</text>
+  <text x="270" y="240" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">static String name() (hides parent)</text>
+  <text x="270" y="258" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">String label()</text>
+
+  <line x1="270" y1="300" x2="270" y2="270" stroke="#9ca3af" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowW044)"/>
+
+  <rect x="90" y="300" width="360" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="270" y="322" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">PaymentRail rail = new CardRail();</text>
+  <text x="270" y="342" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">rail.name();</text>
+  <text x="270" y="362" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">invokestatic PaymentRail.name:()Ljava/lang/String;</text>
+
+  <path d="M 450 340 H 480 V 132 H 450" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#arrowR044)"/>
+
+  <!-- RIGHT LANE: INSTANCE -->
+  <text x="810" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">INSTANCE METHOD</text>
+  <text x="810" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">overridden, resolved by the runtime class</text>
+  <line x1="630" y1="88" x2="990" y2="88" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="630" y="100" width="360" height="70" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="810" y="122" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PaymentRail</text>
+  <text x="810" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">static String name()</text>
+  <text x="810" y="158" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">String label()</text>
+
+  <line x1="810" y1="170" x2="810" y2="200" stroke="#475569" stroke-width="2" marker-end="url(#arrow044)"/>
+
+  <rect x="630" y="200" width="360" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="810" y="222" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardRail</text>
+  <text x="810" y="240" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">static String name()</text>
+  <text x="810" y="258" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">String label() (overrides parent)</text>
+
+  <line x1="810" y1="300" x2="810" y2="270" stroke="#15803d" stroke-width="2" marker-end="url(#arrowR044)"/>
+
+  <rect x="630" y="300" width="360" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="810" y="322" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">PaymentRail rail = new CardRail();</text>
+  <text x="810" y="342" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">rail.label();</text>
+  <text x="810" y="362" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">invokevirtual PaymentRail.label:()Ljava/lang/String;</text>
+
+  <path d="M 990 340 H 1020 V 132 H 990" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowW044)"/>
+
+  <!-- annotation panel -->
+  <rect x="110" y="420" width="900" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="130" y="442" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">RESOLUTION IS STATIC, SELECTION IS DYNAMIC</text>
+  <line x1="130" y1="450" x2="990" y2="450" stroke="#d1d5db" stroke-width="1"/>
+  <text x="130" y="470" font-family="sans-serif" font-size="11" fill="#1f2937">The invokevirtual target in the constant pool names the static type PaymentRail,</text>
+  <text x="130" y="488" font-family="sans-serif" font-size="11" fill="#1f2937">and the JVM still selects CardRail.label() at runtime.</text>
+  <text x="130" y="506" font-family="sans-serif" font-size="11" fill="#1f2937">Which slot is called is decided at compile time; which override runs is decided at runtime.</text>
+
+  <!-- legend -->
+  <text x="110" y="570" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="110" y1="578" x2="1010" y2="578" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="120" y="590" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="148" y="603" font-family="sans-serif" font-size="11" fill="#4b5563">method actually reached at the call site</text>
+
+  <rect x="120" y="614" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="148" y="627" font-family="sans-serif" font-size="11" fill="#4b5563">declared here but not reached at this call site</text>
+
+  <line x1="620" y1="598" x2="642" y2="598" stroke="#475569" stroke-width="2" marker-end="url(#arrow044)"/>
+  <text x="648" y="603" font-family="sans-serif" font-size="11" fill="#4b5563">extends (CardRail extends PaymentRail)</text>
+
+  <line x1="620" y1="622" x2="642" y2="622" stroke="#15803d" stroke-width="2" marker-end="url(#arrowR044)"/>
+  <text x="648" y="627" font-family="sans-serif" font-size="11" fill="#4b5563">bytecode target actually invoked</text>
+
+  <line x1="620" y1="646" x2="642" y2="646" stroke="#9ca3af" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowW044)"/>
+  <text x="648" y="651" font-family="sans-serif" font-size="11" fill="#4b5563">declared candidate, not reached at this call</text>
+</svg>

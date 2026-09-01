@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1080 860" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of configuration resolution order for one knob, checked in three ordered steps: explicit parameter, environment variable, module default. Each check asks whether the value is present and not None, not whether it is truthy, and an explicit zero is traced through the parameter check and survives as the resolved value. The environment layer names HARNESS_AGENT_MAX_TURNS, HARNESS_AGENT_TIMEOUT, HARNESS_PERMISSION_MODE, HARNESS_SETTING_SOURCES, and HARNESS_AGENT_SETTINGS. The default layer names DEFAULT_PERMISSION_MODE acceptEdits, DEFAULT_SETTING_SOURCES user comma project, DEFAULT_TIMEOUT 1800, and DEFAULT_MAX_TURNS 160.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxLeg  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .no    { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="860" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">RESOLUTION ORDER: PARAMETER &#8594; ENV &#8594; DEFAULT</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">worked example: resolving max_turns, called explicitly with 0</text>
+
+  <!-- Check 1: parameter -->
+  <rect x="60" y="76" width="360" height="70" rx="6" class="boxP"/>
+  <text x="240" y="100" text-anchor="middle" class="lbl body">explicit parameter</text>
+  <text x="240" y="118" text-anchor="middle" class="lbl sub">max_turns=0 passed to ClaudeRunner</text>
+  <text x="240" y="134" text-anchor="middle" class="lbl sub" font-weight="700">check: is it present and not None?</text>
+
+  <path class="flow" d="M 240 146 V 172"/>
+  <rect x="60" y="172" width="360" height="40" rx="6" class="boxHi"/>
+  <text x="240" y="197" text-anchor="middle" class="lbl body">0 is not None &#8594; YES</text>
+
+  <path class="no" d="M 420 108 H 480"/>
+  <text x="450" y="98" text-anchor="middle" class="lbl tiny">no</text>
+
+  <!-- Check 2: env -->
+  <rect x="480" y="76" width="380" height="70" rx="6" class="boxP"/>
+  <text x="670" y="100" text-anchor="middle" class="lbl body">environment variable</text>
+  <text x="670" y="118" text-anchor="middle" class="lbl sub">HARNESS_AGENT_MAX_TURNS</text>
+  <text x="670" y="134" text-anchor="middle" class="lbl sub" font-weight="700">check: is it present and not None?</text>
+
+  <path class="no" d="M 860 108 H 920"/>
+  <text x="890" y="98" text-anchor="middle" class="lbl tiny">no</text>
+
+  <!-- Check 3: default -->
+  <rect x="920" y="76" width="140" height="70" rx="6" class="boxLeg"/>
+  <text x="990" y="100" text-anchor="middle" class="lbl body">module</text>
+  <text x="990" y="116" text-anchor="middle" class="lbl body">default</text>
+  <text x="990" y="134" text-anchor="middle" class="lbl sub">DEFAULT_MAX_TURNS</text>
+
+  <!-- Resolved -->
+  <path class="flow" d="M 240 212 V 246"/>
+  <rect x="60" y="246" width="360" height="56" rx="6" class="boxOk"/>
+  <text x="240" y="268" text-anchor="middle" class="lbl body" font-weight="700">resolved: max_turns = 0</text>
+  <text x="240" y="286" text-anchor="middle" class="lbl sub">explicit 0 survives &#8212; truthy check would have skipped it</text>
+
+  <!-- env layer names panel -->
+  <line x1="20" y1="330" x2="1060" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="350" class="lbl h2">ENV LAYER &#8212; THE REAL NAMES</text>
+  <rect x="20" y="362" width="1040" height="66" rx="6" class="panel"/>
+  <text x="36" y="386" class="lbl dense">HARNESS_AGENT_MAX_TURNS &#183; HARNESS_AGENT_TIMEOUT &#183; HARNESS_PERMISSION_MODE</text>
+  <text x="36" y="408" class="lbl dense">HARNESS_SETTING_SOURCES &#183; HARNESS_AGENT_SETTINGS</text>
+
+  <!-- default layer names panel -->
+  <line x1="20" y1="450" x2="1060" y2="450" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="470" class="lbl h2">DEFAULT LAYER &#8212; THE REAL VALUES</text>
+
+  <rect x="20" y="482" width="500" height="44" rx="6" class="boxLeg"/>
+  <text x="36" y="509" class="lbl dense">DEFAULT_PERMISSION_MODE = "acceptEdits"</text>
+
+  <rect x="540" y="482" width="500" height="44" rx="6" class="boxLeg"/>
+  <text x="556" y="509" class="lbl dense">DEFAULT_SETTING_SOURCES = "user,project"</text>
+
+  <rect x="20" y="536" width="500" height="44" rx="6" class="boxLeg"/>
+  <text x="36" y="563" class="lbl dense">DEFAULT_TIMEOUT = 1800</text>
+
+  <rect x="540" y="536" width="500" height="44" rx="6" class="boxLeg"/>
+  <text x="556" y="563" class="lbl dense">DEFAULT_MAX_TURNS = 160</text>
+
+  <!-- present-not-none annotation -->
+  <rect x="20" y="600" width="1040" height="120" rx="6" class="panel"/>
+  <text x="36" y="622" class="lbl h2">WHY "PRESENT AND NOT None" NOT "TRUTHY"</text>
+  <text x="36" y="646" class="lbl dense">A truthy check treats max_turns=0 the same as max_turns=None or an</text>
+  <text x="36" y="664" class="lbl dense">unset field &#8212; it falls through to the env var, then to DEFAULT_MAX_TURNS = 160,</text>
+  <text x="36" y="682" class="lbl dense">silently overriding the caller's explicit "stop after zero turns".</text>
+  <text x="36" y="704" class="lbl dense">An identity check (is it None?) lets 0, "", and False all survive as resolved values.</text>
+
+  <line x1="20" y1="742" x2="1060" y2="742" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="762" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="774" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="787" class="lbl tiny">resolution check</text>
+
+  <rect x="220" y="774" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="250" y="787" class="lbl tiny">check outcome (traced value)</text>
+
+  <rect x="480" y="774" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="510" y="787" class="lbl tiny">resolved knob value</text>
+
+  <rect x="680" y="774" width="22" height="16" rx="3" class="boxLeg"/>
+  <text x="710" y="787" class="lbl tiny">module default / legacy layer</text>
+
+  <rect x="920" y="774" width="22" height="16" rx="3" class="panel"/>
+  <text x="950" y="787" class="lbl tiny">annotation</text>
+
+  <path class="flow" d="M 20 806 H 44"/>
+  <text x="90" y="811" class="lbl tiny">present and not None: yes</text>
+
+  <path class="no" d="M 300 806 H 324"/>
+  <text x="360" y="811" class="lbl tiny">present and not None: no, fall through</text>
+</svg>

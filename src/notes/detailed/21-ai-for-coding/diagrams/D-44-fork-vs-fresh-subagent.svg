@@ -1,0 +1,107 @@
+<svg viewBox="0 0 1000 630" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A fresh subagent compared with a fork side by side. Left, a fresh subagent: an
+     empty window receives only the task string from the parent session, and its prompt cache is
+     not shared. Right, a fork created with /subtask or context: fork: it inherits the whole
+     conversation and system prompt from the parent, its prompt cache is shared and therefore
+     cheaper, but it cannot spawn further forks. A decision panel below states that a fork wins
+     when the subtask needs the full conversation and cache reuse, while a fresh subagent wins when
+     isolation or further spawning is required.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .plain { fill: none; stroke: #475569; stroke-width: 2; }
+    .blocked { fill: none; stroke: #b91c1c; stroke-width: 1.6; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="630" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A FORK VERSUS A FRESH SUBAGENT</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="250" y="72" text-anchor="middle" class="lbl h2">FRESH SUBAGENT</text>
+  <text x="750" y="72" text-anchor="middle" class="lbl h2">FORK — /subtask, context: fork</text>
+
+  <!-- left: fresh -->
+  <rect x="140" y="90" width="220" height="50" rx="6" class="boxP"/>
+  <text x="250" y="120" text-anchor="middle" class="lbl body">parent session</text>
+
+  <path class="plain" d="M 250 140 V 172"/>
+  <text x="250" y="184" text-anchor="middle" class="lbl sub">the task string</text>
+  <path class="flow" d="M 250 196 V 220"/>
+
+  <rect x="140" y="220" width="220" height="120" rx="8" class="boxW"/>
+  <text x="250" y="270" text-anchor="middle" class="lbl node">empty window</text>
+  <text x="250" y="290" text-anchor="middle" class="lbl sub">receives only the task string</text>
+  <text x="250" y="306" text-anchor="middle" class="lbl sub">no conversation history</text>
+
+  <path class="plain" d="M 250 340 V 352"/>
+  <rect x="140" y="352" width="220" height="30" rx="5" class="boxD"/>
+  <text x="250" y="372" text-anchor="middle" class="lbl tiny">prompt cache: not shared</text>
+
+  <!-- right: fork -->
+  <rect x="640" y="90" width="220" height="50" rx="6" class="boxP"/>
+  <text x="750" y="120" text-anchor="middle" class="lbl body">parent session</text>
+
+  <path class="plain" d="M 750 140 V 158"/>
+  <text x="750" y="171" text-anchor="middle" class="lbl sub">the whole conversation</text>
+  <text x="750" y="185" text-anchor="middle" class="lbl sub">and system prompt inherited</text>
+  <path class="flow" d="M 750 200 V 220"/>
+
+  <rect x="640" y="220" width="220" height="120" rx="8" class="boxR"/>
+  <text x="750" y="258" text-anchor="middle" class="lbl node">fork</text>
+  <text x="750" y="276" text-anchor="middle" class="lbl sub">(/subtask, context: fork)</text>
+  <text x="750" y="292" text-anchor="middle" class="lbl sub">inherits full conversation</text>
+  <text x="750" y="308" text-anchor="middle" class="lbl sub">and system prompt</text>
+
+  <path class="blocked" d="M 750 340 V 350"/>
+  <path d="M 743 344 L 757 356 M 743 356 L 757 344" stroke="#b91c1c" stroke-width="2"/>
+  <rect x="640" y="352" width="220" height="30" rx="5" class="boxD"/>
+  <text x="750" y="372" text-anchor="middle" class="lbl tiny">cannot spawn further forks</text>
+
+  <rect x="640" y="392" width="220" height="28" rx="5" class="boxR"/>
+  <text x="750" y="411" text-anchor="middle" class="lbl tiny">prompt cache shared (cheaper)</text>
+
+  <!-- decision panel -->
+  <rect x="80" y="440" width="840" height="90" rx="6" class="ann"/>
+  <text x="100" y="462" class="lbl h2">WHEN A FORK BEATS A FRESH SUBAGENT</text>
+  <text x="100" y="484" class="lbl tiny">fork wins when the subtask needs the full conversation and system prompt, and shared cache makes it cheaper</text>
+  <text x="100" y="506" class="lbl tiny">fresh wins when you need an isolated context boundary, or the task itself must spawn further subagents</text>
+
+  <!-- legend -->
+  <line x1="20" y1="550" x2="980" y2="550" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="562" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="574" class="lbl tiny">parent session</text>
+
+  <rect x="300" y="562" width="22" height="16" rx="3" class="boxW"/>
+  <text x="330" y="574" class="lbl tiny">fresh subagent — empty window</text>
+
+  <rect x="640" y="562" width="22" height="16" rx="3" class="boxR"/>
+  <text x="670" y="574" class="lbl tiny">fork — inherits conversation and cache</text>
+
+  <rect x="20" y="592" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="604" class="lbl tiny">not-shared cache, or a crossed-out action</text>
+
+  <path class="flow" d="M 400 600 H 440"/>
+  <text x="450" y="604" class="lbl tiny">context handed to the new window</text>
+</svg>

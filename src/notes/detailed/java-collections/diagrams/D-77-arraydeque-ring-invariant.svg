@@ -1,0 +1,100 @@
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ArrayDeque 17-slot circular buffer with head at 14 and tail at 3, one slot always kept empty so head equals tail means empty not full, and size computed on the picture as sub(3,14,17) equals 6">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+    <marker id="arrowEmph" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="860" height="24" rx="4" fill="#e5e7eb"/>
+  <text x="450" y="37" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ArrayDeque backing array, capacity 17 — a wrapped state: head=14, tail=3</text>
+
+  <!-- 17 cells, step 48, width 44, start x=40, y=150 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <!-- index 0..2 occupied -->
+    <rect x="40" y="150" width="44" height="56" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="62" y="182" text-anchor="middle">0</text>
+    <rect x="88" y="150" width="44" height="56" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="110" y="182" text-anchor="middle">1</text>
+    <rect x="136" y="150" width="44" height="56" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="158" y="182" text-anchor="middle">2</text>
+    <!-- index 3 = tail, next write slot -->
+    <rect x="184" y="150" width="44" height="56" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="206" y="182" text-anchor="middle">3</text>
+    <!-- index 4..12 free -->
+    <rect x="232" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="254" y="182" text-anchor="middle">4</text>
+    <rect x="280" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="302" y="182" text-anchor="middle">5</text>
+    <rect x="328" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="350" y="182" text-anchor="middle">6</text>
+    <rect x="376" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="398" y="182" text-anchor="middle">7</text>
+    <rect x="424" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="446" y="182" text-anchor="middle">8</text>
+    <rect x="472" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="494" y="182" text-anchor="middle">9</text>
+    <rect x="520" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="542" y="182" text-anchor="middle">10</text>
+    <rect x="568" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="590" y="182" text-anchor="middle">11</text>
+    <rect x="616" y="150" width="44" height="56" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="638" y="182" text-anchor="middle">12</text>
+    <!-- index 13 = the always-kept-empty reserved slot -->
+    <rect x="664" y="150" width="44" height="56" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="686" y="182" text-anchor="middle">13</text>
+    <!-- index 14..16 occupied -->
+    <rect x="712" y="150" width="44" height="56" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="734" y="182" text-anchor="middle">14</text>
+    <rect x="760" y="150" width="44" height="56" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="782" y="182" text-anchor="middle">15</text>
+    <rect x="808" y="150" width="44" height="56" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="830" y="182" text-anchor="middle">16</text>
+  </g>
+
+  <!-- head marker over index 14 -->
+  <rect x="700" y="115" width="68" height="20" rx="3" fill="#fef3c7"/>
+  <text x="734" y="130" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">head=14</text>
+  <line x1="734" y1="135" x2="734" y2="148" stroke="#525252" stroke-width="2" marker-end="url(#arrowEmph)"/>
+
+  <!-- tail marker over index 3 -->
+  <rect x="172" y="115" width="68" height="20" rx="3" fill="#fef3c7"/>
+  <text x="206" y="130" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">tail=3</text>
+  <line x1="206" y1="135" x2="206" y2="148" stroke="#525252" stroke-width="2" marker-end="url(#arrowEmph)"/>
+
+  <!-- wrap arrow from index16 back to index0, drawn above the row -->
+  <path d="M 830 148 Q 878 100 62 100 Q 40 100 40 148" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="380" y="88" width="130" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="445" y="101" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ring wraps: 16 -&gt; 0</text>
+
+  <!-- legend -->
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <rect x="40" y="216" width="16" height="16" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="62" y="228">occupied element (6 slots: 14,15,16,0,1,2)</text>
+    <rect x="330" y="216" width="16" height="16" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="352" y="228">tail: next write slot</text>
+    <rect x="500" y="216" width="16" height="16" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="522" y="228">unused capacity headroom</text>
+    <rect x="720" y="216" width="16" height="16" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="742" y="228">reserved always-empty slot</text>
+  </g>
+
+  <!-- why the empty slot matters -->
+  <rect x="40" y="250" width="820" height="50" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="60" y="270" font-family="sans-serif" font-size="12" fill="#1f2937">Why head == tail means EMPTY, not FULL: capacity is never allowed to fill completely — one slot is always kept</text>
+  <text x="60" y="288" font-family="sans-serif" font-size="12" fill="#1f2937">unwritten. That reserved slot is what stops tail from ever catching up to and colliding with head.</text>
+
+  <!-- size() computation -->
+  <rect x="40" y="315" width="820" height="120" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="338" font-family="sans-serif" font-size="14" fill="#1f2937">size() = sub(tail, head, 17)   — computed for this exact wrapped state:</text>
+  <text x="60" y="362" font-family="sans-serif" font-size="13" fill="#1f2937">sub(3, 14, 17):  i -= j  -&gt;  3 - 14 = -11</text>
+  <text x="60" y="384" font-family="sans-serif" font-size="13" fill="#1f2937">since -11 &lt; 0:  i += modulus  -&gt;  -11 + 17 = 6</text>
+  <rect x="60" y="396" width="200" height="24" rx="4" fill="#dcfce7"/>
+  <text x="70" y="413" font-family="sans-serif" font-size="14" fill="#1f2937">size() = 6</text>
+  <text x="290" y="413" font-family="sans-serif" font-size="12" fill="#1f2937">(matches the 6 shaded green slots: 14,15,16,0,1,2)</text>
+</svg>

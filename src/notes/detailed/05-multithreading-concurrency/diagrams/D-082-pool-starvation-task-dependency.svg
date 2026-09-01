@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1120 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Thread-pool starvation by task dependency, in three frames on a single-thread executor. Frame 1: worker settlement-ingest-1 runs task A, the affordability assessment, which submits task B, the identity-vendor lookup, to the same pool; B sits in the queue. Frame 2: A calls B.get() and blocks, but the one worker is still occupied by A. Frame 3: B can never run because no worker is free to take it, so A waits on B forever — a permanent deadlock invisible to the JVM's deadlock detector because no thread lock is held. A generalisation panel below shows N worker threads each blocked on a task submitted by the previous one, forming a cycle with no free worker anywhere in the pool.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triF); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="920" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THREAD-POOL STARVATION BY TASK DEPENDENCY</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Executors.newSingleThreadExecutor() — one worker thread, one unbounded queue</text>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="86" class="lbl h2">FRAME 1 — A RUNS, SUBMITS B</text>
+  <text x="20" y="102" class="lbl sub">A now running; B just submitted to the same pool</text>
+  <rect x="20" y="112" width="340" height="180" rx="6" class="boxW"/>
+  <text x="190" y="132" text-anchor="middle" class="lbl node">pool: settlement-ingest-1</text>
+  <rect x="40" y="144" width="300" height="46" rx="6" class="boxP"/>
+  <text x="190" y="164" text-anchor="middle" class="lbl body">worker: RUNNING task A</text>
+  <text x="190" y="180" text-anchor="middle" class="lbl sub">AffordabilityAssessment</text>
+  <rect x="40" y="216" width="300" height="60" rx="6" class="boxW"/>
+  <text x="190" y="236" text-anchor="middle" class="lbl body">queue: empty</text>
+  <text x="190" y="256" text-anchor="middle" class="lbl sub">no task waiting yet</text>
+  <path class="flow" d="M 190 190 V 216"/>
+  <text x="205" y="208" class="lbl tiny">executor.submit(B)</text>
+
+  <!-- FRAME 2 -->
+  <text x="390" y="86" class="lbl h2">FRAME 2 — A BLOCKS ON B.get()</text>
+  <text x="390" y="102" class="lbl sub">changed: B is queued; A blocks, holding the only worker</text>
+  <rect x="390" y="112" width="340" height="180" rx="6" class="boxW"/>
+  <text x="560" y="132" text-anchor="middle" class="lbl node">pool: settlement-ingest-1</text>
+  <rect x="410" y="144" width="300" height="46" rx="6" class="boxD"/>
+  <text x="560" y="164" text-anchor="middle" class="lbl body">worker: A BLOCKED on B.get()</text>
+  <text x="560" y="180" text-anchor="middle" class="lbl sub">AffordabilityAssessment awaits B</text>
+  <rect x="410" y="216" width="300" height="60" rx="6" class="boxH"/>
+  <text x="560" y="236" text-anchor="middle" class="lbl body">queue: [ B ]</text>
+  <text x="560" y="256" text-anchor="middle" class="lbl sub">IdentityVendorLookup, task B</text>
+  <path class="fail" d="M 560 190 V 216"/>
+  <text x="575" y="208" class="lbl tiny">waiting on</text>
+
+  <!-- FRAME 3 -->
+  <text x="760" y="86" class="lbl h2">FRAME 3 — PERMANENT DEADLOCK</text>
+  <text x="760" y="102" class="lbl sub">changed: no worker is ever free to dequeue B</text>
+  <rect x="760" y="112" width="340" height="180" rx="6" class="boxD"/>
+  <text x="930" y="132" text-anchor="middle" class="lbl node">pool: settlement-ingest-1</text>
+  <rect x="780" y="144" width="300" height="46" rx="6" class="boxD"/>
+  <text x="930" y="164" text-anchor="middle" class="lbl body">worker: still blocked on B.get()</text>
+  <text x="930" y="180" text-anchor="middle" class="lbl sub">never returns to the pool</text>
+  <rect x="780" y="216" width="300" height="60" rx="6" class="boxD"/>
+  <text x="930" y="236" text-anchor="middle" class="lbl body">queue: [ B ] — forever</text>
+  <text x="930" y="256" text-anchor="middle" class="lbl sub">no worker available to run it</text>
+  <path class="fail" d="M 930 190 V 216"/>
+
+  <rect x="760" y="300" width="340" height="90" rx="6" class="boxA"/>
+  <text x="930" y="322" text-anchor="middle" class="lbl node">invisible to the JVM</text>
+  <text x="930" y="342" text-anchor="middle" class="lbl body">no lock is held — jstack shows</text>
+  <text x="930" y="360" text-anchor="middle" class="lbl body">A as WAITING, not deadlocked</text>
+  <text x="930" y="378" text-anchor="middle" class="lbl sub">the built-in deadlock detector finds none</text>
+
+  <line x1="20" y1="410" x2="1100" y2="410" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- GENERALISATION PANEL -->
+  <text x="20" y="436" class="lbl h2">GENERALISATION — N WORKERS, N SUCH TASKS, SAME POOL</text>
+  <text x="20" y="454" class="lbl sub">Each worker's task blocks on a task submitted to the same bounded pool; the cycle closes with zero free workers.</text>
+
+  <rect x="20" y="470" width="1080" height="240" rx="6" class="boxW"/>
+
+  <!-- 3 worker nodes in a ring layout using orthogonal routing -->
+  <rect x="70" y="500" width="280" height="70" rx="6" class="boxD"/>
+  <text x="210" y="524" text-anchor="middle" class="lbl body">worker 1: BLOCKED task2.get()</text>
+  <text x="210" y="544" text-anchor="middle" class="lbl sub">settlement-ingest-1</text>
+
+  <rect x="440" y="500" width="280" height="70" rx="6" class="boxD"/>
+  <text x="580" y="524" text-anchor="middle" class="lbl body">worker 2: BLOCKED task3.get()</text>
+  <text x="580" y="544" text-anchor="middle" class="lbl sub">settlement-ingest-2</text>
+
+  <rect x="800" y="500" width="280" height="70" rx="6" class="boxD"/>
+  <text x="940" y="524" text-anchor="middle" class="lbl body">worker N: BLOCKED task1.get()</text>
+  <text x="940" y="544" text-anchor="middle" class="lbl sub">settlement-ingest-N</text>
+
+  <path class="fail" d="M 350 535 H 440"/>
+  <text x="395" y="527" text-anchor="middle" class="lbl tiny" style="font-size:10.5px">submitted, queued</text>
+  <path class="fail" d="M 720 535 H 800"/>
+  <text x="760" y="527" text-anchor="middle" class="lbl tiny">…</text>
+  <path class="fail" d="M 940 570 V 612 H 210 V 570"/>
+  <text x="575" y="604" text-anchor="middle" class="lbl tiny" style="font-size:10.5px">cycle closes — worker N's task depends on worker 1's queued task</text>
+
+  <rect x="70" y="632" width="1010" height="60" rx="6" class="boxA"/>
+  <text x="560" y="654" text-anchor="middle" class="lbl body">All N workers are occupied blocking; every dependent task sits queued with zero free workers.</text>
+  <text x="560" y="674" text-anchor="middle" class="lbl sub">Bounding the pool at N guarantees this the moment N+1 mutually-dependent tasks are submitted.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="758" x2="1100" y2="758" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="768" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="780" class="lbl tiny">worker actively running a task</text>
+  <rect x="240" y="768" width="20" height="14" rx="3" class="boxH"/>
+  <text x="266" y="780" class="lbl tiny">task waiting in the queue</text>
+  <rect x="440" y="768" width="20" height="14" rx="3" class="boxD"/>
+  <text x="466" y="780" class="lbl tiny">worker blocked / permanently stuck state</text>
+  <rect x="720" y="768" width="20" height="14" rx="3" class="boxA"/>
+  <text x="746" y="780" class="lbl tiny">annotation panel</text>
+  <path class="fail" d="M 20 800 H 60"/>
+  <text x="68" y="805" class="lbl tiny">A → B : A waits on / submits to B (dashed red = blocking dependency)</text>
+</svg>

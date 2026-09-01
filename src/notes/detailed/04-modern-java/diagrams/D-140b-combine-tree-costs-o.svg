@@ -1,0 +1,78 @@
+<svg viewBox="0 0 900 445" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: the first pairwise combine step. Leaf 1 and leaf 2's ArrayLists merge by copying leaf 2's 700,000 elements into leaf 1's list, producing 1,400,000. Leaf 3 and leaf 4 merge the same way, copying 700,000 into 1,400,000. Running total element-copies after this step: 1,400,000.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="445" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 2/3 — FIRST PAIRWISE MERGE: RIGHT COPIED INTO LEFT</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="64" width="150" height="56" rx="6" class="boxR"/>
+  <text x="115" y="86" text-anchor="middle" class="lbl node">leaf 1</text>
+  <text x="115" y="104" text-anchor="middle" class="lbl body code">700,000</text>
+
+  <rect x="210" y="64" width="150" height="56" rx="6" class="boxR"/>
+  <text x="285" y="86" text-anchor="middle" class="lbl node">leaf 2</text>
+  <text x="285" y="104" text-anchor="middle" class="lbl body code">700,000</text>
+
+  <path class="flow" d="M 115 120 V 150"/>
+  <path class="flow" d="M 285 120 V 136 H 133 V 150"/>
+  <text x="200" y="130" text-anchor="middle" class="lbl sub">copy 700,000 right &#8594; left</text>
+
+  <rect x="60" y="152" width="220" height="60" rx="6" class="boxH"/>
+  <text x="170" y="176" text-anchor="middle" class="lbl node">merged 1</text>
+  <text x="170" y="196" text-anchor="middle" class="lbl body code">1,400,000 (700,000 copied)</text>
+
+  <rect x="540" y="64" width="150" height="56" rx="6" class="boxR"/>
+  <text x="615" y="86" text-anchor="middle" class="lbl node">leaf 3</text>
+  <text x="615" y="104" text-anchor="middle" class="lbl body code">700,000</text>
+
+  <rect x="710" y="64" width="150" height="56" rx="6" class="boxR"/>
+  <text x="785" y="86" text-anchor="middle" class="lbl node">leaf 4</text>
+  <text x="785" y="104" text-anchor="middle" class="lbl body code">700,000</text>
+
+  <path class="flow" d="M 615 120 V 150"/>
+  <path class="flow" d="M 785 120 V 136 H 633 V 150"/>
+  <text x="700" y="130" text-anchor="middle" class="lbl sub">copy 700,000 right &#8594; left</text>
+
+  <rect x="560" y="152" width="220" height="60" rx="6" class="boxH"/>
+  <text x="670" y="176" text-anchor="middle" class="lbl node">merged 2</text>
+  <text x="670" y="196" text-anchor="middle" class="lbl body code">1,400,000 (700,000 copied)</text>
+
+  <rect x="60" y="228" width="820" height="60" rx="6" class="panel"/>
+  <text x="76" y="250" class="lbl node" font-size="13px">running total after this step</text>
+  <text x="76" y="270" class="lbl body code">copies so far = 700,000 + 700,000 = 1,400,000 (of eventual n = 2,800,000)</text>
+
+  <rect x="60" y="300" width="820" height="94" rx="6" class="panel"/>
+  <text x="76" y="322" class="lbl node" font-size="13px">same shape for joining()</text>
+  <text x="76" y="342" class="lbl tiny">Collectors.joining() combines the same way: leaf 2's StringBuilder content is appended onto</text>
+  <text x="76" y="358" class="lbl tiny">leaf 1's, and leaf 4's onto leaf 3's — StringBuilder.append(CharSequence) copies the right</text>
+  <text x="76" y="374" class="lbl tiny">operand's characters into the left one's buffer, the same right-into-left copy this frame shows.</text>
+
+  <line x1="20" y1="404" x2="880" y2="404" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="410" width="22" height="12" rx="3" class="boxR"/>
+  <text x="50" y="420" class="lbl tiny">leaf accumulator (pre-merge)</text>
+  <rect x="260" y="410" width="22" height="12" rx="3" class="boxH"/>
+  <text x="290" y="420" class="lbl tiny">merge result (post-copy)</text>
+  <path class="flow" d="M 500 416 H 540"/>
+  <text x="548" y="420" class="lbl tiny">A → B : B's contents copied from A</text>
+</svg>

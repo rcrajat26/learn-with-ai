@@ -1,0 +1,47 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 4: a second thread notices tail is stale and helps advance it two hops, since the earlier producer's tail CAS was allowed to fail">
+  <defs>
+    <marker id="arrow136c" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="16" width="760" height="24" rx="4" fill="#e5e7eb"/>
+  <text x="400" y="33" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Frame 3/4 — a later thread helps: re-reads tail, hops via p.next, updates tail itself</text>
+
+  <rect x="40" y="100" width="100" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="90" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node A</text>
+
+  <rect x="200" y="100" width="100" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="250" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node B</text>
+
+  <rect x="360" y="100" width="100" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node C</text>
+
+  <rect x="540" y="100" width="100" height="50" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="590" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node D</text>
+
+  <line x1="140" y1="125" x2="200" y2="125" stroke="#737373" stroke-width="2" marker-end="url(#arrow136c)"/>
+  <line x1="300" y1="125" x2="360" y2="125" stroke="#737373" stroke-width="2" marker-end="url(#arrow136c)"/>
+  <line x1="460" y1="125" x2="540" y2="125" stroke="#737373" stroke-width="2" marker-end="url(#arrow136c)"/>
+
+  <rect x="200" y="60" width="60" height="22" rx="3" fill="#fee2e2"/>
+  <text x="230" y="76" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">stale tail</text>
+  <line x1="230" y1="82" x2="250" y2="100" stroke="#737373" stroke-width="2" marker-end="url(#arrow136c)"/>
+
+  <rect x="540" y="60" width="90" height="22" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="585" y="76" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">tail advanced here</text>
+  <line x1="585" y1="82" x2="590" y2="100" stroke="#525252" stroke-width="2" marker-end="url(#arrow136c)"/>
+
+  <path d="M 230 60 C 350 -10, 500 -10, 585 60" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrow136c)"/>
+  <rect x="330" y="4" width="180" height="22" rx="3" fill="#fee2e2"/>
+  <text x="420" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">helper's TAIL.weakCompareAndSet</text>
+
+  <rect x="60" y="190" width="680" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="210" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">offer() L379: p = (p != t &amp;&amp; t != (t = tail)) ? t : q — re-checks tail after two hops and reconciles</text>
+
+  <rect x="60" y="232" width="680" height="44" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="70" y="250" font-family="sans-serif" font-size="12" fill="#1f2937">No thread "owns" advancing tail — any thread walking the chain that notices tail is behind</text>
+  <text x="70" y="266" font-family="sans-serif" font-size="12" fill="#1f2937">may CAS it forward; this is the classic lock-free "helping" pattern</text>
+</svg>

@@ -1,0 +1,78 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve. X axis is turn number from 1 to 100, Y axis is cumulative input tokens billed. A curve rises super-linearly because the whole transcript is re-sent as input on every turn. Two points are annotated with the arithmetic behind them: the 10-turn cumulative total 500 plus 1000 plus 1500 up to 5000 equals 27500 tokens, and the 100-turn cumulative total 500 times the sum 1 through 100 equals 500 times 5050 equals 2525000 tokens. A flat reference line shows the wrong assumption that cost is only the size of the last message, 500 tokens, unchanging across turns.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+    .curve { fill: none; stroke: #b45309; stroke-width: 2.4; }
+    .flat  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; }
+    .pt    { fill: #b45309; stroke: #78350f; stroke-width: 1; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COST SCALES WITH CONVERSATION LENGTH</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- axes: plot area x 100..820, y 500(bottom, turn1) .. 80(top) -->
+  <line class="axis" d="M 100 500 H 840" marker-end="url(#tri)"/>
+  <line class="axis" d="M 100 500 V 80" marker-end="url(#tri)"/>
+  <text x="470" y="530" text-anchor="middle" class="lbl body">turn number (1 to 100)</text>
+  <text x="40" y="290" text-anchor="middle" class="lbl body" transform="rotate(-90 40 290)">cumulative input tokens billed</text>
+
+  <!-- gridlines / x labels -->
+  <line class="grid" x1="174" y1="500" x2="174" y2="90"/>
+  <text x="174" y="516" text-anchor="middle" class="lbl sub">10</text>
+  <line class="grid" x1="840" y1="500" x2="840" y2="90"/>
+  <text x="820" y="516" text-anchor="middle" class="lbl sub">100</text>
+  <text x="100" y="516" text-anchor="middle" class="lbl sub">1</text>
+
+  <!-- y labels -->
+  <text x="90" y="504" text-anchor="end" class="lbl sub">0</text>
+  <text x="90" y="410" text-anchor="end" class="lbl sub">27.5k</text>
+  <line class="grid" x1="100" y1="406" x2="840" y2="406"/>
+  <text x="90" y="100" text-anchor="end" class="lbl sub">2.525M</text>
+  <line class="grid" x1="100" y1="96" x2="840" y2="96"/>
+
+  <!-- super-linear curve: quadratic-ish via quantized points connected with straight (orthogonal-free curve is data, allowed as a plotted series, not a routed edge) -->
+  <path class="curve" d="M 100 500 L 174 406 L 300 320 L 460 240 L 620 160 L 840 96"/>
+
+  <!-- point at turn 10 -->
+  <circle cx="174" cy="406" r="5" class="pt"/>
+  <circle cx="840" cy="96" r="5" class="pt"/>
+
+  <!-- flat reference line: constant 500 tokens, drawn near baseline -->
+  <line class="flat" x1="100" y1="492" x2="840" y2="492"/>
+  <text x="850" y="492" class="lbl tiny">500 tokens flat</text>
+
+  <!-- annotation panel 1: 10-turn -->
+  <rect x="120" y="80" width="330" height="96" rx="6" class="boxAnn"/>
+  <text x="136" y="102" class="lbl tiny" style="font-weight:700">10-turn cumulative total</text>
+  <text x="136" y="122" class="lbl tiny">500 + 1,000 + 1,500 + 2,000 + 2,500 +</text>
+  <text x="136" y="140" class="lbl tiny">3,000 + 3,500 + 4,000 + 4,500 + 5,000</text>
+  <text x="136" y="160" class="lbl tiny" style="font-weight:700">= 27,500 tokens</text>
+
+  <!-- annotation panel 2: 100-turn, placed lower right to avoid overlap with curve -->
+  <rect x="560" y="220" width="270" height="96" rx="6" class="boxAnn"/>
+  <text x="576" y="242" class="lbl tiny" style="font-weight:700">100-turn cumulative total</text>
+  <text x="576" y="262" class="lbl tiny">500 &#215; (1 + 2 + ... + 100)</text>
+  <text x="576" y="282" class="lbl tiny">= 500 &#215; 5,050</text>
+  <text x="576" y="302" class="lbl tiny" style="font-weight:700">= 2,525,000 tokens</text>
+
+  <!-- legend -->
+  <line x1="20" y1="576" x2="1020" y2="576" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="592" x2="50" y2="592" class="curve"/>
+  <text x="58" y="597" class="lbl tiny">actual cumulative cost — whole transcript resent each turn</text>
+  <line x1="480" y1="592" x2="510" y2="592" class="flat"/>
+  <text x="518" y="597" class="lbl tiny">wrong assumption: cost of the last message only (500 tokens, flat)</text>
+</svg>

@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1040 850" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="trySplit halves the index range. S0 is built by list.spliterator() over a
+     200,000-element LedgerEntry backing array, with index 0, fence 200000, and
+     estimateSize() 200000. Calling S0.trySplit() mutates S0 in place to index 100000,
+     fence 200000, and returns a new spliterator S1 with index 0, fence 100000. Calling
+     S1.trySplit() again mutates S1 in place to index 50000, fence 100000, and returns a
+     new spliterator S2 with index 0, fence 50000. Every node's range maps into the same
+     shared elementData array beneath, which is never copied. An annotation panel gives the
+     characteristics bitmask, ORDERED or SIZED or SUBSIZED equals 16464, and a measured
+     example: on a four-element list, estimateSize() is 4, and after one trySplit() each
+     half reports 2.">
+  <style>
+    .lbl     { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1      { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2      { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node    { font-size: 15px; font-weight: 600; }
+    .body    { font-size: 13px; }
+    .sub     { font-size: 10.5px; fill: #4b5563; }
+    .tiny    { font-size: 11px; }
+    .secTiny { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="850" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TRYSPLIT HALVES THE INDEX RANGE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="420" y="60" width="200" height="120" rx="8" class="boxP"/>
+  <text x="520" y="85" text-anchor="middle" class="lbl node">root: S0</text>
+  <text x="520" y="102" text-anchor="middle" class="lbl sub">= list.spliterator()</text>
+  <text x="520" y="122" text-anchor="middle" class="lbl body">index = 0</text>
+  <text x="520" y="140" text-anchor="middle" class="lbl body">fence = 200000</text>
+  <text x="520" y="158" text-anchor="middle" class="lbl body">estimateSize() = 200000</text>
+
+  <path class="flow" d="M 520 180 V 210 H 250 V 240"/>
+  <path class="flow" d="M 520 180 V 210 H 770 V 240"/>
+  <text x="540" y="200" class="lbl tiny">S0.trySplit(): mid = (0+200000) &gt;&gt;&gt; 1 = 100000</text>
+
+  <!-- level 1 -->
+  <rect x="140" y="240" width="220" height="120" rx="8" class="boxP"/>
+  <text x="250" y="265" text-anchor="middle" class="lbl node">S1 (new)</text>
+  <text x="250" y="282" text-anchor="middle" class="lbl sub">returned by S0.trySplit()</text>
+  <text x="250" y="302" text-anchor="middle" class="lbl body">index = 0</text>
+  <text x="250" y="320" text-anchor="middle" class="lbl body">fence = 100000</text>
+  <text x="250" y="338" text-anchor="middle" class="lbl body">estimateSize() = 100000</text>
+
+  <rect x="660" y="240" width="220" height="120" rx="8" class="boxP"/>
+  <text x="770" y="265" text-anchor="middle" class="lbl node">S0 (mutated)</text>
+  <text x="770" y="282" text-anchor="middle" class="lbl sub">index moved to mid by trySplit()</text>
+  <text x="770" y="302" text-anchor="middle" class="lbl body">index = 100000</text>
+  <text x="770" y="320" text-anchor="middle" class="lbl body">fence = 200000</text>
+  <text x="770" y="338" text-anchor="middle" class="lbl body">estimateSize() = 100000</text>
+
+  <path class="flow" d="M 250 360 V 390 H 190 V 420"/>
+  <path class="flow" d="M 250 360 V 390 H 390 V 420"/>
+  <text x="270" y="380" class="lbl tiny">S1.trySplit(): mid = (0+100000) &gt;&gt;&gt; 1 = 50000</text>
+
+  <!-- level 2 -->
+  <rect x="100" y="420" width="180" height="120" rx="8" class="boxP"/>
+  <text x="190" y="445" text-anchor="middle" class="lbl node">S2 (new)</text>
+  <text x="190" y="462" text-anchor="middle" class="lbl sub">returned by S1.trySplit()</text>
+  <text x="190" y="482" text-anchor="middle" class="lbl body">index = 0</text>
+  <text x="190" y="500" text-anchor="middle" class="lbl body">fence = 50000</text>
+  <text x="190" y="518" text-anchor="middle" class="lbl body">estimateSize() = 50000</text>
+
+  <rect x="300" y="420" width="180" height="120" rx="8" class="boxP"/>
+  <text x="390" y="445" text-anchor="middle" class="lbl node">S1 (mutated)</text>
+  <text x="390" y="462" text-anchor="middle" class="lbl sub">index moved to mid by trySplit()</text>
+  <text x="390" y="482" text-anchor="middle" class="lbl body">index = 50000</text>
+  <text x="390" y="500" text-anchor="middle" class="lbl body">fence = 100000</text>
+  <text x="390" y="518" text-anchor="middle" class="lbl body">estimateSize() = 50000</text>
+
+  <!-- shared backing array -->
+  <rect x="40" y="580" width="960" height="70" rx="6" class="boxR"/>
+  <text x="520" y="608" text-anchor="middle" class="lbl node">elementData &#8212; LedgerEntry[200000]</text>
+  <text x="520" y="628" text-anchor="middle" class="lbl sub">one shared backing array &#8212; trySplit() never copies a single element</text>
+
+  <!-- index-range links into the shared array -->
+  <path class="weak" d="M 190 540 V 580"/>
+  <path class="weak" d="M 390 540 V 580"/>
+  <path class="weak" d="M 770 360 V 580"/>
+
+  <!-- characteristics panel -->
+  <rect x="40" y="670" width="960" height="90" rx="6" class="panel"/>
+  <text x="54" y="690" class="lbl h2">SPLITERATOR CHARACTERISTICS</text>
+  <text x="54" y="710" class="lbl tiny">characteristics() = ORDERED | SIZED | SUBSIZED = 16464</text>
+  <text x="54" y="730" class="lbl tiny">measured, JDK 21.0.7: on a 4-element list, estimateSize() is 4; after one trySplit(), each half reports 2.</text>
+  <text x="54" y="748" class="lbl tiny">Splitting moves two ints (index, fence) &#8212; this is why ArrayList parallelises well and LinkedList does not.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="768" x2="1020" y2="768" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="783" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="796" class="lbl tiny">ArrayListSpliterator node (index, fence, estimateSize())</text>
+
+  <rect x="430" y="783" width="22" height="16" rx="3" class="boxR"/>
+  <text x="460" y="796" class="lbl tiny">elementData &#8212; shared backing array</text>
+
+  <rect x="760" y="783" width="22" height="16" rx="3" class="panel"/>
+  <text x="790" y="796" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 30 810 H 70"/>
+  <text x="80" y="815" class="lbl tiny">A &#8594; B : A.trySplit() produces / mutates into B</text>
+
+  <path class="weak" d="M 430 810 H 470"/>
+  <text x="480" y="815" class="lbl tiny">A &#8674; B : A's index range maps into shared array B</text>
+</svg>

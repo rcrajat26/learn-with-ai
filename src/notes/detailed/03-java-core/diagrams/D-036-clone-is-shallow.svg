@@ -1,0 +1,158 @@
+<svg viewBox="0 0 1040 1160" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing that clone() is shallow. Frame 1, before: one Movement instance holds a reference to one List of four LedgerEntry rows — CLIENT_CASH_AVAILABLE, CLIENT_BONUS_RESERVED, SUSPENSE, HOUSE_REVENUE. Frame 2, after clone(): the original Movement and its clone both reference the very same List object, which is the aliasing bug; adding a fifth entry, PROMOTIONAL_EXPENSE, through the clone's reference is visible through the original's reference too, so original.entries.size() becomes 5. Frame 3, the deep-copy fix: a copy constructor that calls List.copyOf on the source's entries gives the clone its own independent List; adding PROMOTIONAL_EXPENSE to the clone's copy now leaves the original's own list at four entries, unaffected.">
+  <defs>
+    <marker id="arrow036" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow036red" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1160" fill="#ffffff"/>
+
+  <text x="20" y="32" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">clone() is shallow</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1: BEFORE -->
+  <text x="40" y="64" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">FRAME 1 — before: one Movement, one list, four entries</text>
+
+  <rect x="60" y="138" width="180" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="168" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">movement : Movement</text>
+
+  <rect x="300" y="90" width="300" height="150" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="450" y="108" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">entries : List&lt;LedgerEntry&gt;, size = 4</text>
+  <rect x="312" y="118" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="450" y="134" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[0] CLIENT_CASH_AVAILABLE</text>
+  <rect x="312" y="146" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="450" y="162" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[1] CLIENT_BONUS_RESERVED</text>
+  <rect x="312" y="174" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="450" y="190" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[2] SUSPENSE</text>
+  <rect x="312" y="202" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="450" y="218" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[3] HOUSE_REVENUE</text>
+
+  <path d="M 240 163 H 300" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow036)"/>
+
+  <!-- FRAME 2: AFTER CLONE, shared list -->
+  <line x1="20" y1="270" x2="1020" y2="270" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="294" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">FRAME 2 — after clone(): both Movements share the SAME list, the aliasing bug</text>
+
+  <rect x="60" y="330" width="180" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="360" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">original : Movement</text>
+
+  <rect x="60" y="430" width="180" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="452" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">clone : Movement</text>
+  <text x="150" y="468" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(via clone())</text>
+
+  <rect x="340" y="350" width="320" height="196" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="500" y="368" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">entries — SAME List object</text>
+  <text x="500" y="384" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">List&lt;LedgerEntry&gt;, size now 5</text>
+  <rect x="352" y="394" width="296" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="500" y="410" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[0] CLIENT_CASH_AVAILABLE</text>
+  <rect x="352" y="422" width="296" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="500" y="438" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[1] CLIENT_BONUS_RESERVED</text>
+  <rect x="352" y="450" width="296" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="500" y="466" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[2] SUSPENSE</text>
+  <rect x="352" y="478" width="296" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="500" y="494" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[3] HOUSE_REVENUE</text>
+  <rect x="352" y="506" width="296" height="24" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="500" y="522" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold"
+        fill="#1f2937">[4] PROMOTIONAL_EXPENSE — added via clone</text>
+
+  <path d="M 240 355 H 340" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow036red)"/>
+  <path d="M 240 460 H 340" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow036red)"/>
+
+  <text x="340" y="566" font-family="sans-serif" font-size="11" fill="#4b5563">Same List object referenced from both Movements.</text>
+  <text x="340" y="582" font-family="sans-serif" font-size="11" fill="#4b5563">clone.entries.add(...) leaks into original.entries.</text>
+  <text x="340" y="598" font-family="sans-serif" font-size="11" fill="#4b5563">original.entries.size() is now 5, not 4.</text>
+
+  <!-- FRAME 3: DEEP-COPY FIX -->
+  <line x1="20" y1="618" x2="1020" y2="618" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="642" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">FRAME 3 — the deep-copy fix: List.copyOf in a copy constructor</text>
+
+  <rect x="60" y="670" width="180" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="700" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">original : Movement</text>
+
+  <rect x="60" y="900" width="180" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="922" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">clone : Movement</text>
+  <text x="150" y="938" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(copy constructor)</text>
+
+  <rect x="340" y="660" width="280" height="176" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="480" y="678" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">entries — original's own List</text>
+  <rect x="352" y="690" width="256" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="480" y="706" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[0] CLIENT_CASH_AVAILABLE</text>
+  <rect x="352" y="718" width="256" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="480" y="734" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[1] CLIENT_BONUS_RESERVED</text>
+  <rect x="352" y="746" width="256" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="480" y="762" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[2] SUSPENSE</text>
+  <rect x="352" y="774" width="256" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="480" y="790" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[3] HOUSE_REVENUE</text>
+  <rect x="352" y="806" width="256" height="24" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="480" y="822" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold"
+        fill="#1f2937">unaffected — still 4 entries</text>
+
+  <rect x="680" y="800" width="300" height="190" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="830" y="818" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">entries — independent copy</text>
+  <text x="830" y="834" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(via List.copyOf in ctor)</text>
+  <rect x="692" y="844" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="830" y="860" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[0] CLIENT_CASH_AVAILABLE</text>
+  <rect x="692" y="872" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="830" y="888" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[1] CLIENT_BONUS_RESERVED</text>
+  <rect x="692" y="900" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="830" y="916" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[2] SUSPENSE</text>
+  <rect x="692" y="928" width="276" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="830" y="944" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[3] HOUSE_REVENUE</text>
+  <rect x="692" y="956" width="276" height="24" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="830" y="972" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold"
+        fill="#1f2937">[4] PROMOTIONAL_EXPENSE — added only here</text>
+
+  <path d="M 240 695 H 340" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow036)"/>
+  <path d="M 240 930 H 680" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow036)"/>
+
+  <!-- annotation panel -->
+  <rect x="340" y="1000" width="640" height="70" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="356" y="1020" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">The fix</text>
+  <text x="356" y="1038" font-family="sans-serif" font-size="11"
+        fill="#1f2937">A copy constructor calling List.copyOf(other.entries) builds a brand-new, unmodifiable</text>
+  <text x="356" y="1054" font-family="sans-serif" font-size="11"
+        fill="#1f2937">list. Mutating the clone's list can never reach the original's list again.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="1090" x2="1020" y2="1090" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="1104" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="1117" font-family="sans-serif" font-size="11" fill="#4b5563">Movement / List instance</text>
+  <rect x="240" y="1104" width="22" height="16" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.4"/>
+  <text x="270" y="1117" font-family="sans-serif" font-size="11" fill="#4b5563">a LedgerEntry row in the list</text>
+  <rect x="460" y="1104" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="490" y="1117" font-family="sans-serif" font-size="11" fill="#4b5563">entry added by the mutation</text>
+  <rect x="700" y="1104" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="730" y="1117" font-family="sans-serif" font-size="11" fill="#4b5563">shared list — the aliasing bug</text>
+  <rect x="40" y="1128" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="70" y="1141" font-family="sans-serif" font-size="11" fill="#4b5563">unaffected after the fix</text>
+  <rect x="240" y="1128" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="270" y="1141" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel</text>
+  <line x1="460" y1="1136" x2="496" y2="1136" stroke="#475569" stroke-width="2" marker-end="url(#arrow036)"/>
+  <text x="506" y="1141" font-family="sans-serif" font-size="11" fill="#4b5563">reference to an independent object</text>
+  <line x1="700" y1="1136" x2="736" y2="1136" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow036red)"/>
+  <text x="746" y="1141" font-family="sans-serif" font-size="11" fill="#4b5563">reference into shared, mutable state (the bug)</text>
+</svg>

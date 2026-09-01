@@ -1,0 +1,130 @@
+<svg viewBox="0 0 1120 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The DST gap and the DST overlap on a local-time axis for Europe/London in 2026. Top half, the spring gap: the local hour 2026-03-29T01:00 to 02:00 does not exist. getValidOffsets for 01:30 returns zero offsets, and ZonedDateTime.of does not throw; it resolves by shifting forward by the length of the gap, one hour, returning 2026-03-29T02:30+01:00, instant 2026-03-29T01:30:00Z. QuizStakes framing: a PaymentRun scheduled for local 01:30 that night silently executes an hour later than the operator entered. Bottom half, the autumn overlap: the local hour 2026-10-25T01:00 to 02:00 occurs twice. getValidOffsets for 01:30 returns two offsets, +01:00 and Z. ZonedDateTime.of picks the earlier offset by default, giving instant 2026-10-25T00:30:00Z. withEarlierOffsetAtOverlap gives the same +01:00 result; withLaterOffsetAtOverlap gives the Z result, instant 2026-10-25T01:30:00Z. The two candidate instants are one hour apart (PT1H). QuizStakes framing: a PaymentRun window opening at local 01:30 that night is ambiguous by exactly one hour. An annotation panel states that neither case throws — ZonedDateTime resolves both by documented rule, which is exactly why the bug is silent.">
+
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr077" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1060" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">The DST gap and the DST overlap &#8212; Europe/London, 2026</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== GAP ===================== -->
+  <text x="20" y="64" class="h2">THE GAP &#8212; Transition[Gap at 2026-03-29T01:00Z to +01:00], isGap() == true, getDuration() == PT1H</text>
+  <line x1="20" y1="72" x2="1100" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- axis: three abutting segments -->
+  <rect x="20" y="100" width="360" height="40" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="124" text-anchor="middle" class="code">00:00 &#8594; 01:00</text>
+  <rect x="380" y="100" width="240" height="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="500" y="124" text-anchor="middle" class="code">01:00 &#8594; 02:00</text>
+  <rect x="620" y="100" width="460" height="40" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="850" y="124" text-anchor="middle" class="code">02:00 &#8594; 03:00 (now +01:00)</text>
+
+  <path d="M 500 140 V 160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr077)"/>
+
+  <rect x="380" y="160" width="240" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="400" y="182" class="smallb">01:00&#8211;02:00 does NOT exist</text>
+  <line x1="400" y1="192" x2="600" y2="192" stroke="#b91c1c" stroke-width="1"/>
+  <text x="400" y="212" class="code">getValidOffsets(1:30)</text>
+  <text x="400" y="230" class="code">&#8594; [] (zero offsets)</text>
+
+  <path d="M 620 140 V 200 H 880 V 260" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr077)"/>
+  <text x="700" y="190" class="small">shift forward by 1 hour (the gap length)</text>
+
+  <rect x="680" y="260" width="400" height="100" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="700" y="282" class="body" font-weight="bold">Resolved: 02:30+01:00[Europe/London]</text>
+  <line x1="700" y1="292" x2="1060" y2="292" stroke="#15803d" stroke-width="1"/>
+  <text x="700" y="312" class="code">2026-03-29T02:30+01:00[Europe/London]</text>
+  <text x="700" y="330" class="code">instant = 2026-03-29T01:30:00Z</text>
+  <text x="700" y="348" class="small">ZonedDateTime.of does NOT throw</text>
+
+  <rect x="20" y="380" width="1080" height="80" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="402" class="small">QuizStakes: a PaymentRun scheduled for local 01:30 that night silently executes at local 02:30 &#8212; one hour later,</text>
+  <text x="40" y="420" class="small">in local terms, than the operator entered. No exception, no log line, just a shifted run: ZonedDateTime.of resolves</text>
+  <text x="40" y="438" class="small">the nonexistent local time by shifting it forward by the length of the gap, exactly one hour.</text>
+
+  <!-- ===================== OVERLAP ===================== -->
+  <text x="20" y="490" class="h2">THE OVERLAP &#8212; Transition[Overlap at 2026-10-25T02:00+01:00 to Z], isOverlap() == true</text>
+  <line x1="20" y1="498" x2="1100" y2="498" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="520" width="360" height="40" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="544" text-anchor="middle" class="code">00:00 &#8594; 01:00</text>
+  <rect x="380" y="520" width="240" height="40" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="500" y="544" text-anchor="middle" class="code">01:00 &#8594; 02:00</text>
+  <rect x="620" y="520" width="460" height="40" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="850" y="544" text-anchor="middle" class="code">02:00 &#8594; 03:00 (now Z)</text>
+
+  <path d="M 500 560 V 580" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr077)"/>
+
+  <rect x="380" y="580" width="240" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="400" y="602" class="smallb">01:00&#8211;02:00 occurs TWICE</text>
+  <line x1="400" y1="612" x2="600" y2="612" stroke="#b45309" stroke-width="1"/>
+  <text x="400" y="632" class="code">getValidOffsets(1:30)</text>
+  <text x="400" y="650" class="code">&#8594; [+01:00, Z]</text>
+
+  <path d="M 420 670 V 685 H 190 V 690" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr077)"/>
+  <path d="M 580 670 V 685 H 880 V 690" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr077)"/>
+
+  <rect x="20" y="690" width="340" height="100" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="40" y="712" class="body" font-weight="bold">Earlier offset (+01:00)</text>
+  <line x1="40" y1="722" x2="340" y2="722" stroke="#15803d" stroke-width="1"/>
+  <text x="40" y="742" class="small">ZonedDateTime.of default, AND</text>
+  <text x="40" y="758" class="code">withEarlierOffsetAtOverlap()</text>
+  <text x="40" y="776" class="code">instant = 2026-10-25T00:30:00Z</text>
+
+  <rect x="380" y="690" width="280" height="100" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="400" y="712" class="body" font-weight="bold">PT1H</text>
+  <line x1="400" y1="722" x2="640" y2="722" stroke="#b45309" stroke-width="1"/>
+  <text x="400" y="742" class="small">Duration.between(earlier.toInstant(),</text>
+  <text x="400" y="758" class="small">later.toInstant())</text>
+  <text x="400" y="776" class="small">&#8212; same wall clock, two moments</text>
+
+  <rect x="680" y="690" width="400" height="100" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="700" y="712" class="body" font-weight="bold">Later offset (Z)</text>
+  <line x1="700" y1="722" x2="1060" y2="722" stroke="#15803d" stroke-width="1"/>
+  <text x="700" y="742" class="small">withLaterOffsetAtOverlap()</text>
+  <text x="700" y="758" class="code">2026-10-25T01:30Z[Europe/London]</text>
+  <text x="700" y="776" class="code">instant = 2026-10-25T01:30:00Z</text>
+
+  <rect x="20" y="810" width="1080" height="80" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="832" class="small">QuizStakes: a PaymentRun window opening at local 01:30 that night is ambiguous by exactly one hour &#8212; the two</text>
+  <text x="40" y="850" class="small">candidate instants above are the two the operator's local time could mean. Neither case throws: ZonedDateTime</text>
+  <text x="40" y="868" class="small">resolves both the gap and the overlap by documented rule, which is exactly why the bug is silent.</text>
+
+  <!-- LEGEND -->
+  <text x="20" y="920" class="h2">LEGEND</text>
+  <line x1="20" y1="928" x2="1100" y2="928" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="944" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="957" class="small">ordinary local hour &#8212; one valid offset, unambiguous</text>
+
+  <rect x="570" y="944" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="598" y="957" class="small">the gap hour &#8212; zero valid offsets, this local time does not exist</text>
+
+  <rect x="30" y="968" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="981" class="small">the overlap hour / the PT1H divergence &#8212; two offsets, or the point of the diagram</text>
+
+  <rect x="570" y="968" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="598" y="981" class="small">resolved result &#8212; the instant ZonedDateTime.of or a selector method returns</text>
+
+  <rect x="30" y="992" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1005" class="small">annotation panel &#8212; QuizStakes framing / measured facts, not a node</text>
+
+  <line x1="30" y1="1024" x2="52" y2="1024" stroke="#475569" stroke-width="2" marker-end="url(#arr077)"/>
+  <text x="58" y="1029" class="small">resolution path : the ambiguous/nonexistent local time &#8594; the instant(s) it actually resolves to</text>
+
+</svg>

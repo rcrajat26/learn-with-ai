@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1080 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of permission evaluation for one incoming tool call. Three sequential diamonds are checked in fixed order: matches deny, then matches ask, then matches allow. The first matching diamond decides the outcome: blocked, prompt, or runs. If none match, the session mode's default applies. An annotation panel states first match wins and specificity does not reorder. A worked example shows the call Bash open paren aws s3 ls close paren matching the deny entry Bash open paren aws star close paren and being blocked, even though a more specific allow entry Bash open paren aws s3 ls close paren also matches, because deny is checked before allow.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP     { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk    { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxHi    { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWeak  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PERMISSION EVALUATION: DENY, THEN ASK, THEN ALLOW</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- entry -->
+  <rect x="250" y="60" width="220" height="46" rx="6" class="boxP"/>
+  <text x="360" y="82" text-anchor="middle" class="lbl node">tool call requested</text>
+  <text x="360" y="98" text-anchor="middle" class="lbl sub">e.g. Bash(aws s3 ls)</text>
+  <path class="flow" d="M 360 106 V 133"/>
+
+  <!-- diamond 1: deny -->
+  <polygon points="360,133 492,190 360,247 228,190" class="boxP"/>
+  <text x="360" y="185" text-anchor="middle" class="lbl node">matches</text>
+  <text x="360" y="201" text-anchor="middle" class="lbl node">deny?</text>
+
+  <path class="flow" d="M 492 190 H 560"/>
+  <text x="500" y="182" class="lbl tiny">yes</text>
+  <rect x="560" y="165" width="190" height="50" rx="6" class="boxBad"/>
+  <text x="655" y="186" text-anchor="middle" class="lbl node">blocked</text>
+  <text x="655" y="203" text-anchor="middle" class="lbl sub">tool call stops here</text>
+
+  <path class="flow" d="M 360 247 V 283"/>
+  <text x="372" y="270" class="lbl tiny">no</text>
+
+  <!-- diamond 2: ask -->
+  <polygon points="360,283 492,340 360,397 228,340" class="boxP"/>
+  <text x="360" y="335" text-anchor="middle" class="lbl node">matches</text>
+  <text x="360" y="351" text-anchor="middle" class="lbl node">ask?</text>
+
+  <path class="flow" d="M 492 340 H 560"/>
+  <text x="500" y="332" class="lbl tiny">yes</text>
+  <rect x="560" y="315" width="190" height="50" rx="6" class="boxHi"/>
+  <text x="655" y="336" text-anchor="middle" class="lbl node">prompt</text>
+  <text x="655" y="353" text-anchor="middle" class="lbl sub">user is asked to approve</text>
+
+  <path class="flow" d="M 360 397 V 433"/>
+  <text x="372" y="420" class="lbl tiny">no</text>
+
+  <!-- diamond 3: allow -->
+  <polygon points="360,433 492,490 360,547 228,490" class="boxP"/>
+  <text x="360" y="485" text-anchor="middle" class="lbl node">matches</text>
+  <text x="360" y="501" text-anchor="middle" class="lbl node">allow?</text>
+
+  <path class="flow" d="M 492 490 H 560"/>
+  <text x="500" y="482" class="lbl tiny">yes</text>
+  <rect x="560" y="465" width="190" height="50" rx="6" class="boxOk"/>
+  <text x="655" y="486" text-anchor="middle" class="lbl node">runs</text>
+  <text x="655" y="503" text-anchor="middle" class="lbl sub">tool executes immediately</text>
+
+  <path class="flow" d="M 360 547 V 583"/>
+  <text x="372" y="570" class="lbl tiny">no</text>
+
+  <!-- mode default -->
+  <rect x="250" y="583" width="220" height="56" rx="6" class="boxWeak"/>
+  <text x="360" y="606" text-anchor="middle" class="lbl node">mode's default</text>
+  <text x="360" y="624" text-anchor="middle" class="lbl sub">no rule matched any list</text>
+
+  <!-- annotation: first match wins -->
+  <rect x="790" y="60" width="270" height="140" rx="6" class="boxAnn"/>
+  <text x="806" y="84" class="lbl h2">First match wins</text>
+  <text x="806" y="104" class="lbl tiny">Lists are checked in one fixed</text>
+  <text x="806" y="120" class="lbl tiny">order: deny, ask, allow. The first</text>
+  <text x="806" y="136" class="lbl tiny">list whose pattern matches the</text>
+  <text x="806" y="152" class="lbl tiny">call decides the outcome, and</text>
+  <text x="806" y="168" class="lbl tiny">evaluation stops there.</text>
+  <text x="806" y="188" class="lbl tiny">Specificity does not reorder.</text>
+
+  <!-- worked example -->
+  <rect x="790" y="215" width="270" height="330" rx="6" class="boxAnn"/>
+  <text x="806" y="239" class="lbl h2">Worked example</text>
+  <text x="806" y="261" class="lbl tiny">deny: ["Bash(aws *)"]</text>
+  <text x="806" y="281" class="lbl tiny">allow: ["Bash(aws s3 ls)"]</text>
+  <text x="806" y="301" class="lbl tiny">call: Bash(aws s3 ls)</text>
+  <text x="806" y="325" class="lbl tiny">step 1 — matches deny?</text>
+  <text x="806" y="343" class="lbl tiny">yes: Bash(aws *) matches</text>
+  <text x="806" y="359" class="lbl tiny">Bash(aws s3 ls)</text>
+  <text x="806" y="383" class="lbl node">result: blocked</text>
+  <text x="806" y="405" class="lbl tiny">evaluation stops at deny —</text>
+  <text x="806" y="421" class="lbl tiny">the allow entry</text>
+  <text x="806" y="437" class="lbl tiny">Bash(aws s3 ls) is never</text>
+  <text x="806" y="453" class="lbl tiny">reached, even though it is a</text>
+  <text x="806" y="469" class="lbl tiny">more specific match.</text>
+  <text x="806" y="493" class="lbl tiny">aws s3 ls follows the exact</text>
+  <text x="806" y="509" class="lbl tiny">same blocked path shown at</text>
+  <text x="806" y="525" class="lbl tiny">left: entry → deny? yes → blocked.</text>
+
+  <line x1="20" y1="660" x2="1060" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- legend -->
+  <rect x="20" y="672" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="685" class="lbl tiny">decision diamond / call</text>
+
+  <rect x="220" y="672" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="250" y="685" class="lbl tiny">blocked outcome (deny match)</text>
+
+  <rect x="470" y="672" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="500" y="685" class="lbl tiny">prompt outcome (ask match)</text>
+
+  <rect x="700" y="672" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="730" y="685" class="lbl tiny">runs outcome (allow match)</text>
+
+  <rect x="20" y="700" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="50" y="713" class="lbl tiny">mode's default (no match)</text>
+
+  <rect x="220" y="700" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="250" y="713" class="lbl tiny">annotation panel</text>
+
+  <line x1="420" y1="708" x2="460" y2="708" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="470" y="713" class="lbl tiny">A → B : evaluation proceeds to B; yes/no labels the branch taken</text>
+</svg>

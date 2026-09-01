@@ -1,0 +1,84 @@
+<svg viewBox="0 0 1150 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after diagram of static final constant inlining. BEFORE, both classes compiled together: BonusRules.class carries ConstantValue int 100, and BonusService.class already has that literal baked into its own constant pool as entry 7 equals Integer 100, used by ldc 7 for int 100. AFTER, BonusRules is recompiled to ConstantValue int 150 in green, but BonusService.class is not recompiled and still shows entry 7 equals Integer 100 and ldc 7 for int 100 in red, the stale value. An annotation panel names the deploy scenario: a partial deploy or incremental build ships a rebuilt BonusRules jar against a BonusService jar built earlier, the JVM links cleanly with no error, and every bonus grant silently caps at 100 instead of 150, because MAX_BONUS is static final int initialised by a constant expression and was copied into BonusService's own constant pool at compile time.">
+  <defs>
+    <marker id="arrow042" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1150" height="760" fill="#ffffff"/>
+
+  <text x="575" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">A static final constant is copied into every caller</text>
+  <line x1="20" y1="42" x2="1130" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BEFORE BAND -->
+  <text x="75" y="66" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BEFORE &#8212; both classes compiled together</text>
+  <line x1="75" y1="74" x2="1075" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="75" y="90" width="480" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="315" y="115" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusRules.class</text>
+  <line x1="315" y1="130" x2="315" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#arrow042)"/>
+  <rect x="75" y="140" width="480" height="90" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="87" y="162" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CONSTANT POOL (javap -v)</text>
+  <text x="87" y="184" font-family="sans-serif" font-size="11" fill="#1f2937">ConstantValue: int 100</text>
+  <text x="87" y="204" font-family="sans-serif" font-size="11" fill="#4b5563">MAX_BONUS: static final int, a constant expression</text>
+
+  <rect x="595" y="90" width="480" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="835" y="115" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService.class</text>
+  <line x1="835" y1="130" x2="835" y2="140" stroke="#475569" stroke-width="2" marker-end="url(#arrow042)"/>
+  <rect x="595" y="140" width="480" height="90" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="607" y="162" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CONSTANT POOL / BYTECODE (javap -v)</text>
+  <text x="607" y="184" font-family="sans-serif" font-size="11" fill="#1f2937">#7 = Integer  100</text>
+  <text x="607" y="204" font-family="sans-serif" font-size="11" fill="#1f2937">  4: ldc  #7  // int 100</text>
+
+  <!-- AFTER BAND -->
+  <text x="75" y="256" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">AFTER &#8212; BonusRules recompiled to 150, BonusService not recompiled</text>
+  <line x1="75" y1="264" x2="1075" y2="264" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="75" y="280" width="480" height="40" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="315" y="305" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusRules.class (recompiled)</text>
+  <line x1="315" y1="320" x2="315" y2="330" stroke="#475569" stroke-width="2" marker-end="url(#arrow042)"/>
+  <rect x="75" y="330" width="480" height="90" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="87" y="352" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CONSTANT POOL (javap -v) &#8212; updated</text>
+  <text x="87" y="374" font-family="sans-serif" font-size="11" font-weight="bold" fill="#15803d">ConstantValue: int 150</text>
+  <text x="87" y="394" font-family="sans-serif" font-size="11" fill="#4b5563">value changed: 100 -&gt; 150 in this class file</text>
+
+  <rect x="595" y="280" width="480" height="40" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="835" y="305" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService.class (not recompiled)</text>
+  <line x1="835" y1="320" x2="835" y2="330" stroke="#475569" stroke-width="2" marker-end="url(#arrow042)"/>
+  <rect x="595" y="330" width="480" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="607" y="352" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CONSTANT POOL / BYTECODE (javap -v) &#8212; stale</text>
+  <text x="607" y="374" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">#7 = Integer  100</text>
+  <text x="607" y="394" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">  4: ldc  #7  // int 100 (stale)</text>
+
+  <!-- ANNOTATION PANEL -->
+  <rect x="75" y="450" width="1000" height="170" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="95" y="472" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">THE DEPLOY THAT PRODUCES IT</text>
+  <text x="95" y="494" font-family="sans-serif" font-size="11" fill="#1f2937">A partial deploy or an incremental build ships a rebuilt BonusRules jar</text>
+  <text x="95" y="512" font-family="sans-serif" font-size="11" fill="#1f2937">against a BonusService jar built earlier. The JVM links cleanly &#8212; no error is raised.</text>
+  <text x="95" y="530" font-family="sans-serif" font-size="11" fill="#1f2937">Every bonus grant silently caps at 100 instead of 150.</text>
+  <text x="95" y="548" font-family="sans-serif" font-size="11" fill="#1f2937">MAX_BONUS is a compile-time constant precisely because it is static final int</text>
+  <text x="95" y="566" font-family="sans-serif" font-size="11" fill="#1f2937">initialised by a constant expression, so BonusService got its own baked-in copy.</text>
+  <text x="95" y="584" font-family="sans-serif" font-size="11" fill="#1f2937">Recompiling BonusRules alone never touches that copy &#8212; only recompiling BonusService does.</text>
+
+  <!-- LEGEND -->
+  <text x="75" y="660" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="75" y1="668" x2="1075" y2="668" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="85" y="682" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="113" y="695" font-family="sans-serif" font-size="11" fill="#4b5563">class file, before any divergence</text>
+
+  <rect x="380" y="682" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="408" y="695" font-family="sans-serif" font-size="11" fill="#4b5563">recompiled &#8212; new constant value (150)</text>
+
+  <rect x="700" y="682" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="728" y="695" font-family="sans-serif" font-size="11" fill="#4b5563">not recompiled &#8212; stale inlined value (100)</text>
+
+  <rect x="85" y="706" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="113" y="719" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; the deploy scenario</text>
+
+  <line x1="380" y1="714" x2="402" y2="714" stroke="#475569" stroke-width="2" marker-end="url(#arrow042)"/>
+  <text x="408" y="719" font-family="sans-serif" font-size="11" fill="#4b5563">class file &#8594; its constant pool (structural)</text>
+</svg>

@@ -1,0 +1,150 @@
+<svg viewBox="0 0 1040 790" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="SubList is an address book. The root ArrayList of WithdrawalTransaction holds
+     elementData with twelve slots, indices 0 through 11. SubList A is root.subList(5, 10):
+     it stores root, parent equal to root, offset 5 and size 5, and every get(index) resolves
+     as root.elementData(5 + index), mapping to root cells 5 through 9. SubList B is
+     A.subList(2, 4), a view of a view: it still stores the same root, but its parent is
+     SubList A, and its offset is 7, the cumulative sum of A's offset 5 plus 2, so
+     get(index) resolves as root.elementData(7 + index), mapping to root cells 7 and 8.
+     Neither view copies a single element. An annotation panel states that a structural
+     change made directly on the root leaves every SubList over it, including nested ones,
+     undefined.">
+  <style>
+    .lbl     { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1      { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2      { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node    { font-size: 15px; font-weight: 600; }
+    .body    { font-size: 13px; }
+    .sub     { font-size: 10.5px; fill: #4b5563; }
+    .tiny    { font-size: 11px; }
+    .floor   { font-size: 10.5px; }
+    .secTiny { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .root  { fill: #ffffff; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="790" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SUBLIST IS AN ADDRESS BOOK</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root array -->
+  <rect x="40" y="70" width="960" height="130" rx="8" class="root"/>
+  <text x="56" y="90" class="lbl h2">root : ArrayList&lt;WithdrawalTransaction&gt;</text>
+  <text x="56" y="105" class="lbl secTiny">the client's full withdrawal history &#8212; &#167;7.3, "show me all my withdrawals"</text>
+
+  <g>
+    <rect x="67"  y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="102" y="129" text-anchor="middle" class="lbl floor">i=0</text>
+    <text x="102" y="147" text-anchor="middle" class="lbl body">WT0</text>
+
+    <rect x="143" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="178" y="129" text-anchor="middle" class="lbl floor">i=1</text>
+    <text x="178" y="147" text-anchor="middle" class="lbl body">WT1</text>
+
+    <rect x="219" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="254" y="129" text-anchor="middle" class="lbl floor">i=2</text>
+    <text x="254" y="147" text-anchor="middle" class="lbl body">WT2</text>
+
+    <rect x="295" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="330" y="129" text-anchor="middle" class="lbl floor">i=3</text>
+    <text x="330" y="147" text-anchor="middle" class="lbl body">WT3</text>
+
+    <rect x="371" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="406" y="129" text-anchor="middle" class="lbl floor">i=4</text>
+    <text x="406" y="147" text-anchor="middle" class="lbl body">WT4</text>
+
+    <rect x="447" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="482" y="129" text-anchor="middle" class="lbl floor">i=5</text>
+    <text x="482" y="147" text-anchor="middle" class="lbl body">WT5</text>
+
+    <rect x="523" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="558" y="129" text-anchor="middle" class="lbl floor">i=6</text>
+    <text x="558" y="147" text-anchor="middle" class="lbl body">WT6</text>
+
+    <rect x="599" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="634" y="129" text-anchor="middle" class="lbl floor">i=7</text>
+    <text x="634" y="147" text-anchor="middle" class="lbl body">WT7</text>
+
+    <rect x="675" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="710" y="129" text-anchor="middle" class="lbl floor">i=8</text>
+    <text x="710" y="147" text-anchor="middle" class="lbl body">WT8</text>
+
+    <rect x="751" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="786" y="129" text-anchor="middle" class="lbl floor">i=9</text>
+    <text x="786" y="147" text-anchor="middle" class="lbl body">WT9</text>
+
+    <rect x="827" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="862" y="129" text-anchor="middle" class="lbl floor">i=10</text>
+    <text x="862" y="147" text-anchor="middle" class="lbl body">WT10</text>
+
+    <rect x="903" y="115" width="70" height="45" rx="4" class="boxP"/>
+    <text x="938" y="129" text-anchor="middle" class="lbl floor">i=11</text>
+    <text x="938" y="147" text-anchor="middle" class="lbl body">WT11</text>
+  </g>
+
+  <!-- offset windows -->
+  <rect x="447" y="208" width="374" height="18" rx="3" class="boxHi"/>
+  <text x="523" y="221" text-anchor="middle" class="lbl floor">A: cells [5..9]</text>
+  <rect x="599" y="208" width="146" height="18" rx="3" class="boxWk"/>
+  <text x="672" y="221" text-anchor="middle" class="lbl floor">B: [7..8]</text>
+
+  <!-- SubList A -->
+  <rect x="140" y="262" width="480" height="140" rx="8" class="boxHi"/>
+  <text x="380" y="284" text-anchor="middle" class="lbl node">SubList A = root.subList(5, 10)</text>
+  <text x="380" y="304" text-anchor="middle" class="lbl body">root &#8594; root ArrayList&lt;WithdrawalTransaction&gt;</text>
+  <text x="380" y="322" text-anchor="middle" class="lbl body">parent &#8594; root (direct child)</text>
+  <text x="380" y="340" text-anchor="middle" class="lbl body">offset = 5, size = 5</text>
+  <text x="380" y="358" text-anchor="middle" class="lbl sub">get(index) = root.elementData(5 + index)</text>
+
+  <path class="flow" d="M 523 262 V 226"/>
+
+  <!-- SubList B (nested) -->
+  <rect x="280" y="442" width="480" height="140" rx="8" class="boxWk"/>
+  <text x="520" y="464" text-anchor="middle" class="lbl node">SubList B = A.subList(2, 4)</text>
+  <text x="520" y="484" text-anchor="middle" class="lbl body">root &#8594; root (unchanged, always the true root)</text>
+  <text x="520" y="502" text-anchor="middle" class="lbl body">parent &#8594; SubList A (not root!)</text>
+  <text x="520" y="520" text-anchor="middle" class="lbl body">offset = 7 (= A.offset 5 + 2), size = 2</text>
+  <text x="520" y="538" text-anchor="middle" class="lbl sub">get(index) = root.elementData(7 + index)</text>
+
+  <path class="flow" d="M 672 442 V 226"/>
+
+  <!-- annotation panel -->
+  <rect x="40" y="600" width="960" height="90" rx="6" class="panel"/>
+  <text x="54" y="618" class="lbl h2">A VIEW HOLDS FOUR INTS AND TWO REFERENCES</text>
+  <text x="54" y="638" class="lbl tiny">No element is ever copied &#8212; every get(index) is one extra addition into root.elementData.</text>
+  <text x="54" y="658" class="lbl tiny">A structural change made directly on root (add/remove) leaves every SubList over it undefined &#8212; A and the nested B alike.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="710" x2="1020" y2="710" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="723" width="22" height="16" rx="3" class="root"/>
+  <text x="60" y="736" class="lbl tiny">grouping frame (root container, not a semantic node)</text>
+
+  <rect x="380" y="723" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="410" y="736" class="lbl tiny">SubList &#8212; top-level view (offset relative to root)</text>
+
+  <rect x="730" y="723" width="22" height="16" rx="3" class="boxWk"/>
+  <text x="760" y="736" class="lbl tiny">nested SubList &#8212; offset still absolute</text>
+
+  <rect x="30" y="753" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="766" class="lbl tiny">root elementData slot</text>
+
+  <path class="flow" d="M 380 761 H 420"/>
+  <text x="430" y="766" class="lbl tiny">A &#8594; B : A resolves its index window into B</text>
+
+  <rect x="790" y="753" width="22" height="16" rx="3" class="panel"/>
+  <text x="830" y="766" class="lbl tiny">annotation panel &#8212; no-copy rule</text>
+</svg>

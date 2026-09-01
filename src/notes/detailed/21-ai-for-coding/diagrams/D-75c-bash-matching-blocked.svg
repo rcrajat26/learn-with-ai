@@ -1,0 +1,76 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: the command git push origin main --force traced through four matching stages, each printing the intermediate string, unchanged at every stage since there is no separator, wrapper, or env assignment. Per-subcommand matching checks the stated rule set and matches the deny rule Bash open paren git push colon star close paren, so the command is blocked.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxBad { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="620" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-75c — TRACED THROUGH MATCHING: A COMMAND THAT IS BLOCKED (FRAME 3 OF 3)</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="450" y="62" text-anchor="middle" class="lbl sub">raw command as typed</text>
+  <rect x="150" y="66" width="600" height="36" rx="6" class="boxW"/>
+  <text x="450" y="90" text-anchor="middle" class="lbl body">git push origin main --force</text>
+
+  <path class="flow" d="M 450 102 V 122"/>
+  <text x="466" y="116" class="lbl sub">stage 1</text>
+  <rect x="150" y="122" width="600" height="46" rx="6" class="boxW"/>
+  <text x="450" y="140" text-anchor="middle" class="lbl h2">SEPARATOR SPLITTING</text>
+  <text x="450" y="158" text-anchor="middle" class="lbl body">no separator found &#8594; git push origin main --force</text>
+
+  <path class="flow" d="M 450 168 V 188"/>
+  <text x="466" y="182" class="lbl sub">stage 2</text>
+  <rect x="150" y="188" width="600" height="46" rx="6" class="boxW"/>
+  <text x="450" y="206" text-anchor="middle" class="lbl h2">WRAPPER STRIPPING</text>
+  <text x="450" y="224" text-anchor="middle" class="lbl body">no wrapper found &#8594; git push origin main --force</text>
+
+  <path class="flow" d="M 450 234 V 254"/>
+  <text x="466" y="248" class="lbl sub">stage 3</text>
+  <rect x="150" y="254" width="600" height="46" rx="6" class="boxW"/>
+  <text x="450" y="272" text-anchor="middle" class="lbl h2">ENV-ASSIGNMENT STRIPPING</text>
+  <text x="450" y="290" text-anchor="middle" class="lbl body">no leading assignment &#8594; git push origin main --force</text>
+
+  <path class="flow" d="M 450 300 V 320"/>
+  <text x="466" y="314" class="lbl sub">stage 4</text>
+  <rect x="150" y="320" width="600" height="46" rx="6" class="boxW"/>
+  <text x="450" y="338" text-anchor="middle" class="lbl h2">PER-SUBCOMMAND MATCHING</text>
+  <text x="450" y="356" text-anchor="middle" class="lbl body">final subcommand: git push origin main --force</text>
+
+  <path class="flow" d="M 450 366 V 388"/>
+  <rect x="270" y="388" width="360" height="56" rx="6" class="boxBad"/>
+  <text x="450" y="410" text-anchor="middle" class="lbl node">BLOCKED</text>
+  <text x="450" y="428" text-anchor="middle" class="lbl sub">deciding rule: deny: "Bash(git push:*)"</text>
+
+  <rect x="150" y="470" width="600" height="110" rx="6" class="boxAnn"/>
+  <text x="166" y="492" class="lbl h2">Stated rule set (same for all 3 frames)</text>
+  <text x="166" y="512" class="lbl tiny">allow: ["Bash(git status:*)"]</text>
+  <text x="166" y="530" class="lbl tiny">ask:   ["Bash(npm publish:*)"]</text>
+  <text x="166" y="548" class="lbl tiny">deny:  ["Bash(git push:*)"]</text>
+  <text x="166" y="566" class="lbl tiny" style="font-weight:700">matched here: deny: "Bash(git push:*)"</text>
+
+  <line x1="20" y1="596" x2="880" y2="596" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="604" width="22" height="14" rx="3" class="boxW"/>
+  <text x="50" y="616" class="lbl tiny">intermediate string at each stage</text>
+  <rect x="330" y="604" width="22" height="14" rx="3" class="boxBad"/>
+  <text x="360" y="616" class="lbl tiny">outcome — blocked</text>
+  <line x1="560" y1="611" x2="600" y2="611" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="610" y="616" class="lbl tiny">A &#8594; B : B is produced from A</text>
+</svg>

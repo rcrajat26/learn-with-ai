@@ -1,0 +1,74 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Dual-pivot quicksort frame 2: mid-partition snapshot showing the less, k and great pointers separating the less-than-P1, between-P1-and-P2, unclassified and greater-than-P2 regions">
+  <defs>
+    <marker id="arrowD48b" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="30" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 2: regions forming as less, k, great scan</text>
+
+  <!-- pointer labels -->
+  <rect x="203.5" y="60" width="70" height="30" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="238.5" y="80" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">less</text>
+  <rect x="431.5" y="60" width="70" height="30" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="466.5" y="80" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k</text>
+  <rect x="545.5" y="60" width="70" height="30" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="580.5" y="80" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">great</text>
+
+  <line x1="238.5" y1="90" x2="238.5" y2="108" stroke="#737373" stroke-width="2" marker-end="url(#arrowD48b)"/>
+  <line x1="466.5" y1="90" x2="466.5" y2="108" stroke="#737373" stroke-width="2" marker-end="url(#arrowD48b)"/>
+  <line x1="580.5" y1="90" x2="580.5" y2="108" stroke="#737373" stroke-width="2" marker-end="url(#arrowD48b)"/>
+
+  <!-- array: 0-2 green (<P1), 3-6 blue (P1<=x<=P2), 7-9 neutral (unclassified), 10-11 amber (>P2) -->
+  <rect x="40" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="67.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">1</text>
+  <rect x="97" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="124.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">2</text>
+  <rect x="154" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="181.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">3</text>
+  <rect x="211" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="238.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">5</text>
+  <rect x="268" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="295.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">6</text>
+  <rect x="325" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="352.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">7</text>
+  <rect x="382" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="409.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">8</text>
+  <rect x="439" y="110" width="55" height="50" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="466.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">9</text>
+  <rect x="496" y="110" width="55" height="50" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="523.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">4</text>
+  <rect x="553" y="110" width="55" height="50" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="580.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">10</text>
+  <rect x="610" y="110" width="55" height="50" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="637.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">11</text>
+  <rect x="667" y="110" width="55" height="50" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="694.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">13</text>
+
+  <!-- legend -->
+  <rect x="40" y="172" width="170" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="46" y="178" width="14" height="14" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="66" y="192" font-family="sans-serif" font-size="11" fill="#1f2937">&lt; P1 (placed left)</text>
+
+  <rect x="215" y="172" width="195" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="221" y="178" width="14" height="14" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="241" y="192" font-family="sans-serif" font-size="11" fill="#1f2937">P1 &lt;= x &lt;= P2 (placed)</text>
+
+  <rect x="415" y="172" width="180" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="421" y="178" width="14" height="14" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="441" y="192" font-family="sans-serif" font-size="11" fill="#1f2937">unclassified (scanning)</text>
+
+  <rect x="600" y="172" width="170" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="606" y="178" width="14" height="14" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="626" y="192" font-family="sans-serif" font-size="11" fill="#1f2937">&gt; P2 (placed right)</text>
+
+  <rect x="20" y="210" width="760" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="226" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">P1 = 5, P2 = 8</text>
+  <text x="400" y="242" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">invariant: a[left..less-1] &lt; P1;  a[less..k-1] in [P1,P2];  a[great+1..right] &gt; P2</text>
+
+  <rect x="20" y="252" width="760" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="269" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">k scans left-to-right; less/great advance only when an element is swapped into place</text>
+</svg>

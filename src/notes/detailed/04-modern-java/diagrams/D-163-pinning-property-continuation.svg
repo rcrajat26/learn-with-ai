@@ -1,0 +1,160 @@
+<svg viewBox="0 0 1180 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels on virtual-thread pinning. Left, Java 21: a continuation's stack with a held monitor frame from a synchronized block and a native frame from a JDBC driver call, both marked as pinning the carrier so yield is impossible. Middle, Java 24 under JEP 491: the monitor frame is now continuation-aware and no longer pins, but the native frame still pins. Right: a CPU-bound virtual thread never blocks, so the scheduler cannot preempt it; it holds its carrier indefinitely while the carrier pool grows toward maxPoolSize as compensation.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 17px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 10.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="660" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PINNING IS A PROPERTY OF THE CONTINUATION, NOT THE THREAD</text>
+  <line x1="20" y1="44" x2="1160" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- column dividers -->
+  <line x1="400" y1="60" x2="400" y2="555" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="790" y1="60" x2="790" y2="555" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- PANEL 1: Java 21 -->
+  <rect x="20" y="62" width="70" height="24" rx="12" class="pill"/>
+  <text x="55" y="79" text-anchor="middle" class="lbl tiny" font-weight="700">Java 21</text>
+  <text x="100" y="79" class="lbl h2">MONITOR AND NATIVE FRAME BOTH PIN</text>
+
+  <text x="30" y="106" class="lbl tiny" font-weight="700">Continuation stack — handleWithdrawal(...)</text>
+
+  <rect x="30" y="116" width="350" height="46" rx="4" class="boxW"/>
+  <text x="40" y="134" class="lbl tiny">top: BankWithdrawal.execute()</text>
+  <text x="40" y="150" class="lbl sub">ordinary frame — no blocker</text>
+
+  <rect x="30" y="170" width="350" height="56" rx="4" class="boxD"/>
+  <text x="40" y="188" class="lbl tiny" font-weight="700">synchronized(ledgerLock) { ... }</text>
+  <text x="40" y="204" class="lbl sub">held monitor frame — PINS (Java 21)</text>
+  <text x="40" y="219" class="lbl mono">jdk.VirtualThreadPinned fires here</text>
+
+  <rect x="30" y="234" width="350" height="56" rx="4" class="boxD"/>
+  <text x="40" y="252" class="lbl tiny" font-weight="700">DriverManager.getConnection() (JDBC)</text>
+  <text x="40" y="268" class="lbl sub">native frame — PINS (every release)</text>
+  <text x="40" y="283" class="lbl mono">carrier held for the native call's duration</text>
+
+  <rect x="30" y="298" width="350" height="46" rx="4" class="boxW"/>
+  <text x="40" y="316" class="lbl tiny">FundsLedger.applyMovement(entry)</text>
+  <text x="40" y="332" class="lbl sub">bottom: ordinary frame</text>
+
+  <path class="flow" d="M 205 162 V 170"/>
+  <path class="flow" d="M 205 226 V 234"/>
+  <path class="flow" d="M 205 290 V 298"/>
+
+  <rect x="30" y="360" width="350" height="82" rx="6" class="boxA"/>
+  <text x="40" y="378" class="lbl tiny" font-weight="700">yield() outcome on Java 21</text>
+  <text x="40" y="396" class="lbl tiny">Either marked frame on the stack makes yield</text>
+  <text x="40" y="412" class="lbl tiny">impossible: the carrier cannot be released, so the</text>
+  <text x="40" y="428" class="lbl tiny">virtual thread stays mounted for the whole call.</text>
+
+  <!-- PANEL 2: Java 24 -->
+  <rect x="410" y="62" width="70" height="24" rx="12" class="pill"/>
+  <text x="445" y="79" text-anchor="middle" class="lbl tiny" font-weight="700">Java 24</text>
+  <text x="490" y="79" class="lbl h2">JEP 491 — MONITOR CASE DISAPPEARS</text>
+
+  <text x="420" y="106" class="lbl tiny" font-weight="700">Same call, same stack shape</text>
+
+  <rect x="420" y="116" width="350" height="46" rx="4" class="boxW"/>
+  <text x="430" y="134" class="lbl tiny">top: BankWithdrawal.execute()</text>
+  <text x="430" y="150" class="lbl sub">ordinary frame — no blocker</text>
+
+  <rect x="420" y="170" width="350" height="56" rx="4" class="boxR"/>
+  <text x="430" y="188" class="lbl tiny" font-weight="700">synchronized(ledgerLock) { ... }</text>
+  <text x="430" y="204" class="lbl sub">continuation-aware monitor — no pin (JEP 491)</text>
+  <text x="430" y="219" class="lbl mono">jdk.VirtualThreadPinned does not fire here</text>
+
+  <rect x="420" y="234" width="350" height="56" rx="4" class="boxD"/>
+  <text x="430" y="252" class="lbl tiny" font-weight="700">DriverManager.getConnection() (JDBC)</text>
+  <text x="430" y="268" class="lbl sub">native frame — still PINS</text>
+  <text x="430" y="283" class="lbl mono">JEP 491 does not touch native/foreign frames</text>
+
+  <rect x="420" y="298" width="350" height="46" rx="4" class="boxW"/>
+  <text x="430" y="316" class="lbl tiny">FundsLedger.applyMovement(entry)</text>
+  <text x="430" y="332" class="lbl sub">bottom: ordinary frame</text>
+
+  <path class="flow" d="M 595 162 V 170"/>
+  <path class="flow" d="M 595 226 V 234"/>
+  <path class="flow" d="M 595 290 V 298"/>
+
+  <rect x="420" y="360" width="350" height="82" rx="6" class="boxA"/>
+  <text x="430" y="378" class="lbl tiny" font-weight="700">yield() outcome on Java 24</text>
+  <text x="430" y="396" class="lbl tiny">The monitor no longer blocks yield — the carrier</text>
+  <text x="430" y="412" class="lbl tiny">is released across the synchronized block. The</text>
+  <text x="430" y="428" class="lbl tiny">native frame alone still pins: JFR event survives.</text>
+
+  <!-- PANEL 3: no preemption -->
+  <text x="800" y="72" class="lbl h2">NO PREEMPTION — CARRIER POOL GROWS</text>
+  <text x="800" y="88" class="lbl h2">AS COMPENSATION</text>
+
+  <text x="800" y="112" class="lbl tiny" font-weight="700">CPU-bound task — never calls a blocking op</text>
+  <rect x="800" y="122" width="360" height="60" rx="4" class="boxD"/>
+  <text x="810" y="140" class="lbl tiny" font-weight="700">computeAffordabilityScore(prospect)</text>
+  <text x="810" y="156" class="lbl sub">tight loop over WealthVerdict inputs — no I/O,</text>
+  <text x="810" y="171" class="lbl sub">no lock, no yield point ever reached</text>
+
+  <path class="flow" d="M 980 182 V 206"/>
+
+  <rect x="800" y="206" width="360" height="56" rx="4" class="boxW"/>
+  <text x="810" y="224" class="lbl tiny" font-weight="700">carrier platform thread</text>
+  <text x="810" y="240" class="lbl sub">held indefinitely — the scheduler has no way to</text>
+  <text x="810" y="255" class="lbl sub">forcibly preempt a running virtual thread</text>
+
+  <path class="flow" d="M 980 262 V 286"/>
+
+  <rect x="800" y="286" width="360" height="150" rx="6" class="boxH"/>
+  <text x="810" y="306" class="lbl tiny" font-weight="700">scheduler compensation (ForkJoinPool)</text>
+  <text x="810" y="326" class="lbl mono">parallelism = 8, minRunnable = max(8/2,1) = 4</text>
+  <text x="810" y="344" class="lbl tiny">runnable count falls below minRunnable ⇒ pool</text>
+  <text x="810" y="360" class="lbl tiny">spins up additional carrier threads, one CPU-bound</text>
+  <text x="810" y="376" class="lbl tiny">virtual thread per extra carrier, up to the ceiling:</text>
+  <text x="810" y="400" class="lbl mono" font-weight="700">maxPoolSize = max(8, 256) = 256</text>
+  <text x="810" y="418" class="lbl sub">growth compensates for lost concurrency; it does not</text>
+  <text x="810" y="432" class="lbl sub">reclaim the stuck virtual thread's own carrier</text>
+
+  <rect x="800" y="454" width="360" height="80" rx="4" class="boxA"/>
+  <text x="810" y="472" class="lbl tiny" font-weight="700">Why this differs from pinning</text>
+  <text x="810" y="490" class="lbl tiny">Pinning blocks yield on a specific frame; this task</text>
+  <text x="810" y="506" class="lbl tiny">never even attempts to yield — cooperative scheduling</text>
+  <text x="810" y="522" class="lbl tiny">has no preemption path for either case.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="565" x2="1160" y2="565" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="575" width="20" height="14" rx="3" class="boxD"/>
+  <text x="46" y="587" class="lbl tiny">pins the carrier</text>
+  <rect x="200" y="575" width="20" height="14" rx="3" class="boxR"/>
+  <text x="226" y="587" class="lbl tiny">resolved — no longer pins</text>
+  <rect x="440" y="575" width="20" height="14" rx="3" class="boxW"/>
+  <text x="466" y="587" class="lbl tiny">ordinary frame / carrier</text>
+  <rect x="650" y="575" width="20" height="14" rx="3" class="boxH"/>
+  <text x="676" y="587" class="lbl tiny">scheduler sizing constant</text>
+  <rect x="880" y="575" width="20" height="14" rx="3" class="boxA"/>
+  <text x="906" y="587" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 1050 582 H 1090"/>
+  <text x="1098" y="587" class="lbl tiny">stack order</text>
+  <rect x="20" y="599" width="46" height="18" rx="9" class="pill"/>
+  <text x="43" y="612" text-anchor="middle" class="lbl tiny" font-weight="700">NN</text>
+  <text x="76" y="612" class="lbl tiny">Java release version pill</text>
+</svg>

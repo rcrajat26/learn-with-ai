@@ -1,0 +1,154 @@
+<svg viewBox="0 0 1140 1280" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing how ZoneRules resolves ambiguous local times, measured on Oracle JDK 21.0.7 macOS aarch64 with tzdb 2025a. Frame 1 shows the loading path: the file at JAVA_HOME lib tzdb.dat, 101,803 bytes dated February 21 2025, feeds ZoneRulesProvider, which builds ZoneRules for Europe/London; ZoneRulesProvider.getVersions of UTC returns keySet 2025a, the way to check the tzdb version at runtime, and ZoneId.getAvailableZoneIds size is 603. ZoneRules holds a finite list of historical transitions plus transition rules for future years such as last Sunday in March at 01:00 UTC, because the list cannot be infinite; for 2026 in Europe/London the resolved transitions are a Gap at 2026-03-29T01:00Z to +01:00 with isGap true and duration PT1H, and an Overlap at 2026-10-25T02:00+01:00 to Z with isOverlap true. Frame 2 shows the spring gap: getValidOffsets for local time 2026-03-29T01:30 returns an empty list, that local time does not exist, yet ZonedDateTime.of does not throw, instead producing 2026-03-29T02:30+01:00 in Europe/London, instant 2026-03-29T01:30:00Z, shifted forward by the one-hour gap; a QuizStakes PaymentRun scheduled for local 01:30 that morning silently runs at local 02:30. Frame 3 shows the autumn overlap: getValidOffsets for local time 2026-10-25T01:30 returns two entries +01:00 and Z; ZonedDateTime.of picks the earlier offset giving instant 2026-10-25T00:30:00Z, withLaterOffsetAtOverlap gives instant 2026-10-25T01:30:00Z, withEarlierOffsetAtOverlap returns the original unchanged, and Duration.between the two instants is PT1H, one wall-clock reading mapping to two instants an hour apart. An annotation panel notes neither frame throws, both are resolved by documented rule, which is why a DST bug in a scheduling path is silent rather than loud, and why the tzdb version shipped with the running JDK is an operational fact worth checking rather than an implementation detail, since a long-lived container image can run stale zone rules after tzdb changes.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr128" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="1280" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">ZoneRules resolves gaps and overlaps &#8212; loading, spring gap, autumn overlap</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; WHERE THE RULES COME FROM</text>
+  <line x1="20" y1="74" x2="1120" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="88" width="300" height="76" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="56" y="108" class="smallb">$JAVA_HOME/lib/tzdb.dat</text>
+  <text x="56" y="126" class="code">101,803 bytes</text>
+  <text x="56" y="144" class="small">dated Feb 21 2025</text>
+  <text x="56" y="160" class="small">binary tzdb compiled by javazic</text>
+
+  <path d="M 340 126 H 400" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+
+  <rect x="400" y="88" width="300" height="76" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="416" y="108" class="smallb">ZoneRulesProvider</text>
+  <text x="416" y="128" class="code">getVersions("UTC")</text>
+  <text x="416" y="146" class="codeG">.keySet() = [2025a]</text>
+  <text x="416" y="160" class="small">check the tzdb version at runtime</text>
+
+  <path d="M 700 126 H 760" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+
+  <rect x="760" y="88" width="300" height="76" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="776" y="108" class="smallb">ZoneRules for Europe/London</text>
+  <text x="776" y="128" class="code">getAvailableZoneIds()</text>
+  <text x="776" y="146" class="code">.size() = 603</text>
+
+  <text x="40" y="196" class="body">ZoneRules holds two things: a FINITE list of historical transitions, and TRANSITION RULES for future years</text>
+  <text x="40" y="214" class="small">(e.g. "last Sunday in March at 01:00 UTC") &#8212; because the historical list cannot be infinite.</text>
+
+  <rect x="40" y="228" width="500" height="60" rx="5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="52" y="248" class="code">Transition[Gap at 2026-03-29T01:00Z to +01:00]</text>
+  <text x="52" y="266" class="codeR">isGap() == true, getDuration() == PT1H</text>
+  <text x="52" y="282" class="small">resolved from a future transition rule, 2026</text>
+
+  <rect x="560" y="228" width="520" height="60" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="572" y="248" class="code">Transition[Overlap at 2026-10-25T02:00+01:00 to Z]</text>
+  <text x="572" y="266" class="code">isOverlap() == true</text>
+  <text x="572" y="282" class="small">resolved from a future transition rule, 2026</text>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="330" class="h2">FRAME 2 &#8212; ZERO OFFSETS: THE SPRING GAP</text>
+  <line x1="20" y1="338" x2="1120" y2="338" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="352" width="500" height="86" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="56" y="374" class="smallb">getValidOffsets(LocalDateTime.of(2026,3,29,1,30))</text>
+  <text x="56" y="396" class="codeR">returns []  &#8212;  an empty list</text>
+  <text x="56" y="416" class="small">that local time 01:30 does not exist in Europe/London that day</text>
+
+  <path d="M 540 395 H 600" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+
+  <rect x="600" y="352" width="500" height="86" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="616" y="374" class="smallb">ZonedDateTime.of(...) &#8212; does NOT throw</text>
+  <text x="616" y="394" class="code">2026-03-29T02:30+01:00[Europe/London]</text>
+  <text x="616" y="412" class="code">instant 2026-03-29T01:30:00Z</text>
+  <text x="616" y="428" class="smallb">shifted forward by the gap length, one hour</text>
+
+  <rect x="40" y="452" width="1060" height="46" rx="5" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="52" y="480" class="body">QuizStakes: a PaymentRun scheduled for local 01:30 that morning silently runs at local 02:30 instead.</text>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="530" class="h2">FRAME 3 &#8212; TWO OFFSETS: THE AUTUMN OVERLAP, AND WHICH ONE WINS</text>
+  <line x1="20" y1="538" x2="1120" y2="538" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="552" width="1060" height="56" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="56" y="574" class="smallb">getValidOffsets(LocalDateTime.of(2026,10,25,1,30))</text>
+  <text x="56" y="594" class="code">returns [+01:00, Z]  &#8212;  two entries</text>
+
+  <!-- bus fan-out to 3 results -->
+  <path d="M 570 608 V 624 H 190 V 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+  <path d="M 570 608 V 624 H 570 V 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+  <path d="M 570 608 V 624 H 950 V 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+
+  <rect x="40" y="640" width="300" height="96" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="56" y="660" class="smallb">ZonedDateTime.of(...)</text>
+  <text x="56" y="678" class="small">picks the earlier offset</text>
+  <text x="56" y="696" class="code">01:30+01:00[Europe/London]</text>
+  <text x="56" y="714" class="codeG">instant 2026-10-25T00:30:00Z</text>
+
+  <rect x="420" y="640" width="300" height="96" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="436" y="660" class="smallb">withLaterOffsetAtOverlap()</text>
+  <text x="436" y="678" class="small">selects the other offset</text>
+  <text x="436" y="696" class="code">01:30Z[Europe/London]</text>
+  <text x="436" y="714" class="codeG">instant 2026-10-25T01:30:00Z</text>
+
+  <rect x="800" y="640" width="300" height="96" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="816" y="660" class="smallb">withEarlierOffsetAtOverlap()</text>
+  <text x="816" y="678" class="small">returns the first one</text>
+  <text x="816" y="696" class="code">unchanged</text>
+  <text x="816" y="714" class="small">same as ZonedDateTime.of result</text>
+
+  <rect x="40" y="754" width="1060" height="56" rx="5" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="52" y="776" class="code">Duration.between(earlier.toInstant(), later.toInstant()) = PT1H</text>
+  <text x="52" y="796" class="body">one wall-clock reading, two instants an hour apart</text>
+
+  <!-- annotation panel -->
+  <rect x="40" y="830" width="1060" height="220" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="56" y="854" class="smallb">NEITHER FRAME THROWS &#8212; both are resolved by documented rule</text>
+  <text x="56" y="878" class="body">That is precisely why a DST bug in a scheduling path is silent rather than loud: no exception, no log line,</text>
+  <text x="56" y="898" class="body">just a payment run or ledger post that happened an hour away from where it was scheduled.</text>
+  <text x="56" y="924" class="body">The tzdb version shipped with the running JDK is an operational fact worth checking, via</text>
+  <text x="56" y="944" class="code">ZoneRulesProvider.getVersions("UTC")</text>
+  <text x="404" y="944" class="body">&#8212; rather than an implementation detail.</text>
+  <text x="56" y="968" class="body">The tzdb changes several times a year, so a long-lived container image can be running stale zone rules for</text>
+  <text x="56" y="988" class="body">a region that legislated a change after the image was built.</text>
+  <text x="56" y="1012" class="small">Oracle JDK 21.0.7+8-LTS-245, macOS aarch64, tzdb 2025a</text>
+  <text x="56" y="1030" class="small">/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/lib/tzdb.dat</text>
+
+  <!-- legend -->
+  <text x="20" y="1086" class="h2">LEGEND</text>
+  <line x1="20" y1="1094" x2="1120" y2="1094" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1106" width="22" height="16" rx="3" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="58" y="1119" class="small">tzdb.dat file and ZoneRulesProvider &#8212; the loading path</text>
+
+  <rect x="30" y="1132" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1145" class="small">ZoneRules for Europe/London &#8212; the transition list and rules</text>
+
+  <rect x="30" y="1158" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="58" y="1171" class="small">zero-offsets gap case &#8212; local time does not exist</text>
+
+  <rect x="600" y="1106" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="628" y="1119" class="small">two-offsets overlap case &#8212; local time is ambiguous</text>
+
+  <rect x="600" y="1132" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="628" y="1145" class="small">resolved ZonedDateTime result &#8212; a concrete instant chosen</text>
+
+  <rect x="600" y="1158" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="628" y="1171" class="small">annotation panel &#8212; operational consequence</text>
+
+  <line x1="30" y1="1196" x2="56" y2="1196" stroke="#475569" stroke-width="2" marker-end="url(#arr128)"/>
+  <text x="64" y="1201" class="small">data flow / fan-out: one result feeds into or produces the boxes downstream</text>
+</svg>

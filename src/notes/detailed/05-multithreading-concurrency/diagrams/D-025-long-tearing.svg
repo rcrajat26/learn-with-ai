@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A non-volatile long can tear. Left panel: a 64-bit ledger balance field is written
+     as two separate 32-bit halves on some JVMs; a reader thread reads the new high word together
+     with the still-old low word and composes a value that was never actually written, a nonsense
+     balance. Right panel: word tearing is forbidden by JLS 17.6 for narrower types — writing index
+     3 of a byte array must never disturb index 2 or index 4; byte, short, char, int, boolean, and
+     reference field writes are always atomic in the JVM, only non-volatile long and double writes
+     may tear.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .mono  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A NON-VOLATILE long CAN TEAR</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: tearing -->
+  <text x="290" y="66" text-anchor="middle" class="lbl h2">LEFT — long ledgerBalance (64 bits, not volatile)</text>
+
+  <rect x="60" y="80" width="460" height="70" rx="6" class="boxP"/>
+  <text x="290" y="102" text-anchor="middle" class="lbl body">long ledgerBalance = 100_00;</text>
+  <text x="290" y="122" text-anchor="middle" class="lbl sub">written by the JVM as two 32-bit halves:</text>
+  <text x="290" y="138" text-anchor="middle" class="lbl mono">high word | low word</text>
+
+  <path class="flow" d="M 290 150 V 176"/>
+
+  <rect x="60" y="176" width="220" height="70" rx="6" class="boxP"/>
+  <text x="170" y="198" text-anchor="middle" class="lbl body">writer writes</text>
+  <text x="170" y="216" text-anchor="middle" class="lbl mono">high = 0x0000_0001</text>
+  <text x="170" y="234" text-anchor="middle" class="lbl mono">(new value 500_00)</text>
+
+  <rect x="300" y="176" width="220" height="70" rx="6" class="boxLg"/>
+  <text x="410" y="198" text-anchor="middle" class="lbl body">low word not yet written</text>
+  <text x="410" y="216" text-anchor="middle" class="lbl mono">low = 0x0000_2710</text>
+  <text x="410" y="234" text-anchor="middle" class="lbl mono">(still old value 100_00)</text>
+
+  <path class="flow" d="M 170 246 V 264 H 290 V 280"/>
+  <path class="flow" d="M 410 246 V 280"/>
+
+  <rect x="180" y="280" width="220" height="66" rx="6" class="boxD"/>
+  <text x="290" y="302" text-anchor="middle" class="lbl body">reader reads</text>
+  <text x="290" y="320" text-anchor="middle" class="lbl mono">high=new + low=old</text>
+  <text x="290" y="338" text-anchor="middle" class="lbl sub">torn read — interleaved halves</text>
+
+  <path class="flow" d="M 290 346 V 370"/>
+
+  <rect x="100" y="370" width="380" height="60" rx="6" class="boxD"/>
+  <text x="290" y="392" text-anchor="middle" class="lbl body">composed value = neither 100_00 nor 500_00</text>
+  <text x="290" y="412" text-anchor="middle" class="lbl sub">a nonsense balance that was never actually written</text>
+
+  <rect x="60" y="450" width="460" height="70" rx="6" class="boxA"/>
+  <text x="70" y="470" class="lbl tinyB">WHY</text>
+  <text x="290" y="490" text-anchor="middle" class="lbl sub">on a 32-bit JVM, long/double writes are two separate</text>
+  <text x="290" y="508" text-anchor="middle" class="lbl sub">32-bit stores — JLS permits this exact interleaving</text>
+
+  <!-- RIGHT: forbidden word tearing -->
+  <text x="830" y="66" text-anchor="middle" class="lbl h2">RIGHT — JLS §17.6 forbids word tearing</text>
+
+  <rect x="600" y="80" width="460" height="56" rx="6" class="boxR"/>
+  <text x="830" y="102" text-anchor="middle" class="lbl body">byte[] restrictionFlags — writing index 3</text>
+  <text x="830" y="120" text-anchor="middle" class="lbl sub">must never disturb index 2 or index 4</text>
+
+  <!-- array boxes -->
+  <rect x="660" y="160" width="80" height="60" rx="4" class="boxLg"/>
+  <text x="700" y="184" text-anchor="middle" class="lbl body">[2]</text>
+  <text x="700" y="202" text-anchor="middle" class="lbl sub">untouched</text>
+
+  <rect x="760" y="160" width="80" height="60" rx="4" class="boxR"/>
+  <text x="800" y="184" text-anchor="middle" class="lbl body">[3]</text>
+  <text x="800" y="202" text-anchor="middle" class="lbl sub">being written</text>
+
+  <rect x="860" y="160" width="80" height="60" rx="4" class="boxLg"/>
+  <text x="900" y="184" text-anchor="middle" class="lbl body">[4]</text>
+  <text x="900" y="202" text-anchor="middle" class="lbl sub">untouched</text>
+
+  <path class="flow" d="M 800 220 V 250"/>
+
+  <rect x="620" y="250" width="360" height="56" rx="6" class="boxR"/>
+  <text x="800" y="272" text-anchor="middle" class="lbl body">write to [3] is a single atomic store</text>
+  <text x="800" y="290" text-anchor="middle" class="lbl sub">no other index can observe a partial value</text>
+
+  <rect x="600" y="330" width="460" height="160" rx="6" class="boxA"/>
+  <text x="610" y="352" class="lbl tinyB">ALWAYS ATOMIC — JLS §17.7</text>
+  <text x="830" y="376" text-anchor="middle" class="lbl body">byte, short, char, int, boolean, reference</text>
+  <text x="830" y="396" text-anchor="middle" class="lbl sub">field and array-element writes are always atomic —</text>
+  <text x="830" y="414" text-anchor="middle" class="lbl sub">no width for the JVM to split them into halves</text>
+  <text x="830" y="440" text-anchor="middle" class="lbl body">only non-volatile long and double may tear</text>
+  <text x="830" y="458" text-anchor="middle" class="lbl sub">declaring the field volatile forbids tearing</text>
+  <text x="830" y="476" text-anchor="middle" class="lbl sub">(JLS §17.7) — the fix for the left panel</text>
+
+  <line x1="20" y1="530" x2="1100" y2="530" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="546" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="558" class="lbl tiny">value or word mid-write</text>
+  <rect x="330" y="546" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="360" y="558" class="lbl tiny">untouched / stale word or index</text>
+  <rect x="620" y="546" width="22" height="16" rx="3" class="boxD"/>
+  <text x="650" y="558" class="lbl tiny">torn / nonsense result</text>
+  <rect x="870" y="546" width="22" height="16" rx="3" class="boxR"/>
+  <text x="900" y="558" class="lbl tiny">atomic — cannot tear</text>
+  <path class="flow" d="M 20 576 H 60"/>
+  <text x="70" y="580" class="lbl tiny">A → B : A's write or read is followed by B</text>
+</svg>

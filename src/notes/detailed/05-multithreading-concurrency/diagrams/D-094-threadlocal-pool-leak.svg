@@ -1,0 +1,122 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The two halves of the thread-pool ThreadLocal leak. Left, the correctness half:
+     request A sets the security context for client 2 401 993 on gateway-http-7, never removes it,
+     the thread is returned to the pool, request B reuses gateway-http-7 and reads A's context — a
+     security incident. Right, the memory half: each request that touches a new pool thread adds
+     another 2 megabyte payload that is never freed, until all fifty pool threads together retain
+     100 megabytes permanently. The fix is try CTX.set(v) finally CTX.remove(); calling
+     CTX.set(null) instead is shown as not a fix, because the entry still occupies a map slot until
+     it is overwritten or the thread dies.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .hdr   { font-size: 11px; font-weight: 700; }
+    .code  { font-family: "SFMono-Regular", Menlo, Consolas, monospace; font-size: 12.5px; }
+
+    .boxP     { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR     { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .degraded { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE TWO HALVES OF THE THREAD-POOL ThreadLocal LEAK</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">CORRECTNESS — CONTEXT LEAKS ACROSS REQUESTS</text>
+  <text x="600" y="64" class="lbl h2">MEMORY — STRONG VALUE ACCUMULATES ACROSS THE POOL</text>
+  <line x1="560" y1="54" x2="560" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: correctness, time axis downward -->
+  <rect x="40" y="80" width="480" height="64" rx="6" class="boxP"/>
+  <text x="280" y="105" text-anchor="middle" class="lbl body">① Request A arrives on gateway-http-7</text>
+  <text x="280" y="123" text-anchor="middle" class="lbl sub">CTX.set(SecurityContext, client 2 401 993)</text>
+
+  <path class="flow" d="M 280 144 V 160"/>
+  <rect x="40" y="160" width="480" height="64" rx="6" class="boxP"/>
+  <text x="280" y="185" text-anchor="middle" class="lbl body">② Request A completes, handler returns</text>
+  <text x="280" y="203" text-anchor="middle" class="lbl sub">CTX.remove() never called</text>
+
+  <path class="flow" d="M 280 224 V 240"/>
+  <rect x="40" y="240" width="480" height="64" rx="6" class="boxP"/>
+  <text x="280" y="265" text-anchor="middle" class="lbl body">③ Thread returned to pool, still armed</text>
+  <text x="280" y="283" text-anchor="middle" class="lbl sub">ThreadLocalMap entry retains client 2 401 993's context</text>
+
+  <path class="flow" d="M 280 304 V 320"/>
+  <rect x="40" y="320" width="480" height="64" rx="6" class="degraded"/>
+  <text x="280" y="345" text-anchor="middle" class="lbl body">④ Request B arrives, reuses gateway-http-7</text>
+  <text x="280" y="363" text-anchor="middle" class="lbl sub">B is a different client, same thread</text>
+
+  <path class="flow" d="M 280 384 V 400"/>
+  <rect x="40" y="400" width="480" height="78" rx="6" class="degraded"/>
+  <text x="280" y="422" text-anchor="middle" class="lbl body">⑤ Request B calls CTX.get()</text>
+  <text x="280" y="440" text-anchor="middle" class="lbl sub">reads client 2 401 993's SecurityContext, not B's own</text>
+  <text x="280" y="456" text-anchor="middle" class="lbl sub">SECURITY INCIDENT: cross-request context leak</text>
+
+  <!-- RIGHT: memory, accumulation across the pool -->
+  <rect x="600" y="80" width="480" height="64" rx="6" class="boxP"/>
+  <text x="840" y="105" text-anchor="middle" class="lbl body">① Request 1 on gateway-http-1</text>
+  <text x="840" y="123" text-anchor="middle" class="lbl sub">CTX.set(payload, 2 MB) — retained: 2 MB</text>
+
+  <path class="flow" d="M 840 144 V 160"/>
+  <rect x="600" y="160" width="480" height="64" rx="6" class="boxP"/>
+  <text x="840" y="185" text-anchor="middle" class="lbl body">② Request 2 on gateway-http-2</text>
+  <text x="840" y="203" text-anchor="middle" class="lbl sub">CTX.set(payload, 2 MB) — retained: 4 MB</text>
+
+  <path class="flow" d="M 840 224 V 240"/>
+  <rect x="600" y="240" width="480" height="64" rx="6" class="boxP"/>
+  <text x="840" y="265" text-anchor="middle" class="lbl body">③ Request 3 on gateway-http-3</text>
+  <text x="840" y="283" text-anchor="middle" class="lbl sub">CTX.set(payload, 2 MB) — retained: 6 MB</text>
+
+  <path class="flow" d="M 840 304 V 320"/>
+  <rect x="600" y="320" width="480" height="64" rx="6" class="boxP"/>
+  <text x="840" y="345" text-anchor="middle" class="lbl body">④ … continues across the pool</text>
+  <text x="840" y="363" text-anchor="middle" class="lbl sub">retained total grows with every new thread touched</text>
+
+  <path class="flow" d="M 840 384 V 400"/>
+  <rect x="600" y="400" width="480" height="78" rx="6" class="degraded"/>
+  <text x="840" y="422" text-anchor="middle" class="lbl body">⑤ All 50 pool threads eventually touched</text>
+  <text x="840" y="440" text-anchor="middle" class="lbl sub">50 × 2 MB = 100 MB retained permanently</text>
+  <text x="840" y="456" text-anchor="middle" class="lbl sub">remove() never called — none of it is ever freed</text>
+
+  <text x="560" y="524" text-anchor="middle" class="lbl h2">THE FIX — AND THE NON-FIX</text>
+
+  <rect x="140" y="545" width="380" height="140" rx="6" class="boxR"/>
+  <text x="330" y="566" text-anchor="middle" class="lbl hdr">FIX</text>
+  <text x="180" y="588" class="lbl code">try {</text>
+  <text x="180" y="606" class="lbl code">    CTX.set(v);</text>
+  <text x="180" y="624" class="lbl code">} finally {</text>
+  <text x="180" y="642" class="lbl code">    CTX.remove();</text>
+  <text x="180" y="660" class="lbl code">}</text>
+
+  <rect x="600" y="545" width="380" height="140" rx="6" class="degraded"/>
+  <text x="790" y="566" text-anchor="middle" class="lbl hdr">NOT A FIX</text>
+  <text x="640" y="588" class="lbl code">CTX.set(null);</text>
+  <text x="790" y="612" text-anchor="middle" class="lbl tiny">entry (and its weak key) still occupies a map slot</text>
+  <text x="790" y="629" text-anchor="middle" class="lbl tiny">not removed until overwritten or the thread dies</text>
+  <text x="790" y="646" text-anchor="middle" class="lbl tiny">must call CTX.remove() instead</text>
+
+  <line x1="20" y1="710" x2="1100" y2="710" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="730" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="743" class="lbl tiny">normal step — before the incident / before the leak grows further</text>
+  <rect x="470" y="730" width="22" height="16" rx="3" class="degraded"/>
+  <text x="500" y="743" class="lbl tiny">incident step — leaked read, or leaked memory total</text>
+  <rect x="880" y="730" width="22" height="16" rx="3" class="boxR"/>
+  <text x="910" y="743" class="lbl tiny">the fix, applied correctly</text>
+
+  <path class="flow" d="M 20 764 H 60"/>
+  <text x="68" y="769" class="lbl tiny">A → B : A happens, then B happens (time runs downward)</text>
+</svg>

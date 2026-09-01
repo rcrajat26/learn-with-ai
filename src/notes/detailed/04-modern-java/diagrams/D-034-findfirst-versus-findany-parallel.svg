@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="findFirst versus findAny in parallel, over a four-leaf task tree splitting 2.8
+     million Reservation records, searching for the first reservation exceeding LimitSet.maxStake.
+     Left, findAny: Leaf 3 finds a match first and wins immediately; Leaf 1, Leaf 2 and Leaf 4 are
+     cancelled with no coordination between leaves. Right, findFirst: because results must be
+     reported in encounter order, Leaf 2 is held until Leaf 1 resolves and Leaf 3 is held until
+     Leaf 2 resolves before Leaf 3's match can be released, and Leaf 4 is cancelled only after
+     Leaf 3 releases — coordination arrows carry this extra cost that findAny does not pay.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .panelh { font-size: 13px; font-weight: 700; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="620" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">FINDFIRST VERSUS FINDANY IN PARALLEL</text>
+  <line x1="20" y1="44" x2="1100" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="54" x2="560" y2="494" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: findAny -->
+  <text x="20" y="66" class="lbl h2">FIND ANY — FIRST LEAF TO SUCCEED WINS</text>
+  <text x="20" y="80" class="lbl tiny">predicate: first Reservation exceeding LimitSet.maxStake, over 2.8M reservations</text>
+
+  <rect x="170" y="96" width="280" height="50" rx="6" class="boxP"/>
+  <text x="310" y="118" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt;</text>
+  <text x="310" y="135" text-anchor="middle" class="lbl sub">2.8M reservations, 4 leaves</text>
+
+  <path class="flow" d="M 310 146 V 166 H 130 V 186"/>
+  <path class="flow" d="M 250 166 V 186"/>
+  <path class="flow" d="M 370 166 V 186"/>
+  <path class="flow" d="M 490 166 V 186"/>
+
+  <rect x="80"  y="186" width="100" height="60" rx="6" class="boxW"/>
+  <text x="130" y="211" text-anchor="middle" class="lbl node">Leaf 1</text>
+  <text x="130" y="229" text-anchor="middle" class="lbl body">no match</text>
+
+  <rect x="200" y="186" width="100" height="60" rx="6" class="boxW"/>
+  <text x="250" y="211" text-anchor="middle" class="lbl node">Leaf 2</text>
+  <text x="250" y="229" text-anchor="middle" class="lbl body">no match</text>
+
+  <rect x="320" y="186" width="100" height="60" rx="6" class="boxR"/>
+  <text x="370" y="211" text-anchor="middle" class="lbl node">Leaf 3</text>
+  <text x="370" y="229" text-anchor="middle" class="lbl body">match</text>
+
+  <rect x="440" y="186" width="100" height="60" rx="6" class="boxW"/>
+  <text x="490" y="211" text-anchor="middle" class="lbl node">Leaf 4</text>
+  <text x="490" y="229" text-anchor="middle" class="lbl body">cancel</text>
+
+  <path class="flow" d="M 370 246 V 256 H 310 V 266"/>
+
+  <rect x="170" y="266" width="280" height="60" rx="6" class="boxR"/>
+  <text x="310" y="288" text-anchor="middle" class="lbl node">findAny() result</text>
+  <text x="310" y="306" text-anchor="middle" class="lbl body">Leaf 3's match, returned at once</text>
+
+  <!-- RIGHT: findFirst -->
+  <text x="580" y="66" class="lbl h2">FIND FIRST — MUST REPORT IN ENCOUNTER ORDER</text>
+  <text x="580" y="80" class="lbl tiny">predicate: first Reservation exceeding LimitSet.maxStake, over 2.8M reservations</text>
+
+  <rect x="730" y="96" width="280" height="50" rx="6" class="boxP"/>
+  <text x="870" y="118" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt;</text>
+  <text x="870" y="135" text-anchor="middle" class="lbl sub">2.8M reservations, 4 leaves</text>
+
+  <path class="flow" d="M 870 146 V 166 H 690 V 186"/>
+  <path class="flow" d="M 810 166 V 186"/>
+  <path class="flow" d="M 930 166 V 186"/>
+  <path class="flow" d="M 1050 166 V 186"/>
+
+  <rect x="640"  y="186" width="100" height="60" rx="6" class="boxW"/>
+  <text x="690" y="211" text-anchor="middle" class="lbl node">Leaf 1</text>
+  <text x="690" y="229" text-anchor="middle" class="lbl body">no match</text>
+
+  <rect x="760" y="186" width="100" height="60" rx="6" class="boxW"/>
+  <text x="810" y="211" text-anchor="middle" class="lbl node">Leaf 2</text>
+  <text x="810" y="229" text-anchor="middle" class="lbl body">no match</text>
+
+  <rect x="880" y="186" width="100" height="60" rx="6" class="boxR"/>
+  <text x="930" y="211" text-anchor="middle" class="lbl node">Leaf 3</text>
+  <text x="930" y="229" text-anchor="middle" class="lbl body">match</text>
+
+  <rect x="1000" y="186" width="100" height="60" rx="6" class="boxW"/>
+  <text x="1050" y="211" text-anchor="middle" class="lbl node">Leaf 4</text>
+  <text x="1050" y="229" text-anchor="middle" class="lbl body">cancel</text>
+
+  <!-- coordination (gate) arrows -->
+  <path class="flow" d="M 720 246 V 262 H 800 V 246"/>
+  <text x="760" y="258" text-anchor="middle" class="lbl tiny">held</text>
+
+  <path class="flow" d="M 840 246 V 276 H 920 V 246"/>
+  <text x="880" y="272" text-anchor="middle" class="lbl tiny">held</text>
+
+  <path class="flow" d="M 960 246 V 262 H 1040 V 246"/>
+  <text x="1000" y="252" text-anchor="middle" class="lbl tiny">cancels</text>
+
+  <!-- leaf3 to result -->
+  <path class="flow" d="M 930 246 V 310 H 870 V 330"/>
+
+  <rect x="730" y="330" width="280" height="60" rx="6" class="boxR"/>
+  <text x="870" y="352" text-anchor="middle" class="lbl node">findFirst() result</text>
+  <text x="870" y="370" text-anchor="middle" class="lbl body">held until Leaf1, Leaf2 confirm</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="404" width="1080" height="90" rx="6" class="panel"/>
+  <text x="36" y="426" class="lbl panelh">THE COST OF ENCOUNTER ORDER</text>
+  <text x="36" y="448" class="lbl tiny">findAny(): no coordination &#8212; the first leaf to find a match wins immediately, others cancel.</text>
+  <text x="36" y="468" class="lbl tiny">findFirst(): Leaf2 and Leaf3 are held until every earlier leaf resolves; Leaf4 cancels only after Leaf3 releases.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="524" x2="1100" y2="524" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20"  y="539" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50"  y="551" class="lbl tiny">source stream (root task)</text>
+  <rect x="280" y="539" width="22" height="16" rx="3" class="boxW"/>
+  <text x="310" y="551" class="lbl tiny">leaf, not the chosen result</text>
+  <rect x="560" y="539" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="551" class="lbl tiny">winning leaf / result</text>
+  <path d="M 820 547 H 850" class="flow"/>
+  <text x="858" y="551" class="lbl tiny">A &#8594; B : split, resolve, or gate</text>
+</svg>

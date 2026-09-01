@@ -1,0 +1,123 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout of groupingBy(Deposit::rail, mapping(Deposit::amount, toList())) over
+     card and bank deposits. The concrete result is a HashMap with an internal bucket table, holding
+     two entries, CARD and BANK, each entry's value an ArrayList of deposit amounts. Both the HashMap
+     and the ArrayList are labelled not guaranteed by the contract, which only promises Map and List.
+     Below, TreeMap::new and LinkedHashMap::new are drawn as the ordered alternatives obtained by
+     passing a map factory to the three-argument groupingBy overload.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT groupingBy(Deposit::rail, mapping(Deposit::amount, toList())) ACTUALLY RETURNS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="30" y="66" class="lbl h2">DECLARED TYPE — Map&lt;String, List&lt;Money&gt;&gt;</text>
+
+  <rect x="40" y="80" width="960" height="42" rx="6" class="panel"/>
+  <text x="56" y="106" class="lbl body">Map&lt;String, List&lt;Money&gt;&gt; byRail = deposits.collect(groupingBy(Deposit::rail, mapping(Deposit::amount, toList())));</text>
+
+  <line x1="20" y1="140" x2="1020" y2="140" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="164" class="lbl h2">CONCRETE RUNTIME LAYOUT — java.util.HashMap</text>
+
+  <rect x="40" y="180" width="220" height="56" rx="6" class="boxP"/>
+  <text x="150" y="203" text-anchor="middle" class="lbl node">HashMap byRail</text>
+  <text x="150" y="221" text-anchor="middle" class="lbl sub">not guaranteed by the contract</text>
+
+  <path class="flow" d="M 260 208 H 300"/>
+
+  <rect x="300" y="180" width="200" height="56" rx="6" class="boxW"/>
+  <text x="400" y="203" text-anchor="middle" class="lbl node">bucket table</text>
+  <text x="400" y="221" text-anchor="middle" class="lbl sub">Node&lt;K,V&gt;[16] default</text>
+
+  <path class="flow" d="M 400 236 V 254 H 220 V 272"/>
+  <path class="flow" d="M 400 236 V 254 H 620 V 272"/>
+
+  <rect x="120" y="274" width="200" height="66" rx="6" class="boxR"/>
+  <text x="220" y="296" text-anchor="middle" class="lbl node">entry: CARD</text>
+  <text x="220" y="314" text-anchor="middle" class="lbl sub">hash(&quot;CARD&quot;) &amp; 15 &#8594; bucket</text>
+  <text x="220" y="330" text-anchor="middle" class="lbl sub">key = &quot;CARD&quot;</text>
+
+  <rect x="520" y="274" width="200" height="66" rx="6" class="boxR"/>
+  <text x="620" y="296" text-anchor="middle" class="lbl node">entry: BANK</text>
+  <text x="620" y="314" text-anchor="middle" class="lbl sub">hash(&quot;BANK&quot;) &amp; 15 &#8594; bucket</text>
+  <text x="620" y="330" text-anchor="middle" class="lbl sub">key = &quot;BANK&quot;</text>
+
+  <path class="flow" d="M 220 340 V 358"/>
+  <path class="flow" d="M 620 340 V 358"/>
+
+  <rect x="100" y="360" width="240" height="72" rx="6" class="boxP"/>
+  <text x="220" y="382" text-anchor="middle" class="lbl node">value: ArrayList</text>
+  <text x="220" y="400" text-anchor="middle" class="lbl sub">[65, 65, 65, &#8230;] card amounts</text>
+  <text x="220" y="418" text-anchor="middle" class="lbl sub">not guaranteed by the contract</text>
+
+  <rect x="500" y="360" width="240" height="72" rx="6" class="boxP"/>
+  <text x="620" y="382" text-anchor="middle" class="lbl node">value: ArrayList</text>
+  <text x="620" y="400" text-anchor="middle" class="lbl sub">[480, 480, &#8230;] bank amounts</text>
+  <text x="620" y="418" text-anchor="middle" class="lbl sub">not guaranteed by the contract</text>
+
+  <rect x="780" y="180" width="220" height="252" rx="6" class="panel"/>
+  <text x="796" y="202" class="lbl tiny" font-weight="700">Contract vs. concrete type</text>
+  <text x="796" y="222" class="lbl tiny">groupingBy() only promises</text>
+  <text x="796" y="238" class="lbl tiny">Map and List. Relying on</text>
+  <text x="796" y="254" class="lbl tiny">HashMap iteration order or</text>
+  <text x="796" y="270" class="lbl tiny">ArrayList's get(i) cost is</text>
+  <text x="796" y="286" class="lbl tiny">coupling to an implementation</text>
+  <text x="796" y="302" class="lbl tiny">detail the API never signed</text>
+  <text x="796" y="318" class="lbl tiny">up for. 95,000 CARD and</text>
+  <text x="796" y="334" class="lbl tiny">6,500 BANK deposits land in</text>
+  <text x="796" y="350" class="lbl tiny">whatever order the bucket</text>
+  <text x="796" y="366" class="lbl tiny">table happens to produce.</text>
+  <text x="796" y="392" class="lbl tiny" font-weight="700">card avg 65, bank avg 480</text>
+  <text x="796" y="408" class="lbl tiny">(95k/day, 6.5k/day)</text>
+
+  <line x1="20" y1="464" x2="1020" y2="464" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="488" class="lbl h2">ORDERED ALTERNATIVES — groupingBy(rail, mapFactory, downstream)</text>
+
+  <rect x="120" y="502" width="260" height="60" rx="6" class="boxL"/>
+  <text x="250" y="526" text-anchor="middle" class="lbl node">TreeMap::new</text>
+  <text x="250" y="544" text-anchor="middle" class="lbl sub">keys sorted: BANK, CARD</text>
+
+  <rect x="480" y="502" width="280" height="60" rx="6" class="boxL"/>
+  <text x="620" y="526" text-anchor="middle" class="lbl node">LinkedHashMap::new</text>
+  <text x="620" y="544" text-anchor="middle" class="lbl sub">keys in first-seen encounter order</text>
+
+
+  <rect x="40" y="580" width="960" height="70" rx="6" class="panel"/>
+  <text x="56" y="602" class="lbl tiny" font-weight="700">How to opt in</text>
+  <text x="56" y="620" class="lbl tiny">groupingBy(Deposit::rail, TreeMap::new, mapping(Deposit::amount, toList())) fixes the map</text>
+  <text x="56" y="636" class="lbl tiny">type; the value's list type is still whatever toList() happens to return underneath.</text>
+
+  <line x1="20" y1="674" x2="1020" y2="674" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="686" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="699" class="lbl tiny">concrete unguaranteed type (HashMap / ArrayList)</text>
+  <rect x="410" y="686" width="22" height="16" rx="3" class="boxW"/>
+  <text x="440" y="699" class="lbl tiny">internal structure (bucket table)</text>
+  <rect x="680" y="686" width="22" height="16" rx="3" class="boxR"/>
+  <text x="710" y="699" class="lbl tiny">map entry for one rail</text>
+  <rect x="20" y="710" width="22" height="16" rx="3" class="boxL"/>
+  <text x="50" y="723" class="lbl tiny">ordered alternative supplied via mapFactory</text>
+  <path class="flow" d="M 380 718 H 420"/>
+  <text x="428" y="723" class="lbl tiny">A &#8594; B : B is contained in / derived from A</text>
+</svg>

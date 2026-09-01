@@ -1,0 +1,84 @@
+<svg viewBox="0 0 1120 785" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Stacked area chart of a 40-turn session showing where tokens are spent per turn: cache reads on the re-sent prefix, fresh input tokens, output tokens, and cache writes. The cache-read band on the re-sent prefix visibly dominates the total area. A 5-minute idle gap between turn 25 and turn 26 crosses the cache TTL, so turn 26 is annotated as a re-priced turn where the prefix is written fresh instead of read cheaply. The session total is 2,850,000 cache-read tokens plus 42,000 fresh input tokens plus 28,000 output tokens plus 80,000 cache-write tokens, equalling 3,000,000 tokens, readable back via slash cost and modelPricing.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .gap   { stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 6 4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="785" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE THE MONEY GOES: TOKEN MIX ACROSS A 40-TURN SESSION</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- plot area: x 100..1000 turns 1..40, y 480(bottom) .. 80(top) -->
+  <line class="axis" d="M 100 480 H 1020" marker-end="url(#tri)"/>
+  <line class="axis" d="M 100 480 V 70" marker-end="url(#tri)"/>
+  <text x="560" y="510" text-anchor="middle" class="lbl body">turn number (1 to 40)</text>
+  <text x="45" y="280" text-anchor="middle" class="lbl body" transform="rotate(-90 45 280)">tokens billed this turn</text>
+
+  <text x="100" y="496" text-anchor="middle" class="lbl sub">1</text>
+  <text x="560" y="496" text-anchor="middle" class="lbl sub">20</text>
+  <line class="grid" x1="560" y1="480" x2="560" y2="80"/>
+  <text x="1000" y="496" text-anchor="middle" class="lbl sub">40</text>
+
+  <!-- stacked areas, straight-segment plotted series (data, not a routed edge) -->
+  <!-- baseline -->
+  <!-- cache reads (dominant, bottom band, largest) -->
+  <polygon points="100,480 1000,480 1000,120 800,150 560,220 320,320 100,420"
+           fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+  <!-- fresh input (thin band above cache reads) -->
+  <polygon points="100,420 320,320 560,220 800,150 1000,120 1000,108 800,138 560,206 320,306 100,406"
+           fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+  <!-- output tokens (thin band above fresh input) -->
+  <polygon points="100,406 320,306 560,206 800,138 1000,108 1000,96 800,126 560,192 320,292 100,392"
+           fill="#dcfce7" stroke="#15803d" stroke-width="1.2"/>
+  <!-- cache writes (thin band, spikes at turn 26 re-price) -->
+  <polygon points="100,392 320,292 560,192 660,150 800,120 800,126 660,158 560,196 320,296 100,396"
+           fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.2"/>
+
+  <!-- idle gap + re-priced turn annotation; panel sits in the clear space above the low left end of the curve -->
+  <line class="gap" x1="660" y1="80" x2="660" y2="480"/>
+  <rect x="140" y="90" width="350" height="112" rx="6" class="boxAnn"/>
+  <text x="156" y="112" class="lbl h2">5-minute idle gap, turn 25 &#8594; 26</text>
+  <text x="156" y="132" class="lbl tiny">Idle time exceeds the cache TTL, so the prefix</text>
+  <text x="156" y="148" class="lbl tiny">cache misses on turn 26 — billed as a fresh</text>
+  <text x="156" y="164" class="lbl tiny">cache write, not a cheap cache read (dashed line).</text>
+  <text x="156" y="180" class="lbl tiny">— see the spike in the cache-write band, right of it.</text>
+
+  <text x="90" y="484" text-anchor="end" class="lbl sub">0</text>
+
+  <!-- session total arithmetic -->
+  <rect x="100" y="540" width="920" height="100" rx="6" class="boxAnn"/>
+  <text x="116" y="564" class="lbl h2">Session total (40 turns)</text>
+  <text x="116" y="586" class="lbl tiny">2,850,000 cache-read tokens + 42,000 fresh input tokens + 28,000 output tokens + 80,000 cache-write tokens</text>
+  <text x="116" y="606" class="lbl body" style="font-weight:700">= 3,000,000 tokens for the session</text>
+  <text x="116" y="628" class="lbl tiny">The cache-read band re-sending the growing prefix accounts for 2,850,000 of the 3,000,000 — it dominates the bill.</text>
+
+  <rect x="100" y="656" width="920" height="46" rx="6" class="boxAnn"/>
+  <text x="116" y="684" class="lbl tiny">Read this breakdown back at any time with /cost (session totals) or the modelPricing lookup (per-token rates by category).</text>
+
+  <line x1="20" y1="712" x2="1100" y2="712" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="722" width="22" height="14" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="50" y="734" class="lbl tiny">cache reads (re-sent prefix, dominant)</text>
+  <rect x="330" y="722" width="22" height="14" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+  <text x="360" y="734" class="lbl tiny">fresh input tokens</text>
+  <rect x="540" y="722" width="22" height="14" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.2"/>
+  <text x="570" y="734" class="lbl tiny">output tokens</text>
+  <rect x="740" y="722" width="22" height="14" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.2"/>
+  <text x="770" y="734" class="lbl tiny">cache writes (spikes on cache miss)</text>
+  <line x1="20" y1="753" x2="60" y2="753" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="68" y="758" class="lbl tiny">TTL-crossing idle gap (dashed vertical)</text>
+</svg>

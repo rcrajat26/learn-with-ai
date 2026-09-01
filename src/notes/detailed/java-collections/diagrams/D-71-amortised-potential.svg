@@ -1,0 +1,81 @@
+<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Amortised cost of ArrayList add via the potential method: actual cost is flat 1 with O(n) spikes at each resize, amortised cost is flat 3, and the potential function phi = 2 times size minus capacity builds up between resizes to exactly pay for each spike">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="240" y="10" width="320" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Amortised cost via potential function (doubling growth)</text>
+
+  <!-- Plot 1: actual cost -->
+  <g transform="translate(60,50)">
+    <rect x="-20" y="-10" width="150" height="20" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="55" y="4" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Actual cost per add</text>
+    <!-- axes -->
+    <line x1="0" y1="120" x2="680" y2="120" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="0" y1="120" x2="0" y2="0" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="690" y="124" font-family="sans-serif" font-size="11" fill="#1f2937">n (adds)</text>
+    <!-- flat cost=1 baseline (near axis) -->
+    <polyline points="20,110 155,110 155,10 156,110 315,110 316,10 317,110 635,110 636,10 637,110 660,110"
+              fill="none" stroke="#525252" stroke-width="2"/>
+    <!-- spike labels at resize points n=10,20,40 -->
+    <rect x="140" y="-6" width="34" height="16" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="157" y="6" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">n=10</text>
+    <rect x="300" y="-6" width="34" height="16" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="317" y="6" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">n=20</text>
+    <rect x="618" y="-6" width="36" height="16" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="636" y="6" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">n=40</text>
+    <rect x="-18" y="102" width="34" height="16" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="-1" y="114" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">1</text>
+  </g>
+
+  <!-- Plot 2: amortised cost -->
+  <g transform="translate(60,220)">
+    <rect x="-20" y="-10" width="180" height="20" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="65" y="4" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Amortised cost per add</text>
+    <line x1="0" y1="90" x2="680" y2="90" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="0" y1="90" x2="0" y2="0" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="690" y="94" font-family="sans-serif" font-size="11" fill="#1f2937">n (adds)</text>
+    <!-- flat line at cost = 3, constant across all n -->
+    <line x1="20" y1="30" x2="660" y2="30" stroke="#525252" stroke-width="3"/>
+    <rect x="-18" y="22" width="34" height="16" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="-1" y="34" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">3</text>
+    <rect x="260" y="42" width="220" height="20" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="370" y="56" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">constant regardless of resize timing</text>
+  </g>
+
+  <!-- Plot 3: potential function -->
+  <g transform="translate(60,350)">
+    <rect x="-20" y="-10" width="260" height="20" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="90" y="4" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Phi = 2*size - capacity (potential)</text>
+    <line x1="0" y1="160" x2="680" y2="160" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="0" y1="160" x2="0" y2="0" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="690" y="164" font-family="sans-serif" font-size="11" fill="#1f2937">n (adds)</text>
+
+    <!-- sawtooth: capacity 10 -> at n=5..10 size grows 5..10, cap=10 constant so phi ramps -5..10 then drops to 0 at resize (cap doubles to 20, size stays 10 -> phi=0) -->
+    <!-- segment A: n=0..10, cap=10, phi = 2n-10, ramps from -10 to 10 -->
+    <polyline points="20,160 155,60" fill="none" stroke="#525252" stroke-width="2"/>
+    <!-- drop at resize n=10: cap becomes 20, phi = 2*10-20=0 -->
+    <line x1="155" y1="60" x2="156" y2="120" stroke="#737373" stroke-width="2" stroke-dasharray="4 3"/>
+    <!-- segment B: n=10..20, cap=20, phi=2n-20, ramps 0..20 -->
+    <polyline points="156,120 316,10" fill="none" stroke="#525252" stroke-width="2"/>
+    <line x1="316" y1="10" x2="317" y2="120" stroke="#737373" stroke-width="2" stroke-dasharray="4 3"/>
+    <!-- segment C: n=20..40, cap=40, phi=2n-40, ramps 0..40 (compressed) -->
+    <polyline points="317,120 636,10" fill="none" stroke="#525252" stroke-width="2"/>
+    <line x1="636" y1="10" x2="637" y2="120" stroke="#737373" stroke-width="2" stroke-dasharray="4 3"/>
+    <polyline points="637,120 660,105" fill="none" stroke="#525252" stroke-width="2"/>
+
+    <rect x="60" y="130" width="150" height="20" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="135" y="144" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">phi builds up as size grows</text>
+    <rect x="330" y="130" width="200" height="20" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="430" y="144" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">sharp drop when capacity doubles at resize</text>
+  </g>
+
+  <!-- Explanation box -->
+  <rect x="20" y="524" width="760" height="34" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="538" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Accumulated potential at the point just before a resize exactly equals the cost of copying n elements,</text>
+  <text x="400" y="552" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">so amortised cost = actual cost + Phi(after) - Phi(before) stays flat at 3 even though actual cost spikes to O(n)</text>
+</svg>

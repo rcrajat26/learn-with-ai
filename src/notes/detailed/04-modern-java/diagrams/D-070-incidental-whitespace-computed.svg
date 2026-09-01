@@ -1,0 +1,158 @@
+<svg viewBox="0 0 1040 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="How incidental whitespace is computed for a Java text block holding a four-line
+     QuizStakes JSON fixture. Frame 1: trailing whitespace is stripped from every line first, the
+     three trailing spaces after the status line's comma are marked and discarded. Frame 2: the
+     now-blank line 3 is excluded from the minimum-indentation candidates. Frame 3: the closing
+     delimiter's own line is still included in the minimum, its four-space indentation marked
+     alongside line 1's four spaces and line 2's six spaces, giving a minimum of four. Frame 4: the
+     four-space common prefix is removed from every non-blank line, leaving a left-aligned result
+     shown against a column ruler.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "Menlo", "Consolas", monospace; font-size: 12px; fill: #1f2937; }
+    .codeC { font-family: "Menlo", "Consolas", monospace; font-size: 12px; fill: #4b5563; }
+    .ruler { font-family: "Menlo", "Consolas", monospace; font-size: 9.5px; fill: #4b5563; }
+
+    .boxF  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HOW INCIDENTAL WHITESPACE IS COMPUTED — FOUR-LINE JSON TEXT BLOCK</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="58" class="lbl sub">Fixture: String json = the DEP-301 status payload, written as a Java text block</text>
+
+  <!-- FRAME 1 : top-left -->
+  <rect x="20" y="70" width="490" height="390" rx="6" class="boxF"/>
+  <text x="36" y="94" class="lbl h2">FRAME 1 — STRIP TRAILING WHITESPACE FROM EVERY LINE</text>
+
+  <text x="40" y="124" class="lbl code">1</text>
+  <text x="64" y="124" class="lbl code">    {</text>
+  <text x="40" y="146" class="lbl code">2</text>
+  <text x="64" y="146" class="lbl code">      "status": "DEP-301 CAPTURED",</text>
+  <rect x="326" y="132" width="24" height="18" class="boxD"/>
+  <text x="328" y="146" class="lbl code" fill="#b91c1c">···</text>
+  <text x="40" y="168" class="lbl code">3</text>
+  <text x="64" y="168" class="lbl codeC">   </text>
+  <text x="220" y="168" class="lbl sub">(3 spaces, whitespace-only line)</text>
+  <text x="40" y="190" class="lbl code">4</text>
+  <text x="64" y="190" class="lbl code">    }</text>
+
+  <rect x="40" y="212" width="450" height="60" rx="6" class="boxD"/>
+  <text x="52" y="232" class="lbl body" font-weight="700">3 trailing spaces stripped from line 2</text>
+  <text x="52" y="252" class="lbl sub">Stripping runs per-line, before any indentation math.</text>
+  <text x="52" y="266" class="lbl sub">The discarded run is shown as ··· above, never kept.</text>
+
+  <rect x="40" y="286" width="450" height="150" rx="6" class="boxA"/>
+  <text x="52" y="308" class="lbl body" font-weight="700">after trailing-strip, per line</text>
+  <text x="52" y="330" class="lbl code">1  "    {"          (unchanged, no trailing ws)</text>
+  <text x="52" y="352" class="lbl code">2  "      \"status\": \"DEP-301</text>
+  <text x="66" y="372" class="lbl code">   CAPTURED\","    (3 trailing spaces gone)</text>
+  <text x="52" y="394" class="lbl code">3  ""               (now truly empty)</text>
+  <text x="52" y="416" class="lbl code">4  "    }"          (unchanged, no trailing ws)</text>
+
+  <!-- FRAME 2 : top-right -->
+  <rect x="530" y="70" width="490" height="390" rx="6" class="boxF"/>
+  <text x="546" y="94" class="lbl h2">FRAME 2 — BLANK LINES EXCLUDED FROM THE MINIMUM</text>
+
+  <text x="550" y="124" class="lbl code">1</text>
+  <text x="574" y="124" class="lbl code">    {</text>
+  <rect x="800" y="110" width="80" height="18" class="boxA"/>
+  <text x="806" y="124" class="lbl tiny" fill="#2563eb">indent 4</text>
+
+  <text x="550" y="146" class="lbl code">2</text>
+  <text x="574" y="146" class="lbl code">      "status": "DEP-301 CAPTURED",</text>
+  <rect x="800" y="132" width="80" height="18" class="boxA"/>
+  <text x="806" y="146" class="lbl tiny" fill="#2563eb">indent 6</text>
+
+  <text x="550" y="168" class="lbl code">3</text>
+  <text x="574" y="168" class="lbl codeC">(empty)</text>
+  <rect x="800" y="154" width="120" height="18" class="boxD"/>
+  <text x="806" y="168" class="lbl tiny" fill="#b91c1c">excluded — blank</text>
+
+  <text x="550" y="190" class="lbl code">4</text>
+  <text x="574" y="190" class="lbl code">    }</text>
+  <rect x="800" y="176" width="80" height="18" class="boxA"/>
+  <text x="806" y="190" class="lbl tiny" fill="#2563eb">indent 4</text>
+
+  <rect x="550" y="212" width="450" height="90" rx="6" class="boxA"/>
+  <text x="562" y="234" class="lbl body" font-weight="700">candidate set for min(): { 4, 6, 4 }</text>
+  <text x="562" y="254" class="lbl sub">Line 3 is blank after trailing-strip — it contributes no</text>
+  <text x="562" y="270" class="lbl sub">indentation candidate at all, not a candidate of 0.</text>
+  <text x="562" y="286" class="lbl sub">A blank line can never force the minimum down to zero.</text>
+
+  <rect x="550" y="316" width="450" height="120" rx="6" class="boxF"/>
+  <text x="562" y="338" class="lbl body" font-weight="700">why this matters</text>
+  <text x="562" y="358" class="lbl sub">If blank lines counted, one accidental blank line with zero</text>
+  <text x="562" y="374" class="lbl sub">leading spaces would collapse every other line's indentation</text>
+  <text x="562" y="390" class="lbl sub">to nothing — JLS 3.10.6 excludes blank lines specifically so</text>
+  <text x="562" y="406" class="lbl sub">an empty separator line cannot destroy the block's shape.</text>
+
+  <!-- FRAME 3 : bottom-left -->
+  <rect x="20" y="480" width="490" height="230" rx="6" class="boxF"/>
+  <text x="36" y="504" class="lbl h2">FRAME 3 — CLOSING DELIM LINE COUNTS TOWARD MIN</text>
+
+  <text x="40" y="534" class="lbl code">1</text>
+  <text x="64" y="534" class="lbl code">    {</text>
+  <rect x="230" y="520" width="80" height="18" class="boxA"/>
+  <text x="236" y="534" class="lbl tiny" fill="#2563eb">indent 4</text>
+
+  <text x="40" y="556" class="lbl code">2</text>
+  <text x="64" y="556" class="lbl code">      "status": "DEP-301 CAPTURED",</text>
+
+  <text x="40" y="578" class="lbl code">3</text>
+  <text x="64" y="578" class="lbl codeC">(empty, excluded — see Frame 2)</text>
+
+  <text x="40" y="600" class="lbl code">4</text>
+  <text x="64" y="600" class="lbl code">    }"""</text>
+  <rect x="230" y="586" width="150" height="18" class="boxY"/>
+  <text x="236" y="600" class="lbl tiny" fill="#b45309">closing delim, indent 4</text>
+
+  <rect x="40" y="622" width="450" height="70" rx="6" class="boxY"/>
+  <text x="52" y="644" class="lbl body" font-weight="700">min(4, 6, 4) = 4</text>
+  <text x="52" y="664" class="lbl sub">The line holding the closing """ is a real content line for this</text>
+  <text x="52" y="680" class="lbl sub">purpose — its own indentation is a candidate, tying line 1.</text>
+
+  <!-- FRAME 4 : bottom-right -->
+  <rect x="530" y="480" width="490" height="230" rx="6" class="boxF"/>
+  <text x="546" y="504" class="lbl h2">FRAME 4 — PREFIX (4) REMOVED, RESULT WITH RULER</text>
+
+  <text x="620" y="522" class="lbl ruler">0    5    10   15   20   25   30</text>
+  <line x1="616" y1="528" x2="1000" y2="528" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="550" y="546" class="lbl code">1 |</text>
+  <text x="616" y="546" class="lbl code">{</text>
+
+  <text x="550" y="568" class="lbl code">2 |</text>
+  <text x="616" y="568" class="lbl code">  "status": "DEP-301 CAPTURED",</text>
+
+  <text x="550" y="590" class="lbl code">3 |</text>
+  <text x="616" y="590" class="lbl codeC">(empty)</text>
+
+  <text x="550" y="612" class="lbl code">4 |</text>
+  <text x="616" y="612" class="lbl code">}</text>
+
+  <rect x="550" y="634" width="450" height="58" rx="6" class="boxR"/>
+  <text x="562" y="656" class="lbl body" font-weight="700">4-space prefix stripped from every non-blank line</text>
+  <text x="562" y="676" class="lbl sub">Column 0 now starts at { and }; result is left-margin flush.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="732" x2="1020" y2="732" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="744" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="757" class="lbl tiny">discarded / excluded from computation</text>
+  <rect x="360" y="744" width="22" height="16" rx="3" class="boxA"/>
+  <text x="390" y="757" class="lbl tiny">measured indentation, kept as a candidate</text>
+  <rect x="20" y="772" width="22" height="16" rx="3" class="boxY"/>
+  <text x="50" y="785" class="lbl tiny">closing-delimiter line, still a candidate</text>
+  <rect x="360" y="772" width="22" height="16" rx="3" class="boxR"/>
+  <text x="390" y="785" class="lbl tiny">final stripped result</text>
+</svg>

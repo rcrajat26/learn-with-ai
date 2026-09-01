@@ -1,0 +1,134 @@
+<svg viewBox="0 0 900 1000" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three ways to walk the same four-entry map: entrySet() costs n operations with one table walk, keySet() plus get(k) costs 2n with a key walk and a separate hash-and-probe per key, and values() costs n with one walk and no keys">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+    <marker id="arrow-em" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+
+  <rect x="240" y="20" width="420" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="38" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Same 4-entry map, three ways to iterate it</text>
+
+  <!-- master table -->
+  <rect x="30" y="60" width="840" height="24" rx="4" fill="#dbeafe"/>
+  <text x="450" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">underlying Map&lt;K,V&gt; table, 4 entries</text>
+
+  <rect x="120" y="100" width="150" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="195" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k1 : v1</text>
+  <rect x="290" y="100" width="150" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="365" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k2 : v2</text>
+  <rect x="460" y="100" width="150" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k3 : v3</text>
+  <rect x="630" y="100" width="150" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k4 : v4</text>
+
+  <!-- ============ LANE 1: entrySet() ============ -->
+  <rect x="30" y="185" width="840" height="24" rx="4" fill="#dcfce7"/>
+  <text x="450" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">entrySet() &#8212; one table walk, one node touch per entry</text>
+
+  <path d="M 195 240 L 780 240" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <rect x="380" y="222" width="140" height="18" rx="3" fill="#fef3c7"/>
+  <text x="450" y="235" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">single pass over table</text>
+
+  <rect x="120" y="250" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="195" y="273" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k1 : v1</text>
+  <text x="195" y="290" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #1</text>
+  <rect x="290" y="250" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="365" y="273" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k2 : v2</text>
+  <text x="365" y="290" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #2</text>
+  <rect x="460" y="250" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="273" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k3 : v3</text>
+  <text x="535" y="290" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #3</text>
+  <rect x="630" y="250" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="273" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k4 : v4</text>
+  <text x="705" y="290" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #4</text>
+
+  <rect x="370" y="315" width="160" height="26" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="333" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">operations = n = 4</text>
+
+  <!-- ============ LANE 2: keySet() + get(k) ============ -->
+  <rect x="30" y="365" width="840" height="24" rx="4" fill="#fef3c7"/>
+  <text x="450" y="382" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">keySet() + get(k) &#8212; a key walk, THEN a separate hash+probe per key</text>
+
+  <path d="M 195 420 L 780 420" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <rect x="340" y="402" width="220" height="18" rx="3" fill="#fef3c7"/>
+  <text x="450" y="415" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">traversal 1 of 2: walk table for keys</text>
+
+  <rect x="120" y="430" width="150" height="46" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="195" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k1</text>
+  <text x="195" y="466" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #1</text>
+  <rect x="290" y="430" width="150" height="46" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="365" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k2</text>
+  <text x="365" y="466" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #2</text>
+  <rect x="460" y="430" width="150" height="46" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k3</text>
+  <text x="535" y="466" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #3</text>
+  <rect x="630" y="430" width="150" height="46" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k4</text>
+  <text x="705" y="466" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #4</text>
+
+  <rect x="330" y="490" width="240" height="18" rx="3" fill="#fee2e2"/>
+  <text x="450" y="503" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">traversal 2 of 2: get(k) per key, independent walk</text>
+
+  <path d="M 195 480 C 195 540 195 560 195 580" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <path d="M 365 480 C 365 540 365 560 365 580" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <path d="M 535 480 C 535 540 535 560 535 580" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <path d="M 705 480 C 705 540 705 560 705 580" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <rect x="110" y="520" width="170" height="18" rx="3" fill="#fee2e2"/>
+  <text x="195" y="533" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">hash(k1)+probe</text>
+  <rect x="280" y="520" width="170" height="18" rx="3" fill="#fee2e2"/>
+  <text x="365" y="533" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">hash(k2)+probe</text>
+  <rect x="450" y="520" width="170" height="18" rx="3" fill="#fee2e2"/>
+  <text x="535" y="533" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">hash(k3)+probe</text>
+  <rect x="620" y="520" width="170" height="18" rx="3" fill="#fee2e2"/>
+  <text x="705" y="533" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">hash(k4)+probe</text>
+
+  <rect x="120" y="590" width="150" height="46" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="195" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v1</text>
+  <text x="195" y="626" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">re-found #1</text>
+  <rect x="290" y="590" width="150" height="46" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="365" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v2</text>
+  <text x="365" y="626" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">re-found #2</text>
+  <rect x="460" y="590" width="150" height="46" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="535" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v3</text>
+  <text x="535" y="626" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">re-found #3</text>
+  <rect x="630" y="590" width="150" height="46" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="705" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v4</text>
+  <text x="705" y="626" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">re-found #4</text>
+
+  <rect x="350" y="655" width="200" height="26" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="673" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">operations = 2n = 8</text>
+
+  <!-- ============ LANE 3: values() ============ -->
+  <rect x="30" y="710" width="840" height="24" rx="4" fill="#dcfce7"/>
+  <text x="450" y="727" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">values() &#8212; one table walk, no keys extracted</text>
+
+  <path d="M 195 765 L 780 765" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-em)"/>
+  <rect x="380" y="747" width="140" height="18" rx="3" fill="#fef3c7"/>
+  <text x="450" y="760" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">single pass over table</text>
+
+  <rect x="120" y="775" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="195" y="798" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v1</text>
+  <text x="195" y="815" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #1, no key</text>
+  <rect x="290" y="775" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="365" y="798" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v2</text>
+  <text x="365" y="815" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #2, no key</text>
+  <rect x="460" y="775" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="798" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v3</text>
+  <text x="535" y="815" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #3, no key</text>
+  <rect x="630" y="775" width="150" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="798" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">v4</text>
+  <text x="705" y="815" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">touch #4, no key</text>
+
+  <rect x="370" y="840" width="160" height="26" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="858" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">operations = n = 4</text>
+
+  <rect x="30" y="890" width="840" height="70" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="915" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">entrySet() and values() each cost one O(n) walk; keySet()+get(k) costs the same walk</text>
+  <text x="450" y="935" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">plus a second independent O(n) lookup pass &#8212; prefer entrySet() whenever both key and value are needed</text>
+</svg>

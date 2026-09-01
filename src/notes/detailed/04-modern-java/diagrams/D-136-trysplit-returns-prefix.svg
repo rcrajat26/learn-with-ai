@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1900 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="trySplit returns the prefix, three frames, over an ArrayList of 95000 card deposits. Frame 1:
+     one spliterator covers indices 0 to 94999. Frame 2: trySplit returns a new spliterator over the prefix,
+     indices 0 to 47499, 47500 elements, and mutates the original spliterator to cover the remainder, indices
+     47500 to 94999, 47500 elements. Frame 3: the recursion continues, halving the range at every level, with
+     index bounds written at every level, until a range's element count falls at or below suggestTargetSize
+     and becomes a leaf that a ForkJoinTask computes directly without further splitting.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-size: 11px; font-family: "Courier New", monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">trySplit() RETURNS THE PREFIX — ArrayList&lt;LedgerEntry&gt; of 95,000 card deposits</text>
+  <line x1="20" y1="42" x2="1880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="440" y1="55" x2="440" y2="620" stroke="#d1d5db" stroke-width="1.2"/>
+  <line x1="1140" y1="55" x2="1140" y2="620" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <text x="220" y="70" text-anchor="middle" class="lbl h2">FRAME 1 — ONE SPLITERATOR</text>
+  <text x="790" y="70" text-anchor="middle" class="lbl h2">FRAME 2 — trySplit() SPLITS OFF THE PREFIX</text>
+  <text x="1520" y="70" text-anchor="middle" class="lbl h2">FRAME 3 — RECURSION TO A LEAF</text>
+
+  <!-- FRAME 1 -->
+  <rect x="70" y="270" width="300" height="110" rx="6" class="boxP"/>
+  <text x="220" y="298" text-anchor="middle" class="lbl node">cardDeposits.spliterator()</text>
+  <text x="220" y="318" text-anchor="middle" class="lbl body">indices [0, 94999]</text>
+  <text x="220" y="336" text-anchor="middle" class="lbl body">95,000 elements</text>
+  <text x="220" y="354" text-anchor="middle" class="lbl sub">SIZED | ORDERED, one spliterator, no split yet</text>
+
+  <!-- FRAME 2 -->
+  <rect x="660" y="150" width="260" height="70" rx="6" class="boxP"/>
+  <text x="790" y="176" text-anchor="middle" class="lbl node">cardDeposits.spliterator()</text>
+  <text x="790" y="194" text-anchor="middle" class="lbl body">[0, 94999], 95,000 elements</text>
+
+  <path class="flow" d="M 790 220 V 260"/>
+  <text x="790" y="248" text-anchor="middle" class="lbl tiny">trySplit()</text>
+  <path d="M 660 260 H 980" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="530" y="300" width="260" height="100" rx="6" class="boxR"/>
+  <text x="660" y="326" text-anchor="middle" class="lbl node">prefix (returned)</text>
+  <text x="660" y="344" text-anchor="middle" class="lbl body">indices [0, 47499]</text>
+  <text x="660" y="362" text-anchor="middle" class="lbl body">47,500 elements</text>
+  <text x="660" y="380" text-anchor="middle" class="lbl sub">new Spliterator instance</text>
+
+  <rect x="850" y="300" width="260" height="100" rx="6" class="boxW"/>
+  <text x="980" y="326" text-anchor="middle" class="lbl node">remainder (original, mutated)</text>
+  <text x="980" y="344" text-anchor="middle" class="lbl body">indices [47500, 94999]</text>
+  <text x="980" y="362" text-anchor="middle" class="lbl body">47,500 elements</text>
+  <text x="980" y="380" text-anchor="middle" class="lbl sub">same instance, origin advanced</text>
+
+  <path class="flow" d="M 660 260 V 298"/>
+  <path class="flow" d="M 980 260 V 298"/>
+
+  <!-- FRAME 3 -->
+  <rect x="1390" y="130" width="260" height="55" rx="6" class="boxP"/>
+  <text x="1520" y="152" text-anchor="middle" class="lbl node">L0: [0, 94999]</text>
+  <text x="1520" y="168" text-anchor="middle" class="lbl sub">95,000 elements</text>
+
+  <path d="M 1520 185 V 205" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 1360 205 H 1680" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 1360 205 V 218"/>
+  <path class="flow" d="M 1680 205 V 218"/>
+
+  <rect x="1260" y="220" width="200" height="55" rx="6" class="boxP"/>
+  <text x="1360" y="242" text-anchor="middle" class="lbl node">L1: [0, 47499]</text>
+  <text x="1360" y="258" text-anchor="middle" class="lbl sub">47,500 elements</text>
+
+  <rect x="1580" y="220" width="200" height="55" rx="6" class="boxW"/>
+  <text x="1680" y="242" text-anchor="middle" class="lbl node">L1: [47500, 94999]</text>
+  <text x="1680" y="258" text-anchor="middle" class="lbl sub">47,500 elements (parked)</text>
+
+  <path d="M 1360 275 V 295" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 1260 295 H 1460" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 1260 295 V 308"/>
+  <path class="flow" d="M 1460 295 V 308"/>
+
+  <rect x="1190" y="310" width="140" height="55" rx="6" class="boxP"/>
+  <text x="1260" y="332" text-anchor="middle" class="lbl node">L2: [0, 23749]</text>
+  <text x="1260" y="348" text-anchor="middle" class="lbl sub">23,750 elements</text>
+
+  <rect x="1390" y="310" width="140" height="55" rx="6" class="boxW"/>
+  <text x="1460" y="332" text-anchor="middle" class="lbl node">L2: [23750, 47499]</text>
+  <text x="1460" y="348" text-anchor="middle" class="lbl sub">23,750 elements</text>
+
+  <path class="flow" d="M 1260 365 V 400"/>
+  <text x="1275" y="386" text-anchor="start" class="lbl tiny" style="fill:#4b5563">… 2 more halvings …</text>
+
+  <!-- annotation: full level table down to leaf -->
+  <rect x="1160" y="405" width="440" height="185" rx="6" class="boxA"/>
+  <text x="1175" y="423" class="lbl tiny" style="font-weight:700">Every level, index bounds and size</text>
+  <text x="1175" y="441" class="lbl code">L0 [0,94999]            95000</text>
+  <text x="1175" y="456" class="lbl code">L1 [0,47499]            47500</text>
+  <text x="1175" y="471" class="lbl code">L2 [0,23749]            23750</text>
+  <text x="1175" y="486" class="lbl code">L3 [0,11874]            11875</text>
+  <text x="1175" y="501" class="lbl code">L4 [0,5937]              5938</text>
+  <text x="1175" y="516" class="lbl code">L5 [0,2968]  LEAF        2969</text>
+  <text x="1175" y="535" class="lbl tiny">suggestTargetSize(95000) = 95000 / LEAF_TARGET</text>
+  <text x="1175" y="550" class="lbl tiny">LEAF_TARGET = commonPoolParallelism() &lt;&lt; 2 = 4 &lt;&lt; 2 = 16 (example)</text>
+  <text x="1175" y="565" class="lbl tiny">target = 5937 (floored); 2969 ≤ 5937 → stop,</text>
+  <text x="1175" y="580" class="lbl tiny">ForkJoinTask computes the leaf directly</text>
+
+  <!-- legend -->
+  <line x1="20" y1="635" x2="1880" y2="635" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="650" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="663" class="lbl tiny">spliterator still eligible to split further</text>
+  <rect x="330" y="650" width="22" height="16" rx="3" class="boxR"/>
+  <text x="360" y="663" class="lbl tiny">prefix returned by trySplit()</text>
+  <rect x="620" y="650" width="22" height="16" rx="3" class="boxW"/>
+  <text x="650" y="663" class="lbl tiny">remainder / not-yet-split branch (parked)</text>
+  <path class="flow" d="M 990 658 H 1030"/>
+  <text x="1038" y="663" class="lbl tiny">A → B : trySplit() / recursive split produces child range</text>
+  <text x="20" y="690" class="lbl tiny">Note: LEAF_TARGET depends on the runtime's ForkJoinPool.commonPool() parallelism; the value 16 above is illustrative for a 5-core machine.</text>
+</svg>

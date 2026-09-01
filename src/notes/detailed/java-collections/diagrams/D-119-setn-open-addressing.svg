@@ -1,0 +1,95 @@
+<svg viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="SetN open addressing: 3 elements in a 6-slot table, probe() hit vs miss return encoding, and SALT32L giving two different iteration orders across two JVM runs">
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <rect x="20" y="20" width="760" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ImmutableCollections.SetN — table length = EXPAND_FACTOR (2) &#215; input.length (3) = 6 slots</text>
+
+  <!-- Table row -->
+  <text x="30" y="75" font-family="sans-serif" font-size="13" fill="#1f2937">elements[] (length 6) — hash-placed, linear probing on collision:</text>
+
+  <!-- 6 slots -->
+  <g font-family="sans-serif">
+    <!-- idx 0 -->
+    <rect x="30" y="85" width="110" height="50" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="85" y="105" text-anchor="middle" font-size="13" fill="#1f2937">idx 0</text>
+    <text x="85" y="122" text-anchor="middle" font-size="13" fill="#1f2937">null</text>
+
+    <rect x="150" y="85" width="110" height="50" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="205" y="105" text-anchor="middle" font-size="13" fill="#1f2937">idx 1</text>
+    <text x="205" y="122" text-anchor="middle" font-size="13" fill="#1f2937">null</text>
+
+    <rect x="270" y="85" width="110" height="50" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+    <text x="325" y="105" text-anchor="middle" font-size="13" fill="#1f2937">idx 2</text>
+    <text x="325" y="122" text-anchor="middle" font-size="13" fill="#1f2937">A</text>
+
+    <rect x="390" y="85" width="110" height="50" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+    <text x="445" y="105" text-anchor="middle" font-size="13" fill="#1f2937">idx 3</text>
+    <text x="445" y="122" text-anchor="middle" font-size="13" fill="#1f2937">B</text>
+
+    <rect x="510" y="85" width="110" height="50" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+    <text x="565" y="105" text-anchor="middle" font-size="13" fill="#1f2937">idx 4</text>
+    <text x="565" y="122" text-anchor="middle" font-size="13" fill="#1f2937">C</text>
+
+    <rect x="630" y="85" width="140" height="50" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="700" y="105" text-anchor="middle" font-size="13" fill="#1f2937">idx 5</text>
+    <text x="700" y="122" text-anchor="middle" font-size="13" fill="#1f2937">null (free slot)</text>
+  </g>
+
+  <!-- probe hit -->
+  <rect x="30" y="160" width="360" height="90" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="182" font-family="sans-serif" font-size="13" fill="#1f2937">probe(A): floorMod(hash(A), 6) = 2</text>
+  <text x="45" y="200" font-family="sans-serif" font-size="13" fill="#1f2937">elements[2] == A (equals) &#8594; found</text>
+  <rect x="45" y="212" width="170" height="24" rx="3" fill="#dbeafe"/>
+  <text x="130" y="229" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">return i = 2 (hit)</text>
+
+  <!-- probe miss -->
+  <rect x="410" y="160" width="360" height="110" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="425" y="182" font-family="sans-serif" font-size="13" fill="#1f2937">probe(D): floorMod(hash(D), 6) = 2, occupied by A</text>
+  <text x="425" y="200" font-family="sans-serif" font-size="13" fill="#1f2937">linear scan: idx 3 (B), idx 4 (C) occupied,</text>
+  <text x="425" y="218" font-family="sans-serif" font-size="13" fill="#1f2937">idx 5 is null &#8594; free slot found at i = 5</text>
+  <rect x="425" y="230" width="230" height="24" rx="3" fill="#fee2e2"/>
+  <text x="540" y="247" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">return -(i + 1) = -(5 + 1) = -6 (miss)</text>
+
+  <!-- SALT32L block -->
+  <rect x="20" y="290" width="760" height="70" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="35" y="312" font-family="sans-serif" font-size="13" fill="#1f2937">Class-init static block: SALT32L = (int)((color * seed) &gt;&gt; 16) &amp; 0xFFFF_FFFFL, where seed = System.nanoTime()</text>
+  <text x="35" y="330" font-family="sans-serif" font-size="13" fill="#1f2937">(fixed for the JVM's lifetime). REVERSE = (SALT32L &amp; 1) == 0.</text>
+  <text x="35" y="348" font-family="sans-serif" font-size="13" fill="#1f2937">Used only by SetNIterator to pick the iteration START index and direction — probe() itself uses plain floorMod(hash, len), no salt.</text>
+
+  <!-- two runs -->
+  <text x="30" y="390" font-family="sans-serif" font-size="15" fill="#1f2937">Two JVM runs, same table contents, different iteration order:</text>
+
+  <!-- Run A -->
+  <rect x="30" y="405" width="360" height="270" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="428" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Run A</text>
+  <text x="45" y="450" font-family="sans-serif" font-size="13" fill="#1f2937">SALT32L_A &#8594; start idx = (int)((SALT32L_A &#215; 6) &gt;&gt;&gt; 32) = 4</text>
+  <text x="45" y="468" font-family="sans-serif" font-size="13" fill="#1f2937">REVERSE = true (SALT32L_A is even) &#8594; step with ++idx, wrap at 6</text>
+  <text x="45" y="486" font-family="sans-serif" font-size="13" fill="#1f2937">visits: 5(null,skip) 0(null,skip) 1(null,skip) 2(A) 3(B) 4(C)</text>
+  <rect x="45" y="500" width="300" height="26" rx="3" fill="#dcfce7"/>
+  <text x="195" y="518" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">iteration order: A, B, C</text>
+
+  <!-- Run B -->
+  <rect x="410" y="405" width="360" height="270" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="590" y="428" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Run B</text>
+  <text x="425" y="450" font-family="sans-serif" font-size="13" fill="#1f2937">SALT32L_B &#8594; start idx = (int)((SALT32L_B &#215; 6) &gt;&gt;&gt; 32) = 1</text>
+  <text x="425" y="468" font-family="sans-serif" font-size="13" fill="#1f2937">REVERSE = false (SALT32L_B is odd) &#8594; step with --idx, wrap at 6</text>
+  <text x="425" y="486" font-family="sans-serif" font-size="13" fill="#1f2937">visits: 0(null,skip) 5(null,skip) 4(C) 3(B) 2(A)</text>
+  <rect x="425" y="500" width="300" height="26" rx="3" fill="#dcfce7"/>
+  <text x="575" y="518" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">iteration order: C, B, A</text>
+
+  <text x="45" y="560" font-family="sans-serif" font-size="13" fill="#1f2937">Same 6-slot table, same 3 elements — the visible</text>
+  <text x="45" y="578" font-family="sans-serif" font-size="13" fill="#1f2937">iteration order differs per JVM run because SALT32L</text>
+  <text x="45" y="596" font-family="sans-serif" font-size="13" fill="#1f2937">is re-derived from System.nanoTime() at each start.</text>
+  <text x="45" y="614" font-family="sans-serif" font-size="13" fill="#1f2937">This is why relying on Set.of(...) iteration order</text>
+  <text x="45" y="632" font-family="sans-serif" font-size="13" fill="#1f2937">across runs is unsafe.</text>
+
+  <line x1="390" y1="540" x2="410" y2="540" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,203 @@
+<svg viewBox="0 0 1180 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames over the same input of three Movements holding zero, one and three LedgerEntry values. Frame 1: map produces three Lists, one output per input, zero extra allocations. Frame 2: flatMap allocates one inner Stream per element, three allocations, then flattens to four LedgerEntry values. Frame 3: mapMulti pushes into a shared Consumer with zero allocations and produces the same four LedgerEntry values.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #374151; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="1060" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MAP VS FLATMAP VS MAPMULTI — SAME INPUT, DIFFERENT ALLOCATION COST</text>
+  <line x1="20" y1="42" x2="1160" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ FRAME 1 : map ============ -->
+  <text x="20" y="62" class="lbl h2">FRAME 1 — map(): ONE-TO-ONE, ZERO EXTRA ALLOCATIONS</text>
+  <line x1="20" y1="70" x2="1160" y2="70" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="70" y="82" width="220" height="64" rx="6" class="boxP"/>
+  <text x="180" y="106" text-anchor="middle" class="lbl node">Movement A</text>
+  <text x="180" y="126" text-anchor="middle" class="lbl body">0 LedgerEntry</text>
+  <text x="180" y="140" text-anchor="middle" class="lbl sub">empty movement</text>
+
+  <rect x="330" y="82" width="220" height="64" rx="6" class="boxP"/>
+  <text x="440" y="106" text-anchor="middle" class="lbl node">Movement B</text>
+  <text x="440" y="126" text-anchor="middle" class="lbl body">1 LedgerEntry</text>
+  <text x="440" y="140" text-anchor="middle" class="lbl sub">single-line movement</text>
+
+  <rect x="590" y="82" width="220" height="64" rx="6" class="boxP"/>
+  <text x="700" y="106" text-anchor="middle" class="lbl node">Movement C</text>
+  <text x="700" y="126" text-anchor="middle" class="lbl body">3 LedgerEntry</text>
+  <text x="700" y="140" text-anchor="middle" class="lbl sub">split movement</text>
+
+  <path class="flow" d="M 180 146 V 178"/>
+  <path class="flow" d="M 440 146 V 178"/>
+  <path class="flow" d="M 700 146 V 178"/>
+  <text x="230" y="168" class="lbl sub">map(Movement::entries)</text>
+
+  <rect x="70" y="182" width="220" height="64" rx="6" class="boxW"/>
+  <text x="180" y="206" text-anchor="middle" class="lbl node">List&lt;LedgerEntry&gt;</text>
+  <text x="180" y="226" text-anchor="middle" class="lbl body">size = 0</text>
+  <text x="180" y="240" text-anchor="middle" class="lbl sub">returned as-is, no copy</text>
+
+  <rect x="330" y="182" width="220" height="64" rx="6" class="boxW"/>
+  <text x="440" y="206" text-anchor="middle" class="lbl node">List&lt;LedgerEntry&gt;</text>
+  <text x="440" y="226" text-anchor="middle" class="lbl body">size = 1</text>
+  <text x="440" y="240" text-anchor="middle" class="lbl sub">returned as-is, no copy</text>
+
+  <rect x="590" y="182" width="220" height="64" rx="6" class="boxW"/>
+  <text x="700" y="206" text-anchor="middle" class="lbl node">List&lt;LedgerEntry&gt;</text>
+  <text x="700" y="226" text-anchor="middle" class="lbl body">size = 3</text>
+  <text x="700" y="240" text-anchor="middle" class="lbl sub">returned as-is, no copy</text>
+
+  <rect x="860" y="82" width="280" height="164" rx="6" class="boxA"/>
+  <text x="876" y="104" class="lbl tiny" font-weight="700">map() CONTRACT</text>
+  <text x="876" y="124" class="lbl tiny">Cardinality: 3 in -&gt; 3 out</text>
+  <text x="876" y="142" class="lbl tiny">Each element becomes exactly</text>
+  <text x="876" y="158" class="lbl tiny">one output element (the List</text>
+  <text x="876" y="174" class="lbl tiny">itself, not its contents)</text>
+  <text x="876" y="196" class="lbl tiny" font-weight="700">Allocations: 0 extra</text>
+  <text x="876" y="212" class="lbl tiny">(no new Stream, no Consumer)</text>
+
+  <!-- ============ FRAME 2 : flatMap ============ -->
+  <text x="20" y="300" class="lbl h2">FRAME 2 — flatMap(): ONE INNER STREAM ALLOCATED PER ELEMENT, THEN FLATTENED</text>
+  <line x1="20" y1="308" x2="1160" y2="308" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="70" y="322" width="220" height="64" rx="6" class="boxP"/>
+  <text x="180" y="346" text-anchor="middle" class="lbl node">Movement A</text>
+  <text x="180" y="366" text-anchor="middle" class="lbl body">0 LedgerEntry</text>
+  <text x="180" y="380" text-anchor="middle" class="lbl sub">empty movement</text>
+
+  <rect x="330" y="322" width="220" height="64" rx="6" class="boxP"/>
+  <text x="440" y="346" text-anchor="middle" class="lbl node">Movement B</text>
+  <text x="440" y="366" text-anchor="middle" class="lbl body">1 LedgerEntry</text>
+  <text x="440" y="380" text-anchor="middle" class="lbl sub">single-line movement</text>
+
+  <rect x="590" y="322" width="220" height="64" rx="6" class="boxP"/>
+  <text x="700" y="346" text-anchor="middle" class="lbl node">Movement C</text>
+  <text x="700" y="366" text-anchor="middle" class="lbl body">3 LedgerEntry</text>
+  <text x="700" y="380" text-anchor="middle" class="lbl sub">split movement</text>
+
+  <path class="flow" d="M 180 386 V 418"/>
+  <path class="flow" d="M 440 386 V 418"/>
+  <path class="flow" d="M 700 386 V 418"/>
+  <text x="250" y="408" class="lbl sub">flatMap(m -&gt; m.entries().stream())</text>
+
+  <rect x="70" y="422" width="220" height="64" rx="6" class="boxH"/>
+  <text x="180" y="446" text-anchor="middle" class="lbl node">Alloc #1</text>
+  <text x="180" y="466" text-anchor="middle" class="lbl body">new Stream&lt;LedgerEntry&gt;</text>
+  <text x="180" y="480" text-anchor="middle" class="lbl sub">0 elements inside</text>
+
+  <rect x="330" y="422" width="220" height="64" rx="6" class="boxH"/>
+  <text x="440" y="446" text-anchor="middle" class="lbl node">Alloc #2</text>
+  <text x="440" y="466" text-anchor="middle" class="lbl body">new Stream&lt;LedgerEntry&gt;</text>
+  <text x="440" y="480" text-anchor="middle" class="lbl sub">1 element inside</text>
+
+  <rect x="590" y="422" width="220" height="64" rx="6" class="boxH"/>
+  <text x="700" y="446" text-anchor="middle" class="lbl node">Alloc #3</text>
+  <text x="700" y="466" text-anchor="middle" class="lbl body">new Stream&lt;LedgerEntry&gt;</text>
+  <text x="700" y="480" text-anchor="middle" class="lbl sub">3 elements inside</text>
+
+  <path class="flow" d="M 180 486 V 520"/>
+  <path class="flow" d="M 440 486 V 520"/>
+  <path class="flow" d="M 700 486 V 520"/>
+  <line x1="180" y1="520" x2="700" y2="520" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 440 520 V 552"/>
+  <text x="490" y="514" class="lbl sub">flatten (bus)</text>
+
+  <rect x="280" y="556" width="400" height="64" rx="6" class="boxR"/>
+  <text x="480" y="580" text-anchor="middle" class="lbl node">Stream&lt;LedgerEntry&gt; flattened</text>
+  <text x="480" y="600" text-anchor="middle" class="lbl body">0 + 1 + 3 = 4 elements</text>
+  <text x="480" y="614" text-anchor="middle" class="lbl sub">order preserved across A, B, C</text>
+
+  <rect x="860" y="322" width="280" height="210" rx="6" class="boxA"/>
+  <text x="876" y="344" class="lbl tiny" font-weight="700">flatMap() CONTRACT</text>
+  <text x="876" y="364" class="lbl tiny">One inner Stream allocated</text>
+  <text x="876" y="380" class="lbl tiny">per input element, even the</text>
+  <text x="876" y="396" class="lbl tiny">empty Movement A</text>
+  <text x="876" y="416" class="lbl tiny">3 elements in -&gt; 3 allocations</text>
+  <text x="876" y="432" class="lbl tiny">-&gt; flattened to 4 elements out</text>
+  <text x="876" y="454" class="lbl tiny" font-weight="700">Allocations: 3</text>
+  <text x="876" y="470" class="lbl tiny">(Alloc #1, #2, #3 above)</text>
+  <text x="876" y="490" class="lbl tiny">discarded once flattened</text>
+
+  <!-- ============ FRAME 3 : mapMulti ============ -->
+  <text x="20" y="662" class="lbl h2">FRAME 3 — mapMulti(): SHARED CONSUMER, ZERO ALLOCATIONS, SAME OUTPUT</text>
+  <line x1="20" y1="670" x2="1160" y2="670" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="70" y="684" width="220" height="64" rx="6" class="boxP"/>
+  <text x="180" y="708" text-anchor="middle" class="lbl node">Movement A</text>
+  <text x="180" y="728" text-anchor="middle" class="lbl body">0 LedgerEntry</text>
+  <text x="180" y="742" text-anchor="middle" class="lbl sub">empty movement</text>
+
+  <rect x="330" y="684" width="220" height="64" rx="6" class="boxP"/>
+  <text x="440" y="708" text-anchor="middle" class="lbl node">Movement B</text>
+  <text x="440" y="728" text-anchor="middle" class="lbl body">1 LedgerEntry</text>
+  <text x="440" y="742" text-anchor="middle" class="lbl sub">single-line movement</text>
+
+  <rect x="590" y="684" width="220" height="64" rx="6" class="boxP"/>
+  <text x="700" y="708" text-anchor="middle" class="lbl node">Movement C</text>
+  <text x="700" y="728" text-anchor="middle" class="lbl body">3 LedgerEntry</text>
+  <text x="700" y="742" text-anchor="middle" class="lbl sub">split movement</text>
+
+  <path class="flow" d="M 180 748 V 764"/>
+  <path class="flow" d="M 440 748 V 764"/>
+  <path class="flow" d="M 700 748 V 764"/>
+  <line x1="180" y1="764" x2="700" y2="764" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 440 764 V 796"/>
+  <text x="300" y="758" class="lbl sub">mapMulti((m, sink) -&gt; m.entries().forEach(sink))</text>
+
+  <rect x="280" y="800" width="400" height="64" rx="6" class="boxR"/>
+  <text x="480" y="824" text-anchor="middle" class="lbl node">Consumer&lt;LedgerEntry&gt; sink</text>
+  <text x="480" y="844" text-anchor="middle" class="lbl body">one shared instance, reused for A, B, C</text>
+  <text x="480" y="858" text-anchor="middle" class="lbl sub">no allocation per element</text>
+
+  <path class="flow" d="M 480 864 V 896"/>
+
+  <rect x="280" y="900" width="400" height="64" rx="6" class="boxR"/>
+  <text x="480" y="924" text-anchor="middle" class="lbl node">Stream&lt;LedgerEntry&gt; result</text>
+  <text x="480" y="944" text-anchor="middle" class="lbl body">4 elements — identical to Frame 2</text>
+  <text x="480" y="958" text-anchor="middle" class="lbl sub">order preserved across A, B, C</text>
+
+  <rect x="860" y="684" width="280" height="210" rx="6" class="boxA"/>
+  <text x="876" y="706" class="lbl tiny" font-weight="700">mapMulti() CONTRACT</text>
+  <text x="876" y="726" class="lbl tiny">sink.accept() called once</text>
+  <text x="876" y="742" class="lbl tiny">per emitted LedgerEntry</text>
+  <text x="876" y="762" class="lbl tiny">No inner Stream is created,</text>
+  <text x="876" y="778" class="lbl tiny">not even for empty Movement A</text>
+  <text x="876" y="798" class="lbl tiny" font-weight="700">Allocations: 0</text>
+  <text x="876" y="814" class="lbl tiny">same 4-element result as</text>
+  <text x="876" y="830" class="lbl tiny">flatMap, at lower cost</text>
+
+  <!-- ============ LEGEND ============ -->
+  <line x1="20" y1="984" x2="1160" y2="984" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="996" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="1009" class="lbl tiny">input Movement</text>
+  <rect x="220" y="996" width="22" height="16" rx="3" class="boxH"/>
+  <text x="250" y="1009" class="lbl tiny">allocation (new Stream, flatMap only)</text>
+  <rect x="560" y="996" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="1009" class="lbl tiny">output / no-allocation sink</text>
+  <rect x="820" y="996" width="22" height="16" rx="3" class="boxW"/>
+  <text x="850" y="1009" class="lbl tiny">output List (map, no re-copy)</text>
+  <path class="flow" d="M 20 1024 H 60"/>
+  <text x="70" y="1029" class="lbl tiny">A → B : B is produced from / fed by A</text>
+</svg>

@@ -1,0 +1,123 @@
+<svg viewBox="0 0 1040 930" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Where a subagent's 2x cost comes from, two panels, for a modest task where the per-dispatch fixed tax is comparable to the work itself. Top panel: two stacked bars compare an inline tool call against a subagent dispatch. The inline bar has three segments: existing prefix reused 40000 tokens (already resident and cached, excluded from the ratio), cache reads 1000 tokens, one set of output tokens 3000 tokens, totalling 44000 displayed. The subagent bar has six segments: fresh system prompt 2000 tokens, fresh tool schemas 1200 tokens, the CLAUDE.md hierarchy re-supplied 1300 tokens, the task string 300 tokens, the work 3000 tokens, and the returned message re-entering the parent transcript 200 tokens, totalling 8000 tokens. The arithmetic (2000 + 1200 + 1300 + 300 + 3000 + 200) divided by (1000 + 3000) equals 8000 divided by 4000 equals 2.0x is written on the canvas, plus a note that a team of agents pays this same fixed tax several times over, 3 to 4x total per the syllabus. Bottom panel makes the opposite case: a subagent burns 150000 tokens inside its own context to do the work, but returns only 200 words to the parent, so the parent transcript grows by those 200 words only, not by the 150000.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .segA  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.4; }
+    .segB  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+    .segC  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; }
+    .segD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; }
+    .segE  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="930" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE A SUBAGENT'S 2X COST COMES FROM</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">PANEL 1 — SAME TASK, TWO PATHS</text>
+
+  <!-- Inline bar -->
+  <text x="20" y="92" class="lbl body" style="font-weight:700">inline tool call</text>
+  <rect x="20" y="100" width="356" height="56" class="segA"/>
+  <text x="198" y="124" text-anchor="middle" class="lbl tiny">existing prefix reused</text>
+  <text x="198" y="140" text-anchor="middle" class="lbl tiny" style="font-weight:700">40,000 tok</text>
+
+  <rect x="376" y="100" width="60" height="56" class="segB"/>
+  <text x="406" y="124" text-anchor="middle" class="lbl tiny">cache</text>
+  <text x="406" y="140" text-anchor="middle" class="lbl tiny" style="font-weight:700">1,000</text>
+
+  <rect x="436" y="100" width="60" height="56" class="segC"/>
+  <text x="466" y="124" text-anchor="middle" class="lbl tiny">output</text>
+  <text x="466" y="140" text-anchor="middle" class="lbl tiny" style="font-weight:700">3,000</text>
+
+  <text x="506" y="126" class="lbl body" style="font-weight:700">= 44,000 tok</text>
+  <text x="506" y="144" class="lbl tiny">(40,000 already cached, excluded below)</text>
+
+  <!-- Subagent bar -->
+  <text x="20" y="192" class="lbl body" style="font-weight:700">subagent dispatch</text>
+  <rect x="20" y="200" width="40" height="40" class="segD"/>
+  <text x="40" y="224" text-anchor="middle" class="lbl tiny" style="font-weight:700">1</text>
+  <rect x="60" y="200" width="40" height="40" class="segD"/>
+  <text x="80" y="224" text-anchor="middle" class="lbl tiny" style="font-weight:700">2</text>
+  <rect x="100" y="200" width="40" height="40" class="segD"/>
+  <text x="120" y="224" text-anchor="middle" class="lbl tiny" style="font-weight:700">3</text>
+  <rect x="140" y="200" width="40" height="40" class="segD"/>
+  <text x="160" y="224" text-anchor="middle" class="lbl tiny" style="font-weight:700">4</text>
+
+  <rect x="180" y="200" width="150" height="40" class="segA"/>
+  <text x="255" y="224" text-anchor="middle" class="lbl tiny">the work — 3,000 tok</text>
+
+  <rect x="330" y="200" width="40" height="40" class="segE"/>
+  <text x="350" y="224" text-anchor="middle" class="lbl tiny" style="font-weight:700">6</text>
+
+  <text x="392" y="218" class="lbl body" style="font-weight:700">= 8,000 tok</text>
+  <text x="392" y="236" class="lbl tiny">(inside subagent context)</text>
+
+  <!-- key list for segments 1,2,3,4,6 -->
+  <rect x="20" y="252" width="560" height="94" rx="6" fill="#fafafa" stroke="#9ca3af" stroke-width="1"/>
+  <text x="34" y="270" class="lbl tiny"><tspan style="font-weight:700">1</tspan> fresh system prompt — 2,000 tok</text>
+  <text x="34" y="286" class="lbl tiny"><tspan style="font-weight:700">2</tspan> fresh tool schemas — 1,200 tok</text>
+  <text x="34" y="302" class="lbl tiny"><tspan style="font-weight:700">3</tspan> the CLAUDE.md hierarchy re-supplied — 1,300 tok</text>
+  <text x="34" y="318" class="lbl tiny"><tspan style="font-weight:700">4</tspan> the task string — 300 tok</text>
+  <text x="300" y="270" class="lbl tiny"><tspan style="font-weight:700">6</tspan> the returned message re-entering the parent transcript — 200 tok</text>
+
+  <!-- arithmetic panel -->
+  <rect x="20" y="358" width="1000" height="124" rx="6" class="boxAnn"/>
+  <text x="36" y="380" class="lbl tiny" style="font-weight:700">arithmetic</text>
+  <text x="36" y="398" class="lbl tiny">subagent total: 2,000 + 1,200 + 1,300 + 300 + 3,000 + 200 = 8,000 tokens (200 of it re-enters the parent transcript)</text>
+  <text x="36" y="416" class="lbl tiny">ratio: (2,000 + 1,200 + 1,300 + 300 + 3,000 + 200) &#247; (1,000 + 3,000) = 8,000 / 4,000 = 2.0&#215;</text>
+  <text x="36" y="434" class="lbl tiny">the 40,000-token cached prefix is already resident and near-free, so it is excluded from the inline side of the ratio</text>
+  <text x="36" y="452" class="lbl tiny" style="font-weight:700">the 2&#215; is not a fixed multiplier — it is fresh system prompt + fresh tool schemas + re-supplied CLAUDE.md paid again, every dispatch, on a modest task</text>
+  <text x="36" y="470" class="lbl tiny">a team of N agents pays this same fixed tax N times over &#8594; 3&#8211;4&#215; total cost for a team dispatch (syllabus &#167;2.1.19)</text>
+
+  <line x1="20" y1="500" x2="1020" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="524" class="lbl h2">PANEL 2 — THE OPPOSITE CASE: BURN INSIDE, RETURN SMALL</text>
+
+  <rect x="60" y="562" width="360" height="260" rx="6" class="segD"/>
+  <text x="240" y="576" text-anchor="middle" class="lbl body" style="font-weight:700">subagent's own context</text>
+  <text x="240" y="676" text-anchor="middle" class="lbl h1" font-size="26">150,000</text>
+  <text x="240" y="700" text-anchor="middle" class="lbl body">tokens burned inside</text>
+  <text x="240" y="718" text-anchor="middle" class="lbl tiny">(reading files, tool loops, reasoning —</text>
+  <text x="240" y="734" text-anchor="middle" class="lbl tiny">none of it visible to the parent)</text>
+
+  <path class="flow" d="M 420 676 H 560"/>
+  <text x="490" y="664" text-anchor="middle" class="lbl tiny">only the</text>
+  <text x="490" y="692" text-anchor="middle" class="lbl tiny">summary crosses</text>
+
+  <rect x="560" y="636" width="380" height="80" rx="6" class="segB"/>
+  <text x="750" y="664" text-anchor="middle" class="lbl body" style="font-weight:700">returned message</text>
+  <text x="750" y="686" text-anchor="middle" class="lbl body">200 words</text>
+  <text x="750" y="704" text-anchor="middle" class="lbl tiny">re-enters the parent transcript</text>
+
+  <rect x="580" y="736" width="340" height="70" rx="6" class="boxAnn"/>
+  <text x="600" y="758" class="lbl tiny" style="font-weight:700">net effect on parent</text>
+  <text x="600" y="778" class="lbl tiny">parent transcript grows by the 200 words</text>
+  <text x="600" y="794" class="lbl tiny">only — not by the 150,000 tokens spent inside</text>
+
+  <!-- legend -->
+  <line x1="20" y1="840" x2="1020" y2="840" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="856" width="20" height="14" rx="2" class="segA"/>
+  <text x="46" y="867" class="lbl tiny">reused prefix / the work</text>
+  <rect x="220" y="856" width="20" height="14" rx="2" class="segB"/>
+  <text x="246" y="867" class="lbl tiny">cache reads / returned summary</text>
+  <rect x="460" y="856" width="20" height="14" rx="2" class="segC"/>
+  <text x="486" y="867" class="lbl tiny">output tokens</text>
+  <rect x="620" y="856" width="20" height="14" rx="2" class="segD"/>
+  <text x="646" y="867" class="lbl tiny">re-supplied per-dispatch fixed cost / burned-inside work</text>
+  <rect x="20" y="880" width="20" height="14" rx="2" class="segE"/>
+  <text x="46" y="891" class="lbl tiny">message re-entering parent transcript</text>
+  <rect x="300" y="880" width="20" height="14" rx="2" class="boxAnn"/>
+  <text x="326" y="891" class="lbl tiny">annotation panel — arithmetic and net-effect callouts</text>
+</svg>

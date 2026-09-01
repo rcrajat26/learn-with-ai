@@ -1,0 +1,65 @@
+<svg viewBox="0 0 1040 380" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 5 of 5 in the CLAUDE.md load order. A subdirectory's own CLAUDE.md is not read at launch with the other four sources. It arrives later, on demand, only when Claude reads or edits a file inside that subdirectory during the session, and is then appended to the running context at that point.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow    { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weakEdge{ fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="380" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLAUDE.md LOAD ORDER — FRAME 5 OF 5</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl h2">A subdirectory CLAUDE.md is not part of launch — it arrives on demand</text>
+
+  <rect x="40" y="86" width="260" height="56" rx="6" class="boxOk"/>
+  <text x="170" y="110" text-anchor="middle" class="lbl node">launch-time block</text>
+  <text x="170" y="128" text-anchor="middle" class="lbl sub">managed + user + project + local</text>
+
+  <path class="weakEdge" d="M 300 114 H 420"/>
+  <text x="360" y="106" text-anchor="middle" class="lbl sub">not yet loaded</text>
+
+  <rect x="420" y="86" width="260" height="56" rx="6" class="boxWeak"/>
+  <text x="550" y="110" text-anchor="middle" class="lbl node">src/payments/CLAUDE.md</text>
+  <text x="550" y="128" text-anchor="middle" class="lbl sub">a subdirectory's own file</text>
+
+  <path class="flow" d="M 550 142 V 176"/>
+  <rect x="420" y="176" width="260" height="60" rx="6" class="boxHi"/>
+  <text x="550" y="200" text-anchor="middle" class="lbl node">Claude reads/edits a file</text>
+  <text x="550" y="218" text-anchor="middle" class="lbl sub">inside src/payments/ during the session</text>
+
+  <path class="flow" d="M 550 236 V 260"/>
+  <rect x="740" y="176" width="260" height="60" rx="6" class="boxOk"/>
+  <text x="870" y="200" text-anchor="middle" class="lbl node">appended to context</text>
+  <text x="870" y="218" text-anchor="middle" class="lbl sub">now, mid-session — not at launch</text>
+  <path class="flow" d="M 680 206 H 740"/>
+
+  <line x1="20" y1="270" x2="1020" y2="270" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="280" width="1000" height="86" rx="6" class="boxAnn"/>
+  <text x="36" y="300" class="lbl h2">Why deferred</text>
+  <text x="36" y="320" class="lbl tiny">Reading every subdirectory's CLAUDE.md at launch would not scale in a large monorepo, so Claude Code only reads one when it actually</text>
+  <text x="36" y="336" class="lbl tiny">touches a file under that directory — the same on-demand discovery walk described for settings and rules elsewhere in this topic.</text>
+  <text x="36" y="352" class="lbl tiny">Once loaded it is appended to the running block for the rest of the session, in the same concatenated, nearest-last spirit as frame 4.</text>
+</svg>

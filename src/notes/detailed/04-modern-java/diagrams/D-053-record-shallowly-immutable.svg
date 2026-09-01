@@ -1,0 +1,165 @@
+<svg viewBox="0 0 1240 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A record is only shallowly immutable. Frame 1: PaymentRun is constructed from a
+     caller-held ArrayList of WithdrawalTransaction; one list object is referenced both by the
+     caller's items variable and by the record's items component. Frame 2: the caller mutates that
+     shared ArrayList by adding a third transaction, and the record's contents change with it,
+     because no record method ran. Frame 3: the fix — the compact constructor wraps the parameter in
+     List.copyOf, producing a separate, independent list object for the record to hold; an array
+     component needs the same treatment via clone() on copy-in and copy-out.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .code  { font-family: "Menlo", "Consolas", monospace; font-size: 11.5px; fill: #1f2937; }
+    .codeC { font-family: "Menlo", "Consolas", monospace; font-size: 11.5px; fill: #4b5563; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1240" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A RECORD IS SHALLOWLY IMMUTABLE</text>
+  <line x1="20" y1="42" x2="1220" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl body">record PaymentRun(RunId id, List&lt;WithdrawalTransaction&gt; items)</text>
+
+  <!-- FRAME headers -->
+  <text x="20" y="92" class="lbl h2">FRAME 1 — CONSTRUCTED FROM A SHARED LIST</text>
+  <text x="440" y="92" class="lbl h2">FRAME 2 — CALLER MUTATES THE SHARED LIST</text>
+  <text x="860" y="92" class="lbl h2">FRAME 3 — THE FIX: List.copyOf</text>
+
+  <!-- vertical divider hairlines between frames -->
+  <line x1="420" y1="80" x2="420" y2="580" stroke="#d1d5db" stroke-width="1.2"/>
+  <line x1="840" y1="80" x2="840" y2="580" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <!-- FRAME 1 -->
+  <rect x="30" y="106" width="150" height="46" rx="6" class="boxP"/>
+  <text x="105" y="128" text-anchor="middle" class="lbl node">caller: items</text>
+  <text x="105" y="144" text-anchor="middle" class="lbl sub">local ArrayList ref</text>
+
+  <rect x="240" y="106" width="150" height="46" rx="6" class="boxP"/>
+  <text x="315" y="128" text-anchor="middle" class="lbl node">run.items</text>
+  <text x="315" y="144" text-anchor="middle" class="lbl sub">record component ref</text>
+
+  <path class="flow" d="M 105 152 V 200 H 200 V 236"/>
+  <path class="flow" d="M 315 152 V 200 H 230 V 236"/>
+
+  <rect x="90" y="240" width="240" height="90" rx="6" class="boxH"/>
+  <text x="210" y="264" text-anchor="middle" class="lbl node">ArrayList&lt;WithdrawalTransaction&gt;</text>
+  <text x="210" y="286" text-anchor="middle" class="lbl code">[ WTX-1, WTX-2 ]</text>
+  <text x="210" y="308" text-anchor="middle" class="lbl sub">one list object, two references pointing to it</text>
+  <text x="210" y="322" text-anchor="middle" class="lbl sub">new PaymentRun(id, items) copies no elements</text>
+
+  <rect x="30" y="350" width="360" height="120" rx="6" class="boxA"/>
+  <text x="46" y="372" class="lbl body" font-weight="700">Why</text>
+  <text x="46" y="392" class="lbl tiny">The generated canonical constructor does</text>
+  <text x="46" y="408" class="lbl tiny">this.items = items; — a reference copy,</text>
+  <text x="46" y="424" class="lbl tiny">not a value copy. The record component and</text>
+  <text x="46" y="440" class="lbl tiny">the caller's variable alias the same</text>
+  <text x="46" y="456" class="lbl tiny">ArrayList instance.</text>
+
+  <!-- FRAME 2 -->
+  <rect x="450" y="106" width="150" height="46" rx="6" class="boxP"/>
+  <text x="525" y="128" text-anchor="middle" class="lbl node">caller: items</text>
+  <text x="525" y="144" text-anchor="middle" class="lbl sub">items.add(WTX-3)</text>
+
+  <rect x="660" y="106" width="150" height="46" rx="6" class="boxP"/>
+  <text x="735" y="128" text-anchor="middle" class="lbl node">run.items</text>
+  <text x="735" y="144" text-anchor="middle" class="lbl sub">no call made on run</text>
+
+  <path class="flow" d="M 525 152 V 200 H 620 V 236"/>
+  <path class="flow" d="M 735 152 V 200 H 650 V 236"/>
+
+  <rect x="510" y="240" width="240" height="90" rx="6" class="boxD"/>
+  <text x="630" y="264" text-anchor="middle" class="lbl node">ArrayList&lt;WithdrawalTransaction&gt;</text>
+  <text x="630" y="286" text-anchor="middle" class="lbl code">[ WTX-1, WTX-2, WTX-3 ]</text>
+  <text x="630" y="308" text-anchor="middle" class="lbl sub">same object — still one list, two refs</text>
+  <text x="630" y="322" text-anchor="middle" class="lbl sub">run.items() now returns WTX-3 too</text>
+
+  <rect x="450" y="350" width="360" height="120" rx="6" class="boxA"/>
+  <text x="466" y="372" class="lbl body" font-weight="700">The break</text>
+  <text x="466" y="392" class="lbl tiny">PaymentRun has no setters, no mutator</text>
+  <text x="466" y="408" class="lbl tiny">methods, and the caller never touched run —</text>
+  <text x="466" y="424" class="lbl tiny">yet run.items() changed. "Shallow" means the</text>
+  <text x="466" y="440" class="lbl tiny">reference is final; what it points to is not.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="870" y="106" width="150" height="46" rx="6" class="boxP"/>
+  <text x="945" y="128" text-anchor="middle" class="lbl node">caller: items</text>
+  <text x="945" y="144" text-anchor="middle" class="lbl sub">local ArrayList ref</text>
+
+  <rect x="1060" y="106" width="150" height="46" rx="6" class="boxR"/>
+  <text x="1135" y="128" text-anchor="middle" class="lbl node">run.items</text>
+  <text x="1135" y="144" text-anchor="middle" class="lbl sub">record component ref</text>
+
+  <path class="flow" d="M 945 152 V 236"/>
+  <path class="flow" d="M 1135 152 V 236"/>
+
+  <rect x="880" y="240" width="150" height="90" rx="6" class="boxH"/>
+  <text x="955" y="262" text-anchor="middle" class="lbl node">caller's ArrayList</text>
+  <text x="955" y="282" text-anchor="middle" class="lbl code">[ WTX-1, WTX-2,</text>
+  <text x="955" y="296" text-anchor="middle" class="lbl code">  WTX-3 ]</text>
+  <text x="955" y="312" text-anchor="middle" class="lbl sub">still mutable,</text>
+  <text x="955" y="324" text-anchor="middle" class="lbl sub">still caller's</text>
+
+  <rect x="1060" y="240" width="150" height="90" rx="6" class="boxR"/>
+  <text x="1135" y="262" text-anchor="middle" class="lbl node">List.copyOf result</text>
+  <text x="1135" y="282" text-anchor="middle" class="lbl code">[ WTX-1, WTX-2 ]</text>
+  <text x="1135" y="298" text-anchor="middle" class="lbl sub">separate, immutable</text>
+  <text x="1135" y="310" text-anchor="middle" class="lbl sub">snapshot at</text>
+  <text x="1135" y="322" text-anchor="middle" class="lbl sub">construction time</text>
+
+  <path class="weak" d="M 1030 280 H 1060"/>
+  <text x="1045" y="230" text-anchor="middle" class="lbl sub">independent</text>
+
+  <rect x="860" y="350" width="360" height="190" rx="6" class="boxA"/>
+  <text x="876" y="372" class="lbl body" font-weight="700">The fix, in the compact constructor</text>
+  <text x="876" y="392" class="lbl code">compact constructor PaymentRun {</text>
+  <text x="892" y="410" class="lbl code">items = List.copyOf(items);</text>
+  <text x="876" y="428" class="lbl code">}</text>
+  <text x="876" y="450" class="lbl tiny">For an array component, copy on both sides:</text>
+  <text x="876" y="466" class="lbl code">payload = payload.clone();  // copy-in</text>
+  <text x="876" y="482" class="lbl code">public byte[] payload() {  // copy-out</text>
+  <text x="892" y="498" class="lbl code">return payload.clone();</text>
+  <text x="876" y="514" class="lbl code">}</text>
+  <text x="876" y="532" class="lbl sub">accessor and constructor both defend</text>
+
+  <!-- legend -->
+  <line x1="20" y1="556" x2="1220" y2="556" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="568" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="581" class="lbl tiny">reference variable (record component or local)</text>
+  <rect x="360" y="568" width="22" height="16" rx="3" class="boxH"/>
+  <text x="390" y="581" class="lbl tiny">shared / mutable backing object</text>
+  <rect x="640" y="568" width="22" height="16" rx="3" class="boxR"/>
+  <text x="670" y="581" class="lbl tiny">independent, defensively-copied object</text>
+  <rect x="950" y="568" width="22" height="16" rx="3" class="boxD"/>
+  <text x="980" y="581" class="lbl tiny">mutated / corrupted state</text>
+  <rect x="20" y="592" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="605" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 300 600 H 340"/>
+  <text x="350" y="605" class="lbl tiny">A → B : B holds a reference produced from A</text>
+  <path class="weak" d="M 700 600 H 740"/>
+  <text x="750" y="605" class="lbl tiny">dotted : the two objects are independent copies</text>
+</svg>

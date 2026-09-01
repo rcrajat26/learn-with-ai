@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1160 650" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="One shared time axis, two lanes. Lane 1, ShutdownOnFailure: the watchlist provider
+     call fails at 1.4 s, the identity vendor call is interrupted at the same instant, join()
+     returns and throwIfFailed() rethrows; total latency 1.4 s and nothing outlives the block.
+     Lane 2, CompletableFuture.allOf: the same watchlist failure at 1.4 s makes the composed
+     future complete exceptionally, but the identity call is never cancelled and keeps running
+     past that point as an orphan, still holding its connection, with no upper bound short of the
+     identity vendor's own p99 of 38 seconds.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxF  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+    .break { stroke: #b91c1c; stroke-width: 2; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="650" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SHUTDOWNONFAILURE VERSUS COMPLETABLEFUTURE.ALLOF</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="66" class="lbl h2">LANE 1 &#8212; ShutdownOnFailure</text>
+
+  <text x="840" y="84" text-anchor="middle" class="lbl tiny" fill="#b91c1c">FAILS &#8212; 1.4 s</text>
+  <rect x="140" y="96" width="700" height="44" rx="6" class="boxP"/>
+  <text x="490" y="116" text-anchor="middle" class="lbl node">Watchlist provider call</text>
+  <text x="490" y="132" text-anchor="middle" class="lbl sub">p50 1.4 s</text>
+  <rect x="833" y="111" width="14" height="14" class="boxF"/>
+
+  <text x="840" y="170" text-anchor="middle" class="lbl tiny" fill="#b91c1c">INTERRUPTED &#8212; 1.4 s</text>
+  <rect x="140" y="182" width="700" height="44" rx="6" class="boxP"/>
+  <text x="490" y="202" text-anchor="middle" class="lbl node">Identity vendor call</text>
+  <text x="490" y="218" text-anchor="middle" class="lbl sub">still in flight at 1.4 s</text>
+  <rect x="833" y="197" width="14" height="14" class="boxF"/>
+
+  <path class="flow" d="M 847 204 H 850"/>
+  <rect x="850" y="189" width="180" height="30" rx="5" class="boxR"/>
+  <text x="940" y="208" text-anchor="middle" class="lbl body">join() returns</text>
+
+  <path class="flow" d="M 940 219 V 229"/>
+  <rect x="850" y="229" width="220" height="30" rx="5" class="boxF"/>
+  <text x="960" y="248" text-anchor="middle" class="lbl body">throwIfFailed() rethrows</text>
+
+  <rect x="140" y="274" width="930" height="50" rx="6" class="panel"/>
+  <text x="156" y="292" class="lbl tiny" font-weight="700">END STATE &#8212; SHUTDOWNONFAILURE</text>
+  <text x="156" y="308" class="lbl tiny">Total latency 1.4 s. throwIfFailed() rethrows; close() waits for the interrupted identity call. Nothing outlives the block.</text>
+
+  <text x="40" y="354" class="lbl h2">LANE 2 &#8212; CompletableFuture.allOf</text>
+
+  <text x="840" y="372" text-anchor="middle" class="lbl tiny" fill="#b91c1c">FAILS &#8212; 1.4 s</text>
+  <rect x="140" y="384" width="700" height="44" rx="6" class="boxP"/>
+  <text x="490" y="404" text-anchor="middle" class="lbl node">Watchlist provider call</text>
+  <text x="490" y="420" text-anchor="middle" class="lbl sub">p50 1.4 s</text>
+  <rect x="833" y="399" width="14" height="14" class="boxF"/>
+
+  <path class="flow" d="M 840 406 H 850"/>
+  <rect x="850" y="391" width="260" height="30" rx="5" class="boxF"/>
+  <text x="980" y="410" text-anchor="middle" class="lbl body">allOf completes exceptionally</text>
+
+  <rect x="140" y="444" width="700" height="44" rx="6" class="boxP"/>
+  <text x="490" y="464" text-anchor="middle" class="lbl node">Identity vendor call</text>
+  <text x="490" y="480" text-anchor="middle" class="lbl sub">p50 900 ms, never cancelled</text>
+
+  <rect x="840" y="444" width="160" height="44" rx="6" class="boxF"/>
+  <text x="920" y="464" text-anchor="middle" class="lbl body">ORPHAN &#8212; running</text>
+  <text x="920" y="480" text-anchor="middle" class="lbl sub">holds its connection</text>
+
+  <line x1="1006" y1="444" x2="1006" y2="488" class="break"/>
+  <line x1="1014" y1="444" x2="1014" y2="488" class="break"/>
+
+  <rect x="140" y="504" width="970" height="60" rx="6" class="panel"/>
+  <text x="156" y="522" class="lbl tiny" font-weight="700">END STATE &#8212; ALLOF</text>
+  <text x="156" y="538" class="lbl tiny">Exception thrown at 1.4 s via CompletionException, but nothing cancels the identity call.</text>
+  <text x="156" y="554" class="lbl tiny">It keeps running unbounded &#8212; identity vendor p99 is 38 s &#8212; an ORPHAN still holding its connection.</text>
+
+  <line x1="20" y1="586" x2="1140" y2="586" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="602" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="614" class="lbl tiny">call in progress</text>
+  <rect x="180" y="602" width="20" height="14" rx="3" class="boxR"/>
+  <text x="206" y="614" class="lbl tiny">structured continuation</text>
+  <rect x="360" y="602" width="20" height="14" rx="3" class="boxF"/>
+  <text x="386" y="614" class="lbl tiny">failure / interrupt / orphan</text>
+  <rect x="560" y="602" width="20" height="14" rx="3" class="panel"/>
+  <text x="586" y="614" class="lbl tiny">end-state annotation</text>
+  <path class="flow" d="M 720 609 H 760"/>
+  <text x="768" y="614" class="lbl tiny">sequencing</text>
+  <line x1="890" y1="602" x2="890" y2="616" class="break"/>
+  <line x1="898" y1="602" x2="898" y2="616" class="break"/>
+  <text x="908" y="614" class="lbl tiny">continues unbounded beyond diagram</text>
+</svg>

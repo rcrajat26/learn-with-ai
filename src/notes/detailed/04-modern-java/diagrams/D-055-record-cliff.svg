@@ -1,0 +1,156 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The record cliff, a decision tree rooted at should this be a record. If the type
+     needs a mutable field, an internal representation different from its public API, inheritance
+     from another class, or a no-arg constructor for a framework such as a JPA entity, then it is
+     not a record, and every generated member — the canonical constructor, equals, hashCode,
+     toString and the accessors — is lost at once, all four outcomes falling off the same cliff
+     edge. If none of those apply, good record candidates include DTOs, value objects such as
+     StakeSplit, compound map keys such as RestrictionKey, multiple return values such as a sealed
+     Verdict, sealed interface cases like DocumentVerdict and ScreeningVerdict, and pipeline scratch
+     types.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .code  { font-family: "Menlo", "Consolas", monospace; font-size: 12px; fill: #1f2937; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE RECORD CLIFF</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT -->
+  <rect x="460" y="56" width="280" height="52" rx="6" class="boxP"/>
+  <text x="600" y="86" text-anchor="middle" class="lbl node">Should this be a record?</text>
+
+  <!-- stub down then split -->
+  <path class="flow" d="M 600 108 V 128"/>
+  <line x1="270" y1="128" x2="600" y2="128" stroke="#475569" stroke-width="2"/>
+  <line x1="600" y1="128" x2="1010" y2="128" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 270 128 V 148"/>
+  <path class="flow" d="M 1010 128 V 148"/>
+
+  <rect x="150" y="150" width="240" height="46" rx="6" class="boxD"/>
+  <text x="270" y="172" text-anchor="middle" class="lbl node">NO — any condition below applies</text>
+  <text x="270" y="188" text-anchor="middle" class="lbl sub">(the four columns under this node)</text>
+
+  <rect x="890" y="150" width="240" height="46" rx="6" class="boxR"/>
+  <text x="1010" y="172" text-anchor="middle" class="lbl node">YES — none of them apply</text>
+  <text x="1010" y="188" text-anchor="middle" class="lbl sub">(good record candidates, right panel)</text>
+
+  <!-- fan into 4 conditions from NO -->
+  <path class="flow" d="M 270 196 V 216"/>
+  <line x1="115" y1="216" x2="270" y2="216" stroke="#475569" stroke-width="2"/>
+  <line x1="270" y1="216" x2="325" y2="216" stroke="#475569" stroke-width="2"/>
+  <line x1="270" y1="216" x2="535" y2="216" stroke="#475569" stroke-width="2"/>
+  <line x1="270" y1="216" x2="745" y2="216" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 115 216 V 236"/>
+  <path class="flow" d="M 325 216 V 236"/>
+  <path class="flow" d="M 535 216 V 236"/>
+  <path class="flow" d="M 745 216 V 236"/>
+
+  <!-- 4 condition columns -->
+  <rect x="20" y="240" width="190" height="70" rx="6" class="boxP"/>
+  <text x="115" y="266" text-anchor="middle" class="lbl body">needs a mutable</text>
+  <text x="115" y="284" text-anchor="middle" class="lbl body">field after construction</text>
+
+  <rect x="230" y="240" width="190" height="70" rx="6" class="boxP"/>
+  <text x="325" y="258" text-anchor="middle" class="lbl body">internal representation</text>
+  <text x="325" y="276" text-anchor="middle" class="lbl body">differs from the</text>
+  <text x="325" y="294" text-anchor="middle" class="lbl body">public API</text>
+
+  <rect x="440" y="240" width="190" height="70" rx="6" class="boxP"/>
+  <text x="535" y="266" text-anchor="middle" class="lbl body">needs to extend</text>
+  <text x="535" y="284" text-anchor="middle" class="lbl body">another class</text>
+
+  <rect x="650" y="240" width="190" height="70" rx="6" class="boxP"/>
+  <text x="745" y="256" text-anchor="middle" class="lbl body">needs a</text>
+  <text x="745" y="272" text-anchor="middle" class="lbl body">no-arg constructor</text>
+  <text x="745" y="288" text-anchor="middle" class="lbl body">for a framework</text>
+  <text x="745" y="302" text-anchor="middle" class="lbl sub">(e.g. JPA @Entity)</text>
+
+  <!-- arrows down to terminal leaves -->
+  <path class="flow" d="M 115 310 V 330"/>
+  <path class="flow" d="M 325 310 V 330"/>
+  <path class="flow" d="M 535 310 V 330"/>
+  <path class="flow" d="M 745 310 V 330"/>
+
+  <rect x="20" y="334" width="190" height="74" rx="6" class="boxD"/>
+  <text x="115" y="356" text-anchor="middle" class="lbl body" font-weight="700">not a record</text>
+  <text x="115" y="374" text-anchor="middle" class="lbl tiny">you lose every</text>
+  <text x="115" y="390" text-anchor="middle" class="lbl tiny">generated member at once</text>
+
+  <rect x="230" y="334" width="190" height="74" rx="6" class="boxD"/>
+  <text x="325" y="356" text-anchor="middle" class="lbl body" font-weight="700">not a record</text>
+  <text x="325" y="374" text-anchor="middle" class="lbl tiny">you lose every</text>
+  <text x="325" y="390" text-anchor="middle" class="lbl tiny">generated member at once</text>
+
+  <rect x="440" y="334" width="190" height="74" rx="6" class="boxD"/>
+  <text x="535" y="356" text-anchor="middle" class="lbl body" font-weight="700">not a record</text>
+  <text x="535" y="374" text-anchor="middle" class="lbl tiny">you lose every</text>
+  <text x="535" y="390" text-anchor="middle" class="lbl tiny">generated member at once</text>
+
+  <rect x="650" y="334" width="190" height="74" rx="6" class="boxD"/>
+  <text x="745" y="356" text-anchor="middle" class="lbl body" font-weight="700">not a record</text>
+  <text x="745" y="374" text-anchor="middle" class="lbl tiny">you lose every</text>
+  <text x="745" y="390" text-anchor="middle" class="lbl tiny">generated member at once</text>
+
+  <!-- annotation about what "every member" means -->
+  <rect x="20" y="426" width="820" height="70" rx="6" class="boxA"/>
+  <text x="36" y="448" class="lbl body" font-weight="700">"Every generated member at once" means</text>
+  <text x="36" y="468" class="lbl tiny">the canonical constructor, equals(), hashCode(), toString(), and every component accessor —</text>
+  <text x="36" y="486" class="lbl tiny">records generate all of these together; there is no partial opt-in, so one disqualifying need forfeits all five.</text>
+
+  <!-- YES side: down into grouped panel -->
+  <path class="flow" d="M 1010 196 V 216"/>
+
+  <rect x="880" y="220" width="290" height="320" rx="6" class="boxR"/>
+  <text x="896" y="244" class="lbl node">Good record candidates</text>
+  <line x1="896" y1="254" x2="1154" y2="254" stroke="#15803d" stroke-width="1"/>
+  <text x="896" y="276" class="lbl body" font-weight="700">DTOs</text>
+  <text x="896" y="292" class="lbl tiny">e.g. an onboarding response projection</text>
+  <text x="896" y="312" class="lbl body" font-weight="700">value objects</text>
+  <text x="896" y="328" class="lbl tiny">Money, ClientId, StakeSplit</text>
+  <text x="896" y="348" class="lbl body" font-weight="700">compound map keys</text>
+  <text x="896" y="364" class="lbl tiny">RestrictionKey(type, source)</text>
+  <text x="896" y="384" class="lbl body" font-weight="700">multiple return values</text>
+  <text x="896" y="400" class="lbl tiny">a Verdict paired with a reason</text>
+  <text x="896" y="420" class="lbl body" font-weight="700">sealed interface cases</text>
+  <text x="896" y="436" class="lbl tiny">DocumentVerdict, ScreeningVerdict,</text>
+  <text x="896" y="452" class="lbl tiny">ReviewVerdict</text>
+  <text x="896" y="472" class="lbl body" font-weight="700">pipeline scratch types</text>
+  <text x="896" y="488" class="lbl tiny">an intermediate stream tuple,</text>
+  <text x="896" y="504" class="lbl tiny">discarded after use</text>
+
+  <!-- legend -->
+  <line x1="20" y1="560" x2="1180" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="572" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="585" class="lbl tiny">decision node / disqualifying condition</text>
+  <rect x="340" y="572" width="22" height="16" rx="3" class="boxD"/>
+  <text x="370" y="585" class="lbl tiny">terminal — not a record</text>
+  <rect x="600" y="572" width="22" height="16" rx="3" class="boxR"/>
+  <text x="630" y="585" class="lbl tiny">yes-branch / good record candidates</text>
+  <rect x="900" y="572" width="22" height="16" rx="3" class="boxA"/>
+  <text x="930" y="585" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 606 H 60"/>
+  <text x="70" y="611" class="lbl tiny">A → B : the decision flows from A to outcome B</text>
+</svg>

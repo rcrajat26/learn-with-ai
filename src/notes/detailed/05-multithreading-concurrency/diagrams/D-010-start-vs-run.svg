@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1160 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels comparing Thread.start, Thread.run, and calling start twice on a
+     StakeSettlementWorker submitted by PaymentService. Panel one: t.start() creates a new OS
+     thread and run executes on that new thread while main continues on its own stack. Panel
+     two: t.run() creates no new thread; run executes on the calling thread, so main's frame and
+     StakeSettlementWorker.run sit on the same single call stack. Panel three: calling start() a
+     second time on the same Thread object throws java.lang.IllegalThreadStateException, not
+     IllegalStateException.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxWk  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">t.START() VS t.RUN() VS A SECOND t.START() — StakeSettlementWorker</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- panel bands -->
+  <rect x="20" y="56" width="340" height="26" rx="4" class="boxP"/>
+  <text x="190" y="74" text-anchor="middle" class="lbl h2">PANEL 1 — t.start()</text>
+  <rect x="410" y="56" width="340" height="26" rx="4" class="boxP"/>
+  <text x="580" y="74" text-anchor="middle" class="lbl h2">PANEL 2 — t.run()</text>
+  <rect x="800" y="56" width="340" height="26" rx="4" class="boxDeg"/>
+  <text x="970" y="74" text-anchor="middle" class="lbl h2">PANEL 3 — second t.start()</text>
+
+  <!-- PANEL 1 -->
+  <rect x="20" y="98" width="340" height="66" rx="6" class="boxP"/>
+  <text x="190" y="122" text-anchor="middle" class="lbl node">main thread (caller)</text>
+  <text x="190" y="142" text-anchor="middle" class="lbl sub">PaymentService.submit(worker)</text>
+  <text x="190" y="156" text-anchor="middle" class="lbl sub">calls t.start(), then continues</text>
+
+  <path class="flow" d="M 190 164 V 200"/>
+  <text x="204" y="188" class="lbl tiny">start()</text>
+
+  <rect x="20" y="200" width="340" height="66" rx="6" class="boxR"/>
+  <text x="190" y="224" text-anchor="middle" class="lbl node">new OS thread: Thread-7</text>
+  <text x="190" y="244" text-anchor="middle" class="lbl sub">JVM allocates a native stack + registers</text>
+  <text x="190" y="258" text-anchor="middle" class="lbl sub">scheduler makes it eligible to run</text>
+
+  <path class="flow" d="M 190 266 V 300"/>
+
+  <rect x="20" y="300" width="340" height="70" rx="6" class="boxR"/>
+  <text x="34" y="322" class="lbl body">Thread-7's own call stack:</text>
+  <text x="34" y="340" class="lbl mono sub">Thread.run()</text>
+  <text x="34" y="356" class="lbl mono sub">StakeSettlementWorker.run()</text>
+
+  <rect x="20" y="384" width="340" height="72" rx="6" class="boxAnn"/>
+  <text x="34" y="404" class="lbl h2">TWO STACKS, TWO THREADS</text>
+  <text x="34" y="422" class="lbl tiny">main's stack and Thread-7's stack are</text>
+  <text x="34" y="438" class="lbl tiny">independent — main can return from</text>
+  <text x="34" y="452" class="lbl tiny">submit() before run() even begins.</text>
+
+  <!-- PANEL 2 -->
+  <rect x="410" y="98" width="340" height="52" rx="6" class="boxP"/>
+  <text x="580" y="120" text-anchor="middle" class="lbl node">main thread (caller)</text>
+  <text x="580" y="138" text-anchor="middle" class="lbl sub">PaymentService.submit(worker)</text>
+
+  <path class="flow" d="M 580 150 V 172"/>
+  <text x="594" y="166" class="lbl tiny">calls t.run() directly</text>
+
+  <rect x="410" y="172" width="340" height="30" rx="4" class="boxDeg"/>
+  <text x="580" y="192" text-anchor="middle" class="lbl body">no new OS thread is created</text>
+
+  <path class="flow" d="M 580 202 V 224"/>
+
+  <rect x="410" y="224" width="340" height="112" rx="6" class="boxWk"/>
+  <text x="424" y="246" class="lbl h2">ONE call stack (main thread)</text>
+  <text x="424" y="266" class="lbl mono body">PaymentService.submit(worker)</text>
+  <text x="424" y="284" class="lbl mono body">  Thread.run()</text>
+  <text x="424" y="302" class="lbl mono body">    StakeSettlementWorker.run()</text>
+  <text x="424" y="322" class="lbl sub">both frames on main's stack — a plain method call</text>
+
+  <rect x="410" y="352" width="340" height="104" rx="6" class="boxAnn"/>
+  <text x="424" y="372" class="lbl h2">run() IS JUST A METHOD</text>
+  <text x="424" y="390" class="lbl tiny">run() has no special JVM meaning by itself.</text>
+  <text x="424" y="406" class="lbl tiny">Calling it directly settles the stake on the</text>
+  <text x="424" y="422" class="lbl tiny">caller's thread, blocking main until</text>
+  <text x="424" y="438" class="lbl tiny">StakeSettlementWorker.run() returns.</text>
+
+  <!-- PANEL 3 -->
+  <rect x="800" y="98" width="340" height="52" rx="6" class="boxP"/>
+  <text x="970" y="120" text-anchor="middle" class="lbl node">Thread t = new Thread(worker)</text>
+  <text x="970" y="138" text-anchor="middle" class="lbl sub">t.start()  — first call, succeeds</text>
+
+  <path class="flow" d="M 970 150 V 172"/>
+
+  <rect x="800" y="172" width="340" height="30" rx="4" class="boxR"/>
+  <text x="970" y="192" text-anchor="middle" class="lbl body">Thread-7 runs, state moves past NEW</text>
+
+  <path class="flow" d="M 970 202 V 224"/>
+  <text x="984" y="218" class="lbl tiny">t.start()  — second call</text>
+
+  <rect x="800" y="224" width="340" height="112" rx="6" class="boxDeg"/>
+  <text x="814" y="246" class="lbl h2">Exception in thread "main"</text>
+  <text x="814" y="266" class="lbl mono body">java.lang.IllegalThreadStateException</text>
+  <text x="814" y="284" class="lbl sub">at java.base/java.lang.Thread.start(Thread.java)</text>
+  <text x="814" y="300" class="lbl sub">at PaymentService.submit(PaymentService.java:41)</text>
+  <text x="814" y="322" class="lbl body">a started thread can never be started again</text>
+
+  <rect x="800" y="352" width="340" height="104" rx="6" class="boxAnn"/>
+  <text x="814" y="372" class="lbl h2">NOT IllegalStateException</text>
+  <text x="814" y="390" class="lbl tiny">Thread.start() throws its own subclass,</text>
+  <text x="814" y="406" class="lbl tiny">IllegalThreadStateException (extends</text>
+  <text x="814" y="422" class="lbl tiny">IllegalArgumentException) — a common</text>
+  <text x="814" y="438" class="lbl tiny">misreading confuses it with the generic type.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="580" x2="1140" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="592" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="603" class="lbl tiny">caller / start-up step</text>
+  <rect x="200" y="592" width="22" height="14" rx="3" class="boxR"/>
+  <text x="230" y="603" class="lbl tiny">success state (new thread live / thread advanced)</text>
+  <rect x="530" y="592" width="22" height="14" rx="3" class="boxWk"/>
+  <text x="560" y="603" class="lbl tiny">a single shared call stack</text>
+  <rect x="740" y="592" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="770" y="603" class="lbl tiny">failure state / thrown exception</text>
+  <rect x="960" y="592" width="22" height="14" rx="3" class="boxAnn"/>
+  <text x="990" y="603" class="lbl tiny">annotation / clarifying note</text>
+  <path class="flow" d="M 20 626 H 60"/>
+  <text x="68" y="630" class="lbl tiny">A → B : sequence of calls / effects, top to bottom within a panel</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg viewBox="0 0 1040 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Ranked bar chart of the four biggest avoidable context costs. Rank one: unbounded command output at 40000 tokens, fixed with head, tail, --quiet or -q. Rank two: whole-file reads where a symbol lookup would do, at 25000 tokens, fixed with targeted grep instead of cat, and git diff --stat before git diff. Rank three: a bloated always-on CLAUDE.md, shown as cost per turn times turns, 2000 tokens per turn times 50 turns equals 100000 tokens, fixed with a path-scoped rule instead of a global instruction. Rank four: chatty MCP servers at 15000 tokens, fixed by disabling the server.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .barD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .barH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+  </style>
+  <defs/>
+
+  <rect x="0" y="0" width="1040" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FOUR BIGGEST AVOIDABLE CONTEXT COSTS, RANKED</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Chart baseline at y=560, bars grow upward. Max value 100000 -> scale -->
+  <!-- scale: 100000 tokens = 380 px height -->
+
+  <!-- axis -->
+  <line x1="120" y1="560" x2="1000" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Rank 1: unbounded command output, 40000 tokens -->
+  <text x="150" y="90" text-anchor="middle" class="lbl h2">#1</text>
+  <rect x="90" y="408" width="120" height="152" class="barD"/>
+  <text x="150" y="398" text-anchor="middle" class="lbl node">40,000 tok</text>
+  <text x="150" y="580" text-anchor="middle" class="lbl body">unbounded</text>
+  <text x="150" y="596" text-anchor="middle" class="lbl body">command output</text>
+
+  <!-- Rank 2: whole-file reads, 25000 tokens -->
+  <text x="330" y="90" text-anchor="middle" class="lbl h2">#2</text>
+  <rect x="270" y="465" width="120" height="95" class="barD"/>
+  <text x="330" y="455" text-anchor="middle" class="lbl node">25,000 tok</text>
+  <text x="330" y="580" text-anchor="middle" class="lbl body">whole-file reads,</text>
+  <text x="330" y="596" text-anchor="middle" class="lbl body">not symbol lookup</text>
+
+  <!-- Rank 3: bloated CLAUDE.md, cost per turn x turns = 100000 -->
+  <text x="530" y="90" text-anchor="middle" class="lbl h2">#3</text>
+  <rect x="470" y="180" width="120" height="380" class="barH"/>
+  <text x="530" y="170" text-anchor="middle" class="lbl node">100,000 tok</text>
+  <text x="530" y="580" text-anchor="middle" class="lbl body">bloated always-on</text>
+  <text x="530" y="596" text-anchor="middle" class="lbl body">CLAUDE.md</text>
+
+  <!-- Rank 4: chatty MCP servers, 15000 tokens -->
+  <text x="710" y="90" text-anchor="middle" class="lbl h2">#4</text>
+  <rect x="650" y="503" width="120" height="57" class="barD"/>
+  <text x="710" y="493" text-anchor="middle" class="lbl node">15,000 tok</text>
+  <text x="710" y="580" text-anchor="middle" class="lbl body">chatty MCP</text>
+  <text x="710" y="596" text-anchor="middle" class="lbl body">servers</text>
+
+  <!-- arithmetic panel for #3, since it must show the multiplication -->
+  <rect x="810" y="130" width="200" height="120" rx="6" class="boxA"/>
+  <text x="825" y="152" class="lbl h2">#3 ARITHMETIC</text>
+  <text x="825" y="176" class="lbl dense">cost per turn × turns</text>
+  <text x="825" y="198" class="lbl dense" font-family="monospace">2,000 tok/turn</text>
+  <text x="825" y="216" class="lbl dense" font-family="monospace">× 50 turns</text>
+  <text x="825" y="238" class="lbl node" font-family="monospace">= 100,000 tok</text>
+
+  <!-- fix annotation panels under each bar, in the remaining space -->
+  <rect x="20" y="620" width="1000" height="64" rx="6" class="boxR"/>
+  <text x="36" y="638" class="lbl h2">FIXES (matched to rank above)</text>
+  <text x="36" y="658" class="lbl dense">#1 head / tail / --quiet / -q</text>
+  <text x="266" y="658" class="lbl dense">#2 targeted grep over cat; git diff --stat before git diff</text>
+  <text x="36" y="676" class="lbl dense">#3 a path-scoped rule instead of a global instruction</text>
+  <text x="600" y="676" class="lbl dense">#4 disable the server</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="714" width="22" height="16" rx="3" class="barD"/>
+  <text x="50" y="727" class="lbl tiny">avoidable cost, ranks #1, #2, #4</text>
+  <rect x="270" y="714" width="22" height="16" rx="3" class="barH"/>
+  <text x="300" y="727" class="lbl tiny">largest cost, rank #3 (CLAUDE.md)</text>
+  <rect x="530" y="714" width="22" height="16" rx="3" class="boxA"/>
+  <text x="560" y="727" class="lbl tiny">arithmetic annotation panel</text>
+  <rect x="790" y="714" width="22" height="16" rx="3" class="boxR"/>
+  <text x="820" y="727" class="lbl tiny">fix (resolved path)</text>
+</svg>

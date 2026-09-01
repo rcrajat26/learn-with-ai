@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1040 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A hierarchy diagram of one agent's blast radius. The agent sits at the centre with three stated properties: it runs with your credentials, it reads what you can read, it follows text it finds. From the agent, edges fan out to six reachable surfaces: the filesystem, the shell, the network, the cloud credentials, the issue tracker via MCP, and the git remote. Beside the reachable surfaces is a ranked list of controls that hold, from strongest to weakest: deny rules, PreToolUse blocking hooks, the sandbox, least-privilege tool sets, and human confirmation on outward-facing actions. Prompting is drawn explicitly outside and below the control list, marked as not a control, because it is worded instruction the agent may still fail to follow.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triweak); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triweak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE AGENT'S BLAST RADIUS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="270" y="64" text-anchor="middle" class="lbl h2">REACHABLE SURFACES</text>
+  <text x="800" y="64" text-anchor="middle" class="lbl h2">CONTROLS, RANKED BY STRENGTH</text>
+  <line x1="560" y1="52" x2="560" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- agent centre -->
+  <rect x="150" y="90" width="240" height="110" rx="6" class="boxD"/>
+  <text x="270" y="114" text-anchor="middle" class="lbl node">the agent</text>
+  <text x="270" y="134" text-anchor="middle" class="lbl sub">runs with your credentials</text>
+  <text x="270" y="150" text-anchor="middle" class="lbl sub">reads what you can read</text>
+  <text x="270" y="166" text-anchor="middle" class="lbl sub">follows text it finds</text>
+
+  <!-- bus down to reachable surfaces -->
+  <path d="M 270 200 V 224" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 60 224 H 480" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 60 224 V 248"/>
+  <path class="flow" d="M 176 224 V 248"/>
+  <path class="flow" d="M 292 224 V 248"/>
+  <path class="flow" d="M 408 224 V 248"/>
+  <path d="M 60 224 V 460" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 60 460 V 460 H 60"/>
+
+  <!-- six surfaces, two rows of three -->
+  <rect x="20" y="248" width="140" height="60" rx="6" class="boxW"/>
+  <text x="90" y="272" text-anchor="middle" class="lbl node">filesystem</text>
+  <text x="90" y="290" text-anchor="middle" class="lbl sub">reads/writes files</text>
+
+  <rect x="180" y="248" width="140" height="60" rx="6" class="boxW"/>
+  <text x="250" y="272" text-anchor="middle" class="lbl node">the shell</text>
+  <text x="250" y="290" text-anchor="middle" class="lbl sub">arbitrary commands</text>
+
+  <rect x="340" y="248" width="150" height="60" rx="6" class="boxW"/>
+  <text x="415" y="272" text-anchor="middle" class="lbl node">the network</text>
+  <text x="415" y="290" text-anchor="middle" class="lbl sub">outbound requests</text>
+
+  <path d="M 90 308 V 332" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 250 308 V 332" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 415 308 V 332" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="20" y="332" width="150" height="64" rx="6" class="boxW"/>
+  <text x="95" y="356" text-anchor="middle" class="lbl node">cloud</text>
+  <text x="95" y="372" text-anchor="middle" class="lbl node">credentials</text>
+  <text x="95" y="388" text-anchor="middle" class="lbl sub">API keys, tokens</text>
+
+  <rect x="180" y="332" width="160" height="64" rx="6" class="boxW"/>
+  <text x="260" y="352" text-anchor="middle" class="lbl node">issue tracker</text>
+  <text x="260" y="368" text-anchor="middle" class="lbl sub">via MCP</text>
+  <text x="260" y="384" text-anchor="middle" class="lbl sub">comments, attachments</text>
+
+  <rect x="350" y="332" width="140" height="64" rx="6" class="boxW"/>
+  <text x="420" y="356" text-anchor="middle" class="lbl node">the git</text>
+  <text x="420" y="372" text-anchor="middle" class="lbl node">remote</text>
+  <text x="420" y="388" text-anchor="middle" class="lbl sub">push, PRs</text>
+
+  <!-- controls list, right side, ranked -->
+  <rect x="600" y="90" width="400" height="52" rx="6" class="boxR"/>
+  <text x="620" y="112" class="lbl node">1. deny rules</text>
+  <text x="620" y="130" class="lbl sub">permissions.deny &#8212; strongest, unconditional</text>
+
+  <path d="M 800 142 V 156" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="600" y="156" width="400" height="52" rx="6" class="boxR"/>
+  <text x="620" y="178" class="lbl node">2. PreToolUse blocking hooks</text>
+  <text x="620" y="196" class="lbl sub">evaluated before the tool runs</text>
+
+  <path d="M 800 208 V 222" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="600" y="222" width="400" height="52" rx="6" class="boxP"/>
+  <text x="620" y="244" class="lbl node">3. the sandbox</text>
+  <text x="620" y="262" class="lbl sub">contains the blast radius by isolation</text>
+
+  <path d="M 800 274 V 288" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="600" y="288" width="400" height="52" rx="6" class="boxP"/>
+  <text x="620" y="310" class="lbl node">4. least-privilege tool sets</text>
+  <text x="620" y="328" class="lbl sub">allowed-tools scoped to the task</text>
+
+  <path d="M 800 340 V 354" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="600" y="354" width="400" height="52" rx="6" class="boxP"/>
+  <text x="620" y="376" class="lbl node">5. human confirmation</text>
+  <text x="620" y="394" class="lbl sub">on outward-facing actions (push, send, pay)</text>
+
+  <!-- prompting explicitly outside the control list -->
+  <path d="M 800 406 V 440" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <rect x="600" y="440" width="400" height="66" rx="6" class="boxD"/>
+  <text x="800" y="462" text-anchor="middle" class="lbl node">prompting</text>
+  <text x="800" y="480" text-anchor="middle" class="lbl sub">NOT a control &#8212; worded instruction the</text>
+  <text x="800" y="496" text-anchor="middle" class="lbl sub">agent can still fail to follow</text>
+
+  <!-- annotation panel -->
+  <rect x="60" y="440" width="460" height="90" rx="6" class="boxA"/>
+  <text x="76" y="460" class="lbl tiny" font-weight="700">Why the ranking matters</text>
+  <text x="76" y="478" class="lbl tiny">Each surface above is reachable the instant the agent has</text>
+  <text x="76" y="494" class="lbl tiny">the matching tool. Controls 1&#8211;5 hold structurally; prompting</text>
+  <text x="76" y="510" class="lbl tiny">holds only if the model happens to comply.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="560" x2="1020" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="572" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="585" class="lbl tiny">the agent / non-control (prompting)</text>
+  <rect x="300" y="572" width="22" height="16" rx="3" class="boxW"/>
+  <text x="330" y="585" class="lbl tiny">reachable surface</text>
+  <rect x="500" y="572" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="585" class="lbl tiny">strongest controls (deny, hooks)</text>
+  <rect x="760" y="572" width="22" height="16" rx="3" class="boxP"/>
+  <text x="790" y="585" class="lbl tiny">weaker structural controls</text>
+  <rect x="20" y="596" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="609" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 300 604 H 340"/>
+  <text x="350" y="609" class="lbl tiny">fan-out from agent to surface</text>
+  <path class="weak" d="M 620 604 H 660"/>
+  <text x="670" y="609" class="lbl tiny">prompting excluded from control chain</text>
+</svg>

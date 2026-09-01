@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1400 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree: where does this Optional live. Root question: where does this Optional live.
+     Six branches. Return type: correct, the caller decides how to handle absence explicitly, e.g.
+     Optional&lt;Client&gt; findClient(ClientId id). Field: wrong, because it is not Serializable and adds
+     extra indirection, e.g. class Client { Optional&lt;Address&gt; address; } — replacement: use null or a
+     default. Parameter: wrong, forces the caller to wrap just to call you, e.g. void applyStake(Optional
+     &lt;Bonus&gt; bonus) — replacement: overload instead. Collection element: wrong, forces a null-check
+     inside every forEach, e.g. List&lt;Optional&lt;LedgerEntry&gt;&gt; — replacement: filter it out with
+     .filter(Optional::isPresent). Map value: wrong, same problem one level of indirection down, e.g.
+     Map&lt;ClientId, Optional&lt;Wallet&gt;&gt; — replacement: omit the key, an absent key means an absent
+     value. Optional of List: wrong, two ways to say nothing is present, e.g. Optional&lt;List&lt;Restriction
+     &gt;&gt; — replacement: return an empty list, List.of() already means none.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .colh  { font-size: 12px; font-weight: 700; letter-spacing: .2px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE DOES THIS OPTIONAL LIVE?</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="450" y="60" width="500" height="70" rx="8" class="boxP"/>
+  <text x="700" y="102" text-anchor="middle" class="lbl node">where does this Optional live?</text>
+
+  <!-- bus -->
+  <path class="flow" d="M 700 130 V 158"/>
+  <line x1="120" y1="158" x2="1280" y2="158" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 120 158 V 190"/>
+  <path class="flow" d="M 352 158 V 190"/>
+  <path class="flow" d="M 584 158 V 190"/>
+  <path class="flow" d="M 816 158 V 190"/>
+  <path class="flow" d="M 1048 158 V 190"/>
+  <path class="flow" d="M 1280 158 V 190"/>
+
+  <!-- column headers -->
+  <text x="120" y="207" text-anchor="middle" class="lbl colh">RETURN TYPE</text>
+  <text x="352" y="207" text-anchor="middle" class="lbl colh">FIELD</text>
+  <text x="584" y="207" text-anchor="middle" class="lbl colh">PARAMETER</text>
+  <text x="816" y="207" text-anchor="middle" class="lbl colh">COLLECTION ELEMENT</text>
+  <text x="1048" y="207" text-anchor="middle" class="lbl colh">MAP VALUE</text>
+  <text x="1280" y="207" text-anchor="middle" class="lbl colh">OPTIONAL&lt;LIST&lt;T&gt;&gt;</text>
+
+  <!-- col0: return type - correct -->
+  <rect x="20" y="215" width="200" height="115" rx="6" class="boxR"/>
+  <text x="120" y="235" text-anchor="middle" class="lbl node" fill="#15803d">CORRECT</text>
+  <text x="120" y="253" text-anchor="middle" class="lbl sub">Optional&lt;Client&gt;</text>
+  <text x="120" y="269" text-anchor="middle" class="lbl sub">findClient(ClientId id)</text>
+  <text x="120" y="290" text-anchor="middle" class="lbl sub">caller decides how to</text>
+  <text x="120" y="304" text-anchor="middle" class="lbl sub">handle absence explicitly</text>
+
+  <!-- col1: field - wrong -->
+  <rect x="252" y="215" width="200" height="115" rx="6" class="boxD"/>
+  <text x="352" y="235" text-anchor="middle" class="lbl node" fill="#b91c1c">WRONG</text>
+  <text x="352" y="253" text-anchor="middle" class="lbl sub">class Client {</text>
+  <text x="352" y="269" text-anchor="middle" class="lbl sub">Optional&lt;Address&gt; address;</text>
+  <text x="352" y="290" text-anchor="middle" class="lbl sub">not Serializable</text>
+  <text x="352" y="304" text-anchor="middle" class="lbl sub">extra indirection</text>
+  <path class="flow" d="M 352 330 V 358"/>
+  <rect x="252" y="360" width="200" height="65" rx="6" class="boxR"/>
+  <text x="352" y="378" text-anchor="middle" class="lbl node" fill="#15803d">REPLACEMENT</text>
+  <text x="352" y="397" text-anchor="middle" class="lbl sub">use null or a default</text>
+
+  <!-- col2: parameter - wrong -->
+  <rect x="484" y="215" width="200" height="115" rx="6" class="boxD"/>
+  <text x="584" y="235" text-anchor="middle" class="lbl node" fill="#b91c1c">WRONG</text>
+  <text x="584" y="253" text-anchor="middle" class="lbl sub">void applyStake(</text>
+  <text x="584" y="269" text-anchor="middle" class="lbl sub">Optional&lt;Bonus&gt; bonus)</text>
+  <text x="584" y="290" text-anchor="middle" class="lbl sub">forces caller to wrap</text>
+  <text x="584" y="304" text-anchor="middle" class="lbl sub">just to call you</text>
+  <path class="flow" d="M 584 330 V 358"/>
+  <rect x="484" y="360" width="200" height="65" rx="6" class="boxR"/>
+  <text x="584" y="378" text-anchor="middle" class="lbl node" fill="#15803d">REPLACEMENT</text>
+  <text x="584" y="397" text-anchor="middle" class="lbl sub">overload instead</text>
+  <text x="584" y="412" text-anchor="middle" class="lbl sub">one overload per case</text>
+
+  <!-- col3: collection element - wrong -->
+  <rect x="716" y="215" width="200" height="115" rx="6" class="boxD"/>
+  <text x="816" y="235" text-anchor="middle" class="lbl node" fill="#b91c1c">WRONG</text>
+  <text x="816" y="253" text-anchor="middle" class="lbl sub">List&lt;Optional&lt;LedgerEntry&gt;&gt;</text>
+  <text x="816" y="290" text-anchor="middle" class="lbl sub">forces a null-check</text>
+  <text x="816" y="304" text-anchor="middle" class="lbl sub">inside every forEach</text>
+  <path class="flow" d="M 816 330 V 358"/>
+  <rect x="716" y="360" width="200" height="65" rx="6" class="boxR"/>
+  <text x="816" y="378" text-anchor="middle" class="lbl node" fill="#15803d">REPLACEMENT</text>
+  <text x="816" y="397" text-anchor="middle" class="lbl sub">filter it out</text>
+  <text x="816" y="412" text-anchor="middle" class="lbl sub">.filter(Optional::isPresent)</text>
+
+  <!-- col4: map value - wrong -->
+  <rect x="948" y="215" width="200" height="115" rx="6" class="boxD"/>
+  <text x="1048" y="235" text-anchor="middle" class="lbl node" fill="#b91c1c">WRONG</text>
+  <text x="1048" y="253" text-anchor="middle" class="lbl sub">Map&lt;ClientId,</text>
+  <text x="1048" y="269" text-anchor="middle" class="lbl sub">Optional&lt;Wallet&gt;&gt;</text>
+  <text x="1048" y="290" text-anchor="middle" class="lbl sub">same problem, one level</text>
+  <text x="1048" y="304" text-anchor="middle" class="lbl sub">of indirection down</text>
+  <path class="flow" d="M 1048 330 V 358"/>
+  <rect x="948" y="360" width="200" height="65" rx="6" class="boxR"/>
+  <text x="1048" y="378" text-anchor="middle" class="lbl node" fill="#15803d">REPLACEMENT</text>
+  <text x="1048" y="397" text-anchor="middle" class="lbl sub">omit the key</text>
+  <text x="1048" y="412" text-anchor="middle" class="lbl sub">absent key = absent value</text>
+
+  <!-- col5: Optional<List<T>> - wrong -->
+  <rect x="1180" y="215" width="200" height="115" rx="6" class="boxD"/>
+  <text x="1280" y="235" text-anchor="middle" class="lbl node" fill="#b91c1c">WRONG</text>
+  <text x="1280" y="253" text-anchor="middle" class="lbl sub">Optional&lt;List&lt;Restriction&gt;&gt;</text>
+  <text x="1280" y="290" text-anchor="middle" class="lbl sub">two ways to say</text>
+  <text x="1280" y="304" text-anchor="middle" class="lbl sub">nothing is present</text>
+  <path class="flow" d="M 1280 330 V 358"/>
+  <rect x="1180" y="360" width="200" height="65" rx="6" class="boxR"/>
+  <text x="1280" y="378" text-anchor="middle" class="lbl node" fill="#15803d">REPLACEMENT</text>
+  <text x="1280" y="397" text-anchor="middle" class="lbl sub">return an empty list</text>
+  <text x="1280" y="412" text-anchor="middle" class="lbl sub">List.of() means none</text>
+
+  <!-- legend -->
+  <line x1="20" y1="470" x2="1380" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="484" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="497" class="lbl tiny">decision node</text>
+  <rect x="220" y="484" width="22" height="16" rx="3" class="boxR"/>
+  <text x="250" y="497" class="lbl tiny">correct usage / recommended replacement</text>
+  <rect x="640" y="484" width="22" height="16" rx="3" class="boxD"/>
+  <text x="670" y="497" class="lbl tiny">wrong — Optional does not belong here</text>
+  <path class="flow" d="M 1060 490 H 1100"/>
+  <text x="1108" y="497" class="lbl tiny">A → B : B follows from A</text>
+</svg>

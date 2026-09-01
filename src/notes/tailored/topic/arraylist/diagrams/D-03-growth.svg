@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ArrayList growth on the eleventh add. Before: elementData at capacity 10, size 10, full. The call chain add(e) to grow() to ArraysSupport.newLength(10, 1, 5) computes a new capacity of 15. The old array is abandoned and Arrays.copyOf allocates a new capacity-15 array in one O(n) copy, giving size 11 after the add. A computation panel shows oldCapacity 10, minGrowth 1, prefGrowth 5, prefLength 15, clamped by SOFT_MAX_ARRAY_LENGTH. A second panel lists the verified capacity sequence of a default-constructed ArrayList: 0, 10, 15, 22, 33, 49, 73, 109, 163, 244, 366, 549 — growth is 1.5x, not doubling.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #1f2937; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1f2937; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">GROWTH ON THE ELEVENTH add()</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BEFORE -->
+  <rect x="60" y="90" width="260" height="90" rx="6" class="boxD"/>
+  <text x="190" y="118" text-anchor="middle" class="lbl node">elementData</text>
+  <text x="190" y="140" text-anchor="middle" class="lbl body">capacity 10, size 10</text>
+  <text x="190" y="160" text-anchor="middle" class="lbl sub">full — next add() must grow</text>
+
+  <!-- transition -->
+  <path class="flow" d="M 320 135 H 660"/>
+  <text x="490" y="108" text-anchor="middle" class="lbl sub">add(e) → grow()</text>
+  <text x="490" y="122" text-anchor="middle" class="lbl sub">→ ArraysSupport.newLength(10, 1, 5)</text>
+  <text x="490" y="154" text-anchor="middle" class="lbl sub">old array abandoned</text>
+
+  <!-- AFTER -->
+  <rect x="660" y="90" width="300" height="90" rx="6" class="boxR"/>
+  <text x="810" y="118" text-anchor="middle" class="lbl node">new array</text>
+  <text x="810" y="140" text-anchor="middle" class="lbl body">capacity 15, size 11</text>
+  <text x="810" y="160" text-anchor="middle" class="lbl sub">10 + (10 &gt;&gt; 1) = 15</text>
+
+  <!-- copy edge, its own lane below the main flow -->
+  <path class="flow" d="M 320 175 V 210 H 660 V 180"/>
+  <text x="490" y="226" text-anchor="middle" class="lbl sub">Arrays.copyOf — O(n), once</text>
+
+  <!-- computation panel -->
+  <rect x="60" y="250" width="440" height="170" rx="6" class="boxAnn"/>
+  <text x="78" y="274" class="lbl h2">HOW 15 IS COMPUTED — JDK 21</text>
+  <text x="78" y="298" class="lbl mono">oldCapacity      = 10</text>
+  <text x="78" y="316" class="lbl mono">minGrowth        = minCapacity - oldCapacity = 1</text>
+  <text x="78" y="334" class="lbl mono">prefGrowth       = oldCapacity &gt;&gt; 1 = 5</text>
+  <text x="78" y="352" class="lbl mono">prefLength       = 10 + max(1, 5) = 15</text>
+  <text x="78" y="370" class="lbl mono">clamp            = SOFT_MAX_ARRAY_LENGTH</text>
+  <text x="78" y="388" class="lbl mono">                 = Integer.MAX_VALUE - 8</text>
+  <text x="78" y="410" class="lbl sub">lives in jdk.internal.util.ArraysSupport, not on ArrayList itself</text>
+
+  <!-- sequence panel -->
+  <rect x="540" y="250" width="440" height="170" rx="6" class="boxAnn"/>
+  <text x="558" y="274" class="lbl h2">THE REAL SEQUENCE</text>
+  <text x="558" y="300" class="lbl mono">0 → 10 → 15 → 22 → 33 → 49 → 73 →</text>
+  <text x="558" y="320" class="lbl mono">109 → 163 → 244 → 366 → 549</text>
+  <text x="558" y="350" class="lbl tiny">from a default-constructed ArrayList,</text>
+  <text x="558" y="368" class="lbl tiny">successive grow() calls only.</text>
+  <text x="558" y="392" class="lbl sub">1.5x, not 2x. Integer truncation makes</text>
+  <text x="558" y="408" class="lbl sub">it 1.5x minus a bit.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="450" x2="1020" y2="450" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="464" width="20" height="14" rx="3" class="boxD"/>
+  <text x="48" y="475" class="lbl tiny">degraded — full array, about to fail fast path</text>
+  <rect x="360" y="464" width="20" height="14" rx="3" class="boxR"/>
+  <text x="388" y="475" class="lbl tiny">resolved — new array after growth</text>
+  <rect x="700" y="464" width="20" height="14" rx="3" class="boxAnn"/>
+  <text x="728" y="475" class="lbl tiny">annotation — computation / verified data</text>
+  <path class="flow" d="M 20 494 H 60"/>
+  <text x="68" y="499" class="lbl tiny">A → B : A produces / copies into B</text>
+
+  <text x="20" y="530" class="lbl tiny" font-style="italic">The eleventh add on a capacity-10 list allocates a capacity-15 array and copies; growth is 1.5x via ArraysSupport.newLength.</text>
+</svg>

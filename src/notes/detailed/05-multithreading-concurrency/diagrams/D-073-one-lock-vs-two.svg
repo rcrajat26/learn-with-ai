@@ -1,0 +1,194 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="One lock versus two. Left: ArrayBlockingQueue backs a fixed items array of 8 ring
+     slots addressed by putIndex and takeIndex, with count tracking occupancy; withdrawal-intake-1
+     and payment-run-worker-1 both must acquire the single ReentrantLock, which holds the notEmpty
+     and notFull conditions, so producer and consumer contend on one lock even though they touch
+     opposite fields. Right: LinkedBlockingQueue is a linked chain of nodes; takeLock guards the
+     head end and putLock guards the tail end independently, with an AtomicInteger count updated by
+     both sides without a shared lock, because head and tail are independent, so two locks are
+     possible; a ring's are not.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .idx   { font-size: 10.5px; fill: #4b5563; text-anchor: middle; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE LOCK VERSUS TWO — ARRAYBLOCKINGQUEUE VS LINKEDBLOCKINGQUEUE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="60" class="lbl h2">ARRAYBLOCKINGQUEUE — items[] RING, ONE LOCK FOR BOTH ENDS</text>
+  <text x="580" y="60" class="lbl h2">LINKEDBLOCKINGQUEUE — LINKED NODES, HEAD AND TAIL INDEPENDENT</text>
+  <line x1="560" y1="50" x2="560" y2="732" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= LEFT: ArrayBlockingQueue ================= -->
+
+  <!-- pointer arrows -->
+  <path class="flow" d="M 384 82 V 108"/>
+  <text x="384" y="76" text-anchor="middle" class="lbl sub">putIndex</text>
+  <path class="flow" d="M 195 82 V 108"/>
+  <text x="195" y="76" text-anchor="middle" class="lbl sub">takeIndex</text>
+
+  <!-- ring slots: 8 boxes, occupied 2,3,4 -->
+  <rect x="40"  y="110" width="58" height="50" rx="5" class="boxW"/>
+  <rect x="103" y="110" width="58" height="50" rx="5" class="boxW"/>
+  <rect x="166" y="110" width="58" height="50" rx="5" class="boxR"/>
+  <rect x="229" y="110" width="58" height="50" rx="5" class="boxR"/>
+  <rect x="292" y="110" width="58" height="50" rx="5" class="boxR"/>
+  <rect x="355" y="110" width="58" height="50" rx="5" class="boxW"/>
+  <rect x="418" y="110" width="58" height="50" rx="5" class="boxW"/>
+  <rect x="481" y="110" width="58" height="50" rx="5" class="boxW"/>
+
+  <text x="69"  y="139" text-anchor="middle" class="lbl sub">empty</text>
+  <text x="132" y="139" text-anchor="middle" class="lbl sub">empty</text>
+  <text x="195" y="134" text-anchor="middle" class="lbl body">W511</text>
+  <text x="195" y="149" text-anchor="middle" class="lbl sub">WD txn</text>
+  <text x="258" y="134" text-anchor="middle" class="lbl body">W512</text>
+  <text x="258" y="149" text-anchor="middle" class="lbl sub">WD txn</text>
+  <text x="321" y="134" text-anchor="middle" class="lbl body">W513</text>
+  <text x="321" y="149" text-anchor="middle" class="lbl sub">WD txn</text>
+  <text x="384" y="139" text-anchor="middle" class="lbl sub">empty</text>
+  <text x="447" y="139" text-anchor="middle" class="lbl sub">empty</text>
+  <text x="510" y="139" text-anchor="middle" class="lbl sub">empty</text>
+
+  <text x="69"  y="175" class="lbl idx">0</text>
+  <text x="132" y="175" class="lbl idx">1</text>
+  <text x="195" y="175" class="lbl idx">2</text>
+  <text x="258" y="175" class="lbl idx">3</text>
+  <text x="321" y="175" class="lbl idx">4</text>
+  <text x="384" y="175" class="lbl idx">5</text>
+  <text x="447" y="175" class="lbl idx">6</text>
+  <text x="510" y="175" class="lbl idx">7</text>
+  <text x="40" y="192" class="lbl body">items[] — 8-slot ring buffer</text>
+  <text x="40" y="207" class="lbl sub">count = 3 occupied slots — incremented on put, decremented on take</text>
+
+  <!-- producer / consumer thread boxes -->
+  <rect x="40"  y="230" width="220" height="50" rx="6" class="boxP"/>
+  <text x="150" y="252" text-anchor="middle" class="lbl node">withdrawal-intake-1</text>
+  <text x="150" y="268" text-anchor="middle" class="lbl sub">producer — calls put()</text>
+
+  <rect x="320" y="230" width="220" height="50" rx="6" class="boxP"/>
+  <text x="430" y="252" text-anchor="middle" class="lbl node">payment-run-worker-1</text>
+  <text x="430" y="268" text-anchor="middle" class="lbl sub">consumer — calls take()</text>
+
+  <path class="flow" d="M 150 280 V 330"/>
+  <text x="106" y="308" text-anchor="middle" class="lbl sub">lock()</text>
+  <path class="flow" d="M 430 280 V 330"/>
+  <text x="474" y="308" text-anchor="middle" class="lbl sub">lock()</text>
+
+  <!-- shared ReentrantLock -->
+  <rect x="100" y="330" width="380" height="100" rx="6" class="boxD"/>
+  <text x="290" y="350" text-anchor="middle" class="lbl node">ReentrantLock (one, shared by both ends)</text>
+
+  <rect x="120" y="363" width="170" height="52" rx="5" class="boxW"/>
+  <text x="205" y="382" text-anchor="middle" class="lbl body">notEmpty</text>
+  <text x="205" y="398" text-anchor="middle" class="lbl sub">signalled after put()</text>
+
+  <rect x="300" y="363" width="170" height="52" rx="5" class="boxW"/>
+  <text x="385" y="382" text-anchor="middle" class="lbl body">notFull</text>
+  <text x="385" y="398" text-anchor="middle" class="lbl sub">signalled after take()</text>
+
+  <!-- contention annotation -->
+  <rect x="40" y="452" width="500" height="90" rx="6" class="panel"/>
+  <text x="56" y="472" class="lbl tiny" font-weight="700">PRODUCER AND CONSUMER CONTENDING ON ONE LOCK</text>
+  <text x="56" y="490" class="lbl tiny">withdrawal-intake-1 and payment-run-worker-1 cannot hold the</text>
+  <text x="56" y="505" class="lbl tiny">ReentrantLock at the same time — even though put() only touches</text>
+  <text x="56" y="520" class="lbl tiny">putIndex/count and take() only touches takeIndex/count.</text>
+
+  <!-- ================= RIGHT: LinkedBlockingQueue ================= -->
+
+  <text x="715" y="86" text-anchor="middle" class="lbl sub">head →</text>
+  <text x="1030" y="86" text-anchor="middle" class="lbl sub">← tail</text>
+  <text x="580" y="180" class="lbl sub">linked Node&lt;WithdrawalTransaction&gt; chain — one WD txn per node</text>
+
+  <rect x="655" y="110" width="120" height="50" rx="6" class="boxP"/>
+  <text x="715" y="132" text-anchor="middle" class="lbl body">Node</text>
+  <text x="715" y="148" text-anchor="middle" class="lbl sub">W601 · WD txn</text>
+  <path class="flow" d="M 775 135 H 815"/>
+
+  <rect x="815" y="110" width="120" height="50" rx="6" class="boxP"/>
+  <text x="875" y="132" text-anchor="middle" class="lbl body">Node</text>
+  <text x="875" y="148" text-anchor="middle" class="lbl sub">W602 · WD txn</text>
+  <path class="flow" d="M 935 135 H 975"/>
+
+  <rect x="975" y="110" width="110" height="50" rx="6" class="boxP"/>
+  <text x="1030" y="132" text-anchor="middle" class="lbl body">Node</text>
+  <text x="1030" y="148" text-anchor="middle" class="lbl sub">W603 · WD txn</text>
+
+  <!-- locks and count -->
+  <path class="flow" d="M 690 160 V 210"/>
+  <rect x="610" y="210" width="150" height="60" rx="6" class="boxR"/>
+  <text x="685" y="234" text-anchor="middle" class="lbl node">takeLock</text>
+  <text x="685" y="252" text-anchor="middle" class="lbl sub">guards head end</text>
+
+  <path class="flow" d="M 1030 160 V 210"/>
+  <rect x="955" y="210" width="150" height="60" rx="6" class="boxR"/>
+  <text x="1030" y="234" text-anchor="middle" class="lbl node">putLock</text>
+  <text x="1030" y="252" text-anchor="middle" class="lbl sub">guards tail end</text>
+
+  <rect x="785" y="210" width="150" height="60" rx="6" class="panel"/>
+  <text x="860" y="234" text-anchor="middle" class="lbl body">AtomicInteger count</text>
+  <text x="860" y="252" text-anchor="middle" class="lbl sub">CAS-updated by both ends</text>
+
+  <!-- thread boxes below, arrows up into locks -->
+  <rect x="610" y="310" width="150" height="50" rx="6" class="boxP"/>
+  <text x="685" y="332" text-anchor="middle" class="lbl body">payment-run-worker-2</text>
+  <text x="685" y="348" text-anchor="middle" class="lbl sub">consumer — take()</text>
+  <path class="flow" d="M 685 310 V 270"/>
+
+  <rect x="955" y="310" width="150" height="50" rx="6" class="boxP"/>
+  <text x="1030" y="332" text-anchor="middle" class="lbl body">withdrawal-intake-2</text>
+  <text x="1030" y="348" text-anchor="middle" class="lbl sub">producer — put()</text>
+  <path class="flow" d="M 1030 310 V 270"/>
+
+  <!-- independence annotation -->
+  <rect x="595" y="400" width="490" height="112" rx="6" class="panel"/>
+  <text x="611" y="420" class="lbl tiny" font-weight="700">TWO LOCKS ARE SAFE HERE</text>
+  <text x="611" y="440" class="lbl tiny">head and tail are independent, so two locks are</text>
+  <text x="611" y="455" class="lbl tiny">possible; a ring's are not — putLock and takeLock never</text>
+  <text x="611" y="470" class="lbl tiny">touch the same node, and count is the only shared field,</text>
+  <text x="611" y="485" class="lbl tiny">kept consistent with an AtomicInteger instead of a lock.</text>
+  <text x="611" y="500" class="lbl tiny">withdrawal-intake-2 and payment-run-worker-2 run concurrently.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <line x1="20" y1="742" x2="1100" y2="742" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="754" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="767" class="lbl tiny">thread / linked-list node</text>
+
+  <rect x="230" y="754" width="22" height="16" rx="3" class="boxR"/>
+  <text x="260" y="767" class="lbl tiny">occupied ring slot / lock object (linked)</text>
+
+  <rect x="490" y="754" width="22" height="16" rx="3" class="boxW"/>
+  <text x="520" y="767" class="lbl tiny">empty slot / condition variable</text>
+
+  <rect x="700" y="754" width="22" height="16" rx="3" class="boxD"/>
+  <text x="730" y="767" class="lbl tiny">contended lock (both ends share it)</text>
+
+  <rect x="940" y="754" width="22" height="16" rx="3" class="panel"/>
+  <text x="970" y="767" class="lbl tiny">derived field / note</text>
+
+  <path class="flow" d="M 20 786 H 60"/>
+  <text x="68" y="791" class="lbl tiny">A → B : call, pointer, or hand-off</text>
+</svg>

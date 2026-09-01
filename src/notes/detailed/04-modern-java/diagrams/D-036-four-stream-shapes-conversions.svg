@@ -1,0 +1,94 @@
+<svg viewBox="0 0 1040 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The four stream shapes and the conversions between them. Stream of T sits above
+     IntStream, LongStream and DoubleStream. Stream of T narrows into each primitive stream via
+     mapToInt, mapToLong and mapToDouble. Each primitive stream widens back into Stream of T via
+     boxed or mapToObj. IntStream widens into LongStream via asLongStream, and both IntStream and
+     LongStream widen into DoubleStream via asDoubleStream. A note explains that CharStream,
+     BooleanStream and FloatStream do not exist, and states the widening order int to long to
+     double.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .panelh { font-size: 13px; font-weight: 700; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="500" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">THE FOUR STREAM SHAPES AND THE CONVERSIONS BETWEEN THEM</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="365" y="90" width="240" height="60" rx="6" class="boxP"/>
+  <text x="485" y="115" text-anchor="middle" class="lbl node">Stream&lt;T&gt;</text>
+  <text x="485" y="135" text-anchor="middle" class="lbl body">generic / reference stream</text>
+
+  <rect x="100" y="200" width="190" height="70" rx="6" class="boxR"/>
+  <text x="195" y="228" text-anchor="middle" class="lbl node">IntStream</text>
+  <text x="195" y="248" text-anchor="middle" class="lbl body">int specialization</text>
+
+  <rect x="390" y="200" width="190" height="70" rx="6" class="boxR"/>
+  <text x="485" y="228" text-anchor="middle" class="lbl node">LongStream</text>
+  <text x="485" y="248" text-anchor="middle" class="lbl body">long specialization</text>
+
+  <rect x="680" y="200" width="190" height="70" rx="6" class="boxR"/>
+  <text x="775" y="228" text-anchor="middle" class="lbl node">DoubleStream</text>
+  <text x="775" y="248" text-anchor="middle" class="lbl body">double specialization</text>
+
+  <!-- narrowing: Stream<T> -> primitives -->
+  <path class="flow" d="M 485 150 V 160 H 195 V 200"/>
+  <text x="205" y="180" class="lbl tiny">mapToInt</text>
+
+  <path class="flow" d="M 485 150 V 200"/>
+  <text x="478" y="175" text-anchor="end" class="lbl tiny">mapToLong</text>
+
+  <path class="flow" d="M 485 150 V 160 H 775 V 200"/>
+  <text x="770" y="180" text-anchor="end" class="lbl tiny">mapToDouble</text>
+
+  <!-- widening back: primitives -> Stream<T> -->
+  <path class="flow" d="M 130 200 V 115 H 365"/>
+  <text x="247" y="107" text-anchor="middle" class="lbl tiny">boxed / mapToObj</text>
+
+  <path class="flow" d="M 845 200 V 115 H 605"/>
+  <text x="725" y="107" text-anchor="middle" class="lbl tiny">boxed / mapToObj</text>
+
+  <path class="flow" d="M 540 200 V 150"/>
+  <text x="552" y="187" class="lbl tiny">boxed / mapToObj</text>
+
+  <!-- widening among primitives -->
+  <path class="flow" d="M 290 235 H 390"/>
+  <text x="340" y="225" text-anchor="middle" class="lbl tiny">asLongStream</text>
+
+  <path class="flow" d="M 580 235 H 680"/>
+  <text x="630" y="225" text-anchor="middle" class="lbl tiny">asDoubleStream</text>
+
+  <path class="flow" d="M 195 270 V 290 H 775 V 270"/>
+  <text x="485" y="282" text-anchor="middle" class="lbl tiny">asDoubleStream</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="320" width="1000" height="90" rx="6" class="panel"/>
+  <text x="36" y="342" class="lbl panelh">STREAM SHAPES THAT DON'T EXIST, AND HOW PRIMITIVES WIDEN</text>
+  <text x="36" y="364" class="lbl tiny">No CharStream, BooleanStream or FloatStream &#8212; char and boolean have no primitive stream; float promotes to double.</text>
+  <text x="36" y="384" class="lbl tiny">Widening order: int widens into long and double; long widens into double (asLongStream, asDoubleStream).</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="430" x2="1020" y2="430" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20"  y="445" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50"  y="457" class="lbl tiny">generic interface (Stream&lt;T&gt;)</text>
+  <rect x="320" y="445" width="22" height="16" rx="3" class="boxR"/>
+  <text x="350" y="457" class="lbl tiny">concrete primitive specialization</text>
+  <path d="M 680 453 H 710" class="flow"/>
+  <text x="718" y="457" class="lbl tiny">A &#8594; B : conversion, labelled by method</text>
+</svg>

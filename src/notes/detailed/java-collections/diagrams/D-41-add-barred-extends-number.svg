@@ -1,0 +1,68 @@
+<svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frame sequence: frame 1 declares List of Integer li and List of ? extends Number ln pointing to it; frame 2 shows the hypothetical ln.add(3.14) reaching the Integer list; frame 3 shows the compiler rejecting it, naming the captured type capture#1 of ? extends Number">
+
+  <text x="400" y="35" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Why add() is barred on List&lt;? extends Number&gt;</text>
+
+  <!-- Frame 1 -->
+  <rect x="40" y="60" width="720" height="220" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="90" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 1: declaration</text>
+
+  <rect x="80" y="110" width="240" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List&lt;Integer&gt; li</text>
+  <text x="200" y="160" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">backed by [1, 2, 3]</text>
+
+  <rect x="460" y="110" width="260" height="70" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="590" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List&lt;? extends Number&gt; ln</text>
+  <text x="590" y="160" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= li;</text>
+
+  <line x1="320" y1="145" x2="460" y2="145" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="330" y="118" width="120" height="24" rx="3" fill="#fef3c7"/>
+  <text x="390" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">assign, same list</text>
+
+  <rect x="80" y="200" width="640" height="60" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Caption: ln aliases li's array of Integer objects, but its declared</text>
+  <text x="400" y="245" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">type only promises "some subtype of Number", not which one</text>
+
+  <!-- Frame 2 -->
+  <rect x="40" y="310" width="720" height="240" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="340" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 2: the hypothetical ln.add(3.14)</text>
+
+  <rect x="80" y="360" width="260" height="60" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="385" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ln.add(3.14)</text>
+  <text x="210" y="405" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(3.14 is a Double)</text>
+
+  <line x1="340" y1="390" x2="480" y2="390" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="350" y="365" width="120" height="24" rx="3" fill="#fef3c7"/>
+  <text x="410" y="382" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">would reach</text>
+
+  <rect x="480" y="360" width="220" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="590" y="385" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">li's backing array</text>
+  <text x="590" y="405" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(actually Integer[])</text>
+
+  <rect x="80" y="440" width="620" height="90" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="465" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Caption: if this were legal, a Double would land in an array</text>
+  <text x="400" y="485" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">of Integer, and the next li.get(i) would throw ClassCastException</text>
+  <text x="400" y="505" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">when the compiler-inserted cast to Integer runs</text>
+
+  <!-- Frame 3 -->
+  <rect x="40" y="580" width="720" height="290" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="610" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 3: the compiler's rejection</text>
+
+  <rect x="80" y="630" width="640" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="655" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">error: incompatible types: double cannot be converted</text>
+  <text x="400" y="675" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">to capture#1 of ? extends Number</text>
+
+  <rect x="150" y="720" width="500" height="70" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="745" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">capture#1 of ? extends Number</text>
+  <text x="400" y="765" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= the compiler's private, unknown, fixed subtype for this ln</text>
+
+  <rect x="80" y="810" width="640" height="50" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="840" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Caption: only null is assignable to an unknown capture, so add(non-null) is barred at compile time</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+</svg>

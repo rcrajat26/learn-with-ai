@@ -1,0 +1,73 @@
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: stage 2 of a two-stage pipeline over ClaudeRunner runs, reading stage 1's output file and writing its own separate output file, at a visibly different path, which is what makes stage 2 independently re-runnable. A cost panel below reads stage 2's tokens and dollars out of its ClaudeEnvelope and adds them to stage 1's for a run total.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 2 OF 3 &#8212; STAGE 2 RUNS OVER ClaudeRunner</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="80" width="220" height="66" rx="6" class="boxR"/>
+  <text x="170" y="104" text-anchor="middle" class="lbl body">input path</text>
+  <text x="170" y="122" text-anchor="middle" class="lbl sub">tmp/pipeline/stage1-output.json</text>
+
+  <path class="flow" d="M 280 113 H 340"/>
+  <text x="310" y="105" text-anchor="middle" class="lbl sub">reads</text>
+
+  <rect x="340" y="80" width="220" height="66" rx="6" class="boxP"/>
+  <text x="450" y="104" text-anchor="middle" class="lbl node">stage 2</text>
+  <text x="450" y="122" text-anchor="middle" class="lbl sub">running via ClaudeRunner</text>
+
+  <path class="flow" d="M 560 113 H 620"/>
+  <text x="590" y="105" text-anchor="middle" class="lbl sub">writes</text>
+
+  <rect x="620" y="80" width="220" height="66" rx="6" class="boxR"/>
+  <text x="730" y="104" text-anchor="middle" class="lbl body">output path</text>
+  <text x="730" y="122" text-anchor="middle" class="lbl sub">tmp/pipeline/stage2-output.json</text>
+
+  <rect x="60" y="168" width="780" height="42" rx="6" class="panel"/>
+  <text x="80" y="194" class="lbl dense" font-weight="700">input path &#8800; output path: tmp/pipeline/stage1-output.json vs. tmp/pipeline/stage2-output.json</text>
+
+  <rect x="60" y="232" width="780" height="230" rx="6" class="panel"/>
+  <text x="80" y="256" class="lbl h2">COST PANEL &#8212; STAGE 2</text>
+  <text x="80" y="282" class="lbl dense">tokens (from stage 2's ClaudeEnvelope.usage): input 6,340 + output 2,010 = 8,350 tokens</text>
+  <text x="80" y="302" class="lbl dense">cost (from stage 2's ClaudeEnvelope.total_cost_usd): $0.089</text>
+  <text x="80" y="330" class="lbl sub">Stage 2 reads only stage1-output.json and writes only stage2-output.json &#8212;</text>
+  <text x="80" y="348" class="lbl sub">never the file it produces itself. That is what makes it independently re-runnable (see Frame 3).</text>
+  <text x="80" y="376" class="lbl h2">RUN TOTAL, STAGE 1 + STAGE 2</text>
+  <text x="80" y="398" class="lbl dense">tokens: 5,960 (stage 1) + 8,350 (stage 2) = 14,310 tokens</text>
+  <text x="80" y="418" class="lbl dense">cost: $0.061 (stage 1) + $0.089 (stage 2) = $0.150</text>
+  <text x="80" y="442" class="lbl sub">Stage 1 is untouched by this run &#8212; it neither reads nor writes anything during Frame 2.</text>
+
+  <line x1="20" y1="472" x2="880" y2="472" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="492" class="lbl h2">LEGEND</text>
+  <rect x="20" y="502" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="515" class="lbl tiny">file path (input)</text>
+  <rect x="220" y="502" width="22" height="16" rx="3" class="boxP"/>
+  <text x="250" y="515" class="lbl tiny">running stage</text>
+  <rect x="400" y="502" width="22" height="16" rx="3" class="boxR"/>
+  <text x="430" y="515" class="lbl tiny">file path (output)</text>
+  <rect x="600" y="502" width="22" height="16" rx="3" class="panel"/>
+  <text x="630" y="515" class="lbl tiny">invariant / cost panel</text>
+</svg>

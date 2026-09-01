@@ -1,0 +1,131 @@
+<svg viewBox="0 0 1120 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after diagram, verified by compiling and running on this machine. Left: source of an exhaustive enum switch expression over RestrictionType with no default arm. Right: javap -c -p output of the compiled class showing a synthetic default arm. A version-trap annotation states the re-verified figures: at --release 17 and below the synthetic default constructs and throws java.lang.IncompatibleClassChangeError with no-arg constructor; at --release 21 it constructs and throws java.lang.MatchException with the two-argument String,Throwable constructor, called here with null message and null cause since there is no failed match to describe. Beneath, the scenario that reaches the synthetic default: a new enum constant SELF_EXCLUDED is added to RestrictionType and only RestrictionType.java is recompiled; calling the unmodified switch method with the new constant falls through the tableswitch to the synthetic default and throws, confirmed by running it at both releases.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .codeS { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; }
+    .badge { font-size: 11px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE SYNTHETIC DEFAULT IN AN EXHAUSTIVE ENUM SWITCH EXPRESSION</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="90" y="64" class="lbl h2">LEFT — source, no default arm</text>
+  <text x="660" y="64" class="lbl h2">RIGHT — javap -c -p on the compiled class</text>
+  <line x1="560" y1="74" x2="560" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT source -->
+  <rect x="60" y="88" width="440" height="150" rx="6" class="boxP"/>
+  <text x="80" y="112" class="lbl node code">static String label(RestrictionType t) {</text>
+  <text x="100" y="132" class="lbl code">return switch (t) {</text>
+  <text x="120" y="150" class="lbl code">case DEPOSIT_BLOCKED    -&gt; "no deposits";</text>
+  <text x="120" y="168" class="lbl code">case STAKE_BLOCKED      -&gt; "no stakes";</text>
+  <text x="120" y="186" class="lbl code">case WITHDRAWAL_BLOCKED -&gt; "no withdrawals";</text>
+  <text x="100" y="204" class="lbl code">};  // no default — exhaustive over 3 constants</text>
+  <text x="80" y="222" class="lbl code">}</text>
+
+  <!-- RIGHT javap -->
+  <path class="flow" d="M 500 163 H 560 V 163 H 620"/>
+  <rect x="620" y="88" width="440" height="220" rx="6" class="boxH"/>
+  <text x="640" y="110" class="lbl node code">tableswitch { // 1 to 3</text>
+  <text x="660" y="128" class="lbl code">1: -&gt; 46   2: -&gt; 51   3: -&gt; 56</text>
+  <text x="660" y="144" class="lbl code">default: -&gt; 36</text>
+  <text x="640" y="166" class="lbl node code">36: new MatchException</text>
+  <text x="660" y="184" class="lbl code">dup; aconst_null; aconst_null</text>
+  <text x="660" y="200" class="lbl code">invokespecial MatchException.</text>
+  <text x="680" y="216" class="lbl code">"&lt;init&gt;":(String,Throwable)V</text>
+  <text x="660" y="234" class="lbl code">45: athrow</text>
+  <text x="640" y="256" class="lbl badge">SYNTHETIC — javac emits this arm;</text>
+  <text x="640" y="272" class="lbl badge">no source line produced it</text>
+  <text x="640" y="290" class="lbl sub">verified: javac --release 21, javap -c -p</text>
+
+  <!-- VERSION TRAP -->
+  <rect x="60" y="330" width="1000" height="150" rx="8" class="boxH"/>
+  <rect x="76" y="342" width="90" height="26" rx="13" class="pill"/>
+  <text x="121" y="360" text-anchor="middle" class="lbl badge">VERSION TRAP</text>
+  <text x="180" y="360" class="lbl h2">THE THROWN TYPE CHANGED SHAPE AT RELEASE 21 — SYLLABUS HAD THIS INVERTED</text>
+  <line x1="76" y1="374" x2="1044" y2="374" stroke="#b45309" stroke-width="1"/>
+  <text x="90" y="396" class="lbl body">Verified by compiling the same enum + switch at three releases, adding a constant, recompiling only the enum:</text>
+  <text x="110" y="416" class="lbl code">--release 14  -&gt;  Exception in thread "main" java.lang.IncompatibleClassChangeError</text>
+  <text x="110" y="434" class="lbl code">--release 17  -&gt;  Exception in thread "main" java.lang.IncompatibleClassChangeError</text>
+  <text x="110" y="452" class="lbl code">--release 21  -&gt;  Exception in thread "main" java.lang.MatchException</text>
+  <text x="90" y="470" class="lbl sub">The synthetic default exists at every release; only the exception TYPE it throws changed, at 21 — never the reverse.</text>
+
+  <!-- SCENARIO -->
+  <text x="20" y="504" class="lbl h2">THE SCENARIO THAT REACHES IT — a constant added after the switch's class was compiled</text>
+  <line x1="20" y1="512" x2="1100" y2="512" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="526" width="260" height="80" rx="6" class="boxP"/>
+  <text x="80" y="548" class="lbl node">Gate.class compiled</text>
+  <text x="80" y="568" class="lbl sub">against RestrictionType with</text>
+  <text x="80" y="584" class="lbl sub">3 constants — Gate never touched again</text>
+
+  <path class="flow" d="M 320 566 H 380"/>
+  <rect x="380" y="526" width="280" height="80" rx="6" class="boxWk"/>
+  <text x="400" y="548" class="lbl node code">+ SELF_EXCLUDED</text>
+  <text x="400" y="568" class="lbl sub">added to RestrictionType, only</text>
+  <text x="400" y="584" class="lbl sub">RestrictionType.java recompiled</text>
+
+  <path class="flow" d="M 660 566 H 720"/>
+  <rect x="720" y="526" width="300" height="80" rx="6" class="boxD"/>
+  <text x="740" y="548" class="lbl node">Gate.label(SELF_EXCLUDED)</text>
+  <text x="740" y="568" class="lbl sub">ordinal 3 has no tableswitch case —</text>
+  <text x="740" y="584" class="lbl sub">falls straight to the synthetic default</text>
+
+  <rect x="60" y="622" width="480" height="86" rx="6" class="boxD"/>
+  <text x="76" y="644" class="lbl h2">--release 21 — VERIFIED OUTPUT</text>
+  <text x="76" y="664" class="lbl code">Exception in thread "main"</text>
+  <text x="96" y="680" class="lbl code">java.lang.MatchException</text>
+  <text x="76" y="698" class="lbl sub">at Gate.label(Gate.java:3) — no message, no cause</text>
+
+  <rect x="580" y="622" width="480" height="86" rx="6" class="boxLg"/>
+  <text x="596" y="644" class="lbl h2">--release 17 — VERIFIED OUTPUT</text>
+  <text x="596" y="664" class="lbl code">Exception in thread "main"</text>
+  <text x="616" y="680" class="lbl code">java.lang.IncompatibleClassChangeError</text>
+  <text x="596" y="698" class="lbl sub">at Gate.label(Gate.java:3) — no-arg constructor</text>
+
+  <rect x="60" y="726" width="1000" height="78" rx="8" class="boxAnn"/>
+  <text x="76" y="748" class="lbl h2">WHY THIS SCENARIO, NOT A NEW ENUM ORDER</text>
+  <text x="76" y="768" class="lbl tiny">This is exhaustiveness breaking, not $SwitchMap's ordinal mapping (D-156) — a genuinely new value has no arm at all, so the switch cannot pick any</text>
+  <text x="76" y="784" class="lbl tiny">case, correct or wrong; it must throw. The type of that throw is the version-dependent fact, not whether it throws.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="828" x2="1100" y2="828" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="842" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="855" class="lbl tiny">source under test</text>
+  <rect x="230" y="842" width="24" height="16" rx="3" class="boxH"/>
+  <text x="262" y="855" class="lbl tiny">the subject: synthetic default / version-new behavior</text>
+  <rect x="620" y="842" width="24" height="16" rx="3" class="boxWk"/>
+  <text x="652" y="855" class="lbl tiny">intermediate state (recompiled enum only)</text>
+  <rect x="900" y="842" width="24" height="16" rx="3" class="boxD"/>
+  <text x="932" y="855" class="lbl tiny">thrown exception (Java 21)</text>
+  <rect x="20" y="866" width="24" height="16" rx="3" class="boxLg"/>
+  <text x="52" y="879" class="lbl tiny">thrown exception (Java 17 and below — legacy shape)</text>
+  <rect x="360" y="866" width="24" height="16" rx="3" class="boxAnn"/>
+  <text x="392" y="879" class="lbl tiny">annotation / cross-reference</text>
+  <path class="flow" d="M 700 874 H 744"/>
+  <text x="754" y="879" class="lbl tiny">step → next step, same compile/run</text>
+</svg>

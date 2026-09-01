@@ -1,0 +1,95 @@
+<svg viewBox="0 0 1040 960" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="One Claude Code request drawn as an ordered vertical strip of segments: the system prompt (built-in plus appended), with the environment and git snapshot embedded inside it by default; tool schemas; memory files sent as a separate user message; the skill listing; then the conversation so far. A bracket marks the system prompt, tool schemas and memory segments as the cached prefix reused at cache-read price. A leader shows that the flag --exclude-dynamic-system-prompt-sections relocates the embedded environment and git snapshot out of the system prompt and into the first user message instead.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 6 4; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .bracket{ fill: none; stroke: #1f2937; stroke-width: 2; }
+    .leader { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="960" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">REQUEST ASSEMBLY ORDER AND THE CACHED PREFIX</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Segment 1: system prompt, WITH the environment/git snapshot embedded inside it by default -->
+  <rect x="300" y="70" width="560" height="190" rx="6" class="boxP"/>
+  <text x="312" y="92" class="lbl node">1. System prompt (built-in + appended)</text>
+  <text x="312" y="110" class="lbl body">built-in base prompt: &#8776;2,200 tokens</text>
+  <text x="312" y="126" class="lbl body">appended via --append-system-prompt: &#8776;550 tokens</text>
+
+  <rect x="312" y="138" width="536" height="70" rx="4" class="boxW"/>
+  <text x="324" y="156" class="lbl tiny" font-weight="700">4. Environment / git snapshot &#8212; embedded inside segment 1 by default</text>
+  <text x="324" y="172" class="lbl sub">cwd, platform/OS, git branch + status, current date &#8776;280 tokens</text>
+  <text x="324" y="188" class="lbl sub">moved out only by --exclude-dynamic-system-prompt-sections</text>
+
+  <text x="312" y="222" class="lbl sub" font-weight="700">combined &#8776;3,030 tokens enter segment 1 by default</text>
+  <text x="312" y="238" class="lbl sub">(&#8776;280 of these relocate when the flag above is set)</text>
+
+  <!-- Segment 2: tool schemas -->
+  <rect x="300" y="280" width="560" height="90" rx="6" class="boxP"/>
+  <text x="312" y="302" class="lbl node">2. Tool schemas</text>
+  <text x="312" y="320" class="lbl body">JSON schema for every registered tool</text>
+  <text x="312" y="336" class="lbl body">(Bash, Read, Edit, Write, Grep, Glob, Agent, ...)</text>
+  <text x="312" y="353" class="lbl sub">&#8776;3,400 tokens</text>
+
+  <!-- Segment 3: memory files -->
+  <rect x="300" y="390" width="560" height="90" rx="6" class="boxP"/>
+  <text x="312" y="412" class="lbl node">3. Memory files &#8212; sent as a user message</text>
+  <text x="312" y="430" class="lbl body">CLAUDE.md (global) + project .claude/CLAUDE.md</text>
+  <text x="312" y="446" class="lbl body">+ .claude/rules/*</text>
+  <text x="312" y="463" class="lbl sub">&#8776;1,100 tokens &#8212; also where the flag's relocated facts land</text>
+
+  <!-- Segment 5: skill listing -->
+  <rect x="300" y="500" width="560" height="90" rx="6" class="boxW"/>
+  <text x="312" y="522" class="lbl node">5. Skill listing</text>
+  <text x="312" y="540" class="lbl body">name + description + when_to_use per enabled skill</text>
+  <text x="312" y="556" class="lbl sub">&#8776;900 tokens (50 skills)</text>
+
+  <!-- Segment 6: conversation -->
+  <rect x="300" y="610" width="560" height="70" rx="6" class="boxW"/>
+  <text x="312" y="634" class="lbl node">6. Conversation so far</text>
+  <text x="312" y="652" class="lbl sub">prior user/assistant/tool turns &#8212; grows every turn, no fixed figure</text>
+
+  <!-- bracket over segments 1-3 (the candidate cached prefix) -->
+  <path class="bracket" d="M 292 70 H 270 V 480 H 292"/>
+  <text class="lbl h2" x="245" y="275" text-anchor="middle" transform="rotate(-90 245 275)">CACHED PREFIX &#8212; REUSED AT CACHE-READ PRICE</text>
+
+  <!-- leader: the flag relocates segment 4's content out of segment 1's inset and into segment 3 -->
+  <path class="leader" d="M 860 172 H 910 V 435 H 860"/>
+  <text class="lbl tiny" x="922" y="300" text-anchor="middle" transform="rotate(-90 922 300)">--exclude-dynamic-system-prompt-sections</text>
+
+  <!-- annotation panel -->
+  <rect x="300" y="730" width="560" height="110" rx="6" class="panel"/>
+  <text x="316" y="752" class="lbl tiny" font-weight="700">--exclude-dynamic-system-prompt-sections</text>
+  <text x="316" y="772" class="lbl tiny">By default, per-machine facts (cwd, platform/OS, git branch &amp; status, date) are</text>
+  <text x="316" y="790" class="lbl tiny">baked inside segment 1 itself, so segment 1 fails to byte-match across machines.</text>
+  <text x="316" y="808" class="lbl tiny">This flag moves them out of segment 1 and into the first user message instead,</text>
+  <text x="316" y="826" class="lbl sub">letting the rest of segment 1 stay identical everywhere and cache-hit across machines.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="860" x2="1020" y2="860" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="874" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="887" class="lbl tiny">in cached prefix this turn (segments 1-3)</text>
+
+  <rect x="20" y="898" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="911" class="lbl tiny">dynamic, not cache-stable &#8212; segment 4's inset nested in segment 1 by default; segments 5-6 standalone</text>
+
+  <line x1="20" y1="922" x2="50" y2="922" class="leader"/>
+  <text x="58" y="926" class="lbl tiny">leader &#8212; the flag relocates segment 4 out of segment 1 and into segment 3 (first user message)</text>
+</svg>

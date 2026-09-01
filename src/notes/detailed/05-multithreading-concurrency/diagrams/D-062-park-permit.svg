@@ -1,0 +1,166 @@
+<svg viewBox="0 0 1040 980" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing that LockSupport's park permit does not accumulate.
+     Frame 1: withdrawal-dispatcher calls unpark(payment-run-worker-1) before that worker calls
+     park; the permit is stored, and when payment-run-worker-1 later calls park it returns
+     immediately, consuming the one stored permit. Frame 2: withdrawal-dispatcher calls unpark
+     twice on payment-run-worker-2 while it is still running; only one permit is stored, because
+     the permit is a single boolean, not a counter. Payment-run-worker-2 then calls park twice:
+     the first park returns immediately using the one permit, but the second park blocks, because
+     there is at most one permit available no matter how many unparks preceded it. Frame 3: the
+     three ways a blocked park can return without a matching unpark ever having been delivered as
+     intended — spuriously with no cause at all, on interrupt without the interrupt flag being
+     cleared, and on timeout when parkNanos was used — each one requiring the caller to re-check
+     its own wait condition after park returns, exactly as with wait().">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13.5px; font-weight: 700; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .cap   { font-size: 12.5px; }
+    .tiny  { font-size: 11px; }
+    .badge { font-size: 15px; font-weight: 700; }
+
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .frame { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri475); }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="980" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">LockSupport.park() / unpark(): THE PERMIT DOES NOT ACCUMULATE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <rect x="40" y="58" width="960" height="150" rx="8" class="frame"/>
+  <circle cx="65" cy="86" r="16" class="boxH"/>
+  <text x="65" y="91" text-anchor="middle" class="lbl badge">1</text>
+  <text x="95" y="91" class="lbl h2">unpark() BEFORE park() — PERMIT IS STORED, park() RETURNS AT ONCE</text>
+
+  <rect x="60" y="103" width="280" height="55" rx="6" class="boxR"/>
+  <text x="200" y="121" text-anchor="middle" class="lbl body" font-weight="600">withdrawal-dispatcher</text>
+  <text x="200" y="138" text-anchor="middle" class="lbl sub">unpark(payment-run-worker-1)</text>
+  <text x="200" y="153" text-anchor="middle" class="lbl sub">runs first — worker not yet parked</text>
+
+  <rect x="640" y="103" width="300" height="55" rx="6" class="boxP"/>
+  <text x="790" y="121" text-anchor="middle" class="lbl body">payment-run-worker-1</text>
+  <text x="790" y="138" text-anchor="middle" class="lbl sub">permit stored: false → true</text>
+  <text x="790" y="153" text-anchor="middle" class="lbl sub">on bank-withdrawal queue thread</text>
+
+  <path class="flow" d="M 340 130 H 640"/>
+  <text x="490" y="123" text-anchor="middle" class="lbl tiny">unpark(t) — sets t's permit</text>
+
+  <text x="60" y="186" class="lbl cap">Step 1 — worker later calls park(): the permit is already true, so park() consumes it and</text>
+  <text x="60" y="200" class="lbl cap">returns immediately, without ever blocking. Permit set → true, then true → false on consumption.</text>
+
+  <!-- FRAME 2 -->
+  <rect x="40" y="222" width="960" height="290" rx="8" class="frame"/>
+  <circle cx="65" cy="250" r="16" class="boxH"/>
+  <text x="65" y="255" text-anchor="middle" class="lbl badge">2</text>
+  <text x="95" y="255" class="lbl h2">TWO unparks, THEN TWO parks — ONLY ONE PERMIT EXISTS</text>
+
+  <rect x="60" y="267" width="300" height="66" rx="6" class="boxR"/>
+  <text x="210" y="288" text-anchor="middle" class="lbl body" font-weight="600">withdrawal-dispatcher</text>
+  <text x="210" y="305" text-anchor="middle" class="lbl sub">unpark(payment-run-worker-2)</text>
+  <text x="210" y="320" text-anchor="middle" class="lbl sub">calls unpark(payment-run-worker-2) again</text>
+
+  <rect x="640" y="267" width="300" height="66" rx="6" class="boxP"/>
+  <text x="790" y="288" text-anchor="middle" class="lbl body">payment-run-worker-2</text>
+  <text x="790" y="305" text-anchor="middle" class="lbl sub">permit: false → true → true</text>
+  <text x="790" y="320" text-anchor="middle" class="lbl sub">second unpark is a no-op — still one bit</text>
+
+  <path class="flow" d="M 360 300 H 640"/>
+  <text x="500" y="293" text-anchor="middle" class="lbl tiny">unpark(t) ×2, no counting</text>
+
+  <text x="60" y="360" class="lbl cap">Step 2 — the permit is a single boolean, not a semaphore count: two unparks leave exactly one</text>
+  <text x="60" y="376" class="lbl cap">permit available, never two.</text>
+
+  <rect x="60" y="392" width="300" height="60" rx="6" class="boxR"/>
+  <text x="210" y="412" text-anchor="middle" class="lbl body">payment-run-worker-2</text>
+  <text x="210" y="429" text-anchor="middle" class="lbl sub">1st park(): permit true → false</text>
+  <text x="210" y="444" text-anchor="middle" class="lbl sub">returns immediately, no blocking</text>
+
+  <rect x="640" y="392" width="300" height="60" rx="6" class="boxD"/>
+  <text x="790" y="412" text-anchor="middle" class="lbl body">payment-run-worker-2</text>
+  <text x="790" y="429" text-anchor="middle" class="lbl sub">2nd park(): permit already false</text>
+  <text x="790" y="444" text-anchor="middle" class="lbl sub">BLOCKS — no permit left to consume</text>
+
+  <path class="flow" d="M 360 422 H 640"/>
+  <text x="500" y="415" text-anchor="middle" class="lbl tiny">two consecutive park() calls</text>
+
+  <text x="60" y="480" class="lbl cap">Step 3 — at most one permit is ever available, regardless of how many unparks preceded it;</text>
+  <text x="60" y="496" class="lbl cap">the first park() drains it and the second genuinely blocks on the bank-withdrawal queue.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="40" y="526" width="960" height="290" rx="8" class="frame"/>
+  <circle cx="65" cy="554" r="16" class="boxH"/>
+  <text x="65" y="559" text-anchor="middle" class="lbl badge">3</text>
+  <text x="95" y="559" class="lbl h2">THREE WAYS park() RETURNS WITHOUT A MATCHING unpark()</text>
+
+  <rect x="60" y="576" width="280" height="80" rx="6" class="boxD"/>
+  <text x="200" y="598" text-anchor="middle" class="lbl body" font-weight="600">spurious return</text>
+  <text x="200" y="616" text-anchor="middle" class="lbl sub">payment-run-worker-3 unparks</text>
+  <text x="200" y="631" text-anchor="middle" class="lbl sub">with no cause at all — JVM</text>
+  <text x="200" y="646" text-anchor="middle" class="lbl sub">makes no delivery guarantee</text>
+
+  <rect x="380" y="576" width="280" height="80" rx="6" class="boxD"/>
+  <text x="520" y="598" text-anchor="middle" class="lbl body" font-weight="600">interrupt, flag not cleared</text>
+  <text x="520" y="616" text-anchor="middle" class="lbl sub">payment-run-worker-3's park()</text>
+  <text x="520" y="631" text-anchor="middle" class="lbl sub">returns on interrupt(), but the</text>
+  <text x="520" y="646" text-anchor="middle" class="lbl sub">interrupt flag stays set — unlike wait()</text>
+
+  <rect x="700" y="576" width="280" height="80" rx="6" class="boxD"/>
+  <text x="840" y="598" text-anchor="middle" class="lbl body" font-weight="600">timeout — parkNanos</text>
+  <text x="840" y="616" text-anchor="middle" class="lbl sub">payment-run-worker-3 called</text>
+  <text x="840" y="631" text-anchor="middle" class="lbl sub">parkNanos(bound) and the bound</text>
+  <text x="840" y="646" text-anchor="middle" class="lbl sub">elapsed with no permit granted</text>
+
+  <path class="flow" d="M 200 656 V 690 H 500 V 700"/>
+  <path class="flow" d="M 520 656 V 690"/>
+  <path class="flow" d="M 840 656 V 690 H 540 V 700"/>
+
+  <rect x="380" y="700" width="280" height="46" rx="6" class="boxW"/>
+  <text x="520" y="720" text-anchor="middle" class="lbl body" font-weight="600">payment-run-worker-3 wakes</text>
+  <text x="520" y="736" text-anchor="middle" class="lbl sub">in all three cases with no work</text>
+
+  <text x="60" y="775" class="lbl cap">Step 4 — every caller of park() must re-check its own wait condition after park() returns,</text>
+  <text x="60" y="791" class="lbl cap">because none of these three returns implies work is actually available on the queue.</text>
+
+  <!-- ANNOTATION -->
+  <rect x="40" y="826" width="960" height="80" rx="8" class="boxA"/>
+  <text x="55" y="848" class="lbl h2">park()/unpark() MIRRORS wait()/notify() — RE-CHECK, DO NOT TRUST THE WAKEUP</text>
+  <text x="55" y="868" class="lbl sub" font-style="italic">The permit collapses many unparks into one wakeup, and park() can return with none of them —</text>
+  <text x="55" y="885" class="lbl sub" font-style="italic">so a caller must loop on its real predicate, the same discipline as while(isEmpty()) wait().</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="923" x2="1020" y2="923" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="936" width="22" height="16" rx="3" class="boxH"/>
+  <text x="60" y="949" class="lbl tiny">step focus (frame header)</text>
+
+  <rect x="290" y="936" width="22" height="16" rx="3" class="boxP"/>
+  <text x="320" y="949" class="lbl tiny">permit stored / waiting worker</text>
+
+  <rect x="560" y="936" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="949" class="lbl tiny">park() returns immediately (permit consumed)</text>
+
+  <rect x="30" y="960" width="22" height="16" rx="3" class="boxD"/>
+  <text x="60" y="973" class="lbl tiny">park() blocks, or returns for a non-permit reason</text>
+
+  <rect x="450" y="960" width="22" height="16" rx="3" class="boxA"/>
+  <text x="480" y="973" class="lbl tiny">explanatory note</text>
+
+  <path class="flow" d="M 700 967 H 732"/>
+  <text x="740" y="973" class="lbl tiny">A → B : unpark sets, or park consumes, the permit</text>
+</svg>

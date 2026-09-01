@@ -1,0 +1,183 @@
+<svg viewBox="0 0 1120 1140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Math.ulp(x) plotted against magnitude x on log-log axes, measured on Oracle JDK 21.0.7. The plotted points are: Double.MIN_NORMAL (2.2250738585072014E-308) with ulp 4.9E-324, shown off-scale in an inset since it is roughly 300 decades below the visible axes; 1.0E-6 with ulp 2.117582368135751E-22; 1.0 with ulp 2.220446049250313E-16; the QuizStakes average stake 4.20 with ulp 8.881784197001252E-16; the average card deposit 65.0 with ulp 1.4210854715202004E-14; 180.0 with ulp 2.842170943040401E-14; 480.0 with ulp 5.684341886080802E-14; 1.0E6 with ulp 1.1641532182693481E-10; the 19.8 million daily ledger entries magnitude 1.98E7 with ulp 3.725290298461914E-9; the 7.2 billion yearly ledger entries magnitude 7.2E9 with ulp 9.5367431640625E-7; 1.0E12 with ulp 1.220703125E-4; 1.0E15 with ulp 0.125; and 1.0E18 with ulp 128.0. The four QuizStakes magnitudes (4.20, 65.0, 1.98E7, 7.2E9) are marked as highlighted points. A dashed horizontal line marks ulp(x) = 1; above and to the right of where the curve crosses it, between the 1.0E15 and 1.0E18 points, no fractional precision remains because consecutive doubles are 128 apart at 1.0E18. An epsilon callout states that a fixed epsilon of 1e-9 is 953.67 times smaller than one ulp at 7.2E9, so a distance check against 1e-9 degenerates to exact equality at that magnitude, while the same 1e-9 at the average stake of 4.20 equals 1,125,899.9 ulps, an absurdly loose tolerance; the synthesis is that one fixed epsilon cannot be correct at both ends of the range, the comparison must be relative or scaled by Math.ulp, and money should not be compared as doubles at all.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr126" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1140" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Math.ulp(x) and the spacing of doubles &#8212; both axes log10, JDK 21.0.7</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- gridlines + ticks: x -->
+  <g stroke="#d1d5db" stroke-width="1">
+    <line x1="140" y1="100" x2="140" y2="700"/>
+    <line x1="257.5" y1="100" x2="257.5" y2="700"/>
+    <line x1="375" y1="100" x2="375" y2="700"/>
+    <line x1="492.5" y1="100" x2="492.5" y2="700"/>
+    <line x1="610" y1="100" x2="610" y2="700"/>
+    <line x1="727.5" y1="100" x2="727.5" y2="700"/>
+    <line x1="845" y1="100" x2="845" y2="700"/>
+    <line x1="962.5" y1="100" x2="962.5" y2="700"/>
+    <line x1="1080" y1="100" x2="1080" y2="700"/>
+  </g>
+  <!-- gridlines: y -->
+  <g stroke="#d1d5db" stroke-width="1">
+    <line x1="140" y1="700" x2="1080" y2="700"/>
+    <line x1="140" y1="614.29" x2="1080" y2="614.29"/>
+    <line x1="140" y1="528.57" x2="1080" y2="528.57"/>
+    <line x1="140" y1="442.86" x2="1080" y2="442.86"/>
+    <line x1="140" y1="357.14" x2="1080" y2="357.14"/>
+    <line x1="140" y1="271.43" x2="1080" y2="271.43"/>
+    <line x1="140" y1="185.71" x2="1080" y2="185.71"/>
+    <line x1="140" y1="100" x2="1080" y2="100"/>
+  </g>
+
+  <!-- axes -->
+  <line x1="140" y1="700" x2="1080" y2="700" stroke="#475569" stroke-width="1.6"/>
+  <line x1="140" y1="100" x2="140" y2="700" stroke="#475569" stroke-width="1.6"/>
+
+  <!-- x ticks -->
+  <g class="code">
+    <line x1="140" y1="700" x2="140" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="140" y="720" text-anchor="middle">1E-6</text>
+    <line x1="257.5" y1="700" x2="257.5" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="257.5" y="720" text-anchor="middle">1E-3</text>
+    <line x1="375" y1="700" x2="375" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="375" y="720" text-anchor="middle">1E0</text>
+    <line x1="492.5" y1="700" x2="492.5" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="492.5" y="720" text-anchor="middle">1E3</text>
+    <line x1="610" y1="700" x2="610" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="610" y="720" text-anchor="middle">1E6</text>
+    <line x1="727.5" y1="700" x2="727.5" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="727.5" y="720" text-anchor="middle">1E9</text>
+    <line x1="845" y1="700" x2="845" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="845" y="720" text-anchor="middle">1E12</text>
+    <line x1="962.5" y1="700" x2="962.5" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="962.5" y="720" text-anchor="middle">1E15</text>
+    <line x1="1080" y1="700" x2="1080" y2="706" stroke="#475569" stroke-width="1.6"/>
+    <text x="1080" y="720" text-anchor="middle">1E18</text>
+  </g>
+
+  <!-- y ticks -->
+  <g class="code">
+    <line x1="134" y1="700" x2="140" y2="700" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="704" text-anchor="end">1E-24</text>
+    <line x1="134" y1="614.29" x2="140" y2="614.29" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="618.29" text-anchor="end">1E-20</text>
+    <line x1="134" y1="528.57" x2="140" y2="528.57" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="532.57" text-anchor="end">1E-16</text>
+    <line x1="134" y1="442.86" x2="140" y2="442.86" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="446.86" text-anchor="end">1E-12</text>
+    <line x1="134" y1="357.14" x2="140" y2="357.14" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="361.14" text-anchor="end">1E-8</text>
+    <line x1="134" y1="271.43" x2="140" y2="271.43" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="275.43" text-anchor="end">1E-4</text>
+    <line x1="134" y1="185.71" x2="140" y2="185.71" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="189.71" text-anchor="end">1E0</text>
+    <line x1="134" y1="100" x2="140" y2="100" stroke="#475569" stroke-width="1.6"/>
+    <text x="128" y="104" text-anchor="end">1E4</text>
+  </g>
+
+  <text x="610" y="742" text-anchor="middle" class="body">x &#8212; magnitude (log scale)</text>
+  <text x="46" y="400" text-anchor="middle" class="body" transform="rotate(-90 46 400)">Math.ulp(x) (log scale)</text>
+
+  <!-- ulp = 1 threshold -->
+  <line x1="140" y1="185.71" x2="1080" y2="185.71" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="880" y="172" text-anchor="middle" class="smallb">ABOVE THIS LINE, PAST 1.0E15&#8211;1.0E18: NO FRACTIONAL PRECISION REMAINS</text>
+
+  <!-- plotted line -->
+  <path d="M 140 650.2 L 375 521.2 L 399.4 508.2 L 445.9 482.4 L 463.3 476.0 L 479.9 469.5 L 610 398.6 L 660.7 366.3 L 761.1 314.7 L 845 269.6 L 962.5 205.1 L 1080 140.6" fill="none" stroke="#2563eb" stroke-width="2"/>
+
+  <!-- data points (non-highlighted) -->
+  <circle cx="140" cy="650.2" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="668" class="code" font-size="11px">1.0E-6 &#8594; 2.12E-22</text>
+
+  <circle cx="375" cy="521.2" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+
+  <circle cx="480" cy="469.5" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+
+  <circle cx="463.3" cy="476.0" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+
+  <circle cx="610" cy="398.6" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="610" y="382" text-anchor="middle" class="code" font-size="11px">1.0E6 &#8594; 1.16E-10</text>
+
+  <circle cx="845" cy="269.6" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="845" y="253" text-anchor="middle" class="code" font-size="11px">1.0E12 &#8594; 1.22E-4</text>
+
+  <circle cx="962.5" cy="205.1" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="962.5" y="222" text-anchor="middle" class="code" font-size="11px">1.0E15 &#8594; 0.125</text>
+
+  <circle cx="1080" cy="140.6" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1070" y="128" text-anchor="end" class="code" font-size="11px">1.0E18 &#8594; 128.0</text>
+
+  <!-- QuizStakes highlighted points -->
+  <circle cx="399.4" cy="508.2" r="7" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <path d="M 399.4 501.2 V 470" fill="none" stroke="#b45309" stroke-width="1.2"/>
+  <text x="399" y="464" text-anchor="middle" class="smallb" fill="#b45309" font-size="11px">4.20 &#8594; 8.88E-16</text>
+
+  <circle cx="445.9" cy="482.4" r="7" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <path d="M 445.9 489.4 V 560" fill="none" stroke="#b45309" stroke-width="1.2"/>
+  <text x="446" y="574" text-anchor="middle" class="smallb" fill="#b45309" font-size="11px">65.0 &#8594; 1.42E-14</text>
+
+  <circle cx="660.7" cy="366.3" r="7" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="660" y="349" text-anchor="middle" class="smallb" fill="#b45309" font-size="11px">1.98E7 &#8594; 3.73E-9</text>
+
+  <circle cx="761.1" cy="314.7" r="7" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="761" y="298" text-anchor="middle" class="smallb" fill="#b45309" font-size="11px">7.2E9 &#8594; 9.54E-7</text>
+
+  <!-- off-scale inset (drawn after gridlines so it occludes them cleanly) -->
+  <rect x="150" y="108" width="430" height="54" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="162" y="128" class="smallb">Double.MIN_NORMAL = 2.2250738585072014E-308</text>
+  <text x="162" y="146" class="small">Math.ulp(MIN_NORMAL) = 4.9E-324 &#8212; off this axis (not to scale)</text>
+
+  <rect x="150" y="170" width="430" height="76" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="162" y="188" class="smallb">Additional measured points:</text>
+  <text x="162" y="205" class="code" font-size="11px">1.0 &#8594; 2.220446049250313E-16</text>
+  <text x="162" y="221" class="code" font-size="11px">180.0 &#8594; 2.842170943040401E-14</text>
+  <text x="162" y="237" class="code" font-size="11px">480.0 &#8594; 5.684341886080802E-14</text>
+
+  <!-- EPSILON CALLOUT -->
+  <rect x="20" y="766" width="1080" height="110" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="40" y="788" class="h2">EPSILON CALLOUT &#8212; THE POINT OF THIS DIAGRAM</text>
+  <text x="40" y="808" class="body">A fixed epsilon of 1e-9 is 953.67&#215; smaller than one ulp at 7.2E9 (Math.ulp(7.2e9) = 9.5367431640625E-7) &#8212; at that</text>
+  <text x="40" y="826" class="body">magnitude no two distinct doubles are ever within 1e-9 of each other, so Math.abs(a-b) &lt; 1e-9 degenerates to a==b.</text>
+  <text x="40" y="848" class="body">The same 1e-9 at the average stake 4.20 is 1,125,899.9 ulps (Math.ulp(4.20) = 8.881784197001252E-16) &#8212; an absurdly</text>
+  <text x="40" y="866" class="body">loose tolerance that will call two genuinely different stake amounts equal.</text>
+
+  <!-- SYNTHESIS -->
+  <rect x="20" y="886" width="1080" height="110" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="908" class="h2">SYNTHESIS</text>
+  <text x="40" y="928" class="body">One fixed epsilon cannot be correct at both ends of the range: the correct comparison is relative &#8212; scale the tolerance</text>
+  <text x="40" y="946" class="body">by the magnitude, or by Math.ulp &#8212; and for money the correct answer is not to compare doubles at all.</text>
+  <text x="40" y="968" class="body">At 1.0E18 the ulp is 128.0 &#8212; consecutive doubles are 128 apart, so integers in that range are not all representable.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="1016" x2="1100" y2="1016" stroke="#d1d5db" stroke-width="1.5"/>
+  <circle cx="30" cy="1036" r="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="46" y="1040" class="small">Measured data point</text>
+  <circle cx="290" cy="1036" r="7" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+  <text x="306" y="1040" class="small">QuizStakes magnitude (highlighted)</text>
+  <line x1="560" y1="1036" x2="596" y2="1036" stroke="#2563eb" stroke-width="2"/>
+  <text x="602" y="1040" class="small">Math.ulp(x), plotted point to point</text>
+  <line x1="860" y1="1036" x2="896" y2="1036" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="902" y="1040" class="small">ulp(x) = 1 threshold</text>
+
+  <rect x="20" y="1062" width="16" height="16" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="44" y="1074" class="small">Degraded &#8212; epsilon callout panel</text>
+  <rect x="290" y="1062" width="16" height="16" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="314" y="1074" class="small">Annotation &#8212; synthesis panel</text>
+  <rect x="560" y="1062" width="16" height="16" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="584" y="1074" class="small">Neutral &#8212; off-scale supporting fact</text>
+</svg>

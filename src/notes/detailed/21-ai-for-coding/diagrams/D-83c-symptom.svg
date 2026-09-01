@@ -1,0 +1,50 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 4: the observed symptom. Read, edit, mkdir, touch, mv, cp and sed all work under the bare acceptEdits defaults, while mvn, git commit, chmod and java are all refused because the harness's own settings never loaded.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+  </style>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">D-83 · FRAME 3 OF 4 — THE OBSERVED SYMPTOM</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">working — bare acceptEdits defaults</text>
+  <rect x="20" y="80" width="410" height="230" rx="6" class="boxR"/>
+  <text x="40" y="108" class="lbl body">read</text>
+  <text x="40" y="132" class="lbl body">edit</text>
+  <text x="40" y="156" class="lbl body">mkdir</text>
+  <text x="40" y="180" class="lbl body">touch</text>
+  <text x="40" y="204" class="lbl body">mv</text>
+  <text x="40" y="228" class="lbl body">cp</text>
+  <text x="40" y="252" class="lbl body">sed</text>
+  <text x="40" y="284" class="lbl sub">these are the built-in acceptEdits</text>
+  <text x="40" y="300" class="lbl sub">defaults — allowed with no settings.json at all</text>
+
+  <text x="470" y="66" class="lbl h2">refused — needed permissions.allow / deny</text>
+  <rect x="470" y="80" width="410" height="230" rx="6" class="boxD"/>
+  <text x="490" y="108" class="lbl body">mvn</text>
+  <text x="490" y="132" class="lbl body">git commit</text>
+  <text x="490" y="156" class="lbl body">chmod</text>
+  <text x="490" y="180" class="lbl body">java</text>
+  <text x="490" y="212" class="lbl sub">these require Bash(*) from</text>
+  <text x="490" y="228" class="lbl sub">sdlc-harness/.claude/settings.json</text>
+  <text x="490" y="248" class="lbl sub">— never loaded from the worktree cwd,</text>
+  <text x="490" y="264" class="lbl sub">so the coder falls back to the deny-by-default</text>
+  <text x="490" y="280" class="lbl sub">bare acceptEdits posture and refuses them</text>
+
+  <rect x="20" y="330" width="860" height="70" rx="6" class="boxAnn"/>
+  <text x="36" y="350" class="lbl h2">Annotation</text>
+  <text x="36" y="370" class="lbl tiny">The split is exactly the acceptEdits/allow boundary: file-mutation tools ship allowed by default; anything</text>
+  <text x="36" y="388" class="lbl tiny">requiring an explicit permissions.allow (Bash(*)) or checked against permissions.deny needs settings that never loaded.</text>
+</svg>

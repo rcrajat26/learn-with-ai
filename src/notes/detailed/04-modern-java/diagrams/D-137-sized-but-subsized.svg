@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of the SIZED and SUBSIZED spliterator characteristics. Left: ArrayList of 2,800,000 Reservation elements backed by a single array. Its spliterator reports SIZED, because the total count is exact, and SUBSIZED, because after trySplit both halves report an exact count too. Right: a balanced TreeMap of Reservation keyed by RoundId. Its spliterator reports SIZED, because the map tracks total size, but not SUBSIZED, because after trySplit neither subtree knows how many nodes it holds without walking it, so both child estimates are marked unknown.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .badge { font-size: 11px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; marker-end: url(#triWk); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triWk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SIZED DOES NOT IMPLY SUBSIZED</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="185" y="50" width="220" height="22" rx="11" class="boxR"/>
+  <text x="295" y="65" text-anchor="middle" class="lbl badge">SIZED + SUBSIZED</text>
+  <rect x="730" y="50" width="220" height="22" rx="11" class="boxWk"/>
+  <text x="840" y="65" text-anchor="middle" class="lbl badge">SIZED, NOT SUBSIZED</text>
+
+  <text x="90" y="92" class="lbl h2">LEFT — array-backed: ArrayList&lt;Reservation&gt;</text>
+  <text x="620" y="92" class="lbl h2">RIGHT — balanced tree: TreeMap&lt;RoundId, Reservation&gt;</text>
+  <line x1="560" y1="102" x2="560" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: array source -->
+  <rect x="90" y="112" width="400" height="70" rx="6" class="boxP"/>
+  <text x="290" y="134" text-anchor="middle" class="lbl node">elementData[]</text>
+  <text x="290" y="154" text-anchor="middle" class="lbl body">2,800,000 Reservation, single backing array</text>
+  <text x="290" y="171" text-anchor="middle" class="lbl sub">index range known end to end</text>
+
+  <path class="flow" d="M 290 182 V 214"/>
+  <text x="330" y="204" class="lbl sub">trySplit()</text>
+
+  <rect x="90" y="214" width="190" height="76" rx="6" class="boxR"/>
+  <text x="185" y="238" text-anchor="middle" class="lbl node">left half</text>
+  <text x="185" y="258" text-anchor="middle" class="lbl body">1,400,000</text>
+  <text x="185" y="276" text-anchor="middle" class="lbl sub">exact — index-derived</text>
+
+  <rect x="300" y="214" width="190" height="76" rx="6" class="boxR"/>
+  <text x="395" y="238" text-anchor="middle" class="lbl node">right half</text>
+  <text x="395" y="258" text-anchor="middle" class="lbl body">1,400,000</text>
+  <text x="395" y="276" text-anchor="middle" class="lbl sub">exact — index-derived</text>
+
+  <rect x="90" y="310" width="400" height="120" rx="6" class="boxAnn"/>
+  <text x="106" y="332" class="lbl h2">why both flags hold</text>
+  <text x="106" y="352" class="lbl tiny">estimateSize() reads the array's fixed length: 2,800,000.</text>
+  <text x="106" y="370" class="lbl tiny">trySplit() carves the index range in half — each half's own</text>
+  <text x="106" y="388" class="lbl tiny">length is exact the instant the split happens, with no walk.</text>
+  <text x="106" y="406" class="lbl tiny">So the whole is SIZED, and every sub-spliterator is SIZED too:</text>
+  <text x="106" y="422" class="lbl code">SIZED &amp; SUBSIZED</text>
+
+  <!-- RIGHT: tree source -->
+  <rect x="630" y="112" width="400" height="70" rx="6" class="boxP"/>
+  <text x="830" y="134" text-anchor="middle" class="lbl node">TreeMap.spliterator()</text>
+  <text x="830" y="154" text-anchor="middle" class="lbl body">2,800,000 entries, size field maintained on the map</text>
+  <text x="830" y="171" text-anchor="middle" class="lbl sub">total known without walking the tree</text>
+
+  <path class="flow" d="M 830 182 V 214"/>
+  <text x="870" y="204" class="lbl sub">trySplit()</text>
+
+  <rect x="630" y="214" width="190" height="76" rx="6" class="boxWk"/>
+  <text x="725" y="238" text-anchor="middle" class="lbl node">left subtree</text>
+  <text x="725" y="258" text-anchor="middle" class="lbl body">est. unknown</text>
+  <text x="725" y="276" text-anchor="middle" class="lbl sub">node count not cached</text>
+
+  <rect x="840" y="214" width="190" height="76" rx="6" class="boxWk"/>
+  <text x="935" y="238" text-anchor="middle" class="lbl node">right subtree</text>
+  <text x="935" y="258" text-anchor="middle" class="lbl body">est. unknown</text>
+  <text x="935" y="276" text-anchor="middle" class="lbl sub">node count not cached</text>
+
+  <rect x="630" y="310" width="400" height="120" rx="6" class="boxAnn"/>
+  <text x="646" y="332" class="lbl h2">why SUBSIZED fails</text>
+  <text x="646" y="352" class="lbl tiny">The map's size field covers the whole tree, so SIZED holds</text>
+  <text x="646" y="370" class="lbl tiny">at the root. But a red-black subtree does not cache its own</text>
+  <text x="646" y="388" class="lbl tiny">node count — getting an exact figure means walking it, which</text>
+  <text x="646" y="406" class="lbl tiny">defeats the point of an O(1) estimate. So the split children</text>
+  <text x="646" y="422" class="lbl code">SIZED, but not SUBSIZED</text>
+
+  <!-- javadoc quote -->
+  <rect x="90" y="450" width="940" height="110" rx="8" class="boxAnn"/>
+  <text x="106" y="474" class="lbl h2">Spliterator's own framing (javadoc, java.util.Spliterator)</text>
+  <text x="106" y="496" class="lbl body">"SUBSIZED: A Spliterator reports SUBSIZED if it can guarantee that all child</text>
+  <text x="106" y="514" class="lbl body">Spliterators produced by trySplit() will be both SIZED and SUBSIZED. ... SIZED</text>
+  <text x="106" y="532" class="lbl body">does not imply SUBSIZED — a spliterator may know its own total size while its</text>
+  <text x="106" y="550" class="lbl body">children, once split, do not know theirs."</text>
+
+  <!-- legend -->
+  <line x1="20" y1="592" x2="1100" y2="592" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="607" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="620" class="lbl tiny">source under test</text>
+  <rect x="220" y="607" width="24" height="16" rx="3" class="boxR"/>
+  <text x="252" y="620" class="lbl tiny">exact size after split — SUBSIZED</text>
+  <rect x="500" y="607" width="24" height="16" rx="3" class="boxWk"/>
+  <text x="532" y="620" class="lbl tiny">unknown size after split — not SUBSIZED</text>
+  <rect x="820" y="607" width="24" height="16" rx="3" class="boxAnn"/>
+  <text x="852" y="620" class="lbl tiny">explanatory panel / javadoc quote</text>
+  <path class="flow" d="M 20 638 H 64"/>
+  <text x="74" y="643" class="lbl tiny">A → B : B follows from A (trySplit)</text>
+</svg>

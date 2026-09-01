@@ -1,0 +1,73 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 4: the harness consults the permission rules such as permissions.deny, decides whether to allow or block the tool_use block, and executes it if allowed. This decision point is the entire basis of the permission system.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE TURN OF THE AGENT LOOP — FRAME 3 OF 4: PERMISSION CHECK AND EXECUTE</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="80" width="220" height="66" rx="6" class="boxH"/>
+  <text x="170" y="108" text-anchor="middle" class="lbl node">tool_use block</text>
+  <text x="170" y="128" text-anchor="middle" class="lbl sub">name: Read, args: {...}</text>
+
+  <path class="flow" d="M 280 113 H 340"/>
+
+  <rect x="340" y="80" width="260" height="66" rx="6" class="boxP"/>
+  <text x="470" y="104" text-anchor="middle" class="lbl node">permission rules</text>
+  <text x="470" y="124" text-anchor="middle" class="lbl sub">permissions.deny, permissions.allow</text>
+
+  <path class="flow" d="M 470 146 V 190"/>
+
+  <rect x="330" y="190" width="280" height="60" rx="6" class="boxP"/>
+  <text x="470" y="215" text-anchor="middle" class="lbl node">harness decides</text>
+  <text x="470" y="235" text-anchor="middle" class="lbl sub">checks the rule set against the args</text>
+
+  <path class="flow" d="M 400 250 V 280 H 210 V 296"/>
+  <text x="290" y="270" text-anchor="middle" class="lbl tiny">allowed</text>
+  <rect x="90" y="296" width="240" height="60" rx="6" class="boxR"/>
+  <text x="210" y="320" text-anchor="middle" class="lbl node">execute tool</text>
+  <text x="210" y="340" text-anchor="middle" class="lbl sub">Read runs against the file system</text>
+
+  <path class="flow" d="M 540 250 V 280 H 730 V 296"/>
+  <text x="650" y="270" text-anchor="middle" class="lbl tiny">denied</text>
+  <rect x="610" y="296" width="240" height="60" rx="6" class="boxD"/>
+  <text x="730" y="320" text-anchor="middle" class="lbl node">blocked</text>
+  <text x="730" y="340" text-anchor="middle" class="lbl sub">tool never runs</text>
+
+  <rect x="360" y="296" width="180" height="60" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="376" y="316" class="lbl tiny" font-weight="700">this decision point is</text>
+  <text x="376" y="332" class="lbl tiny">the entire basis of the</text>
+  <text x="376" y="348" class="lbl tiny">permission system</text>
+
+  <line x1="20" y1="376" x2="880" y2="376" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="388" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="401" class="lbl tiny">tool_use / rules</text>
+  <rect x="180" y="388" width="22" height="16" rx="3" class="boxR"/>
+  <text x="210" y="401" class="lbl tiny">executed (allowed)</text>
+  <rect x="380" y="388" width="22" height="16" rx="3" class="boxD"/>
+  <text x="410" y="401" class="lbl tiny">blocked (denied)</text>
+  <path class="flow" d="M 560 396 H 600"/>
+  <text x="608" y="401" class="lbl tiny">A → B : B decided from A</text>
+</svg>

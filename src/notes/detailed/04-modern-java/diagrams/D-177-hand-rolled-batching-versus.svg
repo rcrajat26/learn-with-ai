@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1120 880" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of fixed-window batching of 100 ledger entries. Left, the Java 21 hand-rolled Spliterator of List of LedgerEntry: estimateSize divides the remaining estimate by 100, and it deliberately does not claim the SUBSIZED characteristic because a split does not guarantee proportionally exact window counts on each side. Right, the Java 24 one-liner ledgerEntries.stream().gather(Gatherers.windowFixed(100)): the Gatherer contract's four functions — initializer, integrator, combiner, finisher — are labelled, and greedy versus short-circuiting integrators are listed, with windowFixed's integrator being greedy.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .code-bg { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="880" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HAND-ROLLED BATCHING VERSUS Gatherers.windowFixed</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Fixed windows of 100 LedgerEntry rows out of the ~19.8M ledger writes/day, for FundsLedger batch export</text>
+
+  <!-- LEFT -->
+  <text x="20" y="90" class="lbl h2">LEFT — Java 21 hand-rolled Spliterator&lt;List&lt;LedgerEntry&gt;&gt;</text>
+  <line x1="20" y1="98" x2="540" y2="98" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="110" width="520" height="176" rx="6" class="code-bg"/>
+  <text x="34" y="130" class="lbl code">class WindowSpliterator</text>
+  <text x="46" y="146" class="lbl code">implements Spliterator&lt;List&lt;LedgerEntry&gt;&gt; {</text>
+  <text x="46" y="164" class="lbl code">static final int WINDOW = 100;</text>
+  <text x="46" y="182" class="lbl code">long estimateSize() {</text>
+  <text x="58" y="198" class="lbl code">return remainingEstimate / WINDOW;</text>
+  <text x="46" y="214" class="lbl code">}</text>
+  <text x="46" y="232" class="lbl code">int characteristics() {</text>
+  <text x="58" y="248" class="lbl code">return ORDERED | NONNULL;</text>
+  <text x="58" y="264" class="lbl code">// no SUBSIZED — see below</text>
+  <text x="46" y="280" class="lbl code">}</text>
+
+  <rect x="20" y="298" width="520" height="90" rx="6" class="boxD"/>
+  <text x="280" y="320" text-anchor="middle" class="lbl node">SUBSIZED is deliberately NOT claimed</text>
+  <text x="280" y="340" text-anchor="middle" class="lbl dense">SUBSIZED promises each side of trySplit() reports its</text>
+  <text x="280" y="358" text-anchor="middle" class="lbl dense">exact remaining size — a source that splits 250 entries</text>
+  <text x="280" y="376" text-anchor="middle" class="lbl dense">into two windowed halves cannot promise that exactly</text>
+
+  <rect x="20" y="398" width="520" height="70" rx="6" class="boxW"/>
+  <text x="280" y="420" text-anchor="middle" class="lbl dense">estimateSize() only estimates window COUNT,</text>
+  <text x="280" y="438" text-anchor="middle" class="lbl dense">not element count — trySplit's two halves</text>
+  <text x="280" y="456" text-anchor="middle" class="lbl dense">can each land a short trailing window</text>
+
+  <rect x="20" y="478" width="520" height="74" rx="6" class="boxAnn"/>
+  <text x="36" y="498" class="lbl node">COST</text>
+  <text x="36" y="518" class="lbl tiny">~60 lines: tryAdvance, trySplit, a manual ArrayList</text>
+  <text x="36" y="534" class="lbl tiny">accumulator, a partial-window finisher — hand-written and hand-tested</text>
+
+  <!-- RIGHT -->
+  <rect x="580" y="66" width="26" height="16" rx="3" class="pill"/>
+  <text x="596" y="79" text-anchor="middle" class="lbl tiny">24</text>
+  <text x="614" y="90" class="lbl h2">RIGHT — Java 24 Gatherers.windowFixed(100)</text>
+  <line x1="580" y1="98" x2="1100" y2="98" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="580" y="110" width="520" height="50" rx="6" class="code-bg"/>
+  <text x="594" y="132" class="lbl code">List&lt;List&lt;LedgerEntry&gt;&gt; windows =</text>
+  <text x="606" y="150" class="lbl code">ledgerEntries.stream().gather(Gatherers.windowFixed(100)).toList();</text>
+
+  <path class="adapt" d="M 540 135 H 580"/>
+  <text x="560" y="129" class="lbl tiny" text-anchor="middle">same result</text>
+
+  <rect x="580" y="168" width="520" height="166" rx="6" class="boxP"/>
+  <text x="840" y="188" text-anchor="middle" class="lbl node">the Gatherer&lt;T,A,R&gt; contract — four functions</text>
+
+  <rect x="600" y="204" width="230" height="56" rx="4" class="boxW"/>
+  <text x="715" y="222" text-anchor="middle" class="lbl dense">initializer:</text>
+  <text x="715" y="238" text-anchor="middle" class="lbl dense">Supplier&lt;A&gt;</text>
+  <text x="715" y="253" text-anchor="middle" class="lbl tiny">new ArrayList&lt;T&gt;(100)/window</text>
+
+  <rect x="850" y="204" width="230" height="56" rx="4" class="boxW"/>
+  <text x="965" y="222" text-anchor="middle" class="lbl dense">integrator:</text>
+  <text x="965" y="238" text-anchor="middle" class="lbl dense">Integrator&lt;A,T,R&gt;</text>
+  <text x="965" y="253" text-anchor="middle" class="lbl tiny">adds T; pushes at 100 (greedy)</text>
+
+  <rect x="600" y="268" width="230" height="56" rx="4" class="boxW"/>
+  <text x="715" y="286" text-anchor="middle" class="lbl dense">combiner:</text>
+  <text x="715" y="302" text-anchor="middle" class="lbl dense">BinaryOperator&lt;A&gt;</text>
+  <text x="715" y="317" text-anchor="middle" class="lbl tiny">null here — sequential only</text>
+
+  <rect x="850" y="268" width="230" height="56" rx="4" class="boxW"/>
+  <text x="965" y="286" text-anchor="middle" class="lbl dense">finisher:</text>
+  <text x="965" y="302" text-anchor="middle" class="lbl dense">BiConsumer&lt;A,Downstream&gt;</text>
+  <text x="965" y="317" text-anchor="middle" class="lbl tiny">flushes a short trailing window</text>
+
+  <rect x="600" y="346" width="480" height="92" rx="4" class="boxH"/>
+  <text x="614" y="366" class="lbl node">integrator flavours</text>
+  <text x="614" y="384" class="lbl tiny">Integrator.ofGreedy: always returns true — ignores the downstream</text>
+  <text x="614" y="398" class="lbl tiny">push's own signal, keeps integrating regardless</text>
+  <text x="614" y="412" class="lbl tiny">Integrator.ofShortCircuiting: returns whatever push returned — false</text>
+  <text x="614" y="426" class="lbl tiny">stops the stream early. windowFixed's integrator uses greedy</text>
+
+  <rect x="580" y="454" width="520" height="140" rx="6" class="boxR"/>
+  <text x="840" y="476" text-anchor="middle" class="lbl node">what the one-liner buys</text>
+  <text x="840" y="496" text-anchor="middle" class="lbl dense">no hand-written trySplit or estimateSize</text>
+  <text x="840" y="514" text-anchor="middle" class="lbl dense">no manual accumulator bookkeeping</text>
+  <text x="840" y="532" text-anchor="middle" class="lbl dense">gather() composes with map/filter mid-pipeline —</text>
+  <text x="840" y="550" text-anchor="middle" class="lbl dense">a Spliterator can only sit at the source</text>
+  <text x="840" y="572" text-anchor="middle" class="lbl sub">Gatherers.windowFixed(100) throws IllegalArgumentException below 1</text>
+
+  <rect x="20" y="614" width="1080" height="80" rx="6" class="boxAnn"/>
+  <text x="36" y="636" class="lbl node">THE POINT</text>
+  <text x="36" y="656" class="lbl tiny">A Spliterator decomposes a SOURCE for parallel traversal — SUBSIZED, SIZED and friends are promises about the SOURCE's shape. A Gatherer</text>
+  <text x="36" y="672" class="lbl tiny">is a mid-pipeline stateful transform — it never claims characteristics because it isn't a source at all; it trades the Spliterator's split contract</text>
+  <text x="36" y="686" class="lbl tiny">for the initializer/integrator/combiner/finisher contract, which is what lets it compose anywhere in a stream, not just at its head.</text>
+
+  <line x1="20" y1="722" x2="1100" y2="722" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="734" width="22" height="16" rx="3" class="pill"/>
+  <text x="50" y="747" class="lbl tiny">version pill (24 = new in Java 24)</text>
+  <rect x="260" y="734" width="22" height="16" rx="3" class="boxD"/>
+  <text x="290" y="747" class="lbl tiny">what the Spliterator cannot claim</text>
+  <rect x="520" y="734" width="22" height="16" rx="3" class="boxW"/>
+  <text x="550" y="747" class="lbl tiny">contract function / detail</text>
+  <rect x="740" y="734" width="22" height="16" rx="3" class="boxH"/>
+  <text x="770" y="747" class="lbl tiny">integrator flavour comparison</text>
+  <rect x="940" y="734" width="22" height="16" rx="3" class="boxR"/>
+  <text x="970" y="747" class="lbl tiny">Java 24 benefit</text>
+  <path class="adapt" d="M 20 766 H 60"/>
+  <text x="68" y="771" class="lbl tiny">adapter — same observable result, different mechanism</text>
+
+  <rect x="20" y="792" width="1080" height="66" rx="6" class="boxW"/>
+  <text x="36" y="814" class="lbl node">VERSION NOTE</text>
+  <text x="36" y="832" class="lbl tiny">Gatherers left preview in Java 24 (JEP 485); the notes target Java 21 LTS, where windowFixed does not exist and the hand-rolled Spliterator</text>
+  <text x="36" y="846" class="lbl tiny">on the left is the only option — this comparison argues why 4.7 is worth knowing even before an upgrade to 24 is on the table.</text>
+</svg>

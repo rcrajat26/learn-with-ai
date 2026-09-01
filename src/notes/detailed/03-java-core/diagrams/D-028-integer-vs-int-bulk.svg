@@ -1,0 +1,130 @@
+<svg viewBox="0 0 1140 1040" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout comparing int array against List of Integer for the same 2.8 million daily QuizStakes stake reservations. Top: int stakeMinorUnits equals new int of 2,800,000 is a single object, a 16-byte header followed by 11.2 megabytes of contiguous 4-byte int values, measured at 11,200,712 bytes or 10.68 mebibytes, exactly 4.000 bytes per element. Bottom, in three layers: a 24-byte ArrayList object points down at a backing Object array whose 16-byte header precedes 11.2 megabytes of 4-byte compressed references, and that reference run points down at 2,800,000 separate java.lang.Integer objects of 16 bytes each, totalling 44.8 megabytes. Measured total 56,000,376 bytes or 53.41 mebibytes, exactly 20.000 bytes per element, a ratio of exactly 5.00 times and 42.72 mebibytes of pure overhead per day. Annotation panels give the QuizStakes domain context and the measured Long comparison of 8.000 versus 28.000 bytes per element.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+    <marker id="arr028" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="1040" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Integer versus int in bulk &#8212; 2.8M QuizStakes stake reservations for one day</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ TOP ============ -->
+  <text x="20" y="66" class="h2">TOP &#8212; int[] stakeMinorUnits = new int[2_800_000]</text>
+
+  <rect x="60" y="84" width="150" height="70" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="106" class="smallb">16-byte header</text>
+  <text x="76" y="124" class="small">12B mark + klass</text>
+  <text x="76" y="140" class="small">+ 4B length, aligned</text>
+
+  <rect x="210" y="84" width="870" height="70" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="226" y="108" class="bodyb">2,800,000 &#215; 4-byte int values, one contiguous run</text>
+  <text x="226" y="130" class="smallD">11,200,000 bytes = 11.2 MB of payload, no pointers, no per-element header</text>
+  <text x="226" y="148" class="small">one object, one header &#8212; a cache-friendly linear scan</text>
+
+  <text x="60" y="178" class="smallD">measured, ThreadMXBean.getThreadAllocatedBytes: 11,200,712 bytes = 10.68 MiB = 4.000 bytes per element</text>
+
+  <!-- ============ BOTTOM ============ -->
+  <text x="20" y="216" class="h2">BOTTOM &#8212; List&lt;Integer&gt; of the same 2.8M daily stake amounts (ArrayList presized to 2,800,000)</text>
+
+  <!-- layer 1 -->
+  <rect x="60" y="234" width="300" height="70" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="256" class="bodyb">ArrayList &#8212; 24 bytes</text>
+  <text x="76" y="276" class="smallD">12B header + int size + int modCount</text>
+  <text x="76" y="294" class="smallD">+ 4B elementData reference, aligned</text>
+
+  <path d="M 135 304 V 344" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr028)"/>
+
+  <!-- layer 2 -->
+  <rect x="60" y="344" width="150" height="70" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="366" class="smallb">16-byte header</text>
+  <text x="76" y="384" class="small">12B mark + klass</text>
+  <text x="76" y="400" class="small">+ 4B length, aligned</text>
+
+  <rect x="210" y="344" width="870" height="70" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="226" y="368" class="bodyb">backing Object[] : 2,800,000 &#215; 4-byte compressed references</text>
+  <text x="226" y="390" class="smallD">11,200,000 bytes = 11.2 MB of pointers alone (UseCompressedOops on)</text>
+  <text x="226" y="408" class="small">the same 11.2 MB the int[] spent on actual values, spent here on addresses</text>
+
+  <path d="M 645 414 V 454" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr028)"/>
+
+  <!-- layer 3 -->
+  <rect x="210" y="454" width="870" height="100" rx="5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="226" y="478" class="bodyb">2,800,000 separate java.lang.Integer objects, scattered across the heap</text>
+  <text x="226" y="500" class="smallD">each 16 bytes = 12-byte header + 4-byte int value, padded to the 8-byte ObjectAlignmentInBytes boundary</text>
+  <text x="226" y="522" class="smallD">2,800,000 &#215; 16 = 44,800,000 bytes = 44.8 MB</text>
+  <text x="226" y="542" class="small">every read is one pointer dereference into a different cache line</text>
+
+  <text x="60" y="584" class="smallD">measured, ThreadMXBean.getThreadAllocatedBytes: 56,000,376 bytes = 53.41 MiB = 20.000 bytes per element</text>
+  <text x="60" y="604" class="smallD">20 bytes per element = 4-byte compressed reference in the backing Object[] + 16-byte Integer object</text>
+
+  <!-- ============ RATIO ============ -->
+  <text x="20" y="642" class="h2">THE RATIO, MEASURED</text>
+
+  <rect x="60" y="658" width="320" height="76" rx="5" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="76" y="682" class="bodyb">int[2_800_000]</text>
+  <text x="76" y="704" class="smallD">11,200,712 bytes = 10.68 MiB</text>
+  <text x="76" y="724" class="smallD">4.000 bytes per element</text>
+
+  <rect x="400" y="658" width="320" height="76" rx="5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="416" y="682" class="bodyb">List&lt;Integer&gt;, 2.8M entries</text>
+  <text x="416" y="704" class="smallD">56,000,376 bytes = 53.41 MiB</text>
+  <text x="416" y="724" class="smallD">20.000 bytes per element</text>
+
+  <rect x="740" y="658" width="340" height="76" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="756" y="682" class="bodyb">ratio = exactly 5.00&#215;</text>
+  <text x="756" y="704" class="smallD">56,000,376 / 11,200,712 = 5.00</text>
+  <text x="756" y="724" class="smallD">42.72 MiB of pure overhead per day</text>
+
+  <!-- ============ PANELS ============ -->
+  <rect x="60" y="766" width="500" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="788" class="bodyb">DOMAIN CONTEXT</text>
+  <text x="76" y="810" class="smallD">2.8M is QuizStakes stake reservations per day</text>
+  <text x="76" y="828" class="smallD">1,200 per second at peak, average stake value 4.20</text>
+  <text x="76" y="846" class="smallD">so minor units average 420 &#8212; every value fits in an int</text>
+  <text x="76" y="866" class="small">ArrayList presized, so no growth reallocation is counted</text>
+
+  <rect x="580" y="766" width="500" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="596" y="788" class="bodyb">THE Long CASE, MEASURED</text>
+  <text x="596" y="810" class="smallD">long[]        &#8594;   8.000 bytes per element</text>
+  <text x="596" y="828" class="smallD">List&lt;Long&gt;   &#8594;  28.000 bytes per element</text>
+  <text x="596" y="846" class="smallD">= 4-byte reference + 24-byte Long object (3.5&#215;)</text>
+  <text x="596" y="866" class="small">Oracle JDK 21.0.7+8-LTS-245, macOS aarch64, alignment 8</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="908" class="h2">LEGEND</text>
+  <line x1="20" y1="916" x2="1120" y2="916" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="928" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="941" class="small">contiguous primitive payload &#8212; the compact, cache-friendly layout</text>
+
+  <rect x="30" y="954" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="967" class="small">object header words: mark, klass pointer, array length</text>
+
+  <rect x="30" y="980" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="993" class="small">the ArrayList object itself &#8212; the collection wrapper</text>
+
+  <rect x="30" y="1006" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1019" class="small">measured annotation panel</text>
+
+  <rect x="600" y="928" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="628" y="941" class="small">4-byte compressed references in the backing Object[], and the ratio</text>
+
+  <rect x="600" y="954" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="628" y="967" class="small">the 2.8M boxed Integer objects &#8212; the 5&#215; memory blow-up</text>
+
+  <line x1="600" y1="986" x2="626" y2="986" stroke="#475569" stroke-width="2" marker-end="url(#arr028)"/>
+  <text x="634" y="991" class="small">refers to : A &#8594; B, the object A holds a reference into B</text>
+</svg>

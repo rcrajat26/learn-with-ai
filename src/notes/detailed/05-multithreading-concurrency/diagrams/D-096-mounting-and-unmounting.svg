@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1160 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four frames showing a virtual thread mounting and unmounting while calling the card
+     PSP authorise at 240 millisecond p50. Frame 1: the virtual thread is mounted, its frames live
+     on the carrier's own stack. Frame 2: the blocking read calls Continuation.yield, and the live
+     frames freeze into a heap StackChunk via a lazy copy. Frame 3: the now-free carrier picks up a
+     different runnable virtual thread. Frame 4: the poller unparks the original virtual thread and
+     its frames thaw incrementally, possibly onto a different carrier than the one it started on.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .frame  { fill: none; stroke: #d1d5db; stroke-width: 1.3; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MOUNTING AND UNMOUNTING — gateway-http-7 CALLING THE CARD PSP (240 ms p50)</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- 4 frame panels -->
+  <!-- Frame 1 -->
+  <rect x="20" y="60" width="270" height="430" rx="6" class="frame"/>
+  <text x="35" y="82" class="lbl h2">FRAME 1 — MOUNTED</text>
+  <rect x="35" y="94" width="240" height="60" rx="6" class="boxH"/>
+  <text x="155" y="116" text-anchor="middle" class="lbl body">carrier-worker-3</text>
+  <text x="155" y="134" text-anchor="middle" class="lbl sub">platform thread</text>
+  <path class="flow" d="M 155 154 V 174"/>
+  <rect x="55" y="174" width="200" height="150" rx="6" class="boxP"/>
+  <text x="155" y="198" text-anchor="middle" class="lbl body">VT: gateway-http-7</text>
+  <text x="155" y="218" text-anchor="middle" class="lbl sub">frames live on the</text>
+  <text x="155" y="234" text-anchor="middle" class="lbl sub">carrier's own OS stack</text>
+  <line x1="75" y1="250" x2="235" y2="250" stroke="#9ca3af" stroke-width="1" stroke-dasharray="2 2"/>
+  <text x="155" y="270" text-anchor="middle" class="lbl sub">authorise() called</text>
+  <text x="155" y="288" text-anchor="middle" class="lbl sub">about to block on read</text>
+  <rect x="35" y="340" width="240" height="130" rx="6" class="boxAnn"/>
+  <text x="155" y="362" text-anchor="middle" class="lbl tiny" font-weight="700">step 1</text>
+  <text x="155" y="382" text-anchor="middle" class="lbl tiny">running normally,</text>
+  <text x="155" y="398" text-anchor="middle" class="lbl tiny">no different from a</text>
+  <text x="155" y="414" text-anchor="middle" class="lbl tiny">platform thread yet</text>
+
+  <path class="flow" d="M 290 275 H 310"/>
+
+  <!-- Frame 2 -->
+  <rect x="310" y="60" width="270" height="430" rx="6" class="frame"/>
+  <text x="325" y="82" class="lbl h2">FRAME 2 — YIELD</text>
+  <rect x="325" y="94" width="240" height="60" rx="6" class="boxH"/>
+  <text x="445" y="116" text-anchor="middle" class="lbl body">carrier-worker-3</text>
+  <text x="445" y="134" text-anchor="middle" class="lbl sub">about to be freed</text>
+  <path class="weak" d="M 445 154 V 174"/>
+  <text x="490" y="168" class="lbl tiny">yield</text>
+  <rect x="345" y="174" width="200" height="150" rx="6" class="boxR"/>
+  <text x="445" y="198" text-anchor="middle" class="lbl body">StackChunk (heap)</text>
+  <text x="445" y="218" text-anchor="middle" class="lbl sub">Continuation.yield freezes</text>
+  <text x="445" y="234" text-anchor="middle" class="lbl sub">the live frames here</text>
+  <text x="445" y="252" text-anchor="middle" class="lbl sub" font-weight="700">lazy copy: only touched</text>
+  <text x="445" y="268" text-anchor="middle" class="lbl sub" font-weight="700">frames are copied</text>
+  <text x="445" y="288" text-anchor="middle" class="lbl sub">PSP socket read is blocking</text>
+  <rect x="325" y="340" width="240" height="130" rx="6" class="boxAnn"/>
+  <text x="445" y="362" text-anchor="middle" class="lbl tiny" font-weight="700">step 2</text>
+  <text x="445" y="382" text-anchor="middle" class="lbl tiny">read() would block the</text>
+  <text x="445" y="398" text-anchor="middle" class="lbl tiny">OS thread; the JDK's socket</text>
+  <text x="445" y="414" text-anchor="middle" class="lbl tiny">adapter parks the VT instead</text>
+
+  <path class="flow" d="M 580 275 H 600"/>
+
+  <!-- Frame 3 -->
+  <rect x="600" y="60" width="270" height="430" rx="6" class="frame"/>
+  <text x="615" y="82" class="lbl h2">FRAME 3 — CARRIER REUSED</text>
+  <rect x="615" y="94" width="240" height="60" rx="6" class="boxH"/>
+  <text x="735" y="116" text-anchor="middle" class="lbl body">carrier-worker-3</text>
+  <text x="735" y="134" text-anchor="middle" class="lbl sub">now free</text>
+  <path class="flow" d="M 735 154 V 174"/>
+  <rect x="635" y="174" width="200" height="150" rx="6" class="boxP"/>
+  <text x="735" y="198" text-anchor="middle" class="lbl body">VT: settlement-ingest-3</text>
+  <text x="735" y="218" text-anchor="middle" class="lbl sub">a different, unrelated</text>
+  <text x="735" y="234" text-anchor="middle" class="lbl sub">runnable virtual thread</text>
+  <text x="735" y="252" text-anchor="middle" class="lbl sub">picked up from the FIFO</text>
+  <text x="735" y="268" text-anchor="middle" class="lbl sub">runnable-VT queue</text>
+  <rect x="615" y="340" width="240" height="130" rx="6" class="boxAnn"/>
+  <text x="735" y="362" text-anchor="middle" class="lbl tiny" font-weight="700">step 3</text>
+  <text x="735" y="382" text-anchor="middle" class="lbl tiny">gateway-http-7's StackChunk</text>
+  <text x="735" y="398" text-anchor="middle" class="lbl tiny">sits parked on the heap while</text>
+  <text x="735" y="414" text-anchor="middle" class="lbl tiny">the carrier does other work</text>
+
+  <path class="flow" d="M 870 275 H 890"/>
+
+  <!-- Frame 4 -->
+  <rect x="890" y="60" width="250" height="430" rx="6" class="frame"/>
+  <text x="905" y="82" class="lbl h2">FRAME 4 — THAW</text>
+  <rect x="905" y="94" width="220" height="60" rx="6" class="boxH"/>
+  <text x="1015" y="116" text-anchor="middle" class="lbl body">carrier-worker-9</text>
+  <text x="1015" y="134" text-anchor="middle" class="lbl sub" font-weight="700">possibly different carrier</text>
+  <path class="weak" d="M 1015 154 V 174"/>
+  <text x="1058" y="168" class="lbl tiny">thaw</text>
+  <rect x="925" y="174" width="180" height="150" rx="6" class="boxP"/>
+  <text x="1015" y="198" text-anchor="middle" class="lbl body">VT: gateway-http-7</text>
+  <text x="1015" y="218" text-anchor="middle" class="lbl sub">poller unparks it after the</text>
+  <text x="1015" y="234" text-anchor="middle" class="lbl sub">PSP response arrives</text>
+  <text x="1015" y="252" text-anchor="middle" class="lbl sub">frames thaw incrementally</text>
+  <text x="1015" y="268" text-anchor="middle" class="lbl sub">from the StackChunk</text>
+  <text x="1015" y="286" text-anchor="middle" class="lbl sub">back onto a carrier stack</text>
+  <rect x="905" y="340" width="220" height="130" rx="6" class="boxAnn"/>
+  <text x="1015" y="362" text-anchor="middle" class="lbl tiny" font-weight="700">step 4</text>
+  <text x="1015" y="382" text-anchor="middle" class="lbl tiny">execution resumes exactly</text>
+  <text x="1015" y="398" text-anchor="middle" class="lbl tiny">where it yielded; identity of</text>
+  <text x="1015" y="414" text-anchor="middle" class="lbl tiny">the carrier is irrelevant to</text>
+  <text x="1015" y="430" text-anchor="middle" class="lbl tiny">correct Java code</text>
+
+  <!-- legend -->
+  <line x1="20" y1="512" x2="1140" y2="512" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="524" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="537" class="lbl tiny">carrier — the thing the frame is about</text>
+  <rect x="320" y="524" width="22" height="16" rx="3" class="boxP"/>
+  <text x="350" y="537" class="lbl tiny">the subject virtual thread</text>
+  <rect x="600" y="524" width="22" height="16" rx="3" class="boxR"/>
+  <text x="630" y="537" class="lbl tiny">StackChunk — resolved, concrete, on heap</text>
+  <rect x="920" y="524" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="950" y="537" class="lbl tiny">annotation panel — this step</text>
+
+  <path class="flow" d="M 20 556 H 60"/>
+  <text x="70" y="561" class="lbl tiny">A → B : sequence advances from A to B</text>
+  <path class="weak" d="M 400 556 H 440"/>
+  <text x="450" y="561" class="lbl tiny">A → B : freeze/thaw transfer between carrier and heap</text>
+
+  <text x="20" y="590" class="lbl tiny" font-style="italic">Frames 1→4 replay left to right; frame 4's carrier-worker-9 need not be frame 1's carrier-worker-3.</text>
+</svg>

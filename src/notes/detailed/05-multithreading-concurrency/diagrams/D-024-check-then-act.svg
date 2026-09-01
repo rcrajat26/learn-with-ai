@@ -1,0 +1,113 @@
+<svg viewBox="0 0 1040 580" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Check-then-act loses the race. Two threads, restriction-apply-1 and
+     restriction-apply-2, both run: if (!restrictions.containsKey(key)) restrictions.put(key, r)
+     for RestrictionKey(STAKE_BLOCKED, ADMIN). Frame 1: both threads check containsKey and both see
+     false. Frame 2: both threads proceed to put. Frame 3: restriction-apply-2's put overwrites
+     restriction-apply-1's put, silently discarding the first Restriction object though the map
+     reports only one entry present. Beside the race, a fixed version puts both the check and the
+     act inside one synchronized block guarded by the same lock, so the second thread's check
+     happens only after the first thread's put is fully visible.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .lane  { stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="580" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CHECK-THEN-ACT LOSES THE RACE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- setup panel -->
+  <rect x="20" y="52" width="660" height="56" rx="6" class="boxA"/>
+  <text x="40" y="72" class="lbl body">if (!restrictions.containsKey(key)) restrictions.put(key, r);</text>
+  <text x="40" y="92" class="lbl sub">key = RestrictionKey(STAKE_BLOCKED, ADMIN) · no synchronization</text>
+
+  <!-- SECTION: RACE -->
+  <text x="20" y="128" class="lbl h2">RACE — SEPARATE CHECK AND ACT</text>
+
+  <text x="220" y="150" text-anchor="middle" class="lbl tinyB">restriction-apply-1</text>
+  <text x="530" y="150" text-anchor="middle" class="lbl tinyB">restriction-apply-2</text>
+  <line x1="220" y1="158" x2="220" y2="470" class="lane"/>
+  <line x1="530" y1="158" x2="530" y2="470" class="lane"/>
+  <text x="60" y="163" class="lbl tinyB">TIME</text>
+  <path class="flow" d="M 60 168 V 460"/>
+
+  <!-- frame 1 -->
+  <rect x="20" y="170" width="660" height="90" rx="6" class="boxP"/>
+  <text x="30" y="188" class="lbl tinyB">FRAME 1 — both check, both see false</text>
+  <rect x="120" y="198" width="200" height="52" rx="6" class="boxP"/>
+  <text x="220" y="218" text-anchor="middle" class="lbl body">1. containsKey(key)</text>
+  <text x="220" y="236" text-anchor="middle" class="lbl sub">returns false</text>
+  <rect x="430" y="198" width="200" height="52" rx="6" class="boxP"/>
+  <text x="530" y="218" text-anchor="middle" class="lbl body">1. containsKey(key)</text>
+  <text x="530" y="236" text-anchor="middle" class="lbl sub">returns false</text>
+
+  <!-- frame 2 -->
+  <rect x="20" y="270" width="660" height="90" rx="6" class="boxP"/>
+  <text x="30" y="288" class="lbl tinyB">FRAME 2 — both proceed to put</text>
+  <rect x="120" y="298" width="200" height="52" rx="6" class="boxP"/>
+  <text x="220" y="318" text-anchor="middle" class="lbl body">2. put(key, r1)</text>
+  <text x="220" y="336" text-anchor="middle" class="lbl sub">restriction r1 written</text>
+  <rect x="430" y="298" width="200" height="52" rx="6" class="boxP"/>
+  <text x="530" y="318" text-anchor="middle" class="lbl body">2. put(key, r2)</text>
+  <text x="530" y="336" text-anchor="middle" class="lbl sub">restriction r2 written</text>
+
+  <!-- frame 3 -->
+  <rect x="20" y="370" width="660" height="90" rx="6" class="boxD"/>
+  <text x="30" y="388" class="lbl tinyB">FRAME 3 — second put silently overwrites first</text>
+  <path class="flow" d="M 220 350 V 402"/>
+  <path class="flow" d="M 530 350 V 402"/>
+  <rect x="290" y="402" width="200" height="46" rx="6" class="boxD"/>
+  <text x="390" y="422" text-anchor="middle" class="lbl body">restrictions.get(key) = r2</text>
+  <text x="390" y="438" text-anchor="middle" class="lbl sub">r1 discarded — map has one entry only</text>
+
+  <!-- SECTION: FIX -->
+  <text x="740" y="128" class="lbl h2">FIX — CHECK AND ACT UNDER ONE LOCK</text>
+  <rect x="740" y="140" width="280" height="330" rx="6" class="boxR"/>
+  <text x="760" y="162" class="lbl tinyB">synchronized (restrictionsLock) {</text>
+  <text x="780" y="186" class="lbl body">if (!restrictions</text>
+  <text x="800" y="204" class="lbl body">.containsKey(key))</text>
+  <text x="800" y="226" class="lbl body">restrictions.put(key, r);</text>
+  <text x="760" y="248" class="lbl tinyB">}</text>
+  <line x1="760" y1="264" x2="1000" y2="264" stroke="#d1d5db" stroke-width="1"/>
+  <text x="880" y="286" text-anchor="middle" class="lbl sub">both check and act are one</text>
+  <text x="880" y="304" text-anchor="middle" class="lbl sub">atomic critical section guarded</text>
+  <text x="880" y="322" text-anchor="middle" class="lbl sub">by the same lock as every other</text>
+  <text x="880" y="340" text-anchor="middle" class="lbl sub">access to restrictions</text>
+  <text x="880" y="366" text-anchor="middle" class="lbl sub">restriction-apply-2's check now</text>
+  <text x="880" y="384" text-anchor="middle" class="lbl sub">happens only after restriction-apply-1's</text>
+  <text x="880" y="402" text-anchor="middle" class="lbl sub">put is fully visible — it sees true</text>
+  <text x="880" y="428" text-anchor="middle" class="lbl sub">and skips the put; r1 survives</text>
+  <text x="880" y="450" text-anchor="middle" class="lbl sub">exactly one entry, no lost write</text>
+
+  <line x1="20" y1="500" x2="1020" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="516" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="528" class="lbl tiny">check or act step, unguarded</text>
+  <rect x="330" y="516" width="22" height="16" rx="3" class="boxD"/>
+  <text x="360" y="528" class="lbl tiny">the overwrite / lost restriction</text>
+  <rect x="700" y="516" width="22" height="16" rx="3" class="boxR"/>
+  <text x="730" y="528" class="lbl tiny">check + act inside one synchronized block (fixed)</text>
+  <path class="flow" d="M 20 546 H 60"/>
+  <text x="70" y="550" class="lbl tiny">A → B : A happens, then B happens next on the time axis</text>
+</svg>

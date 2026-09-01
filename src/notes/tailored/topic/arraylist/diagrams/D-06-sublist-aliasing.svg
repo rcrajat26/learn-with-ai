@@ -1,0 +1,105 @@
+<svg viewBox="0 0 1040 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="subList is a view, not a copy. The parent ArrayList, of size 5, and its ArrayList dollar SubList, a nested type holding root, parent, offset 1 and size 3, both point to the exact same backing Object array of 5 slots holding QuizStakes payment status codes DEP-301, DEP-400, BDP-100, BDP-200 and BDP-300. A bracket marks the view as slots 1 through 3. An annotation panel explains that writes and clears through the view affect the parent, that structural changes to the parent invalidate the view, and that the view retains a strong reference to the whole parent array.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .field { font-size: 12px; }
+    .idx   { font-size: 10.5px; fill: #4b5563; text-anchor: middle; }
+    .val   { font-size: 12px; font-weight: 600; text-anchor: middle; }
+    .sub   { font-size: 11px; fill: #4b5563; text-anchor: middle; }
+    .panelHdr { font-size: 12px; font-weight: 700; fill: #1e3a8a; }
+    .panelRow { font-size: 11px; fill: #1f2937; }
+    .legend { font-size: 11px; fill: #1f2937; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 6 4; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow    { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .nested  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triGreen); }
+    .tick    { fill: none; stroke: #475569; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">subList IS A VIEW, NOT A COPY</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- parent object -->
+  <rect x="60" y="70" width="300" height="100" rx="6" class="boxP"/>
+  <text x="210" y="96" text-anchor="middle" class="lbl node">ArrayList (parent)</text>
+  <text x="210" y="120" text-anchor="middle" class="lbl field">size : 5</text>
+  <text x="210" y="142" text-anchor="middle" class="lbl field">modCount : m0</text>
+
+  <!-- SubList nested type -->
+  <rect x="680" y="70" width="300" height="140" rx="6" class="boxWeak"/>
+  <text x="830" y="96" text-anchor="middle" class="lbl node">ArrayList$SubList</text>
+  <text x="700" y="120" class="lbl field">root : ArrayList</text>
+  <text x="700" y="142" class="lbl field">parent : the enclosing list</text>
+  <text x="700" y="164" class="lbl field">offset : 1</text>
+  <text x="700" y="186" class="lbl field">size : 3</text>
+
+  <!-- nested type of, dashed, arrow points at parent -->
+  <path class="nested" d="M 680 150 H 500 V 120 H 360"/>
+
+  <!-- structural refs into the SAME array -->
+  <path class="flow" d="M 210 170 V 300 H 505 V 330"/>
+  <path class="flow" d="M 830 210 V 300 H 535 V 330"/>
+
+  <!-- shared backing array -->
+  <text x="520" y="256" text-anchor="middle" class="lbl node">elementData : Object[]  &#8212;  ONE array, two owners</text>
+
+  <text x="324" y="324" class="idx">0</text>
+  <rect x="279" y="330" width="90" height="50" rx="5" class="boxP"/>
+  <text x="324" y="358" class="val">DEP-301</text>
+
+  <text x="422" y="324" class="idx">1</text>
+  <rect x="377" y="330" width="90" height="50" rx="5" class="boxP"/>
+  <text x="422" y="358" class="val">DEP-400</text>
+
+  <text x="520" y="324" class="idx">2</text>
+  <rect x="475" y="330" width="90" height="50" rx="5" class="boxP"/>
+  <text x="520" y="358" class="val">BDP-100</text>
+
+  <text x="618" y="324" class="idx">3</text>
+  <rect x="573" y="330" width="90" height="50" rx="5" class="boxP"/>
+  <text x="618" y="358" class="val">BDP-200</text>
+
+  <text x="716" y="324" class="idx">4</text>
+  <rect x="671" y="330" width="90" height="50" rx="5" class="boxP"/>
+  <text x="716" y="358" class="val">BDP-300</text>
+
+  <!-- bracket over the view: slots 1-3 -->
+  <path class="tick" d="M 377 388 V 396 H 663 V 388"/>
+  <text x="520" y="414" class="sub">the view: offset 1, size 3</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="450" width="1000" height="140" rx="6" class="panel"/>
+  <text x="40" y="472" class="lbl panelHdr">WHAT THAT ALIASING COSTS YOU</text>
+  <text x="40" y="494" class="lbl panelRow">sub.set(0, x) writes through to parent index 1.</text>
+  <text x="40" y="514" class="lbl panelRow">sub.clear() DELETES those elements from the parent.</text>
+  <text x="40" y="534" class="lbl panelRow">A structural change to the parent makes the view throw ConcurrentModificationException on next use.</text>
+  <text x="40" y="554" class="lbl panelRow">The view holds a strong reference to the whole parent array &#8212; a 3-element view of a 40k list retains all 40k.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="612" x2="1020" y2="612" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="30" y="624" width="22" height="16" rx="3" class="boxP"/>
+  <text x="58" y="636" class="lbl legend">concrete object / array slot</text>
+  <rect x="240" y="624" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="268" y="636" class="lbl legend">nested type (SubList)</text>
+  <rect x="440" y="624" width="22" height="16" rx="3" class="panel"/>
+  <text x="468" y="636" class="lbl legend">callout panel</text>
+  <path class="flow" d="M 600 632 H 640"/>
+  <text x="650" y="636" class="lbl legend">A &#8594; B : structural reference</text>
+  <path class="nested" d="M 850 632 H 890"/>
+  <text x="900" y="636" class="lbl legend">A &#8594; B : nested type of</text>
+</svg>

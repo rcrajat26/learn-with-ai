@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1120 980" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout of vtable versus itable dispatch. Left: a CardRail instance points to its CardRail klass, which holds a vtable array with fixed indices 0-4 inherited from Object, index 5 for PaymentRail.authorise overwritten by CardRail's own override, and index 6 for CardRail's own additional method; invokevirtual reads klass, then vtable[index], then code, resolving the index once at link time. Right: a PaymentRailPort-typed reference points to the same CardRail klass, which holds an itable listing (interface klass, method-table offset) pairs; invokeinterface must scan the itable for PaymentRailPort before it can index into the method table, the extra work invokevirtual never pays. An annotation panel states that vtable and itable are HotSpot implementation details never named in the JVMS, which specifies only resolution and selection semantics.">
+  <defs>
+    <marker id="arrow110" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="980" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">vtable and itable</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">VTABLE &#8212; invokevirtual is an index</text>
+  <line x1="40" y1="72" x2="520" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="840" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">ITABLE &#8212; invokeinterface searches, then indexes</text>
+  <line x1="600" y1="72" x2="1080" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ============ LEFT: VTABLE ============ -->
+  <rect x="40" y="90" width="480" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="110" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">CardRail instance</text>
+  <text x="280" y="128" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">receiver of authorise(intent)</text>
+
+  <line x1="280" y1="140" x2="280" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#arrow110)"/>
+  <text x="292" y="164" font-family="sans-serif" font-size="11" fill="#4b5563">klass pointer</text>
+
+  <rect x="40" y="180" width="480" height="280" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="280" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardRail klass &#8212; vtable</text>
+
+  <rect x="60" y="212" width="440" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="70" y="228" font-family="sans-serif" font-size="11" fill="#1f2937">[0] toString()  &#8212; inherited from Object</text>
+
+  <rect x="60" y="236" width="440" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="70" y="252" font-family="sans-serif" font-size="11" fill="#1f2937">[1] hashCode()  &#8212; inherited from Object</text>
+
+  <rect x="60" y="260" width="440" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="70" y="276" font-family="sans-serif" font-size="11" fill="#1f2937">[2] equals(Object)  &#8212; inherited from Object</text>
+
+  <rect x="60" y="284" width="440" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="70" y="300" font-family="sans-serif" font-size="11" fill="#1f2937">[3] clone()  &#8212; inherited from Object</text>
+
+  <rect x="60" y="308" width="440" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="70" y="324" font-family="sans-serif" font-size="11" fill="#1f2937">[4] finalize()  &#8212; inherited from Object</text>
+
+  <text x="280" y="344" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">indices 0-4 are a HotSpot layout choice, not JVMS-specified</text>
+
+  <rect x="60" y="352" width="440" height="26" fill="#dcfce7" stroke="#15803d" stroke-width="1.4"/>
+  <text x="70" y="369" font-family="sans-serif" font-size="11" fill="#1f2937">[5] CardRail.authorise(PaymentIntent) &#8212; overwrites PaymentRail's slot</text>
+
+  <rect x="60" y="380" width="440" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="70" y="397" font-family="sans-serif" font-size="11" fill="#1f2937">[6] CardRail.reconcile(LedgerEntry) &#8212; own new method, new slot</text>
+
+  <text x="280" y="424" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">slot index is FIXED by the superclass PaymentRail;</text>
+  <text x="280" y="442" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CardRail overwrites it, it does not append a new slot</text>
+
+  <text x="280" y="484" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">receiver -&gt; klass -&gt; vtable[index] -&gt; code</text>
+  <text x="280" y="504" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">invokevirtual resolves the index ONCE at link time from the</text>
+  <text x="280" y="522" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">constant-pool Methodref, then only pays a fixed-offset array read</text>
+
+  <!-- ============ RIGHT: ITABLE ============ -->
+  <rect x="600" y="90" width="480" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="840" y="110" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">reference typed PaymentRailPort</text>
+  <text x="840" y="128" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">runtime type: CardRail</text>
+
+  <line x1="840" y1="140" x2="840" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#arrow110)"/>
+  <text x="852" y="164" font-family="sans-serif" font-size="11" fill="#4b5563">klass pointer</text>
+
+  <rect x="600" y="180" width="480" height="50" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="840" y="202" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">CardRail klass</text>
+  <text x="840" y="220" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(vtable omitted here &#8212; see left lane)</text>
+
+  <path d="M 840 230 V 260" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow110)"/>
+  <text x="852" y="248" font-family="sans-serif" font-size="11" fill="#b45309">scan itable for PaymentRailPort</text>
+
+  <rect x="600" y="260" width="480" height="140" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="840" y="282" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardRail itable</text>
+
+  <rect x="620" y="292" width="440" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="1.4"/>
+  <text x="630" y="309" font-family="sans-serif" font-size="11" fill="#1f2937">PaymentRailPort -&gt; method-table offset 0</text>
+
+  <rect x="620" y="324" width="440" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="630" y="341" font-family="sans-serif" font-size="11" fill="#1f2937">Auditable -&gt; method-table offset 1 (unrelated interface)</text>
+
+  <text x="840" y="372" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">CardRail may implement many unrelated interfaces &#8212;</text>
+  <text x="840" y="388" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">no interface has a fixed position in this list</text>
+
+  <line x1="840" y1="400" x2="840" y2="440" stroke="#475569" stroke-width="2" marker-end="url(#arrow110)"/>
+
+  <rect x="600" y="440" width="480" height="50" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="840" y="462" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">method table[offset 0]</text>
+  <text x="840" y="480" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">= CardRail.authorise(PaymentIntent)</text>
+
+  <text x="840" y="524" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">receiver -&gt; klass -&gt; scan itable for PaymentRailPort -&gt;</text>
+  <text x="840" y="544" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">offset -&gt; method table -&gt; code</text>
+  <text x="840" y="564" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b45309">the SCAN step is the extra work invokeinterface pays and invokevirtual does not</text>
+
+  <!-- ============ ANNOTATION PANEL ============ -->
+  <rect x="60" y="620" width="1000" height="190" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="644" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">vtable AND itable ARE HOTSPOT IMPLEMENTATION DETAILS.</text>
+  <text x="80" y="664" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">NEITHER WORD APPEARS IN THE JVMS.</text>
+  <text x="80" y="686" font-family="sans-serif" font-size="11" fill="#1f2937">The JVMS specifies method resolution (&#167;5.4.3.3) and selection (&#167;5.4.6) as semantics,</text>
+  <text x="80" y="704" font-family="sans-serif" font-size="11" fill="#1f2937">not as a data structure; the table layout, the slot indices, and the itable scan are</text>
+  <text x="80" y="722" font-family="sans-serif" font-size="11" fill="#1f2937">how HotSpot chooses to implement those semantics. Another conforming JVM may</text>
+  <text x="80" y="740" font-family="sans-serif" font-size="11" fill="#1f2937">implement resolution and selection differently while still being spec-compliant.</text>
+  <text x="80" y="762" font-family="sans-serif" font-size="11" fill="#1f2937">Both lanes above are HotSpot's chosen mechanism, not a JVMS requirement.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="850" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="40" y1="858" x2="1080" y2="858" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="60" y1="878" x2="100" y2="878" stroke="#475569" stroke-width="2" marker-end="url(#arrow110)"/>
+  <text x="110" y="883" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : fixed-offset access (receiver-&gt;klass, klass-&gt;vtable[index])</text>
+
+  <line x1="560" y1="878" x2="600" y2="878" stroke="#475569" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow110)"/>
+  <text x="610" y="883" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : search / scan (klass-&gt;itable, no fixed position)</text>
+
+  <rect x="60" y="898" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="90" y="911" font-family="sans-serif" font-size="11" fill="#4b5563">the interface reference / the entry being scanned for</text>
+
+  <rect x="560" y="898" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="590" y="911" font-family="sans-serif" font-size="11" fill="#4b5563">resolved / winning method-table entry</text>
+
+  <rect x="60" y="922" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="90" y="935" font-family="sans-serif" font-size="11" fill="#4b5563">inherited Object slot / unrelated interface entry</text>
+
+  <rect x="560" y="922" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="590" y="935" font-family="sans-serif" font-size="11" fill="#4b5563">the receiver / a new own-method slot</text>
+</svg>

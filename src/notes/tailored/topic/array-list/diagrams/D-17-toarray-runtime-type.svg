@@ -1,0 +1,146 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The runtime type toArray hands back, compared across JDK 8 and JDK 9+. Frame A, JDK 8: Arrays.asList(instrumentIds).toArray() returns a String array via a.clone(), and storing an Integer into it throws ArrayStoreException, because the array's runtime component type is String. new ArrayList of that collection dot toArray() returns Object array in JDK 8 too, because the ArrayList constructor forces Arrays.copyOf(a, size, Object[].class), and the Integer store into that succeeds. Frame B, JDK 9 and later: Arrays.asList(instrumentIds).toArray() now also returns Object array, because JDK-6260652 changed Arrays$ArrayList.toArray() from a.clone() to Arrays.copyOf(a, a.length, Object[].class), so the Integer store now succeeds. new ArrayList of that collection dot toArray() is unchanged: still Object array, still succeeds, in both JDKs.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #1f2937; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxF  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 3 3; marker-end: url(#triA); }
+
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE RUNTIME TYPE toArray HANDS BACK</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl body mono">String[] instrumentIds = { "AA-610", "AA-620" };</text>
+  <text x="20" y="82" class="lbl sub">instrumentIds: Instrument ids for a Client's cards and bank accounts (§3 Glossary). AA-610 / AA-620 are activation status codes (§3.1/§8.3).</text>
+
+  <!-- ============ FRAME A: JDK 8 ============ -->
+  <rect x="20" y="98" width="520" height="330" rx="8" fill="#fafafa" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="122" class="lbl h2">FRAME A — JDK 1.8.0_202</text>
+  <rect x="440" y="104" width="88" height="24" rx="12" class="pill"/>
+  <text x="484" y="120" text-anchor="middle" class="lbl tiny" font-weight="700">8</text>
+
+  <text x="36" y="146" class="lbl body mono">Arrays.asList(instrumentIds).toArray()</text>
+  <path class="flow" d="M 36 156 V 172"/>
+  <rect x="36" y="176" width="230" height="50" rx="6" class="boxH"/>
+  <text x="151" y="196" text-anchor="middle" class="lbl node mono">a.clone()</text>
+  <text x="151" y="214" text-anchor="middle" class="lbl sub">Arrays$ArrayList.toArray()</text>
+
+  <path class="flow" d="M 266 201 H 300"/>
+  <rect x="304" y="176" width="186" height="50" rx="6" class="boxP"/>
+  <text x="397" y="196" text-anchor="middle" class="lbl node mono">String[]</text>
+  <text x="397" y="214" text-anchor="middle" class="lbl sub">clone preserves component type</text>
+
+  <path class="flow" d="M 397 226 V 246"/>
+  <text x="411" y="240" class="lbl tiny sub">store Integer</text>
+  <rect x="290" y="250" width="214" height="58" rx="6" class="boxF"/>
+  <text x="397" y="272" text-anchor="middle" class="lbl node mono" font-size="12.5">ArrayStoreException</text>
+  <text x="397" y="290" text-anchor="middle" class="lbl sub">java.lang.Integer</text>
+  <text x="397" y="303" text-anchor="middle" class="lbl sub">JVM array-store check</text>
+
+  <line x1="36" y1="330" x2="504" y2="330" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="36" y="352" class="lbl body mono">new ArrayList&lt;&gt;(c).toArray()</text>
+  <path class="flow" d="M 36 362 V 378"/>
+  <rect x="36" y="382" width="230" height="36" rx="6" class="boxW"/>
+  <text x="151" y="404" text-anchor="middle" class="lbl sub mono">Arrays.copyOf(a, size, Object[].class)</text>
+
+  <path class="flow" d="M 266 400 H 300"/>
+  <rect x="304" y="382" width="186" height="36" rx="6" class="boxR"/>
+  <text x="397" y="404" text-anchor="middle" class="lbl node mono">Object[]</text>
+
+  <text x="304" y="426" class="lbl sub">Integer store: OK</text>
+
+  <!-- ============ FRAME B: JDK 9+ ============ -->
+  <rect x="580" y="98" width="520" height="330" rx="8" fill="#fafafa" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="596" y="122" class="lbl h2">FRAME B — JDK 9+ (11 / 17 / 21 identical)</text>
+  <rect x="1000" y="104" width="88" height="24" rx="12" class="pill"/>
+  <text x="1044" y="120" text-anchor="middle" class="lbl tiny" font-weight="700">9+</text>
+
+  <text x="596" y="146" class="lbl body mono">Arrays.asList(instrumentIds).toArray()</text>
+  <path class="flow" d="M 596 156 V 172"/>
+  <rect x="596" y="176" width="270" height="50" rx="6" class="boxH"/>
+  <text x="731" y="196" text-anchor="middle" class="lbl node mono" font-size="12.5">Arrays.copyOf(a, a.length,</text>
+  <text x="731" y="212" text-anchor="middle" class="lbl node mono" font-size="12.5">Object[].class)</text>
+  <text x="731" y="224" text-anchor="middle" class="lbl sub">JDK-6260652 — changed from a.clone()</text>
+
+  <path class="flow" d="M 866 201 H 890"/>
+  <rect x="850" y="176" width="150" height="50" rx="6" class="boxR"/>
+  <text x="925" y="200" text-anchor="middle" class="lbl node mono">Object[]</text>
+  <text x="925" y="218" text-anchor="middle" class="lbl sub">forced, not covariant</text>
+
+  <path class="flow" d="M 925 226 V 246"/>
+  <text x="939" y="240" class="lbl tiny sub">store Integer</text>
+  <rect x="820" y="250" width="180" height="40" rx="6" class="boxR"/>
+  <text x="910" y="275" text-anchor="middle" class="lbl node mono">OK</text>
+
+  <line x1="596" y1="330" x2="1064" y2="330" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="596" y="352" class="lbl body mono">new ArrayList&lt;&gt;(c).toArray()</text>
+  <path class="flow" d="M 596 362 V 378"/>
+  <rect x="596" y="382" width="270" height="36" rx="6" class="boxW"/>
+  <text x="731" y="404" text-anchor="middle" class="lbl sub mono">Arrays.copyOf(a, size, Object[].class)</text>
+
+  <path class="flow" d="M 866 400 H 890"/>
+  <rect x="850" y="382" width="150" height="36" rx="6" class="boxR"/>
+  <text x="925" y="404" text-anchor="middle" class="lbl node mono">Object[]</text>
+
+  <text x="850" y="426" class="lbl sub">Integer store: OK — unchanged</text>
+
+  <!-- annotation panels -->
+  <rect x="20" y="446" width="1080" height="90" rx="6" class="boxA"/>
+  <text x="36" y="468" class="lbl body" font-weight="700">Why the ArrayList constructor is stable across both JDKs</text>
+  <text x="36" y="488" class="lbl tiny mono">ArrayList(Collection&lt;? extends E&gt; c): if c.getClass() == ArrayList.class, adopt c.toArray() directly (no copy);</text>
+  <text x="36" y="504" class="lbl tiny mono">otherwise elementData = Arrays.copyOf(c.toArray(), size, Object[].class) — the cast to Object[].class is explicit</text>
+  <text x="36" y="520" class="lbl tiny">source, so its behaviour never depended on Arrays$ArrayList's internal clone-vs-copyOf choice.</text>
+
+  <rect x="20" y="548" width="1080" height="94" rx="6" class="boxA"/>
+  <text x="36" y="570" class="lbl body" font-weight="700">The safe form, regardless of JDK</text>
+  <text x="36" y="590" class="lbl tiny mono">entries.toArray(new LedgerEntry[0])</text>
+  <text x="36" y="608" class="lbl tiny">used by a payout-file writer over a List&lt;LedgerEntry&gt; — the typed-array overload fixes the runtime component type</text>
+  <text x="36" y="624" class="lbl tiny">from the argument, so it never depends on which toArray() implementation the source collection happens to run.</text>
+
+  <rect x="20" y="656" width="1080" height="94" rx="6" class="boxF"/>
+  <text x="36" y="678" class="lbl body" font-weight="700">Same source line, two runtime types, one JDK apart — JDK-6260652 is why</text>
+  <text x="36" y="698" class="lbl tiny">Arrays.asList(arr).toArray() is source-compatible across JDK 8 and JDK 9+, but its returned array's runtime</text>
+  <text x="36" y="714" class="lbl tiny">component type changed from String[] (JDK 8, via clone) to Object[] (JDK 9+, via Arrays.copyOf(..., Object[].class)).</text>
+  <text x="36" y="730" class="lbl tiny">new ArrayList&lt;&gt;(c).toArray() always returned Object[] in both — its constructor forces the cast independently.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="762" x2="1100" y2="762" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="770" width="18" height="14" rx="3" class="boxH"/>
+  <text x="44" y="781" class="lbl tiny">version-sensitive call</text>
+  <rect x="190" y="770" width="18" height="14" rx="3" class="boxR"/>
+  <text x="214" y="781" class="lbl tiny">succeeding store / resolved Object[]</text>
+  <rect x="470" y="770" width="18" height="14" rx="3" class="boxF"/>
+  <text x="494" y="781" class="lbl tiny">thrown exception</text>
+  <rect x="620" y="770" width="18" height="14" rx="3" class="boxW"/>
+  <text x="644" y="781" class="lbl tiny">internal copy step</text>
+  <path class="flow" d="M 800 777 H 834"/>
+  <text x="842" y="781" class="lbl tiny">A → B : B produced from A</text>
+</svg>

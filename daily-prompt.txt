@@ -1,0 +1,470 @@
+  You are generating the most elaborate possible study notes for Day [N] of a
+  28-week FAANG interview prep plan. The plan is at @faang-staff-prep-v4-28week.md
+  in the working directory — read the Day [N] section before starting.
+
+  Reference benchmark: @example-day-notes.md is the depth, structure, and tone
+  target. Match or exceed it. The example covers Day 1; later days may diverge
+  in topic mix but must keep the same shape, tier-tagging discipline, and rigor.
+
+  THIS IS NOT A SUMMARY. This is a complete standalone reference that someone
+  6 years into their career, aspiring to Senior IC OR Staff / Tech Lead, can
+  use as their single source of truth for everything covered today. There is
+  NO size limit. Be exhaustive. Length is a non-goal — completeness is the
+  goal. If a topic needs 800 lines, write 800 lines. If a problem needs five
+  implementations, write five.
+
+  ════════════════════════════════════════════════════════════════════════════
+  DAY-SPECIFIC INPUT (the only thing that changes per day)
+  ════════════════════════════════════════════════════════════════════════════
+
+  Day number:           [N]
+  Week number:          [W]
+  Day title:            [verbatim from plan, e.g. "DSA-D: Trees — traversals + Invert BT + Max Depth"]
+  Day type:             [DSA-D | HLD-D | LLD-D | Build-D | Review-D | Mock-D | DS-D | JSD-D | Auth-D | DistTx-D | Kafka/K8s session]
+  Source plan lines:    Day [N] of faang-staff-prep-v4-28week.md
+  Output file:          /Users/rajat.chikkodikar/Desktop/My-files/rough/day[N]-notes.md
+  Problems for today:   [exact list verbatim from plan]
+  Theory topics today:  [exact list verbatim from plan]
+  Project tie-ins:      [Project 1/2/3 work scheduled today, if any]
+  Prior callbacks:      [concepts from earlier days this day reinforces]
+  Forward setup:        [concepts this day enables in later days — list day #s]
+  Companion content:    [blog read, paper section, behavioral block, etc.]
+
+  ════════════════════════════════════════════════════════════════════════════
+  AUDIENCE — DUAL-TRACK (fixed every day)
+  ════════════════════════════════════════════════════════════════════════════
+
+  The reader is a backend engineer with 6 years of experience, currently a
+  mid-senior IC, aspiring to one of:
+
+    • Senior IC (L5) — owns features, designs subsystems, mentors juniors.
+      Interview bar: strong DSA + 1 HLD round + LLD + behavioral.
+      Differentiator: code quality, debugging instinct, scope ownership.
+
+    • Staff (L6) / Tech Lead — sets technical direction, designs systems
+      across teams, influences without authority.
+      Interview bar: multiple HLD rounds, deeper LLD, "tell me how you'd
+      set direction" behavioral, architectural judgment.
+      Differentiator: trade-off articulation, judgment under uncertainty,
+      cross-team influence, technical strategy.
+
+  The notes must serve BOTH tracks. Every section must contain a base layer
+  (Senior IC) AND a depth layer (Staff). Use the explicit tier-labelled
+  sub-headings defined below — never collapse the two layers into one prose
+  block. Senior reads everything labelled [BOTH] and [SENIOR IC]. Staff
+  reads everything ([BOTH] + [SENIOR IC] + [STAFF]).
+
+  ════════════════════════════════════════════════════════════════════════════
+  TIER LABELLING (mandatory)
+  ════════════════════════════════════════════════════════════════════════════
+
+  Every distinct sub-block must be tagged with one of:
+
+    [BOTH]       — applies to Senior IC and Staff equally.
+    [SENIOR IC]  — required for L5 bar (mechanics, fluency, correctness).
+    [STAFF]      — extension content for L6 (architecture, trade-offs,
+                    distributed variants, scale, organizational judgment,
+                    domain abstraction, real-world failure case studies).
+
+  Examples:
+    ### Brute Force [BOTH]
+    ### Optimal Solution [BOTH]
+    ### Edge Cases [SENIOR IC]
+    ### Scale-Up to Distributed [STAFF]
+    ### Trade-Off Drill [STAFF]
+    ### Production Failure Case Study [STAFF]
+    ### JVM Internals Deep Dive [STAFF]
+
+  When in doubt — tag [BOTH]. Reserve [STAFF] for content a Senior IC could
+  skip without losing correctness, but a Staff candidate cannot skip without
+  underperforming the round.
+
+  ════════════════════════════════════════════════════════════════════════════
+  DAY NOTE STRUCTURE (fixed every day)
+  ════════════════════════════════════════════════════════════════════════════
+
+  § 0. Day Header
+     - Day number, week number, day title.
+     - Day type, time budget (per plan, even though we exceed in elaboration).
+     - One-paragraph "why this day matters" framing.
+     - Prerequisites (days that must precede this; if reader skipped, what
+       they should backfill).
+     - Forward setup (later days this enables — name day #s).
+     - Reader prerequisites checklist.
+
+  § 1. Table of Contents (anchored)
+
+  § 2. Theory Block — ONE per theory topic for the day
+     For EACH theory topic, include ALL of the following sub-sections,
+     even if it makes the section long:
+
+     2.1 Origin & Motivation [BOTH]
+         - Why does this concept exist? What problem in the field motivated
+           its invention? Cite the paper / RFC / standard if applicable.
+         - The historical alternative it replaced or extended.
+
+     2.2 Intuition [BOTH]
+         - The 30-second explanation someone could give a smart non-expert.
+         - Concrete real-world analogy when helpful.
+
+     2.3 Formal Definition [BOTH]
+         - Precise definition. Math notation acceptable when needed.
+         - Invariants, contracts, guarantees.
+
+     2.4 Mechanics — How It Actually Works [BOTH]
+         - Step-by-step internal operation.
+         - For algorithms: pseudocode + worked example.
+         - For data structures: memory layout, growth, deletion strategy.
+         - For JVM features: bytecode, JIT behaviour, GC interaction.
+         - For Spring features: filter/bean lifecycle, proxy mechanism.
+         - For systems: state diagrams, protocol exchanges, write paths.
+
+     2.5 Complexity / Cost Model [BOTH]
+         - Time AND space, average AND worst case.
+         - Concrete numbers at n = 10⁶ (or appropriate scale).
+         - Constant-factor discussion (cache locality, allocation overhead).
+
+     2.6 Implementation Walkthrough [BOTH]
+         - Idiomatic Java 21 reference implementation, line-commented where
+           non-obvious.
+         - Common variants and their trade-offs.
+
+     2.7 Edge Cases & Pitfalls [BOTH]
+         - Off-by-one regions, empty input, single-element input, max
+           values, negative numbers, Unicode, threading.
+         - Each edge case as a bullet with a one-line explanation.
+
+     2.8 Internals — One Layer Deeper [STAFF]
+         - For algorithms: invariant proofs, amortized analysis, lower
+           bounds, why this is optimal (or not).
+         - For Java: bytecode, JIT, escape analysis, GC card tables, safepoints.
+         - For data structures: cache effects, branch prediction, false
+           sharing, allocation pressure.
+         - For systems: replication protocols, failure detectors, clock skew.
+
+     2.9 Real-World Failure Case Studies [STAFF]
+         - At least one named real incident, postmortem, or production bug
+           that involved this concept. Cite a blog post or postmortem when
+           available.
+         - What went wrong, root cause, what the fix taught the industry.
+
+     2.10 Alternatives — When NOT to use this [BOTH + STAFF extension]
+         - Other approaches in the design space.
+         - Decision criteria (input size, latency profile, ops complexity,
+           vendor lock-in).
+         - 3-axis trade-off statement [STAFF].
+
+     2.11 Connection to the Three Portfolio Projects [BOTH]
+         - If/where this concept lands in Project 1 / 2 / 3.
+         - If this is purely interview-theoretical, say so explicitly.
+
+     2.12 Connection to the Real World [STAFF]
+         - Where does this show up in production at scale? Name companies
+           and systems. (Netflix, Uber, Discord, AWS, Stripe etc.)
+
+     2.13 Common Misconceptions [BOTH]
+         - 3–5 wrong beliefs that interviewers test you on.
+
+     2.14 Interview Framing [BOTH]
+         - How to introduce this in an interview answer.
+         - What signal you give by handling it well.
+         - What anti-signals juniors emit (so you can avoid).
+
+     2.15 Further Reading [BOTH]
+         - Inline links at point of mention AND collected here.
+
+  § 3. Problem Block — ONE per problem for the day
+     For EACH problem, include ALL of the following, exhaustively:
+
+     3.1 Problem Statement [BOTH]
+         - Paraphrased — do not copy-paste copyrighted LeetCode text.
+         - LeetCode URL and NeetCode URL.
+         - Frequency / company tags (which FAANG actually asks this).
+         - Difficulty: Easy / Medium / Hard.
+
+     3.2 Clarifying Questions [BOTH]
+         - The exact questions you would ask the interviewer before coding.
+         - Why each question matters.
+
+     3.3 Brute Force [BOTH]
+         - Always include the brute-force solution first.
+         - Complexity analysis (time + space).
+         - Why this is suboptimal (which constraint forces a better solution).
+
+     3.4 Intermediate Improvements [BOTH]
+         - Any in-between solutions (e.g., O(n²) → O(n log n) → O(n)).
+         - State the algorithmic insight that unlocks each step.
+
+     3.5 Optimal Solution(s) [BOTH]
+         - Full idiomatic Java 21 implementation.
+         - Line-by-line commentary for the non-obvious lines.
+         - Alternative optimal implementations if multiple exist
+           (heap vs bucket; iterative vs recursive; in-place vs auxiliary).
+
+     3.6 Worked Trace [BOTH]
+         - Walk through ONE small concrete example step by step.
+         - Show variable state at each iteration.
+         - For DP: show the table being filled.
+         - For graphs: show the visited set / queue progression.
+
+     3.7 Complexity Analysis [BOTH]
+         - Time AND space, with justification (not just "O(n) trust me").
+         - For amortized: explain the amortization.
+
+     3.8 Edge Cases [BOTH]
+         - List at least 5 edge cases and what your solution does on each.
+         - Empty, single element, all duplicates, very large input, overflow,
+           negative numbers, Unicode (where applicable), null inputs.
+
+     3.9 Common Bugs [BOTH]
+         - Off-by-one, exclusive vs inclusive bounds, integer overflow,
+           autoboxing surprises, modifying collection while iterating,
+           hashCode/equals omission for custom keys.
+
+     3.10 Pattern Recognition [BOTH]
+         - What signal in the problem statement says "this is pattern X."
+         - List of related problems that share the pattern.
+
+     3.11 Multi-Solution Comparison Table [BOTH]
+         - Tabular comparison: approach | time | space | trade-off.
+
+     3.12 Follow-Up Questions [BOTH]
+         - The 3–5 follow-ups an interviewer is likely to ask.
+         - Drafted answers for each.
+
+     3.13 Scale-Up Addendum [STAFF]
+         - What changes at 1B inputs?
+         - Streaming variant (Count-Min Sketch, Bloom filter, reservoir
+           sampling, sliding window, etc.).
+         - Distributed variant (shard key, MapReduce shape, hot-shard risk).
+         - Memory-bounded variant (external sort, disk-backed hash, mmap).
+
+     3.14 Real-World Analogue [STAFF]
+         - Where does this problem show up in production?
+         - Example: Two Sum → join algorithm in databases; Top K Frequent →
+           trending topics; LRU Cache → page replacement, CDN; etc.
+
+     3.15 Trade-Off Drill [STAFF]
+         - At least TWO framed "when A vs B?" questions with full 3-axis
+           answers.
+
+     3.16 Junior vs Senior vs Staff Lens [BOTH]
+         - What a Junior would do wrong.
+         - What a Senior IC says right.
+         - What a Staff candidate adds on top.
+
+     3.17 Interview Communication Script [BOTH]
+         - The exact sentences to say while solving (clarifying → brute →
+           optimal → complexity → edge cases → "anything you want me to
+           optimize further?").
+
+  § 4. Applied / Integration Block (when day has Build, JSD, Auth, Kafka,
+       K8s, DS-D, or Mock content)
+
+     For build/applied content, include:
+
+     4.1 Goal of Today's Build [BOTH]
+     4.2 Step-by-Step Implementation [BOTH]
+     4.3 Code Walkthroughs of Key Files [BOTH]
+     4.4 Configuration / IaC / Manifests [BOTH]
+     4.5 Testing & Verification [BOTH]
+     4.6 Common Setup Pitfalls [BOTH]
+     4.7 ADR (Architecture Decision Record) Draft [STAFF]
+     4.8 Failure Modes & What You Learned [STAFF]
+     4.9 Production-Readiness Gap Analysis [STAFF]
+         - What's missing between your build and a real prod service?
+
+     For DS-D (DDIA / paper days), include:
+
+     4.1 Reading Goal — Which chapter / sections / paper [BOTH]
+     4.2 Key Concepts Distilled [BOTH]
+     4.3 Notable Quotes & Why They Matter [BOTH]
+     4.4 Connection to Production Systems [STAFF]
+     4.5 Connection to Project 2 / 3 [BOTH]
+     4.6 Discussion Questions a Staff Interviewer Might Ask [STAFF]
+
+     For Mock-D days, include:
+
+     4.1 Pre-Mock Warmup [BOTH]
+     4.2 Post-Mortem Template [BOTH]
+     4.3 What "Strong Hire" Sounds Like at Your Level [STAFF]
+     4.4 Common Mock Failure Patterns [BOTH]
+
+  § 5. Behavioral / Architecture-Judgment Block (when applicable)
+
+     5.1 STAR Story Work [BOTH]
+     5.2 Story Self-Grading Rubric [BOTH]
+     5.3 Engineering Blog Dissection (7-question template) [BOTH]
+     5.4 Staff-Level Question Drilling [STAFF]
+         - "How would you set technical direction for this team?"
+         - "Tell me about a technology bet you made."
+         - "How do you influence without authority?"
+
+  § 6. Cross-References
+     6.1 Callbacks to Prior Days [BOTH]
+         - For every concept from a prior day this day uses, link the day #
+           and the specific concept name.
+     6.2 Foreshadow Forward Days [BOTH]
+         - For every concept this day enables in a later day, name the
+           day # and what gets built on top.
+     6.3 Project Integration Map [BOTH]
+         - Which Project (1/2/3) days will use today's content, and where.
+
+  § 7. Cheatsheet (One-Page Summary)
+     - Patterns recognized today.
+     - Idioms / one-liners.
+     - Decision trees for any "which tool?" choice surfaced today.
+     - The 3-axis trade-off answer for the day's hot topic [STAFF].
+
+  § 8. Self-Assessment Checklist
+     - Mechanical fluency (could I solve this in N minutes again?).
+     - Knowledge (can I explain on a whiteboard?).
+     - Trade-off articulation drills (verbalize each).
+     - Behavioral progress (if applicable).
+     - Confidence rating 1–5 per topic.
+
+  § 9. Glossary of Terms Introduced Today [BOTH]
+     - One-line definition per term, alphabetized.
+
+  § 10. Consolidated References
+     - All URLs cited today, organized by topic.
+
+  ════════════════════════════════════════════════════════════════════════════
+  DEPTH REQUIREMENTS (non-negotiable per day)
+  ════════════════════════════════════════════════════════════════════════════
+
+  For every theory topic:
+    • Cover ALL 15 sub-sections of § 2. Do not skip even if the topic seems
+      simple — go deeper rather than shorter.
+    • At least 1 real-world failure case study [STAFF].
+    • At least 1 worked example with full trace.
+    • At least 3 alternatives discussed.
+
+  For every problem:
+    • Cover ALL 17 sub-sections of § 3.
+    • Brute force MUST be shown — never jump straight to optimal.
+    • At least 2 follow-up questions answered.
+    • At least 1 trade-off drill with full 3-axis answer [STAFF].
+    • At least 1 streaming or distributed variant [STAFF].
+    • At least 5 edge cases enumerated.
+
+  For every applied/build task:
+    • Working code, not pseudocode.
+    • Configuration files in full.
+    • Verification steps the reader can run.
+    • ADR draft [STAFF].
+
+  ════════════════════════════════════════════════════════════════════════════
+  WRITING RULES (fixed every day)
+  ════════════════════════════════════════════════════════════════════════════
+
+    • Comprehensive but not bloated. Every sentence earns its place.
+    • NO size cap. NO line cap. Optimal length is whatever fully covers
+      the topic. Expect 1,500–4,000 lines per day depending on content
+      density. Do not artificially compress.
+    • Java code: Java 21 idiomatic. Use records, var (sparingly), pattern
+      matching, enhanced switch, Stream API where it improves clarity.
+      Modern Spring Boot 3.x conventions when Spring-relevant.
+    • Use code blocks (```java, ```yaml, ```sql, ```hcl etc.) for every
+      code snippet, properly fenced.
+    • Markdown tables for any comparison ≥ 3 items.
+    • Inline external links at the point of mention; duplicate them in
+      § 10 references.
+    • DO NOT delegate to subagents — write inline.
+    • DO NOT use emojis.
+    • DO NOT use filler phrases ("Let's dive in", "Great question",
+      "It's important to note"). Lead with content.
+    • Use second person where instructional ("you'll see this when…").
+    • Use first-person plural sparingly, only when describing collective
+      engineering culture ("we treat L2 cache as a last resort").
+    • Tier-tag every distinct sub-block with [BOTH] / [SENIOR IC] / [STAFF].
+    • When tier diverges within a section, keep the [SENIOR IC] base and
+      add [STAFF] extension as a separate sub-sub-section — do not blend.
+
+  ════════════════════════════════════════════════════════════════════════════
+  SOURCES TO CITE (when relevant to the day's topics)
+  ════════════════════════════════════════════════════════════════════════════
+
+    • Oracle Java Tutorials & Javadoc (current LTS — Java 21)
+    • OpenJDK JEPs (cite by number)
+    • Effective Java (Bloch) — cite item number
+    • Java Concurrency in Practice (Goetz et al)
+    • Java Performance (Oaks)
+    • DDIA (Kleppmann) — cite chapter and page when possible
+    • Designing Data-Intensive Applications papers (Dynamo, Spanner, Raft,
+      Bigtable, GFS, MapReduce, Kafka log paper) — cite by name
+    • Spring reference docs (Boot, Security, Data, Kafka)
+    • AWS Builders' Library articles
+    • AWS Well-Architected Framework pillars
+    • Engineering blogs: Netflix, Uber, Discord, Stripe, Cloudflare,
+      Pinterest, LinkedIn, Airbnb, WhatsApp, Slack, Shopify, Robinhood
+    • Postmortems (Cloudflare, AWS, GitHub, GitLab incident reports)
+    • Real RFC standards when applicable (HTTP, OAuth, JWT, gRPC, mTLS)
+    • Original papers (any paper from the plan's reading list)
+    • LeetCode / NeetCode problem URLs
+    • Hello Interview write-ups when relevant (Hello Interview's HLD guides)
+    • Baeldung (acceptable for Java/Spring; avoid for distributed systems)
+
+  ════════════════════════════════════════════════════════════════════════════
+  INTEGRATION ACROSS THE 28-WEEK PLAN
+  ════════════════════════════════════════════════════════════════════════════
+
+    • Foreshadow upcoming days: when a concept set up today is built on
+      later, name the day # and the topic ("This is the foundation for
+      Day 67's Spring Kafka wiring").
+    • Call back prior days: when this day reinforces an earlier idea, link
+      the day # and concept name explicitly.
+    • Connect to the three portfolio projects whenever applicable. Say
+      where in Project 1 / 2 / 3 today's concept lands, with file paths
+      when known.
+    • Maintain running totals across days when relevant:
+        - LeetCode problems solved (track cumulative).
+        - STAR stories drafted (target 20 by Day 85).
+        - Engineering blogs dissected (target 1/week through Phase 3).
+        - DDIA chapters completed.
+        - Distributed-systems papers read.
+    • Cross-reference plan appendices when applicable:
+        - Appendix A (Senior IC framing) — pull from for [SENIOR IC]-tagged
+          framing notes and the L5 vs L6 differentiator table.
+        - Appendix B (general prep anti-patterns) — surface relevant items
+          in Review-D and Mock-D days.
+        - Appendix C (daily hours breakdown by phase) — cite when discussing
+          how the day's content fits the phase's hour allocation.
+
+  ════════════════════════════════════════════════════════════════════════════
+  DELIVERABLE
+  ════════════════════════════════════════════════════════════════════════════
+
+  A single Markdown file at the output path above. No length cap. After
+  writing, report:
+
+    • Final line count.
+    • Final section count (theory blocks + problem blocks + applied blocks).
+    • Topics covered with one-sentence summaries.
+    • Anything from the plan's Day [N] section deliberately deferred (with
+      reason — e.g. "deep dive on Hibernate caching deferred to Day 80
+      where it's the primary topic").
+    • Senior IC coverage assessment (1 paragraph).
+    • Staff / Tech Lead coverage assessment (1 paragraph).
+    • Suggested target reading time (Senior IC track + Staff track).
+
+  ════════════════════════════════════════════════════════════════════════════
+  QUALITY BAR — SELF-CHECK BEFORE FINISHING
+  ════════════════════════════════════════════════════════════════════════════
+
+  Before reporting done, verify:
+
+    □ Every theory topic has all 15 sub-sections from § 2.
+    □ Every problem has all 17 sub-sections from § 3.
+    □ Every sub-block is tier-tagged ([BOTH] / [SENIOR IC] / [STAFF]).
+    □ Brute force is shown before optimal for every problem.
+    □ At least 1 [STAFF] real-world failure case per theory topic.
+    □ At least 1 [STAFF] streaming/distributed variant per problem.
+    □ Cross-references (callbacks + foreshadows) are explicit with day #s.
+    □ Java code is Java 21 idiomatic, fenced, and runnable.
+    □ Tables used for any ≥3-item comparison.
+    □ No filler phrases.
+    □ No emojis.
+    □ No size compression — went as deep as topic warrants.
+
+  If any box is unchecked — return to that section and expand.

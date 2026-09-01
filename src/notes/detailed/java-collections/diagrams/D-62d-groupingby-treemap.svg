@@ -1,0 +1,40 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-argument groupingBy(classifier, TreeMap::new, counting()) produces a TreeMap with keys sorted ascending, unlike the unspecified HashMap order of the two-argument forms">
+  <defs>
+    <marker id="arrow62d" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">groupingBy(classifier, TreeMap::new, counting()) — 3-arg form: map factory + downstream</text>
+
+  <rect x="140" y="60" width="150" height="50" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="215" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">HashMap (default)</text>
+  <text x="215" y="98" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">key order unspecified</text>
+
+  <text x="400" y="90" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">vs.</text>
+
+  <rect x="510" y="60" width="150" height="50" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">TreeMap::new (supplied)</text>
+  <text x="585" y="98" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">keys sorted ascending</text>
+
+  <line x1="400" y1="115" x2="400" y2="160" stroke="#737373" stroke-width="2" marker-end="url(#arrow62d)"/>
+
+  <rect x="200" y="175" width="120" height="60" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="260" y="209" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">a &#8594; 3</text>
+
+  <rect x="340" y="175" width="120" height="60" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="209" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">b &#8594; 2</text>
+
+  <rect x="480" y="175" width="120" height="60" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="540" y="209" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">c &#8594; 1</text>
+
+  <line x1="260" y1="235" x2="340" y2="235" stroke="#737373" stroke-width="2"/>
+  <line x1="400" y1="235" x2="480" y2="235" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="255" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a &lt; b &lt; c — guaranteed iteration order</text>
+
+  <rect x="80" y="272" width="640" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="290" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">TreeMap&lt;Character,Long&gt; — same counts as D-62b, but keys now iterate in Comparator order</text>
+</svg>

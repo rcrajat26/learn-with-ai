@@ -1,0 +1,203 @@
+<svg viewBox="0 0 1340 880" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The QuizStakes bonus lifecycle state machine beside its EnumMap transition table. On the left, GRANTED (ordinal 0) moves to ACTIVE (ordinal 1) on FIRST_DEPOSIT_CAPTURED; ACTIVE then fans out to EXPIRED (ordinal 3) on EXPIRY_ELAPSED, to CLAWED_BACK (ordinal 4) on CLAWBACK_ORDERED, and to CONSUMED (ordinal 2) on STAKE_CONSUMED_BALANCE; CONSUMED also moves to CLAWED_BACK on CLAWBACK_ORDERED, the shortfall case. On the right, the EnumMap of BonusState to EnumMap of Event to BonusState is drawn as an outer array of five slots indexed 0 to 4 by BonusState.ordinal(); slots 0, 1 and 2 each point at an inner array of four slots indexed 0 to 3 by Event.ordinal() holding the destination state or null, while slots 3 (EXPIRED) and 4 (CLAWED_BACK) hold null because those states are terminal. Annotation panels state the 30-day expiry rule that reverses unspent bonus to PROMOTIONAL_EXPENSE, and explain that EnumMap is an ordinal-indexed array rather than a hash table.">
+  <defs>
+    <style>
+      .t   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+      .ttl { font-size: 15px; font-weight: bold; }
+      .bnd { font-size: 13px; font-weight: bold; }
+      .nt  { font-size: 13px; font-weight: bold; }
+      .sm  { font-size: 11px; }
+      .lh  { font-size: 11px; font-weight: bold; }
+      .ph  { font-size: 12.5px; font-weight: bold; }
+      .sec { fill: #4b5563; }
+      .bp  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+      .bl  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+      .bf  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+      .bh  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+      .bw  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+      .bg  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+      .ba  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+      .e   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#arr134); }
+      .eb  { fill: none; stroke: #475569; stroke-width: 2; }
+      .es  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#arrG134); }
+      .hr  { stroke: #d1d5db; stroke-width: 1.5; }
+      .gr  { stroke: #d1d5db; stroke-width: 1.3; }
+    </style>
+    <marker id="arr134" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrG134" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1340" height="880" fill="#ffffff"/>
+
+  <text class="t ttl" x="20" y="32">Bonus lifecycle as an enum state machine, and the EnumMap that stores its transitions</text>
+  <line class="hr" x1="20" y1="42" x2="1320" y2="42"/>
+
+  <!-- ============ LEFT: STATE MACHINE ============ -->
+  <text class="t bnd" x="40" y="70">BONUS LIFECYCLE — every edge labelled with its event</text>
+
+  <rect class="bp" x="210" y="100" width="180" height="48" rx="6"/>
+  <text class="t nt" x="300" y="120" text-anchor="middle">GRANTED</text>
+  <text class="t sm sec" x="300" y="138" text-anchor="middle">ordinal 0</text>
+
+  <path class="e" d="M 300 148 V 200"/>
+  <text class="t sm" x="310" y="178">FIRST_DEPOSIT_CAPTURED</text>
+
+  <rect class="bp" x="210" y="200" width="180" height="48" rx="6"/>
+  <text class="t nt" x="300" y="220" text-anchor="middle">ACTIVE</text>
+  <text class="t sm sec" x="300" y="238" text-anchor="middle">ordinal 1</text>
+
+  <!-- fan-out bus from ACTIVE to its three successor states -->
+  <path class="eb" d="M 300 248 V 280"/>
+  <path class="eb" d="M 115 280 H 485"/>
+  <path class="e" d="M 115 280 V 330"/>
+  <path class="e" d="M 300 280 V 330"/>
+  <path class="e" d="M 485 280 V 330"/>
+  <text class="t sm" x="124" y="302">EXPIRY_ELAPSED</text>
+  <text class="t sm" x="309" y="302">CLAWBACK_ORDERED</text>
+  <text class="t sm" x="494" y="302">STAKE_CONSUMED_BALANCE</text>
+
+  <rect class="bl" x="40" y="330" width="150" height="48" rx="6"/>
+  <text class="t nt" x="115" y="350" text-anchor="middle">EXPIRED</text>
+  <text class="t sm sec" x="115" y="368" text-anchor="middle">ordinal 3 — terminal</text>
+
+  <rect class="bf" x="225" y="330" width="150" height="48" rx="6"/>
+  <text class="t nt" x="300" y="350" text-anchor="middle">CLAWED_BACK</text>
+  <text class="t sm sec" x="300" y="368" text-anchor="middle">ordinal 4 — terminal</text>
+
+  <rect class="bp" x="410" y="330" width="150" height="48" rx="6"/>
+  <text class="t nt" x="485" y="350" text-anchor="middle">CONSUMED</text>
+  <text class="t sm sec" x="485" y="368" text-anchor="middle">ordinal 2</text>
+
+  <!-- CONSUMED -> CLAWED_BACK, the shortfall case -->
+  <path class="e" d="M 485 378 V 412 H 300 V 378"/>
+  <text class="t sm" x="180" y="432">CLAWBACK_ORDERED — the shortfall case: no unspent bonus is left,</text>
+  <text class="t sm" x="180" y="450">so the whole shortfall posts to PROMOTIONAL_EXPENSE</text>
+
+  <!-- ============ RIGHT: ENUMMAP TABLE ============ -->
+  <text class="t bnd" x="720" y="70">TRANSITION TABLE — EnumMap&lt;BonusState, EnumMap&lt;Event, BonusState&gt;&gt;</text>
+  <text class="t sm sec" x="720" y="92">indexed by BonusState.ordinal()</text>
+  <text class="t sm sec" x="950" y="92">indexed by Event.ordinal()</text>
+
+  <!-- outer array, 5 ordinal-indexed slots -->
+  <rect class="bh" x="720" y="110" width="200" height="40" rx="4"/>
+  <text class="t lh" x="732" y="127">[0] GRANTED</text>
+  <text class="t sm sec" x="732" y="143">→ inner array (4 slots)</text>
+
+  <rect class="bh" x="720" y="150" width="200" height="40" rx="4"/>
+  <text class="t lh" x="732" y="167">[1] ACTIVE</text>
+  <text class="t sm sec" x="732" y="183">→ inner array (4 slots)</text>
+
+  <rect class="bh" x="720" y="190" width="200" height="40" rx="4"/>
+  <text class="t lh" x="732" y="207">[2] CONSUMED</text>
+  <text class="t sm sec" x="732" y="223">→ inner array (4 slots)</text>
+
+  <rect class="bw" x="720" y="230" width="200" height="40" rx="4"/>
+  <text class="t lh" x="732" y="247">[3] EXPIRED</text>
+  <text class="t sm sec" x="732" y="263">null — terminal state</text>
+
+  <rect class="bw" x="720" y="270" width="200" height="40" rx="4"/>
+  <text class="t lh" x="732" y="287">[4] CLAWED_BACK</text>
+  <text class="t sm sec" x="732" y="303">null — terminal state</text>
+
+  <!-- pointers from outer slots into their inner arrays -->
+  <path class="es" d="M 920 130 H 950"/>
+  <path class="es" d="M 920 170 H 938 V 300 H 950"/>
+  <path class="es" d="M 920 210 H 928 V 470 H 950"/>
+
+  <!-- inner array for GRANTED -->
+  <rect class="bw" x="950" y="100" width="350" height="148" rx="4"/>
+  <text class="t lh" x="962" y="120">inner array for GRANTED (ordinal 0)</text>
+  <line class="gr" x1="950" y1="128" x2="1300" y2="128"/>
+  <text class="t lh" x="962" y="144">[i] Event</text>
+  <text class="t lh" x="1180" y="144">destination</text>
+  <line class="gr" x1="950" y1="152" x2="1300" y2="152"/>
+  <text class="t sm" x="962" y="170">[0] FIRST_DEPOSIT_CAPTURED</text>
+  <rect class="bg" x="1174" y="158" width="106" height="17" rx="3"/>
+  <text class="t sm" x="1180" y="170">ACTIVE</text>
+  <text class="t sm" x="962" y="192">[1] STAKE_CONSUMED_BALANCE</text>
+  <text class="t sm sec" x="1180" y="192">null</text>
+  <text class="t sm" x="962" y="214">[2] EXPIRY_ELAPSED</text>
+  <text class="t sm sec" x="1180" y="214">null</text>
+  <text class="t sm" x="962" y="236">[3] CLAWBACK_ORDERED</text>
+  <text class="t sm sec" x="1180" y="236">null</text>
+
+  <!-- inner array for ACTIVE -->
+  <rect class="bw" x="950" y="260" width="350" height="148" rx="4"/>
+  <text class="t lh" x="962" y="280">inner array for ACTIVE (ordinal 1)</text>
+  <line class="gr" x1="950" y1="288" x2="1300" y2="288"/>
+  <text class="t lh" x="962" y="304">[i] Event</text>
+  <text class="t lh" x="1180" y="304">destination</text>
+  <line class="gr" x1="950" y1="312" x2="1300" y2="312"/>
+  <text class="t sm" x="962" y="330">[0] FIRST_DEPOSIT_CAPTURED</text>
+  <text class="t sm sec" x="1180" y="330">null</text>
+  <text class="t sm" x="962" y="352">[1] STAKE_CONSUMED_BALANCE</text>
+  <rect class="bg" x="1174" y="340" width="106" height="17" rx="3"/>
+  <text class="t sm" x="1180" y="352">CONSUMED</text>
+  <text class="t sm" x="962" y="374">[2] EXPIRY_ELAPSED</text>
+  <rect class="bg" x="1174" y="362" width="106" height="17" rx="3"/>
+  <text class="t sm" x="1180" y="374">EXPIRED</text>
+  <text class="t sm" x="962" y="396">[3] CLAWBACK_ORDERED</text>
+  <rect class="bg" x="1174" y="384" width="106" height="17" rx="3"/>
+  <text class="t sm" x="1180" y="396">CLAWED_BACK</text>
+
+  <!-- inner array for CONSUMED -->
+  <rect class="bw" x="950" y="420" width="350" height="148" rx="4"/>
+  <text class="t lh" x="962" y="440">inner array for CONSUMED (ordinal 2)</text>
+  <line class="gr" x1="950" y1="448" x2="1300" y2="448"/>
+  <text class="t lh" x="962" y="464">[i] Event</text>
+  <text class="t lh" x="1180" y="464">destination</text>
+  <line class="gr" x1="950" y1="472" x2="1300" y2="472"/>
+  <text class="t sm" x="962" y="490">[0] FIRST_DEPOSIT_CAPTURED</text>
+  <text class="t sm sec" x="1180" y="490">null</text>
+  <text class="t sm" x="962" y="512">[1] STAKE_CONSUMED_BALANCE</text>
+  <text class="t sm sec" x="1180" y="512">null</text>
+  <text class="t sm" x="962" y="534">[2] EXPIRY_ELAPSED</text>
+  <text class="t sm sec" x="1180" y="534">null</text>
+  <text class="t sm" x="962" y="556">[3] CLAWBACK_ORDERED</text>
+  <rect class="bg" x="1174" y="544" width="106" height="17" rx="3"/>
+  <text class="t sm" x="1180" y="556">CLAWED_BACK</text>
+
+  <!-- ============ ANNOTATION PANELS ============ -->
+  <rect class="ba" x="40" y="580" width="640" height="126" rx="6"/>
+  <text class="t ph" x="52" y="604">TERMINALITY AND THE 30-DAY RULE</text>
+  <text class="t sm" x="52" y="624">CONSUMED, EXPIRED and CLAWED_BACK are terminal, except that</text>
+  <text class="t sm" x="52" y="642">CONSUMED still accepts CLAWBACK_ORDERED — the shortfall case.</text>
+  <text class="t sm" x="52" y="660">EXPIRY_ELAPSED fires 30 days from grant; unspent bonus reverses</text>
+  <text class="t sm" x="52" y="678">to PROMOTIONAL_EXPENSE.</text>
+  <text class="t sm" x="52" y="696">An undefined (state, event) pair reads null → IllegalTransitionException.</text>
+
+  <rect class="ba" x="720" y="580" width="580" height="126" rx="6"/>
+  <text class="t ph" x="732" y="604">WHY EnumMap IS AN ARRAY, NOT A HASH TABLE</text>
+  <text class="t sm" x="732" y="624">EnumMap holds an Object[] sized to the enum&#39;s constant count.</text>
+  <text class="t sm" x="732" y="642">get(key) is vals[key.ordinal()] — no hashing, no collision handling,</text>
+  <text class="t sm" x="732" y="660">no Map.Entry allocation; one bounds-checked array read per lookup.</text>
+  <text class="t sm" x="732" y="678">Ordinals run 0 to 4 here, so the outer array has exactly 5 slots and</text>
+  <text class="t sm" x="732" y="696">each inner array exactly 4 — one per Event constant.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <line class="hr" x1="20" y1="730" x2="1320" y2="730"/>
+
+  <rect class="bp" x="40" y="744" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="755">live bonus lifecycle state — GRANTED, ACTIVE, CONSUMED</text>
+  <rect class="bl" x="40" y="766" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="777">lapsed terminal state — EXPIRED</text>
+  <rect class="bf" x="40" y="788" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="799">reversal terminal state — CLAWED_BACK</text>
+  <rect class="ba" x="40" y="810" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="821">annotation panel — prose facts, neither node nor edge</text>
+
+  <rect class="bh" x="720" y="744" width="24" height="14" rx="3"/>
+  <text class="t sm" x="754" y="755">outer array slot, indexed by BonusState.ordinal()</text>
+  <rect class="bw" x="720" y="766" width="24" height="14" rx="3"/>
+  <text class="t sm" x="754" y="777">inner array, indexed by Event.ordinal(), or a null outer slot</text>
+  <rect class="bg" x="720" y="788" width="24" height="14" rx="3"/>
+  <text class="t sm" x="754" y="799">a defined transition target stored in an inner slot</text>
+  <path class="e" d="M 720 815 H 770"/>
+  <text class="t sm" x="782" y="819">state transition — arrow points at the destination state</text>
+  <path class="es" d="M 720 837 H 770"/>
+  <text class="t sm" x="782" y="841">outer slot points at the inner array it holds</text>
+</svg>

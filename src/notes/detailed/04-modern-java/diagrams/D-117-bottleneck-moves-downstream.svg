@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1360 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The bottleneck moves downstream. Before: 200 platform request threads sit comfortably
+     behind a FundsLedger JDBC pool of 20 connections, which sits behind the database — the pool is
+     the only limiter and queue depth is near zero. After: 14k concurrent virtual threads arrive at the
+     same 20-connection pool; the queue now forms at the pool and the database's max-connections
+     ceiling is at risk. Fix: a Semaphore with permits=20 is acquired before borrowing a connection, so
+     admission is bounded on purpose instead of accidentally by the platform-thread count.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .ah    { font-size: 12px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE BOTTLENECK MOVES DOWNSTREAM — FundsLedger JDBC POOL</text>
+  <line x1="20" y1="42" x2="1340" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Panel 1: BEFORE -->
+  <text x="60" y="66" class="lbl h2">BEFORE — POOL IS THE ONLY LIMITER</text>
+
+  <rect x="60" y="100" width="340" height="64" rx="6" class="boxP"/>
+  <text x="230" y="126" text-anchor="middle" class="lbl node">200 request threads</text>
+  <text x="230" y="146" text-anchor="middle" class="lbl sub">platform threads, ApplicationGateway</text>
+
+  <path class="flow" d="M 230 164 V 196"/>
+
+  <rect x="60" y="196" width="340" height="84" rx="6" class="boxR"/>
+  <text x="230" y="220" text-anchor="middle" class="lbl node">FundsLedger JDBC pool</text>
+  <text x="230" y="242" text-anchor="middle" class="lbl body">20 connections</text>
+  <text x="230" y="262" text-anchor="middle" class="lbl sub">queue depth ~0 at steady state</text>
+
+  <path class="flow" d="M 230 280 V 312"/>
+
+  <rect x="60" y="312" width="340" height="66" rx="6" class="boxR"/>
+  <text x="230" y="338" text-anchor="middle" class="lbl node">Database</text>
+  <text x="230" y="358" text-anchor="middle" class="lbl sub">connections in use ≤ 20</text>
+
+  <rect x="60" y="474" width="340" height="140" rx="6" class="boxA"/>
+  <text x="76" y="496" class="lbl ah">Why it never bites</text>
+  <text x="76" y="516" class="lbl tiny">200 platform threads, 20 connections:</text>
+  <text x="76" y="534" class="lbl tiny">callers always outnumber permits, but</text>
+  <text x="76" y="552" class="lbl tiny">thread creation cost keeps 200 low —</text>
+  <text x="76" y="570" class="lbl tiny">the pool sizes the whole system.</text>
+  <text x="76" y="596" class="lbl tiny">Queueing is brief, invisible in p50/p99.</text>
+
+  <!-- Panel 2: AFTER -->
+  <text x="500" y="66" class="lbl h2">AFTER — VIRTUAL THREADS EXPOSE THE POOL</text>
+
+  <rect x="500" y="100" width="340" height="64" rx="6" class="boxP"/>
+  <text x="670" y="126" text-anchor="middle" class="lbl node">14k concurrent virtual threads</text>
+  <text x="670" y="146" text-anchor="middle" class="lbl sub">ApplicationGateway request handlers</text>
+
+  <path class="flow" d="M 670 164 V 196"/>
+
+  <rect x="500" y="196" width="340" height="84" rx="6" class="boxD"/>
+  <text x="670" y="220" text-anchor="middle" class="lbl node">FundsLedger JDBC pool</text>
+  <text x="670" y="242" text-anchor="middle" class="lbl body">20 connections</text>
+  <text x="670" y="262" text-anchor="middle" class="lbl sub">queue depth ~13,980 waiting</text>
+
+  <path class="flow" d="M 670 280 V 312"/>
+
+  <rect x="500" y="312" width="340" height="66" rx="6" class="boxD"/>
+  <text x="670" y="334" text-anchor="middle" class="lbl node">Database max-connections ceiling</text>
+  <text x="670" y="354" text-anchor="middle" class="lbl sub">new connections refused past the ceiling</text>
+
+  <rect x="500" y="474" width="340" height="140" rx="6" class="boxA"/>
+  <text x="516" y="496" class="lbl ah">The bottleneck didn't move</text>
+  <text x="516" y="516" class="lbl tiny">It was always the 20-connection pool.</text>
+  <text x="516" y="534" class="lbl tiny">Virtual threads just supply enough</text>
+  <text x="516" y="552" class="lbl tiny">concurrent callers (14k) to reveal it —</text>
+  <text x="516" y="570" class="lbl tiny">the queue simply relocated downstream,</text>
+  <text x="516" y="588" class="lbl tiny">from thread creation to the pool itself.</text>
+
+  <!-- Panel 3: FIX -->
+  <text x="940" y="66" class="lbl h2">FIX — A SEMAPHORE SIZED ON PURPOSE</text>
+
+  <rect x="940" y="100" width="340" height="64" rx="6" class="boxP"/>
+  <text x="1110" y="126" text-anchor="middle" class="lbl node">14k concurrent virtual threads</text>
+  <text x="1110" y="146" text-anchor="middle" class="lbl sub">ApplicationGateway request handlers</text>
+
+  <path class="flow" d="M 1110 164 V 190"/>
+
+  <rect x="940" y="190" width="340" height="64" rx="6" class="boxH"/>
+  <text x="1110" y="216" text-anchor="middle" class="lbl node">Semaphore permits=20</text>
+  <text x="1110" y="236" text-anchor="middle" class="lbl sub">acquire() before borrowing a connection</text>
+
+  <path class="flow" d="M 1110 254 V 280"/>
+
+  <rect x="940" y="280" width="340" height="84" rx="6" class="boxR"/>
+  <text x="1110" y="304" text-anchor="middle" class="lbl node">FundsLedger JDBC pool</text>
+  <text x="1110" y="326" text-anchor="middle" class="lbl body">20 connections</text>
+  <text x="1110" y="346" text-anchor="middle" class="lbl sub">never oversubscribed</text>
+
+  <path class="flow" d="M 1110 364 V 390"/>
+
+  <rect x="940" y="390" width="340" height="64" rx="6" class="boxR"/>
+  <text x="1110" y="416" text-anchor="middle" class="lbl node">Database</text>
+  <text x="1110" y="436" text-anchor="middle" class="lbl sub">connections in use ≤ 20</text>
+
+  <rect x="940" y="474" width="340" height="140" rx="6" class="boxA"/>
+  <text x="956" y="496" class="lbl ah">Deliberate admission control</text>
+  <text x="956" y="516" class="lbl tiny">The Semaphore bounds concurrent</text>
+  <text x="956" y="534" class="lbl tiny">callers at the pool's true capacity —</text>
+  <text x="956" y="552" class="lbl tiny">by design, not by accident of the</text>
+  <text x="956" y="570" class="lbl tiny">platform-thread count that used to</text>
+  <text x="956" y="588" class="lbl tiny">throttle admission for free.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="690" x2="1340" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="704" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="717" class="lbl tiny">caller (request or virtual threads)</text>
+
+  <rect x="290" y="704" width="22" height="16" rx="3" class="boxR"/>
+  <text x="320" y="717" class="lbl tiny">healthy / resolved state</text>
+
+  <rect x="540" y="704" width="22" height="16" rx="3" class="boxD"/>
+  <text x="570" y="717" class="lbl tiny">degraded — queue or ceiling exceeded</text>
+
+  <rect x="860" y="704" width="22" height="16" rx="3" class="boxH"/>
+  <text x="890" y="717" class="lbl tiny">deliberate fix — sized Semaphore</text>
+
+  <rect x="1120" y="704" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1150" y="717" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 748 H 60"/>
+  <text x="70" y="753" class="lbl tiny">A → B : A calls / flows into B</text>
+</svg>

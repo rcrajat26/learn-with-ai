@@ -1,0 +1,50 @@
+<svg viewBox="0 0 1040 470" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Step 3 of 3. The same input, The bug in ClaudeRunner is caused by, produces two different complete outputs when sampled twice: one blaming a missing null check in parse, the other blaming a race condition between PreToolUse and the tool_result callback. Both are fluent. An annotation states that fluency is not a correctness signal.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; }
+    .node { font-size: 15px; font-weight: 600; }
+    .body { font-size: 13px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="470" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STEP 3 OF 3 — TWO COMPLETE OUTPUTS FROM THE SAME INPUT</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="60" width="920" height="50" rx="6" class="boxW"/>
+  <text x="80" y="90" class="lbl body">input: "The bug in ClaudeRunner is caused by ..."</text>
+
+  <rect x="60" y="140" width="440" height="140" rx="6" class="boxP"/>
+  <text x="80" y="164" class="lbl h2">OUTPUT A (sample 1)</text>
+  <text x="80" y="192" class="lbl body">"... the missing null check in</text>
+  <text x="80" y="212" class="lbl body">parse(String stdout)."</text>
+  <text x="80" y="256" class="lbl sub">fluent, grammatical, confident</text>
+
+  <rect x="540" y="140" width="440" height="140" rx="6" class="boxP"/>
+  <text x="560" y="164" class="lbl h2">OUTPUT B (sample 2)</text>
+  <text x="560" y="192" class="lbl body">"... a race condition between</text>
+  <text x="560" y="212" class="lbl body">PreToolUse and the tool_result</text>
+  <text x="560" y="232" class="lbl body">callback."</text>
+  <text x="560" y="256" class="lbl sub">also fluent, grammatical, confident</text>
+
+  <rect x="60" y="320" width="920" height="70" rx="6" class="boxA"/>
+  <text x="80" y="342" class="lbl h2">NOTE</text>
+  <text x="80" y="364" class="lbl body">Fluency is not a correctness signal — both A and B read equally well;</text>
+  <text x="80" y="382" class="lbl body">at most one of them is actually true.</text>
+
+  <line x1="20" y1="410" x2="1020" y2="410" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="422" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="435" class="lbl tiny">shared input</text>
+  <rect x="220" y="422" width="22" height="16" rx="3" class="boxP"/>
+  <text x="250" y="435" class="lbl tiny">a sampled complete output</text>
+  <rect x="520" y="422" width="22" height="16" rx="3" class="boxA"/>
+  <text x="545" y="435" class="lbl tiny">annotation</text>
+</svg>

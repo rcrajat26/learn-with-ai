@@ -1,0 +1,63 @@
+<svg viewBox="0 0 800 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The string pool: AccountActivation and ApplicationHistory both point to one pooled AA-801 literal, new String(AA-801) is a separate object, and intern() points it back to the pool">
+  <defs>
+    <marker id="arrow032" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15"
+        fill="#1f2937" font-weight="bold">The string pool</text>
+
+  <!-- Heap outer box -->
+  <rect x="40" y="60" width="720" height="430" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="55" y="72" width="70" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="90" y="89" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Heap</text>
+
+  <!-- Two class boxes -->
+  <rect x="70" y="110" width="230" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="185" y="132" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">AccountActivation</text>
+  <text x="185" y="150" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">STATUS = "AA-801" (literal)</text>
+
+  <rect x="340" y="110" width="230" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="455" y="132" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ApplicationHistory</text>
+  <text x="455" y="150" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">STATUS = "AA-801" (literal)</text>
+
+  <!-- Pool region -->
+  <rect x="150" y="220" width="300" height="110" rx="8" fill="#fef3c7" stroke="#737373" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="300" y="238" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">string pool (interned literals)</text>
+  <rect x="220" y="255" width="160" height="55" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="300" y="277" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"AA-801"</text>
+  <text x="300" y="294" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">one pooled instance</text>
+
+  <line x1="185" y1="170" x2="270" y2="255" stroke="#737373" stroke-width="2" marker-end="url(#arrow032)"/>
+  <line x1="455" y1="170" x2="330" y2="255" stroke="#737373" stroke-width="2" marker-end="url(#arrow032)"/>
+
+  <!-- new String box (outside pool, on the heap) -->
+  <rect x="560" y="230" width="170" height="70" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="645" y="252" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">new String("AA-801")</text>
+  <text x="645" y="268" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">own object header</text>
+  <text x="645" y="284" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">own byte[] copy</text>
+
+  <!-- intern() arrow back to pool -->
+  <path d="M 560 290 C 480 340, 400 340, 380 300" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow032)"/>
+  <rect x="420" y="330" width="90" height="24" rx="3" fill="#fef3c7"/>
+  <text x="465" y="347" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">.intern()</text>
+
+  <!-- == annotations -->
+  <rect x="70" y="390" width="640" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">AccountActivation.STATUS == ApplicationHistory.STATUS  -&gt;  true (same pooled instance)</text>
+
+  <rect x="70" y="430" width="640" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="452" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">AccountActivation.STATUS == new String("AA-801")  -&gt;  false (pooled vs. heap copy)</text>
+
+  <rect x="70" y="470" width="640" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="492" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">new String("AA-801").intern() == AccountActivation.STATUS  -&gt;  true (intern resolves to the pool)</text>
+
+  <!-- VERSION TRAP -->
+  <rect x="60" y="520" width="680" height="66" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="542" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">VERSION TRAP</text>
+  <text x="400" y="560" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">the string pool lived in PermGen through Java 6, so heavy interning could throw</text>
+  <text x="400" y="576" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">OutOfMemoryError: PermGen space. JDK 7 (2011) moved the pool onto the main heap.</text>
+</svg>

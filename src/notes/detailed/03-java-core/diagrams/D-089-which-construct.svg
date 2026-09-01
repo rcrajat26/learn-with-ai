@@ -1,0 +1,281 @@
+<svg viewBox="0 0 2000 1200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree titled Which construct do I reach for, rooted at the question What are you modelling. A shared bus drops to nine branch questions, five in a top band and four in a second band reached by a connector routed down the right margin: Value type (Immutable data with equality by content), leaves record Money(BigDecimal amount, Currency currency), class for a superclass or mutable state, enum for a closed set. Contract (who implements it and is the set closed), leaves interface for an open set, sealed interface Verdict permits DocumentVerdict, ScreeningVerdict, ReviewVerdict, WealthVerdict, functional interface with one abstract method, abstract class for shared state. Constant (does the set change without a redeploy), leaves static final compile-time literal, enum RestrictionType, config property tunable limit. Error signal (can the caller do anything about it), leaves unchecked InsufficientFundsException, checked for a recoverable I/O boundary, Optional where absent is normal, Result of T and E where a reason must travel with the failure. Number (is it money), leaves minor-unit long a stake of 420 minor units, BigDecimal Money.amount at scale 2, int or long for counts and ids, and double marked in the degraded red style as never for money. Text (does it need wiping from memory), leaves String a StatusCode value, StringBuilder a built payout file line, char array a password, byte array a PSP callback payload. Time (instant on the timeline or a human date), leaves Instant LedgerEntry.postedAt, LocalDate a date of birth, ZonedDateTime an operator-facing PaymentRun window, epoch millis only at a wire boundary. Copy (must the copy be independent of later writes), leaves unmodifiable view via Collections.unmodifiableList which still sees later writes, List.copyOf an independent snapshot, deep copy for mutable elements, immutable rebuild via a withX method. Nested type (does it need the enclosing instance), leaves static nested PaymentRun.Item, inner which needs this dollar zero, local or anonymous for one call site, lambda a Comparator on LedgerEntry.postedAt.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;font-weight:bold;fill:#b91c1c;}
+    </style>
+    <marker id="mkr089" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="2000" height="1200" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Which construct do I reach for &#8212; a decision tree from "what are you modelling" to a concrete Java type</text>
+  <line x1="20" y1="42" x2="1980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT -->
+  <rect x="860" y="60" width="280" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="1000" y="90" class="smallb" text-anchor="middle">What are you modelling?</text>
+
+  <!-- BUS -->
+  <path d="M1000,110 V130" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="20" y1="130" x2="1980" y2="130" stroke="#475569" stroke-width="2"/>
+
+  <!-- ================= ROW 1 BRANCHES (5) ================= -->
+  <!-- Value type -->
+  <path d="M220,130 V160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="50" y="160" width="340" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="220" y="178" class="smallb" text-anchor="middle">VALUE TYPE</text>
+  <text x="220" y="196" class="small" text-anchor="middle">Immutable data with equality by content?</text>
+
+  <path d="M220,210 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="50" y="230" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="250" class="code">record</text>
+  <text x="66" y="270" class="small">&#8212; Money(BigDecimal amount, Currency currency)</text>
+
+  <path d="M220,292 V302" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="50" y="302" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="322" class="code">class</text>
+  <text x="66" y="342" class="small">&#8212; needs a superclass or mutable state</text>
+
+  <path d="M220,364 V374" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="50" y="374" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="394" class="code">enum</text>
+  <text x="66" y="414" class="small">&#8212; a closed set</text>
+
+  <!-- Contract -->
+  <path d="M610,130 V160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="440" y="160" width="340" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="610" y="178" class="smallb" text-anchor="middle">CONTRACT</text>
+  <text x="610" y="196" class="small" text-anchor="middle">Who implements it, and is the set closed?</text>
+
+  <path d="M610,210 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="440" y="230" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="456" y="250" class="code">interface</text>
+  <text x="456" y="270" class="small">&#8212; open set</text>
+
+  <path d="M610,292 V302" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="440" y="302" width="340" height="94" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="456" y="322" class="code">sealed interface</text>
+  <text x="456" y="340" class="small">&#8212; Verdict permits DocumentVerdict,</text>
+  <text x="456" y="356" class="small">ScreeningVerdict, ReviewVerdict,</text>
+  <text x="456" y="372" class="small">WealthVerdict</text>
+
+  <path d="M610,396 V406" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="440" y="406" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="456" y="426" class="code">functional interface</text>
+  <text x="456" y="446" class="small">&#8212; one abstract method</text>
+
+  <path d="M610,468 V478" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="440" y="478" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="456" y="498" class="code">abstract class</text>
+  <text x="456" y="518" class="small">&#8212; shared state</text>
+
+  <!-- Constant -->
+  <path d="M1000,130 V160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="830" y="160" width="340" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1000" y="178" class="smallb" text-anchor="middle">CONSTANT</text>
+  <text x="1000" y="196" class="small" text-anchor="middle">Does the set change without a redeploy?</text>
+
+  <path d="M1000,210 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="830" y="230" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="846" y="250" class="code">static final</text>
+  <text x="846" y="270" class="small">&#8212; a compile-time literal</text>
+
+  <path d="M1000,292 V302" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="830" y="302" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="846" y="322" class="code">enum</text>
+  <text x="846" y="342" class="small">&#8212; RestrictionType</text>
+
+  <path d="M1000,364 V374" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="830" y="374" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="846" y="394" class="code">config property</text>
+  <text x="846" y="414" class="small">&#8212; a tunable limit</text>
+
+  <!-- Error signal -->
+  <path d="M1390,130 V160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1220" y="160" width="340" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1390" y="178" class="smallb" text-anchor="middle">ERROR SIGNAL</text>
+  <text x="1390" y="196" class="small" text-anchor="middle">Can the caller do anything about it?</text>
+
+  <path d="M1390,210 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1220" y="230" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1236" y="250" class="code">unchecked</text>
+  <text x="1236" y="270" class="small">&#8212; InsufficientFundsException</text>
+
+  <path d="M1390,292 V302" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1220" y="302" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1236" y="322" class="code">checked</text>
+  <text x="1236" y="342" class="small">&#8212; a recoverable I/O boundary</text>
+
+  <path d="M1390,364 V374" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1220" y="374" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1236" y="394" class="code">Optional</text>
+  <text x="1236" y="414" class="small">&#8212; absent is normal</text>
+
+  <path d="M1390,436 V446" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1220" y="446" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1236" y="466" class="code">Result&lt;T,E&gt;</text>
+  <text x="1236" y="486" class="small">&#8212; a reason must travel with the failure</text>
+
+  <!-- Number -->
+  <path d="M1780,130 V160" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1610" y="160" width="340" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1780" y="178" class="smallb" text-anchor="middle">NUMBER</text>
+  <text x="1780" y="196" class="small" text-anchor="middle">Is it money?</text>
+
+  <path d="M1780,210 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1610" y="230" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1626" y="250" class="code">minor-unit long</text>
+  <text x="1626" y="270" class="small">&#8212; a stake of 420 minor units</text>
+
+  <path d="M1780,292 V302" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1610" y="302" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1626" y="322" class="code">BigDecimal</text>
+  <text x="1626" y="342" class="small">&#8212; Money.amount at scale 2</text>
+
+  <path d="M1780,364 V374" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1610" y="374" width="340" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1626" y="394" class="code">int / long</text>
+  <text x="1626" y="414" class="small">&#8212; counts and ids</text>
+
+  <path d="M1780,436 V446" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1610" y="446" width="340" height="62" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="1626" y="466" class="codeR">double</text>
+  <text x="1626" y="486" class="small">&#8212; never for money</text>
+
+  <!-- ================= CONNECTOR TO ROW 2 ================= -->
+  <path d="M1980,130 V590" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="280" y1="590" x2="1980" y2="590" stroke="#475569" stroke-width="2"/>
+
+  <!-- ================= ROW 2 BRANCHES (4) ================= -->
+  <!-- Text -->
+  <path d="M280,590 V620" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="70" y="620" width="420" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="638" class="smallb" text-anchor="middle">TEXT</text>
+  <text x="280" y="656" class="small" text-anchor="middle">Does it need wiping from memory?</text>
+
+  <path d="M280,670 V690" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="70" y="690" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="86" y="710" class="code">String</text>
+  <text x="86" y="730" class="small">&#8212; a StatusCode value</text>
+
+  <path d="M280,752 V762" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="70" y="762" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="86" y="782" class="code">StringBuilder</text>
+  <text x="86" y="802" class="small">&#8212; a built payout file line</text>
+
+  <path d="M280,824 V834" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="70" y="834" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="86" y="854" class="code">char[]</text>
+  <text x="86" y="874" class="small">&#8212; a password</text>
+
+  <path d="M280,896 V906" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="70" y="906" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="86" y="926" class="code">byte[]</text>
+  <text x="86" y="946" class="small">&#8212; a PSP callback payload</text>
+
+  <!-- Time -->
+  <path d="M770,590 V620" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="560" y="620" width="420" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="770" y="638" class="smallb" text-anchor="middle">TIME</text>
+  <text x="770" y="656" class="small" text-anchor="middle">Instant on the timeline, or a human date?</text>
+
+  <path d="M770,670 V690" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="560" y="690" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="710" class="code">Instant</text>
+  <text x="576" y="730" class="small">&#8212; LedgerEntry.postedAt</text>
+
+  <path d="M770,752 V762" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="560" y="762" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="782" class="code">LocalDate</text>
+  <text x="576" y="802" class="small">&#8212; a date of birth</text>
+
+  <path d="M770,824 V834" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="560" y="834" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="854" class="code">ZonedDateTime</text>
+  <text x="576" y="874" class="small">&#8212; an operator-facing PaymentRun window</text>
+
+  <path d="M770,896 V906" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="560" y="906" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="926" class="code">epoch millis</text>
+  <text x="576" y="946" class="small">&#8212; only at a wire boundary</text>
+
+  <!-- Copy -->
+  <path d="M1260,590 V620" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1050" y="620" width="420" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1260" y="638" class="smallb" text-anchor="middle">COPY</text>
+  <text x="1260" y="656" class="small" text-anchor="middle">Must the copy be independent of later writes?</text>
+
+  <path d="M1260,670 V690" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1050" y="690" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1066" y="710" class="code">unmodifiable view</text>
+  <text x="1066" y="730" class="small">&#8212; Collections.unmodifiableList, sees later writes</text>
+
+  <path d="M1260,752 V762" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1050" y="762" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1066" y="782" class="code">List.copyOf</text>
+  <text x="1066" y="802" class="small">&#8212; an independent snapshot</text>
+
+  <path d="M1260,824 V834" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1050" y="834" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1066" y="854" class="code">deep copy</text>
+  <text x="1066" y="874" class="small">&#8212; mutable elements</text>
+
+  <path d="M1260,896 V906" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1050" y="906" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1066" y="926" class="code">immutable rebuild</text>
+  <text x="1066" y="946" class="small">&#8212; a withX method</text>
+
+  <!-- Nested type -->
+  <path d="M1750,590 V620" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1540" y="620" width="420" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1750" y="638" class="smallb" text-anchor="middle">NESTED TYPE</text>
+  <text x="1750" y="656" class="small" text-anchor="middle">Does it need the enclosing instance?</text>
+
+  <path d="M1750,670 V690" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1540" y="690" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1556" y="710" class="code">static nested</text>
+  <text x="1556" y="730" class="small">&#8212; PaymentRun.Item</text>
+
+  <path d="M1750,752 V762" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1540" y="762" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1556" y="782" class="code">inner</text>
+  <text x="1556" y="802" class="small">&#8212; needs this$0</text>
+
+  <path d="M1750,824 V834" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1540" y="834" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1556" y="854" class="code">local / anonymous</text>
+  <text x="1556" y="874" class="small">&#8212; one call site</text>
+
+  <path d="M1750,896 V906" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <rect x="1540" y="906" width="420" height="62" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1556" y="926" class="code">lambda</text>
+  <text x="1556" y="946" class="small">&#8212; a Comparator on LedgerEntry.postedAt</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1010" class="h2">LEGEND</text>
+  <line x1="20" y1="1018" x2="1980" y2="1018" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="42" y="1040" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="70" y="1053" class="small">highlight &#8212; the root question that starts every decision</text>
+
+  <rect x="42" y="1064" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="1077" class="small">annotation panel &#8212; a branch decision point</text>
+
+  <rect x="42" y="1088" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="1101" class="small">primary &#8212; a concrete construct, with its QuizStakes instance</text>
+
+  <rect x="42" y="1112" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="70" y="1125" class="small">degraded &#8212; the construct to avoid for this case</text>
+
+  <line x1="42" y1="1150" x2="68" y2="1150" stroke="#475569" stroke-width="2" marker-end="url(#mkr089)"/>
+  <text x="76" y="1154" class="small">structural edge &#8212; question leads to branch, branch leads to leaf</text>
+</svg>

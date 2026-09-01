@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of deserializing a StakeSplit. Left, a hand-written class:
+     the default deserialization path allocates the object and writes its fields directly through
+     reflection, bypassing every constructor, so a StakeSplit whose bonusPortion and cashPortion do
+     not sum to the stake can exist. Right, the record: deserialization reads the component values
+     from the stream and passes them to the canonical constructor, so the compact constructor's
+     validation runs and throws on the same invalid input. A note lists the serialization hooks a
+     record ignores and the default serialVersionUID of zero.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">DESERIALIZING AN INVALID StakeSplit — HAND-WRITTEN CLASS VS RECORD</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- section headers -->
+  <text x="20" y="66" class="lbl h2">HAND-WRITTEN CLASS — CONSTRUCTOR BYPASSED</text>
+  <text x="580" y="66" class="lbl h2">RECORD — CANONICAL CONSTRUCTOR RUNS</text>
+  <line x1="560" y1="56" x2="560" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT SIDE -->
+  <rect x="20" y="80" width="500" height="58" rx="6" class="boxL"/>
+  <text x="270" y="102" text-anchor="middle" class="lbl node mono">class StakeSplit implements Serializable</text>
+  <text x="270" y="122" text-anchor="middle" class="lbl sub">private final Money bonusPortion, cashPortion; own constructor validates sum == stake</text>
+
+  <path class="flow" d="M 270 138 V 160"/>
+
+  <rect x="20" y="164" width="500" height="70" rx="6" class="boxP"/>
+  <text x="270" y="188" text-anchor="middle" class="lbl body">ObjectInputStream.readObject()</text>
+  <text x="270" y="208" text-anchor="middle" class="lbl dense mono">Unsafe.allocateInstance(StakeSplit.class)</text>
+  <text x="270" y="224" text-anchor="middle" class="lbl sub">no constructor invoked — object allocated bare</text>
+
+  <path class="flow" d="M 270 234 V 256"/>
+
+  <rect x="20" y="260" width="500" height="70" rx="6" class="boxP"/>
+  <text x="270" y="284" text-anchor="middle" class="lbl body">fields written directly from the stream</text>
+  <text x="270" y="304" text-anchor="middle" class="lbl dense mono">bonusPortion = 80.00 ; cashPortion = 10.00</text>
+  <text x="270" y="320" text-anchor="middle" class="lbl sub">reflective field set — validation code never runs</text>
+
+  <path class="flow" d="M 270 330 V 352"/>
+
+  <rect x="20" y="356" width="500" height="66" rx="6" class="boxD"/>
+  <text x="270" y="380" text-anchor="middle" class="lbl node">invalid StakeSplit now exists</text>
+  <text x="270" y="400" text-anchor="middle" class="lbl dense mono">80.00 + 10.00 ≠ stake — invariant broken, no throw</text>
+
+  <!-- RIGHT SIDE -->
+  <rect x="580" y="80" width="500" height="58" rx="6" class="boxR"/>
+  <text x="830" y="102" text-anchor="middle" class="lbl node mono">record StakeSplit(Money bonusPortion, Money cashPortion)</text>
+  <text x="830" y="122" text-anchor="middle" class="lbl sub">compact constructor: if (!bonusPortion.plus(cashPortion).equals(stake)) throw ...</text>
+
+  <path class="flow" d="M 830 138 V 160"/>
+
+  <rect x="580" y="164" width="500" height="70" rx="6" class="boxP"/>
+  <text x="830" y="188" text-anchor="middle" class="lbl body">ObjectInputStream.readObject()</text>
+  <text x="830" y="208" text-anchor="middle" class="lbl dense mono">reads component values from the stream</text>
+  <text x="830" y="224" text-anchor="middle" class="lbl sub">bonusPortion = 80.00 ; cashPortion = 10.00</text>
+
+  <path class="flow" d="M 830 234 V 256"/>
+
+  <rect x="580" y="260" width="500" height="70" rx="6" class="boxR"/>
+  <text x="830" y="284" text-anchor="middle" class="lbl body">values passed to the canonical constructor</text>
+  <text x="830" y="304" text-anchor="middle" class="lbl dense mono">new StakeSplit(80.00, 10.00)</text>
+  <text x="830" y="320" text-anchor="middle" class="lbl sub">JDK-generated deserialization always calls it</text>
+
+  <path class="flow" d="M 830 330 V 352"/>
+
+  <rect x="580" y="356" width="500" height="66" rx="6" class="boxD"/>
+  <text x="830" y="380" text-anchor="middle" class="lbl node">compact constructor validation throws</text>
+  <text x="830" y="400" text-anchor="middle" class="lbl dense mono">IllegalArgumentException: bonusPortion + cashPortion != stake</text>
+
+  <!-- annotation panel: ignored hooks -->
+  <rect x="20" y="446" width="1060" height="120" rx="6" class="boxA"/>
+  <text x="34" y="468" class="lbl body" style="font-weight:700;">Serialization hooks a record ignores</text>
+  <text x="34" y="490" class="lbl tiny mono">writeObject · readObject · readObjectNoData · writeExternal · readExternal · serialPersistentFields</text>
+  <text x="34" y="510" class="lbl tiny">None of these methods, even if declared on a record, are consulted — the JDK's record-aware</text>
+  <text x="34" y="528" class="lbl tiny">serialization mechanism always reads the component values and calls the canonical constructor.</text>
+  <text x="34" y="548" class="lbl tiny">Default serialVersionUID for a record (and for any class that omits it): 0.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="584" x2="1100" y2="584" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="596" width="22" height="14" rx="3" class="boxL"/>
+  <text x="50" y="608" class="lbl tiny">declaration</text>
+  <rect x="160" y="596" width="22" height="14" rx="3" class="boxP"/>
+  <text x="190" y="608" class="lbl tiny">deserialization step</text>
+  <rect x="340" y="596" width="22" height="14" rx="3" class="boxR"/>
+  <text x="370" y="608" class="lbl tiny">constructor / validation step</text>
+  <rect x="560" y="596" width="22" height="14" rx="3" class="boxD"/>
+  <text x="590" y="608" class="lbl tiny">outcome (broken invariant vs thrown exception)</text>
+  <rect x="880" y="596" width="22" height="14" rx="3" class="boxA"/>
+  <text x="910" y="608" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 636 H 60"/>
+  <text x="68" y="641" class="lbl tiny">A → B : B follows from A in the deserialization sequence</text>
+</svg>

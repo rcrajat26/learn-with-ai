@@ -1,0 +1,137 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Skip list with four levels at p=0.25, a traced search path, and a contrast of a single CAS pointer swing versus a multi-node red-black rotation">
+  <defs>
+    <marker id="arrow111" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+    <marker id="arrowPath" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="6" width="760" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="400" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ConcurrentSkipListMap — 4 levels, p = 0.25 (each level ~1/4 the row below)</text>
+
+  <!-- level labels -->
+  <rect x="20" y="70" width="34" height="18" rx="3" fill="#fef3c7"/>
+  <text x="37" y="83" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">L3</text>
+  <rect x="20" y="140" width="34" height="18" rx="3" fill="#fef3c7"/>
+  <text x="37" y="153" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">L2</text>
+  <rect x="20" y="210" width="34" height="18" rx="3" fill="#fef3c7"/>
+  <text x="37" y="223" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">L1</text>
+  <rect x="20" y="280" width="34" height="18" rx="3" fill="#fef3c7"/>
+  <text x="37" y="293" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">L0</text>
+
+  <rect x="600" y="70" width="180" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="690" y="83" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">header only (0 data nodes)</text>
+  <rect x="600" y="140" width="180" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="690" y="153" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">~1 node</text>
+  <rect x="600" y="210" width="180" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="690" y="223" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">~4 nodes</text>
+  <rect x="600" y="280" width="180" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="690" y="293" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">16 nodes (base list, sorted)</text>
+
+  <!-- L0: 16 nodes -->
+  <line x1="20" y1="289" x2="750" y2="289" stroke="#737373" stroke-width="2"/>
+  <g id="l0nodes">
+    <!-- header -->
+    <rect x="12" y="277" width="16" height="24" rx="3" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <!-- keys 1..16 at x = 60 + i*46 -->
+    <g fill="#dbeafe" stroke="#737373" stroke-width="2">
+      <circle cx="60" cy="289" r="14"/><circle cx="106" cy="289" r="14"/><circle cx="152" cy="289" r="14"/>
+      <circle cx="198" cy="289" r="14"/><circle cx="244" cy="289" r="14"/><circle cx="290" cy="289" r="14"/>
+      <circle cx="336" cy="289" r="14"/><circle cx="382" cy="289" r="14"/><circle cx="428" cy="289" r="14"/>
+      <circle cx="474" cy="289" r="14"/><circle cx="520" cy="289" r="14"/><circle cx="566" cy="289" r="14"/>
+      <circle cx="612" cy="289" r="14"/><circle cx="658" cy="289" r="14"/><circle cx="704" cy="289" r="14"/>
+      <circle cx="750" cy="289" r="14"/>
+    </g>
+    <g font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">
+      <text x="60" y="293">1</text><text x="106" y="293">2</text><text x="152" y="293">3</text>
+      <text x="198" y="293">4</text><text x="244" y="293">5</text><text x="290" y="293">6</text>
+      <text x="336" y="293">7</text><text x="382" y="293">8</text><text x="428" y="293">9</text>
+      <text x="474" y="293">10</text><text x="520" y="293">11</text><text x="566" y="293">12</text>
+      <text x="612" y="293">13</text><text x="658" y="293">14</text><text x="704" y="293">15</text>
+      <text x="750" y="293">16</text>
+    </g>
+  </g>
+
+  <!-- L1: keys 4,8,12,16 at x=198,382,566,750 -->
+  <line x1="20" y1="219" x2="198" y2="219" stroke="#737373" stroke-width="2"/>
+  <line x1="198" y1="219" x2="382" y2="219" stroke="#737373" stroke-width="2"/>
+  <line x1="382" y1="219" x2="566" y2="219" stroke="#737373" stroke-width="2"/>
+  <line x1="566" y1="219" x2="750" y2="219" stroke="#737373" stroke-width="2"/>
+  <rect x="12" y="207" width="16" height="24" rx="3" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <g fill="#dbeafe" stroke="#737373" stroke-width="2">
+    <circle cx="198" cy="219" r="14"/><circle cx="382" cy="219" r="14"/><circle cx="566" cy="219" r="14"/><circle cx="750" cy="219" r="14"/>
+  </g>
+  <g font-family="sans-serif" font-size="12" fill="#1f2937" text-anchor="middle">
+    <text x="198" y="223">4</text><text x="382" y="223">8</text><text x="566" y="223">12</text><text x="750" y="223">16</text>
+  </g>
+  <!-- dashed vertical links down to same key at L0 -->
+  <g stroke="#737373" stroke-width="1" stroke-dasharray="3,2">
+    <line x1="198" y1="233" x2="198" y2="275"/>
+    <line x1="382" y1="233" x2="382" y2="275"/>
+    <line x1="566" y1="233" x2="566" y2="275"/>
+    <line x1="750" y1="233" x2="750" y2="275"/>
+  </g>
+
+  <!-- L2: key 8 only at x=382 -->
+  <line x1="20" y1="149" x2="382" y2="149" stroke="#737373" stroke-width="2"/>
+  <rect x="12" y="137" width="16" height="24" rx="3" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <circle cx="382" cy="149" r="14" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="382" y="153" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">8</text>
+  <line x1="382" y1="163" x2="382" y2="205" stroke="#737373" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- L3: header only -->
+  <rect x="12" y="67" width="16" height="24" rx="3" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="20" y="63" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937"> </text>
+
+  <!-- search path for key 9: header L3 -> drop -> L2 key8 -> drop -> L1(col8) -> drop -> L0 key8 -> right -> L0 key9 -->
+  <g stroke="#525252" stroke-width="3" fill="none" marker-end="url(#arrowPath)">
+    <path d="M 20 79 L 20 145"/>
+    <path d="M 28 149 L 374 149"/>
+    <path d="M 382 157 L 382 215"/>
+    <path d="M 382 227 L 382 281"/>
+    <path d="M 396 289 L 420 289"/>
+  </g>
+  <rect x="330" y="30" width="220" height="20" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="440" y="44" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">search(9): top-left down, then right</text>
+
+  <!-- insertion: single CAS pointer swing at base level -->
+  <rect x="20" y="330" width="380" height="150" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="352" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">skip list insert: single CAS pointer swing</text>
+
+  <circle cx="90" cy="410" r="18" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="90" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">8</text>
+  <circle cx="330" cy="410" r="18" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="330" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">9</text>
+  <circle cx="210" cy="410" r="18" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">new</text>
+
+  <line x1="108" y1="410" x2="192" y2="410" stroke="#525252" stroke-width="2" marker-end="url(#arrow111)"/>
+  <line x1="228" y1="410" x2="312" y2="410" stroke="#525252" stroke-width="2" marker-end="url(#arrow111)"/>
+  <rect x="70" y="440" width="280" height="18" rx="3" fill="#dcfce7"/>
+  <text x="210" y="453" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">CAS(node8.next, oldRef=9, newRef=new) — one word</text>
+
+  <rect x="70" y="462" width="280" height="16" rx="3" fill="#dcfce7"/>
+  <text x="210" y="474" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">lock-free: only one pointer needs to change atomically</text>
+
+  <!-- contrast: red-black rotation touching 3 nodes -->
+  <rect x="420" y="330" width="360" height="150" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="352" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">red-black left rotation: 3-node pointer surgery</text>
+
+  <circle cx="500" cy="410" r="18" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="500" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">X</text>
+  <circle cx="600" cy="380" r="18" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="600" y="385" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Y</text>
+  <circle cx="700" cy="410" r="18" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="700" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Z</text>
+
+  <line x1="510" y1="398" x2="588" y2="386" stroke="#525252" stroke-width="2"/>
+  <line x1="612" y1="386" x2="690" y2="404" stroke="#525252" stroke-width="2"/>
+
+  <rect x="440" y="440" width="320" height="18" rx="3" fill="#fee2e2"/>
+  <text x="600" y="453" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">X.right, Y.left, Y.parent all change together</text>
+
+  <rect x="440" y="462" width="320" height="16" rx="3" fill="#fee2e2"/>
+  <text x="600" y="474" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">needs a lock: 3+ pointers can't be one atomic CAS</text>
+</svg>

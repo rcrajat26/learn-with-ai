@@ -1,0 +1,50 @@
+<svg viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3 in the directory discovery walk. The primary working directory is /Users/dev/repo/services/payments, highlighted at the bottom of the chain that runs up to the filesystem root.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="430" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 1 / 3 — THE PRIMARY WORKING DIRECTORY</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="290" y="70" width="320" height="46" rx="6" class="boxP"/>
+  <text x="450" y="98" text-anchor="middle" class="lbl body">/</text>
+  <path class="flow" d="M 450 116 V 136"/>
+
+  <rect x="290" y="136" width="320" height="46" rx="6" class="boxP"/>
+  <text x="450" y="164" text-anchor="middle" class="lbl body">/Users/dev</text>
+  <path class="flow" d="M 450 182 V 202"/>
+
+  <rect x="290" y="202" width="320" height="46" rx="6" class="boxP"/>
+  <text x="450" y="230" text-anchor="middle" class="lbl body">/Users/dev/repo</text>
+  <path class="flow" d="M 450 248 V 268"/>
+
+  <rect x="270" y="268" width="360" height="46" rx="6" class="boxP"/>
+  <text x="450" y="296" text-anchor="middle" class="lbl body">/Users/dev/repo/services</text>
+  <path class="flow" d="M 450 314 V 334"/>
+
+  <rect x="230" y="334" width="440" height="60" rx="6" class="boxY"/>
+  <text x="450" y="360" text-anchor="middle" class="lbl node">/Users/dev/repo/services/payments</text>
+  <text x="450" y="380" text-anchor="middle" class="lbl sub">cwd — the primary working directory</text>
+
+  <text x="690" y="364" class="lbl sub" font-weight="700">walk starts here</text>
+</svg>

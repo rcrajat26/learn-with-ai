@@ -1,0 +1,187 @@
+<svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Why exactly one bit decides whether a HashMap entry moves during resize from capacity 16 to 32">
+  <defs>
+    <marker id="arrow93" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937">Why exactly one bit decides</text>
+
+  <!-- callout: that bit == oldCap -->
+  <rect x="330" y="46" width="240" height="26" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="63" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">that bit == oldCap, i.e. 16</text>
+
+  <!-- LEFT PANEL: hash = 21 -->
+  <rect x="40" y="84" width="180" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="102" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">hash = 21</text>
+
+  <!-- column headers (bit values) -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="40" y="118" width="40" height="24" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="60" y="135" text-anchor="middle">16</text>
+    <rect x="80" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="100" y="135" text-anchor="middle">8</text>
+    <rect x="120" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="140" y="135" text-anchor="middle">4</text>
+    <rect x="160" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="180" y="135" text-anchor="middle">2</text>
+    <rect x="200" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="220" y="135" text-anchor="middle">1</text>
+  </g>
+
+  <!-- row: bits of 21 = 10101 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="40" y="146" width="40" height="26" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="60" y="164" text-anchor="middle">1</text>
+    <rect x="80" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="100" y="164" text-anchor="middle">0</text>
+    <rect x="120" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="140" y="164" text-anchor="middle">1</text>
+    <rect x="160" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="180" y="164" text-anchor="middle">0</text>
+    <rect x="200" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="220" y="164" text-anchor="middle">1</text>
+    <rect x="240" y="146" width="150" height="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="315" y="164" text-anchor="middle" font-size="12">bits of hash</text>
+  </g>
+
+  <!-- row: old mask n=16 -> 15 = 01111 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="40" y="174" width="40" height="26" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="60" y="192" text-anchor="middle">0</text>
+    <rect x="80" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="100" y="192" text-anchor="middle">1</text>
+    <rect x="120" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="140" y="192" text-anchor="middle">1</text>
+    <rect x="160" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="180" y="192" text-anchor="middle">1</text>
+    <rect x="200" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="220" y="192" text-anchor="middle">1</text>
+    <rect x="240" y="174" width="150" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="315" y="192" text-anchor="middle" font-size="12">old mask n-1=15</text>
+  </g>
+
+  <!-- row: new mask n=32 -> 31 = 11111 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="40" y="202" width="40" height="26" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="60" y="220" text-anchor="middle">1</text>
+    <rect x="80" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="100" y="220" text-anchor="middle">1</text>
+    <rect x="120" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="140" y="220" text-anchor="middle">1</text>
+    <rect x="160" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="180" y="220" text-anchor="middle">1</text>
+    <rect x="200" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="220" y="220" text-anchor="middle">1</text>
+    <rect x="240" y="202" width="150" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="315" y="220" text-anchor="middle" font-size="12">new mask n-1=31</text>
+  </g>
+
+  <!-- results for hash 21 -->
+  <rect x="40" y="238" width="350" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="215" y="255" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">21 &amp; 15 = 5   (old index j)</text>
+
+  <rect x="40" y="266" width="350" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="215" y="283" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">21 &amp; 31 = 21   (new index)</text>
+
+  <rect x="40" y="294" width="350" height="26" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="215" y="312" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">21 &amp; 16 = 16 != 0 -&gt; goes to j+oldCap</text>
+
+  <!-- RIGHT PANEL: hash = 5 -->
+  <rect x="480" y="84" width="180" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="570" y="102" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">hash = 5</text>
+
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="480" y="118" width="40" height="24" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="500" y="135" text-anchor="middle">16</text>
+    <rect x="520" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="135" text-anchor="middle">8</text>
+    <rect x="560" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="580" y="135" text-anchor="middle">4</text>
+    <rect x="600" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="620" y="135" text-anchor="middle">2</text>
+    <rect x="640" y="118" width="40" height="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="660" y="135" text-anchor="middle">1</text>
+  </g>
+
+  <!-- row: bits of 5 = 00101 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="480" y="146" width="40" height="26" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="500" y="164" text-anchor="middle">0</text>
+    <rect x="520" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="164" text-anchor="middle">0</text>
+    <rect x="560" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="580" y="164" text-anchor="middle">1</text>
+    <rect x="600" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="620" y="164" text-anchor="middle">0</text>
+    <rect x="640" y="146" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="660" y="164" text-anchor="middle">1</text>
+    <rect x="680" y="146" width="150" height="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="755" y="164" text-anchor="middle" font-size="12">bits of hash</text>
+  </g>
+
+  <!-- row: old mask 15 = 01111 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="480" y="174" width="40" height="26" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="500" y="192" text-anchor="middle">0</text>
+    <rect x="520" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="192" text-anchor="middle">1</text>
+    <rect x="560" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="580" y="192" text-anchor="middle">1</text>
+    <rect x="600" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="620" y="192" text-anchor="middle">1</text>
+    <rect x="640" y="174" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="660" y="192" text-anchor="middle">1</text>
+    <rect x="680" y="174" width="150" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="755" y="192" text-anchor="middle" font-size="12">old mask n-1=15</text>
+  </g>
+
+  <!-- row: new mask 31 = 11111 -->
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="480" y="202" width="40" height="26" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="500" y="220" text-anchor="middle">1</text>
+    <rect x="520" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="220" text-anchor="middle">1</text>
+    <rect x="560" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="580" y="220" text-anchor="middle">1</text>
+    <rect x="600" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="620" y="220" text-anchor="middle">1</text>
+    <rect x="640" y="202" width="40" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="660" y="220" text-anchor="middle">1</text>
+    <rect x="680" y="202" width="150" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="755" y="220" text-anchor="middle" font-size="12">new mask n-1=31</text>
+  </g>
+
+  <!-- results for hash 5 -->
+  <rect x="480" y="238" width="350" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="655" y="255" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">5 &amp; 15 = 5   (old index j)</text>
+
+  <rect x="480" y="266" width="350" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="655" y="283" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">5 &amp; 31 = 5   (new index)</text>
+
+  <rect x="480" y="294" width="350" height="26" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="655" y="312" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">5 &amp; 16 = 0   -&gt; stays at j</text>
+
+  <!-- destination boxes -->
+  <rect x="280" y="340" width="140" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="350" y="365" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">j = 5</text>
+
+  <rect x="470" y="340" width="200" height="40" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="570" y="365" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">j + oldCap = 21</text>
+
+  <line x1="215" y1="320" x2="330" y2="342" stroke="#737373" stroke-width="2" marker-end="url(#arrow93)"/>
+  <line x1="655" y1="320" x2="580" y2="342" stroke="#737373" stroke-width="2" marker-end="url(#arrow93)"/>
+
+  <!-- conclusion -->
+  <rect x="40" y="400" width="820" height="200" rx="8" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="428" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">
+    <tspan x="450" dy="0">the new index differs from the old by either 0 or exactly oldCap</tspan>
+    <tspan x="450" dy="24">-- so a single &amp; test replaces a full rehash.</tspan>
+    <tspan x="450" dy="24">This is the whole reason capacity must be a power of two:</tspan>
+    <tspan x="450" dy="24">masks n-1 are all-ones runs, so growing n only ever exposes</tspan>
+    <tspan x="450" dy="24">one new high bit (bit 4, value 16, equal to oldCap) between</tspan>
+    <tspan x="450" dy="24">the old mask 01111 and the new mask 11111.</tspan>
+  </text>
+</svg>

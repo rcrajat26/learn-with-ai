@@ -1,0 +1,57 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Frame 3: side-by-side contrast of inserting one at a time versus buildFromSorted for the same 15 sorted entries">
+  <defs>
+    <marker id="arrow109c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="360" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="200" y="34" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Same 15 sorted entries, two construction strategies</text>
+
+  <!-- left panel: insert-one-at-a-time -->
+  <rect x="20" y="60" width="360" height="200" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="86" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">insert one at a time</text>
+
+  <circle cx="200" cy="120" r="16" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="200" y="125" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1</text>
+  <line x1="200" y1="136" x2="230" y2="156" stroke="#737373" stroke-width="2" marker-end="url(#arrow109c)"/>
+  <circle cx="245" cy="170" r="16" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="245" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2</text>
+  <line x1="245" y1="186" x2="275" y2="206" stroke="#737373" stroke-width="2" marker-end="url(#arrow109c)"/>
+  <circle cx="290" cy="220" r="16" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="290" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">3</text>
+
+  <rect x="60" y="200" width="130" height="20" rx="3" fill="#fef3c7"/>
+  <text x="125" y="215" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">rotation fires here</text>
+  <line x1="190" y1="210" x2="230" y2="190" stroke="#525252" stroke-width="2" marker-end="url(#arrow109c)"/>
+
+  <rect x="30" y="236" width="340" height="16" rx="3" fill="#fee2e2"/>
+  <text x="200" y="248" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">sorted-order insert degenerates toward a skewed chain</text>
+
+  <!-- right panel: buildFromSorted -->
+  <rect x="420" y="60" width="360" height="200" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="86" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">buildFromSorted</text>
+
+  <line x1="600" y1="110" x2="540" y2="150" stroke="#737373" stroke-width="2"/>
+  <line x1="600" y1="110" x2="660" y2="150" stroke="#737373" stroke-width="2"/>
+  <line x1="540" y1="150" x2="510" y2="190" stroke="#737373" stroke-width="2"/>
+  <line x1="540" y1="150" x2="570" y2="190" stroke="#737373" stroke-width="2"/>
+  <line x1="660" y1="150" x2="630" y2="190" stroke="#737373" stroke-width="2"/>
+  <line x1="660" y1="150" x2="690" y2="190" stroke="#737373" stroke-width="2"/>
+  <circle cx="600" cy="110" r="16" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="540" cy="150" r="14" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="660" cy="150" r="14" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="510" cy="190" r="12" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="570" cy="190" r="12" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="630" cy="190" r="12" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="690" cy="190" r="12" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+
+  <rect x="450" y="236" width="300" height="16" rx="3" fill="#dcfce7"/>
+  <text x="600" y="248" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">always perfectly balanced regardless of key order</text>
+
+  <rect x="20" y="270" width="360" height="24" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="286" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">n × O(log n) total, with rotations</text>
+
+  <rect x="420" y="270" width="360" height="24" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="286" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">O(n) total, zero rotations</text>
+</svg>

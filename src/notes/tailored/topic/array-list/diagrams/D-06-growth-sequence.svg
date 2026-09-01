@@ -1,0 +1,146 @@
+<svg viewBox="0 0 1320 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of ArrayList default growth from empty, filling a PaymentRun itemIds
+     list from a bank payout file of 1800 records. Capacity steps ten, fifteen, twenty-two,
+     thirty-three, forty-nine, seventy-three, one hundred nine, one hundred sixty-three, two
+     hundred forty-four, each computed as old capacity plus old capacity shifted right one bit.
+     Above the axis a spike marks the Arrays.copyOf cost of each resize, sized to the number of
+     elements copied: ten, fifteen, twenty-two, thirty-three, forty-nine, seventy-three, one
+     hundred nine, one hundred sixty-three elements respectively, with spikes growing taller and
+     rarer as capacity grows. An annotation panel reports that growing from empty to one hundred
+     thousand elements takes twenty-four grow calls, ends at capacity one hundred six thousand
+     seven hundred ten, and copies two hundred thirteen thousand four hundred thirteen elements
+     total, averaging 2.13 copies per element — the amortised cost that spikes hide.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .axis  { stroke: #475569; stroke-width: 2; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .spike { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .dot   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .dotFirst { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1320" height="560" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">THE 1.5x SEQUENCE</text>
+  <line x1="20" y1="46" x2="1300" y2="46" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="66" class="lbl sub">PaymentRun.itemIds filling from a bank payout file of 1,800 records — capacity grows on demand, never shrinks</text>
+
+  <!-- axis -->
+  <line x1="90" y1="300" x2="1260" y2="300" class="axis"/>
+  <text x="20" y="322" class="lbl sub">capacity axis →</text>
+
+  <!-- Step 0: initial allocation, capacity 10, no spike; x = 100 -->
+  <circle cx="100" cy="300" r="7" class="dotFirst"/>
+  <text x="100" y="262" text-anchor="middle" class="lbl body" style="font-weight:700">10</text>
+  <text x="100" y="336" text-anchor="middle" class="lbl sub">new Object[10]</text>
+  <text x="100" y="350" text-anchor="middle" class="lbl sub">DEFAULT_CAPACITY</text>
+
+  <!-- x positions: 240:15 380:22 520:33 660:49 800:73 940:109 1080:163 1220:244 -->
+  <!-- capacity label y = copies_y - 20; copies_y = bar_top - 10; bar_top = 300 - height -->
+
+  <!-- step 1: 15, spike height 8 (copies 10) -->
+  <path class="flow" d="M 107 300 H 233"/>
+  <rect x="232" y="292" width="16" height="8" class="spike"/>
+  <text x="240" y="272" text-anchor="middle" class="lbl sub">copies 10</text>
+  <circle cx="240" cy="300" r="7" class="dot"/>
+  <text x="240" y="252" text-anchor="middle" class="lbl body" style="font-weight:700">15</text>
+  <text x="240" y="336" text-anchor="middle" class="lbl sub">10+(10&gt;&gt;1)</text>
+
+  <!-- step 2: 22, spike height 12 (copies 15) -->
+  <path class="flow" d="M 247 300 H 373"/>
+  <rect x="372" y="288" width="16" height="12" class="spike"/>
+  <text x="380" y="268" text-anchor="middle" class="lbl sub">copies 15</text>
+  <circle cx="380" cy="300" r="7" class="dot"/>
+  <text x="380" y="248" text-anchor="middle" class="lbl body" style="font-weight:700">22</text>
+  <text x="380" y="336" text-anchor="middle" class="lbl sub">15+(15&gt;&gt;1)</text>
+
+  <!-- step 3: 33, spike height 18 (copies 22) -->
+  <path class="flow" d="M 387 300 H 513"/>
+  <rect x="512" y="282" width="16" height="18" class="spike"/>
+  <text x="520" y="262" text-anchor="middle" class="lbl sub">copies 22</text>
+  <circle cx="520" cy="300" r="7" class="dot"/>
+  <text x="520" y="242" text-anchor="middle" class="lbl body" style="font-weight:700">33</text>
+  <text x="520" y="336" text-anchor="middle" class="lbl sub">22+(22&gt;&gt;1)</text>
+
+  <!-- step 4: 49, spike height 26 (copies 33) -->
+  <path class="flow" d="M 527 300 H 653"/>
+  <rect x="652" y="274" width="16" height="26" class="spike"/>
+  <text x="660" y="254" text-anchor="middle" class="lbl sub">copies 33</text>
+  <circle cx="660" cy="300" r="7" class="dot"/>
+  <text x="660" y="234" text-anchor="middle" class="lbl body" style="font-weight:700">49</text>
+  <text x="660" y="336" text-anchor="middle" class="lbl sub">33+(33&gt;&gt;1)</text>
+
+  <!-- step 5: 73, spike height 39 (copies 49) -->
+  <path class="flow" d="M 667 300 H 793"/>
+  <rect x="792" y="261" width="16" height="39" class="spike"/>
+  <text x="800" y="241" text-anchor="middle" class="lbl sub">copies 49</text>
+  <circle cx="800" cy="300" r="7" class="dot"/>
+  <text x="800" y="221" text-anchor="middle" class="lbl body" style="font-weight:700">73</text>
+  <text x="800" y="336" text-anchor="middle" class="lbl sub">49+(49&gt;&gt;1)</text>
+
+  <!-- step 6: 109, spike height 58 (copies 73) -->
+  <path class="flow" d="M 807 300 H 933"/>
+  <rect x="932" y="242" width="16" height="58" class="spike"/>
+  <text x="940" y="222" text-anchor="middle" class="lbl sub">copies 73</text>
+  <circle cx="940" cy="300" r="7" class="dot"/>
+  <text x="940" y="202" text-anchor="middle" class="lbl body" style="font-weight:700">109</text>
+  <text x="940" y="336" text-anchor="middle" class="lbl sub">73+(73&gt;&gt;1)</text>
+
+  <!-- step 7: 163, spike height 87 (copies 109); x = 1080 -->
+  <path class="flow" d="M 947 300 H 1073"/>
+  <rect x="1072" y="213" width="16" height="87" class="spike"/>
+  <text x="1080" y="193" text-anchor="middle" class="lbl sub">copies 109</text>
+  <circle cx="1080" cy="300" r="7" class="dot"/>
+  <text x="1080" y="173" text-anchor="middle" class="lbl body" style="font-weight:700">163</text>
+  <text x="1080" y="336" text-anchor="middle" class="lbl sub">109+(109&gt;&gt;1)</text>
+
+  <!-- step 8: 244, spike height 130 (copies 163); x = 1220 -->
+  <path class="flow" d="M 1087 300 H 1213"/>
+  <rect x="1212" y="170" width="16" height="130" class="spike"/>
+  <text x="1220" y="150" text-anchor="middle" class="lbl sub">copies 163</text>
+  <circle cx="1220" cy="300" r="7" class="dot"/>
+  <text x="1220" y="130" text-anchor="middle" class="lbl body" style="font-weight:700">244</text>
+  <text x="1220" y="336" text-anchor="middle" class="lbl sub">163+(163&gt;&gt;1)</text>
+
+  <!-- annotation panel: running total -->
+  <rect x="90" y="380" width="580" height="110" rx="6" class="boxAnno"/>
+  <text x="108" y="404" class="lbl tiny" style="font-weight:700">Amortised cost, measured to n = 100,000 on JDK 21.0.7</text>
+  <text x="108" y="426" class="lbl tiny">24 grow() calls from empty to 100,000 elements</text>
+  <text x="108" y="446" class="lbl tiny">final capacity 106,710 — final array is 6.7% larger than needed</text>
+  <text x="108" y="466" class="lbl tiny">213,413 elements copied in total across all resizes</text>
+  <text x="108" y="484" class="lbl tiny" style="font-weight:700">= 2.13 copies per element inserted</text>
+
+  <!-- annotation panel: spikes vs area -->
+  <rect x="700" y="380" width="560" height="110" rx="6" class="boxAnno"/>
+  <text x="718" y="404" class="lbl tiny" style="font-weight:700">Reading the spikes</text>
+  <text x="718" y="426" class="lbl tiny">Each spike is one Arrays.copyOf call — height = elements moved.</text>
+  <text x="718" y="446" class="lbl tiny">Spikes get taller (more elements) and rarer (1.5x spacing) together.</text>
+  <text x="718" y="466" class="lbl tiny">The step to 10 is a plain new Object[10] — never a copy, so no spike.</text>
+  <text x="718" y="484" class="lbl tiny">Sum the spike areas over n adds and divide by n: that quotient is 2.13.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="512" x2="1300" y2="512" stroke="#d1d5db" stroke-width="1.5"/>
+  <circle cx="30" cy="528" r="7" class="dotFirst"/>
+  <text x="46" y="533" class="lbl tiny">initial allocation (no copy)</text>
+  <circle cx="260" cy="528" r="7" class="dot"/>
+  <text x="276" y="533" class="lbl tiny">capacity after grow()</text>
+  <rect x="480" y="520" width="16" height="16" class="spike"/>
+  <text x="504" y="533" class="lbl tiny">copyOf spike, height = elements copied</text>
+  <path class="flow" d="M 850 528 H 890"/>
+  <text x="898" y="533" class="lbl tiny">A → B : next capacity reached by add()</text>
+  <rect x="1170" y="520" width="16" height="16" class="boxAnno"/>
+  <text x="1192" y="533" class="lbl tiny">annotation</text>
+</svg>

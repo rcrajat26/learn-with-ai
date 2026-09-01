@@ -1,0 +1,147 @@
+<svg viewBox="0 0 1080 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout of the claude -p --output-format json envelope, drawn field by field with a sample value in each: result text, is_error false, session_id, total_cost_usd, usage token counts, and duration_ms. Arrows lead from each field to its downstream use: billing, audit, retry classification, or continuation. A side panel compares text, json, and stream-json output formats, and contrasts text versus stream-json as input formats.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR    { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE claude -p --output-format json ENVELOPE</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">ENVELOPE FIELDS (left) &#8594; DOWNSTREAM USE (right)</text>
+
+  <!-- field boxes column -->
+  <rect x="20" y="80" width="430" height="52" rx="6" class="boxHi"/>
+  <text x="36" y="100" class="lbl body" font-weight="700">result</text>
+  <text x="36" y="120" class="lbl sub">"Refactored ConnectionPool.acquire() to fix the race."</text>
+
+  <rect x="20" y="142" width="430" height="52" rx="6" class="boxR"/>
+  <text x="36" y="162" class="lbl body" font-weight="700">is_error</text>
+  <text x="36" y="182" class="lbl sub">false</text>
+
+  <rect x="20" y="204" width="430" height="52" rx="6" class="boxP"/>
+  <text x="36" y="224" class="lbl body" font-weight="700">session_id</text>
+  <text x="36" y="244" class="lbl sub">"a3f9c2e1-7d4b-4e2a-9c11-6f0d2b8e5a77"</text>
+
+  <rect x="20" y="266" width="430" height="52" rx="6" class="boxHi"/>
+  <text x="36" y="286" class="lbl body" font-weight="700">total_cost_usd</text>
+  <text x="36" y="306" class="lbl sub">0.0842</text>
+
+  <rect x="20" y="328" width="430" height="70" rx="6" class="boxP"/>
+  <text x="36" y="348" class="lbl body" font-weight="700">usage</text>
+  <text x="36" y="366" class="lbl sub">input_tokens: 18420, output_tokens: 963</text>
+  <text x="36" y="382" class="lbl sub">cache_read_input_tokens: 15200</text>
+
+  <rect x="20" y="410" width="430" height="52" rx="6" class="boxR"/>
+  <text x="36" y="430" class="lbl body" font-weight="700">duration_ms</text>
+  <text x="36" y="450" class="lbl sub">14832</text>
+
+  <!-- downstream boxes column -->
+  <rect x="620" y="80" width="260" height="52" rx="6" class="panel"/>
+  <text x="750" y="100" text-anchor="middle" class="lbl body">continuation</text>
+  <text x="750" y="118" text-anchor="middle" class="lbl sub">feed result back as next-turn input</text>
+
+  <rect x="620" y="142" width="260" height="52" rx="6" class="panel"/>
+  <text x="750" y="162" text-anchor="middle" class="lbl body">retry classification</text>
+  <text x="750" y="180" text-anchor="middle" class="lbl sub">is_error true/false branches taxonomy</text>
+
+  <rect x="620" y="204" width="260" height="52" rx="6" class="panel"/>
+  <text x="750" y="224" text-anchor="middle" class="lbl body">continuation</text>
+  <text x="750" y="242" text-anchor="middle" class="lbl sub">resume same conversation</text>
+
+  <rect x="620" y="266" width="260" height="52" rx="6" class="panel"/>
+  <text x="750" y="286" text-anchor="middle" class="lbl body">billing</text>
+  <text x="750" y="304" text-anchor="middle" class="lbl sub">per-run spend rollup</text>
+
+  <rect x="620" y="328" width="260" height="70" rx="6" class="panel"/>
+  <text x="750" y="348" text-anchor="middle" class="lbl body">billing + audit</text>
+  <text x="750" y="366" text-anchor="middle" class="lbl sub">token accounting,</text>
+  <text x="750" y="382" text-anchor="middle" class="lbl sub">cache-hit efficiency</text>
+
+  <rect x="620" y="410" width="260" height="52" rx="6" class="panel"/>
+  <text x="750" y="430" text-anchor="middle" class="lbl body">audit</text>
+  <text x="750" y="448" text-anchor="middle" class="lbl sub">latency / SLA trace</text>
+
+  <!-- corridor arrows: exit at distinct x offsets on the right edge of field boxes -->
+  <path class="flow" d="M 450 106 H 500 V 106 H 620"/>
+  <path class="flow" d="M 450 168 H 520 V 168 H 620"/>
+  <path class="flow" d="M 450 230 H 540 V 230 H 620"/>
+  <path class="flow" d="M 450 292 H 500 V 292 H 620"/>
+  <path class="flow" d="M 450 363 H 520 V 363 H 620"/>
+  <path class="flow" d="M 450 436 H 540 V 436 H 620"/>
+
+  <line x1="20" y1="480" x2="1060" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="500" class="lbl h2">OUTPUT FORMATS COMPARED</text>
+
+  <rect x="20" y="514" width="330" height="150" rx="6" class="boxP"/>
+  <text x="185" y="536" text-anchor="middle" class="lbl body" font-weight="700">text</text>
+  <text x="36" y="558" class="lbl sub">Plain result string on stdout.</text>
+  <text x="36" y="574" class="lbl sub">No cost, no session_id, no</text>
+  <text x="36" y="590" class="lbl sub">usage — nothing to bill or audit.</text>
+  <text x="36" y="612" class="lbl sub">Good for a human reading a</text>
+  <text x="36" y="628" class="lbl sub">terminal, bad for a wrapper.</text>
+
+  <rect x="375" y="514" width="330" height="150" rx="6" class="boxHi"/>
+  <text x="540" y="536" text-anchor="middle" class="lbl body" font-weight="700">json</text>
+  <text x="391" y="558" class="lbl sub">One envelope object, emitted</text>
+  <text x="391" y="574" class="lbl sub">after the run completes.</text>
+  <text x="391" y="596" class="lbl sub">Carries result, is_error,</text>
+  <text x="391" y="612" class="lbl sub">session_id, total_cost_usd,</text>
+  <text x="391" y="628" class="lbl sub">usage, duration_ms — this diagram.</text>
+
+  <rect x="730" y="514" width="330" height="150" rx="6" class="boxR"/>
+  <text x="895" y="536" text-anchor="middle" class="lbl body" font-weight="700">stream-json</text>
+  <text x="746" y="558" class="lbl sub">One JSON object per line, as</text>
+  <text x="746" y="574" class="lbl sub">the run progresses (tool calls,</text>
+  <text x="746" y="590" class="lbl sub">partial text, then the final</text>
+  <text x="746" y="606" class="lbl sub">envelope) — for live UIs.</text>
+
+  <rect x="20" y="682" width="1040" height="126" rx="6" class="panel"/>
+  <text x="36" y="704" class="lbl h2">INPUT FORMAT: text VS stream-json</text>
+  <text x="36" y="726" class="lbl dense">text input: one prompt string piped in — no way to attach prior</text>
+  <text x="36" y="744" class="lbl dense">turns or tool results mid-stream.</text>
+  <text x="36" y="766" class="lbl dense">stream-json input: a sequence of message objects piped in, including</text>
+  <text x="36" y="784" class="lbl dense">tool_result blocks — required for a wrapper driving a multi-turn agent loop.</text>
+
+  <line x1="20" y1="826" x2="1060" y2="826" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="846" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="858" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="50" y="871" class="lbl tiny">result text / cost field</text>
+
+  <rect x="260" y="858" width="22" height="16" rx="3" class="boxR"/>
+  <text x="290" y="871" class="lbl tiny">status / duration field</text>
+
+  <rect x="500" y="858" width="22" height="16" rx="3" class="boxP"/>
+  <text x="530" y="871" class="lbl tiny">identity / usage field</text>
+
+  <rect x="740" y="858" width="22" height="16" rx="3" class="panel"/>
+  <text x="770" y="871" class="lbl tiny">downstream consumer / annotation</text>
+
+  <path class="flow" d="M 960 866 H 984"/>
+  <text x="1020" y="871" text-anchor="middle" class="lbl tiny">used by</text>
+</svg>

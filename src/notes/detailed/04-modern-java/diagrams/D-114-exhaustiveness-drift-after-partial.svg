@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of exhaustiveness drift after a partial redeploy. Point 1: Verdict.class, sealed
+     permitting DocumentVerdict, ScreeningVerdict, ReviewVerdict and WealthVerdict, and PaymentService's
+     switch site are compiled together in the same build; the switch is exhaustive with no default. Point
+     2: a fifth subtype, AffordabilityVerdict, is added to Verdict's permits clause; only Verdict.class is
+     recompiled and redeployed, while PaymentService.class, compiled against the old four-case permits
+     list, is redeployed unchanged. Point 3: at runtime a real AffordabilityVerdict instance reaches the
+     switch; none of its four compiled case labels match, and the JVM throws java.lang.MatchException from
+     the synthetic default the compiler generated at compile time, not java.lang.IncompatibleClassChangeError
+     which is the pre-Java-21 shape of this failure for enum switches. An annotation panel states this is
+     not a link error: both class files are binary compatible and pass verification; the switch site is
+     simply stale relative to the new permits clause.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 11.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1f2937; }
+    .pill  { font-size: 11px; font-weight: 700; fill: #78350f; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pillB { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trir); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">EXHAUSTIVENESS DRIFT AFTER A PARTIAL REDEPLOY</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- timeline spine -->
+  <line x1="120" y1="90" x2="920" y2="90" stroke="#475569" stroke-width="2"/>
+  <circle cx="160" cy="90" r="7" fill="#2563eb"/>
+  <circle cx="520" cy="90" r="7" fill="#b45309"/>
+  <circle cx="880" cy="90" r="7" fill="#b91c1c"/>
+  <text x="160" y="76" text-anchor="middle" class="lbl tiny" font-weight="700">t1 — compiled together</text>
+  <text x="520" y="76" text-anchor="middle" class="lbl tiny" font-weight="700">t2 — partial recompile + redeploy</text>
+  <text x="880" y="76" text-anchor="middle" class="lbl tiny" font-weight="700">t3 — runtime, first live case</text>
+
+  <!-- ============ POINT 1 ============ -->
+  <path class="flow" d="M 160 97 V 130"/>
+  <rect x="30" y="132" width="260" height="140" rx="6" class="boxR"/>
+  <text x="46" y="154" class="lbl node">Verdict.class</text>
+  <text x="46" y="172" class="lbl code">sealed, permits:</text>
+  <text x="46" y="188" class="lbl code">DocumentVerdict, ScreeningVerdict,</text>
+  <text x="46" y="204" class="lbl code">ReviewVerdict, WealthVerdict</text>
+  <line x1="46" y1="214" x2="274" y2="214" stroke="#9ca3af" stroke-width="1"/>
+  <text x="46" y="232" class="lbl node">PaymentService.class</text>
+  <text x="46" y="250" class="lbl code">switch(verdict) { 4 cases }</text>
+  <text x="46" y="266" class="lbl sub">no default — exhaustive over 4</text>
+
+  <rect x="30" y="284" width="260" height="46" rx="6" class="panel"/>
+  <text x="46" y="304" class="lbl tiny" font-weight="700">Same build, same deploy</text>
+  <text x="46" y="320" class="lbl tiny">both class files compiled together</text>
+
+  <!-- ============ POINT 2 ============ -->
+  <path class="flow" d="M 520 97 V 130"/>
+  <rect x="390" y="132" width="260" height="164" rx="6" class="boxH"/>
+  <text x="406" y="154" class="lbl node">Verdict.class — recompiled</text>
+  <text x="406" y="172" class="lbl code">sealed, permits:</text>
+  <text x="406" y="188" class="lbl code">Document, Screening, Review,</text>
+  <text x="406" y="204" class="lbl code">Wealth, AffordabilityVerdict</text>
+  <text x="406" y="220" class="lbl sub">5th subtype added, redeployed</text>
+  <line x1="406" y1="230" x2="634" y2="230" stroke="#9ca3af" stroke-width="1"/>
+  <text x="406" y="248" class="lbl node" fill="#78716c">PaymentService.class — stale</text>
+  <text x="406" y="266" class="lbl code">switch(verdict) { 4 cases }</text>
+  <text x="406" y="282" class="lbl sub">not recompiled; redeployed unchanged</text>
+
+  <rect x="390" y="308" width="260" height="52" rx="6" class="panel"/>
+  <text x="406" y="328" class="lbl tiny" font-weight="700">The drift</text>
+  <text x="406" y="344" class="lbl tiny">hierarchy and switch site now disagree</text>
+  <text x="406" y="358" class="lbl tiny">on how many Verdict subtypes exist</text>
+
+  <!-- ============ POINT 3 ============ -->
+  <path class="fail" d="M 880 97 V 130"/>
+  <rect x="750" y="132" width="260" height="188" rx="6" class="boxD"/>
+  <text x="766" y="154" class="lbl node" fill="#b91c1c">a real AffordabilityVerdict</text>
+  <text x="766" y="170" class="lbl body">reaches PaymentService's switch</text>
+  <text x="766" y="190" class="lbl code">none of the 4 compiled case</text>
+  <text x="766" y="206" class="lbl code">labels match this instance</text>
+  <line x1="766" y1="216" x2="994" y2="216" stroke="#9ca3af" stroke-width="1"/>
+  <text x="766" y="236" class="lbl code" font-weight="700">throw: java.lang.MatchException</text>
+  <text x="766" y="252" class="lbl sub">from the synthetic default the</text>
+  <text x="766" y="266" class="lbl sub">compiler generated at compile time</text>
+  <line x1="766" y1="276" x2="994" y2="276" stroke="#9ca3af" stroke-width="1"/>
+  <text x="766" y="294" class="lbl sub" text-decoration="line-through" fill="#78716c">NOT IncompatibleClassChangeError</text>
+  <text x="766" y="310" class="lbl sub">(that shape predates Java 21)</text>
+
+  <!-- release pill for the throw type -->
+  <rect x="984" y="128" width="34" height="20" rx="10" class="pillB"/>
+  <text x="1001" y="142" text-anchor="middle" class="pill">21</text>
+
+  <!-- annotation: not a link error -->
+  <rect x="30" y="380" width="980" height="130" rx="6" class="panel"/>
+  <text x="46" y="402" class="lbl tiny" font-weight="700">This is not a link error</text>
+  <text x="46" y="422" class="lbl tiny">Both class files are binary compatible and pass bytecode verification — loading and linking PaymentService.class against the</text>
+  <text x="46" y="438" class="lbl tiny">redeployed Verdict.class succeeds cleanly, because a sealed interface's permits clause is not part of the caller's binary contract</text>
+  <text x="46" y="454" class="lbl tiny">the way a method signature is. The failure is purely a runtime data-shape surprise: the switch site's case labels are a compile-time</text>
+  <text x="46" y="470" class="lbl tiny">snapshot of the permits clause at the time it was last compiled, and that snapshot is now one subtype short of the live hierarchy.</text>
+  <text x="46" y="490" class="lbl tiny" font-weight="700">The fix</text>
+  <text x="46" y="506" class="lbl tiny">recompile and redeploy every switch site over Verdict whenever the permits clause changes — sealing does not make that automatic.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="530" x2="1020" y2="530" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="544" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="557" class="lbl tiny">hierarchy + switch site in agreement</text>
+  <rect x="300" y="544" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="557" class="lbl tiny">hierarchy ahead of a stale switch site</text>
+  <rect x="620" y="544" width="22" height="16" rx="3" class="boxD"/>
+  <text x="650" y="557" class="lbl tiny">runtime failure — thrown exception</text>
+  <rect x="20" y="570" width="22" height="16" rx="3" class="panel"/>
+  <text x="50" y="583" class="lbl tiny">annotation panel — explanatory note</text>
+  <rect x="300" y="570" width="34" height="20" rx="10" class="pillB"/>
+  <text x="345" y="583" class="lbl tiny">Java release the figure applies to</text>
+  <path class="flow" d="M 20 606 H 60"/>
+  <text x="68" y="611" class="lbl tiny">A → B : timeline progression, A before B</text>
+</svg>

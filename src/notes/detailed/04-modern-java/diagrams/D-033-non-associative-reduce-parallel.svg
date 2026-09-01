@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1120 880" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="What a non-associative reduce does in parallel, over the elements 65, 480, 42, 180.
+     Frame 1: the sequential left fold of subtraction gives 65 minus 480 minus 42 minus 180 equals
+     negative 637, the correct answer. Frame 2: the same subtraction split across two leaves, 65
+     minus 480 equals negative 415 and 42 minus 180 equals negative 138, combined as negative 415
+     minus negative 138 equals negative 277 — a different, wrong answer, because subtraction is not
+     associative. Frame 3: the same argument for string concatenation with a non-identity seed O —
+     sequential folding gives the correct O6548042180, but splitting into two leaves applies the
+     seed O once per leaf and then concatenates the leaf results, giving the wrong O65480O42180
+     with the seed duplicated.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .warnrow{ font-size: 11px; fill: #b91c1c; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="880" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">WHAT A NON-ASSOCIATIVE REDUCE DOES IN PARALLEL</text>
+  <line x1="20" y1="44" x2="1100" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="66" class="lbl h2">FRAME 1 — SEQUENTIAL LEFT FOLD (SUBTRACTION)</text>
+  <text x="20" y="80" class="lbl tiny">elements: 65, 480, 42, 180 &#8212; operator: a - b</text>
+
+  <rect x="40"  y="100" width="160" height="60" rx="6" class="boxP"/>
+  <text x="120" y="125" text-anchor="middle" class="lbl node">65</text>
+  <text x="120" y="143" text-anchor="middle" class="lbl sub">start</text>
+
+  <path class="flow" d="M 200 130 H 320"/>
+  <text x="260" y="118" text-anchor="middle" class="lbl tiny">-480</text>
+
+  <rect x="320" y="100" width="160" height="60" rx="6" class="boxW"/>
+  <text x="400" y="125" text-anchor="middle" class="lbl node">-415</text>
+  <text x="400" y="143" text-anchor="middle" class="lbl sub">after 65-480</text>
+
+  <path class="flow" d="M 480 130 H 600"/>
+  <text x="540" y="118" text-anchor="middle" class="lbl tiny">-42</text>
+
+  <rect x="600" y="100" width="160" height="60" rx="6" class="boxW"/>
+  <text x="680" y="125" text-anchor="middle" class="lbl node">-457</text>
+  <text x="680" y="143" text-anchor="middle" class="lbl sub">after (-415)-42</text>
+
+  <path class="flow" d="M 760 130 H 840"/>
+  <text x="800" y="118" text-anchor="middle" class="lbl tiny">-180</text>
+
+  <rect x="840" y="100" width="160" height="60" rx="6" class="boxR"/>
+  <text x="920" y="125" text-anchor="middle" class="lbl node">-637</text>
+  <text x="920" y="143" text-anchor="middle" class="lbl sub">sequential, correct</text>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="190" class="lbl h2">FRAME 2 — SPLIT ACROSS TWO LEAVES, COMBINED (SUBTRACTION)</text>
+
+  <rect x="200" y="204" width="220" height="60" rx="6" class="boxW"/>
+  <text x="310" y="228" text-anchor="middle" class="lbl node">Leaf A</text>
+  <text x="310" y="248" text-anchor="middle" class="lbl body">65 - 480 = -415</text>
+
+  <rect x="700" y="204" width="220" height="60" rx="6" class="boxW"/>
+  <text x="810" y="228" text-anchor="middle" class="lbl node">Leaf B</text>
+  <text x="810" y="248" text-anchor="middle" class="lbl body">42 - 180 = -138</text>
+
+  <path class="flow" d="M 310 264 V 290 H 810 V 264"/>
+  <path class="flow" d="M 560 290 V 320"/>
+
+  <rect x="440" y="320" width="240" height="70" rx="6" class="boxD"/>
+  <text x="560" y="345" text-anchor="middle" class="lbl node">combine: LeafA - LeafB</text>
+  <text x="560" y="363" text-anchor="middle" class="lbl body">-415 - (-138) = -277</text>
+  <text x="560" y="379" text-anchor="middle" class="lbl sub">WRONG &#8212; not associative</text>
+
+  <text x="440" y="406" class="lbl warnrow">expected sequential result: -637 (frame 1) &#8212; parallel gives -277</text>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="445" class="lbl h2">FRAME 3 — NON-IDENTITY SEED, STRING CONCATENATION</text>
+  <text x="40"  y="465" class="lbl h2">SEQUENTIAL (CORRECT)</text>
+  <text x="600" y="465" class="lbl h2">PARALLEL (WRONG)</text>
+
+  <rect x="40" y="480" width="140" height="60" rx="6" class="boxP"/>
+  <text x="110" y="505" text-anchor="middle" class="lbl node">O</text>
+  <text x="110" y="523" text-anchor="middle" class="lbl sub">seed (non-identity)</text>
+
+  <path class="flow" d="M 180 510 H 300"/>
+
+  <rect x="300" y="480" width="260" height="60" rx="6" class="boxR"/>
+  <text x="430" y="505" text-anchor="middle" class="lbl node">O6548042180</text>
+  <text x="430" y="523" text-anchor="middle" class="lbl sub">correct, matches sequential</text>
+
+  <rect x="600" y="480" width="100" height="60" rx="6" class="boxP"/>
+  <text x="650" y="505" text-anchor="middle" class="lbl node">O</text>
+  <text x="650" y="523" text-anchor="middle" class="lbl sub">seed, copied per leaf</text>
+
+  <path class="flow" d="M 650 540 V 560 H 980 V 580"/>
+  <path class="flow" d="M 730 560 V 580"/>
+
+  <rect x="650" y="580" width="160" height="60" rx="6" class="boxW"/>
+  <text x="730" y="602" text-anchor="middle" class="lbl node">Leaf A</text>
+  <text x="730" y="620" text-anchor="middle" class="lbl body">O65480</text>
+
+  <rect x="900" y="580" width="160" height="60" rx="6" class="boxW"/>
+  <text x="980" y="602" text-anchor="middle" class="lbl node">Leaf B</text>
+  <text x="980" y="620" text-anchor="middle" class="lbl body">O42180</text>
+
+  <path class="flow" d="M 730 640 V 660 H 980 V 640"/>
+  <path class="flow" d="M 855 660 V 680"/>
+
+  <rect x="730" y="680" width="250" height="70" rx="6" class="boxD"/>
+  <text x="855" y="705" text-anchor="middle" class="lbl node">O65480O42180</text>
+  <text x="855" y="723" text-anchor="middle" class="lbl sub">WRONG &#8212; seed O applied twice</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="780" x2="1100" y2="780" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20"  y="795" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50"  y="807" class="lbl tiny">leaf / seed value</text>
+  <rect x="240" y="795" width="22" height="16" rx="3" class="boxW"/>
+  <text x="270" y="807" class="lbl tiny">intermediate / transient value</text>
+  <rect x="500" y="795" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="807" class="lbl tiny">correct result (sequential)</text>
+  <rect x="760" y="795" width="22" height="16" rx="3" class="boxD"/>
+  <text x="790" y="807" class="lbl tiny">wrong result (parallel)</text>
+  <path d="M 960 803 H 990" class="flow"/>
+  <text x="998" y="807" class="lbl tiny">fold / combine</text>
+</svg>

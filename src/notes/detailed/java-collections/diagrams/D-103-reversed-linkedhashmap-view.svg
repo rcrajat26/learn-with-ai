@@ -1,0 +1,101 @@
+<svg viewBox="0 0 960 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ReversedLinkedHashMapView is a thin one-field wrapper around the real LinkedHashMap chain, swapping first and last semantics">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="480" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937" font-weight="bold">ReversedLinkedHashMapView</text>
+
+  <!-- underlying map -->
+  <rect x="40" y="55" width="560" height="160" rx="8" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="56" y="78" font-family="sans-serif" font-size="14" fill="#1f2937" font-weight="bold">LinkedHashMap&lt;K,V&gt; base   (head = A, tail = C)</text>
+
+  <g font-family="sans-serif">
+    <rect x="70" y="100" width="80" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="110" y="130" text-anchor="middle" font-size="15" fill="#1f2937">A</text>
+    <rect x="250" y="100" width="80" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="290" y="130" text-anchor="middle" font-size="15" fill="#1f2937">B</text>
+    <rect x="430" y="100" width="80" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="470" y="130" text-anchor="middle" font-size="15" fill="#1f2937">C</text>
+
+    <line x1="150" y1="118" x2="248" y2="118" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="199" y="110" text-anchor="middle" font-size="11" fill="#1f2937">after</text>
+    <line x1="248" y1="132" x2="150" y2="132" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="199" y="148" text-anchor="middle" font-size="11" fill="#1f2937">before</text>
+
+    <line x1="330" y1="118" x2="428" y2="118" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="428" y1="132" x2="330" y2="132" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  </g>
+
+  <rect x="70" y="160" width="60" height="18" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="100" y="173" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">head</text>
+  <rect x="440" y="160" width="60" height="18" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="173" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">tail</text>
+
+  <text x="56" y="200" font-family="sans-serif" font-size="12" fill="#1f2937">observable order (base): [A, B, C]</text>
+
+  <!-- view object -->
+  <rect x="660" y="70" width="240" height="90" rx="8" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="672" y="90" font-family="sans-serif" font-size="12" fill="#1f2937" font-weight="bold">ReversedLinkedHashMapView&lt;K,V&gt;</text>
+  <text x="672" y="107" font-family="sans-serif" font-size="11" fill="#1f2937">extends AbstractMap&lt;K,V&gt;</text>
+  <text x="672" y="122" font-family="sans-serif" font-size="11" fill="#1f2937">implements SequencedMap&lt;K,V&gt;</text>
+  <text x="672" y="144" font-family="sans-serif" font-size="12" fill="#1f2937">field: final LinkedHashMap&lt;K,V&gt; base</text>
+
+  <path d="M 690 160 C 640 220, 400 190, 250 155" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="380" y="185" width="260" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="510" y="199" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no copy -- one field, one reference</text>
+
+  <rect x="660" y="175" width="240" height="40" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="672" y="198" font-family="sans-serif" font-size="11" fill="#1f2937">every read walks the same chain</text>
+
+  <text x="740" y="245" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">observable order (view): [C, B, A]</text>
+
+  <!-- translation table -->
+  <rect x="40" y="240" width="560" height="230" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="56" y="262" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">call on the view  -&gt;  performed on the base</text>
+
+  <g font-family="sans-serif" font-size="12" fill="#1f2937">
+    <rect x="56" y="272" width="520" height="26" fill="#dbeafe" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="290">firstEntry()  -&gt;  lastEntry()</text>
+    <rect x="56" y="298" width="520" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="316">lastEntry()  -&gt;  firstEntry()</text>
+    <rect x="56" y="324" width="520" height="26" fill="#dbeafe" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="342">putFirst(k,v)  -&gt;  putLast(k,v)</text>
+    <rect x="56" y="350" width="520" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="368">putLast(k,v)  -&gt;  putFirst(k,v)</text>
+    <rect x="56" y="376" width="520" height="26" fill="#dbeafe" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="394">pollFirstEntry()  -&gt;  pollLastEntry()</text>
+    <rect x="56" y="402" width="520" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="420">pollLastEntry()  -&gt;  pollFirstEntry()</text>
+    <rect x="56" y="428" width="520" height="26" fill="#dbeafe" stroke="#737373" stroke-width="1"/>
+    <text x="64" y="446">iteration  -&gt;  walks "before" from tail</text>
+  </g>
+
+  <!-- reversed().reversed() cycle -->
+  <rect x="640" y="240" width="280" height="150" rx="8" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="656" y="262" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">reversed().reversed()</text>
+
+  <rect x="670" y="285" width="90" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="715" y="309" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">base</text>
+  <rect x="810" y="285" width="90" height="40" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="855" y="309" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">view</text>
+
+  <path d="M 760 295 C 785 275, 785 275, 810 295" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 810 315 C 785 335, 785 335, 760 315" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <text x="780" y="345" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">order restored</text>
+  <text x="780" y="362" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">but a view of a view --</text>
+  <text x="780" y="378" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">two objects deep, not the</text>
+
+  <rect x="40" y="490" width="880" height="60" rx="8" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="56" y="515" font-family="sans-serif" font-size="12" fill="#1f2937">reversed().reversed() is NOT identical by reference to the original map --</text>
+  <text x="56" y="535" font-family="sans-serif" font-size="12" fill="#1f2937">it is a fresh ReversedLinkedHashMapView wrapping the reversed view, semantically equal but a distinct object.</text>
+
+  <rect x="40" y="565" width="880" height="80" rx="8" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="56" y="592" font-family="sans-serif" font-size="12" fill="#1f2937" font-weight="bold">Caution:</text>
+  <text x="56" y="612" font-family="sans-serif" font-size="12" fill="#1f2937">ReversedLinkedHashMapView is a real package-private nested class in JDK 21,</text>
+  <text x="56" y="630" font-family="sans-serif" font-size="12" fill="#1f2937">but it is not specified API -- never write an instanceof check against it.</text>
+</svg>

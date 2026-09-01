@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1120 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison verified by javap -c on --release 21. Left: a switch over RestrictionType compiles to a synthetic Gate-dollar-1 class holding an int array SwitchMap-dollar-RestrictionType, sized to RestrictionType.values().length, rebuilt every time Gate-dollar-1 loads by querying each constant's live ordinal, so the map entry for DEPOSIT_BLOCKED is 1, STAKE_BLOCKED is 2, WITHDRAWAL_BLOCKED is 3; Gate's own tableswitch dispatches on those stable case indices, never on ordinal directly. Right: RestrictionType is reordered and only RestrictionType.java is recompiled; because the map array is rebuilt at class-load time from the new ordinals, Gate's unmodified tableswitch still produces the correct label. A third panel shows the failure that occurs without this indirection: a hypothetical switch baked directly on ordinal, unrecompiled after the enum reorder, silently returns the wrong label for DEPOSIT_BLOCKED.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .codeS { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; }
+    .badge { font-size: 11px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">$SwitchMap PROTECTS A SEPARATELY COMPILED ENUM SWITCH (verified: javap -c, --release 21)</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="90" y="64" class="lbl h2">LEFT — Gate.java compiled against the original RestrictionType</text>
+  <text x="640" y="64" class="lbl h2">RIGHT — RestrictionType reordered, only it recompiled</text>
+  <line x1="560" y1="74" x2="560" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <rect x="60" y="86" width="440" height="46" rx="6" class="boxP"/>
+  <text x="80" y="106" class="lbl node code">enum RestrictionType {</text>
+  <text x="80" y="122" class="lbl code">DEPOSIT_BLOCKED, STAKE_BLOCKED, WITHDRAWAL_BLOCKED }</text>
+
+  <path class="flow" d="M 280 132 V 154"/>
+  <rect x="60" y="154" width="440" height="150" rx="6" class="boxR"/>
+  <text x="80" y="176" class="lbl node">Gate$1 — synthetic, static init</text>
+  <text x="80" y="196" class="lbl code">static final int[] $SwitchMap$RestrictionType</text>
+  <text x="80" y="212" class="lbl code">= new int[RestrictionType.values().length];</text>
+  <text x="100" y="230" class="lbl code">[DEPOSIT_BLOCKED.ordinal()]    = 1</text>
+  <text x="100" y="246" class="lbl code">[STAKE_BLOCKED.ordinal()]      = 2</text>
+  <text x="100" y="262" class="lbl code">[WITHDRAWAL_BLOCKED.ordinal()] = 3</text>
+  <text x="80" y="284" class="lbl sub">each store wrapped: catch (NoSuchFieldError) { }</text>
+  <text x="80" y="298" class="lbl sub">rebuilt fresh every time Gate$1 loads</text>
+
+  <path class="flow" d="M 280 304 V 326"/>
+  <rect x="60" y="326" width="440" height="130" rx="6" class="boxP"/>
+  <text x="80" y="348" class="lbl node code">Gate.label(t)</text>
+  <text x="80" y="368" class="lbl code">tableswitch($SwitchMap...[t.ordinal()])</text>
+  <text x="100" y="388" class="lbl code">1 -&gt; "no deposits"</text>
+  <text x="100" y="404" class="lbl code">2 -&gt; "no stakes"</text>
+  <text x="100" y="420" class="lbl code">3 -&gt; "no withdrawals"</text>
+  <text x="80" y="440" class="lbl sub">indices 1,2,3 are compile-time stable, never re-emitted</text>
+
+  <!-- RIGHT -->
+  <rect x="620" y="86" width="440" height="46" rx="6" class="boxP"/>
+  <text x="640" y="106" class="lbl node code">enum RestrictionType {  // reordered</text>
+  <text x="640" y="122" class="lbl code">WITHDRAWAL_BLOCKED, DEPOSIT_BLOCKED, STAKE_BLOCKED }</text>
+
+  <path class="flow" d="M 840 132 V 154"/>
+  <rect x="620" y="154" width="440" height="150" rx="6" class="boxR"/>
+  <text x="640" y="176" class="lbl node">Gate$1 — REBUILT at class-load, not recompiled</text>
+  <text x="640" y="196" class="lbl code">reads live ordinal() from the NEW enum:</text>
+  <text x="660" y="214" class="lbl code">[DEPOSIT_BLOCKED.ordinal()=1]    = 1</text>
+  <text x="660" y="230" class="lbl code">[STAKE_BLOCKED.ordinal()=2]      = 2</text>
+  <text x="660" y="246" class="lbl code">[WITHDRAWAL_BLOCKED.ordinal()=0] = 3</text>
+  <text x="640" y="266" class="lbl sub">Gate$1.class was never recompiled — same bytecode,</text>
+  <text x="640" y="282" class="lbl sub">but this static init runs again and re-derives the map</text>
+  <text x="640" y="298" class="lbl sub">so it absorbs the new ordinal assignment</text>
+
+  <path class="flow" d="M 840 304 V 326"/>
+  <rect x="620" y="326" width="440" height="130" rx="6" class="boxR"/>
+  <text x="640" y="348" class="lbl node code">Gate.label(RestrictionType.STAKE_BLOCKED)</text>
+  <text x="640" y="368" class="lbl code">ordinal() = 2 -&gt; map[2] = 2 -&gt; tableswitch case 2</text>
+  <text x="640" y="388" class="lbl code">result: "no stakes"</text>
+  <text x="640" y="410" class="lbl sub">CORRECT — same as before the reorder, verified</text>
+  <text x="640" y="426" class="lbl sub">by rerunning the unmodified Gate.class (exit 0)</text>
+
+  <!-- THIRD PANEL: failure without the indirection -->
+  <text x="20" y="500" class="lbl h2">WITHOUT $SwitchMap — THE FAILURE (a switch baked directly on ordinal())</text>
+  <line x1="20" y1="508" x2="1100" y2="508" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="522" width="300" height="90" rx="6" class="boxD"/>
+  <text x="80" y="544" class="lbl node code">GateNaive.label(t)</text>
+  <text x="80" y="564" class="lbl code">int o = t.ordinal();</text>
+  <text x="80" y="580" class="lbl code">if (o==0) return "no deposits";</text>
+  <text x="80" y="596" class="lbl code">if (o==1) return "no stakes"; ...</text>
+
+  <path class="flow" d="M 360 567 H 420"/>
+  <rect x="420" y="522" width="300" height="90" rx="6" class="boxWk"/>
+  <text x="440" y="544" class="lbl node">enum reordered, only enum recompiled</text>
+  <text x="440" y="564" class="lbl sub">GateNaive.class unchanged — still tests</text>
+  <text x="440" y="580" class="lbl sub">o==0 for "no deposits" verbatim</text>
+  <text x="440" y="596" class="lbl sub">but DEPOSIT_BLOCKED.ordinal() is now 1</text>
+
+  <path class="flow" d="M 720 567 H 780"/>
+  <rect x="780" y="510" width="300" height="112" rx="6" class="boxD"/>
+  <text x="796" y="532" class="lbl node">SILENT WRONG ANSWER</text>
+  <text x="796" y="552" class="lbl code">label(DEPOSIT_BLOCKED)</text>
+  <text x="796" y="570" class="lbl code">verified output: "no stakes"</text>
+  <text x="796" y="588" class="lbl sub">no exception, no crash — the wrong</text>
+  <text x="796" y="604" class="lbl sub">restriction message ships</text>
+  <text x="796" y="618" class="lbl sub">(verified by rerunning old .class)</text>
+
+  <rect x="60" y="642" width="1020" height="74" rx="8" class="boxAnn"/>
+  <text x="76" y="664" class="lbl h2">WHY IT MATTERS FOR A SEPARATELY COMPILED CODEBASE</text>
+  <text x="76" y="684" class="lbl tiny">RestrictionType and Gate compile to separate .class files, and one module can ship a new build of the enum without recompiling the other.</text>
+  <text x="76" y="700" class="lbl tiny">$SwitchMap's class-load-time rebuild is exactly what makes that safe — remove it and a reorder becomes a silent data-corruption bug, not a build error.</text>
+
+  <rect x="60" y="728" width="1020" height="60" rx="8" class="boxAnn"/>
+  <text x="76" y="748" class="lbl h2">NoSuchFieldError, PER SLOT</text>
+  <text x="76" y="766" class="lbl tiny">Each map-slot store is individually try/caught for NoSuchFieldError so that a constant *removed* since Gate compiled degrades that one slot to 0 instead of failing the whole class init.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="816" x2="1100" y2="816" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="830" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="843" class="lbl tiny">source under test</text>
+  <rect x="270" y="830" width="24" height="16" rx="3" class="boxR"/>
+  <text x="302" y="843" class="lbl tiny">correct outcome, protected by $SwitchMap</text>
+  <rect x="620" y="830" width="24" height="16" rx="3" class="boxWk"/>
+  <text x="652" y="843" class="lbl tiny">unmodified compiled class, reused as-is</text>
+  <rect x="920" y="830" width="24" height="16" rx="3" class="boxD"/>
+  <text x="952" y="843" class="lbl tiny">wrong / degraded</text>
+  <path class="flow" d="M 20 862 H 64"/>
+  <text x="74" y="867" class="lbl tiny">step → next step in the same build/run</text>
+</svg>

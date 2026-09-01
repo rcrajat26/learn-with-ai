@@ -1,0 +1,117 @@
+<svg viewBox="0 0 1040 1020" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The conditional operator computes its own static type before evaluating the condition: same-type operands keep that type, a primitive paired with its wrapper (or two numeric-convertible types) triggers binary numeric promotion which unboxes both operands, and otherwise the result is the least upper bound of the two reference types; three QuizStakes leaves show this producing an unexpected NullPointerException, a silent widen-and-rebox to Double, and a clean Money result">
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1020" fill="#ffffff"/>
+
+  <text x="520" y="26" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">The conditional operator's static type is decided by the operand types alone, not by which branch runs</text>
+
+  <!-- Decision spine -->
+  <rect x="60" y="46" width="380" height="60" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="250" y="70" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Decision 1: are both operands</text>
+  <text x="250" y="88" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">exactly the same type?</text>
+
+  <line x1="440" y1="76" x2="530" y2="76" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="485" y="68" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">YES</text>
+
+  <rect x="540" y="46" width="380" height="60" rx="8" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="730" y="82" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Result type = that common type (no conversion)</text>
+
+  <line x1="250" y1="106" x2="250" y2="150" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="270" y="130" font-family="sans-serif" font-size="11" fill="#4b5563">NO</text>
+
+  <rect x="60" y="150" width="380" height="76" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="250" y="172" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Decision 2: one operand a primitive and the</text>
+  <text x="250" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">other its wrapper, or both convertible to a</text>
+  <text x="250" y="208" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">common numeric type?</text>
+
+  <line x1="440" y1="188" x2="530" y2="188" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="485" y="180" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">YES</text>
+
+  <rect x="540" y="150" width="380" height="76" rx="8" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="730" y="174" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Binary numeric promotion:</text>
+  <text x="730" y="192" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">UNBOXES both operands, then widens</text>
+  <text x="730" y="210" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">to the common numeric type</text>
+
+  <line x1="250" y1="226" x2="250" y2="270" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="270" y="250" font-family="sans-serif" font-size="11" fill="#4b5563">NO</text>
+
+  <rect x="60" y="270" width="380" height="60" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="250" y="294" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Otherwise: reference conditional</text>
+  <text x="250" y="312" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">(neither rule above applies)</text>
+
+  <line x1="440" y1="300" x2="530" y2="300" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="540" y="270" width="380" height="60" rx="8" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="730" y="294" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Result type = least upper bound (lub)</text>
+  <text x="730" y="312" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">of the two reference types</text>
+
+  <line x1="40" y1="352" x2="1000" y2="352" stroke="#d1d5db" stroke-width="1"/>
+  <text x="520" y="374" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#4b5563">worked leaves — each shows which decision fired and what unboxing/promotion it triggered</text>
+
+  <!-- Leaf 1 -->
+  <rect x="40" y="392" width="960" height="160" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="56" y="404" width="90" height="22" rx="3" fill="#fef3c7"/>
+  <text x="101" y="419" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Leaf 1</text>
+  <text x="600" y="419" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">flag ? 0 : nullBonusCount</text>
+  <text x="600" y="437" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">types: int : Integer nullBonusCount &#8594; path: Decision 2, binary numeric promotion</text>
+
+  <text x="80" y="460" font-family="sans-serif" font-size="12" fill="#1f2937">expression static type is int, so the compiler inserts unboxing on the branch NOT taken too:</text>
+  <text x="80" y="478" font-family="monospace" font-size="12" fill="#1f2937">nullBonusCount.intValue()</text>
+  <text x="80" y="500" font-family="sans-serif" font-size="12" fill="#1f2937">that unboxing call is generated for both arms of the promotion,</text>
+  <text x="80" y="518" font-family="sans-serif" font-size="12" fill="#1f2937">so it runs even when flag is true and the 0 arm is the one</text>
+  <text x="80" y="536" font-family="sans-serif" font-size="12" fill="#1f2937">actually selected at runtime</text>
+
+  <rect x="540" y="500" width="400" height="36" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="740" y="523" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">nullBonusCount == null &#8594; NullPointerException</text>
+
+  <!-- Leaf 2 -->
+  <rect x="40" y="562" width="960" height="160" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="56" y="574" width="90" height="22" rx="3" fill="#fef3c7"/>
+  <text x="101" y="589" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Leaf 2</text>
+  <text x="600" y="589" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">true ? Integer.valueOf(1) : Double.valueOf(2.0)</text>
+  <text x="600" y="607" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">types: Integer : Double &#8594; path: Decision 2, binary numeric promotion</text>
+
+  <text x="80" y="630" font-family="sans-serif" font-size="12" fill="#1f2937">Integer and Double both promote to double; Integer.valueOf(1) is unboxed via intValue(),</text>
+  <text x="80" y="648" font-family="sans-serif" font-size="12" fill="#1f2937">then widened int -&gt; double to 1.0; Double.valueOf(2.0) is unboxed to double 2.0</text>
+  <text x="80" y="670" font-family="sans-serif" font-size="12" fill="#1f2937">the chosen double is re-boxed to Double when the expression targets an Object slot</text>
+
+  <rect x="640" y="670" width="300" height="36" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="790" y="693" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">result: Double 1.0 (not Integer 1)</text>
+
+  <!-- Leaf 3 -->
+  <rect x="40" y="732" width="960" height="140" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="56" y="744" width="90" height="22" rx="3" fill="#dbeafe"/>
+  <text x="101" y="759" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Leaf 3</text>
+  <text x="600" y="759" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">flag ? bonus : cash</text>
+  <text x="600" y="777" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">types: Money : Money &#8594; path: Decision 1, same type</text>
+
+  <text x="80" y="800" font-family="sans-serif" font-size="12" fill="#1f2937">both operands are exactly Money, so Decision 1 succeeds immediately: no promotion,</text>
+  <text x="80" y="818" font-family="sans-serif" font-size="12" fill="#1f2937">no unboxing, no lub search — the chosen Money reference is returned unchanged</text>
+
+  <rect x="520" y="828" width="420" height="36" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="730" y="851" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">result: Money (bonus, or cash if flag is false)</text>
+
+  <!-- legend -->
+  <line x1="40" y1="892" x2="1000" y2="892" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="60" y="906" width="18" height="14" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="86" y="918" font-family="sans-serif" font-size="11" fill="#4b5563">decision node</text>
+  <rect x="220" y="906" width="18" height="14" fill="#dbeafe" stroke="#737373" stroke-width="1.6"/>
+  <text x="246" y="918" font-family="sans-serif" font-size="11" fill="#4b5563">same-type / reference outcome</text>
+  <rect x="460" y="906" width="18" height="14" fill="#fef3c7" stroke="#737373" stroke-width="1.6"/>
+  <text x="486" y="918" font-family="sans-serif" font-size="11" fill="#4b5563">binary numeric promotion (unboxes)</text>
+  <rect x="740" y="906" width="18" height="14" fill="#dcfce7" stroke="#737373" stroke-width="1.6"/>
+  <text x="766" y="918" font-family="sans-serif" font-size="11" fill="#4b5563">resolved value</text>
+  <rect x="880" y="906" width="18" height="14" fill="#fee2e2" stroke="#525252" stroke-width="1.6"/>
+  <text x="906" y="918" font-family="sans-serif" font-size="11" fill="#4b5563">runtime failure</text>
+
+  <text x="520" y="950" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the compiler's per-arm unboxing calls are inserted before the condition is evaluated at runtime,</text>
+  <text x="520" y="968" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">so a numeric-promotion ternary can NPE on the branch it never takes</text>
+
+</svg>

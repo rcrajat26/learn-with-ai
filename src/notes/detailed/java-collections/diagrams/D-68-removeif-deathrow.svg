@@ -1,0 +1,147 @@
+<svg viewBox="0 0 800 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="removeIf two-pass deathRow bitset: pass one sets bits per predicate match on a 12-element list, pass two compacts survivors left in one sweep, tail is nulled and size/modCount updated once; batchRemove's finally block restores consistency if the predicate throws">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Title bar -->
+  <rect x="20" y="16" width="760" height="30" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">removeIf: two-pass compaction over a 12-element ArrayList</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="60" width="760" height="220" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="32" y="70" width="220" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="142" y="88" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 1: pass one - evaluate predicate</text>
+
+  <!-- 12 elements as boxes with index -->
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <!-- indices 0..11, elements labeled e0..e11 -->
+    <!-- deathRow bit set for indices 1,3,4,7,10 (example predicate: isEven-ish pattern) -->
+    <!-- Elements row -->
+    <g id="elemsRow">
+      <!-- generate 12 boxes manually -->
+      <rect x="30" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="56" y="131" text-anchor="middle">e0</text>
+      <rect x="90" y="110" width="52" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+      <text x="116" y="131" text-anchor="middle">e1</text>
+      <rect x="150" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="176" y="131" text-anchor="middle">e2</text>
+      <rect x="210" y="110" width="52" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+      <text x="236" y="131" text-anchor="middle">e3</text>
+      <rect x="270" y="110" width="52" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+      <text x="296" y="131" text-anchor="middle">e4</text>
+      <rect x="330" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="356" y="131" text-anchor="middle">e5</text>
+      <rect x="390" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="416" y="131" text-anchor="middle">e6</text>
+      <rect x="450" y="110" width="52" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+      <text x="476" y="131" text-anchor="middle">e7</text>
+      <rect x="510" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="536" y="131" text-anchor="middle">e8</text>
+      <rect x="570" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="596" y="131" text-anchor="middle">e9</text>
+      <rect x="630" y="110" width="52" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+      <text x="656" y="131" text-anchor="middle">e10</text>
+      <rect x="690" y="110" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+      <text x="716" y="131" text-anchor="middle">e11</text>
+    </g>
+
+    <!-- bit values row -->
+    <text x="30" y="170" font-size="12" fill="#1f2937">deathRow (long[1] bitset), bit i = 1 if predicate.test(e_i) true:</text>
+    <g id="bitsRow">
+      <rect x="30" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="56" y="199" text-anchor="middle">0</text>
+      <rect x="90" y="180" width="52" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+      <text x="116" y="199" text-anchor="middle">1</text>
+      <rect x="150" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="176" y="199" text-anchor="middle">0</text>
+      <rect x="210" y="180" width="52" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+      <text x="236" y="199" text-anchor="middle">1</text>
+      <rect x="270" y="180" width="52" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+      <text x="296" y="199" text-anchor="middle">1</text>
+      <rect x="330" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="356" y="199" text-anchor="middle">0</text>
+      <rect x="390" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="416" y="199" text-anchor="middle">0</text>
+      <rect x="450" y="180" width="52" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+      <text x="476" y="199" text-anchor="middle">1</text>
+      <rect x="510" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="536" y="199" text-anchor="middle">0</text>
+      <rect x="570" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="596" y="199" text-anchor="middle">0</text>
+      <rect x="630" y="180" width="52" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+      <text x="656" y="199" text-anchor="middle">1</text>
+      <rect x="690" y="180" width="52" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+      <text x="716" y="199" text-anchor="middle">0</text>
+    </g>
+    <rect x="30" y="220" width="640" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="350" y="237" text-anchor="middle" font-size="12">no structural mutation yet - only reads + bit writes; modCount unchanged during pass one</text>
+    <rect x="30" y="250" width="740" height="22" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="400" y="266" text-anchor="middle" font-size="11">CME check: pass one re-verifies modCount before pass two begins - a mutation from predicate.test() throws here</text>
+  </g>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="300" width="760" height="200" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="32" y="310" width="260" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="162" y="328" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 2: pass two - single compaction sweep</text>
+
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <text x="30" y="358" font-size="12">Two cursors: r (read) scans all 12; w (write) advances only for survivors:</text>
+    <!-- surviving elements shifted left: e0 e2 e5 e6 e8 e9 e11 -->
+    <rect x="30" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="56" y="389" text-anchor="middle">e0</text>
+    <rect x="90" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="116" y="389" text-anchor="middle">e2</text>
+    <rect x="150" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="176" y="389" text-anchor="middle">e5</text>
+    <rect x="210" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="236" y="389" text-anchor="middle">e6</text>
+    <rect x="270" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="296" y="389" text-anchor="middle">e8</text>
+    <rect x="330" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="356" y="389" text-anchor="middle">e9</text>
+    <rect x="390" y="368" width="52" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+    <text x="416" y="389" text-anchor="middle">e11</text>
+
+    <!-- arrows showing shift from original positions -->
+    <path d="M 236 460 L 236 410" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="236" y="475" text-anchor="middle" font-size="11">e6 moves from index 6 to write-slot 3</text>
+
+    <rect x="30" y="420" width="360" height="24" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="210" y="437" text-anchor="middle" font-size="12">w cursor after sweep = 7 (7 survivors)</text>
+
+    <rect x="410" y="368" width="330" height="86" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="575" y="388" text-anchor="middle" font-size="12">deathRow.get(r) checked per index;</text>
+    <text x="575" y="406" text-anchor="middle" font-size="12">survivors copied via elementData[w++]=elementData[r];</text>
+    <text x="575" y="424" text-anchor="middle" font-size="12">no shifting per removal like remove(int) -</text>
+    <text x="575" y="442" text-anchor="middle" font-size="12">O(n) total instead of O(n) per removed element</text>
+  </g>
+
+  <!-- FRAME 3 -->
+  <rect x="20" y="516" width="760" height="150" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="32" y="526" width="260" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="162" y="544" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 3: tail nulled, size/modCount updated</text>
+
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <rect x="30" y="566" width="364" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="212" y="587" text-anchor="middle">elementData[0..6] = survivors e0,e2,e5,e6,e8,e9,e11</text>
+    <rect x="404" y="566" width="336" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="572" y="587" text-anchor="middle">elementData[7..11] = null (GC unpin)</text>
+
+    <rect x="30" y="610" width="220" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="140" y="629" text-anchor="middle" font-size="12">size = 12 -&gt; 7 (one write)</text>
+    <rect x="260" y="610" width="220" height="28" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="370" y="629" text-anchor="middle" font-size="12">modCount++ once, not per removal</text>
+
+    <rect x="30" y="648" width="740" height="16" rx="0" fill="none"/>
+  </g>
+
+  <!-- finally note -->
+  <rect x="20" y="678" width="760" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="698" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">batchRemove's finally block:</text>
+  <text x="400" y="716" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">if predicate.test() throws mid pass-one, finally still copies elementData[r..size) over the write cursor</text>
+  <text x="400" y="732" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">and fixes size, so a thrown exception never leaves the list with duplicated or lost elements - only a modCount bump signals the partial mutation</text>
+</svg>

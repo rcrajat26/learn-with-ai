@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for collect() on a parallel stream of stake reservations. Root: collect() called. Node 1: is the stream parallel? No leads to per-leaf containers with a combiner tree, one shared container is not used. Yes proceeds to Node 2: is the collector CONCURRENT? No leads to per-leaf containers with a combiner tree. Yes proceeds to Node 3: is the stream unordered, or is the collector UNORDERED? No leads to per-leaf containers with a combiner tree, because order must be preserved. Yes leads to one shared container with no combiner, all threads inserting directly into it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .yes   { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+    .no    { fill: none; stroke: #78716c; stroke-width: 1.8; stroke-linejoin: round; marker-end: url(#triS); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#78716c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE THREE CONDITIONS FOR A SHARED-CONTAINER CONCURRENT REDUCTION</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl dense">stakeReservations.parallelStream().collect(toSet()) over the 2.8M/day reservation feed</text>
+
+  <!-- Root -->
+  <rect x="410" y="84" width="220" height="52" rx="6" class="boxP"/>
+  <text x="520" y="116" text-anchor="middle" class="lbl node">collect() called</text>
+
+  <path class="flow" d="M 520 136 V 160"/>
+
+  <!-- Node 1 -->
+  <rect x="380" y="164" width="280" height="60" rx="6" class="boxY"/>
+  <text x="520" y="190" text-anchor="middle" class="lbl node">Node 1: stream parallel?</text>
+  <text x="520" y="210" text-anchor="middle" class="lbl sub">.parallelStream() or .parallel()</text>
+
+  <!-- Node1 NO branch -> per-leaf outcome, own exit x -->
+  <path class="no" d="M 380 194 H 150 V 480"/>
+  <text x="200" y="215" text-anchor="middle" class="lbl tiny">no</text>
+
+  <!-- Node1 YES -> Node 2 -->
+  <path class="yes" d="M 520 224 V 250"/>
+  <text x="546" y="242" class="lbl tiny">yes</text>
+
+  <!-- Node 2 -->
+  <rect x="380" y="254" width="280" height="60" rx="6" class="boxY"/>
+  <text x="520" y="280" text-anchor="middle" class="lbl node">Node 2: collector CONCURRENT?</text>
+  <text x="520" y="300" text-anchor="middle" class="lbl sub">Collector.Characteristics.CONCURRENT</text>
+
+  <path class="no" d="M 380 284 H 250 V 480"/>
+  <text x="290" y="305" text-anchor="middle" class="lbl tiny">no</text>
+
+  <path class="yes" d="M 520 314 V 340"/>
+  <text x="546" y="332" class="lbl tiny">yes</text>
+
+  <!-- Node 3 -->
+  <rect x="380" y="344" width="280" height="76" rx="6" class="boxY"/>
+  <text x="520" y="368" text-anchor="middle" class="lbl node">Node 3: unordered stream</text>
+  <text x="520" y="384" text-anchor="middle" class="lbl node">OR collector UNORDERED?</text>
+  <text x="520" y="404" text-anchor="middle" class="lbl sub">.unordered() or Characteristics.UNORDERED</text>
+
+  <path class="no" d="M 380 384 H 340 V 480"/>
+  <text x="358" y="405" text-anchor="middle" class="lbl tiny">no</text>
+
+  <path class="yes" d="M 660 384 H 780 V 480"/>
+  <text x="760" y="405" text-anchor="middle" class="lbl tiny">yes</text>
+
+  <!-- Per-leaf outcome box -->
+  <rect x="80" y="480" width="440" height="90" rx="6" class="boxW"/>
+  <text x="300" y="504" text-anchor="middle" class="lbl node">Per-leaf containers + combiner tree</text>
+  <text x="300" y="524" text-anchor="middle" class="lbl dense">any "no" answer forces the safe, split path</text>
+  <text x="300" y="544" text-anchor="middle" class="lbl sub">each ForkJoin leaf gets its own container; results merge</text>
+  <text x="300" y="560" text-anchor="middle" class="lbl sub">pairwise via the collector's combiner function</text>
+
+  <!-- container count illustration for per-leaf -->
+  <rect x="100" y="590" width="60" height="40" rx="4" class="boxP"/>
+  <text x="130" y="614" text-anchor="middle" class="lbl tiny">C1</text>
+  <rect x="180" y="590" width="60" height="40" rx="4" class="boxP"/>
+  <text x="210" y="614" text-anchor="middle" class="lbl tiny">C2</text>
+  <rect x="260" y="590" width="60" height="40" rx="4" class="boxP"/>
+  <text x="290" y="614" text-anchor="middle" class="lbl tiny">C3</text>
+  <rect x="340" y="590" width="60" height="40" rx="4" class="boxP"/>
+  <text x="370" y="614" text-anchor="middle" class="lbl tiny">C4</text>
+  <text x="300" y="646" text-anchor="middle" class="lbl sub">4 leaf containers (example split) — combiner merges 4 → 2 → 1</text>
+
+  <!-- YES path outcome -->
+  <rect x="620" y="480" width="380" height="90" rx="6" class="boxG"/>
+  <text x="810" y="504" text-anchor="middle" class="lbl node">One shared container, no combiner</text>
+  <text x="810" y="524" text-anchor="middle" class="lbl dense">all three conditions true</text>
+  <text x="810" y="544" text-anchor="middle" class="lbl sub">every leaf inserts directly into the same</text>
+  <text x="810" y="560" text-anchor="middle" class="lbl sub">CONCURRENT collector instance</text>
+
+  <rect x="750" y="590" width="120" height="40" rx="4" class="boxG"/>
+  <text x="810" y="614" text-anchor="middle" class="lbl tiny">1 shared container</text>
+  <text x="810" y="646" text-anchor="middle" class="lbl sub">e.g. ConcurrentHashMap-backed groupingByConcurrent</text>
+
+  <!-- Annotation panel -->
+  <rect x="80" y="690" width="920" height="120" rx="6" class="panel"/>
+  <text x="100" y="714" class="lbl body" font-weight="700">Why order matters at Node 3</text>
+  <text x="100" y="736" class="lbl tiny">Even a CONCURRENT collector on a parallel stream falls back to per-leaf + combiner if the encounter</text>
+  <text x="100" y="754" class="lbl tiny">order must be preserved — inserting straight into a shared structure loses the source ordering.</text>
+  <text x="100" y="772" class="lbl tiny">toSet()/toUnmodifiableSet() with groupingByConcurrent qualifies once .unordered() is applied; a plain</text>
+  <text x="100" y="790" class="lbl tiny">ordered toList() collector is never CONCURRENT, so it always takes the per-leaf path.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="826" x2="1020" y2="826" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="838" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="851" class="lbl tiny">stream / container node</text>
+
+  <rect x="220" y="838" width="22" height="16" rx="3" class="boxY"/>
+  <text x="250" y="851" class="lbl tiny">decision node</text>
+
+  <rect x="380" y="838" width="22" height="16" rx="3" class="boxG"/>
+  <text x="410" y="851" class="lbl tiny">shared-container outcome</text>
+
+  <rect x="600" y="838" width="22" height="16" rx="3" class="boxW"/>
+  <text x="630" y="851" class="lbl tiny">split / per-leaf outcome</text>
+
+  <path class="yes" d="M 800 846 H 840"/>
+  <text x="848" y="851" class="lbl tiny">"yes" branch</text>
+
+  <path class="no" d="M 20 874 H 60"/>
+  <text x="68" y="879" class="lbl tiny">"no" branch — any no forces per-leaf path</text>
+</svg>

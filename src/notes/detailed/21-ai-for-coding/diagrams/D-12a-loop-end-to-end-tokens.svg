@@ -1,0 +1,57 @@
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 5: task is rename this method, renaming parse to parseEnvelope on ClaudeRunner. The agent issues a Grep tool_use and receives a tool_result, growing the transcript to a cumulative 720 tokens.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="380" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TASK: RENAME parse TO parseEnvelope ON ClaudeRunner — FRAME 1 OF 5: Grep</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="66" class="lbl node">transcript</text>
+  <rect x="40" y="76" width="360" height="30" rx="4" class="boxP"/>
+  <text x="220" y="96" text-anchor="middle" class="lbl body">system prompt — 500 tok</text>
+  <rect x="40" y="110" width="360" height="30" rx="4" class="boxP"/>
+  <text x="220" y="130" text-anchor="middle" class="lbl body">user: "rename parse to parseEnvelope" — 40 tok</text>
+  <rect x="40" y="144" width="360" height="30" rx="4" class="boxH"/>
+  <text x="220" y="164" text-anchor="middle" class="lbl body">tool_use: Grep(pattern="parse") — 30 tok</text>
+  <rect x="40" y="178" width="360" height="30" rx="4" class="boxR"/>
+  <text x="220" y="198" text-anchor="middle" class="lbl body">tool_result: 3 matches — 150 tok</text>
+
+  <path class="flow" d="M 400 193 H 460"/>
+
+  <rect x="460" y="140" width="400" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="476" y="164" class="lbl node">cumulative after this step</text>
+  <text x="476" y="188" class="lbl body">500 + 40 + 30 + 150 = 720 tokens</text>
+  <text x="476" y="210" class="lbl sub">Grep locates every "parse" occurrence</text>
+  <text x="476" y="226" class="lbl sub">before any file is opened.</text>
+
+  <line x1="20" y1="290" x2="880" y2="290" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="302" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="315" class="lbl tiny">existing message</text>
+  <rect x="220" y="302" width="22" height="16" rx="3" class="boxH"/>
+  <text x="250" y="315" class="lbl tiny">tool_use (this step)</text>
+  <rect x="420" y="302" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="315" class="lbl tiny">tool_result (this step)</text>
+  <path class="flow" d="M 620 310 H 660"/>
+  <text x="668" y="315" class="lbl tiny">A → B : B computed from A</text>
+</svg>

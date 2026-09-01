@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Directory diagram of tilde slash dot claude slash projects slash project slash memory holding MEMORY.md plus one topic file per memory. MEMORY.md has a cut line at first 200 lines or 25 kilobytes: the part above loads at session start, the part below is labelled not loaded at session start. The four memory types user, feedback, project, and reference are labelled on the topic files, each marked read on demand. An annotation panel states the directory is keyed on the git repo so worktrees share it, is machine-local, and does not load into a subagent, a fork excepted.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+    .weakE { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AUTO MEMORY ON DISK, AND WHAT ACTUALLY LOADS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- directory root -->
+  <rect x="60" y="64" width="500" height="34" rx="6" class="boxWeak"/>
+  <text x="80" y="86" class="lbl body">~/.claude/projects/&lt;project&gt;/memory/</text>
+
+  <!-- row 1 bus: trunk (clear of all boxes, above y130) then one bus line, then one branch per child -->
+  <path class="bus" d="M 310 98 V 116"/>
+  <path class="bus" d="M 160 116 H 535"/>
+  <path class="flow" d="M 160 116 V 130"/>
+  <path class="flow" d="M 365 116 V 130"/>
+  <path class="flow" d="M 535 116 V 130"/>
+
+  <!-- MEMORY.md box with cut line -->
+  <rect x="60" y="130" width="200" height="180" rx="6" class="boxP"/>
+  <text x="160" y="152" text-anchor="middle" class="lbl node">MEMORY.md</text>
+  <line x1="72" y1="220" x2="248" y2="220" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 3"/>
+  <text x="160" y="185" text-anchor="middle" class="lbl tiny">loaded at session start</text>
+  <text x="160" y="238" text-anchor="middle" class="lbl sub">cut line:</text>
+  <text x="160" y="252" text-anchor="middle" class="lbl sub">first 200 lines</text>
+  <text x="160" y="264" text-anchor="middle" class="lbl sub">or 25 KB</text>
+  <text x="160" y="290" text-anchor="middle" class="lbl tiny">not loaded</text>
+  <text x="160" y="302" text-anchor="middle" class="lbl tiny">at session start</text>
+
+  <!-- topic file: user -->
+  <rect x="290" y="130" width="150" height="90" rx="6" class="boxWeak"/>
+  <text x="365" y="152" text-anchor="middle" class="lbl node">topic file</text>
+  <text x="365" y="170" text-anchor="middle" class="lbl body">type: user</text>
+  <text x="365" y="192" text-anchor="middle" class="lbl tiny">read on demand</text>
+
+  <!-- topic file: feedback -->
+  <rect x="460" y="130" width="150" height="90" rx="6" class="boxWeak"/>
+  <text x="535" y="152" text-anchor="middle" class="lbl node">topic file</text>
+  <text x="535" y="170" text-anchor="middle" class="lbl body">type: feedback</text>
+  <text x="535" y="192" text-anchor="middle" class="lbl tiny">read on demand</text>
+
+  <!-- row 2 bus: trunk routed through the clear corridor between MEMORY.md and the user topic file
+       (x=275, gap 260-290), so it never passes under any row-1 box -->
+  <path class="bus" d="M 275 98 V 340"/>
+  <path class="bus" d="M 275 340 H 535"/>
+  <path class="flow" d="M 365 340 V 354"/>
+  <path class="flow" d="M 535 340 V 354"/>
+
+  <!-- topic file: project -->
+  <rect x="290" y="354" width="150" height="90" rx="6" class="boxWeak"/>
+  <text x="365" y="376" text-anchor="middle" class="lbl node">topic file</text>
+  <text x="365" y="394" text-anchor="middle" class="lbl body">type: project</text>
+  <text x="365" y="416" text-anchor="middle" class="lbl tiny">read on demand</text>
+
+  <!-- topic file: reference -->
+  <rect x="460" y="354" width="150" height="90" rx="6" class="boxWeak"/>
+  <text x="535" y="376" text-anchor="middle" class="lbl node">topic file</text>
+  <text x="535" y="394" text-anchor="middle" class="lbl body">type: reference</text>
+  <text x="535" y="416" text-anchor="middle" class="lbl tiny">read on demand</text>
+
+  <!-- one topic file per memory note -->
+  <rect x="660" y="240" width="330" height="150" rx="6" class="boxAnn"/>
+  <text x="676" y="262" class="lbl h2">One topic file per memory</text>
+  <text x="676" y="284" class="lbl tiny">MEMORY.md is the index; each individual</text>
+  <text x="676" y="300" class="lbl tiny">memory gets its own topic file on disk,</text>
+  <text x="676" y="316" class="lbl tiny">tagged with one of the four types shown</text>
+  <text x="676" y="332" class="lbl tiny">at left: user, feedback, project, reference.</text>
+  <text x="676" y="352" class="lbl tiny">Topic files are never auto-loaded whole —</text>
+  <text x="676" y="368" class="lbl tiny">Claude reads one on demand by filename.</text>
+
+  <line x1="20" y1="480" x2="1020" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- panel: scoping / machine-local / subagent -->
+  <rect x="20" y="500" width="1000" height="200" rx="6" class="boxAnn"/>
+  <text x="36" y="524" class="lbl h2">Scope of this directory</text>
+  <text x="36" y="548" class="lbl tiny">Keyed on the git repo, so every worktree of the same repo shares the same ~/.claude/projects/&lt;project&gt;/memory/ directory —</text>
+  <text x="36" y="566" class="lbl tiny">a memory written from one worktree is visible from another worktree of the same repo.</text>
+  <text x="36" y="590" class="lbl tiny">Machine-local: this directory lives under the user's home directory on one machine, not in the repo itself and not synced by git.</text>
+  <text x="36" y="614" class="lbl tiny">Does not load into a subagent — a subagent starts with none of this loaded. The one exception is a fork, which inherits the</text>
+  <text x="36" y="632" class="lbl tiny">parent's full context, memory included.</text>
+  <text x="36" y="656" class="lbl tiny">MEMORY.md example: first 200 lines / 25 KB load automatically at session start; content past that cut line requires reading the</text>
+  <text x="36" y="674" class="lbl tiny">file explicitly, exactly like any other on-demand topic file.</text>
+
+  <line x1="20" y1="714" x2="1020" y2="714" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Legend -->
+  <rect x="20" y="726" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="50" y="739" class="lbl tiny">directory / on-demand file</text>
+
+  <rect x="230" y="726" width="22" height="16" rx="3" class="boxP"/>
+  <text x="260" y="739" class="lbl tiny">MEMORY.md (auto-loaded index, split by cut line)</text>
+
+  <rect x="560" y="726" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="590" y="739" class="lbl tiny">annotation panel</text>
+
+  <line x1="760" y1="734" x2="800" y2="734" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="810" y="739" class="lbl tiny">A → B : B is contained within A</text>
+</svg>

@@ -1,0 +1,154 @@
+<svg viewBox="0 0 1120 1320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels on class-initialization and its deadlock. Panel 1 is a left-to-right state machine spine: unlinked, then linked, then being-initialized with the owner thread recorded, then initialized; erroneous hangs below being-initialized, reached when clinit throws. Transitions name the per-class init lock: acquire per-class init lock and record the owner thread on entry to being-initialized; run clinit; then set state to initialized, notify all waiters and release the lock. Two self-transitions on being-initialized show another thread blocking on the lock until initialized, versus the owner thread re-entering and being allowed through immediately for recursive initialization. Panel 2 shows the deadlock: thread bonus-grant-1 holds the BonusRules init lock and waits for the LedgerPositions init lock, while thread payment-run-worker holds the LedgerPositions init lock and waits for the BonusRules init lock, because BonusRules clinit reads LedgerPositions.PROMOTIONAL_EXPENSE and LedgerPositions clinit reads BonusRules.MAX_BONUS, forming a four-edge deadlock cycle. Panel 3 shows the single-thread recursive case: bonus-grant-1 enters BonusRules clinit, which calls LedgerPositions clinit, which reads back BonusRules.MAX_BONUS while BonusRules is still being initialized by that same thread, so the read is allowed through with no block and no error, observing the default value 0 instead of the declared value 100.">
+  <defs>
+    <marker id="arrow108" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow108red" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1320" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">The class-initialization state machine and its deadlock</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ PANEL 1 : STATE MACHINE ============ -->
+  <text x="80" y="64" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PANEL 1 &#8212; THE STATE MACHINE (PER-CLASS INIT LOCK)</text>
+  <line x1="80" y1="72" x2="1040" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="280" y="92" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">linking completes</text>
+  <text x="525" y="108" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">acquire per-class init lock</text>
+  <text x="820" y="108" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">run &lt;clinit&gt;</text>
+  <text x="525" y="124" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">state := being-initialized, owner thread recorded</text>
+  <text x="820" y="140" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">state := initialized, notify all waiters, release lock</text>
+
+  <rect x="90" y="155" width="140" height="55" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="160" y="188" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">unlinked</text>
+
+  <rect x="330" y="155" width="140" height="55" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="400" y="188" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">linked</text>
+
+  <rect x="580" y="155" width="170" height="55" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="665" y="180" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">being-initialized</text>
+  <text x="665" y="198" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(owner thread recorded)</text>
+
+  <rect x="890" y="155" width="150" height="55" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="965" y="188" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">initialized</text>
+
+  <line x1="230" y1="182" x2="330" y2="182" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <line x1="470" y1="182" x2="580" y2="182" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <line x1="750" y1="170" x2="890" y2="170" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+
+  <!-- self-transitions on being-initialized -->
+  <path d="M 595 210 V 245 H 640 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <text x="617" y="264" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">another thread arrives</text>
+  <text x="617" y="277" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">-&gt; block on lock until initialized</text>
+
+  <path d="M 670 210 V 285 H 720 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <text x="695" y="298" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">owner thread re-enters</text>
+  <text x="695" y="311" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">-&gt; allowed through (recursive)</text>
+
+  <!-- erroneous, reached when clinit throws -->
+  <path d="M 750 200 H 850 V 325 H 665 V 345" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow108red)"/>
+  <text x="860" y="265" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">&lt;clinit&gt; threw</text>
+
+  <rect x="515" y="345" width="300" height="55" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="665" y="368" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">erroneous</text>
+  <text x="665" y="386" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">future use throws NoClassDefFoundError</text>
+
+  <!-- ============ PANEL 2 : THE DEADLOCK ============ -->
+  <text x="80" y="440" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PANEL 2 &#8212; THE DEADLOCK</text>
+  <line x1="80" y1="448" x2="1040" y2="448" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="140" y="470" width="260" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="270" y="520" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">bonus-grant-1</text>
+
+  <rect x="680" y="470" width="260" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="810" y="500" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusRules</text>
+  <text x="810" y="524" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">&lt;clinit&gt; reads</text>
+  <text x="810" y="542" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">LedgerPositions.PROMOTIONAL_EXPENSE</text>
+
+  <rect x="140" y="760" width="260" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="270" y="790" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LedgerPositions</text>
+  <text x="270" y="814" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">&lt;clinit&gt; reads</text>
+  <text x="270" y="832" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">BonusRules.MAX_BONUS</text>
+
+  <rect x="680" y="760" width="260" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="810" y="810" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">payment-run-worker</text>
+
+  <line x1="400" y1="515" x2="680" y2="515" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow108red)"/>
+  <text x="540" y="505" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">holds BonusRules init lock</text>
+
+  <line x1="680" y1="805" x2="400" y2="805" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow108red)"/>
+  <text x="540" y="795" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">holds LedgerPositions init lock</text>
+
+  <line x1="270" y1="560" x2="270" y2="760" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow108red)"/>
+  <text x="280" y="605" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">waits for LedgerPositions init lock</text>
+
+  <line x1="810" y1="760" x2="810" y2="560" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow108red)"/>
+  <text x="820" y="605" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">waits for BonusRules init lock</text>
+
+  <rect x="460" y="630" width="160" height="60" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="540" y="666" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="bold" fill="#b91c1c">DEADLOCK</text>
+
+  <!-- ============ PANEL 3 : SINGLE-THREAD RECURSIVE CASE ============ -->
+  <text x="80" y="890" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PANEL 3 &#8212; SINGLE-THREAD RECURSIVE INITIALIZATION</text>
+  <line x1="80" y1="898" x2="1040" y2="898" stroke="#d1d5db" stroke-width="1"/>
+  <text x="90" y="918" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">THREAD: bonus-grant-1</text>
+
+  <rect x="90" y="930" width="230" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="205" y="965" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bonus-grant-1 enters</text>
+  <text x="205" y="983" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">BonusRules.&lt;clinit&gt;</text>
+
+  <line x1="320" y1="975" x2="380" y2="975" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+
+  <rect x="380" y="930" width="230" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="495" y="965" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">calls</text>
+  <text x="495" y="983" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerPositions.&lt;clinit&gt;</text>
+
+  <line x1="610" y1="975" x2="670" y2="975" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+
+  <rect x="670" y="930" width="350" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="845" y="955" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">LedgerPositions.&lt;clinit&gt; reads</text>
+  <text x="845" y="973" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">BonusRules.MAX_BONUS (same thread,</text>
+  <text x="845" y="991" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">BonusRules still being-initialized)</text>
+
+  <line x1="845" y1="1020" x2="845" y2="1055" stroke="#475569" stroke-width="2"/>
+  <line x1="720" y1="1055" x2="965" y2="1055" stroke="#475569" stroke-width="2"/>
+  <line x1="720" y1="1055" x2="720" y2="1080" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <line x1="965" y1="1055" x2="965" y2="1080" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <text x="860" y="1042" text-anchor="start" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4b5563">allowed through, no block</text>
+
+  <rect x="610" y="1080" width="220" height="70" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="720" y="1120" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#b91c1c">observed: MAX_BONUS = 0</text>
+
+  <rect x="850" y="1080" width="230" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="965" y="1120" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#15803d">declared: MAX_BONUS = 100</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="80" y="1190" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="80" y1="1198" x2="1040" y2="1198" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="90" y="1210" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="118" y="1223" font-family="sans-serif" font-size="11" fill="#4b5563">neutral state (unlinked / linked) / thread</text>
+
+  <rect x="90" y="1236" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="118" y="1249" font-family="sans-serif" font-size="11" fill="#4b5563">being-initialized / the class currently running &lt;clinit&gt;</text>
+
+  <rect x="90" y="1262" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="118" y="1275" font-family="sans-serif" font-size="11" fill="#4b5563">initialized (success) / the declared, correct value</text>
+
+  <rect x="610" y="1210" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="638" y="1223" font-family="sans-serif" font-size="11" fill="#4b5563">erroneous / deadlock cycle / the observed wrong value</text>
+
+  <line x1="610" y1="1244" x2="632" y2="1244" stroke="#475569" stroke-width="2" marker-end="url(#arrow108)"/>
+  <text x="638" y="1249" font-family="sans-serif" font-size="11" fill="#4b5563">state transition / flow (structural edge)</text>
+
+  <line x1="610" y1="1270" x2="632" y2="1270" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow108red)"/>
+  <text x="638" y="1275" font-family="sans-serif" font-size="11" fill="#4b5563">holds / waits-for edge inside the deadlock cycle</text>
+</svg>

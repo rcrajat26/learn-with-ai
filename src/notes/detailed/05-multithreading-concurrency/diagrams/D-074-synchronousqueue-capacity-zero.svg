@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="SynchronousQueue has capacity zero. Left, the mental model most engineers bring:
+     a queue with a buffer, where withdrawal-intake-3 can put a WithdrawalTransaction and walk
+     away while it waits. Right, the reality: a rendezvous point with no buffer, where put()
+     blocks until a take() arrives to hand off directly to payment-run-worker-3. size() equals 0,
+     peek() equals null, and isEmpty() equals true are printed as constants regardless of pending
+     handoffs, because it is a hand-off, not storage. newCachedThreadPool is named as its user:
+     it hands each submitted task straight to an idle worker or spawns one, never queueing it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-size: 11px; font-family: "SF Mono", Menlo, monospace; fill: #1f2937; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SYNCHRONOUSQUEUE HAS CAPACITY ZERO</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="lbl h2">MENTAL MODEL — A QUEUE WITH A BUFFER</text>
+  <text x="580" y="62" class="lbl h2">REALITY — A RENDEZVOUS, ZERO CAPACITY</text>
+  <line x1="560" y1="50" x2="560" y2="572" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= LEFT: mental model ================= -->
+
+  <rect x="160" y="90" width="220" height="42" rx="6" class="boxP"/>
+  <text x="270" y="116" text-anchor="middle" class="lbl body">withdrawal-intake-3</text>
+
+  <path class="flow" d="M 270 132 V 158"/>
+  <text x="300" y="149" class="lbl sub">put(W710)</text>
+
+  <rect x="140" y="158" width="260" height="100" rx="8" class="boxD"/>
+  <text x="270" y="176" text-anchor="middle" class="lbl body" font-weight="700">imagined buffer</text>
+
+  <rect x="156" y="184" width="60" height="34" rx="4" class="boxW"/>
+  <text x="186" y="205" text-anchor="middle" class="lbl sub">W710</text>
+  <rect x="224" y="184" width="60" height="34" rx="4" class="boxW"/>
+  <text x="254" y="205" text-anchor="middle" class="lbl sub">W711</text>
+  <rect x="292" y="184" width="92" height="34" rx="4" class="boxW"/>
+  <text x="338" y="205" text-anchor="middle" class="lbl sub">W712</text>
+  <text x="270" y="238" text-anchor="middle" class="lbl sub">imagined to wait here</text>
+
+  <path class="flow" d="M 270 258 V 284"/>
+  <text x="298" y="275" class="lbl sub">take()</text>
+
+  <rect x="160" y="284" width="220" height="42" rx="6" class="boxP"/>
+  <text x="270" y="310" text-anchor="middle" class="lbl body">payment-run-worker-3</text>
+
+  <rect x="60" y="360" width="500" height="110" rx="6" class="panel"/>
+  <text x="76" y="382" class="lbl tiny" font-weight="700">WHY THIS IS WRONG FOR SynchronousQueue</text>
+  <text x="76" y="402" class="lbl tiny">put() is imagined to succeed and return immediately, leaving the</text>
+  <text x="76" y="418" class="lbl tiny">WithdrawalTransaction sitting in a buffer until some consumer</text>
+  <text x="76" y="434" class="lbl tiny">calls take() — this is true of ArrayBlockingQueue, never of</text>
+  <text x="76" y="450" class="lbl tiny">SynchronousQueue, which allocates no storage for the item at all.</text>
+
+  <!-- ================= RIGHT: reality ================= -->
+
+  <rect x="600" y="90" width="200" height="46" rx="6" class="boxP"/>
+  <text x="700" y="112" text-anchor="middle" class="lbl body">withdrawal-intake-3</text>
+  <text x="700" y="128" text-anchor="middle" class="lbl sub">put(W710) — blocks here</text>
+
+  <rect x="880" y="90" width="200" height="46" rx="6" class="boxP"/>
+  <text x="980" y="112" text-anchor="middle" class="lbl body">payment-run-worker-3</text>
+  <text x="980" y="128" text-anchor="middle" class="lbl sub">take() — arrives, unblocks both</text>
+
+  <path class="flow" d="M 800 113 H 850"/>
+  <rect x="850" y="98" width="30" height="30" rx="15" class="boxY"/>
+  <text x="865" y="118" text-anchor="middle" class="lbl sub" font-weight="700">⇄</text>
+
+  <text x="700" y="160" text-anchor="middle" class="lbl sub">direct hand-off — W710 moves thread-to-thread,</text>
+  <text x="865" y="176" text-anchor="middle" class="lbl sub">never sits in a data structure</text>
+
+  <rect x="700" y="200" width="280" height="70" rx="6" class="boxD"/>
+  <text x="840" y="220" text-anchor="middle" class="lbl code" font-weight="700">size() == 0</text>
+  <text x="840" y="238" text-anchor="middle" class="lbl code" font-weight="700">peek() == null</text>
+  <text x="840" y="256" text-anchor="middle" class="lbl code" font-weight="700">isEmpty() == true</text>
+
+  <text x="840" y="288" text-anchor="middle" class="lbl sub">printed as constants — true even mid-handoff, with a put() and</text>
+  <text x="840" y="302" text-anchor="middle" class="lbl sub">a take() both blocked on each other right now</text>
+
+  <rect x="600" y="330" width="500" height="20" rx="4" class="boxY"/>
+  <text x="850" y="345" text-anchor="middle" class="lbl body" font-weight="700">a hand-off, not storage</text>
+
+  <rect x="600" y="380" width="500" height="112" rx="6" class="panel"/>
+  <text x="616" y="402" class="lbl tiny" font-weight="700">NAMED USER — Executors.newCachedThreadPool()</text>
+  <text x="616" y="422" class="lbl tiny">newCachedThreadPool's internal ThreadPoolExecutor is built on a</text>
+  <text x="616" y="438" class="lbl tiny">SynchronousQueue: a submitted WithdrawalTransaction task is</text>
+  <text x="616" y="454" class="lbl tiny">handed straight to an idle worker thread; if none is idle, a new</text>
+  <text x="616" y="470" class="lbl tiny">worker is spawned on the spot — nothing ever queues waiting.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <line x1="20" y1="522" x2="1100" y2="522" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="534" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="547" class="lbl tiny">producer / consumer thread</text>
+
+  <rect x="250" y="534" width="22" height="16" rx="3" class="boxW"/>
+  <text x="280" y="547" class="lbl tiny">imagined buffered item</text>
+
+  <rect x="470" y="534" width="22" height="16" rx="3" class="boxD"/>
+  <text x="500" y="547" class="lbl tiny">wrong mental model / printed-constant fact</text>
+
+  <rect x="800" y="534" width="22" height="16" rx="3" class="boxY"/>
+  <text x="830" y="547" class="lbl tiny">the rendezvous point / key takeaway</text>
+
+  <rect x="1010" y="534" width="0" height="0"/>
+
+  <rect x="20" y="558" width="22" height="16" rx="3" class="panel"/>
+  <text x="50" y="571" class="lbl tiny">explanatory note</text>
+
+  <path class="flow" d="M 250 566 H 290"/>
+  <text x="298" y="571" class="lbl tiny">A → B : call / hand-off</text>
+</svg>

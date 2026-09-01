@@ -1,0 +1,72 @@
+<svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Byte layout comparison: List.of(a,b) as a single List12 object with no backing array, versus new ArrayList of that same List12, which is an ArrayList object plus a separately allocated 2-slot Object array">
+
+  <rect x="20" y="16" width="760" height="46" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">List.of(a, b) vs new ArrayList&lt;&gt;(List.of(a, b)) — object header sizes</text>
+  <text x="400" y="54" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Assumption: compressed oops (default heap &lt; 32 GB). Object header = 8B mark + 4B class word = 12B. Array header = 12B + 4B length = 16B. 1 ref = 4B.</text>
+
+  <!-- LEFT: List12 -->
+  <text x="200" y="90" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">List.of(a, b) &#8594; List12&lt;E&gt;</text>
+
+  <rect x="60" y="105" width="280" height="140" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="200" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List12 object</text>
+  <rect x="80" y="140" width="240" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="200" y="156" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">header (mark+class): 12 B</text>
+  <rect x="80" y="166" width="240" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="200" y="182" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">E e0 (ref): 4 B</text>
+  <rect x="80" y="192" width="240" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="200" y="208" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Object e1 (ref): 4 B</text>
+  <text x="200" y="235" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">12 + 4 + 4 = 20 B, padded to 8 &#8594; 24 B</text>
+
+  <rect x="60" y="260" width="280" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="282" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no backing array — e0/e1 hold</text>
+  <text x="200" y="299" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">the elements directly as fields</text>
+
+  <rect x="90" y="330" width="220" height="30" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="200" y="350" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Total: 24 B</text>
+
+  <!-- divider -->
+  <line x1="400" y1="80" x2="400" y2="500" stroke="#737373" stroke-width="2" stroke-dasharray="6,4"/>
+
+  <!-- RIGHT: ArrayList -->
+  <text x="600" y="90" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">new ArrayList&lt;&gt;(List.of(a, b))</text>
+
+  <rect x="440" y="105" width="270" height="140" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="575" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayList object</text>
+  <rect x="460" y="140" width="230" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="575" y="156" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">header (mark+class): 12 B</text>
+  <rect x="460" y="166" width="230" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="575" y="182" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">int size: 4 B</text>
+  <rect x="460" y="192" width="230" height="22" rx="3" fill="#e5e7eb"/>
+  <text x="575" y="208" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Object[] elementData (ref): 4 B</text>
+  <text x="575" y="235" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">12 + 4 + 4 = 20 B, padded to 8 &#8594; 24 B</text>
+
+  <line x1="575" y1="245" x2="575" y2="270" stroke="#737373" stroke-width="2" marker-end="url(#arrow121)"/>
+  <defs>
+    <marker id="arrow121" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="440" y="272" width="270" height="90" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="575" y="294" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">separate Object[] elementData</text>
+  <text x="575" y="312" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Arrays.copyOf(a, size=2) &#8594; exactly 2 slots</text>
+  <text x="575" y="330" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">array header 16 B + 2 refs &#215; 4 B = 8 B</text>
+  <text x="575" y="348" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">16 + 8 = 24 B</text>
+
+  <rect x="460" y="370" width="230" height="30" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="575" y="390" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Total: 24 + 24 = 48 B, no slack</text>
+
+  <text x="575" y="420" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">(constructor sizes the array to c.toArray().length —</text>
+  <text x="575" y="436" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">2 elements in, 2-slot array out; ArrayList.java line 180-192)</text>
+
+  <!-- Departure note box -->
+  <rect x="60" y="450" width="680" height="150" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="80" y="472" font-family="sans-serif" font-size="13" fill="#1f2937">Not the same as new ArrayList&lt;&gt;() followed by two add() calls:</text>
+  <text x="80" y="492" font-family="sans-serif" font-size="12" fill="#1f2937">that path starts from the shared DEFAULTCAPACITY_EMPTY_ELEMENTDATA sentinel and grows on first add()</text>
+  <text x="80" y="510" font-family="sans-serif" font-size="12" fill="#1f2937">to DEFAULT_CAPACITY = 10 (ArrayList.java line 118), giving a 10-slot Object[]:</text>
+  <text x="80" y="528" font-family="sans-serif" font-size="12" fill="#1f2937">array header 16 B + 10 &#215; 4 B = 56 B, plus the 24 B ArrayList object = 80 B total, with 8 slots of slack.</text>
+  <text x="80" y="552" font-family="sans-serif" font-size="12" fill="#1f2937">The manifest's "10-slot Object[] (16 + 40 B), 8 slots of slack" describes THIS no-arg-constructor-plus-two-adds</text>
+  <text x="80" y="570" font-family="sans-serif" font-size="12" fill="#1f2937">expression, not new ArrayList&lt;&gt;(List.of(a,b)) — the two allocate very differently and both are drawn above/here.</text>
+  <text x="80" y="588" font-family="sans-serif" font-size="12" fill="#1f2937">new ArrayList&lt;&gt;(Collection) has zero slack: 48 B total, confirmed by reading the constructor at ArrayList.java:180-192.</text>
+</svg>

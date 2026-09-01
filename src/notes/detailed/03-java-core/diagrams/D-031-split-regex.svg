@@ -1,0 +1,97 @@
+<svg viewBox="0 0 820 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="split is a regex and eats trailing empties: three frames showing split(dot) returning zero elements, split of escaped dot returning three parts, and limit -1 versus default limit on a trailing-comma string">
+  <defs>
+    <marker id="arrow031" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="410" y="42" text-anchor="middle" font-family="sans-serif" font-size="15"
+        fill="#1f2937" font-weight="bold">split is a regex, and it eats trailing empties</text>
+
+  <!-- FRAME 1 -->
+  <rect x="40" y="65" width="740" height="190" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="55" y="78" width="230" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="170" y="96" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 1: "." means "any character"</text>
+
+  <rect x="80" y="118" width="300" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="143" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"BDP-101.ACME.  "</text>
+
+  <line x1="380" y1="138" x2="470" y2="138" stroke="#737373" stroke-width="2" marker-end="url(#arrow031)"/>
+  <rect x="385" y="108" width="145" height="24" rx="3" fill="#fef3c7"/>
+  <text x="457" y="125" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">split(".")</text>
+
+  <rect x="470" y="118" width="270" height="40" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="605" y="143" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">result: new String[0]</text>
+
+  <text x="230" y="190" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">"." is a regex metacharacter: it matches every character, so the whole</text>
+  <text x="230" y="206" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">string splits into all-empty pieces, and every empty piece is trailing.</text>
+  <rect x="470" y="170" width="270" height="46" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="190" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">zero-length array, length 0</text>
+  <text x="605" y="206" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">default limit 0 strips all trailing empties</text>
+
+  <!-- FRAME 2 -->
+  <rect x="40" y="275" width="740" height="190" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="55" y="288" width="270" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="190" y="306" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 2: escape it — "\\." means a literal dot</text>
+
+  <rect x="80" y="328" width="300" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="353" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"BDP-101.ACME.  "</text>
+
+  <line x1="380" y1="348" x2="470" y2="348" stroke="#737373" stroke-width="2" marker-end="url(#arrow031)"/>
+  <rect x="385" y="318" width="150" height="24" rx="3" fill="#fef3c7"/>
+  <text x="460" y="335" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">split("\\.")</text>
+
+  <rect x="470" y="328" width="80" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="353" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"BDP-101"</text>
+  <rect x="560" y="328" width="80" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="353" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"ACME"</text>
+  <rect x="650" y="328" width="90" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="695" y="353" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"  " (2 sp)</text>
+
+  <text x="410" y="405" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">three elements: the trailing "  " is two space characters, not empty,</text>
+  <text x="410" y="421" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">so it is not stripped — only zero-length trailing strings are eaten.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="40" y="485" width="740" height="400" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="55" y="498" width="330" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="220" y="516" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 3: limit -1 keeps trailing empties, limit 0 eats them</text>
+
+  <rect x="80" y="536" width="220" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="561" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"65,,"</text>
+
+  <line x1="300" y1="556" x2="400" y2="556" stroke="#737373" stroke-width="2" marker-end="url(#arrow031)"/>
+  <rect x="305" y="526" width="180" height="24" rx="3" fill="#fef3c7"/>
+  <text x="395" y="543" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">split(",", -1)</text>
+
+  <rect x="400" y="536" width="90" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="445" y="561" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"65"</text>
+  <rect x="500" y="536" width="90" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="545" y="561" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"" (empty)</text>
+  <rect x="600" y="536" width="90" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="645" y="561" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"" (empty)</text>
+
+  <rect x="600" y="590" width="140" height="30" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="610" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">length 3</text>
+
+  <rect x="80" y="650" width="220" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="675" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"65,,"</text>
+
+  <line x1="300" y1="670" x2="400" y2="670" stroke="#737373" stroke-width="2" marker-end="url(#arrow031)"/>
+  <rect x="305" y="640" width="180" height="24" rx="3" fill="#fef3c7"/>
+  <text x="395" y="657" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">split(",")</text>
+
+  <rect x="400" y="650" width="90" height="40" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="445" y="675" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"65"</text>
+
+  <rect x="500" y="655" width="140" height="30" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="570" y="675" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">length 1</text>
+
+  <rect x="70" y="720" width="700" height="140" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="420" y="744" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">The limit rule</text>
+  <text x="420" y="766" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">limit &gt; 0: apply the pattern at most limit-1 times, keep everything after that as the last element.</text>
+  <text x="420" y="786" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">limit = 0 (the default): apply the pattern as many times as possible, then discard trailing empty strings.</text>
+  <text x="420" y="806" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">limit &lt; 0: apply the pattern as many times as possible, and keep trailing empty strings.</text>
+  <text x="420" y="828" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Parsing a fixed-width feed such as a QuizStakes deposit reference? Pass -1, or the last blank field vanishes.</text>
+</svg>

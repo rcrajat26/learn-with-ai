@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1120 860" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Every route to a list, and what you actually get. Four constructor routes —
+     new ArrayList of no args, of capacity n, of a collection c, and deserialization — all
+     produce java.util.ArrayList, mutable, each with its own initial capacity rule. Five
+     static factory routes follow: List.of produces ImmutableCollections List12 or ListN,
+     immutable; List.copyOf the same; Arrays.asList produces java.util.Arrays ArrayList,
+     fixed-size, where set works but add throws UnsupportedOperationException; stream toList
+     produces ImmutableCollections ListN, immutable; and stream collect Collectors toList
+     produces java.util.ArrayList, mutable. Mutable outcomes are green, immutable and
+     fixed-size outcomes are grey.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+    .body  { font-size: 13px; }
+    .bodyB { font-size: 13px; font-weight: 700; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="860" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">EVERY ROUTE TO A LIST, AND WHAT YOU ACTUALLY GET</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="70" class="lbl h2">CONSTRUCTOR ROUTES — new ArrayList&lt;&gt;(...)</text>
+
+  <!-- C1 -->
+  <rect x="40" y="80" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="108" text-anchor="middle" class="lbl body">new ArrayList&lt;&gt;()</text>
+  <text x="180" y="126" text-anchor="middle" class="lbl tiny">no-arg constructor</text>
+  <path class="flow" d="M 320 112 H 380"/>
+  <rect x="380" y="80" width="560" height="64" rx="6" class="boxR"/>
+  <text x="660" y="106" text-anchor="middle" class="lbl bodyB">java.util.ArrayList</text>
+  <text x="660" y="126" text-anchor="middle" class="lbl tiny">capacity 0 until first add, then 10</text>
+
+  <!-- C2 -->
+  <rect x="40" y="154" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="182" text-anchor="middle" class="lbl body">new ArrayList&lt;&gt;(n)</text>
+  <text x="180" y="200" text-anchor="middle" class="lbl tiny">sized constructor</text>
+  <path class="flow" d="M 320 186 H 380"/>
+  <rect x="380" y="154" width="560" height="64" rx="6" class="boxR"/>
+  <text x="660" y="180" text-anchor="middle" class="lbl bodyB">java.util.ArrayList</text>
+  <text x="660" y="200" text-anchor="middle" class="lbl tiny">capacity = n (n = 0 → 0, then grows to 1)</text>
+
+  <!-- C3 -->
+  <rect x="40" y="228" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="256" text-anchor="middle" class="lbl body">new ArrayList&lt;&gt;(c)</text>
+  <text x="180" y="274" text-anchor="middle" class="lbl tiny">copy constructor</text>
+  <path class="flow" d="M 320 260 H 380"/>
+  <rect x="380" y="228" width="560" height="64" rx="6" class="boxR"/>
+  <text x="660" y="254" text-anchor="middle" class="lbl bodyB">java.util.ArrayList</text>
+  <text x="660" y="274" text-anchor="middle" class="lbl tiny">capacity exactly c.size()</text>
+
+  <!-- C4 -->
+  <rect x="40" y="302" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="330" text-anchor="middle" class="lbl body">deserialization</text>
+  <text x="180" y="348" text-anchor="middle" class="lbl tiny">readObject(ObjectInputStream)</text>
+  <path class="flow" d="M 320 334 H 380"/>
+  <rect x="380" y="302" width="560" height="64" rx="6" class="boxR"/>
+  <text x="660" y="328" text-anchor="middle" class="lbl bodyB">java.util.ArrayList</text>
+  <text x="660" y="348" text-anchor="middle" class="lbl tiny">capacity exactly size (no slack kept)</text>
+
+  <line x1="40" y1="392" x2="940" y2="392" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="40" y="416" class="lbl h2">STATIC FACTORY ROUTES — List.of / Arrays.asList / streams</text>
+
+  <!-- F1 -->
+  <rect x="40" y="426" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="454" text-anchor="middle" class="lbl body">List.of(...)</text>
+  <text x="180" y="472" text-anchor="middle" class="lbl tiny">0..N element factory</text>
+  <path class="flow" d="M 320 458 H 380"/>
+  <rect x="380" y="426" width="560" height="64" rx="6" class="boxW"/>
+  <text x="660" y="452" text-anchor="middle" class="lbl bodyB">ImmutableCollections$List12 / $ListN</text>
+  <text x="660" y="472" text-anchor="middle" class="lbl tiny">immutable — List12 for &#8804;10 args, ListN for 11+</text>
+
+  <!-- F2 -->
+  <rect x="40" y="500" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="528" text-anchor="middle" class="lbl body">List.copyOf(c)</text>
+  <text x="180" y="546" text-anchor="middle" class="lbl tiny">defensive-copy factory</text>
+  <path class="flow" d="M 320 532 H 380"/>
+  <rect x="380" y="500" width="560" height="64" rx="6" class="boxW"/>
+  <text x="660" y="526" text-anchor="middle" class="lbl bodyB">ImmutableCollections$List12 / $ListN</text>
+  <text x="660" y="546" text-anchor="middle" class="lbl tiny">immutable — same size-based layout rule as List.of</text>
+
+  <!-- F3 -->
+  <rect x="40" y="574" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="602" text-anchor="middle" class="lbl body">Arrays.asList(arr)</text>
+  <text x="180" y="620" text-anchor="middle" class="lbl tiny">array-backed view</text>
+  <path class="flow" d="M 320 606 H 380"/>
+  <rect x="380" y="574" width="560" height="64" rx="6" class="boxW"/>
+  <text x="660" y="600" text-anchor="middle" class="lbl bodyB">java.util.Arrays$ArrayList</text>
+  <text x="660" y="620" text-anchor="middle" class="lbl tiny">fixed-size — set() works, add() throws</text>
+
+  <!-- F4 -->
+  <rect x="40" y="648" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="676" text-anchor="middle" class="lbl body">stream().toList()</text>
+  <text x="180" y="694" text-anchor="middle" class="lbl tiny">terminal collector, JDK 16+</text>
+  <path class="flow" d="M 320 680 H 380"/>
+  <rect x="380" y="648" width="560" height="64" rx="6" class="boxW"/>
+  <text x="660" y="674" text-anchor="middle" class="lbl bodyB">ImmutableCollections$ListN</text>
+  <text x="660" y="694" text-anchor="middle" class="lbl tiny">immutable</text>
+
+  <!-- F5 -->
+  <rect x="40" y="722" width="280" height="64" rx="6" class="boxP"/>
+  <text x="180" y="746" text-anchor="middle" class="lbl body">stream().collect(</text>
+  <text x="180" y="762" text-anchor="middle" class="lbl body">Collectors.toList())</text>
+  <path class="flow" d="M 320 754 H 380"/>
+  <rect x="380" y="722" width="560" height="64" rx="6" class="boxR"/>
+  <text x="660" y="748" text-anchor="middle" class="lbl bodyB">java.util.ArrayList</text>
+  <text x="660" y="768" text-anchor="middle" class="lbl tiny">mutable — same runtime type as new ArrayList&lt;&gt;(c)</text>
+
+  <!-- legend -->
+  <line x1="20" y1="800" x2="1100" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="814" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="827" class="lbl tiny">route — the call expression</text>
+  <rect x="280" y="814" width="22" height="16" rx="3" class="boxR"/>
+  <text x="312" y="827" class="lbl tiny">mutable outcome — java.util.ArrayList</text>
+  <rect x="620" y="814" width="22" height="16" rx="3" class="boxW"/>
+  <text x="652" y="827" class="lbl tiny">immutable or fixed-size outcome</text>
+  <path class="flow" d="M 900 822 H 922"/>
+  <text x="932" y="827" class="lbl tiny">A &#8594; B : B is the runtime outcome of calling A</text>
+</svg>

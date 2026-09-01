@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1040 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout diagram. A single 200,000 token budget is drawn as one horizontal bar divided into labelled segments with token counts: system prompt 3,000, tool schemas 8,000, memory files 4,000, skill listing 2,000, environment and git snapshot 1,000, conversation up to 132,000, and free space 50,000. A vertical line marks the seventy five percent autocompaction threshold, with the arithmetic 200,000 times 0.75 equals 150,000 usable tokens written beside it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .segA  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.4; }
+    .segB  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; }
+    .segC  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .segD  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+    .segE  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.4; }
+    .segConv { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .segFree { fill: #ffffff; stroke: #78716c; stroke-width: 1.4; stroke-dasharray: 4 3; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE 200K BUDGET, ITEMISED</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- bar: total width 960 px representing 200,000 tokens -> scale 0.0048 px/token -->
+  <!-- segment widths (px) proportional to tokens: 3000->14.4, 8000->38.4, 4000->19.2, 2000->9.6,
+       1000->4.8, conversation 132000->633.6, free 50000->240 -->
+  <!-- bar y range 100-160, x start 40 -->
+
+  <!-- system prompt -->
+  <rect x="40" y="100" width="15" height="60" class="segA"/>
+  <!-- tool schemas -->
+  <rect x="55" y="100" width="38" height="60" class="segB"/>
+  <!-- memory files -->
+  <rect x="93" y="100" width="19" height="60" class="segC"/>
+  <!-- skill listing -->
+  <rect x="112" y="100" width="10" height="60" class="segD"/>
+  <!-- env/git snapshot -->
+  <rect x="122" y="100" width="5" height="60" class="segE"/>
+  <!-- conversation -->
+  <rect x="127" y="100" width="634" height="60" class="segConv"/>
+  <!-- free space -->
+  <rect x="761" y="100" width="239" height="60" class="segFree"/>
+
+  <!-- numbered tags above the narrow fixed-overhead segments: pure vertical leaders (no bends,
+       no crossings), alternating two height rows so adjacent close tags (3, 4, 5) never collide -->
+  <line x1="47" y1="100" x2="47" y2="90" stroke="#9ca3af" stroke-width="1"/>
+  <text x="47" y="87" text-anchor="middle" class="lbl sub">1</text>
+
+  <line x1="74" y1="100" x2="74" y2="74" stroke="#9ca3af" stroke-width="1"/>
+  <text x="74" y="71" text-anchor="middle" class="lbl sub">2</text>
+
+  <line x1="102" y1="100" x2="102" y2="90" stroke="#9ca3af" stroke-width="1"/>
+  <text x="102" y="87" text-anchor="middle" class="lbl sub">3</text>
+
+  <line x1="117" y1="100" x2="117" y2="74" stroke="#9ca3af" stroke-width="1"/>
+  <text x="117" y="71" text-anchor="middle" class="lbl sub">4</text>
+
+  <line x1="124" y1="100" x2="124" y2="90" stroke="#9ca3af" stroke-width="1"/>
+  <text x="124" y="87" text-anchor="middle" class="lbl sub">5</text>
+
+  <!-- key panel resolving the five numbered tags, placed clear of the tags themselves -->
+  <rect x="160" y="48" width="840" height="44" rx="5" class="boxAnn"/>
+  <text x="172" y="64" class="lbl tiny">1 system prompt 3,000     2 tool schemas 8,000     3 memory files 4,000 (CLAUDE.md, settings.local.json)</text>
+  <text x="172" y="81" class="lbl tiny">4 skill listing 2,000     5 environment / git snapshot 1,000</text>
+
+  <text x="444" y="140" text-anchor="middle" class="lbl body" fill="#1f2937">conversation</text>
+  <text x="444" y="156" text-anchor="middle" class="lbl sub">up to 132,000</text>
+
+  <text x="880" y="134" text-anchor="middle" class="lbl body">free space</text>
+  <text x="880" y="150" text-anchor="middle" class="lbl sub">50,000</text>
+
+  <!-- bar border overlay to show total extent -->
+  <rect x="40" y="100" width="960" height="60" fill="none" stroke="#475569" stroke-width="1.6"/>
+
+  <!-- scale ticks -->
+  <text x="40" y="182" class="lbl sub">0</text>
+  <text x="1000" y="182" text-anchor="end" class="lbl sub">200,000</text>
+
+  <!-- autocompaction threshold vertical line at 75% = 150,000 tokens -> x = 40 + 0.75*960 = 760 -->
+  <line x1="760" y1="90" x2="760" y2="200" stroke="#b91c1c" stroke-width="2.4" stroke-dasharray="6 4"/>
+  <text x="760" y="80" text-anchor="middle" class="lbl tiny" fill="#b91c1c">autocompaction threshold — 75%</text>
+
+  <rect x="560" y="230" width="400" height="80" rx="6" class="boxAnn"/>
+  <text x="576" y="252" class="lbl tiny" style="font-weight:700">Usable budget below the threshold</text>
+  <text x="576" y="274" class="lbl body">200,000 &#215; 0.75 = 150,000 usable</text>
+  <text x="576" y="294" class="lbl tiny">the remaining 50,000 is reserved headroom, not usable context</text>
+
+  <rect x="80" y="230" width="440" height="80" rx="6" class="boxAnn"/>
+  <text x="96" y="252" class="lbl tiny" style="font-weight:700">Fixed overhead before any conversation</text>
+  <text x="96" y="272" class="lbl tiny">3,000 + 8,000 + 4,000 + 2,000 + 1,000 = 18,000 tokens</text>
+  <text x="96" y="292" class="lbl tiny">spent on system prompt, tool schemas, memory files,</text>
+  <text x="96" y="306" class="lbl tiny">skill listing, and the environment / git snapshot</text>
+
+  <!-- legend -->
+  <line x1="20" y1="350" x2="1020" y2="350" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="362" width="22" height="16" class="segA"/>
+  <text x="50" y="375" class="lbl tiny">system prompt</text>
+  <rect x="180" y="362" width="22" height="16" class="segB"/>
+  <text x="210" y="375" class="lbl tiny">tool schemas</text>
+  <rect x="340" y="362" width="22" height="16" class="segC"/>
+  <text x="370" y="375" class="lbl tiny">memory files</text>
+  <rect x="500" y="362" width="22" height="16" class="segD"/>
+  <text x="530" y="375" class="lbl tiny">skill listing</text>
+  <rect x="660" y="362" width="22" height="16" class="segE"/>
+  <text x="690" y="375" class="lbl tiny">environment / git snapshot</text>
+
+  <rect x="20" y="392" width="22" height="16" class="segConv"/>
+  <text x="50" y="405" class="lbl tiny">conversation (grows each turn)</text>
+  <rect x="300" y="392" width="22" height="16" class="segFree"/>
+  <text x="330" y="405" class="lbl tiny">free space / reserved headroom</text>
+  <line x1="620" y1="400" x2="650" y2="400" stroke="#b91c1c" stroke-width="2.4" stroke-dasharray="6 4"/>
+  <text x="658" y="405" class="lbl tiny">autocompaction threshold (75%)</text>
+</svg>

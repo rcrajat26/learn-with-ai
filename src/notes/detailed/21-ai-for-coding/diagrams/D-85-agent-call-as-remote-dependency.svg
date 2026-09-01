@@ -1,0 +1,78 @@
+<svg viewBox="0 0 1040 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="An agent call treated as a remote dependency: a caller box and a claude -p box across a network-shaped boundary, wrapped in five labelled reliability rings — timeout, retry with backoff, idempotency, circuit breaker, and bulkhead on concurrency — each annotated with the concrete mechanism used on this dependency.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .ring  { fill: none; stroke: #9ca3af; stroke-width: 1.4; stroke-dasharray: 4 3; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">D-85 — AN AGENT CALL IS A REMOTE DEPENDENCY</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="60" width="180" height="80" rx="6" class="boxP"/>
+  <text x="110" y="92" text-anchor="middle" class="lbl node">caller</text>
+  <text x="110" y="114" text-anchor="middle" class="lbl sub">the calling service process</text>
+
+  <path class="flow" d="M 200 100 H 260"/>
+  <text x="230" y="150" text-anchor="middle" class="lbl sub">network-shaped</text>
+  <text x="230" y="163" text-anchor="middle" class="lbl sub">boundary</text>
+
+  <rect x="260" y="60" width="220" height="80" rx="6" class="boxW"/>
+  <text x="370" y="92" text-anchor="middle" class="lbl node">claude -p</text>
+  <text x="370" y="114" text-anchor="middle" class="lbl sub">subprocess, wall-clock bounded</text>
+
+  <!-- five concentric labelled rings, drawn as stacked rectangular bands (orthogonal, not literal circles) -->
+  <rect x="20" y="170" width="1000" height="600" rx="8" class="ring"/>
+  <text x="36" y="192" class="lbl h2" fill="#4b5563">RING 5 — BULKHEAD ON CONCURRENCY</text>
+  <text x="36" y="210" class="lbl tiny">mechanism: Semaphore permit count — bounds concurrent claude -p invocations so one hot caller cannot starve others</text>
+
+  <rect x="50" y="222" width="940" height="518" rx="8" class="ring"/>
+  <text x="66" y="244" class="lbl h2" fill="#4b5563">RING 4 — CIRCUIT BREAKER</text>
+  <text x="66" y="262" class="lbl tiny">mechanism: failure-rate trip — sustained refusals/timeouts open the circuit and short-circuit further calls</text>
+
+  <rect x="80" y="274" width="880" height="436" rx="8" class="ring"/>
+  <text x="96" y="296" class="lbl h2" fill="#4b5563">RING 3 — IDEMPOTENCY</text>
+  <text x="96" y="314" class="lbl tiny">mechanism: session id used as the idempotency key — a retried call resumes the same session rather than duplicating work</text>
+
+  <rect x="110" y="326" width="820" height="354" rx="8" class="ring"/>
+  <text x="126" y="348" class="lbl h2" fill="#4b5563">RING 2 — RETRY WITH BACKOFF</text>
+  <text x="126" y="366" class="lbl tiny">mechanism: bounded retry that keeps the last ClaudeEnvelope — retries do not discard the prior partial result</text>
+
+  <rect x="140" y="378" width="760" height="272" rx="8" class="ring"/>
+  <text x="156" y="400" class="lbl h2" fill="#4b5563">RING 1 — TIMEOUT</text>
+  <text x="156" y="418" class="lbl tiny">mechanism: the wall-clock kill — DEFAULT_TIMEOUT = 1800 seconds enforced by ClaudeRunner</text>
+
+  <rect x="170" y="430" width="700" height="180" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="520" y="460" text-anchor="middle" class="lbl body">caller ⇄ claude -p, wrapped innermost-out by</text>
+  <text x="520" y="480" text-anchor="middle" class="lbl body">timeout → retry → idempotency → circuit breaker → bulkhead</text>
+  <text x="520" y="504" text-anchor="middle" class="lbl sub">DEFAULT_MAX_TURNS = 160 bounds each individual call inside the timeout</text>
+  <text x="520" y="524" text-anchor="middle" class="lbl sub">model: claude-opus-5 or claude-haiku-4-5-20251001, --output-format json</text>
+  <text x="520" y="546" text-anchor="middle" class="lbl sub">result: a ClaudeEnvelope returned to the caller, success or failure</text>
+  <text x="520" y="568" text-anchor="middle" class="lbl sub">ClaudeRunner owns all five rings around this one subprocess call</text>
+  <text x="520" y="590" text-anchor="middle" class="lbl sub">nothing here is Claude-specific — it is the standard remote-dependency toolkit</text>
+
+  <rect x="20" y="790" width="1000" height="0" rx="0"/>
+  <rect x="20" y="742" width="1000" height="60" rx="6" class="boxAnn"/>
+  <text x="36" y="762" class="lbl h2">Annotation</text>
+  <text x="36" y="782" class="lbl tiny">The reader already knows this material from prior resilience-pattern topics — it applies unchanged to a claude -p call.</text>
+</svg>

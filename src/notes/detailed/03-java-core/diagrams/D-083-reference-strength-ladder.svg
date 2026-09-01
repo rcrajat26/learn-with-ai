@@ -1,0 +1,91 @@
+<svg viewBox="0 0 1000 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The reference strength ladder, four rungs from strongest to weakest. Strong reference: never cleared while reachable, has no get, cannot use a ReferenceQueue, used for the ordinary field such as Account.clientId. SoftReference: cleared at JVM discretion before OutOfMemoryError, get returns the referent until cleared, ReferenceQueue is optional, used for an agreement-text cache with a note to prefer a real cache library. WeakReference: cleared at the next GC cycle once unreachable, get returns the referent until cleared, ReferenceQueue is optional, used for a canonicalising map of RestrictionKey. PhantomReference: referent is already cleared before phantom reachability, get always returns null by design, ReferenceQueue is mandatory, used for a Cleaner action on a LedgerFileHandle file descriptor.">
+  <rect x="0" y="0" width="1000" height="940" fill="#ffffff"/>
+
+  <text x="500" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">The reference strength ladder</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- RUNG 1: STRONG -->
+  <rect x="60" y="60" width="880" height="180" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="80" y="82" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">Strong reference — the ordinary field</text>
+
+  <text x="80" y="110" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">GC clears it when</text>
+  <text x="280" y="110" font-family="sans-serif" font-size="13" fill="#1f2937">never, while reachable through a chain of strong references from a GC root</text>
+
+  <text x="80" y="144" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">get() returns</text>
+  <text x="280" y="144" font-family="sans-serif" font-size="13" fill="#1f2937">n/a — no get() method; the variable itself is the live reference</text>
+
+  <text x="80" y="178" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ReferenceQueue</text>
+  <text x="280" y="178" font-family="sans-serif" font-size="13" fill="#1f2937">n/a — a strong reference cannot be registered with a queue</text>
+
+  <text x="80" y="212" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">QuizStakes use</text>
+  <text x="280" y="212" font-family="sans-serif" font-size="13" fill="#1f2937">the ordinary field, e.g. Account.clientId, Wallet.cashAvailable</text>
+
+  <!-- RUNG 2: SOFT -->
+  <rect x="60" y="260" width="880" height="180" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="80" y="282" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">SoftReference&lt;T&gt; — cleared under memory pressure</text>
+
+  <text x="80" y="310" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">GC clears it when</text>
+  <text x="280" y="310" font-family="sans-serif" font-size="13" fill="#1f2937">at JVM discretion, guaranteed cleared before an OutOfMemoryError is thrown</text>
+
+  <text x="80" y="344" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">get() returns</text>
+  <text x="280" y="344" font-family="sans-serif" font-size="13" fill="#1f2937">the referent until cleared, then null</text>
+
+  <text x="80" y="378" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ReferenceQueue</text>
+  <text x="280" y="378" font-family="sans-serif" font-size="13" fill="#1f2937">optional — the referent is enqueued after being cleared</text>
+
+  <text x="80" y="412" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">QuizStakes use</text>
+  <text x="280" y="412" font-family="sans-serif" font-size="13" fill="#1f2937">agreement-text cache — prefer a real cache library over raw SoftReference</text>
+
+  <!-- RUNG 3: WEAK -->
+  <rect x="60" y="460" width="880" height="180" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.8"/>
+  <text x="80" y="482" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">WeakReference&lt;T&gt; — cleared at the next GC cycle</text>
+
+  <text x="80" y="510" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">GC clears it when</text>
+  <text x="280" y="510" font-family="sans-serif" font-size="13" fill="#1f2937">at the next GC cycle, as soon as it is unreachable via strong or soft paths</text>
+
+  <text x="80" y="544" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">get() returns</text>
+  <text x="280" y="544" font-family="sans-serif" font-size="13" fill="#1f2937">the referent until cleared, then null</text>
+
+  <text x="80" y="578" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ReferenceQueue</text>
+  <text x="280" y="578" font-family="sans-serif" font-size="13" fill="#1f2937">optional — the referent is enqueued at clear time</text>
+
+  <text x="80" y="612" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">QuizStakes use</text>
+  <text x="280" y="612" font-family="sans-serif" font-size="13" fill="#1f2937">canonicalising map of RestrictionKey, keyed by WeakReference&lt;RestrictionKey&gt;</text>
+
+  <!-- RUNG 4: PHANTOM -->
+  <rect x="60" y="660" width="880" height="180" rx="8" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="80" y="682" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">PhantomReference&lt;T&gt; — enqueued after the referent is unreachable</text>
+
+  <text x="80" y="710" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">GC clears it when</text>
+  <text x="280" y="710" font-family="sans-serif" font-size="13" fill="#1f2937">the referent is already cleared before phantom reachability is reached</text>
+
+  <text x="80" y="744" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">get() returns</text>
+  <text x="280" y="744" font-family="sans-serif" font-size="13" font-weight="bold" fill="#b91c1c">always null — by design, never exposes the referent</text>
+
+  <text x="80" y="778" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ReferenceQueue</text>
+  <text x="280" y="778" font-family="sans-serif" font-size="13" fill="#1f2937">mandatory — the only way to observe a phantom reference at all</text>
+
+  <text x="80" y="812" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">QuizStakes use</text>
+  <text x="280" y="812" font-family="sans-serif" font-size="13" fill="#1f2937">a Cleaner action on a LedgerFileHandle's file descriptor</text>
+
+  <!-- legend -->
+  <line x1="20" y1="870" x2="980" y2="870" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="884" width="18" height="14" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="896" font-family="sans-serif" font-size="11" fill="#4b5563">strong — primary subject</text>
+
+  <rect x="300" y="884" width="18" height="14" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="326" y="896" font-family="sans-serif" font-size="11" fill="#4b5563">soft — highlight</text>
+
+  <rect x="520" y="884" width="18" height="14" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="546" y="896" font-family="sans-serif" font-size="11" fill="#4b5563">weak — weak / GC-cleared</text>
+
+  <rect x="760" y="884" width="18" height="14" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="786" y="896" font-family="sans-serif" font-size="11" fill="#4b5563">phantom — get() is always null</text>
+</svg>

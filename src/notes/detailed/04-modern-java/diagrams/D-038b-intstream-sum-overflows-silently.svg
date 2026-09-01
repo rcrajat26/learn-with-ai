@@ -1,0 +1,58 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: the wrap. Adding the final stake of 250 minor units to 2,147,483,501
+     gives a true sum of 2,147,483,751, which is 104 past Integer.MAX_VALUE of 2,147,483,647. Signed
+     32-bit wraparound computes 2,147,483,751 minus 4,294,967,296, giving -2,147,483,545 as the value
+     IntStream.sum() actually returns, with no exception thrown.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 2/3 — THE WRAP TO A NEGATIVE VALUE</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="820" height="50" rx="6" class="boxH"/>
+  <text x="450" y="96" text-anchor="middle" class="lbl node">2,147,483,501 + 250 = 2,147,483,751  (true arithmetic sum)</text>
+
+  <path class="flow" d="M 450 116 V 148"/>
+
+  <rect x="40" y="150" width="820" height="50" rx="6" class="boxD"/>
+  <text x="450" y="180" text-anchor="middle" class="lbl node">2,147,483,751 exceeds Integer.MAX_VALUE (2,147,483,647) by 104</text>
+
+  <path class="flow" d="M 450 200 V 232"/>
+
+  <rect x="40" y="234" width="820" height="56" rx="6" class="boxD"/>
+  <text x="450" y="260" text-anchor="middle" class="lbl node">signed 32-bit wrap: 2,147,483,751 &#8722; 4,294,967,296</text>
+  <text x="450" y="278" text-anchor="middle" class="lbl sub">2^32 = 4,294,967,296</text>
+
+  <path class="flow" d="M 450 290 V 322"/>
+
+  <rect x="40" y="324" width="820" height="56" rx="6" class="boxD"/>
+  <text x="450" y="350" text-anchor="middle" class="lbl node">IntStream.sum() returns -2,147,483,545</text>
+  <text x="450" y="368" text-anchor="middle" class="lbl sub">no exception, no warning — silently wrong</text>
+
+  <line x1="20" y1="392" x2="880" y2="392" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="400" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="413" class="lbl tiny">value still within int range</text>
+  <rect x="320" y="400" width="22" height="16" rx="3" class="boxD"/>
+  <text x="350" y="413" class="lbl tiny">overflow / wrong result</text>
+  <path class="flow" d="M 560 408 H 600"/>
+  <text x="608" y="413" class="lbl tiny">A &#8594; B : B follows from A</text>
+</svg>

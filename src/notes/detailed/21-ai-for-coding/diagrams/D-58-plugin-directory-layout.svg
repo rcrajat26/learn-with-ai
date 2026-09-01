@@ -1,0 +1,146 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A hierarchy diagram of the correct plugin directory layout: the plugin root directory contains a .claude-plugin folder holding only plugin.json, and sibling entries at the plugin root are skills, commands, agents, hooks slash hooks.json, .mcp.json, .lsp.json, monitors slash monitors.json, bin, and settings.json. Below it, a crossed-out trap variant shows skills misplaced inside .claude-plugin, labelled silently ships nothing. An annotation states the plugin root is the plugin's own directory, never the user's home .claude directory.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE PLUGIN DIRECTORY LAYOUT</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="300" y="66" text-anchor="middle" class="lbl h2">CORRECT LAYOUT</text>
+
+  <!-- plugin root -->
+  <rect x="140" y="86" width="320" height="56" rx="6" class="boxP"/>
+  <text x="300" y="110" text-anchor="middle" class="lbl node">plugin root (the plugin's own directory)</text>
+  <text x="300" y="128" text-anchor="middle" class="lbl sub">never ~/.claude/</text>
+
+  <!-- bus down -->
+  <path class="flow" d="M 300 142 V 158"/>
+
+  <!-- .claude-plugin folder with only plugin.json -->
+  <rect x="140" y="166" width="320" height="70" rx="6" class="boxR"/>
+  <text x="300" y="188" text-anchor="middle" class="lbl node">.claude-plugin/</text>
+  <text x="300" y="208" text-anchor="middle" class="lbl body">plugin.json</text>
+  <text x="300" y="224" text-anchor="middle" class="lbl sub">only file allowed in this folder</text>
+
+  <!-- siblings bus -->
+  <path class="flow" d="M 300 142 H 620 V 158"/>
+  <line x1="620" y1="158" x2="620" y2="176" stroke="#475569" stroke-width="2"/>
+
+  <!-- horizontal bus for siblings -->
+  <line x1="500" y1="176" x2="1000" y2="176" stroke="#475569" stroke-width="2"/>
+
+  <!-- sibling boxes row 1 -->
+  <rect x="500" y="196" width="110" height="46" rx="6" class="boxW"/>
+  <text x="555" y="223" text-anchor="middle" class="lbl body">skills/</text>
+
+  <rect x="618" y="196" width="110" height="46" rx="6" class="boxW"/>
+  <text x="673" y="223" text-anchor="middle" class="lbl body">commands/</text>
+
+  <rect x="736" y="196" width="110" height="46" rx="6" class="boxW"/>
+  <text x="791" y="223" text-anchor="middle" class="lbl body">agents/</text>
+
+  <rect x="854" y="196" width="140" height="46" rx="6" class="boxW"/>
+  <text x="924" y="215" text-anchor="middle" class="lbl body">hooks/</text>
+  <text x="924" y="231" text-anchor="middle" class="lbl sub">hooks.json</text>
+
+  <!-- vertical drops from bus to row1 -->
+  <line x1="555" y1="176" x2="555" y2="196" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <line x1="673" y1="176" x2="673" y2="196" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <line x1="791" y1="176" x2="791" y2="196" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <line x1="924" y1="176" x2="924" y2="196" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+
+  <!-- second bus for row 2 -->
+  <line x1="500" y1="266" x2="1000" y2="266" stroke="#475569" stroke-width="2"/>
+  <line x1="620" y1="242" x2="620" y2="266" stroke="#475569" stroke-width="2"/>
+
+  <rect x="500" y="286" width="110" height="46" rx="6" class="boxW"/>
+  <text x="555" y="309" text-anchor="middle" class="lbl body">.mcp.json</text>
+
+  <rect x="618" y="286" width="110" height="46" rx="6" class="boxW"/>
+  <text x="673" y="309" text-anchor="middle" class="lbl body">.lsp.json</text>
+
+  <rect x="736" y="286" width="150" height="46" rx="6" class="boxW"/>
+  <text x="811" y="303" text-anchor="middle" class="lbl body">monitors/</text>
+  <text x="811" y="319" text-anchor="middle" class="lbl sub">monitors.json</text>
+
+  <rect x="894" y="286" width="100" height="46" rx="6" class="boxW"/>
+  <text x="944" y="309" text-anchor="middle" class="lbl body">bin/</text>
+
+  <line x1="555" y1="266" x2="555" y2="286" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <line x1="673" y1="266" x2="673" y2="286" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <line x1="811" y1="266" x2="811" y2="286" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <line x1="944" y1="266" x2="944" y2="286" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+
+  <!-- third bus row for settings.json -->
+  <line x1="500" y1="356" x2="620" y2="356" stroke="#475569" stroke-width="2"/>
+  <line x1="620" y1="332" x2="620" y2="356" stroke="#475569" stroke-width="2"/>
+  <rect x="500" y="376" width="120" height="46" rx="6" class="boxW"/>
+  <text x="560" y="403" text-anchor="middle" class="lbl body">settings.json</text>
+  <line x1="560" y1="356" x2="560" y2="376" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+
+  <!-- second band: trap variant -->
+  <line x1="20" y1="450" x2="1020" y2="450" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="300" y="474" text-anchor="middle" class="lbl h2" fill="#b91c1c">TRAP: MISPLACED skills/ INSIDE .claude-plugin/</text>
+
+  <rect x="140" y="494" width="320" height="56" rx="6" class="boxP"/>
+  <text x="300" y="518" text-anchor="middle" class="lbl node">plugin root</text>
+  <text x="300" y="536" text-anchor="middle" class="lbl sub">same plugin directory</text>
+
+  <path class="flow" d="M 300 550 V 566"/>
+
+  <rect x="140" y="574" width="320" height="140" rx="6" class="boxD"/>
+  <text x="300" y="598" text-anchor="middle" class="lbl node">.claude-plugin/</text>
+  <text x="300" y="618" text-anchor="middle" class="lbl body">plugin.json</text>
+
+  <!-- crossed out skills box inside -->
+  <rect x="200" y="632" width="200" height="60" rx="6" class="boxD"/>
+  <text x="300" y="654" text-anchor="middle" class="lbl body" fill="#b91c1c">skills/  (misplaced)</text>
+  <line x1="200" y1="632" x2="400" y2="692" stroke="#b91c1c" stroke-width="2.4"/>
+  <line x1="400" y1="632" x2="200" y2="692" stroke="#b91c1c" stroke-width="2.4"/>
+  <text x="300" y="708" text-anchor="middle" class="lbl tiny" fill="#b91c1c" font-weight="600">silently ships nothing</text>
+
+  <!-- Annotation panel -->
+  <rect x="500" y="494" width="500" height="150" rx="6" class="boxAnn"/>
+  <text x="520" y="516" class="lbl h2">WHY THIS FAILS SILENTLY</text>
+  <text x="520" y="538" class="lbl body">Claude Code only ever reads <tspan font-weight="600">plugin.json</tspan> out of</text>
+  <text x="520" y="556" class="lbl body"><tspan font-weight="600">.claude-plugin/</tspan> — any skills/ folder nested there</text>
+  <text x="520" y="574" class="lbl body">is invisible to the loader, so the skill set loads</text>
+  <text x="520" y="592" class="lbl body">as empty with no error raised.</text>
+  <text x="520" y="616" class="lbl body" font-weight="600">The plugin root is the plugin's own directory,</text>
+  <text x="520" y="634" class="lbl body" font-weight="600">never ~/.claude/.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="738" x2="1020" y2="738" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="754" width="20" height="14" rx="3" class="boxP"/>
+  <text x="48" y="766" class="lbl tiny">plugin root</text>
+  <rect x="150" y="754" width="20" height="14" rx="3" class="boxR"/>
+  <text x="178" y="766" class="lbl tiny">.claude-plugin/ (plugin.json only)</text>
+  <rect x="420" y="754" width="20" height="14" rx="3" class="boxW"/>
+  <text x="448" y="766" class="lbl tiny">sibling directory/file at plugin root</text>
+  <rect x="680" y="754" width="20" height="14" rx="3" class="boxD"/>
+  <text x="708" y="766" class="lbl tiny">misplaced / trap content</text>
+  <line x1="880" y1="761" x2="902" y2="761" class="flow"/>
+  <text x="910" y="766" class="lbl tiny">A &#8594; B : B lives inside A</text>
+</svg>

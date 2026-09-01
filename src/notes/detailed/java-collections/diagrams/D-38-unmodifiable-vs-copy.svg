@@ -1,0 +1,117 @@
+<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Collections.unmodifiableList wraps and reflects the source list; List.copyOf makes an independent copy that does not reflect later mutation">
+  <defs>
+    <marker id="arrow38" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+    <marker id="arrowEm38" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Unmodifiable view vs immutable copy</text>
+
+  <!-- ===================== LEFT: unmodifiableList ===================== -->
+  <text x="205" y="70" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">Collections.unmodifiableList(src) — view</text>
+
+  <!-- src list step 1 -->
+  <rect x="60" y="90" width="150" height="56" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="135" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">src</text>
+  <text x="135" y="132" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[A, B]</text>
+
+  <!-- wrapper -->
+  <rect x="230" y="90" width="150" height="56" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="305" y="108" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">UnmodifiableList</text>
+  <text x="305" y="126" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">this.list = src</text>
+  <text x="305" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(field holds reference)</text>
+
+  <!-- get delegates -->
+  <line x1="380" y1="105" x2="212" y2="105" stroke="#737373" stroke-width="2" marker-end="url(#arrow38)"/>
+  <rect x="255" y="150" width="120" height="20" rx="3" fill="#fef3c7"/>
+  <text x="315" y="164" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">get(i) -&gt; list.get(i)</text>
+
+  <!-- mutation arrow -->
+  <line x1="135" y1="146" x2="135" y2="210" stroke="#525252" stroke-width="2" marker-end="url(#arrowEm38)"/>
+  <rect x="45" y="185" width="180" height="22" rx="3" fill="#fee2e2"/>
+  <text x="135" y="200" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">src.add(X)  (mutation)</text>
+
+  <!-- src after mutation -->
+  <rect x="60" y="215" width="150" height="56" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="135" y="237" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">src</text>
+  <text x="135" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[A, B, X]</text>
+
+  <!-- wrapper unchanged, but reflects -->
+  <rect x="230" y="215" width="150" height="56" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="305" y="237" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">wrapper view</text>
+  <text x="305" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">still same object</text>
+
+  <line x1="135" y1="271" x2="135" y2="300" stroke="#737373" stroke-width="2" marker-end="url(#arrow38)"/>
+  <line x1="305" y1="271" x2="305" y2="300" stroke="#737373" stroke-width="2" marker-end="url(#arrow38)"/>
+
+  <!-- result -->
+  <rect x="60" y="305" width="320" height="70" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="220" y="330" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">wrapper.get(2) returns X</text>
+  <text x="220" y="350" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">mutation IS visible through the view</text>
+  <text x="220" y="368" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">wrapper.add(Y) still throws UnsupportedOperationException</text>
+
+  <!-- ===================== RIGHT: List.copyOf ===================== -->
+  <text x="600" y="70" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">List.copyOf(src) — independent copy</text>
+
+  <rect x="460" y="90" width="150" height="56" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">src</text>
+  <text x="535" y="132" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[A, B]</text>
+
+  <line x1="612" y1="118" x2="648" y2="118" stroke="#737373" stroke-width="2" marker-end="url(#arrow38)"/>
+  <rect x="600" y="96" width="90" height="20" rx="3" fill="#fef3c7"/>
+  <text x="645" y="110" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">toArray()+copy</text>
+
+  <rect x="650" y="90" width="130" height="56" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="715" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">copy (ListN)</text>
+  <text x="715" y="132" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">own array [A, B]</text>
+
+  <!-- mutation -->
+  <line x1="535" y1="146" x2="535" y2="210" stroke="#525252" stroke-width="2" marker-end="url(#arrowEm38)"/>
+  <rect x="445" y="185" width="180" height="22" rx="3" fill="#fee2e2"/>
+  <text x="535" y="200" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">src.add(X)  (mutation)</text>
+
+  <rect x="460" y="215" width="150" height="56" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="535" y="237" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">src</text>
+  <text x="535" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[A, B, X]</text>
+
+  <rect x="650" y="215" width="130" height="56" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="715" y="237" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">copy (ListN)</text>
+  <text x="715" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">still [A, B]</text>
+
+  <line x1="535" y1="271" x2="535" y2="300" stroke="#737373" stroke-width="2" marker-end="url(#arrow38)"/>
+  <line x1="715" y1="271" x2="715" y2="300" stroke="#737373" stroke-width="2" marker-end="url(#arrow38)"/>
+
+  <rect x="460" y="305" width="320" height="70" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="620" y="330" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">copy.size() is still 2</text>
+  <text x="620" y="350" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">mutation is NOT visible through the copy</text>
+  <text x="620" y="368" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">copy.add(Y) throws UnsupportedOperationException too</text>
+
+  <!-- nuance box -->
+  <rect x="60" y="400" width="680" height="140" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="424" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">Nuance: List.copyOf is not guaranteed to allocate a new array</text>
+  <text x="400" y="448" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">
+    ImmutableCollections.listCopy(coll): same-instance return requires coll instanceof List12,
+  </text>
+  <text x="400" y="468" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">
+    or ListN with allowNulls == false — only then does copyOf return that SAME instance, no copy.
+  </text>
+  <text x="400" y="488" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">
+    Unmodifiable VIEWS (e.g. UnmodifiableRandomAccessList) are neither List12 nor ListN, and a
+  </text>
+  <text x="400" y="508" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">
+    ListN with allowNulls == true (what Stream.toList() returns) also fails the guard — both copy.
+  </text>
+  <rect x="270" y="516" width="260" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="400" y="530" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ImmutableCollections.java:168-176</text>
+
+</svg>

@@ -1,0 +1,44 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3: the expected but wrong mental model of reservations.stream().filter().map().forEach()
+     with a print in every stage — one reader expects all filter prints, then all map prints, then all forEach
+     prints, stage by stage, for the first three stake reservations of 4.20, 2.10 and 6.00.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; }
+    .node { font-size: 13.5px; font-weight: 600; }
+    .body { font-size: 12.5px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .boxF { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+  </style>
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 1 / 3 — THE EXPECTED (WRONG) STAGE-BY-STAGE OUTPUT</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="740" y="18" width="34" height="20" rx="10" class="pill"/>
+  <text x="757" y="33" text-anchor="middle" class="lbl tiny" style="font-weight:700;">1/3</text>
+
+  <text x="20" y="64" class="lbl body">reservations = [4.20, 2.10, 6.00, ...] .stream()</text>
+  <text x="20" y="82" class="lbl body">  .filter(r -&gt; { print("filter " + r); return r.amount() &gt;= 4.20; })</text>
+  <text x="20" y="100" class="lbl body">  .map(r -&gt; { print("map " + r); return r.stakeSplit(); })</text>
+  <text x="20" y="118" class="lbl body">  .forEach(s -&gt; print("forEach " + s));</text>
+
+  <rect x="20" y="140" width="860" height="230" rx="6" class="boxF"/>
+  <text x="40" y="164" class="lbl h2">WRONG MENTAL MODEL — "each stage runs to completion before the next starts"</text>
+  <text x="40" y="190" class="lbl mono">filter 4.20</text>
+  <text x="40" y="208" class="lbl mono">filter 2.10</text>
+  <text x="40" y="226" class="lbl mono">filter 6.00</text>
+  <text x="40" y="252" class="lbl mono">map 4.20</text>
+  <text x="40" y="270" class="lbl mono">map 6.00</text>
+  <text x="40" y="296" class="lbl mono">forEach 0.42/3.78</text>
+  <text x="40" y="314" class="lbl mono">forEach 0.60/5.40</text>
+  <text x="40" y="344" class="lbl tiny" style="fill:#b91c1c; font-weight:700;">This never happens — Stream has no intermediate list between stages.</text>
+
+  <line x1="20" y1="388" x2="880" y2="388" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="398" width="22" height="14" rx="3" class="boxF"/>
+  <text x="50" y="410" class="lbl tiny">wrong / disproved assumption</text>
+</svg>

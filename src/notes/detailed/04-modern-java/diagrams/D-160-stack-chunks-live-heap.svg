@@ -1,0 +1,117 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Stack chunks live on the heap. Left: one carrier platform thread's native stack,
+     holding three mounted frames for the currently running virtual thread. Right: the heap, holding
+     StackChunk objects for every unmounted virtual thread's suspended frames. An unmount arrow
+     copies frames from native stack to a StackChunk lazily and partially; a mount arrow copies them
+     back. An annotation panel works the arithmetic: one million virtual threads at roughly 1KB of
+     resident StackChunk bytes each is on the order of 1GB of heap, contrasted with one million
+     platform threads each reserving 1MB of native stack, roughly 1TB, which is why platform
+     threads cannot scale to that count.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .mono   { font-family: "SF Mono", Consolas, monospace; font-size: 12px; fill: #1f2937; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .panelh { font-size: 13px; font-weight: 700; }
+    .warnrow{ font-size: 11px; fill: #b91c1c; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">STACK CHUNKS LIVE ON THE HEAP</text>
+  <line x1="20" y1="44" x2="1100" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20"  y="66" class="lbl h2">CARRIER SIDE — NATIVE STACK</text>
+  <text x="640" y="66" class="lbl h2">HEAP SIDE — UNMOUNTED VIRTUAL THREADS</text>
+
+  <!-- LEFT: native stack of carrier with 3 mounted frames -->
+  <rect x="60" y="90" width="360" height="380" rx="6" class="boxL"/>
+  <text x="240" y="112" text-anchor="middle" class="lbl node">carrier platform thread — native stack</text>
+  <text x="240" y="130" text-anchor="middle" class="lbl sub">reserved ~1 MB, OS-managed</text>
+
+  <rect x="90" y="150" width="300" height="80" rx="5" class="boxP"/>
+  <text x="240" y="176" text-anchor="middle" class="lbl body">frame 3 (top)</text>
+  <text x="240" y="196" text-anchor="middle" class="lbl sub">FundsLedger.postEntry(...)</text>
+  <text x="240" y="214" text-anchor="middle" class="lbl sub">mounted — currently executing</text>
+
+  <rect x="90" y="240" width="300" height="70" rx="5" class="boxP"/>
+  <text x="240" y="264" text-anchor="middle" class="lbl body">frame 2</text>
+  <text x="240" y="284" text-anchor="middle" class="lbl sub">PaymentService.settleStake(...)</text>
+
+  <rect x="90" y="320" width="300" height="70" rx="5" class="boxP"/>
+  <text x="240" y="344" text-anchor="middle" class="lbl body">frame 1 (bottom)</text>
+  <text x="240" y="364" text-anchor="middle" class="lbl sub">VirtualThread.run(...)</text>
+
+  <text x="240" y="454" text-anchor="middle" class="lbl sub">only the mounted VirtualThread's frames occupy this stack</text>
+
+  <!-- RIGHT: heap with StackChunk objects -->
+  <rect x="700" y="90" width="360" height="380" rx="6" class="boxR"/>
+  <text x="880" y="112" text-anchor="middle" class="lbl node">heap — java.lang.VirtualThread objects</text>
+
+  <rect x="730" y="150" width="300" height="66" rx="5" class="boxH"/>
+  <text x="880" y="174" text-anchor="middle" class="lbl body">StackChunk — thread A</text>
+  <text x="880" y="192" text-anchor="middle" class="lbl sub">ReserveStake caller, parked on I/O</text>
+
+  <rect x="730" y="226" width="300" height="66" rx="5" class="boxH"/>
+  <text x="880" y="250" text-anchor="middle" class="lbl body">StackChunk — thread B</text>
+  <text x="880" y="268" text-anchor="middle" class="lbl sub">withdrawal poller, parked</text>
+
+  <rect x="730" y="302" width="300" height="66" rx="5" class="boxH"/>
+  <text x="880" y="326" text-anchor="middle" class="lbl body">StackChunk — thread C</text>
+  <text x="880" y="344" text-anchor="middle" class="lbl sub">bonus expiry sweep, parked</text>
+
+  <text x="880" y="404" text-anchor="middle" class="lbl sub">... one StackChunk per unmounted virtual thread</text>
+  <text x="880" y="420" text-anchor="middle" class="lbl sub">ordinary GC-managed heap objects, not native memory</text>
+
+  <!-- Corridor between the two sides: mount / unmount -->
+  <text x="560" y="178" text-anchor="middle" class="lbl tiny">unmount — lazy, partial copy</text>
+  <path class="flow" d="M 420 190 H 700"/>
+
+  <text x="560" y="338" text-anchor="middle" class="lbl tiny">mount — copy back onto native stack</text>
+  <path class="flow" d="M 700 350 H 420"/>
+
+  <!-- Arithmetic panel -->
+  <rect x="20" y="500" width="1080" height="190" rx="6" class="panel"/>
+  <text x="36" y="524" class="lbl panelh">HEAP ARITHMETIC — 1,000,000 VIRTUAL THREADS</text>
+  <text x="36" y="548" class="lbl tiny">Each StackChunk holds only the frames actually in use — order of ~1 KB resident per idle</text>
+  <text x="36" y="566" class="lbl tiny">virtual thread for a shallow call chain (e.g. a parked ReserveStake continuation).</text>
+  <text x="36" y="592" class="lbl mono">1,000,000 virtual threads x ~1 KB/StackChunk  ~1 GB of heap, GC-managed, resizable</text>
+  <text x="36" y="618" class="lbl mono">1,000,000 platform threads x 1 MB reserved native stack (default)  ~1 TB of address space</text>
+  <text x="36" y="646" class="lbl warnrow">The platform-thread figure is reserved, not resident — but the OS still will not let you create</text>
+  <text x="36" y="664" class="lbl warnrow">a million of them; the virtual-thread figure is real heap, scales, and is compacted by GC.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="716" x2="1100" y2="716" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="728" width="22" height="16" rx="3" class="boxL"/>
+  <text x="50" y="740" class="lbl tiny">native OS-managed stack</text>
+  <rect x="230" y="728" width="22" height="16" rx="3" class="boxP"/>
+  <text x="260" y="740" class="lbl tiny">mounted frame</text>
+  <rect x="410" y="728" width="22" height="16" rx="3" class="boxH"/>
+  <text x="440" y="740" class="lbl tiny">StackChunk (heap object)</text>
+  <rect x="650" y="728" width="22" height="16" rx="3" class="panel"/>
+  <text x="680" y="740" class="lbl tiny">arithmetic callout</text>
+  <path d="M 850 736 H 880" class="flow"/>
+  <text x="890" y="740" class="lbl tiny">A &#8594; B : copies frames</text>
+</svg>

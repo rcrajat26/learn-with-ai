@@ -1,0 +1,66 @@
+<svg viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of the SessionStart reindex pile-up. One session starts. Its SessionStart hook decides a delta-reindex is due, pulls two handbook clones, and spawns embedder processes.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="470" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 1 OF 4 &#8212; ONE SESSION, ONE REINDEX DECISION</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="70" width="180" height="60" rx="6" class="boxP"/>
+  <text x="130" y="94" text-anchor="middle" class="lbl node">session starts</text>
+  <text x="130" y="112" text-anchor="middle" class="lbl sub">claude -p</text>
+
+  <path class="flow" d="M 220 100 H 260"/>
+  <rect x="260" y="70" width="220" height="60" rx="6" class="boxHi"/>
+  <text x="370" y="94" text-anchor="middle" class="lbl node">SessionStart hook</text>
+  <text x="370" y="112" text-anchor="middle" class="lbl sub">decides: delta-reindex is due</text>
+
+  <path class="flow" d="M 480 100 H 520"/>
+  <rect x="520" y="70" width="180" height="60" rx="6" class="boxWeak"/>
+  <text x="610" y="94" text-anchor="middle" class="lbl node">handbook clones</text>
+  <text x="610" y="112" text-anchor="middle" class="lbl sub">2 clones pulled</text>
+
+  <path class="flow" d="M 370 130 V 190"/>
+  <rect x="260" y="190" width="220" height="60" rx="6" class="boxWeak"/>
+  <text x="370" y="214" text-anchor="middle" class="lbl node">embedder processes</text>
+  <text x="370" y="232" text-anchor="middle" class="lbl sub">spawned for this session</text>
+
+  <rect x="40" y="300" width="820" height="90" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="56" y="324" class="lbl node">state so far</text>
+  <line x1="56" y1="334" x2="844" y2="334" stroke="#d1d5db" stroke-width="1"/>
+  <text x="56" y="356" class="lbl tiny">one session, one SessionStart hook run, one delta-reindex decision, 2 handbook clones,</text>
+  <text x="56" y="374" class="lbl tiny">1 batch of embedder processes &#8212; nothing wrong yet, this is the intended single-session behaviour</text>
+
+  <line x1="20" y1="410" x2="880" y2="410" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="422" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="435" class="lbl tiny">session</text>
+  <rect x="150" y="422" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="180" y="435" class="lbl tiny">SessionStart hook</text>
+  <rect x="340" y="422" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="370" y="435" class="lbl tiny">work spawned by the hook</text>
+  <rect x="580" y="422" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="610" y="435" class="lbl tiny">running-state summary panel</text>
+
+  <path class="flow" d="M 20 452 H 60"/>
+  <text x="68" y="457" class="lbl tiny">A &#8594; B : A causes / produces B</text>
+</svg>

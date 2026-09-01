@@ -1,0 +1,112 @@
+Section 1 — DSA & Data Structures
+Q1. Explain why adding n elements to an ArrayList is O(n) total even though individual add calls occasionally trigger a full copy. What is the term for this kind of analysis?
+-
+---------------
+Q2. [CODE — 15 min] Write int[] twoSum(int[] nums, int target) returning the indices of the two numbers that sum to target (exactly one solution) in O(n) time. State why your solution is O(n).
+- will do this later
+---------------
+===============
+Section 2 — Java Core
+Q3. Predict what happens and explain the mechanism:
+
+List<String> l = new ArrayList<>(List.of("a", "b", "c"));
+for (String s : l) {
+    if (s.equals("b")) l.remove(s);
+}
+Give two correct ways to remove matching elements while iterating.
+- Not aware of this
+---------------
+Q4. Explain type erasure in one paragraph. Then explain what PECS (? extends / ? super) is for, using a method that copies from one list to another as the example.
+- Dont know the concept at all sounds entirely new to me I've randomly heard the word erasure but dont know anything about it
+---------------
+===============
+Section 3 — Concurrency & JVM
+Q5. Spot the bug and fix it — two accounts, concurrent transfers:
+
+void transfer(Account from, Account to, long amt) {
+    synchronized (from) {
+        synchronized (to) {
+            from.debit(amt); to.credit(amt);
+        }
+    }
+}
+- I know its a deadlock scenario but dont know how to explain it
+---------------
+Q6. For a ThreadPoolExecutor: explain the roles of core pool size, max pool size, and the work queue — in what order are they exercised as load rises? What surprising behavior results from using an unbounded queue?
+- Not aware of this concept
+---------------
+===============
+Section 4 — Spring & JPA
+Q7. A singleton @Service holds private final List<Order> pending = new ArrayList<>() which request handlers add to and a scheduled method drains. Name the TWO distinct problems with this design and how you'd restructure it.
+- The race condition would occur however I dont know how to fully explain this.
+- Solution is to use synchronized version of the list
+---------------
+Q8. In JPA, explain the entity states (transient, managed, detached, removed) and what the persistence context is. Why does calling save() on a managed entity inside a transaction do nothing extra?
+- I need to revise this concept.
+---------------
+===============
+Section 5 — SQL & Databases
+Q9. Predict the result and explain:
+
+SELECT count(*) FROM employees
+WHERE dept_id NOT IN (SELECT dept_id FROM excluded_departments);
+where excluded_departments.dept_id contains one NULL row. What's the safe rewrite?
+- Not sure what happens in case of null, dont know this concept
+---------------
+Q10. Give four distinct reasons why the query planner might NOT use an existing index on email for SELECT * FROM users WHERE ... — with a one-line explanation each.
+- Not sure on this
+---------------
+===============
+Section 6 — Networking & OS
+Q11. A service making thousands of short-lived outbound HTTP calls per minute starts failing with "cannot assign requested address." Explain the mechanism (name the TCP state involved) and the structural fix.
+- I guess we have exhausted thread pool.
+- Not aware of the TCP state and fix
+---------------
+Q12. What does a TLS handshake accomplish? Name its three goals and explain why asymmetric cryptography is only used at the start, with symmetric keys doing the rest.
+- Not sure of the concept
+- TLS helps securely share the http data
+---------------
+===============
+Section 7 — API & Web Security
+Q13. A JWT arrives at your API. List everything the server must validate before trusting it, and explain why the payload being base64 (readable by anyone) is not a flaw in the design — what does the signature actually protect?
+- Not fully aware of this concept
+---------------
+Q14. An SPA at https://app.example.com calls your API at https://api.example.com with an Authorization header and JSON body. Describe exactly what the browser does before your controller ever runs, and what response headers your API must send. Does this mechanism protect your API from a malicious script running outside a browser?
+- Entirely unsure about this, completely unaware
+---------------
+===============
+Section 8 — Messaging & Caching
+Q15. Your consumer processed a message (wrote to Postgres) and crashed before acknowledging; the broker redelivers. Design idempotent handling — be specific about what the dedup key is, where it's stored, and what makes the check race-proof.
+- Not aware of this
+---------------
+Q16. A hot cache key expires and 5,000 concurrent requests all miss and hit the database simultaneously. Name this problem and describe three distinct mitigations.
+- I guess this is called thundering herd problem
+- We can make the DB call synchronous while cache remains non-sync
+---------------
+===============
+Section 9 — Testing & Craft
+Q17. Name four distinct causes of flaky tests and the specific fix for each.
+- Not quite sure Need a good guide around test cases, unit integration acceptance smoke etc
+---------------
+Q18. merge vs rebase: what does each do to history, what's the golden rule about rebasing, and when is git push --force-with-lease (vs --force) acceptable?
+- merge it merges the new branch into old branch while rebase takes the commits and appends to the latest and then add the new changes at the end
+- Not sure about the others
+---------------
+===============
+Section 10 — Cloud & DevOps
+Q19. Spot at least four problems in this Dockerfile and explain the consequence of each:
+
+FROM openjdk:latest
+COPY . /app
+WORKDIR /app
+RUN ./mvnw package
+ENV DB_PASSWORD=prodSecret123
+EXPOSE 8080
+CMD ["java", "-jar", "target/service.jar"]
+- password is hard coded
+- target folder wont be present
+---------------
+Q20. The same container image must run in staging and prod with different database endpoints and credentials. Describe the correct setup: where configuration and secrets each live, how they reach the container, and two places secrets must never appear.
+- Environment variables can be used to define endpoints and creds
+---------------
+===============

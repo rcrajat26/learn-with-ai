@@ -1,0 +1,228 @@
+<svg viewBox="0 0 1040 1038" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Java 21 collection and map interface hierarchy drawn as two layered trees. Collection side: Iterable extends to Collection; Collection extends to Set, SequencedCollection (new in Java 21) and Queue on one row; SequencedCollection extends to SequencedSet, List and Deque; Queue also extends to Deque; Set also extends to SequencedSet; SequencedSet extends to SortedSet extends to NavigableSet. The vertical spine Iterable to Collection to SequencedCollection to List makes explicit that List is a subinterface of Collection. Concrete classes: HashSet implements Set, LinkedHashSet implements SequencedSet, TreeSet implements NavigableSet, ArrayList implements List, LinkedList implements both List and Deque, ArrayDeque implements Deque, PriorityQueue implements Queue, and the legacy synchronized Vector implements List with Stack extending Vector. Map side: Map is a separate root not under Iterable or Collection; Map extends to SequencedMap (new in Java 21) extends to SortedMap extends to NavigableMap; Map.Entry is a nested interface of Map; HashMap implements Map, LinkedHashMap implements SequencedMap, TreeMap implements NavigableMap.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .iface { font-size: 15px; font-weight: 600; }
+    .cls   { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12px; font-weight: 700; letter-spacing: .5px; fill: #374151; }
+
+    .boxI  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxN  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxC  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxD  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 5 3; }
+
+    .ext   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 1.6; stroke-dasharray: 6 4;
+             stroke-linejoin: round; marker-end: url(#triG); }
+    .extc  { fill: none; stroke: #78716c; stroke-width: 1.8; stroke-linejoin: round;
+             marker-end: url(#triB); }
+    .nest  { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3;
+             marker-end: url(#triL); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#78716c"/>
+    </marker>
+    <marker id="triL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1038" fill="#ffffff"/>
+
+  <!-- ================= TITLE ================= -->
+  <text x="20" y="32" class="lbl h1">COLLECTION AND MAP INTERFACE HIERARCHY — JAVA 21</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= COLLECTION TREE ================= -->
+  <text x="20" y="66" class="lbl h2">COLLECTION SIDE — root: Iterable</text>
+
+  <!-- spine: Iterable -> Collection -->
+  <rect x="430" y="78" width="140" height="40" rx="6" class="boxI"/>
+  <text x="500" y="103" text-anchor="middle" class="lbl iface">Iterable</text>
+  <path class="ext" d="M 500 118 V 146"/>
+
+  <rect x="430" y="148" width="140" height="40" rx="6" class="boxI"/>
+  <text x="500" y="173" text-anchor="middle" class="lbl iface">Collection</text>
+
+  <!-- bus from Collection to row 1 -->
+  <path d="M 500 188 V 210 M 140 210 H 800" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="ext" d="M 140 210 V 231"/>
+  <path class="ext" d="M 500 210 V 231"/>
+  <path class="ext" d="M 800 210 V 231"/>
+
+  <!-- Row 1: Set | SequencedCollection | Queue -->
+  <rect x="80" y="233" width="120" height="40" rx="6" class="boxI"/>
+  <text x="140" y="258" text-anchor="middle" class="lbl iface">Set</text>
+
+  <rect x="382" y="233" width="258" height="40" rx="6" class="boxN"/>
+  <text x="487" y="258" text-anchor="middle" class="lbl iface">SequencedCollection</text>
+  <rect x="596" y="243" width="30" height="20" rx="10" fill="#fbbf24" stroke="#b45309" stroke-width="1.2"/>
+  <text x="611" y="257" text-anchor="middle" class="lbl tiny">21</text>
+
+  <rect x="740" y="233" width="120" height="40" rx="6" class="boxI"/>
+  <text x="800" y="258" text-anchor="middle" class="lbl iface">Queue</text>
+
+  <!-- Row 1 -> Row 2 -->
+  <path class="ext" d="M 140 273 V 306"/>                        <!-- Set -> SequencedSet -->
+  <path class="ext" d="M 420 273 V 290 H 168 V 306"/>            <!-- SequencedCollection -> SequencedSet -->
+  <path class="ext" d="M 500 273 V 306"/>                        <!-- SequencedCollection -> List (spine) -->
+  <path class="ext" d="M 580 273 V 290 H 750 V 306"/>            <!-- SequencedCollection -> Deque -->
+  <path class="ext" d="M 800 273 V 306"/>                        <!-- Queue -> Deque -->
+
+  <!-- Row 2: SequencedSet | List | Deque -->
+  <rect x="50" y="308" width="180" height="40" rx="6" class="boxN"/>
+  <text x="122" y="333" text-anchor="middle" class="lbl iface">SequencedSet</text>
+  <rect x="192" y="318" width="30" height="20" rx="10" fill="#fbbf24" stroke="#b45309" stroke-width="1.2"/>
+  <text x="207" y="332" text-anchor="middle" class="lbl tiny">21</text>
+
+  <rect x="425" y="308" width="150" height="50" rx="6" class="boxI"/>
+  <text x="500" y="330" text-anchor="middle" class="lbl iface">List</text>
+  <text x="500" y="347" text-anchor="middle" class="lbl sub">is-a Collection ↑</text>
+
+  <rect x="700" y="308" width="160" height="40" rx="6" class="boxI"/>
+  <text x="780" y="333" text-anchor="middle" class="lbl iface">Deque</text>
+
+  <!-- Set lineage down-chain -->
+  <path class="ext" d="M 140 348 V 381"/>
+  <rect x="60" y="383" width="160" height="40" rx="6" class="boxI"/>
+  <text x="140" y="408" text-anchor="middle" class="lbl iface">SortedSet</text>
+
+  <path class="ext" d="M 140 423 V 456"/>
+  <rect x="60" y="458" width="160" height="40" rx="6" class="boxI"/>
+  <text x="140" y="483" text-anchor="middle" class="lbl iface">NavigableSet</text>
+
+  <!-- Concrete classes: Set lineage -->
+  <path class="impl" d="M 200 253 H 246"/>
+  <rect x="248" y="235" width="108" height="36" rx="6" class="boxC"/>
+  <text x="302" y="258" text-anchor="middle" class="lbl cls">HashSet</text>
+
+  <path class="impl" d="M 230 328 H 258"/>
+  <rect x="260" y="310" width="140" height="36" rx="6" class="boxC"/>
+  <text x="330" y="333" text-anchor="middle" class="lbl cls">LinkedHashSet</text>
+
+  <path class="impl" d="M 220 478 H 258"/>
+  <rect x="260" y="460" width="120" height="36" rx="6" class="boxC"/>
+  <text x="320" y="483" text-anchor="middle" class="lbl cls">TreeSet</text>
+
+  <!-- Concrete classes: List -->
+  <path class="impl" d="M 470 358 V 375 H 420 V 391"/>
+  <rect x="360" y="393" width="120" height="36" rx="6" class="boxC"/>
+  <text x="420" y="416" text-anchor="middle" class="lbl cls">ArrayList</text>
+
+  <path class="impl" d="M 530 358 V 375 H 570 V 391"/>
+  <rect x="505" y="393" width="130" height="46" rx="6" class="boxC"/>
+  <text x="570" y="412" text-anchor="middle" class="lbl cls">LinkedList</text>
+  <text x="562" y="428" text-anchor="middle" class="lbl sub">also a Deque</text>
+
+  <!-- LinkedList also implements Deque -->
+  <path class="impl" d="M 700 338 H 668 V 424 H 637"/>
+
+  <!-- Legacy List branch: Vector / Stack -->
+  <path class="impl" d="M 575 333 H 610 V 462 H 638"/>
+  <rect x="640" y="444" width="150" height="46" rx="6" class="boxL"/>
+  <text x="715" y="463" text-anchor="middle" class="lbl cls">Vector</text>
+  <text x="715" y="479" text-anchor="middle" class="lbl sub">legacy · synchronized</text>
+
+  <path class="extc" d="M 715 490 V 512"/>
+  <rect x="640" y="514" width="150" height="46" rx="6" class="boxL"/>
+  <text x="715" y="533" text-anchor="middle" class="lbl cls">Stack</text>
+  <text x="715" y="549" text-anchor="middle" class="lbl sub">legacy · extends Vector</text>
+
+  <!-- Concrete classes: Deque / Queue -->
+  <path class="impl" d="M 780 348 V 391"/>
+  <rect x="710" y="393" width="140" height="36" rx="6" class="boxC"/>
+  <text x="780" y="416" text-anchor="middle" class="lbl cls">ArrayDeque</text>
+
+  <path class="impl" d="M 860 253 H 898"/>
+  <rect x="900" y="235" width="130" height="36" rx="6" class="boxC"/>
+  <text x="965" y="258" text-anchor="middle" class="lbl cls">PriorityQueue</text>
+
+  <!-- Callout: the List / Collection relationship -->
+  <rect x="380" y="580" width="640" height="72" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="398" y="602" class="lbl tiny" font-weight="700">READ THE CENTRE SPINE</text>
+  <text x="398" y="621" class="lbl tiny">Iterable → Collection → SequencedCollection → List</text>
+  <text x="398" y="639" class="lbl tiny">List IS a subinterface of Collection — Java 21 only inserted SequencedCollection between the two.</text>
+
+  <!-- ================= DIVIDER ================= -->
+  <line x1="20" y1="674" x2="1020" y2="674" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="700" class="lbl h2">MAP SIDE — separate root, NOT under Iterable / Collection</text>
+
+  <!-- Map spine -->
+  <rect x="430" y="716" width="140" height="40" rx="6" class="boxI"/>
+  <text x="500" y="741" text-anchor="middle" class="lbl iface">Map</text>
+
+  <path class="nest" d="M 570 736 H 698"/>
+  <text x="612" y="730" class="lbl sub">nested</text>
+  <rect x="700" y="716" width="180" height="40" rx="6" class="boxD"/>
+  <text x="790" y="734" text-anchor="middle" class="lbl cls">Map.Entry&lt;K,V&gt;</text>
+  <text x="790" y="749" text-anchor="middle" class="lbl sub">nested interface</text>
+
+  <path class="ext" d="M 500 756 V 789"/>
+  <rect x="410" y="791" width="180" height="40" rx="6" class="boxN"/>
+  <text x="490" y="816" text-anchor="middle" class="lbl iface">SequencedMap</text>
+  <rect x="556" y="801" width="26" height="20" rx="10" fill="#fbbf24" stroke="#b45309" stroke-width="1.2"/>
+  <text x="569" y="815" text-anchor="middle" class="lbl tiny">21</text>
+
+  <path class="ext" d="M 500 831 V 864"/>
+  <rect x="410" y="866" width="180" height="40" rx="6" class="boxI"/>
+  <text x="500" y="891" text-anchor="middle" class="lbl iface">SortedMap</text>
+
+  <path class="ext" d="M 500 906 V 939"/>
+  <rect x="410" y="941" width="180" height="40" rx="6" class="boxI"/>
+  <text x="500" y="966" text-anchor="middle" class="lbl iface">NavigableMap</text>
+
+  <!-- Map concrete classes -->
+  <path class="impl" d="M 430 736 H 342"/>
+  <rect x="200" y="718" width="140" height="36" rx="6" class="boxC"/>
+  <text x="270" y="741" text-anchor="middle" class="lbl cls">HashMap</text>
+
+  <path class="impl" d="M 410 811 H 342"/>
+  <rect x="190" y="793" width="150" height="36" rx="6" class="boxC"/>
+  <text x="265" y="816" text-anchor="middle" class="lbl cls">LinkedHashMap</text>
+
+  <path class="impl" d="M 410 961 H 342"/>
+  <rect x="210" y="943" width="130" height="36" rx="6" class="boxC"/>
+  <text x="275" y="966" text-anchor="middle" class="lbl cls">TreeMap</text>
+
+  <!-- legacy Map sibling -->
+  <path class="impl" d="M 570 750 H 620 V 805 H 698"/>
+  <rect x="700" y="782" width="180" height="46" rx="6" class="boxL"/>
+  <text x="790" y="801" text-anchor="middle" class="lbl cls">Hashtable</text>
+  <text x="790" y="817" text-anchor="middle" class="lbl sub">legacy · synchronized</text>
+
+  <!-- ================= LEGEND ================= -->
+  <line x1="20" y1="1000" x2="1020" y2="1000" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="1010" width="22" height="16" rx="3" class="boxI"/>
+  <text x="50" y="1023" class="lbl tiny">interface</text>
+
+  <rect x="126" y="1010" width="22" height="16" rx="3" class="boxN"/>
+  <text x="156" y="1023" class="lbl tiny">new in Java 21</text>
+
+  <rect x="260" y="1010" width="22" height="16" rx="3" class="boxC"/>
+  <text x="290" y="1023" class="lbl tiny">concrete class</text>
+
+  <rect x="386" y="1010" width="22" height="16" rx="3" class="boxL"/>
+  <text x="416" y="1023" class="lbl tiny">legacy class</text>
+
+  <path class="ext" d="M 512 1018 H 552"/>
+  <text x="560" y="1023" class="lbl tiny">A → B : B extends A</text>
+
+  <path class="impl" d="M 700 1018 H 740"/>
+  <text x="748" y="1023" class="lbl tiny">implements</text>
+
+  <path class="nest" d="M 838 1018 H 878"/>
+  <text x="886" y="1023" class="lbl tiny">nested type</text>
+</svg>

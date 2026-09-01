@@ -1,0 +1,179 @@
+You are generating comprehensive study notes for Week [N] of a 28-week FAANG
+Staff / Tech-Lead interview prep plan. The plan is at @faang-staff-prep-v4-28week.md
+in this directory — read the Week [N] section before starting.
+
+Reference benchmark: @example-week-notes.md is the depth, structure, and tone
+target. Match or exceed it. The example covers Week 1; later weeks may diverge
+in topic mix but must keep the same shape and rigor.
+
+────────────────────────────────────────────────────────────────────────────
+WEEK-SPECIFIC INPUT (the only thing that changes per week)
+────────────────────────────────────────────────────────────────────────────
+
+Week number:          [N]
+Week title:           [e.g., "Two Pointers + Java Streams"]
+Source plan lines:    Day [X] to Day [Y] of faang-staff-prep-v4-28week.md
+Output file:          /Users/rajat.chikkodikar/Desktop/My-files/rough/week[N]-notes.md
+Day-type mix:         [e.g., "5 DSA-D" or "3 DSA-D + 1 HLD-D + 1 Review-D"]
+Primary problems:     [list LeetCode problems verbatim from the plan]
+Primary theory:       [list theory topics verbatim from the plan]
+Project tie-ins:      [Project 1/2/3 days that fall in this week, if any]
+Prior-week callbacks: [concepts from earlier weeks this week should reinforce]
+
+────────────────────────────────────────────────────────────────────────────
+AUDIENCE & BAR (fixed — applies every week)
+────────────────────────────────────────────────────────────────────────────
+
+Reader: Backend engineer, 6 yrs, Java/Spring, targeting Staff (L6) / Tech Lead.
+Bar: Staff. NOT Senior IC. The differentiator is JUDGMENT under uncertainty,
+not raw knowledge. The notes must teach the reader to make and defend
+technical decisions — not just to solve the problem.
+
+Anti-patterns to avoid (from the plan's Staff anti-pattern list):
+1. Solving the problem given without questioning it.
+2. "We" language in behavioral sections.
+3. Results without metrics.
+4. Picking tools without trade-off framing.
+5. Memorized designs instead of derived ones.
+6. Reading without an opinion.
+
+────────────────────────────────────────────────────────────────────────────
+STRUCTURE (fixed — every week's file must follow this)
+────────────────────────────────────────────────────────────────────────────
+
+1. Header block
+    - Week title, theme (2 sentences), time budget, end-of-week deliverable.
+
+2. Table of Contents (anchored links to each day + cheatsheet + checklist).
+
+3. ONE section per study day, in plan order. Each day section contains:
+
+   a) Time budget line.
+   b) Part A — Theory / Internals (when applicable):
+      - Intuition (why this concept exists / what problem it solves).
+      - Mechanics (how it actually works under the hood — go DEEP).
+      - Complexity / cost model with concrete numbers.
+      - JVM / Java-specific traps a Staff candidate must know.
+      - Reference links (Oracle docs, JEPs, Effective Java items, Baeldung,
+        original papers, engineering blogs).
+   c) Part B — Problems. For EACH problem:
+      - Title + LeetCode / NeetCode URL.
+      - Statement (paraphrased, not copy-pasted).
+      - Brute-force approach (always show this first — Staff candidates
+        explain progression, not just the optimal answer).
+      - Optimal approach with full Java code (idiomatic, modern Java 21).
+      - Walk-through with a concrete small example.
+      - Complexity analysis (time AND space, justified).
+      - Edge cases (≥3 per problem).
+      - **Trade-off drill** (REQUIRED): 2–3 framed questions of the form
+        "When would you use approach A vs B?" — answers using the 3-axis
+        template ("There are three things I'd think about: X, Y, Z…").
+      - **Scale-up addendum** (REQUIRED): "What changes if the input is a
+        stream? Doesn't fit in memory? Is sharded across machines?" —
+        1 paragraph minimum.
+      - **Junior-mistake callouts** (REQUIRED): "What a Senior says wrong
+        that a Staff says right." 2–3 bullets.
+      - Interview communication notes (how to verbalize the approach).
+   d) Part C — Applied / Java deep dive (when the day has one).
+   e) Internal-cross-references using [[anchor]] links to other days.
+
+4. Mid-week or end-of-week REVIEW DAY:
+    - Re-do protocol with target times.
+    - Behavioral block (story bank progress — track running total).
+    - Reflection prompts (5 questions, identical every week for consistency).
+    - Tracker table row.
+
+5. Week Cheatsheet (consolidated):
+    - Patterns recognized this week + signal phrase that maps problem→pattern.
+    - Idioms / one-liners introduced.
+    - Decision trees / framing templates.
+    - 3-axis trade-off answers for the week's hot topics.
+
+6. Week Checklist:
+    - Knowledge ("can you explain on a whiteboard"):  ~7–10 items.
+    - Problems (with target time per problem):       all week's problems.
+    - Behavioral (running totals).
+    - Architecture judgment (blogs read this week).
+    - Reflection (filled tracker, identified next-week change).
+
+7. Consolidated reference link list at the end.
+
+────────────────────────────────────────────────────────────────────────────
+DEPTH REQUIREMENTS (fixed — these are the Staff-bar non-negotiables)
+────────────────────────────────────────────────────────────────────────────
+
+For every theory topic introduced this week, you MUST cover:
+
+    • WHY it exists (what real-world problem motivated it).
+    • HOW it works under the hood (mechanics, not just API).
+    • COST model (concrete complexity + concrete numbers at n=10⁶).
+    • FAILURE modes (when it breaks, silently or loudly).
+    • ALTERNATIVES (what else could you reach for, and when).
+    • JVM / Java-specific traps (autoboxing, immutability, threading, GC
+      interactions — whichever apply).
+
+For every problem this week, you MUST include:
+
+    • Brute force → optimal progression (NOT just the optimal solution).
+    • Trade-off drill (≥2 framed questions).
+    • Scale-up addendum (stream / distributed / OOM variant).
+    • Junior-mistake callouts (≥2 bullets).
+
+────────────────────────────────────────────────────────────────────────────
+INTEGRATION & CONTINUITY (fixed)
+────────────────────────────────────────────────────────────────────────────
+
+    • Foreshadow upcoming weeks: when a concept this week sets up something
+      later in the plan, name the day and topic ("this is the foundation for
+      Day X's Y").
+    • Call back prior weeks: when this week reinforces an earlier idea, link
+      it ("you saw this pattern in Day X — here it generalizes").
+    • Connect to the three portfolio projects: when relevant, point at where
+      in Project 1/2/3 this concept lands.
+    • Behavioral story-bank: maintain the running total (e.g., "Target by
+      end of Week [N]: [M] stories").
+
+────────────────────────────────────────────────────────────────────────────
+TONE & FORMAT
+────────────────────────────────────────────────────────────────────────────
+
+    • Comprehensive but not bloated. Every sentence earns its place.
+    • Code: Java 21, idiomatic, modern (records, var where helpful, pattern
+      matching, `Map.computeIfAbsent`, `merge`, etc.). No Lombok. No legacy.
+    • Markdown tables for any comparison ≥ 3 items.
+    • Code blocks fenced with ```java.
+    • External links inline near the concept (not buried in a footer alone —
+      duplicate them at the end in a consolidated list).
+    • DO NOT delegate to subagents. Write the notes inline.
+    • DO NOT use emojis.
+    • DO NOT add narrative filler ("Let's dive in", "Great question", etc.).
+    • DO write in second person where it helps ("you'll hit this when…").
+
+────────────────────────────────────────────────────────────────────────────
+SOURCES TO CITE (when relevant to the week's topics)
+────────────────────────────────────────────────────────────────────────────
+
+    • Oracle Java tutorials & Javadoc
+    • OpenJDK JEPs (cite by number)
+    • Effective Java (Bloch) — cite item number
+    • Java Concurrency in Practice (Goetz)
+    • DDIA (Kleppmann) — cite chapter
+    • Spring reference docs (when Spring-relevant)
+    • Original papers (Dynamo, Spanner, Raft, etc.) — cite by name
+    • Engineering blogs (Netflix, Uber, Discord, Stripe, AWS Builders' Library)
+    • LeetCode / NeetCode problem URLs
+    • Baeldung (acceptable for Java/Spring; avoid for distributed systems)
+
+────────────────────────────────────────────────────────────────────────────
+DELIVERABLE
+────────────────────────────────────────────────────────────────────────────
+
+A single Markdown file at the output path above. Target length: 900–1300
+lines. If you finish under 900, you've under-covered. If you exceed 1300,
+prune narrative filler — depth not bloat.
+
+When done, report:
+  • Final line count.
+  • Day-by-day summary (1 sentence each).
+  • Anything from the plan's Week [N] section you intentionally skipped or
+    deferred (and why).

@@ -1,0 +1,172 @@
+<svg viewBox="0 0 1200 1180" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy diagram of a packaged plugin and its local marketplace. The plugin holds .claude-plugin/plugin.json with fields name, version and dependencies filled in with real values, plus skills, agents and hooks/hooks.json moved out of .claude. The local marketplace holds .claude-plugin/marketplace.json with a plugins array entry pointing at the plugin. Edges show the install path: /plugin marketplace add, /plugin install, /reload-plugins, and --plugin-dir for pre-publish testing. A version-bump panel shows the installed copy updating only after the version field changes. An unresolved-dependency panel shows the errors array from claude plugin list --json.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR    { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="1180" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE PACKAGED PLUGIN AND ITS LOCAL MARKETPLACE</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="270" y="66" text-anchor="middle" class="lbl h2">THE PLUGIN</text>
+  <text x="900" y="66" text-anchor="middle" class="lbl h2">THE LOCAL MARKETPLACE</text>
+
+  <!-- PLUGIN SIDE -->
+  <rect x="40" y="86" width="460" height="120" rx="6" class="boxHi"/>
+  <text x="270" y="110" text-anchor="middle" class="lbl node">.claude-plugin/plugin.json</text>
+  <text x="60" y="134" class="lbl dense">name: "sdlc-harness-review"</text>
+  <text x="60" y="154" class="lbl dense">version: "1.4.0"</text>
+  <text x="60" y="174" class="lbl dense">dependencies: ["sdlc-harness-core@^1.2.0"]</text>
+  <text x="60" y="194" class="lbl sub">real values, not placeholders</text>
+
+  <path class="flow" d="M 270 206 V 230"/>
+  <path d="M 100 230 H 440" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 100 230 V 254"/>
+  <path class="flow" d="M 270 230 V 254"/>
+  <path class="flow" d="M 440 230 V 254"/>
+
+  <rect x="30" y="254" width="140" height="66" rx="6" class="boxWeak"/>
+  <text x="100" y="280" text-anchor="middle" class="lbl body">skills/</text>
+  <text x="100" y="298" text-anchor="middle" class="lbl sub">moved from .claude/</text>
+
+  <rect x="200" y="254" width="140" height="66" rx="6" class="boxWeak"/>
+  <text x="270" y="280" text-anchor="middle" class="lbl body">agents/</text>
+  <text x="270" y="298" text-anchor="middle" class="lbl sub">moved from .claude/</text>
+
+  <rect x="370" y="254" width="140" height="66" rx="6" class="boxWeak"/>
+  <text x="440" y="280" text-anchor="middle" class="lbl body">hooks/hooks.json</text>
+  <text x="440" y="298" text-anchor="middle" class="lbl sub">moved from .claude/</text>
+
+  <path class="flow" d="M 270 320 V 360"/>
+  <rect x="40" y="360" width="460" height="60" rx="6" class="boxP"/>
+  <text x="270" y="384" text-anchor="middle" class="lbl body" font-weight="700">pre-publish test</text>
+  <text x="270" y="402" text-anchor="middle" class="lbl sub">claude --plugin-dir /path/to/sdlc-harness-review</text>
+
+  <!-- version-bump panel -->
+  <rect x="40" y="450" width="460" height="150" rx="6" class="panel"/>
+  <text x="56" y="474" class="lbl h2">VERSION-BUMP PANEL</text>
+  <text x="56" y="496" class="lbl dense">plugin.json version: "1.4.0" &#8594; "1.4.1"</text>
+  <text x="56" y="516" class="lbl dense">installed copy check: version unchanged &#8594; skip update</text>
+  <text x="56" y="536" class="lbl dense">installed copy check: version changed &#8594; pull new copy</text>
+  <text x="56" y="560" class="lbl sub">The installed copy only refreshes after the version field itself</text>
+  <text x="56" y="576" class="lbl sub">changes &#8212; editing files without bumping version is invisible.</text>
+
+  <!-- unresolved dependency panel -->
+  <rect x="40" y="620" width="460" height="150" rx="6" class="boxDeg"/>
+  <text x="56" y="644" class="lbl h2">UNRESOLVED-DEPENDENCY PANEL</text>
+  <text x="56" y="666" class="lbl dense">claude plugin list --json</text>
+  <text x="56" y="686" class="lbl dense">"errors": [</text>
+  <text x="76" y="704" class="lbl dense">"sdlc-harness-review: missing dependency</text>
+  <text x="76" y="720" class="lbl dense">sdlc-harness-core@^1.2.0"</text>
+  <text x="56" y="738" class="lbl dense">]</text>
+  <text x="56" y="758" class="lbl sub">a non-empty errors array blocks the plugin from loading</text>
+
+  <!-- MARKETPLACE SIDE -->
+  <rect x="670" y="86" width="460" height="110" rx="6" class="boxHi"/>
+  <text x="900" y="110" text-anchor="middle" class="lbl node">.claude-plugin/marketplace.json</text>
+  <text x="690" y="134" class="lbl dense">name: "internal-sdlc-marketplace"</text>
+  <text x="690" y="154" class="lbl dense">owner: "platform-eng"</text>
+  <text x="690" y="174" class="lbl sub">local marketplace manifest</text>
+
+  <path class="flow" d="M 900 196 V 230"/>
+  <rect x="670" y="230" width="460" height="90" rx="6" class="boxR"/>
+  <text x="900" y="254" text-anchor="middle" class="lbl body" font-weight="700">plugins[] entry</text>
+  <text x="690" y="276" class="lbl dense">{ "name": "sdlc-harness-review",</text>
+  <text x="690" y="294" class="lbl dense">&#160;&#160;"source": "./plugins/sdlc-harness-review" }</text>
+
+  <!-- adapter link from marketplace entry to the plugin (not inheritance) -->
+  <path class="adapt" d="M 670 275 H 620 V 190 H 500"/>
+  <text x="560" y="182" text-anchor="middle" class="lbl tiny">points at</text>
+
+  <!-- install path steps -->
+  <path class="flow" d="M 900 320 V 360"/>
+  <rect x="670" y="360" width="460" height="60" rx="6" class="boxP"/>
+  <text x="900" y="384" text-anchor="middle" class="lbl body" font-weight="700">/plugin marketplace add</text>
+  <text x="900" y="402" text-anchor="middle" class="lbl sub">registers internal-sdlc-marketplace with the CLI</text>
+
+  <path class="flow" d="M 900 420 V 450"/>
+  <rect x="670" y="450" width="460" height="60" rx="6" class="boxP"/>
+  <text x="900" y="474" text-anchor="middle" class="lbl body" font-weight="700">/plugin install</text>
+  <text x="900" y="492" text-anchor="middle" class="lbl sub">installs sdlc-harness-review from the marketplace</text>
+
+  <path class="flow" d="M 900 510 V 540"/>
+  <rect x="670" y="540" width="460" height="60" rx="6" class="boxP"/>
+  <text x="900" y="564" text-anchor="middle" class="lbl body" font-weight="700">/reload-plugins</text>
+  <text x="900" y="582" text-anchor="middle" class="lbl sub">picks up the installed copy in the running session</text>
+
+  <!-- annotation panel: how the two sides fit -->
+  <rect x="670" y="620" width="460" height="150" rx="6" class="panel"/>
+  <text x="686" y="644" class="lbl h2">HOW THE TWO SIDES FIT</text>
+  <text x="686" y="666" class="lbl dense">The plugin is a self-contained folder; the marketplace is</text>
+  <text x="686" y="684" class="lbl dense">just a catalog pointing at plugin folders by source path.</text>
+  <text x="686" y="702" class="lbl dense">--plugin-dir bypasses the marketplace entirely so a plugin</text>
+  <text x="686" y="720" class="lbl dense">under active development can be tested before it is ever</text>
+  <text x="686" y="738" class="lbl dense">listed in a marketplace.json plugins[] entry.</text>
+  <text x="686" y="756" class="lbl dense">/plugin install always resolves through the marketplace.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="810" x2="1180" y2="810" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="830" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="842" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="50" y="855" class="lbl tiny">manifest file</text>
+
+  <rect x="220" y="842" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="250" y="855" class="lbl tiny">plugin content moved from .claude/</text>
+
+  <rect x="560" y="842" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="855" class="lbl tiny">marketplace entry / resolved reference</text>
+
+  <rect x="900" y="842" width="22" height="16" rx="3" class="boxP"/>
+  <text x="930" y="855" class="lbl tiny">CLI command step</text>
+
+  <rect x="1080" y="842" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="1110" y="855" class="lbl tiny">failure state</text>
+
+  <rect x="20" y="868" width="22" height="16" rx="3" class="panel"/>
+  <text x="50" y="881" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 260 876 H 300"/>
+  <text x="340" y="881" text-anchor="middle" class="lbl tiny">flow / install step</text>
+
+  <path class="adapt" d="M 500 876 H 540"/>
+  <text x="600" y="881" text-anchor="middle" class="lbl tiny">A &#8594; B : marketplace entry points at plugin (not inheritance)</text>
+
+  <rect x="20" y="900" width="1160" height="260" rx="6" class="panel"/>
+  <text x="36" y="922" class="lbl h2">THE INSTALL PATH, IN ORDER</text>
+  <text x="36" y="946" class="lbl dense">1. Author the plugin folder with .claude-plugin/plugin.json (name, version, dependencies) plus skills/, agents/, hooks/hooks.json.</text>
+  <text x="36" y="966" class="lbl dense">2. Test it directly with claude --plugin-dir before publishing &#8212; this reads the folder in place, no marketplace involved.</text>
+  <text x="36" y="986" class="lbl dense">3. Add a plugins[] entry to a marketplace.json pointing at the plugin's source path.</text>
+  <text x="36" y="1006" class="lbl dense">4. /plugin marketplace add registers that marketplace.json with the running CLI.</text>
+  <text x="36" y="1026" class="lbl dense">5. /plugin install pulls the plugin named in the plugins[] entry into the local install cache.</text>
+  <text x="36" y="1046" class="lbl dense">6. /reload-plugins makes the running session pick up the newly installed copy without restarting.</text>
+  <text x="36" y="1066" class="lbl dense">7. Bumping plugin.json's version is what makes step 5 pull a fresh copy on a later /plugin install &#8212; an unchanged version is a no-op.</text>
+  <text x="36" y="1086" class="lbl dense">8. claude plugin list --json surfaces a non-empty errors array when a declared dependency (e.g. sdlc-harness-core@^1.2.0) cannot be resolved.</text>
+  <text x="36" y="1106" class="lbl dense">A plugin with unresolved dependencies is installed but will not load until the errors array is empty.</text>
+</svg>

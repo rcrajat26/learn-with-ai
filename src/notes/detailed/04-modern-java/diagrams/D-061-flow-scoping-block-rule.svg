@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 710" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four panels over pattern-variable flow scoping in a single method that classifies a Verdict v. Panel 1: if (v instanceof DocumentVerdict d) { ... } — d is in scope only inside the braces, shaded green. Panel 2: if (!(v instanceof DocumentVerdict d)) return; — d is in scope for the rest of the method after the if, because every path that skips the return proves the test true; that whole tail region is shaded green. Panel 3: x instanceof T t &amp;&amp; t.foo() — t is in scope on the right of &amp;&amp;, shaded green, because &amp;&amp; only evaluates its right side when the left is true. Panel 4: x instanceof T t || t.foo() — t is not in scope on the right of ||, shaded red, and javac reports a real compile error, cannot find symbol t, because || evaluates its right side exactly when the left is false, when the test failed.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .scopeYes { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; stroke-dasharray: 6 4; }
+    .scopeNo  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; stroke-dasharray: 6 4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="710" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FLOW SCOPING IS NOT A BLOCK RULE — WHERE d / t IS PROVABLY BOUND</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">All four panels classify the same DocumentVerdict v inside Application.classify(Verdict v)</text>
+
+  <!-- Panel 1 -->
+  <text x="20" y="86" class="lbl h2">PANEL 1 — SCOPE ENDS AT THE BLOCK</text>
+  <line x1="20" y1="94" x2="500" y2="94" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="20" y="104" width="480" height="130" rx="6" class="boxW"/>
+  <text x="36" y="126" class="lbl code">if (v instanceof DocumentVerdict d) {</text>
+  <rect x="44" y="134" width="440" height="66" rx="4" class="scopeYes"/>
+  <text x="56" y="152" class="lbl code">requirement.satisfy(d.reason());</text>
+  <text x="56" y="168" class="lbl code">// d in scope: compiler proved</text>
+  <text x="56" y="184" class="lbl code">// v instanceof DocumentVerdict here</text>
+  <text x="36" y="216" class="lbl code">}  // d out of scope past this brace</text>
+
+  <!-- Panel 2 -->
+  <text x="540" y="86" class="lbl h2">PANEL 2 — NEGATED TEST, EARLY RETURN</text>
+  <line x1="540" y1="94" x2="1020" y2="94" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="540" y="104" width="480" height="130" rx="6" class="boxW"/>
+  <text x="556" y="126" class="lbl code">if (!(v instanceof DocumentVerdict d))</text>
+  <text x="556" y="144" class="lbl code">  return;</text>
+  <rect x="556" y="154" width="448" height="66" rx="4" class="scopeYes"/>
+  <text x="568" y="172" class="lbl code">// every path reaching here returned</text>
+  <text x="568" y="188" class="lbl code">// false from the negated test, so</text>
+  <text x="568" y="204" class="lbl code">requirement.satisfy(d.reason()); // d in scope</text>
+
+  <!-- Panel 3 -->
+  <text x="20" y="264" class="lbl h2">PANEL 3 — SHORT-CIRCUIT &amp;&amp;, RIGHT SIDE IN SCOPE</text>
+  <line x1="20" y1="272" x2="500" y2="272" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="20" y="282" width="480" height="120" rx="6" class="boxW"/>
+  <text x="36" y="304" class="lbl code">if (x instanceof DocumentVerdict t</text>
+  <text x="36" y="322" class="lbl code">    &amp;&amp; t.outcome() == REFERRED) {</text>
+  <rect x="44" y="330" width="440" height="60" rx="4" class="scopeYes"/>
+  <text x="56" y="350" class="lbl tiny">t reachable here: &amp;&amp; only evaluates its</text>
+  <text x="56" y="366" class="lbl tiny">right side once the left side already</text>
+  <text x="56" y="382" class="lbl tiny">tested true</text>
+
+  <!-- Panel 4 -->
+  <text x="540" y="264" class="lbl h2">PANEL 4 — SHORT-CIRCUIT ||, RIGHT SIDE OUT OF SCOPE</text>
+  <line x1="540" y1="272" x2="1020" y2="272" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="540" y="282" width="480" height="120" rx="6" class="boxD"/>
+  <text x="556" y="304" class="lbl code">if (x instanceof DocumentVerdict t</text>
+  <text x="556" y="322" class="lbl code">    || t.outcome() == REFERRED) {</text>
+  <rect x="556" y="330" width="448" height="60" rx="4" class="scopeNo"/>
+  <text x="568" y="348" class="lbl tiny">javac: cannot find symbol: variable t</text>
+  <text x="568" y="364" class="lbl sub">|| evaluates its right side exactly when</text>
+  <text x="568" y="380" class="lbl sub">the left tested false — t is unbound there</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="408" width="1000" height="80" rx="6" class="panel"/>
+  <text x="36" y="430" class="lbl body" font-weight="700">The rule the four panels illustrate</text>
+  <text x="36" y="450" class="lbl tiny">Pattern-variable scope follows definite-assignment-style flow analysis, not lexical block nesting: the compiler tracks, at every</text>
+  <text x="36" y="468" class="lbl tiny">program point, whether the instanceof test is provably true there. Braces are irrelevant; only reachability under a proven-true test matters.</text>
+
+  <!-- Flow chart: where the compiler can prove the test succeeded, across the whole method -->
+  <text x="20" y="524" class="lbl h2">WHERE THE COMPILER CAN PROVE "v instanceof DocumentVerdict" SUCCEEDED — METHOD TIMELINE</text>
+  <line x1="20" y1="532" x2="1020" y2="532" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="556" width="200" height="56" rx="6" class="boxP"/>
+  <text x="140" y="580" text-anchor="middle" class="lbl node">method entry</text>
+  <text x="140" y="598" text-anchor="middle" class="lbl sub">v : Verdict, untested</text>
+
+  <path class="flow" d="M 240 584 H 300"/>
+
+  <rect x="300" y="556" width="220" height="56" rx="6" class="boxW"/>
+  <text x="410" y="580" text-anchor="middle" class="lbl node">instanceof test point</text>
+  <text x="410" y="598" text-anchor="middle" class="lbl sub">panel 1, 2, or 3's condition</text>
+
+  <path class="flow" d="M 520 584 H 580"/>
+
+  <rect x="580" y="556" width="200" height="56" rx="6" class="boxG"/>
+  <text x="680" y="580" text-anchor="middle" class="lbl node">proven-true region</text>
+  <text x="680" y="598" text-anchor="middle" class="lbl sub">d / t bound and usable</text>
+
+  <path class="flow" d="M 780 584 H 840"/>
+
+  <rect x="840" y="556" width="160" height="56" rx="6" class="boxD"/>
+  <text x="920" y="580" text-anchor="middle" class="lbl node">not-proven region</text>
+  <text x="920" y="598" text-anchor="middle" class="lbl sub">d / t unbound</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="640" x2="1020" y2="640" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="652" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="665" class="lbl tiny">method / selector state</text>
+
+  <rect x="260" y="652" width="22" height="16" rx="3" class="boxW"/>
+  <text x="290" y="665" class="lbl tiny">source code under study</text>
+
+  <rect x="500" y="652" width="22" height="16" rx="3" class="scopeYes"/>
+  <text x="530" y="665" class="lbl tiny">pattern variable in scope</text>
+
+  <rect x="740" y="652" width="22" height="16" rx="3" class="scopeNo"/>
+  <text x="770" y="665" class="lbl tiny">not in scope — compile error</text>
+
+  <path class="flow" d="M 20 686 H 60"/>
+  <text x="68" y="691" class="lbl tiny">A → B : execution proceeds from A to B</text>
+</svg>

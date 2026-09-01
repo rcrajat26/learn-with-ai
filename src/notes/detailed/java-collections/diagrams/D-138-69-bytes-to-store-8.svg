@@ -1,0 +1,60 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="One HashMap Integer Integer entry costs about 69 bytes to store 8 bytes of actual int data: 32-byte Node, 16-byte key Integer, 16-byte value Integer, and about 5.3 amortised bytes of table slot at load factor 0.75, a ratio of roughly 8.6 times">
+  <rect x="20" y="20" width="760" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="43" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashMap&lt;Integer,Integer&gt; single entry: ~69 B to hold 8 B of int data</text>
+
+  <!-- Node breakdown -->
+  <text x="30" y="80" font-family="sans-serif" font-size="13" fill="#1f2937">Node&lt;K,V&gt; object (32 B):</text>
+  <g transform="translate(30,90)">
+    <rect x="0" y="0" width="80" height="30" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="40" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">header 12B</text>
+    <rect x="80" y="0" width="60" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="110" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">hash 4B</text>
+    <rect x="140" y="0" width="60" height="30" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="170" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">key ref 4B</text>
+    <rect x="200" y="0" width="60" height="30" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="230" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">val ref 4B</text>
+    <rect x="260" y="0" width="70" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="295" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">next ref 4B</text>
+    <rect x="330" y="0" width="40" height="30" fill="#e5e7eb" stroke="#737373" stroke-width="2" stroke-dasharray="3,2"/>
+    <text x="350" y="20" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1f2937">pad 4B</text>
+  </g>
+  <text x="420" y="112" font-family="sans-serif" font-size="13" fill="#1f2937">= 32 B</text>
+
+  <!-- boxed key -->
+  <text x="30" y="150" font-family="sans-serif" font-size="13" fill="#1f2937">Boxed key Integer (16 B):</text>
+  <g transform="translate(30,160)">
+    <rect x="0" y="0" width="80" height="30" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="40" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">header 12B</text>
+    <rect x="80" y="0" width="60" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="110" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">int 4B</text>
+  </g>
+  <text x="330" y="182" font-family="sans-serif" font-size="13" fill="#1f2937">= 16 B (this is one of the two real "8 bytes of data" halves)</text>
+
+  <!-- boxed value -->
+  <text x="30" y="220" font-family="sans-serif" font-size="13" fill="#1f2937">Boxed value Integer (16 B):</text>
+  <g transform="translate(30,230)">
+    <rect x="0" y="0" width="80" height="30" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="40" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">header 12B</text>
+    <rect x="80" y="0" width="60" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="110" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">int 4B</text>
+  </g>
+  <text x="330" y="252" font-family="sans-serif" font-size="13" fill="#1f2937">= 16 B (the other half of the "8 bytes of data")</text>
+
+  <!-- table slot -->
+  <text x="30" y="290" font-family="sans-serif" font-size="13" fill="#1f2937">Amortised table[] slot at load factor 0.75:</text>
+  <g transform="translate(30,300)">
+    <rect x="0" y="0" width="180" height="30" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="90" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ref slot 4B / 0.75 fill</text>
+  </g>
+  <text x="330" y="322" font-family="sans-serif" font-size="13" fill="#1f2937">= ~5.3 B (array reference slot, spread over occupied buckets)</text>
+
+  <!-- total -->
+  <rect x="30" y="350" width="740" height="60" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="50" y="375" font-family="sans-serif" font-size="14" fill="#1f2937">Total: 32 (Node) + 16 (key) + 16 (value) + ~5.3 (slot) &#8776; 69 B</text>
+  <text x="50" y="397" font-family="sans-serif" font-size="14" fill="#1f2937">Actual payload: two 4-byte ints = 8 B of real data</text>
+
+  <!-- ratio -->
+  <rect x="30" y="425" width="740" height="55" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="458" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#1f2937">69 B / 8 B &#8776; 8.6&#215; overhead to store two small ints</text>
+</svg>

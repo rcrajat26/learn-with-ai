@@ -1,0 +1,99 @@
+Section 1 — DSA & Data Structures
+Q1. State the time complexity of: (a) HashMap.get(key), (b) ArrayList.get(index), (c) searching a sorted array with binary search, (d) inserting at index 0 of an ArrayList.
+a -> O (1), fetches directly from a bucket based on the has value of the key.
+b -> O (1), index points to precise location hence fetching in O(1)
+c -> O (logn), each time the search space halves hence the time complexity of logn.
+d -> O (n), we will have to move all the nth item to (n+1)th index hence its O(n), if it were a linked list it'd be O(1), as we had to attach just one link at the start.
+--------------
+Q2. You need FIFO processing of tasks, and separately LIFO undo history. Which data structure for each? Name the Java class you'd actually use for both.
+Logically we'd need a Queue to process FIFO and Stack to process LIFO. I've forgotten Java Collections a little hence not able to recollect the class names but my best answer is LinearQueue.class(i guess this is wrong) there was a ConcurrentQueue probably but won't suit the answer hereand Stack.class
+--------------
+==============
+Section 2 — Java Core
+Q3. String a = "hi"; String b = new String("hi"); — what do a == b and a.equals(b) each return, and why?
+a is a string literal here created in StringConstantPool (a special pool in Heap if I'm not wrong, correct me otherwise), b (created with new) sits in heap memory, equals operation compares the value and not the address (unlike ==), hence the result turns out to be true for "a.equals(b)" and false for "a == b"
+--------------
+Q4. Strings in Java are immutable. What does that mean, and name one practical consequence for code that builds a large string in a loop.
+Strings created (as literals) are stored in String constant pool, hence String a="hi", String b="hi" point to the same location say 0xAB. and create Str a = "hi there" moves the a to location say 0x12, 0xAB will always store "hi" no matter what (unless GCed) hence is immutable. When we create a string in loop say a 5 letter looping in 5 iteration, each iteration creates a new string literal causing the memory to get overloaded.
+--------------
+==============
+Section 3 — Concurrency & JVM
+Q5. What is the difference between a process and a thread? What do two threads of the same process share?
+A process is small piece of code designed to run on a core, while thread is running version of it. They share common stack i guess, I'm weak in Multi-threading concepts need a great deal of help here.
+-------------
+Q6. What is a race condition? Give a one-line code example of an operation that looks atomic but isn't.
+When two operations tries to access a certain resource simultaneously and final state of that resource depends on which job finishes first hence result is unpredictable, this is a race condition. the following code in non-sync code "result +=1"
+-------------
+=============
+Section 4 — Spring & JPA
+Q7. In one sentence each: what problem does dependency injection solve, and what does the @Autowired/constructor-injection mechanism actually do?
+DI solves the problem of inverting the control of bean creation to factory and supplying wherever needed, there by removing the tight coupling and enhancing testability and flexibility of the code. The @Autowired/Constructor Injection figures out all the dependencies of a given bean before creating that bean, and goes on to create the sub-beans once all the sub-beans are ready goes on to create the actual bean, meaning at the time of initialization itself the bean is created with all the dependencies intact.
+-------------
+Q8. What's the difference between @Component, @Service, and @Repository?
+All three under the hood does the exact same work. @Service and @Repository makes distinction easier to mark service class and repo class. (I guess we can call them decorative annotations)
+-------------
+=============
+Section 5 — SQL & Databases
+Q9. What's the difference between WHERE and HAVING? Which runs first?
+(Pretty weak in DB concepts)
+- WHERE filters the individual rows from the table based on specific condition
+- HAVING filters the rows grouped using "grouped-by" based on a certain condition.
+-------------
+Q10. Explain INNER JOIN vs LEFT JOIN. If orders has a row whose customer_id matches nothing in customers, which join keeps it (joining orders → customers)?
+(out of touch as I've not revised the concepts recently)
+- INNER JOIN considers only common elements where entry exists in both join tables.
+- LEFT JOIN considers all the rows where main join table is not null, and include the rows from second join table even if the values in it are not present
+-------------
+=============
+Section 6 — Networking & OS
+Q11. TCP vs UDP: name two guarantees TCP gives that UDP doesn't, and one real protocol/use-case built on each.
+- TCP ensures order and delivery guarantee. TCP-HTTP, UDP-video, call related protocols.
+-------------
+Q12. What does DNS do? What kind of value does an A record hold?
+DNS returns the right IP address for a given domain name.
+No Idea about A record dont know the basics of this concept.
+-------------
+=============
+Section 7 — API & Web Security
+Q13. Distinguish 401 vs 403 vs 404 — one sentence each.
+401 - Unauthorized, the user hasnt come from logged in channel or password wrong.
+403 - User is logged in but doesnt have permission to view.
+404 - the resource user is asking for is not there on the system.
+-------------
+Q14. Map the four CRUD operations onto HTTP methods for a /users resource (collection and single item).
+CREATE - POST /users | with body
+READ - GET /users/{id} - given user with an id, GET /users - all users | without body
+UPDATE - PUT/PATCH /users/{id} | with body
+DELETE - DELETE /users/{id} | without body
+-------------
+=============
+Section 8 — Messaging & Caching
+Q15. Give two reasons to put a message queue between two services instead of a direct HTTP call.
+- We want to guaranteedly send the message to another system wothout any n/w infra issue affecting the message delivery.
+- The operation can be done asynchronously
+-------------
+Q16. What is a cache? Why is reading from Redis typically much faster than reading the same value from Postgres?
+- Cache is the in-memory memory which gives fast responses when available instead of hitting DB. DB stores in Drives (secondary memory) which are slower, while REDIS stores  in faster primary memory or in CPU buffer memories sometimes.
+-------------
+=============
+Section 9 — Testing & Craft
+Q17. Unit test vs integration test — define each. Which is usually faster and why?
+- Unit test does test a piece of code mocking all the external dependencies. It doesnt make any HTTP/DB calls
+- Integration test tests the code by bringing actual dependencies the in the mocked format making HTTP/DB calls to a mocked entity.
+- Unit test much faster as it doesnt need to depend on any external system and is as good as running the application itself.
+-------------
+Q18. What is a mock and why do tests use them? Give one example of a dependency you would mock.
+- A mock is piece of code that mimics behaviour of an external system like DB, which returns the same entity with created ID upon saving, or throw an exception when a user is not present. We can mimic this behaviour by conditionally returning a user or exception.
+-------------
+=============
+Section 10 — Cloud & DevOps
+Q19. One-liners: what are EC2, S3, and RDS each for?
+- EC2 is compute, used to spin application servers generally.
+- S3 is storage for files and other blob kind of objects.
+- RDS is DB service which stores the relation database data
+-------------
+Q20. What is Docker? What's the difference between an image and a container?
+Docker is a service that helps to run an self-contained application by defining the dependencies of an application in a given file.
+Image is an OS's copy that has OS,libraries and softwares needed together in one bundle. Container is a running form of that image which runs the application using the image
+-------------
+=============

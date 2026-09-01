@@ -1,0 +1,124 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels. Left: Verdict and its permitted subtypes declared in the same named module com.quizstakes.onboarding compile successfully. Middle: a permitted subtype declared in a different named module fails to compile with a quoted error. Right: in the unnamed module, the boundary rule relaxes from module to package — permitted subtypes must share Verdict's package instead. A note states you cannot permit a type you do not control.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxE  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SEALING IS A MODULE / PACKAGE BOUNDARY</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- panel dividers -->
+  <line x1="380" y1="60" x2="380" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="750" y1="60" x2="750" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT PANEL: same module -->
+  <text x="30" y="72" class="lbl h2">SAME NAMED MODULE — COMPILES</text>
+  <rect x="30" y="86" width="330" height="60" rx="6" class="boxA"/>
+  <text x="195" y="106" text-anchor="middle" class="lbl body">module com.quizstakes.onboarding</text>
+  <text x="195" y="124" text-anchor="middle" class="lbl sub">requires ...; exports ...</text>
+
+  <rect x="60" y="166" width="270" height="70" rx="6" class="boxP"/>
+  <text x="195" y="192" text-anchor="middle" class="lbl node">sealed interface Verdict</text>
+  <text x="195" y="210" text-anchor="middle" class="lbl sub">permits ScreeningVerdict</text>
+
+  <path class="flow" d="M 195 236 V 260"/>
+  <rect x="60" y="260" width="270" height="60" rx="6" class="boxR"/>
+  <text x="195" y="284" text-anchor="middle" class="lbl node">ScreeningVerdict</text>
+  <text x="195" y="302" text-anchor="middle" class="lbl sub">same module com.quizstakes.onboarding</text>
+
+  <rect x="55" y="340" width="285" height="46" rx="6" class="boxR"/>
+  <text x="197" y="368" text-anchor="middle" class="lbl body">COMPILES</text>
+
+  <!-- MIDDLE PANEL: different module -->
+  <text x="400" y="72" class="lbl h2">PERMITTED SUBTYPE IN ANOTHER MODULE</text>
+  <rect x="400" y="86" width="150" height="60" rx="6" class="boxA"/>
+  <text x="475" y="106" text-anchor="middle" class="lbl body" style="font-size:11.5px;">module com.quizstakes</text>
+  <text x="475" y="122" text-anchor="middle" class="lbl body" style="font-size:11.5px;">.onboarding</text>
+
+  <rect x="580" y="86" width="150" height="60" rx="6" class="boxA"/>
+  <text x="655" y="106" text-anchor="middle" class="lbl body" style="font-size:11.5px;">module com.quizstakes</text>
+  <text x="655" y="122" text-anchor="middle" class="lbl body" style="font-size:11.5px;">.screening</text>
+
+  <rect x="415" y="166" width="120" height="70" rx="6" class="boxP"/>
+  <text x="475" y="192" text-anchor="middle" class="lbl node" style="font-size:13px;">Verdict</text>
+  <text x="475" y="210" text-anchor="middle" class="lbl sub">permits Screening-</text>
+  <text x="475" y="222" text-anchor="middle" class="lbl sub">Verdict</text>
+
+  <path class="flow" d="M 535 200 H 595"/>
+  <rect x="600" y="166" width="120" height="70" rx="6" class="boxE"/>
+  <text x="660" y="192" text-anchor="middle" class="lbl node" style="font-size:13px;">Screening-</text>
+  <text x="660" y="208" text-anchor="middle" class="lbl node" style="font-size:13px;">Verdict</text>
+  <text x="660" y="226" text-anchor="middle" class="lbl sub">screening module</text>
+
+  <rect x="400" y="256" width="330" height="110" rx="6" class="boxE"/>
+  <text x="565" y="280" text-anchor="middle" class="lbl body">compile error</text>
+  <text x="565" y="300" text-anchor="middle" class="lbl tiny">"class ScreeningVerdict in module</text>
+  <text x="565" y="316" text-anchor="middle" class="lbl tiny">com.quizstakes.screening cannot extend</text>
+  <text x="565" y="332" text-anchor="middle" class="lbl tiny">sealed class Verdict in module</text>
+  <text x="565" y="348" text-anchor="middle" class="lbl tiny">com.quizstakes.onboarding: modules</text>
+  <text x="565" y="362" text-anchor="middle" class="lbl tiny">do not open"</text>
+
+  <!-- RIGHT PANEL: unnamed module -->
+  <text x="770" y="72" class="lbl h2">UNNAMED MODULE — SAME-PACKAGE RULE</text>
+  <rect x="770" y="86" width="320" height="60" rx="6" class="boxA"/>
+  <text x="930" y="106" text-anchor="middle" class="lbl body">unnamed module (classpath)</text>
+  <text x="930" y="124" text-anchor="middle" class="lbl sub">no module-info.java present</text>
+
+  <rect x="770" y="166" width="320" height="70" rx="6" class="boxP"/>
+  <text x="930" y="188" text-anchor="middle" class="lbl node">Verdict</text>
+  <text x="930" y="206" text-anchor="middle" class="lbl sub">package com.quizstakes.onboarding</text>
+  <text x="930" y="222" text-anchor="middle" class="lbl sub">permits ScreeningVerdict</text>
+
+  <path class="flow" d="M 930 236 V 260"/>
+  <rect x="770" y="260" width="320" height="70" rx="6" class="boxR"/>
+  <text x="930" y="284" text-anchor="middle" class="lbl node">ScreeningVerdict</text>
+  <text x="930" y="302" text-anchor="middle" class="lbl sub">same package</text>
+  <text x="930" y="316" text-anchor="middle" class="lbl sub">com.quizstakes.onboarding</text>
+
+  <rect x="770" y="344" width="320" height="52" rx="6" class="boxR"/>
+  <text x="930" y="364" text-anchor="middle" class="lbl body">COMPILES</text>
+  <text x="930" y="382" text-anchor="middle" class="lbl tiny">package, not module, is the boundary</text>
+
+  <!-- annotation panel spanning bottom -->
+  <rect x="30" y="420" width="1060" height="90" rx="6" class="boxA"/>
+  <text x="46" y="444" class="lbl node" style="font-size:13px;">You cannot permit a type you do not control</text>
+  <text x="46" y="466" class="lbl tiny">A sealed type's `permits` list must name types the author can see and compile against in the same</text>
+  <text x="46" y="484" class="lbl tiny">module (or package, unnamed module) — you cannot seal ScreeningVerdict shut against a subtype defined</text>
+  <text x="46" y="502" class="lbl tiny">in a downstream consumer's module; sealing is an authorial boundary, not a runtime access-control check.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="540" x2="1100" y2="540" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="556" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="569" class="lbl tiny">module / boundary container</text>
+  <rect x="380" y="556" width="22" height="16" rx="3" class="boxP"/>
+  <text x="410" y="569" class="lbl tiny">sealed interface/class — the subject</text>
+  <rect x="760" y="556" width="22" height="16" rx="3" class="boxR"/>
+  <text x="790" y="569" class="lbl tiny">legal permitted subtype / success outcome</text>
+  <rect x="20" y="586" width="22" height="16" rx="3" class="boxE"/>
+  <text x="50" y="599" class="lbl tiny">illegal placement / compile error</text>
+  <path class="flow" d="M 380 594 H 420"/>
+  <text x="430" y="599" class="lbl tiny">A → B : B attempts to extend A</text>
+</svg>

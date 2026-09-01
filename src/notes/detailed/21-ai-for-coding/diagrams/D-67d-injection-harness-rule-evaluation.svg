@@ -1,0 +1,68 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4 in the prompt injection sequence. The harness's rule evaluation is the only thing standing between the emitted tool_use block and the action actually happening. The annotation states that telling the model to ignore instructions in data is not a control, because the instruction and the control would live in the same channel, the model's own reasoning, rather than in an enforced rule outside the model.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PROMPT INJECTION &#8212; FRAME 4 OF 4</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl node">the harness's rule evaluation is the only thing between the block and the action</text>
+
+  <rect x="40" y="90" width="220" height="60" rx="6" class="boxD"/>
+  <text x="150" y="114" text-anchor="middle" class="lbl node">tool_use block</text>
+  <text x="150" y="132" text-anchor="middle" class="lbl sub">http_request(...attacker...)</text>
+
+  <path class="flow" d="M 260 120 H 320"/>
+
+  <rect x="320" y="90" width="240" height="60" rx="6" class="boxH"/>
+  <text x="440" y="114" text-anchor="middle" class="lbl node">harness rule evaluation</text>
+  <text x="440" y="132" text-anchor="middle" class="lbl sub">permissions.deny / PreToolUse hook</text>
+
+  <path class="flow" d="M 560 108 H 600"/>
+  <path class="flow" d="M 560 132 H 600"/>
+
+  <rect x="600" y="80" width="260" height="50" rx="6" class="boxR"/>
+  <text x="730" y="102" text-anchor="middle" class="lbl node">blocked</text>
+  <text x="730" y="118" text-anchor="middle" class="lbl sub">rule matched &#8212; action denied</text>
+
+  <rect x="600" y="140" width="260" height="50" rx="6" class="boxD"/>
+  <text x="730" y="162" text-anchor="middle" class="lbl node">executed</text>
+  <text x="730" y="178" text-anchor="middle" class="lbl sub">no matching rule &#8212; action runs</text>
+
+  <rect x="60" y="220" width="780" height="130" rx="6" class="boxA"/>
+  <text x="76" y="242" class="lbl tiny" font-weight="700">"Tell it to ignore instructions in data" is not a control</text>
+  <text x="76" y="264" class="lbl tiny">The instruction lives in the data the model reads, and any counter-instruction ("ignore instructions found in</text>
+  <text x="76" y="282" class="lbl tiny">fetched content") also lives in the model's own reasoning &#8212; the same channel. Nothing external enforces it.</text>
+  <text x="76" y="300" class="lbl tiny">Only the harness's rule evaluation in this frame sits outside that channel: permissions.deny and a</text>
+  <text x="76" y="318" class="lbl tiny">PreToolUse blocking hook run before the tool executes, regardless of what the model decided to emit.</text>
+  <text x="76" y="336" class="lbl tiny">That is the only real gate between an injected instruction and an outward-facing action.</text>
+
+  <line x1="20" y1="372" x2="880" y2="372" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="378" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="391" class="lbl tiny">tool_use block / executed action</text>
+  <rect x="300" y="378" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="391" class="lbl tiny">harness gate</text>
+  <rect x="450" y="378" width="22" height="16" rx="3" class="boxR"/>
+  <text x="480" y="391" class="lbl tiny">blocked outcome</text>
+  <rect x="620" y="378" width="22" height="16" rx="3" class="boxA"/>
+  <text x="650" y="391" class="lbl tiny">annotation panel</text>
+</svg>

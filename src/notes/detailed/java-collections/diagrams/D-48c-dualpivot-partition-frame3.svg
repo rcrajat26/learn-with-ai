@@ -1,0 +1,68 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Dual-pivot quicksort frame 3: final layout with P1 and P2 pivots placed and the three recursive subranges bracketed: sort(left,less-1), sort(less,great), sort(great+1,right)">
+  <defs>
+    <marker id="arrowD48c" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="30" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 3: pivots placed, three recursive subranges</text>
+
+  <rect x="245.5" y="60" width="100" height="26" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="295.5" y="78" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">P1 pivot</text>
+  <rect x="416.5" y="60" width="100" height="26" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="466.5" y="78" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">P2 pivot</text>
+
+  <line x1="295.5" y1="86" x2="295.5" y2="108" stroke="#737373" stroke-width="2" marker-end="url(#arrowD48c)"/>
+  <line x1="466.5" y1="86" x2="466.5" y2="108" stroke="#737373" stroke-width="2" marker-end="url(#arrowD48c)"/>
+
+  <!-- final array: 0-3 <P1, 4=P1 pivot, 5-6 middle, 7=P2 pivot, 8-11 >P2 -->
+  <rect x="40" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="67.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">1</text>
+  <rect x="97" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="124.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">2</text>
+  <rect x="154" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="181.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">3</text>
+  <rect x="211" y="110" width="55" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="238.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">4</text>
+  <rect x="268" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="3"/>
+  <text x="295.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">5</text>
+  <rect x="325" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="352.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">6</text>
+  <rect x="382" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="409.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">7</text>
+  <rect x="439" y="110" width="55" height="50" fill="#dbeafe" stroke="#525252" stroke-width="3"/>
+  <text x="466.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">8</text>
+  <rect x="496" y="110" width="55" height="50" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="523.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">9</text>
+  <rect x="553" y="110" width="55" height="50" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="580.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">10</text>
+  <rect x="610" y="110" width="55" height="50" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="637.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">11</text>
+  <rect x="667" y="110" width="55" height="50" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="694.5" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">13</text>
+
+  <!-- recursion brackets -->
+  <line x1="40" y1="172" x2="266" y2="172" stroke="#525252" stroke-width="2"/>
+  <line x1="40" y1="172" x2="40" y2="178" stroke="#525252" stroke-width="2"/>
+  <line x1="266" y1="172" x2="266" y2="178" stroke="#525252" stroke-width="2"/>
+  <rect x="63" y="182" width="180" height="30" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="153" y="202" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">sort(left, less-1)</text>
+
+  <line x1="325" y1="172" x2="437" y2="172" stroke="#525252" stroke-width="2"/>
+  <line x1="325" y1="172" x2="325" y2="178" stroke="#525252" stroke-width="2"/>
+  <line x1="437" y1="172" x2="437" y2="178" stroke="#525252" stroke-width="2"/>
+  <rect x="291" y="182" width="180" height="30" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="381" y="202" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">sort(less, great)</text>
+
+  <line x1="496" y1="172" x2="722" y2="172" stroke="#525252" stroke-width="2"/>
+  <line x1="496" y1="172" x2="496" y2="178" stroke="#525252" stroke-width="2"/>
+  <line x1="722" y1="172" x2="722" y2="178" stroke="#525252" stroke-width="2"/>
+  <rect x="519" y="182" width="180" height="30" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="609" y="202" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">sort(great+1, right)</text>
+
+  <rect x="20" y="222" width="760" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="241" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">If P1 == P2, the middle subrange sort(less, great) is skipped entirely</text>
+</svg>

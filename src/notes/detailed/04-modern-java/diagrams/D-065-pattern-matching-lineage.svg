@@ -1,0 +1,170 @@
+<svg viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline from Java 14 to Java 25 of the pattern-matching lineage. Track one, instanceof patterns: JEP 305 preview at 14, JEP 375 second preview at 15, JEP 394 final at 16. Track two, pattern switch: previews at 17, 18, 19 and 20, JEP 441 final at 21; a marker at 21 shows the double-ampersand guard replaced by the when clause. Track three, record patterns: JEP 405 preview at 19, JEP 432 preview at 20, JEP 440 final at 21; a withdrawal marker shows record patterns in enhanced-for removed before 21. Track four shows primitive patterns, JEP 455 and JEP 507, still in preview and not finalized in 21.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 12.5px; font-weight: 600; }
+    .body  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .axisv { font-size: 12px; font-weight: 700; }
+
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxFin  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxDeg  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .pill    { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .axis    { stroke: #475569; stroke-width: 2; }
+    .tick    { stroke: #475569; stroke-width: 1.6; }
+    .guide   { stroke: #d1d5db; stroke-width: 1.3; stroke-dasharray: 4 3; }
+    .stub    { stroke: #475569; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="680" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE PATTERN-MATCHING LINEAGE: JAVA 14 → 21 (AND BEYOND)</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- axis -->
+  <line x1="60" y1="70" x2="1140" y2="70" class="axis"/>
+  <g class="tick">
+    <line x1="120" y1="62" x2="120" y2="70"/>
+    <line x1="260" y1="62" x2="260" y2="70"/>
+    <line x1="400" y1="62" x2="400" y2="70"/>
+    <line x1="540" y1="62" x2="540" y2="70"/>
+    <line x1="680" y1="62" x2="680" y2="70"/>
+    <line x1="820" y1="62" x2="820" y2="70"/>
+    <line x1="960" y1="62" x2="960" y2="70"/>
+    <line x1="1100" y1="62" x2="1100" y2="70"/>
+    <line x1="1170" y1="62" x2="1170" y2="70"/>
+  </g>
+  <text x="120" y="56" text-anchor="middle" class="lbl axisv">14</text>
+  <text x="260" y="56" text-anchor="middle" class="lbl axisv">15</text>
+  <text x="400" y="56" text-anchor="middle" class="lbl axisv">16</text>
+  <text x="540" y="56" text-anchor="middle" class="lbl axisv">17</text>
+  <text x="680" y="56" text-anchor="middle" class="lbl axisv">18</text>
+  <text x="820" y="56" text-anchor="middle" class="lbl axisv">19</text>
+  <text x="960" y="56" text-anchor="middle" class="lbl axisv">20</text>
+  <text x="1100" y="56" text-anchor="middle" class="lbl axisv">21</text>
+  <text x="1135" y="56" text-anchor="middle" class="lbl sub">···</text>
+  <text x="1170" y="56" text-anchor="middle" class="lbl axisv">25</text>
+
+  <!-- vertical guides for used columns, drawn behind boxes -->
+  <g class="guide">
+    <line x1="120" y1="78" x2="120" y2="545"/>
+    <line x1="260" y1="78" x2="260" y2="545"/>
+    <line x1="400" y1="78" x2="400" y2="545"/>
+    <line x1="540" y1="78" x2="540" y2="545"/>
+    <line x1="680" y1="78" x2="680" y2="545"/>
+    <line x1="820" y1="78" x2="820" y2="545"/>
+    <line x1="960" y1="78" x2="960" y2="545"/>
+    <line x1="1100" y1="78" x2="1100" y2="545"/>
+  </g>
+
+  <!-- Track 1: instanceof patterns -->
+  <text x="60" y="112" class="lbl h2">INSTANCEOF PATTERNS — JEP 305 / 375 / 394</text>
+
+  <rect x="60" y="120" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="120" y="138" text-anchor="middle" class="lbl node">JEP 305</text>
+  <text x="120" y="154" text-anchor="middle" class="lbl body">preview</text>
+  <rect x="103" y="160" width="34" height="14" rx="4" class="pill"/>
+  <text x="120" y="171" text-anchor="middle" class="lbl body" font-size="10.5">14</text>
+
+  <rect x="200" y="120" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="260" y="138" text-anchor="middle" class="lbl node">JEP 375</text>
+  <text x="260" y="154" text-anchor="middle" class="lbl body">second preview</text>
+  <rect x="243" y="160" width="34" height="14" rx="4" class="pill"/>
+  <text x="260" y="171" text-anchor="middle" class="lbl body" font-size="10.5">15</text>
+
+  <rect x="340" y="120" width="120" height="52" rx="6" class="boxFin"/>
+  <text x="400" y="138" text-anchor="middle" class="lbl node">JEP 394</text>
+  <text x="400" y="154" text-anchor="middle" class="lbl body">FINAL</text>
+  <rect x="383" y="160" width="34" height="14" rx="4" class="pill"/>
+  <text x="400" y="171" text-anchor="middle" class="lbl body" font-size="10.5">16</text>
+
+  <!-- Track 2: pattern switch -->
+  <text x="60" y="210" class="lbl h2">PATTERN SWITCH — previews 17–20, JEP 441 FINAL (21)</text>
+
+  <rect x="480" y="218" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="540" y="240" text-anchor="middle" class="lbl node">preview</text>
+  <rect x="523" y="248" width="34" height="14" rx="4" class="pill"/>
+  <text x="540" y="259" text-anchor="middle" class="lbl body" font-size="10.5">17</text>
+
+  <rect x="620" y="218" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="680" y="240" text-anchor="middle" class="lbl node">preview</text>
+  <rect x="663" y="248" width="34" height="14" rx="4" class="pill"/>
+  <text x="680" y="259" text-anchor="middle" class="lbl body" font-size="10.5">18</text>
+
+  <rect x="760" y="218" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="820" y="240" text-anchor="middle" class="lbl node">preview</text>
+  <rect x="803" y="248" width="34" height="14" rx="4" class="pill"/>
+  <text x="820" y="259" text-anchor="middle" class="lbl body" font-size="10.5">19</text>
+
+  <rect x="900" y="218" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="960" y="240" text-anchor="middle" class="lbl node">preview</text>
+  <rect x="943" y="248" width="34" height="14" rx="4" class="pill"/>
+  <text x="960" y="259" text-anchor="middle" class="lbl body" font-size="10.5">20</text>
+
+  <rect x="1040" y="218" width="120" height="52" rx="6" class="boxFin"/>
+  <text x="1100" y="236" text-anchor="middle" class="lbl node">JEP 441</text>
+  <text x="1100" y="252" text-anchor="middle" class="lbl body">FINAL</text>
+  <rect x="1083" y="258" width="34" height="14" rx="4" class="pill"/>
+  <text x="1100" y="269" text-anchor="middle" class="lbl body" font-size="10.5">21</text>
+
+  <line x1="1100" y1="270" x2="1100" y2="282" class="stub"/>
+  <rect x="1000" y="282" width="200" height="42" rx="6" class="boxDeg"/>
+  <text x="1100" y="299" text-anchor="middle" class="lbl node" font-size="11.5">&amp;&amp; guards → when clauses</text>
+  <text x="1100" y="315" text-anchor="middle" class="lbl body">replaced at JEP 441 (21)</text>
+
+  <!-- Track 3: record patterns -->
+  <text x="60" y="356" class="lbl h2">RECORD PATTERNS — JEP 405 / 432 previews, JEP 440 FINAL (21)</text>
+
+  <rect x="760" y="364" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="820" y="382" text-anchor="middle" class="lbl node">JEP 405</text>
+  <text x="820" y="398" text-anchor="middle" class="lbl body">preview</text>
+  <rect x="803" y="404" width="34" height="14" rx="4" class="pill"/>
+  <text x="820" y="415" text-anchor="middle" class="lbl body" font-size="10.5">19</text>
+
+  <rect x="900" y="364" width="120" height="52" rx="6" class="boxWeak"/>
+  <text x="960" y="382" text-anchor="middle" class="lbl node">JEP 432</text>
+  <text x="960" y="398" text-anchor="middle" class="lbl body">preview</text>
+  <rect x="943" y="404" width="34" height="14" rx="4" class="pill"/>
+  <text x="960" y="415" text-anchor="middle" class="lbl body" font-size="10.5">20</text>
+
+  <rect x="1040" y="364" width="120" height="52" rx="6" class="boxFin"/>
+  <text x="1100" y="382" text-anchor="middle" class="lbl node">JEP 440</text>
+  <text x="1100" y="398" text-anchor="middle" class="lbl body">FINAL</text>
+  <rect x="1083" y="404" width="34" height="14" rx="4" class="pill"/>
+  <text x="1100" y="415" text-anchor="middle" class="lbl body" font-size="10.5">21</text>
+
+  <line x1="960" y1="416" x2="960" y2="428" class="stub"/>
+  <rect x="850" y="428" width="220" height="42" rx="6" class="boxDeg"/>
+  <text x="960" y="445" text-anchor="middle" class="lbl node" font-size="11.5">record patterns in enhanced-for</text>
+  <text x="960" y="461" text-anchor="middle" class="lbl body">withdrawn before 21 ships</text>
+
+  <!-- Track 4: primitive patterns, still preview -->
+  <text x="60" y="502" class="lbl h2">PRIMITIVE PATTERNS — STILL PREVIEW (NOT IN 21)</text>
+
+  <rect x="900" y="510" width="260" height="60" rx="6" class="boxWeak"/>
+  <text x="1030" y="528" text-anchor="middle" class="lbl node">JEP 455 / JEP 507</text>
+  <text x="1030" y="544" text-anchor="middle" class="lbl body">primitive types in patterns</text>
+  <text x="1030" y="560" text-anchor="middle" class="lbl sub">still preview past 21, no final JEP yet</text>
+
+  <!-- legend -->
+  <line x1="20" y1="600" x2="1180" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="612" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="50" y="625" class="lbl tiny">preview / second preview, not yet final</text>
+
+  <rect x="330" y="612" width="22" height="16" rx="3" class="boxFin"/>
+  <text x="360" y="625" class="lbl tiny">finalized JEP, shipped in that release</text>
+
+  <rect x="640" y="612" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="670" y="625" class="lbl tiny">withdrawn or replaced at/before 21</text>
+
+  <line x1="930" y1="620" x2="962" y2="620" class="guide"/>
+  <text x="970" y="625" class="lbl tiny">vertical guide: same Java release</text>
+
+  <rect x="20" y="640" width="22" height="16" rx="3" class="pill"/>
+  <text x="50" y="653" class="lbl tiny">release-number pill inside a JEP box</text>
+</svg>

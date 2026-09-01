@@ -1,0 +1,49 @@
+<svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 4: put A, B, C into a capacity-3 access-order LinkedHashMap, none evicted">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="36" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937" font-weight="bold">The LRU eviction cycle -- frame 1 of 4</text>
+  <text x="450" y="58" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">put(A), put(B), put(C) on new LinkedHashMap&lt;&gt;(16, 0.75f, true)</text>
+
+  <rect x="40" y="80" width="820" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="52" y="102" font-family="monospace" font-size="12" fill="#1f2937">protected boolean removeEldestEntry(Map.Entry&lt;K,V&gt; eldest) {</text>
+  <text x="70" y="122" font-family="sans-serif" font-size="12" fill="#1f2937">return size() &gt; 3;</text>
+  <text x="52" y="142" font-family="sans-serif" font-size="12" fill="#1f2937">}</text>
+  <text x="52" y="160" font-family="sans-serif" font-size="12" fill="#1f2937">override in effect on this map</text>
+
+  <g font-family="sans-serif">
+    <rect x="120" y="230" width="90" height="55" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="165" y="263" text-anchor="middle" font-size="15" fill="#1f2937">A</text>
+    <rect x="340" y="230" width="90" height="55" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="385" y="263" text-anchor="middle" font-size="15" fill="#1f2937">B</text>
+    <rect x="560" y="230" width="90" height="55" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="605" y="263" text-anchor="middle" font-size="15" fill="#1f2937">C</text>
+
+    <line x1="210" y1="250" x2="338" y2="250" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="274" y="242" text-anchor="middle" font-size="11" fill="#1f2937">after</text>
+    <line x1="338" y1="266" x2="210" y2="266" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="274" y="282" text-anchor="middle" font-size="11" fill="#1f2937">before</text>
+
+    <line x1="430" y1="250" x2="558" y2="250" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="558" y1="266" x2="430" y2="266" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  </g>
+
+  <rect x="120" y="295" width="150" height="20" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="195" y="309" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">head = eldest / LRU</text>
+  <rect x="530" y="295" width="180" height="20" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="309" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">tail = youngest / MRU</text>
+
+  <rect x="680" y="230" width="150" height="55" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="755" y="253" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">size = 3</text>
+  <text x="755" y="271" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">3 &gt; 3 == false</text>
+
+  <rect x="40" y="350" width="820" height="90" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="378" font-family="sans-serif" font-size="13" fill="#1f2937">afterNodeInsertion(true) ran three times; each time removeEldestEntry</text>
+  <text x="60" y="398" font-family="sans-serif" font-size="13" fill="#1f2937">returned 3 &gt; 3 == false, so nothing was evicted.</text>
+  <text x="60" y="420" font-family="sans-serif" font-size="13" fill="#1f2937">All three entries A, B, C survive; capacity has not been reached.</text>
+</svg>

@@ -1,0 +1,126 @@
+<svg viewBox="0 0 800 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Binary heap array-to-tree index mapping: an 11-slot array laid out as a complete binary tree, with parent=(k-1) greater-than-greater-than-greater-than 1, left=2k+1, right=2k+2 worked for k=4">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="8" width="760" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="25" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Complete binary tree stored breadth-first in a flat array — same 11 elements, two views</text>
+
+  <!-- ============ TREE (top) ============ -->
+  <!-- edges -->
+  <g stroke="#737373" stroke-width="2">
+    <line x1="400" y1="90" x2="220" y2="170"/>
+    <line x1="400" y1="90" x2="580" y2="170"/>
+    <line x1="220" y1="198" x2="130" y2="270"/>
+    <line x1="220" y1="198" x2="310" y2="270"/>
+    <line x1="580" y1="198" x2="490" y2="270"/>
+    <line x1="580" y1="198" x2="670" y2="270"/>
+    <line x1="130" y1="298" x2="85" y2="360"/>
+    <line x1="130" y1="298" x2="175" y2="360"/>
+    <line x1="310" y1="298" x2="265" y2="360"/>
+    <line x1="310" y1="298" x2="355" y2="360"/>
+  </g>
+
+  <!-- nodes: idx0..10, values 1,3,2,7,5,4,6,9,8,10,11 -->
+  <!-- idx0 root -->
+  <circle cx="400" cy="70" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="75" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">0:1</text>
+
+  <!-- idx1 parent of k=4, highlighted green -->
+  <circle cx="220" cy="184" r="26" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+  <text x="220" y="189" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1:3</text>
+
+  <circle cx="580" cy="184" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="580" y="189" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2:2</text>
+
+  <circle cx="130" cy="284" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="289" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">3:7</text>
+
+  <!-- idx4 the worked k, amber -->
+  <circle cx="310" cy="284" r="26" fill="#fef3c7" stroke="#525252" stroke-width="3"/>
+  <text x="310" y="289" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4:5</text>
+
+  <circle cx="490" cy="284" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="490" y="289" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">5:4</text>
+
+  <circle cx="670" cy="284" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="289" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">6:6</text>
+
+  <circle cx="85" cy="384" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="85" y="389" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">7:9</text>
+
+  <circle cx="175" cy="384" r="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="389" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">8:8</text>
+
+  <!-- idx9,10 children of k=4, highlighted green -->
+  <circle cx="265" cy="384" r="26" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+  <text x="265" y="389" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">9:10</text>
+
+  <circle cx="355" cy="384" r="26" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+  <text x="355" y="389" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">10:11</text>
+
+  <!-- ============ ARRAY (bottom) ============ -->
+  <rect x="20" y="424" width="760" height="22" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="440" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">backing array, indices 0-10 (same colors as the tree nodes above)</text>
+
+  <g font-family="sans-serif" font-size="13">
+    <rect x="40" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="64" y="485" text-anchor="middle" fill="#1f2937">1</text>
+
+    <rect x="92" y="460" width="48" height="40" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+    <text x="116" y="485" text-anchor="middle" fill="#1f2937">3</text>
+
+    <rect x="144" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="168" y="485" text-anchor="middle" fill="#1f2937">2</text>
+
+    <rect x="196" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="220" y="485" text-anchor="middle" fill="#1f2937">7</text>
+
+    <rect x="248" y="460" width="48" height="40" fill="#fef3c7" stroke="#525252" stroke-width="3"/>
+    <text x="272" y="485" text-anchor="middle" fill="#1f2937">5</text>
+
+    <rect x="300" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="324" y="485" text-anchor="middle" fill="#1f2937">4</text>
+
+    <rect x="352" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="376" y="485" text-anchor="middle" fill="#1f2937">6</text>
+
+    <rect x="404" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="428" y="485" text-anchor="middle" fill="#1f2937">9</text>
+
+    <rect x="456" y="460" width="48" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="480" y="485" text-anchor="middle" fill="#1f2937">8</text>
+
+    <rect x="508" y="460" width="48" height="40" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+    <text x="532" y="485" text-anchor="middle" fill="#1f2937">10</text>
+
+    <rect x="560" y="460" width="48" height="40" fill="#dcfce7" stroke="#525252" stroke-width="3"/>
+    <text x="584" y="485" text-anchor="middle" fill="#1f2937">11</text>
+  </g>
+
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <text x="64" y="515" text-anchor="middle">0</text>
+    <text x="116" y="515" text-anchor="middle">1</text>
+    <text x="168" y="515" text-anchor="middle">2</text>
+    <text x="220" y="515" text-anchor="middle">3</text>
+    <text x="272" y="515" text-anchor="middle">4</text>
+    <text x="324" y="515" text-anchor="middle">5</text>
+    <text x="376" y="515" text-anchor="middle">6</text>
+    <text x="428" y="515" text-anchor="middle">7</text>
+    <text x="480" y="515" text-anchor="middle">8</text>
+    <text x="532" y="515" text-anchor="middle">9</text>
+    <text x="584" y="515" text-anchor="middle">10</text>
+  </g>
+
+  <!-- worked formula box -->
+  <rect x="120" y="536" width="560" height="106" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="556" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">worked example: k = 4  (node "4:5", amber)</text>
+  <text x="400" y="578" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">parent(k) = (k - 1) &gt;&gt;&gt; 1  =  (4 - 1) &gt;&gt;&gt; 1  =  3 &gt;&gt;&gt; 1  =  1   →  node "1:3"</text>
+  <text x="400" y="598" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">left(k)  = 2k + 1  =  2*4 + 1  =  9   →  node "9:10"</text>
+  <text x="400" y="618" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">right(k) = 2k + 2  =  2*4 + 2  =  10  →  node "10:11"</text>
+  <text x="400" y="636" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">green = parent/children of k, matched by index between tree and array</text>
+</svg>

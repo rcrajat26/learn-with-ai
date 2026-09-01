@@ -1,0 +1,89 @@
+<svg viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="CopyOnWriteArrayList add(E): writer synchronizes on a plain Object monitor, copies the array to n+1, writes the new element, then publishes via setArray while two readers keep traversing the old array unlocked; COWIterator holds its own snapshot and remove() throws UnsupportedOperationException; an amber box notes that JDK 8 used a ReentrantLock here, a version trap for anyone recalling the old implementation">
+  <defs>
+    <marker id="arrow132" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="400" y="38" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">CopyOnWriteArrayList write path (JDK 21) — add(E)</text>
+
+  <!-- Before state -->
+  <text x="40" y="72" font-family="sans-serif" font-size="13" fill="#1f2937">BEFORE add()</text>
+  <rect x="40" y="80" width="220" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="98" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">private transient volatile Object[] array (:110)</text>
+  <rect x="40" y="112" width="220" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="132" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">array (len n)</text>
+  <text x="150" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A, B, C</text>
+
+  <!-- Lock: plain monitor -->
+  <rect x="330" y="72" width="220" height="34" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="440" y="94" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">synchronized (lock) — plain Object monitor</text>
+
+  <rect x="330" y="112" width="220" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="440" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">final transient Object lock (:107)</text>
+
+  <line x1="440" y1="106" x2="440" y2="112" stroke="#737373" stroke-width="2"/>
+
+  <!-- version trap amber box -->
+  <rect x="570" y="60" width="200" height="80" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="80" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">version trap</text>
+  <text x="670" y="98" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">JDK 8 used a ReentrantLock</text>
+  <text x="670" y="114" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">here (8u202:97) — JDK 21</text>
+  <text x="670" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">switched to a plain monitor</text>
+
+  <text x="330" y="160" font-family="sans-serif" font-size="13" fill="#1f2937">Writer thread steps (add(), :461-469):</text>
+  <rect x="330" y="168" width="420" height="26" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="340" y="186" font-family="sans-serif" font-size="13" fill="#1f2937">1. es = getArray()  (:463)</text>
+  <rect x="330" y="198" width="420" height="26" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="340" y="216" font-family="sans-serif" font-size="13" fill="#1f2937">2. es = Arrays.copyOf(es, len + 1)  (:465)</text>
+  <rect x="330" y="228" width="420" height="26" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="340" y="246" font-family="sans-serif" font-size="13" fill="#1f2937">3. es[len] = e  (:466)</text>
+  <rect x="330" y="258" width="420" height="26" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="340" y="276" font-family="sans-serif" font-size="13" fill="#1f2937">4. setArray(es)  — volatile publish (:467)</text>
+
+  <line x1="540" y1="284" x2="540" y2="330" stroke="#737373" stroke-width="2" marker-end="url(#arrow132)"/>
+
+  <!-- class-comment quote -->
+  <rect x="330" y="294" width="420" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="540" y="312" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">class comment (:105-106): mild preference for builtin</text>
+  <text x="540" y="328" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">synchronized monitors over ReentrantLock when either will do</text>
+
+  <!-- old/new array -->
+  <text x="40" y="240" font-family="sans-serif" font-size="13" fill="#1f2937">DURING copy (readers unaffected)</text>
+  <rect x="40" y="248" width="220" height="50" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="268" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">old array (len n)</text>
+  <text x="150" y="286" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A, B, C — still referenced</text>
+
+  <rect x="330" y="360" width="220" height="50" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="440" y="380" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">new array (len n+1)</text>
+  <text x="440" y="398" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A, B, C, D — published</text>
+
+  <!-- Readers -->
+  <text x="40" y="330" font-family="sans-serif" font-size="13" fill="#1f2937">Two readers — no lock held, no ConcurrentModificationException:</text>
+  <rect x="40" y="340" width="230" height="30" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="155" y="360" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Reader 1: for-each over old array</text>
+  <rect x="40" y="376" width="230" height="30" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="155" y="396" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Reader 2: get(i) via getArray()</text>
+  <line x1="150" y1="298" x2="150" y2="340" stroke="#737373" stroke-width="2" marker-end="url(#arrow132)"/>
+  <line x1="155" y1="298" x2="155" y2="376" stroke="#737373" stroke-width="2" marker-end="url(#arrow132)"/>
+  <rect x="40" y="412" width="510" height="24" rx="3" fill="#fee2e2"/>
+  <text x="295" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Readers keep seeing the pre-write snapshot until setArray() completes — no blocking, no torn reads</text>
+
+  <!-- COWIterator -->
+  <rect x="20" y="452" width="760" height="90" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="472" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">COWIterator&lt;E&gt; (:1161)</text>
+  <rect x="60" y="484" width="330" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="225" y="502" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">private final Object[] snapshot  (:1163)</text>
+  <rect x="410" y="484" width="330" height="26" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="575" y="502" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">remove() throws UnsupportedOperationException (:1207-1208)</text>
+  <text x="400" y="528" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Iterator captured getArray() at creation time — later writes never appear in it</text>
+
+  <!-- final version-trap summary box -->
+  <rect x="20" y="562" width="760" height="80" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="584" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">version trap: JDK 8 used a ReentrantLock here (8u202:97)</text>
+  <text x="400" y="604" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">JDK 21 replaced it with a plain synchronized(lock) monitor — every article and interviewer</text>
+  <text x="400" y="622" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">from before ~2018 still says ReentrantLock; verify against the actual source before answering</text>
+</svg>

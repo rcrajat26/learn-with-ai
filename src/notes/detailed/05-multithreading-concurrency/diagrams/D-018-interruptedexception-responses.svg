@@ -1,0 +1,87 @@
+<svg viewBox="0 0 1040 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for handling InterruptedException. Root question: can your method declare throws
+     InterruptedException? Yes leads to propagate — let it fly, or catch, clean up, and rethrow. No, because the
+     signature is fixed such as Runnable.run, leads to calling Thread.currentThread().interrupt() inside the catch
+     block and then returning, so the caller's loop notices next. A third option, swallowing it in an empty catch
+     (InterruptedException e) block, is always a bug, with the symptom that a shutdownNow() call never stops
+     anything.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE TWO LEGAL RESPONSES TO InterruptedException</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="340" y="70" width="360" height="100" rx="6" class="boxP"/>
+  <text x="520" y="92" text-anchor="middle" class="lbl tinyB">DECISION</text>
+  <text x="520" y="116" text-anchor="middle" class="lbl body">can your method declare</text>
+  <text x="520" y="136" text-anchor="middle" class="lbl body">throws InterruptedException ?</text>
+  <text x="520" y="156" text-anchor="middle" class="lbl sub">e.g. a stake-reservation worker vs. Runnable.run</text>
+
+  <path class="bus" d="M 480 170 V 200"/>
+  <path class="bus" d="M 190 200 H 880"/>
+  <path class="flow" d="M 190 200 V 240"/>
+  <path class="flow" d="M 530 200 V 240"/>
+  <path class="flow" d="M 880 200 V 240"/>
+  <text x="150" y="216" class="lbl tinyB">YES</text>
+  <text x="640" y="216" class="lbl tinyB">NO</text>
+  <text x="900" y="216" class="lbl tinyB">EITHER WAY</text>
+
+  <rect x="60" y="240" width="260" height="150" rx="6" class="boxR"/>
+  <text x="190" y="262" text-anchor="middle" class="lbl tinyB">YES — CAN DECLARE THROWS</text>
+  <text x="190" y="286" text-anchor="middle" class="lbl node">propagate</text>
+  <text x="190" y="308" text-anchor="middle" class="lbl sub">let InterruptedException fly,</text>
+  <text x="190" y="324" text-anchor="middle" class="lbl sub">don't catch it</text>
+  <text x="190" y="344" text-anchor="middle" class="lbl sub">or catch, clean up the</text>
+  <text x="190" y="360" text-anchor="middle" class="lbl sub">stake reservation, then throw e;</text>
+
+  <rect x="390" y="240" width="280" height="150" rx="6" class="boxR"/>
+  <text x="530" y="262" text-anchor="middle" class="lbl tinyB">NO — SIGNATURE IS FIXED</text>
+  <text x="530" y="282" text-anchor="middle" class="lbl sub">e.g. Runnable.run on a pool worker</text>
+  <text x="530" y="306" text-anchor="middle" class="lbl body">Thread.currentThread()</text>
+  <text x="530" y="324" text-anchor="middle" class="lbl body">.interrupt();</text>
+  <text x="530" y="346" text-anchor="middle" class="lbl sub">call it inside the catch block,</text>
+  <text x="530" y="362" text-anchor="middle" class="lbl sub">then return</text>
+
+  <rect x="740" y="240" width="280" height="150" rx="6" class="boxD"/>
+  <text x="880" y="262" text-anchor="middle" class="lbl tinyB">THE THIRD OPTION — ALWAYS A BUG</text>
+  <text x="880" y="284" text-anchor="middle" class="lbl body">catch (InterruptedException e) { }</text>
+  <text x="880" y="304" text-anchor="middle" class="lbl sub">swallow — do nothing, keep looping</text>
+  <text x="880" y="326" text-anchor="middle" class="lbl sub">symptom: a shutdownNow() that</text>
+  <text x="880" y="342" text-anchor="middle" class="lbl sub">never stops anything</text>
+  <text x="880" y="362" text-anchor="middle" class="lbl sub">the cancellation request vanishes</text>
+
+  <line x1="20" y1="460" x2="1020" y2="460" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="478" width="22" height="16" rx="3" class="boxP"/>
+  <text x="70" y="490" class="lbl tiny">decision node</text>
+  <rect x="260" y="478" width="22" height="16" rx="3" class="boxR"/>
+  <text x="290" y="490" class="lbl tiny">legal response (correct)</text>
+  <rect x="540" y="478" width="22" height="16" rx="3" class="boxD"/>
+  <text x="570" y="490" class="lbl tiny">always a bug</text>
+  <path class="flow" d="M 780 486 H 820"/>
+  <text x="830" y="490" class="lbl tiny">A → B : leads to response B</text>
+
+  <text x="40" y="520" class="lbl tiny">Swallowing looks harmless in a try/catch around a single stake reservation — it is never harmless in a shutdown path.</text>
+</svg>

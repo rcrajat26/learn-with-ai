@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1120 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A pattern is a test, an extraction, and a binding. Left panel: the pre-16 form performs the three steps by hand: instanceof tests the type, an explicit cast extracts the value, and an assignment binds it to variable d. Right panel: pattern-matching instanceof collapses all three steps into one expression producing DocumentVerdict d, and below it a record pattern further destructures d into its four components outcome, reason, at, and by in one step.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, monospace; fill: #1f2937; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+
+    .boxW  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A PATTERN IS A TEST, AN EXTRACTION, AND A BINDING</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="60" x2="560" y2="610" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: pre-16 form -->
+  <text x="30" y="72" class="lbl h2">PRE-16 — THREE STEPS BY HAND</text>
+  <rect x="30" y="86" width="510" height="52" rx="6" class="boxW"/>
+  <text x="42" y="108" class="lbl code">if (v instanceof DocumentVerdict) {</text>
+  <text x="42" y="126" class="lbl code">  DocumentVerdict d = (DocumentVerdict) v; ...</text>
+
+  <rect x="30" y="156" width="160" height="72" rx="6" class="boxW"/>
+  <text x="110" y="180" text-anchor="middle" class="lbl node" style="font-size:13px;">① test</text>
+  <text x="110" y="200" text-anchor="middle" class="lbl tiny">v instanceof</text>
+  <text x="110" y="216" text-anchor="middle" class="lbl tiny">DocumentVerdict</text>
+
+  <path class="flow" d="M 190 192 H 220"/>
+
+  <rect x="224" y="156" width="160" height="72" rx="6" class="boxW"/>
+  <text x="304" y="180" text-anchor="middle" class="lbl node" style="font-size:13px;">② extract</text>
+  <text x="304" y="200" text-anchor="middle" class="lbl tiny">explicit cast</text>
+  <text x="304" y="216" text-anchor="middle" class="lbl tiny">(DocumentVerdict) v</text>
+
+  <path class="flow" d="M 384 192 H 414"/>
+
+  <rect x="418" y="156" width="130" height="72" rx="6" class="boxW"/>
+  <text x="483" y="180" text-anchor="middle" class="lbl node" style="font-size:13px;">③ bind</text>
+  <text x="483" y="200" text-anchor="middle" class="lbl tiny">assign to</text>
+  <text x="483" y="216" text-anchor="middle" class="lbl tiny">variable d</text>
+
+  <rect x="30" y="250" width="510" height="80" rx="6" class="boxA"/>
+  <text x="46" y="272" class="lbl body" style="font-weight:700;">Risk</text>
+  <text x="46" y="292" class="lbl tiny">Test and extraction can drift apart — a later edit changes the instanceof check</text>
+  <text x="46" y="308" class="lbl tiny">but the cast target is forgotten, producing a ClassCastException at runtime.</text>
+
+  <!-- RIGHT: pattern matching form -->
+  <text x="580" y="72" class="lbl h2">JAVA 16+ — PATTERN MATCHING INSTANCEOF (JEP 394)</text>
+  <rect x="580" y="86" width="510" height="52" rx="6" class="boxY"/>
+  <text x="592" y="116" class="lbl code">if (v instanceof DocumentVerdict d) { ... }</text>
+
+  <path d="M 835 138 V 160" fill="none" stroke="#b45309" stroke-width="2"/>
+  <path d="M 620 160 H 1050" fill="none" stroke="#b45309" stroke-width="2"/>
+  <path class="flow" d="M 620 160 V 190"/>
+  <path class="flow" d="M 835 160 V 190"/>
+  <path class="flow" d="M 1050 160 V 190"/>
+
+  <rect x="580" y="190" width="140" height="60" rx="6" class="boxY"/>
+  <text x="650" y="212" text-anchor="middle" class="lbl node" style="font-size:12.5px;">① test</text>
+  <text x="650" y="230" text-anchor="middle" class="lbl tiny">type check</text>
+
+  <rect x="765" y="190" width="140" height="60" rx="6" class="boxY"/>
+  <text x="835" y="212" text-anchor="middle" class="lbl node" style="font-size:12.5px;">② extract</text>
+  <text x="835" y="230" text-anchor="middle" class="lbl tiny">cast, hidden</text>
+
+  <rect x="950" y="190" width="140" height="60" rx="6" class="boxY"/>
+  <text x="1020" y="212" text-anchor="middle" class="lbl node" style="font-size:12.5px;">③ bind</text>
+  <text x="1020" y="230" text-anchor="middle" class="lbl tiny">d in scope</text>
+
+  <text x="835" y="278" text-anchor="middle" class="lbl sub">one expression — the compiler keeps ①②③ in sync</text>
+
+  <!-- record pattern below -->
+  <rect x="580" y="310" width="510" height="60" rx="6" class="boxR"/>
+  <text x="592" y="334" class="lbl code" style="font-size:11.5px;">if (v instanceof DocumentVerdict(</text>
+  <text x="592" y="352" class="lbl code" style="font-size:11.5px;">    var outcome, var reason, var at, var by)) { ... }</text>
+
+  <path class="flow" d="M 835 370 V 394"/>
+  <rect x="600" y="394" width="470" height="120" rx="6" class="boxR"/>
+  <text x="620" y="416" class="lbl node" style="font-size:13px;">record pattern — destructures in one step</text>
+  <line x1="620" y1="428" x2="1050" y2="428" stroke="#15803d" stroke-width="1"/>
+  <text x="620" y="448" class="lbl tiny">outcome  ← DocumentVerdict.outcome()</text>
+  <text x="620" y="466" class="lbl tiny">reason   ← DocumentVerdict.reason()</text>
+  <text x="620" y="484" class="lbl tiny">at       ← DocumentVerdict.decidedAt()</text>
+  <text x="620" y="502" class="lbl tiny">by       ← DocumentVerdict.decidedBy()</text>
+
+  <!-- annotation panel spanning bottom -->
+  <rect x="30" y="540" width="1060" height="66" rx="6" class="boxA"/>
+  <text x="46" y="562" class="lbl body" style="font-weight:700;">Same three steps, nested one level deeper</text>
+  <text x="46" y="580" class="lbl tiny">The record pattern still tests (v is a DocumentVerdict), extracts (calls each accessor), and binds (outcome, reason, at, by) — pattern matching composes.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="622" x2="1100" y2="622" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="638" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="651" class="lbl tiny">pre-16 manual step</text>
+  <rect x="220" y="638" width="22" height="16" rx="3" class="boxY"/>
+  <text x="250" y="651" class="lbl tiny">pattern-matching instanceof (new-in-version, JEP 394)</text>
+  <rect x="560" y="638" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="651" class="lbl tiny">record pattern destructuring (JEP 440)</text>
+  <path class="flow" d="M 860 646 H 900"/>
+  <text x="910" y="651" class="lbl tiny">A → B : B follows A in sequence</text>
+</svg>

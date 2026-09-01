@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="BLOCKED versus WAITING in a jstack dump, compared side by side. Left: FundsLedger-reserve-worker-3
+     holds the monitor at 0x00000000d5f5b1a8; twelve other threads show Thread.State BLOCKED (on object monitor)
+     waiting to lock that same monitor, a contention incident where you must find the owner. Right: a
+     LinkedBlockingQueue of withdrawal transactions; forty pool threads show Thread.State WAITING (parking),
+     parking inside ThreadPoolExecutor.getTask with no owner and no monitor to blame, which is normal idle.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .tiny  { font-size: 11px; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; font-family: "SF Mono", Consolas, monospace; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">BLOCKED VERSUS WAITING IN A THREAD DUMP</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="52" x2="560" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl h2">CONTENTION INCIDENT — FIND THE OWNER</text>
+  <text x="580" y="64" class="lbl h2">NORMAL IDLE</text>
+
+  <!-- LEFT: owner -->
+  <rect x="150" y="90" width="300" height="100" rx="6" class="boxR"/>
+  <text x="300" y="108" text-anchor="middle" class="lbl tinyB">OWNER — HOLDS THE LOCK</text>
+  <text x="300" y="130" text-anchor="middle" class="lbl node">FundsLedger-reserve-worker-3</text>
+  <text x="300" y="150" text-anchor="middle" class="lbl sub">holds &lt;0x00000000d5f5b1a8&gt;</text>
+  <text x="300" y="167" text-anchor="middle" class="lbl sub">(a com.quizstakes.funds.FundsLedger)</text>
+
+  <path class="flow" d="M 300 190 V 260"/>
+
+  <rect x="70" y="260" width="460" height="190" rx="6" class="boxD"/>
+  <text x="300" y="286" text-anchor="middle" class="lbl node">12 THREADS — BLOCKED (on object monitor)</text>
+  <text x="90" y="308" class="lbl body">java.lang.Thread.State: BLOCKED (on object monitor)</text>
+  <text x="90" y="328" class="lbl body">- waiting to lock &lt;0x00000000d5f5b1a8&gt;</text>
+  <text x="90" y="348" class="lbl body">  (a com.quizstakes.funds.FundsLedger)</text>
+  <text x="300" y="374" text-anchor="middle" class="lbl sub">stake-reserve-worker-4 … stake-reserve-worker-15</text>
+  <text x="300" y="392" text-anchor="middle" class="lbl sub">12 threads total — same monitor, one owner</text>
+
+  <rect x="70" y="470" width="460" height="80" rx="6" class="ann"/>
+  <text x="90" y="490" class="lbl tinyB">READING THIS DUMP</text>
+  <text x="90" y="508" class="lbl tiny">12 BLOCKED threads + 1 named owner holding the monitor</text>
+  <text x="90" y="524" class="lbl tiny">= a contention incident — find the owner, see what it is doing</text>
+
+  <!-- RIGHT: queue -->
+  <rect x="690" y="90" width="300" height="100" rx="6" class="boxW"/>
+  <text x="840" y="108" text-anchor="middle" class="lbl tinyB">TASK QUEUE — WORKERS PARK HERE</text>
+  <text x="840" y="130" text-anchor="middle" class="lbl node">LinkedBlockingQueue&lt;Runnable&gt;</text>
+  <text x="840" y="150" text-anchor="middle" class="lbl sub">withdrawal transactions</text>
+  <text x="840" y="167" text-anchor="middle" class="lbl sub">awaiting a payment run</text>
+
+  <path class="flow" d="M 840 190 V 260"/>
+
+  <rect x="610" y="260" width="460" height="190" rx="6" class="boxW"/>
+  <text x="840" y="286" text-anchor="middle" class="lbl node">40 THREADS — WAITING (parking)</text>
+  <text x="630" y="308" class="lbl body">java.lang.Thread.State: WAITING (parking)</text>
+  <text x="630" y="328" class="lbl body">- parking to wait for &lt;0x...&gt;</text>
+  <text x="630" y="348" class="lbl body">  (a java.util.concurrent.LinkedBlockingQueue$Node)</text>
+  <text x="840" y="374" text-anchor="middle" class="lbl sub">at ThreadPoolExecutor.getTask</text>
+  <text x="840" y="392" text-anchor="middle" class="lbl sub">pool-4-thread-1 … pool-4-thread-40 — 40 total</text>
+
+  <rect x="610" y="470" width="460" height="80" rx="6" class="ann"/>
+  <text x="630" y="490" class="lbl tinyB">READING THIS DUMP</text>
+  <text x="630" y="508" class="lbl tiny">40 WAITING threads, no owner, no monitor to blame</text>
+  <text x="630" y="524" class="lbl tiny">= normal idle — the pool is simply out of work</text>
+
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="718" width="22" height="16" rx="3" class="boxR"/>
+  <text x="70" y="730" class="lbl tiny">owner — holds the lock</text>
+  <rect x="280" y="718" width="22" height="16" rx="3" class="boxD"/>
+  <text x="310" y="730" class="lbl tiny">BLOCKED threads (contention)</text>
+  <rect x="560" y="718" width="22" height="16" rx="3" class="boxW"/>
+  <text x="590" y="730" class="lbl tiny">WAITING threads / queue (normal)</text>
+  <rect x="860" y="718" width="22" height="16" rx="3" class="ann"/>
+  <text x="890" y="730" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 40 754 H 90"/>
+  <text x="100" y="758" class="lbl tiny">A → B : A's dump entry (owner / queue) explains B's dump entry (blocked / waiting)</text>
+</svg>

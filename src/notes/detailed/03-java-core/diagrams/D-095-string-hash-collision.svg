@@ -1,0 +1,71 @@
+<svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two different strings, one hash: Aa and BB both hash to 2112, and the doubling family AaAa BBBB AaBB BBAa shows 2^k strings sharing one hash at length 2k, with a hash-flooding attack named on a coupon-code map.">
+  <defs>
+    <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#1f2937">Two different strings, one hash</text>
+
+  <!-- Frame 1 -->
+  <rect x="20" y="54" width="860" height="200" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="66" width="360" height="24" rx="3" fill="#dbeafe"/>
+  <text x="214" y="83" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Frame 1: &quot;Aa&quot; and &quot;BB&quot; collide</text>
+
+  <rect x="40" y="100" width="380" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="122" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;Aa&quot;: 31*65 + 97</text>
+  <text x="230" y="142" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= 2015 + 97 = 2112</text>
+
+  <rect x="440" y="100" width="380" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="122" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;BB&quot;: 31*66 + 66</text>
+  <text x="630" y="142" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= 2046 + 66 = 2112</text>
+
+  <line x1="230" y1="160" x2="430" y2="196" stroke="#737373" stroke-width="2" marker-end="url(#arrow4)"/>
+  <line x1="630" y1="160" x2="450" y2="196" stroke="#737373" stroke-width="2" marker-end="url(#arrow4)"/>
+
+  <rect x="340" y="200" width="220" height="40" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">both hashCode() = 2112</text>
+
+  <!-- Frame 2 -->
+  <rect x="20" y="270" width="860" height="410" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="282" width="440" height="24" rx="3" fill="#fee2e2"/>
+  <text x="254" y="299" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Frame 2: doubling family shares one hash at length 2k</text>
+
+  <!-- root -->
+  <rect x="360" y="312" width="180" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="337" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;Aa&quot; / &quot;BB&quot; (k=1)</text>
+
+  <line x1="410" y1="352" x2="150" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow4)"/>
+  <line x1="430" y1="352" x2="380" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow4)"/>
+  <line x1="470" y1="352" x2="520" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow4)"/>
+  <line x1="490" y1="352" x2="750" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow4)"/>
+
+  <!-- 4 children -->
+  <rect x="80" y="404" width="140" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;AaAa&quot;</text>
+
+  <rect x="310" y="404" width="140" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="380" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;BBBB&quot;</text>
+
+  <rect x="450" y="404" width="140" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="520" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;AaBB&quot;</text>
+
+  <rect x="680" y="404" width="140" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="750" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;BBAa&quot;</text>
+
+  <rect x="200" y="456" width="500" height="30" rx="4" fill="#fef3c7"/>
+  <text x="450" y="477" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">all four length-4 strings hash identically (k=2)</text>
+
+  <rect x="240" y="494" width="420" height="34" rx="4" fill="#e5e7eb"/>
+  <text x="450" y="517" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">2^k distinct strings share one hash at length 2k</text>
+
+  <!-- attack callout -->
+  <rect x="60" y="540" width="780" height="120" rx="8" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="564" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Hash-flooding attack</text>
+  <text x="450" y="586" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a HashMap keyed by client-supplied coupon codes (e.g. promo-code lookup on</text>
+  <text x="450" y="604" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">deposit BDP-101) can be fed thousands of colliding keys from this family,</text>
+  <text x="450" y="622" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">forcing every bucket into one linked list and degrading O(1) lookups toward O(n)</text>
+  <text x="450" y="644" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">degradation node: coupon-code HashMap under attack</text>
+</svg>

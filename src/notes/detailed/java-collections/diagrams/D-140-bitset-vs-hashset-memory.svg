@@ -1,0 +1,111 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cost curve comparing memory usage of BitSet versus HashSet of Integer as domain size grows. For a dense set, BitSet uses 1 bit per element while HashSet uses about 50 bytes per element; at n=1,000,000, BitSet uses 125,000 bytes (125 KB) versus HashSet's 50,000,000 bytes (50 MB), a ratio of about 400 times. A sparse regime is also marked where a huge domain with very few actual members flips the winner: BitSet must allocate the full dense array up to the maximum value, so HashSet wins because it only pays per actual element.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <rect x="20" y="4" width="760" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="400" y="18" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937" text-anchor="middle">BitSet vs HashSet&lt;Integer&gt;: memory vs domain size (dense set)</text>
+
+  <!-- Background regime bands -->
+  <rect x="70" y="35" width="110" height="170" fill="#fef3c7"/>
+  <rect x="180" y="35" width="380" height="170" fill="#dcfce7"/>
+
+  <!-- Axes -->
+  <line x1="70" y1="35" x2="70" y2="205" stroke="#737373" stroke-width="2"/>
+  <line x1="70" y1="205" x2="560" y2="205" stroke="#737373" stroke-width="2"/>
+
+  <!-- Y axis label -->
+  <rect x="72" y="27" width="130" height="14" rx="3" fill="#e5e7eb"/>
+  <text x="77" y="37" font-family="sans-serif" font-size="11" fill="#1f2937">Memory (bytes, log scale)</text>
+
+  <!-- Y tick labels -->
+  <rect x="34" y="182" width="30" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="61" y="192" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="end">1B</text>
+  <rect x="30" y="131" width="34" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="61" y="141" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="end">1KB</text>
+  <rect x="30" y="80" width="34" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="61" y="90" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="end">1MB</text>
+  <rect x="30" y="29" width="34" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="61" y="39" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="end">1GB</text>
+
+  <!-- X tick labels -->
+  <rect x="60" y="208" width="20" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="70" y="218" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">10</text>
+  <rect x="218" y="208" width="30" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="233" y="218" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">1K</text>
+  <rect x="378" y="208" width="38" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="397" y="218" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">100K</text>
+  <rect x="461" y="208" width="34" height="13" rx="3" fill="#fef3c7"/>
+  <text x="478" y="218" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">1M</text>
+  <rect x="543" y="208" width="34" height="13" rx="3" fill="#e5e7eb"/>
+  <text x="560" y="218" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">10M</text>
+
+  <!-- BitSet line: 1 bit/element -->
+  <line x1="70" y1="186" x2="560" y2="84" stroke="#525252" stroke-width="3"/>
+
+  <!-- HashSet line: 50 bytes/element -->
+  <line x1="70" y1="142" x2="560" y2="40" stroke="#737373" stroke-width="3" stroke-dasharray="7,4"/>
+
+  <!-- Markers at n = 1,000,000 -->
+  <circle cx="478.3" cy="101" r="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="478.3" cy="57" r="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <line x1="478.3" y1="35" x2="478.3" y2="205" stroke="#737373" stroke-width="2" stroke-dasharray="3,3"/>
+
+  <!-- ratio arrow between the two n=1,000,000 points -->
+  <line x1="505" y1="101" x2="505" y2="57" stroke="#525252" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="507" y="70" width="55" height="18" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="534" y="83" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">~400x</text>
+
+  <!-- n = 1,000,000 callout -->
+  <rect x="485" y="105" width="70" height="16" rx="3" fill="#e5e7eb"/>
+  <text x="520" y="117" font-family="sans-serif" font-size="11" fill="#1f2937" text-anchor="middle">n=1,000,000</text>
+
+  <!-- Legend -->
+  <rect x="330" y="42" width="220" height="40" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <line x1="338" y1="55" x2="368" y2="55" stroke="#525252" stroke-width="3"/>
+  <text x="374" y="59" font-family="sans-serif" font-size="11" fill="#1f2937">BitSet: 1 bit / element</text>
+  <line x1="338" y1="71" x2="368" y2="71" stroke="#737373" stroke-width="3" stroke-dasharray="7,4"/>
+  <text x="374" y="75" font-family="sans-serif" font-size="11" fill="#1f2937">HashSet: ~50 bytes / element</text>
+
+  <!-- Dense regime label -->
+  <rect x="330" y="160" width="100" height="34" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="380" y="174" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">dense:</text>
+  <text x="380" y="188" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">BitSet wins</text>
+
+  <!-- Sparse regime label -->
+  <rect x="80" y="160" width="95" height="34" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="127" y="174" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">sparse:</text>
+  <text x="127" y="188" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">HashSet wins</text>
+
+  <!-- Right sidebar: sparse exception explainer -->
+  <rect x="565" y="35" width="215" height="170" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="575" y="52" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Sparse exception</text>
+  <text x="575" y="70" font-family="sans-serif" font-size="11" fill="#1f2937">Domain size = 1,000,000,000</text>
+  <text x="575" y="85" font-family="sans-serif" font-size="11" fill="#1f2937">Actual members = 100</text>
+  <text x="575" y="103" font-family="sans-serif" font-size="11" fill="#1f2937">BitSet allocates full domain:</text>
+  <text x="575" y="118" font-family="sans-serif" font-size="11" fill="#1f2937">~125,000,000 bytes = 125 MB</text>
+  <text x="575" y="136" font-family="sans-serif" font-size="11" fill="#1f2937">HashSet pays per element:</text>
+  <text x="575" y="151" font-family="sans-serif" font-size="11" fill="#1f2937">100 x 50 bytes = 5,000 bytes</text>
+  <rect x="573" y="163" width="197" height="32" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="671" y="176" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">HashSet wins here</text>
+  <text x="671" y="190" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937" text-anchor="middle">by roughly 25,000x</text>
+
+  <!-- Bottom stat boxes for n = 1,000,000 -->
+  <rect x="20" y="230" width="250" height="58" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="30" y="246" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BitSet @ n=1,000,000</text>
+  <text x="30" y="264" font-family="sans-serif" font-size="11" fill="#1f2937">1,000,000 bits = 125,000 bytes</text>
+  <text x="30" y="279" font-family="sans-serif" font-size="11" fill="#1f2937">= approx 125 KB</text>
+
+  <rect x="280" y="230" width="270" height="58" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="290" y="246" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">HashSet&lt;Integer&gt; @ n=1,000,000</text>
+  <text x="290" y="264" font-family="sans-serif" font-size="11" fill="#1f2937">1,000,000 x 50 bytes = 50,000,000 bytes</text>
+  <text x="290" y="279" font-family="sans-serif" font-size="11" fill="#1f2937">= approx 50 MB</text>
+
+  <rect x="560" y="230" width="220" height="58" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="570" y="246" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Ratio at n=1,000,000</text>
+  <text x="570" y="264" font-family="sans-serif" font-size="11" fill="#1f2937">50,000,000 / 125,000 = 400</text>
+  <text x="570" y="279" font-family="sans-serif" font-size="11" fill="#1f2937">HashSet is approx 400x bigger</text>
+</svg>

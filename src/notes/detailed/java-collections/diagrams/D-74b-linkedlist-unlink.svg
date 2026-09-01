@@ -1,0 +1,66 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="LinkedList unlink: bypass writes prev.next = next and next.prev = prev, then three explicit erasures x.item = null, x.next = null, x.prev = null annotated as helping garbage collection">
+
+  <defs>
+    <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="15" width="760" height="34" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="37" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">unlink(x): bypass x, then null out x's fields to help GC</text>
+
+  <!-- prev node -->
+  <rect x="60" y="90" width="120" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="120" y="115" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">prev</text>
+  <text x="120" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">prev | item | next</text>
+
+  <!-- x node, being removed -->
+  <rect x="340" y="90" width="120" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="115" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">x</text>
+  <text x="400" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">prev | item | next</text>
+
+  <!-- next node -->
+  <rect x="620" y="90" width="120" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="115" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">next</text>
+  <text x="680" y="135" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">prev | item | next</text>
+
+  <!-- old links through x, dashed/faded -->
+  <line x1="180" y1="115" x2="340" y2="115" stroke="#737373" stroke-width="2" stroke-dasharray="4,4"/>
+  <line x1="460" y1="115" x2="620" y2="115" stroke="#737373" stroke-width="2" stroke-dasharray="4,4"/>
+
+  <!-- bypass writes: prev.next = next -->
+  <path d="M 120 90 C 120 55, 680 55, 680 90" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="330" y="40" width="180" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="420" y="55" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">1: prev.next = next</text>
+
+  <!-- bypass writes: next.prev = prev -->
+  <path d="M 680 160 C 680 195, 120 195, 120 160" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="290" y="188" width="180" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="380" y="203" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">2: next.prev = prev</text>
+
+  <!-- x node now isolated -->
+  <text x="400" y="220" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937"></text>
+
+  <!-- erasures on x -->
+  <rect x="300" y="250" width="200" height="26" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="268" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">3: x.item = null</text>
+
+  <rect x="300" y="282" width="200" height="26" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="300" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">4: x.next = null</text>
+
+  <rect x="300" y="314" width="200" height="26" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="332" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">5: x.prev = null</text>
+
+  <line x1="400" y1="160" x2="400" y2="248" stroke="#737373" stroke-width="2" stroke-dasharray="3,3"/>
+
+  <rect x="520" y="270" width="180" height="55" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="610" y="290" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">help GC:</text>
+  <text x="610" y="308" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">x holds no references,</text>
+  <text x="610" y="322" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">so it can be collected now</text>
+  <path d="M 520 297 L 502 300" stroke="#525252" stroke-width="2" marker-end="url(#arrow4)"/>
+
+  <rect x="20" y="355" width="760" height="35" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="377" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Bypass (1,2) happens before erasure (3,4,5): the chain is repaired first, then the orphaned node's fields are cleared</text>
+</svg>

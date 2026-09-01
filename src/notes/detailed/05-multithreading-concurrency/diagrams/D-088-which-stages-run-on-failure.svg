@@ -1,0 +1,200 @@
+<svg viewBox="0 0 1100 860" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Which stages run when stage 2 of 5 fails, in the QuizStakes affordability chain
+     lookupClient, fetchWallet, combine with LimitSet, call the identity vendor, and a terminal
+     call. Stage 2, fetchWallet, always fails and its WalletServiceException is wrapped in a
+     CompletionException that propagates past every downstream thenApply-style stage. Four frames
+     show the same five-stage chain with a different terminal call. Frame 1, terminated by
+     thenApply, is skipped like the other downstream stages and the exception escapes uncaught.
+     Frame 2, terminated by handle, runs on both the success and failure path and recovers a
+     fallback value. Frame 3, terminated by whenComplete, also runs on both paths but does not
+     recover, so the exception still escapes. Frame 4, terminated by exceptionally, runs only on
+     the failure path and recovers a fallback value.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .warn   { font-size: 11px; fill: #b91c1c; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .frame { fill: none; stroke: #d1d5db; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .propx { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triGrey); }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGrey" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="860" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHICH STAGES RUN WHEN STAGE 2 OF 5 FAILS — AFFORDABILITY CHAIN</text>
+  <line x1="20" y1="42" x2="1080" y2="42" class="rule"/>
+
+  <!-- ============ FRAME 1 : thenApply ============ -->
+  <rect x="20" y="60" width="1060" height="150" rx="8" class="frame"/>
+  <text x="32" y="76" class="lbl h2">FRAME 1 — terminal .thenApply(w -&gt; buildAssessment(w))</text>
+  <text x="32" y="90" class="lbl sub">baseline: the exception from stage 2 short-circuits every downstream thenApply, including the terminal one</text>
+
+  <rect x="40" y="102" width="150" height="60" rx="6" class="boxP"/>
+  <text x="115" y="128" text-anchor="middle" class="lbl node">1 · lookupClient</text>
+  <text x="115" y="146" text-anchor="middle" class="lbl sub">Client</text>
+
+  <rect x="206" y="102" width="150" height="60" rx="6" class="boxD"/>
+  <text x="281" y="128" text-anchor="middle" class="lbl node">2 · fetchWallet</text>
+  <text x="281" y="146" text-anchor="middle" class="lbl sub">FAILS here</text>
+
+  <rect x="372" y="102" width="150" height="60" rx="6" class="boxW"/>
+  <text x="447" y="128" text-anchor="middle" class="lbl node">3 · combine</text>
+  <text x="447" y="146" text-anchor="middle" class="lbl sub">LimitSet</text>
+
+  <rect x="538" y="102" width="150" height="60" rx="6" class="boxW"/>
+  <text x="613" y="128" text-anchor="middle" class="lbl node">4 · identity</text>
+  <text x="613" y="146" text-anchor="middle" class="lbl sub">vendor call</text>
+
+  <rect x="704" y="102" width="150" height="60" rx="6" class="boxW"/>
+  <text x="779" y="128" text-anchor="middle" class="lbl node">thenApply</text>
+  <text x="779" y="146" text-anchor="middle" class="lbl sub">skipped</text>
+
+  <path class="flow" d="M 190 132 H 206"/>
+  <path class="propx" d="M 356 132 H 372"/>
+  <path class="propx" d="M 522 132 H 538"/>
+  <path class="propx" d="M 688 132 H 704"/>
+
+  <text x="40" y="178" class="lbl warn">⚠ WalletServiceException wrapped in CompletionException after stage 2</text>
+  <text x="40" y="196" class="lbl sub">result: .join() throws CompletionException(WalletServiceException) — the terminal thenApply body never runs</text>
+
+  <!-- ============ FRAME 2 : handle ============ -->
+  <rect x="20" y="230" width="1060" height="150" rx="8" class="frame"/>
+  <text x="32" y="246" class="lbl h2">FRAME 2 — terminal .handle((v, ex) -&gt; ...)</text>
+  <text x="32" y="260" class="lbl sub">changed from frame 1: terminal now runs on both paths and observes ex != null</text>
+
+  <rect x="40" y="272" width="150" height="60" rx="6" class="boxP"/>
+  <text x="115" y="298" text-anchor="middle" class="lbl node">1 · lookupClient</text>
+  <text x="115" y="316" text-anchor="middle" class="lbl sub">Client</text>
+
+  <rect x="206" y="272" width="150" height="60" rx="6" class="boxD"/>
+  <text x="281" y="298" text-anchor="middle" class="lbl node">2 · fetchWallet</text>
+  <text x="281" y="316" text-anchor="middle" class="lbl sub">FAILS here</text>
+
+  <rect x="372" y="272" width="150" height="60" rx="6" class="boxW"/>
+  <text x="447" y="298" text-anchor="middle" class="lbl node">3 · combine</text>
+  <text x="447" y="316" text-anchor="middle" class="lbl sub">LimitSet</text>
+
+  <rect x="538" y="272" width="150" height="60" rx="6" class="boxW"/>
+  <text x="613" y="298" text-anchor="middle" class="lbl node">4 · identity</text>
+  <text x="613" y="316" text-anchor="middle" class="lbl sub">vendor call</text>
+
+  <rect x="704" y="272" width="150" height="60" rx="6" class="boxR"/>
+  <text x="779" y="298" text-anchor="middle" class="lbl node">handle</text>
+  <text x="779" y="316" text-anchor="middle" class="lbl sub">recover</text>
+
+  <path class="flow" d="M 190 302 H 206"/>
+  <path class="propx" d="M 356 302 H 372"/>
+  <path class="propx" d="M 522 302 H 538"/>
+  <path class="propx" d="M 688 302 H 704"/>
+
+  <text x="40" y="348" class="lbl warn">⚠ WalletServiceException wrapped in CompletionException after stage 2</text>
+  <text x="40" y="366" class="lbl sub">result: .join() returns the fallback assessment built by handle — no exception escapes</text>
+
+  <!-- ============ FRAME 3 : whenComplete ============ -->
+  <rect x="20" y="400" width="1060" height="150" rx="8" class="frame"/>
+  <text x="32" y="416" class="lbl h2">FRAME 3 — terminal .whenComplete((v, ex) -&gt; ...)</text>
+  <text x="32" y="430" class="lbl sub">changed from frame 2: terminal runs but does not recover — it rethrows the same exception</text>
+
+  <rect x="40" y="442" width="150" height="60" rx="6" class="boxP"/>
+  <text x="115" y="468" text-anchor="middle" class="lbl node">1 · lookupClient</text>
+  <text x="115" y="486" text-anchor="middle" class="lbl sub">Client</text>
+
+  <rect x="206" y="442" width="150" height="60" rx="6" class="boxD"/>
+  <text x="281" y="468" text-anchor="middle" class="lbl node">2 · fetchWallet</text>
+  <text x="281" y="486" text-anchor="middle" class="lbl sub">FAILS here</text>
+
+  <rect x="372" y="442" width="150" height="60" rx="6" class="boxW"/>
+  <text x="447" y="468" text-anchor="middle" class="lbl node">3 · combine</text>
+  <text x="447" y="486" text-anchor="middle" class="lbl sub">LimitSet</text>
+
+  <rect x="538" y="442" width="150" height="60" rx="6" class="boxW"/>
+  <text x="613" y="468" text-anchor="middle" class="lbl node">4 · identity</text>
+  <text x="613" y="486" text-anchor="middle" class="lbl sub">vendor call</text>
+
+  <rect x="704" y="442" width="150" height="60" rx="6" class="boxD"/>
+  <text x="779" y="468" text-anchor="middle" class="lbl node">whenComplete</text>
+  <text x="779" y="486" text-anchor="middle" class="lbl sub">peeks, rethrows</text>
+
+  <path class="flow" d="M 190 472 H 206"/>
+  <path class="propx" d="M 356 472 H 372"/>
+  <path class="propx" d="M 522 472 H 538"/>
+  <path class="propx" d="M 688 472 H 704"/>
+
+  <text x="40" y="518" class="lbl warn">⚠ WalletServiceException wrapped in CompletionException after stage 2</text>
+  <text x="40" y="536" class="lbl sub">result: .join() still throws CompletionException(WalletServiceException) — whenComplete only observed it</text>
+
+  <!-- ============ FRAME 4 : exceptionally ============ -->
+  <rect x="20" y="570" width="1060" height="150" rx="8" class="frame"/>
+  <text x="32" y="586" class="lbl h2">FRAME 4 — terminal .exceptionally(ex -&gt; fallbackAssessment())</text>
+  <text x="32" y="600" class="lbl sub">changed from frame 3: terminal runs only on the failure path and returns a fallback value</text>
+
+  <rect x="40" y="612" width="150" height="60" rx="6" class="boxP"/>
+  <text x="115" y="638" text-anchor="middle" class="lbl node">1 · lookupClient</text>
+  <text x="115" y="656" text-anchor="middle" class="lbl sub">Client</text>
+
+  <rect x="206" y="612" width="150" height="60" rx="6" class="boxD"/>
+  <text x="281" y="638" text-anchor="middle" class="lbl node">2 · fetchWallet</text>
+  <text x="281" y="656" text-anchor="middle" class="lbl sub">FAILS here</text>
+
+  <rect x="372" y="612" width="150" height="60" rx="6" class="boxW"/>
+  <text x="447" y="638" text-anchor="middle" class="lbl node">3 · combine</text>
+  <text x="447" y="656" text-anchor="middle" class="lbl sub">LimitSet</text>
+
+  <rect x="538" y="612" width="150" height="60" rx="6" class="boxW"/>
+  <text x="613" y="638" text-anchor="middle" class="lbl node">4 · identity</text>
+  <text x="613" y="656" text-anchor="middle" class="lbl sub">vendor call</text>
+
+  <rect x="704" y="612" width="150" height="60" rx="6" class="boxR"/>
+  <text x="779" y="638" text-anchor="middle" class="lbl node">exceptionally</text>
+  <text x="779" y="656" text-anchor="middle" class="lbl sub">recover, fallback</text>
+
+  <path class="flow" d="M 190 642 H 206"/>
+  <path class="propx" d="M 356 642 H 372"/>
+  <path class="propx" d="M 522 642 H 538"/>
+  <path class="propx" d="M 688 642 H 704"/>
+
+  <text x="40" y="688" class="lbl warn">⚠ WalletServiceException wrapped in CompletionException after stage 2</text>
+  <text x="40" y="706" class="lbl sub">result: .join() returns the fallback assessment built by exceptionally — no exception escapes</text>
+
+  <!-- legend -->
+  <line x1="20" y1="740" x2="1080" y2="740" class="rule"/>
+
+  <rect x="40" y="760" width="20" height="14" rx="3" class="boxP"/>
+  <text x="68" y="771" class="lbl tiny">ran normally, no exception</text>
+
+  <rect x="320" y="760" width="20" height="14" rx="3" class="boxD"/>
+  <text x="348" y="771" class="lbl tiny">the failing call, or a terminal that still observes/rethrows it</text>
+
+  <rect x="700" y="760" width="20" height="14" rx="3" class="boxW"/>
+  <text x="728" y="771" class="lbl tiny">skipped — the exception short-circuited this stage</text>
+
+  <rect x="40" y="795" width="20" height="14" rx="3" class="boxR"/>
+  <text x="68" y="806" class="lbl tiny">terminal recovered a value from the exception</text>
+
+  <path class="flow" d="M 320 802 H 370"/>
+  <text x="380" y="806" class="lbl tiny">normal success flow</text>
+
+  <path class="propx" d="M 620 802 H 670"/>
+  <text x="680" y="806" class="lbl tiny">exception propagates past a skipped stage</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cost curve comparing list.removeAll with a List argument (n times m) versus a Set argument (n plus m), worked at n=m=10000 giving 100000000 versus 20000 operations">
+  <defs>
+    <marker id="arrow59" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="760" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="27" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">removeAll cost vs argument size m (n fixed at 10,000)</text>
+
+  <!-- axes -->
+  <line x1="70" y1="250" x2="70" y2="45" stroke="#737373" stroke-width="2" marker-end="url(#arrow59)"/>
+  <line x1="70" y1="250" x2="740" y2="250" stroke="#737373" stroke-width="2" marker-end="url(#arrow59)"/>
+
+  <rect x="24" y="130" width="40" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="44" y="143" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ops</text>
+  <rect x="690" y="256" width="60" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="720" y="269" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">m (size)</text>
+
+  <!-- n*m curve (list argument) - steep quadratic-looking line since n fixed, cost = n*m linear in m but huge slope -->
+  <path d="M 70 248 L 200 210 L 350 150 L 500 95 L 650 45" fill="none" stroke="#525252" stroke-width="2"/>
+  <rect x="560" y="50" width="150" height="20" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="1"/>
+  <text x="635" y="65" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">list.removeAll(list2): n·m</text>
+
+  <!-- n+m curve (set argument) - nearly flat since dominated by n -->
+  <path d="M 70 235 L 200 233 L 350 231 L 500 229 L 650 227" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="560" y="205" width="170" height="20" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="1"/>
+  <text x="645" y="220" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">list.removeAll(new HashSet&lt;&gt;(list2)): n+m</text>
+
+  <!-- worked point callout -->
+  <rect x="330" y="80" width="230" height="55" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="445" y="98" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n = m = 10,000</text>
+  <text x="445" y="114" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">List arg: 10,000 x 10,000 = 100,000,000 ops</text>
+  <text x="445" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Set arg: 10,000 + 10,000 = 20,000 ops</text>
+
+  <rect x="30" y="255" width="40" height="16" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="50" y="267" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+</svg>

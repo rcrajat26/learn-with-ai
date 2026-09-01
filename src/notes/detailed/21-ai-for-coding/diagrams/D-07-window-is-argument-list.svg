@@ -1,0 +1,98 @@
+<svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after diagram. Left, the wrong mental model: the model is drawn as a box that writes to a persistent server-side memory store across turns, marked false. Right, the real model: a stateless RestController-shaped handler that receives the entire conversation as its request body every call, with a client that appends the new turn to that body each time. An annotation panel lists where the memory analogy breaks: no session, no cookie, no server-side store.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; font-size: 12px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad{ fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bad   { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triBad); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triBad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE WINDOW IS AN ARGUMENT LIST, NOT A MEMORY</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <text x="20" y="66" class="lbl h2">WRONG MODEL — MARKED FALSE</text>
+  <text x="540" y="66" class="lbl h2">REAL MODEL</text>
+  <line x1="510" y1="76" x2="510" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: wrong model -->
+  <rect x="60" y="100" width="180" height="64" rx="6" class="boxBad"/>
+  <text x="150" y="128" text-anchor="middle" class="lbl node">the model</text>
+  <text x="150" y="148" text-anchor="middle" class="lbl sub">assumed stateful</text>
+
+  <path class="bad" d="M 150 164 V 200"/>
+  <text x="228" y="188" text-anchor="middle" class="lbl tiny">writes to memory</text>
+
+  <rect x="60" y="200" width="180" height="60" rx="6" class="boxBad"/>
+  <text x="150" y="226" text-anchor="middle" class="lbl node">persistent store</text>
+  <text x="150" y="246" text-anchor="middle" class="lbl sub">server-side session</text>
+
+  <rect x="60" y="284" width="420" height="40" rx="6" class="boxBad"/>
+  <text x="270" y="309" text-anchor="middle" class="lbl body">FALSE — the model has no memory between calls</text>
+
+  <!-- RIGHT: real model -->
+  <rect x="560" y="100" width="440" height="88" rx="6" class="boxP"/>
+  <text x="580" y="124" class="lbl node">@RestController</text>
+  <text x="580" y="144" class="lbl mono">POST /v1/messages</text>
+  <text x="580" y="164" class="lbl body">handle(ConversationRequest body)</text>
+  <text x="580" y="180" class="lbl sub">stateless handler — no instance field holds history</text>
+
+  <path class="flow" d="M 780 188 V 220"/>
+  <text x="880" y="208" text-anchor="middle" class="lbl tiny">entire conversation as request body</text>
+
+  <rect x="560" y="220" width="440" height="96" rx="6" class="boxG"/>
+  <text x="580" y="244" class="lbl node">ConversationRequest body</text>
+  <text x="580" y="264" class="lbl mono">messages: [turn1, turn2, ... turnN]</text>
+  <text x="580" y="284" class="lbl body">every prior user + assistant turn, resent</text>
+  <text x="580" y="302" class="lbl sub">re-derived fresh from the client each call</text>
+
+  <path class="flow" d="M 780 316 V 348"/>
+  <text x="900" y="336" text-anchor="middle" class="lbl tiny">client appends new turn each call</text>
+
+  <rect x="560" y="348" width="440" height="64" rx="6" class="boxP"/>
+  <text x="580" y="374" class="lbl node">client</text>
+  <text x="580" y="394" class="lbl body">messages.add(newTurn); call again</text>
+
+  <!-- annotation panel -->
+  <rect x="60" y="440" width="940" height="130" rx="6" class="boxAnn"/>
+  <text x="80" y="464" class="lbl h2">Where the analogy breaks</text>
+  <text x="80" y="488" class="lbl tiny">- No session: there is no server-side identifier tying two calls together.</text>
+  <text x="80" y="508" class="lbl tiny">- No cookie: nothing travels implicitly; the client must carry and resend the full array.</text>
+  <text x="80" y="528" class="lbl tiny">- No server-side store: drop one message from the request body and the model has no way to recover it.</text>
+  <text x="80" y="550" class="lbl tiny">The context window is the argument list to a pure function, not a memory the model consults.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="588" x2="1020" y2="588" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="598" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="50" y="611" class="lbl tiny">wrong / false model</text>
+  <rect x="190" y="598" width="22" height="16" rx="3" class="boxP"/>
+  <text x="220" y="611" class="lbl tiny">handler / client (interface role)</text>
+  <rect x="410" y="598" width="22" height="16" rx="3" class="boxG"/>
+  <text x="440" y="611" class="lbl tiny">the request body (resolved data)</text>
+  <path class="flow" d="M 650 606 H 690"/>
+  <text x="698" y="611" class="lbl tiny">primary flow</text>
+  <path class="bad" d="M 800 606 H 840"/>
+  <text x="848" y="611" class="lbl tiny">false / incorrect flow</text>
+</svg>

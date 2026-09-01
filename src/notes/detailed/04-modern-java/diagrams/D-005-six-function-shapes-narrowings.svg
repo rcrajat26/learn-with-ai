@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1360 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy of the core functional interfaces. Five roots: Function of T,R with method R apply(T t), instantiated here as Function of LedgerEntry and Money; BiFunction of T,U,R with R apply(T t, U u), instantiated as BiFunction of Money, Money, Money; Predicate of T with boolean test(T t), instantiated as Predicate of Restriction; Consumer of T with void accept(T t), instantiated as Consumer of Movement; and Supplier of T with T get(), instantiated as Supplier of IdempotencyKey. Two narrowings extend roots: UnaryOperator of T extends Function of T,T, used as UnaryOperator of Money for applyFee from diagram D-007; BinaryOperator of T extends BiFunction of T,T,T, used as BinaryOperator of Money for Money::add. Neither narrowing declares a new abstract method.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE SIX FUNCTION SHAPES AND THEIR NARROWINGS</text>
+  <line x1="20" y1="42" x2="1340" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Row 1: the five roots -->
+  <rect x="40" y="90" width="240" height="100" rx="6" class="boxP"/>
+  <text x="160" y="112" text-anchor="middle" class="lbl node">Function&lt;T,R&gt;</text>
+  <text x="160" y="133" text-anchor="middle" class="lbl body">R apply(T t)</text>
+  <text x="160" y="153" text-anchor="middle" class="lbl sub">Function&lt;LedgerEntry, Money&gt;</text>
+
+  <rect x="280" y="90" width="240" height="100" rx="6" class="boxP"/>
+  <text x="400" y="112" text-anchor="middle" class="lbl node">BiFunction&lt;T,U,R&gt;</text>
+  <text x="400" y="133" text-anchor="middle" class="lbl body">R apply(T t, U u)</text>
+  <text x="400" y="153" text-anchor="middle" class="lbl sub">BiFunction&lt;Money,Money,Money&gt;</text>
+
+  <rect x="520" y="90" width="240" height="100" rx="6" class="boxP"/>
+  <text x="640" y="112" text-anchor="middle" class="lbl node">Predicate&lt;T&gt;</text>
+  <text x="640" y="133" text-anchor="middle" class="lbl body">boolean test(T t)</text>
+  <text x="640" y="153" text-anchor="middle" class="lbl sub">Predicate&lt;Restriction&gt;</text>
+
+  <rect x="760" y="90" width="240" height="100" rx="6" class="boxP"/>
+  <text x="880" y="112" text-anchor="middle" class="lbl node">Consumer&lt;T&gt;</text>
+  <text x="880" y="133" text-anchor="middle" class="lbl body">void accept(T t)</text>
+  <text x="880" y="153" text-anchor="middle" class="lbl sub">Consumer&lt;Movement&gt;</text>
+
+  <rect x="1000" y="90" width="240" height="100" rx="6" class="boxP"/>
+  <text x="1120" y="112" text-anchor="middle" class="lbl node">Supplier&lt;T&gt;</text>
+  <text x="1120" y="133" text-anchor="middle" class="lbl body">T get()</text>
+  <text x="1120" y="153" text-anchor="middle" class="lbl sub">Supplier&lt;IdempotencyKey&gt;</text>
+
+  <!-- Row 2: the two narrowings -->
+  <path class="flow" d="M 160 310 V 190"/>
+  <rect x="50" y="310" width="220" height="120" rx="6" class="boxP"/>
+  <text x="160" y="332" text-anchor="middle" class="lbl node">UnaryOperator&lt;T&gt;</text>
+  <text x="160" y="350" text-anchor="middle" class="lbl tiny">extends Function&lt;T,T&gt;</text>
+  <text x="160" y="368" text-anchor="middle" class="lbl body">T apply(T t)</text>
+  <text x="160" y="388" text-anchor="middle" class="lbl sub">UnaryOperator&lt;Money&gt;</text>
+  <text x="160" y="405" text-anchor="middle" class="lbl tiny">— see applyFee (D-007)</text>
+
+  <path class="flow" d="M 400 310 V 190"/>
+  <rect x="290" y="310" width="220" height="120" rx="6" class="boxP"/>
+  <text x="400" y="332" text-anchor="middle" class="lbl node">BinaryOperator&lt;T&gt;</text>
+  <text x="400" y="350" text-anchor="middle" class="lbl tiny">extends BiFunction&lt;T,T,T&gt;</text>
+  <text x="400" y="368" text-anchor="middle" class="lbl body">T apply(T t1, T t2)</text>
+  <text x="400" y="388" text-anchor="middle" class="lbl sub">BinaryOperator&lt;Money&gt;</text>
+  <text x="400" y="405" text-anchor="middle" class="lbl tiny">— e.g. Money::add</text>
+
+  <!-- annotation -->
+  <rect x="550" y="330" width="560" height="110" rx="8" class="boxAnn"/>
+  <text x="570" y="354" class="lbl h2">NARROWING, NOT NEW BEHAVIOR</text>
+  <text x="570" y="376" class="lbl body">UnaryOperator&lt;T&gt; and BinaryOperator&lt;T&gt; declare no new abstract method —</text>
+  <text x="570" y="394" class="lbl body">they specialize Function&lt;T,T&gt; and BiFunction&lt;T,T,T&gt; to one type argument, so</text>
+  <text x="570" y="412" class="lbl body">a Function&lt;Money,Money&gt; lambda is already a valid UnaryOperator&lt;Money&gt;.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="480" x2="1340" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="495" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="508" class="lbl tiny">functional interface — root or narrowing</text>
+  <path class="flow" d="M 420 503 H 464"/>
+  <text x="474" y="508" class="lbl tiny">child → parent : child extends parent</text>
+  <rect x="820" y="495" width="24" height="16" rx="3" class="boxAnn"/>
+  <text x="852" y="508" class="lbl tiny">shared note</text>
+</svg>

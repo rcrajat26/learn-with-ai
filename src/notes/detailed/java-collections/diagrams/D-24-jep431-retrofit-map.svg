@@ -1,0 +1,86 @@
+<svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="JEP 431 retrofit: Deque and List gain SequencedCollection; LinkedHashSet and SortedSet gain SequencedSet; LinkedHashMap and SortedMap gain SequencedMap, with the seven SequencedCollection methods and ten SequencedMap methods listed">
+  <defs>
+    <marker id="arrow24" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="860" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="450" y="38" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">JEP 431: the sequenced-collection retrofit</text>
+
+  <!-- Row A: Collection side -->
+  <rect x="40" y="70" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="95" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Deque</text>
+
+  <rect x="40" y="130" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="155" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">List</text>
+
+  <line x1="180" y1="90" x2="290" y2="105" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+  <line x1="180" y1="150" x2="290" y2="115" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+
+  <rect x="290" y="85" width="180" height="40" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="380" y="110" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">SequencedCollection</text>
+
+  <line x1="470" y1="105" x2="530" y2="105" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+
+  <rect x="540" y="55" width="330" height="180" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="75" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">SequencedCollection methods (7)</text>
+  <text x="560" y="95" font-family="sans-serif" font-size="12" fill="#1f2937">reversed()</text>
+  <text x="560" y="115" font-family="sans-serif" font-size="12" fill="#1f2937">addFirst(e)</text>
+  <text x="560" y="135" font-family="sans-serif" font-size="12" fill="#1f2937">addLast(e)</text>
+  <text x="560" y="155" font-family="sans-serif" font-size="12" fill="#1f2937">getFirst()</text>
+  <text x="560" y="175" font-family="sans-serif" font-size="12" fill="#1f2937">getLast()</text>
+  <text x="560" y="195" font-family="sans-serif" font-size="12" fill="#1f2937">removeFirst()</text>
+  <text x="560" y="215" font-family="sans-serif" font-size="12" fill="#1f2937">removeLast()</text>
+
+  <!-- Row B: Set side -->
+  <rect x="40" y="270" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="295" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">LinkedHashSet</text>
+
+  <rect x="40" y="330" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="355" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">SortedSet</text>
+
+  <line x1="180" y1="290" x2="290" y2="305" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+  <line x1="180" y1="350" x2="290" y2="315" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+
+  <rect x="290" y="285" width="180" height="40" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="380" y="310" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">SequencedSet</text>
+
+  <line x1="380" y1="285" x2="380" y2="130" stroke="#737373" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow24)"/>
+  <rect x="395" y="195" width="80" height="18" rx="3" fill="#fef3c7"/>
+  <text x="435" y="208" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">extends</text>
+
+  <!-- Row C: Map side -->
+  <rect x="40" y="450" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="475" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">LinkedHashMap</text>
+
+  <rect x="40" y="510" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="535" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">SortedMap</text>
+
+  <line x1="180" y1="470" x2="290" y2="485" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+  <line x1="180" y1="530" x2="290" y2="495" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+
+  <rect x="290" y="465" width="180" height="40" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="380" y="490" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">SequencedMap</text>
+
+  <line x1="470" y1="485" x2="530" y2="470" stroke="#737373" stroke-width="2" marker-end="url(#arrow24)"/>
+
+  <rect x="540" y="260" width="330" height="250" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="280" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">SequencedMap methods (10)</text>
+  <text x="560" y="300" font-family="sans-serif" font-size="12" fill="#1f2937">reversed()</text>
+  <text x="560" y="320" font-family="sans-serif" font-size="12" fill="#1f2937">putFirst(k, v)</text>
+  <text x="560" y="340" font-family="sans-serif" font-size="12" fill="#1f2937">putLast(k, v)</text>
+  <text x="560" y="360" font-family="sans-serif" font-size="12" fill="#1f2937">firstEntry()</text>
+  <text x="560" y="380" font-family="sans-serif" font-size="12" fill="#1f2937">lastEntry()</text>
+  <text x="560" y="400" font-family="sans-serif" font-size="12" fill="#1f2937">pollFirstEntry()</text>
+  <text x="720" y="300" font-family="sans-serif" font-size="12" fill="#1f2937">pollLastEntry()</text>
+  <text x="720" y="320" font-family="sans-serif" font-size="12" fill="#1f2937">sequencedKeySet()</text>
+  <text x="720" y="340" font-family="sans-serif" font-size="12" fill="#1f2937">sequencedValues()</text>
+  <text x="720" y="360" font-family="sans-serif" font-size="12" fill="#1f2937">sequencedEntrySet()</text>
+
+  <rect x="40" y="620" width="820" height="40" rx="4" fill="#fef3c7"/>
+  <text x="450" y="635" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Zero new classes for callers to learn — every existing type is retrofitted with a new supertype interface.</text>
+  <text x="450" y="651" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">SequencedSet adds no methods of its own; it narrows SequencedCollection's return types.</text>
+</svg>

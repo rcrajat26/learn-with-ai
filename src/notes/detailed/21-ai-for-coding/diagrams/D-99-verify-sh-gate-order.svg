@@ -1,0 +1,147 @@
+<svg viewBox="0 0 1000 1180" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of verify.sh's gate order from entry to exit code. Gate 1, drawn first, asserts every target file is text, failing loudly if not, because a binary or truncated file makes every later check meaningless. Gate 2 runs the structural checks. Gate 3 re-runs every fenced listing and compares it against the printed output. Each gate branches either to pass, continuing to the next gate, or to a loud named failure, never to a silent skip. Two terminals are annotated: the Stop hook, which runs the fast local gates, and the CI job, which runs the slow ones.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR    { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxDeg  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triF); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="1180" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">verify.sh GATE ORDER &#8212; TEXT-NESS FIRST</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- entry -->
+  <rect x="340" y="60" width="320" height="50" rx="6" class="boxP"/>
+  <text x="500" y="90" text-anchor="middle" class="lbl body" font-weight="700">verify.sh entry</text>
+
+  <!-- GATE 1: text-ness -->
+  <path class="flow" d="M 500 110 V 134"/>
+  <rect x="300" y="134" width="400" height="76" rx="6" class="boxHi"/>
+  <text x="500" y="158" text-anchor="middle" class="lbl body" font-weight="700">GATE 1 &#8212; assert every target file is text</text>
+  <text x="500" y="178" text-anchor="middle" class="lbl sub">drawn first: a binary or truncated file makes</text>
+  <text x="500" y="194" text-anchor="middle" class="lbl sub">every later structural or listing check meaningless</text>
+
+  <!-- gate 1 branches -->
+  <path class="flow" d="M 500 210 V 234"/>
+  <text x="514" y="228" class="lbl tiny">pass</text>
+  <path class="fail" d="M 300 172 H 120 V 234"/>
+  <text x="130" y="228" class="lbl tiny">fail</text>
+
+  <rect x="20" y="234" width="220" height="66" rx="6" class="boxDeg"/>
+  <text x="130" y="258" text-anchor="middle" class="lbl body" font-weight="700">FAIL: non-text-file</text>
+  <text x="130" y="278" text-anchor="middle" class="lbl sub">named failure, loud exit</text>
+  <text x="130" y="292" text-anchor="middle" class="lbl sub">never a silent skip</text>
+
+  <!-- GATE 2: structural checks -->
+  <rect x="300" y="234" width="400" height="76" rx="6" class="boxP"/>
+  <text x="500" y="258" text-anchor="middle" class="lbl body" font-weight="700">GATE 2 &#8212; structural checks</text>
+  <text x="500" y="278" text-anchor="middle" class="lbl sub">headings, tier tags, required sections,</text>
+  <text x="500" y="294" text-anchor="middle" class="lbl sub">file-count-against-manifest</text>
+
+  <path class="flow" d="M 500 310 V 410"/>
+  <text x="514" y="328" class="lbl tiny">pass</text>
+  <path class="fail" d="M 380 310 V 334"/>
+  <text x="394" y="328" class="lbl tiny">fail</text>
+
+  <rect x="270" y="334" width="220" height="66" rx="6" class="boxDeg"/>
+  <text x="380" y="358" text-anchor="middle" class="lbl body" font-weight="700">FAIL: structure-check</text>
+  <text x="380" y="378" text-anchor="middle" class="lbl sub">named failure, loud exit</text>
+  <text x="380" y="392" text-anchor="middle" class="lbl sub">never a silent skip</text>
+
+  <!-- GATE 3: re-run fenced listings -->
+  <rect x="300" y="410" width="400" height="76" rx="6" class="boxR"/>
+  <text x="500" y="434" text-anchor="middle" class="lbl body" font-weight="700">GATE 3 &#8212; re-run every fenced listing</text>
+  <text x="500" y="454" text-anchor="middle" class="lbl sub">executes each fenced code block, diffs its</text>
+  <text x="500" y="470" text-anchor="middle" class="lbl sub">actual output against the printed output in the note</text>
+
+  <path class="flow" d="M 500 486 V 510"/>
+  <text x="514" y="504" class="lbl tiny">pass</text>
+  <path class="fail" d="M 700 448 H 780 V 510"/>
+  <text x="720" y="504" class="lbl tiny">fail</text>
+
+  <rect x="670" y="510" width="220" height="66" rx="6" class="boxDeg"/>
+  <text x="780" y="534" text-anchor="middle" class="lbl body" font-weight="700">FAIL: listing-drift</text>
+  <text x="780" y="554" text-anchor="middle" class="lbl sub">named failure, loud exit</text>
+  <text x="780" y="568" text-anchor="middle" class="lbl sub">never a silent skip</text>
+
+  <!-- all-gates-pass -->
+  <rect x="340" y="510" width="320" height="60" rx="6" class="boxR"/>
+  <text x="500" y="534" text-anchor="middle" class="lbl body" font-weight="700">all three gates pass</text>
+  <text x="500" y="552" text-anchor="middle" class="lbl sub">exit code 0</text>
+
+  <!-- terminals -->
+  <path class="flow" d="M 420 570 V 604 H 220 V 628"/>
+  <path class="flow" d="M 580 570 V 604 H 780 V 628"/>
+
+  <rect x="60" y="628" width="320" height="90" rx="6" class="boxWeak"/>
+  <text x="220" y="652" text-anchor="middle" class="lbl body" font-weight="700">Stop hook</text>
+  <text x="220" y="672" text-anchor="middle" class="lbl sub">runs Gate 1 and Gate 2 locally</text>
+  <text x="220" y="688" text-anchor="middle" class="lbl sub">on every stop &#8212; fast gates,</text>
+  <text x="220" y="704" text-anchor="middle" class="lbl sub">sub-second, no network</text>
+
+  <rect x="620" y="628" width="320" height="90" rx="6" class="boxWeak"/>
+  <text x="780" y="652" text-anchor="middle" class="lbl body" font-weight="700">CI job</text>
+  <text x="780" y="672" text-anchor="middle" class="lbl sub">runs Gate 3 (and re-confirms 1, 2)</text>
+  <text x="780" y="688" text-anchor="middle" class="lbl sub">on push &#8212; slow gate, executes every</text>
+  <text x="780" y="704" text-anchor="middle" class="lbl sub">fenced listing, minutes not seconds</text>
+
+  <!-- annotation panel -->
+  <rect x="60" y="748" width="880" height="130" rx="6" class="panel"/>
+  <text x="76" y="772" class="lbl h2">WHY TEXT-NESS COMES FIRST</text>
+  <text x="76" y="794" class="lbl dense">If Gate 1 ran last, Gate 2's structural regexes and Gate 3's fenced-listing diff would both silently match nothing</text>
+  <text x="76" y="812" class="lbl dense">against a binary or NUL-corrupted file, and the run would report success on a file no gate actually read. Gate 1</text>
+  <text x="76" y="830" class="lbl dense">exists to fail loudly before that can happen &#8212; see D-92's null-byte-file scenario for the corruption this guards against.</text>
+  <text x="76" y="854" class="lbl dense">Every gate below follows the same rule: branch to a loud named failure (non-text-file, structure-check, listing-drift), never to a quiet skip.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="906" x2="980" y2="906" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="926" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="938" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="951" class="lbl tiny">entry / structural gate</text>
+
+  <rect x="250" y="938" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="280" y="951" class="lbl tiny">Gate 1, text-ness (drawn first)</text>
+
+  <rect x="520" y="938" width="22" height="16" rx="3" class="boxR"/>
+  <text x="550" y="951" class="lbl tiny">Gate 3 / all-pass success state</text>
+
+  <rect x="800" y="938" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="830" y="951" class="lbl tiny">named failure</text>
+
+  <rect x="20" y="964" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="50" y="977" class="lbl tiny">terminal (where the gate runs)</text>
+
+  <rect x="300" y="964" width="22" height="16" rx="3" class="panel"/>
+  <text x="330" y="977" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 520 972 H 560"/>
+  <text x="600" y="977" text-anchor="middle" class="lbl tiny">pass, continue</text>
+
+  <path class="fail" d="M 700 972 H 740"/>
+  <text x="800" y="977" text-anchor="middle" class="lbl tiny">fail, loud named exit</text>
+</svg>

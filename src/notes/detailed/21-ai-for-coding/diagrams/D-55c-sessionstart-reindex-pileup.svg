@@ -1,0 +1,56 @@
+<svg viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of the SessionStart reindex pile-up. Hundreds of concurrent embedder processes are now running, having left behind more than 100 gigabytes of abandoned partial indexes, and the machine becomes unusable.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="430" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 3 OF 4 &#8212; HUNDREDS OF PROCESSES, 100+ GB ABANDONED</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="380" height="90" rx="6" class="boxBad"/>
+  <text x="230" y="94" text-anchor="middle" class="lbl node">hundreds of concurrent</text>
+  <text x="230" y="112" text-anchor="middle" class="lbl node">embedder processes</text>
+  <text x="230" y="134" text-anchor="middle" class="lbl sub">every session's SessionStart hook added its own batch</text>
+
+  <path class="flow" d="M 420 111 H 460"/>
+  <rect x="460" y="66" width="400" height="90" rx="6" class="boxBad"/>
+  <text x="660" y="94" text-anchor="middle" class="lbl node">100+ GB of abandoned</text>
+  <text x="660" y="112" text-anchor="middle" class="lbl node">partial indexes</text>
+  <text x="660" y="134" text-anchor="middle" class="lbl sub">no run ever finished cleanly to reclaim its own disk</text>
+
+  <path class="flow" d="M 230 156 V 200"/>
+  <path class="flow" d="M 660 156 V 200"/>
+
+  <rect x="160" y="200" width="580" height="80" rx="6" class="boxBad"/>
+  <text x="450" y="230" text-anchor="middle" class="lbl node">the machine is unusable</text>
+  <text x="450" y="252" text-anchor="middle" class="lbl sub">CPU, memory, and disk are all exhausted by the abandoned processes and their partial output</text>
+
+  <rect x="40" y="300" width="820" height="60" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="56" y="324" class="lbl node">the numbers are the point</text>
+  <text x="56" y="344" class="lbl tiny">what began as 1 hook run in frame 1 became hundreds of processes and over 100 GB of disk, purely from concurrency</text>
+
+  <line x1="20" y1="380" x2="880" y2="380" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="392" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="50" y="405" class="lbl tiny">resource-exhaustion outcome</text>
+  <rect x="280" y="392" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="310" y="405" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 500 400 H 540"/>
+  <text x="548" y="405" class="lbl tiny">A &#8594; B : A causes / produces B</text>
+</svg>

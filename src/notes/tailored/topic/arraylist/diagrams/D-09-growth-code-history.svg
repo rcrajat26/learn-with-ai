@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1760 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The ArrayList growth code across JDK versions, four panels left to right. JDK 8: grow() inline, a MAX_ARRAY_SIZE constant of Integer.MAX_VALUE minus 8, a hugeCapacity method, ensureCapacityInternal and ensureExplicitCapacity, and equals/hashCode not overridden. JDK 9 through 12: grow splits into grow(int) and newCapacity(int), MAX_ARRAY_SIZE and hugeCapacity are still present, and equals/hashCode are now overridden with an equalsArrayList fast path. A marked removal boundary sits between JDK 12 and JDK 13: from JDK 13 through 20, grow(int) delegates to ArraysSupport.newLength, and MAX_ARRAY_SIZE and hugeCapacity are removed from ArrayList entirely, with the clamp moving to ArraysSupport.SOFT_MAX_ARRAY_LENGTH. JDK 21, highlighted as the target version, keeps everything from 13-20 and adds List extends SequencedCollection, with getFirst, getLast, addFirst, addLast, removeFirst, and removeLast overridden, plus an inherited reversed() default that returns a view. An annotation panel explains that most blogs still describe the JDK 8 code and that naming your JDK version turns a stale answer into a strong one.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+    .pill  { font-size: 12px; font-weight: 700; fill: #78350f; }
+
+    .boxLeg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pillR  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .removed { stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 5 4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1760" height="750" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE GROWTH CODE ACROSS JDK VERSIONS</text>
+  <line x1="20" y1="42" x2="1740" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- version pills + chronology arrows -->
+  <rect x="195" y="56" width="50" height="22" rx="11" class="pillR"/>
+  <text x="220" y="71" text-anchor="middle" class="lbl pill">8</text>
+  <path class="flow" d="M 250 67 H 615"/>
+
+  <rect x="595" y="56" width="70" height="22" rx="11" class="pillR"/>
+  <text x="630" y="71" text-anchor="middle" class="lbl pill">9-12</text>
+  <path class="flow" d="M 665 67 H 1115"/>
+
+  <rect x="1095" y="56" width="80" height="22" rx="11" class="pillR"/>
+  <text x="1135" y="71" text-anchor="middle" class="lbl pill">13-20</text>
+  <path class="flow" d="M 1175 67 H 1515"/>
+
+  <rect x="1495" y="56" width="50" height="22" rx="11" class="pillR"/>
+  <text x="1520" y="71" text-anchor="middle" class="lbl pill">21</text>
+
+  <!-- Panel 1: JDK 8 (legacy) -->
+  <rect x="40" y="100" width="360" height="250" rx="6" class="boxLeg"/>
+  <text x="60" y="126" class="lbl h2">JDK 8</text>
+  <line x1="60" y1="136" x2="380" y2="136" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="60" y="158" class="lbl dense">grow() inline</text>
+  <text x="60" y="182" class="lbl dense">private static final int MAX_ARRAY_SIZE =</text>
+  <text x="60" y="202" class="lbl dense">    Integer.MAX_VALUE - 8</text>
+  <text x="60" y="226" class="lbl dense">private static int hugeCapacity(int)</text>
+  <text x="60" y="250" class="lbl dense">ensureCapacityInternal / ensureExplicitCapacity</text>
+  <text x="60" y="274" class="lbl dense">equals / hashCode NOT overridden -</text>
+  <text x="60" y="294" class="lbl dense">    inherited from AbstractList</text>
+
+  <!-- Panel 2: JDK 9-12 (legacy) -->
+  <rect x="440" y="100" width="360" height="250" rx="6" class="boxLeg"/>
+  <text x="460" y="126" class="lbl h2">JDK 9 - 12</text>
+  <line x1="460" y1="136" x2="780" y2="136" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="460" y="158" class="lbl dense">grow(int) + private int newCapacity(int) split</text>
+  <text x="460" y="182" class="lbl dense">MAX_ARRAY_SIZE and hugeCapacity STILL PRESENT</text>
+  <text x="460" y="206" class="lbl dense">equals / hashCode NOW overridden, with</text>
+  <text x="460" y="226" class="lbl dense">equalsArrayList fast path</text>
+
+  <!-- Removal boundary -->
+  <line x1="870" y1="100" x2="870" y2="350" class="removed"/>
+  <rect x="805" y="190" width="130" height="96" rx="6" class="boxAnn"/>
+  <text x="870" y="209" text-anchor="middle" class="lbl tiny">REMOVAL</text>
+  <text x="870" y="225" text-anchor="middle" class="lbl tiny">BOUNDARY</text>
+  <text x="870" y="245" text-anchor="middle" class="lbl tiny">MAX_ARRAY_SIZE</text>
+  <text x="870" y="261" text-anchor="middle" class="lbl tiny">/ hugeCapacity</text>
+  <text x="870" y="277" text-anchor="middle" class="lbl tiny">gone</text>
+
+  <!-- Panel 3: JDK 13-20 (primary) -->
+  <rect x="940" y="100" width="360" height="250" rx="6" class="boxP"/>
+  <text x="960" y="126" class="lbl h2">JDK 13 - 20</text>
+  <line x1="960" y1="136" x2="1280" y2="136" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="960" y="158" class="lbl dense">grow(int) delegates to</text>
+  <text x="960" y="178" class="lbl dense">ArraysSupport.newLength(...)</text>
+  <text x="960" y="202" class="lbl dense">MAX_ARRAY_SIZE and hugeCapacity</text>
+  <text x="960" y="222" class="lbl dense">REMOVED from ArrayList</text>
+  <text x="960" y="246" class="lbl dense">clamp moves to ArraysSupport.</text>
+  <text x="960" y="266" class="lbl dense">SOFT_MAX_ARRAY_LENGTH</text>
+
+  <!-- Panel 4: JDK 21 (highlight, target) -->
+  <rect x="1340" y="100" width="360" height="250" rx="6" class="boxH"/>
+  <text x="1360" y="126" class="lbl h2">JDK 21 (target)</text>
+  <line x1="1360" y1="136" x2="1680" y2="136" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="1360" y="158" class="lbl dense">everything from 13-20, plus:</text>
+  <text x="1360" y="182" class="lbl dense">List extends SequencedCollection</text>
+  <text x="1360" y="206" class="lbl dense">getFirst / getLast / addFirst / addLast /</text>
+  <text x="1360" y="226" class="lbl dense">removeFirst / removeLast overridden</text>
+  <text x="1360" y="250" class="lbl dense">reversed() inherited as a List default,</text>
+  <text x="1360" y="270" class="lbl dense">returns a VIEW</text>
+
+  <!-- Annotation panel -->
+  <rect x="40" y="400" width="1660" height="150" rx="6" class="boxAnn"/>
+  <text x="60" y="428" class="lbl h2">THE STALE ANSWER INTERVIEWERS STILL EXPECT</text>
+  <line x1="60" y1="438" x2="1680" y2="438" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="60" y="462" class="lbl tiny">Most blogs and StackOverflow answers describe the JDK 8 code.</text>
+  <text x="60" y="486" class="lbl tiny">"ArrayList has a MAX_ARRAY_SIZE field of Integer.MAX_VALUE - 8" is FALSE from JDK 13 on.</text>
+  <text x="60" y="510" class="lbl tiny">The constant still exists - as ArraysSupport.SOFT_MAX_ARRAY_LENGTH, in jdk.internal.util.</text>
+  <text x="60" y="534" class="lbl tiny">Say which version you are describing and you turn a wrong answer into a strong one.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="590" x2="1740" y2="590" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="606" width="20" height="14" rx="3" class="boxLeg"/>
+  <text x="48" y="617" class="lbl tiny">legacy — superseded shape of the code</text>
+  <rect x="380" y="606" width="20" height="14" rx="3" class="boxP"/>
+  <text x="408" y="617" class="lbl tiny">primary — current shape (JDK 13-20)</text>
+  <rect x="740" y="606" width="20" height="14" rx="3" class="boxH"/>
+  <text x="768" y="617" class="lbl tiny">highlight — target version (JDK 21)</text>
+  <rect x="1090" y="606" width="20" height="14" rx="3" class="boxAnn"/>
+  <text x="1118" y="617" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 1330 613 H 1370"/>
+  <text x="1378" y="617" class="lbl tiny">chronological order</text>
+  <line x1="1560" y1="613" x2="1600" y2="613" class="removed"/>
+  <text x="1608" y="617" class="lbl tiny">removal boundary</text>
+</svg>

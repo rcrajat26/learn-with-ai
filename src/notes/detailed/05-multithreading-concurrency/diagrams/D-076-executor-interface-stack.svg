@@ -1,0 +1,103 @@
+<svg viewBox="0 0 1040 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Executor interface stack for settlement-ingest. Executor declares execute(Runnable) on the top band.
+     ExecutorService extends Executor and also implements AutoCloseable, a second parent added in Java 19; it declares
+     lifecycle methods shutdown, shutdownNow, awaitTermination, isShutdown, isTerminated, plus submit, invokeAll,
+     invokeAny, and close (default method, Java 19, calls shutdown then awaitTermination). ScheduledExecutorService
+     extends ExecutorService at the bottom and adds schedule, scheduleAtFixedRate, scheduleWithFixedDelay.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxLeg{ fill: #f5f5f4; stroke: #78716c; stroke-width: 1.3; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE EXECUTOR INTERFACE STACK — settlement-ingest POOL</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Band 1: Executor -->
+  <text x="20" y="70" class="lbl h2">GENERATION 1 — THE ROOT</text>
+  <rect x="400" y="80" width="240" height="90" rx="6" class="boxP"/>
+  <text x="520" y="106" text-anchor="middle" class="lbl node">Executor</text>
+  <line x1="412" y1="116" x2="628" y2="116" stroke="#2563eb" stroke-width="1"/>
+  <text x="520" y="136" text-anchor="middle" class="lbl body">execute(Runnable command)</text>
+  <text x="520" y="154" text-anchor="middle" class="lbl sub">decouples task submission from</text>
+  <text x="520" y="167" text-anchor="middle" class="lbl sub">thread creation/scheduling policy</text>
+
+  <!-- vertical stub down to ExecutorService -->
+  <path class="flow" d="M 520 170 V 210"/>
+
+  <!-- Band 2: ExecutorService + AutoCloseable -->
+  <text x="20" y="240" class="lbl h2">GENERATION 2 — LIFECYCLE + BULK SUBMISSION</text>
+  <rect x="290" y="250" width="460" height="150" rx="6" class="boxP"/>
+  <text x="520" y="276" text-anchor="middle" class="lbl node">ExecutorService</text>
+  <line x1="302" y1="286" x2="738" y2="286" stroke="#2563eb" stroke-width="1"/>
+  <text x="520" y="304" text-anchor="middle" class="lbl body">shutdown(), shutdownNow(), isShutdown(), isTerminated()</text>
+  <text x="520" y="322" text-anchor="middle" class="lbl body">awaitTermination(timeout, unit)</text>
+  <text x="520" y="340" text-anchor="middle" class="lbl body">submit(Runnable/Callable), invokeAll(tasks), invokeAny(tasks)</text>
+  <rect x="440" y="352" width="160" height="26" rx="5" class="boxH"/>
+  <text x="520" y="369" text-anchor="middle" class="lbl body" font-weight="600">close()</text>
+  <rect x="608" y="355" width="34" height="18" rx="4" class="pill"/>
+  <text x="625" y="368" text-anchor="middle" class="lbl tiny" font-weight="700">19</text>
+  <text x="520" y="392" text-anchor="middle" class="lbl sub">default method: calls shutdown() then awaitTermination()</text>
+
+  <!-- AutoCloseable second parent -->
+  <rect x="800" y="250" width="200" height="70" rx="6" class="boxLeg"/>
+  <text x="900" y="276" text-anchor="middle" class="lbl node" font-size="14">AutoCloseable</text>
+  <line x1="812" y1="286" x2="988" y2="286" stroke="#78716c" stroke-width="1"/>
+  <text x="900" y="304" text-anchor="middle" class="lbl sub">close() throws Exception</text>
+  <rect x="810" y="255" width="34" height="18" rx="4" class="pill"/>
+  <text x="827" y="268" text-anchor="middle" class="lbl tiny" font-weight="700">19</text>
+
+  <!-- implements edge: AutoCloseable -> ExecutorService (second parent), arrow points at child ExecutorService -->
+  <path class="impl" d="M 900 320 V 342 H 750"/>
+  <text x="895" y="337" text-anchor="end" class="lbl sub" fill="#15803d">try-with-resources since 19</text>
+
+  <!-- vertical stub down to ScheduledExecutorService -->
+  <path class="flow" d="M 520 400 V 450"/>
+
+  <!-- Band 3: ScheduledExecutorService -->
+  <text x="20" y="480" class="lbl h2">GENERATION 3 — RECURRING SCHEDULE</text>
+  <rect x="290" y="490" width="460" height="110" rx="6" class="boxP"/>
+  <text x="520" y="516" text-anchor="middle" class="lbl node">ScheduledExecutorService</text>
+  <line x1="302" y1="526" x2="738" y2="526" stroke="#2563eb" stroke-width="1"/>
+  <text x="520" y="546" text-anchor="middle" class="lbl body">schedule(callable/runnable, delay, unit)</text>
+  <text x="520" y="564" text-anchor="middle" class="lbl body">scheduleAtFixedRate(...), scheduleWithFixedDelay(...)</text>
+  <text x="520" y="586" text-anchor="middle" class="lbl sub">e.g. periodic settlement-ingest queue-depth probe</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="620" x2="1020" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="634" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="647" class="lbl tiny">interface, method list</text>
+  <rect x="220" y="634" width="22" height="16" rx="3" class="boxH"/>
+  <text x="252" y="647" class="lbl tiny">version-new default method</text>
+  <rect x="460" y="634" width="22" height="16" rx="3" class="boxLeg"/>
+  <text x="492" y="647" class="lbl tiny">secondary/legacy-style interface</text>
+  <rect x="700" y="634" width="30" height="16" rx="4" class="pill"/>
+  <text x="740" y="647" class="lbl tiny">version pill — API added in this JDK</text>
+
+  <path class="flow" d="M 20 672 H 60"/>
+  <text x="72" y="677" class="lbl tiny">A → B : B extends A (primary hierarchy)</text>
+  <path class="impl" d="M 560 672 H 600"/>
+  <text x="612" y="677" class="lbl tiny">A → B : B additionally implements A</text>
+</svg>

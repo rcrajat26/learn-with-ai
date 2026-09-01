@@ -1,0 +1,88 @@
+<svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="sizeCtl state machine: table not created (0 or initial capacity), -1 while initTable runs, positive next-resize threshold, and resize-in-progress where the field javadoc's -(1+activeResizers) formula is contrasted with what the code actually sets, plus the worked arithmetic for resizeStamp(16)">
+  <defs>
+    <marker id="arrow129" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- State 1: table not yet created -->
+  <rect x="40" y="30" width="330" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="55" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">1. table not yet created</text>
+  <text x="205" y="76" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">sizeCtl = 0 (default ctor)</text>
+  <text x="205" y="95" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">sizeCtl = cap (sized ctor)</text>
+  <text x="205" y="113" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">holds requested initial capacity, not always 0</text>
+
+  <!-- State 2: initializing -->
+  <rect x="470" y="30" width="290" height="90" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="615" y="55" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">3. initializing</text>
+  <text x="615" y="76" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">sizeCtl = -1</text>
+  <text x="615" y="95" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">initTable(), CAS sc -&gt; -1 (:2296)</text>
+  <text x="615" y="111" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">other threads Thread.yield() while sc == -1</text>
+
+  <!-- arrow 1 -> 2 -->
+  <line x1="370" y1="75" x2="466" y2="75" stroke="#737373" stroke-width="2" marker-end="url(#arrow129)"/>
+  <rect x="378" y="55" width="80" height="20" rx="3" fill="#fef3c7"/>
+  <text x="418" y="70" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">initTable() CAS</text>
+
+  <!-- State 3: positive threshold -->
+  <rect x="240" y="200" width="330" height="90" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="405" y="225" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">2. next resize threshold</text>
+  <text x="405" y="246" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">sizeCtl = n - (n &gt;&gt;&gt; 2)   (0.75n)</text>
+  <text x="405" y="265" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">set at initTable() completion (:2303) and</text>
+  <text x="405" y="281" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">transfer() completion (:2468): (n&lt;&lt;1)-(n&gt;&gt;&gt;1)</text>
+
+  <!-- arrow 2 -> 3 -->
+  <path d="M 600 120 C 560 160 480 180 440 198" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow129)"/>
+  <rect x="470" y="150" width="150" height="20" rx="3" fill="#fef3c7"/>
+  <text x="545" y="165" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">table built, sc = 0.75n</text>
+
+  <!-- State 4: resize in progress -->
+  <rect x="80" y="330" width="640" height="200" rx="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="352" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">4. resize in progress — draw the code, not the comment</text>
+
+  <!-- red box: javadoc -->
+  <rect x="100" y="366" width="290" height="146" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="245" y="386" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">what the field javadoc says</text>
+  <text x="245" y="406" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">sizeCtl = -(1 + activeResizers)</text>
+  <text x="245" y="424" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">single resizer =&gt; -2</text>
+  <text x="245" y="446" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ConcurrentHashMap.java:792-799</text>
+  <text x="245" y="464" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this is the stale comment — the actual</text>
+  <text x="245" y="480" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">stored value is never -2; see the green</text>
+  <text x="245" y="496" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">box for what the code sets and CASes</text>
+
+  <!-- green box: actual code -->
+  <rect x="410" y="366" width="290" height="146" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="555" y="386" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">what the code actually sets</text>
+  <text x="555" y="406" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">sc = (resizeStamp(n) &lt;&lt; RESIZE_STAMP_SHIFT) + 2</text>
+  <text x="555" y="424" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">first resizer: addCount() :2353,</text>
+  <text x="555" y="440" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">tryPresize() :2413-2414</text>
+  <text x="555" y="460" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">helper threads then CAS sc -&gt; sc + 1</text>
+  <text x="555" y="476" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">addCount() :2350, helpTransfer() :2373</text>
+  <text x="555" y="496" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">never literally -2 for any real n</text>
+
+  <!-- arrow 3 -> 4 -->
+  <line x1="405" y1="290" x2="410" y2="328" stroke="#737373" stroke-width="2" marker-end="url(#arrow129)"/>
+  <rect x="290" y="298" width="230" height="20" rx="3" fill="#fef3c7"/>
+  <text x="405" y="313" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">addCount(): s &gt;= sizeCtl, CAS sc-&gt;rs+2</text>
+
+  <!-- Worked arithmetic box -->
+  <rect x="80" y="550" width="640" height="200" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="572" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">worked arithmetic — verified twice, reproduce exactly</text>
+  <text x="100" y="596" font-family="sans-serif" font-size="13" fill="#1f2937">resizeStamp(n) = Integer.numberOfLeadingZeros(n) | (1 &lt;&lt; 15)   (:2284-2286)</text>
+  <text x="100" y="618" font-family="sans-serif" font-size="13" fill="#1f2937">for n = 16: numberOfLeadingZeros(16) = 27</text>
+  <text x="100" y="640" font-family="sans-serif" font-size="13" fill="#1f2937">resizeStamp(16) = 27 | 32768 = 32795</text>
+  <text x="100" y="662" font-family="sans-serif" font-size="13" fill="#1f2937">32795 &lt;&lt; 16 = 0x801B0000 = 2,149,253,120 unsigned</text>
+  <text x="100" y="684" font-family="sans-serif" font-size="13" fill="#1f2937">= -2,145,714,176 as a signed 32-bit int</text>
+  <rect x="90" y="694" width="400" height="26" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="290" y="712" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">first resizer sets sizeCtl = -2145714174</text>
+  <text x="100" y="736" font-family="sans-serif" font-size="11" fill="#1f2937">check yourself: 32795 * 65536 = 2149253120; 2149253120 - 4294967296 = -2145714176; + 2 = -2145714174</text>
+
+  <!-- small stamp box -->
+  <rect x="80" y="770" width="640" height="100" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="790" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">high 16 bits: resize stamp identifying which table size is being resized</text>
+  <text x="400" y="808" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">low 16 bits: 2 + helpers   |   RESIZE_STAMP_BITS = 16 (:575)   RESIZE_STAMP_SHIFT = 16 (:586)   MAX_RESIZERS = 65535 (:581)</text>
+  <text x="400" y="828" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">why the stamp exists: it stops a late thread from joining a resize that already</text>
+  <text x="400" y="846" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">finished and restarted at a different size — the stamp must match or the CAS fails</text>
+</svg>

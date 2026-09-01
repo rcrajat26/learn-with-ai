@@ -1,0 +1,206 @@
+<svg viewBox="0 0 1220 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence for StakeSplit, a class with two final Money fields,
+     bonusPortion and cashPortion, constructed for a 3.33 stake as 0.33 bonus plus 3.00 cash.
+     Frame 1: settlement-ingest-3 runs the constructor, which writes bonusPortion to
+     Money(0.33) and cashPortion to Money(3.00), each Money wrapping a BigDecimal amount, via a
+     memory-chain of writes. Frame 2: at the end of the constructor a freeze occurs, fixing the
+     values of both final fields and everything reachable through them before the reference is
+     returned. Frame 3: balance-view-2 receives the split reference after the freeze and, without
+     any further synchronization, is guaranteed to see bonusPortion and cashPortion and, via a
+     dereference chain through each Money, the BigDecimal(0.33) and BigDecimal(3.00) instances
+     themselves.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .2px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .hb    { fill: none; stroke: #15803d; stroke-width: 2.4; stroke-dasharray: 6 4; marker-end: url(#triG); }
+    .deref { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1220" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE FREEZE ACTION AND THE DEREFERENCE CHAIN &#8212; StakeSplit(0.33, 3.00)</text>
+  <line x1="20" y1="42" x2="1200" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="56" width="380" height="26" rx="4" class="boxP"/>
+  <text x="210" y="74" text-anchor="middle" class="lbl h2">FRAME 1 &#8212; CONSTRUCTOR WRITES BOTH FIELDS</text>
+
+  <rect x="40" y="92" width="340" height="50" rx="6" class="boxW"/>
+  <text x="60" y="112" class="lbl body mono">settlement-ingest-3 runs</text>
+  <text x="60" y="130" class="lbl body mono">new StakeSplit(Money(0.33), Money(3.00))</text>
+
+  <path class="flow" d="M 210 142 V 168"/>
+
+  <rect x="60" y="168" width="300" height="40" rx="6" class="boxW"/>
+  <text x="210" y="192" text-anchor="middle" class="lbl body">StakeSplit &#8212; fields being written</text>
+
+  <path class="flow" d="M 210 208 V 224"/>
+  <path class="flow" d="M 120 224 H 300"/>
+  <path class="flow" d="M 120 224 V 240"/>
+  <path class="flow" d="M 300 224 V 240"/>
+  <text x="224" y="218" text-anchor="start" class="lbl tiny" fill="#475569">memory chain: write</text>
+
+  <rect x="50" y="240" width="140" height="54" rx="6" class="boxP"/>
+  <text x="120" y="260" text-anchor="middle" class="lbl body" font-weight="600">bonusPortion</text>
+  <text x="120" y="278" text-anchor="middle" class="lbl sub mono">final Money(0.33)</text>
+
+  <rect x="230" y="240" width="140" height="54" rx="6" class="boxP"/>
+  <text x="300" y="260" text-anchor="middle" class="lbl body" font-weight="600">cashPortion</text>
+  <text x="300" y="278" text-anchor="middle" class="lbl sub mono">final Money(3.00)</text>
+
+  <path class="flow" d="M 120 294 V 316"/>
+  <path class="flow" d="M 300 294 V 316"/>
+
+  <rect x="50" y="316" width="140" height="40" rx="6" class="boxH"/>
+  <text x="120" y="340" text-anchor="middle" class="lbl sub mono">BigDecimal("0.33")</text>
+
+  <rect x="230" y="316" width="140" height="40" rx="6" class="boxH"/>
+  <text x="300" y="340" text-anchor="middle" class="lbl sub mono">BigDecimal("3.00")</text>
+
+  <rect x="40" y="372" width="340" height="94" rx="6" class="boxA"/>
+  <text x="60" y="392" class="lbl body" font-weight="600">Observed:</text>
+  <text x="60" y="410" class="lbl sub">both final fields, and each Money's internal</text>
+  <text x="60" y="426" class="lbl sub">BigDecimal, are written inside the constructor</text>
+  <text x="60" y="442" class="lbl sub">body. Nothing has been frozen yet &#8212; the</text>
+  <text x="60" y="458" class="lbl sub">reference has not left this thread.</text>
+
+  <!-- FRAME 2 -->
+  <rect x="420" y="56" width="380" height="26" rx="4" class="boxH"/>
+  <text x="610" y="74" text-anchor="middle" class="lbl h2">FRAME 2 &#8212; THE FREEZE (END OF CONSTRUCTOR)</text>
+
+  <rect x="460" y="92" width="300" height="50" rx="6" class="boxR"/>
+  <text x="610" y="112" text-anchor="middle" class="lbl body" font-weight="600">StakeSplit &#8212; fully written</text>
+  <text x="610" y="130" text-anchor="middle" class="lbl sub">change since frame 1: both writes complete</text>
+
+  <path class="flow" d="M 610 142 V 168"/>
+  <path class="flow" d="M 520 168 H 700"/>
+  <path class="flow" d="M 520 168 V 184"/>
+  <path class="flow" d="M 700 168 V 184"/>
+
+  <rect x="450" y="184" width="140" height="46" rx="6" class="boxP"/>
+  <text x="520" y="204" text-anchor="middle" class="lbl body" font-weight="600">bonusPortion</text>
+  <text x="520" y="220" text-anchor="middle" class="lbl sub mono">Money(0.33)</text>
+
+  <rect x="630" y="184" width="140" height="46" rx="6" class="boxP"/>
+  <text x="700" y="204" text-anchor="middle" class="lbl body" font-weight="600">cashPortion</text>
+  <text x="700" y="220" text-anchor="middle" class="lbl sub mono">Money(3.00)</text>
+
+  <path class="flow" d="M 520 230 V 246"/>
+  <path class="flow" d="M 700 230 V 246"/>
+
+  <rect x="450" y="246" width="140" height="36" rx="6" class="boxH"/>
+  <text x="520" y="268" text-anchor="middle" class="lbl sub mono">BigDecimal("0.33")</text>
+
+  <rect x="630" y="246" width="140" height="36" rx="6" class="boxH"/>
+  <text x="700" y="268" text-anchor="middle" class="lbl sub mono">BigDecimal("3.00")</text>
+
+  <!-- freeze barrier -->
+  <line x1="440" y1="306" x2="780" y2="306" class="hb"/>
+  <text x="610" y="300" text-anchor="middle" class="lbl tiny" fill="#15803d" font-weight="700">FREEZE &#8212; happens at return from StakeSplit(&#8230;)</text>
+  <text x="610" y="322" text-anchor="middle" class="lbl sub">fixes both final fields and everything reachable through them</text>
+
+  <path class="flow" d="M 610 336 V 352"/>
+
+  <rect x="460" y="352" width="300" height="40" rx="6" class="boxR"/>
+  <text x="610" y="376" text-anchor="middle" class="lbl body">return this &#8212; reference now safe to publish</text>
+
+  <rect x="440" y="410" width="340" height="94" rx="6" class="boxA"/>
+  <text x="460" y="430" class="lbl body" font-weight="600">Observed:</text>
+  <text x="460" y="448" class="lbl sub">change since frame 1: the constructor has</text>
+  <text x="460" y="464" class="lbl sub">returned. Any thread that later obtains this</text>
+  <text x="460" y="480" class="lbl sub">reference (not by escaping during</text>
+  <text x="460" y="496" class="lbl sub">construction) sees the frozen state below.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="820" y="56" width="380" height="26" rx="4" class="boxR"/>
+  <text x="1010" y="74" text-anchor="middle" class="lbl h2">FRAME 3 &#8212; CROSS-THREAD READ (SAFE PUBLICATION)</text>
+
+  <rect x="840" y="92" width="340" height="50" rx="6" class="boxW"/>
+  <text x="860" y="112" class="lbl body">balance-view-2 receives reference split</text>
+  <text x="860" y="130" class="lbl sub">change since frame 2: reference crosses threads</text>
+
+  <path class="deref" d="M 1010 142 V 168"/>
+
+  <rect x="860" y="168" width="300" height="40" rx="6" class="boxR"/>
+  <text x="1010" y="192" text-anchor="middle" class="lbl body" font-weight="600">split &#8212; frozen, fully visible</text>
+
+  <path class="deref" d="M 1010 208 V 224"/>
+  <path class="deref" d="M 920 224 H 1100"/>
+  <path class="deref" d="M 920 224 V 240"/>
+  <path class="deref" d="M 1100 224 V 240"/>
+  <text x="1024" y="218" text-anchor="start" class="lbl tiny" fill="#b45309">dereference chain</text>
+
+  <rect x="850" y="240" width="140" height="54" rx="6" class="boxP"/>
+  <text x="920" y="260" text-anchor="middle" class="lbl body" font-weight="600">bonusPortion</text>
+  <text x="920" y="278" text-anchor="middle" class="lbl sub mono">Money(0.33)</text>
+
+  <rect x="1030" y="240" width="140" height="54" rx="6" class="boxP"/>
+  <text x="1100" y="260" text-anchor="middle" class="lbl body" font-weight="600">cashPortion</text>
+  <text x="1100" y="278" text-anchor="middle" class="lbl sub mono">Money(3.00)</text>
+
+  <path class="deref" d="M 920 294 V 316"/>
+  <path class="deref" d="M 1100 294 V 316"/>
+
+  <rect x="850" y="316" width="140" height="40" rx="6" class="boxH"/>
+  <text x="920" y="340" text-anchor="middle" class="lbl sub mono">BigDecimal("0.33")</text>
+
+  <rect x="1030" y="316" width="140" height="40" rx="6" class="boxH"/>
+  <text x="1100" y="340" text-anchor="middle" class="lbl sub mono">BigDecimal("3.00")</text>
+
+  <rect x="840" y="372" width="340" height="94" rx="6" class="boxA"/>
+  <text x="860" y="392" class="lbl body" font-weight="600">Guaranteed, with no extra sync:</text>
+  <text x="860" y="410" class="lbl sub">balance-view-2 sees bonusPortion=Money(0.33)</text>
+  <text x="860" y="426" class="lbl sub">and cashPortion=Money(3.00), and transitively</text>
+  <text x="860" y="442" class="lbl sub">the BigDecimal(0.33) / BigDecimal(3.00) each</text>
+  <text x="860" y="458" class="lbl sub">wraps &#8212; because split arrived after the freeze.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="566" x2="1200" y2="566" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="578" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="591" class="lbl tiny">thread / actor, or object mid-construction</text>
+
+  <rect x="300" y="578" width="22" height="16" rx="3" class="boxP"/>
+  <text x="330" y="591" class="lbl tiny">final Money field</text>
+
+  <rect x="460" y="578" width="22" height="16" rx="3" class="boxH"/>
+  <text x="490" y="591" class="lbl tiny">BigDecimal leaf reachable through the field</text>
+
+  <rect x="740" y="578" width="22" height="16" rx="3" class="boxR"/>
+  <text x="770" y="591" class="lbl tiny">StakeSplit once fully written / frozen / published</text>
+
+  <rect x="1030" y="578" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1060" y="591" class="lbl tiny">annotation</text>
+
+  <path class="flow" d="M 20 612 H 60"/>
+  <text x="68" y="617" class="lbl tiny">memory chain: constructor write, program order</text>
+
+  <path class="hb" d="M 400 612 H 440"/>
+  <text x="448" y="617" class="lbl tiny">freeze barrier: final field state fixed here</text>
+
+  <path class="deref" d="M 760 612 H 800"/>
+  <text x="808" y="617" class="lbl tiny">dereference chain: cross-thread read via the frozen reference</text>
+</svg>

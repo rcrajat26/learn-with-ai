@@ -1,0 +1,155 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Where ArrayList sits. A centre spine runs Iterable extends into Collection
+     extends into SequencedCollection (added in Java 21, version pill 21) extends into List,
+     which ArrayList implements. On the class side, AbstractCollection implements Collection,
+     extends into AbstractList, which implements List and extends into ArrayList. Under List,
+     LinkedList, Vector, and CopyOnWriteArrayList branch off as sibling implementers. A grouped
+     panel lists the marker interfaces ArrayList implements: RandomAccess, Cloneable,
+     Serializable. An annotation panel restates that every ArrayList is a List, and every List
+     has been a SequencedCollection since Java 21.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .ext   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triGreen); }
+    .implNoHead { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; }
+    .weakEdge { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; marker-end: url(#triGrey); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE ARRAYLIST SITS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="360" y="68" class="lbl h2">INTERFACE SIDE — root: Iterable</text>
+  <text x="130" y="68" class="lbl h2">CLASS SIDE</text>
+
+  <!-- interface spine -->
+  <rect x="360" y="75" width="200" height="64" rx="6" class="boxP"/>
+  <text x="460" y="103" text-anchor="middle" class="lbl node">Iterable</text>
+  <text x="460" y="122" text-anchor="middle" class="lbl sub">root of the spine</text>
+
+  <rect x="360" y="185" width="200" height="64" rx="6" class="boxP"/>
+  <text x="460" y="213" text-anchor="middle" class="lbl node">Collection</text>
+  <text x="460" y="232" text-anchor="middle" class="lbl sub">extends Iterable</text>
+
+  <rect x="360" y="295" width="200" height="64" rx="6" class="boxP"/>
+  <text x="460" y="323" text-anchor="middle" class="lbl node">SequencedCollection</text>
+  <text x="460" y="342" text-anchor="middle" class="lbl sub">extends Collection</text>
+  <rect x="545" y="287" width="28" height="18" rx="9" class="pill"/>
+  <text x="559" y="300" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+
+  <rect x="360" y="405" width="200" height="64" rx="6" class="boxP"/>
+  <text x="460" y="433" text-anchor="middle" class="lbl node">List</text>
+  <text x="460" y="452" text-anchor="middle" class="lbl sub">extends SequencedCollection (since 21)</text>
+
+  <rect x="360" y="575" width="200" height="70" rx="6" class="boxH"/>
+  <text x="460" y="603" text-anchor="middle" class="lbl node">ArrayList</text>
+  <text x="460" y="622" text-anchor="middle" class="lbl sub">implements List — is-a List ↑</text>
+  <text x="460" y="637" text-anchor="middle" class="lbl sub">extends AbstractList</text>
+
+  <!-- class side -->
+  <rect x="130" y="295" width="180" height="64" rx="6" class="boxR"/>
+  <text x="220" y="323" text-anchor="middle" class="lbl node">AbstractCollection</text>
+  <text x="220" y="342" text-anchor="middle" class="lbl sub">implements Collection</text>
+
+  <rect x="130" y="405" width="180" height="64" rx="6" class="boxR"/>
+  <text x="220" y="433" text-anchor="middle" class="lbl node">AbstractList</text>
+  <text x="220" y="452" text-anchor="middle" class="lbl sub">extends AbstractCollection</text>
+
+  <!-- siblings under List -->
+  <rect x="580" y="495" width="110" height="56" rx="6" class="boxR"/>
+  <text x="635" y="524" text-anchor="middle" class="lbl body">LinkedList</text>
+
+  <rect x="700" y="495" width="90" height="56" rx="6" class="boxL"/>
+  <text x="745" y="524" text-anchor="middle" class="lbl body">Vector</text>
+
+  <rect x="810" y="495" width="200" height="56" rx="6" class="boxR"/>
+  <text x="910" y="524" text-anchor="middle" class="lbl body">CopyOnWriteArrayList</text>
+
+  <!-- marker interfaces grouped panel -->
+  <rect x="620" y="560" width="400" height="100" rx="6" class="boxW"/>
+  <text x="636" y="580" class="lbl tiny" font-weight="700">Marker interfaces on ArrayList</text>
+  <text x="636" y="598" class="lbl tiny">RandomAccess — signals O(1) indexed access to algorithms</text>
+  <text x="636" y="616" class="lbl tiny">Cloneable — enables the Object.clone() override</text>
+  <text x="636" y="634" class="lbl tiny">Serializable — opts into Java serialization</text>
+
+  <!-- spine edges -->
+  <path class="ext" d="M 460 139 V 185"/>
+  <path class="ext" d="M 460 249 V 295"/>
+  <path class="ext" d="M 460 359 V 405"/>
+  <path class="impl" d="M 460 469 V 575"/>
+
+  <!-- Collection -> AbstractCollection (implements) -->
+  <path class="impl" d="M 400 249 V 269 H 220 V 295"/>
+
+  <!-- AbstractCollection -> AbstractList (extends) -->
+  <path class="ext" d="M 220 359 V 405"/>
+
+  <!-- List -> AbstractList (implements), same band, straight across corridor -->
+  <path class="impl" d="M 360 437 H 310"/>
+
+  <!-- AbstractList -> ArrayList (extends) -->
+  <path class="ext" d="M 220 469 V 535 H 400 V 575"/>
+
+  <!-- List -> siblings, one bus, one drop per child -->
+  <path class="implNoHead" d="M 520 469 V 485 H 910"/>
+  <path class="impl" d="M 635 485 V 495"/>
+  <path class="impl" d="M 745 485 V 495"/>
+  <path class="impl" d="M 910 485 V 495"/>
+
+  <!-- ArrayList -> marker panel -->
+  <path class="weakEdge" d="M 560 610 H 620"/>
+
+  <!-- annotation panel -->
+  <rect x="40" y="685" width="960" height="75" rx="6" class="boxA"/>
+  <text x="56" y="706" class="lbl body" font-weight="700">THE SPINE IS THE RELATIONSHIP THAT MATTERS</text>
+  <text x="56" y="726" class="lbl tiny">Iterable → Collection → SequencedCollection → List → ArrayList. Every ArrayList is a List.</text>
+  <text x="56" y="744" class="lbl tiny">Every List has been a SequencedCollection since Java 21 — getFirst, getLast, addFirst, addLast, reversed().</text>
+
+  <!-- legend -->
+  <line x1="20" y1="785" x2="1020" y2="785" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="800" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="813" class="lbl tiny">interface — the primary type on the spine</text>
+  <rect x="20" y="824" width="22" height="16" rx="3" class="boxH"/>
+  <text x="52" y="837" class="lbl tiny">ArrayList — the subject of this diagram</text>
+  <rect x="20" y="848" width="22" height="16" rx="3" class="boxR"/>
+  <text x="52" y="861" class="lbl tiny">concrete/abstract class on the backbone</text>
+  <rect x="20" y="872" width="22" height="16" rx="3" class="boxL"/>
+  <text x="52" y="885" class="lbl tiny">legacy — Vector, retained for compatibility</text>
+
+  <rect x="530" y="800" width="22" height="16" rx="3" class="boxW"/>
+  <text x="562" y="813" class="lbl tiny">grouped detail panel — secondary, no methods of its own</text>
+  <rect x="530" y="824" width="22" height="16" rx="3" class="boxA"/>
+  <text x="562" y="837" class="lbl tiny">annotation panel — facts not shown as nodes/edges</text>
+  <path class="ext" d="M 530 852 H 552"/>
+  <text x="562" y="861" class="lbl tiny">A → B : B extends A</text>
+  <path class="impl" d="M 530 876 H 552"/>
+  <text x="562" y="885" class="lbl tiny">A → B : B implements A</text>
+</svg>

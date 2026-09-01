@@ -1,0 +1,88 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A lambda is a poly expression: the same source text r arrow r.amount().compareTo(MAX_STAKE) greater than 0 is assigned at three sites. As a Predicate of Reservation it compiles, using test. As a custom StakeRule it compiles, using its own single abstract method. As a Function of Reservation to Boolean it does not compile at this site. Below, Object o assigned a bare lambda fails because Object is not a functional interface, but casting the same lambda to Runnable compiles because the cast supplies the target type.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A LAMBDA IS A POLY EXPRESSION</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- shared source -->
+  <rect x="280" y="60" width="460" height="70" rx="6" class="boxP"/>
+  <text x="510" y="86" text-anchor="middle" class="lbl body" font-weight="700">SAME SOURCE TEXT — A POLY EXPRESSION</text>
+  <text x="510" y="110" text-anchor="middle" class="lbl body">r -&gt; r.amount().compareTo(MAX_STAKE) &gt; 0</text>
+
+  <path class="bus" d="M 510 130 V 162"/>
+  <path class="bus" d="M 170 162 H 850"/>
+
+  <path class="flow" d="M 170 162 V 200"/>
+  <path class="flow" d="M 510 162 V 200"/>
+  <path class="flow" d="M 850 162 V 200"/>
+
+  <!-- SITE A -->
+  <rect x="20" y="200" width="300" height="104" rx="6" class="boxR"/>
+  <text x="170" y="228" text-anchor="middle" class="lbl node">Predicate&lt;Reservation&gt;</text>
+  <text x="170" y="250" text-anchor="middle" class="lbl body">test(Reservation): boolean</text>
+  <text x="170" y="270" text-anchor="middle" class="lbl sub" font-weight="600">compiles — target: Predicate</text>
+
+  <!-- SITE B -->
+  <rect x="360" y="200" width="300" height="104" rx="6" class="boxR"/>
+  <text x="510" y="228" text-anchor="middle" class="lbl node">StakeRule</text>
+  <text x="510" y="250" text-anchor="middle" class="lbl body">applies(Reservation): boolean</text>
+  <text x="510" y="270" text-anchor="middle" class="lbl sub" font-weight="600">compiles — target: StakeRule</text>
+
+  <!-- SITE C -->
+  <rect x="700" y="200" width="300" height="104" rx="6" class="boxD"/>
+  <text x="850" y="228" text-anchor="middle" class="lbl node" fill="#b91c1c">Function&lt;Reservation,Boolean&gt;</text>
+  <text x="850" y="250" text-anchor="middle" class="lbl body" fill="#b91c1c">apply(Reservation): Boolean</text>
+  <text x="850" y="270" text-anchor="middle" class="lbl sub" fill="#b91c1c" font-weight="600">does NOT compile at this site</text>
+
+  <!-- SECOND SECTION -->
+  <text x="20" y="336" class="lbl h2">NO TARGET TYPE (Object) vs CAST TARGET TYPE (Runnable)</text>
+  <line x1="20" y1="344" x2="1020" y2="344" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="90" y="364" width="380" height="104" rx="6" class="boxD"/>
+  <text x="280" y="392" text-anchor="middle" class="lbl node" fill="#b91c1c">Object o = () -&gt; {};</text>
+  <text x="280" y="414" text-anchor="middle" class="lbl body" fill="#b91c1c">compile error:</text>
+  <text x="280" y="434" text-anchor="middle" class="lbl sub" fill="#b91c1c">target type is not a functional interface</text>
+
+  <path class="flow" d="M 470 416 H 570"/>
+  <text x="520" y="408" text-anchor="middle" class="lbl tiny">+ cast</text>
+
+  <rect x="570" y="364" width="380" height="104" rx="6" class="boxR"/>
+  <text x="760" y="392" text-anchor="middle" class="lbl node">Object o = (Runnable) () -&gt; {};</text>
+  <text x="760" y="414" text-anchor="middle" class="lbl body">compiles</text>
+  <text x="760" y="434" text-anchor="middle" class="lbl sub">cast supplies the functional-interface target type</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="500" x2="1020" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="514" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="527" class="lbl tiny">shared source (the subject)</text>
+  <rect x="240" y="514" width="22" height="16" rx="3" class="boxR"/>
+  <text x="270" y="527" class="lbl tiny">compiles at this site</text>
+  <rect x="440" y="514" width="22" height="16" rx="3" class="boxD"/>
+  <text x="470" y="527" class="lbl tiny">does not compile at this site</text>
+  <path class="flow" d="M 700 522 H 740"/>
+  <text x="748" y="527" class="lbl tiny">A → B : same source flows to target type B</text>
+</svg>

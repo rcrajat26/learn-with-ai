@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1120 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ThreadLocal storage lives inside the Thread object, not inside the ThreadLocal
+     instance. Two Thread objects, gateway-http-7 and gateway-http-12, each hold a ThreadLocalMap
+     whose Entry key is a weak reference to a shared ThreadLocal and whose value is a strong
+     reference to a 2 megabyte SecurityContext payload for client 2 401 993. On the left the
+     ThreadLocal is still reachable. On the right the ThreadLocal has been collected, leaving a null
+     key, but the value is still strongly referenced and stays live because gateway-http-12 is a
+     pool thread that never dies.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .ttl   { font-size: 12.5px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .hdr   { font-size: 11px; font-weight: 700; }
+
+    .boxP     { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxWeak  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .legacy   { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .degraded { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .annot    { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .strong { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triStrong); }
+    .weak   { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triWeak); }
+  </style>
+  <defs>
+    <marker id="triStrong" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triWeak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THREADLOCAL LIVES IN THE THREAD, NOT IN THE THREADLOCAL</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">gateway-http-7 — ThreadLocal STILL REACHABLE</text>
+  <text x="600" y="64" class="lbl h2">gateway-http-12 — ThreadLocal COLLECTED, VALUE STILL LIVE</text>
+  <line x1="560" y1="54" x2="560" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: still alive -->
+  <rect x="40" y="90" width="480" height="60" rx="6" class="boxP"/>
+  <text x="280" y="115" text-anchor="middle" class="lbl node">Thread: gateway-http-7</text>
+  <text x="280" y="135" text-anchor="middle" class="lbl body">pool thread (HTTP request handler)</text>
+
+  <path class="strong" d="M 280 150 V 170"/>
+  <rect x="40" y="170" width="480" height="70" rx="6" class="boxP"/>
+  <text x="280" y="196" text-anchor="middle" class="lbl node">ThreadLocalMap</text>
+  <text x="280" y="216" text-anchor="middle" class="lbl body">Entry[] table, indexed by threadLocalHashCode</text>
+
+  <path class="strong" d="M 280 240 V 260"/>
+  <rect x="40" y="260" width="480" height="90" rx="6" class="boxP"/>
+  <text x="280" y="284" text-anchor="middle" class="lbl node">Entry</text>
+  <text x="280" y="306" text-anchor="middle" class="lbl body">key → ThreadLocal (weak ref)</text>
+  <text x="280" y="324" text-anchor="middle" class="lbl body">value → payload (strong ref)</text>
+  <text x="280" y="340" text-anchor="middle" class="lbl sub">client 2 401 993</text>
+
+  <path class="weak" d="M 155 350 V 390"/>
+  <path class="strong" d="M 405 350 V 390"/>
+
+  <rect x="40" y="390" width="230" height="70" rx="6" class="boxWeak"/>
+  <text x="155" y="415" text-anchor="middle" class="lbl ttl">ThreadLocal&lt;SecurityContext&gt;</text>
+  <text x="155" y="434" text-anchor="middle" class="lbl sub">SECURITY_CONTEXT static field</text>
+  <text x="155" y="449" text-anchor="middle" class="lbl sub">still has a strong ref from the class</text>
+
+  <rect x="290" y="390" width="230" height="70" rx="6" class="boxP"/>
+  <text x="405" y="415" text-anchor="middle" class="lbl ttl">SecurityContext payload</text>
+  <text x="405" y="434" text-anchor="middle" class="lbl sub">2 MB, client 2 401 993</text>
+
+  <!-- RIGHT: leaked -->
+  <rect x="600" y="90" width="480" height="60" rx="6" class="boxP"/>
+  <text x="840" y="115" text-anchor="middle" class="lbl node">Thread: gateway-http-12</text>
+  <text x="840" y="135" text-anchor="middle" class="lbl body">pool thread — never dies, reused forever</text>
+
+  <path class="strong" d="M 840 150 V 170"/>
+  <rect x="600" y="170" width="480" height="70" rx="6" class="boxP"/>
+  <text x="840" y="196" text-anchor="middle" class="lbl node">ThreadLocalMap</text>
+  <text x="840" y="216" text-anchor="middle" class="lbl body">Entry[] table, indexed by threadLocalHashCode</text>
+
+  <path class="strong" d="M 840 240 V 260"/>
+  <rect x="600" y="260" width="480" height="90" rx="6" class="degraded"/>
+  <text x="840" y="284" text-anchor="middle" class="lbl node">Entry</text>
+  <text x="840" y="306" text-anchor="middle" class="lbl body">key → null (weak ref cleared)</text>
+  <text x="840" y="324" text-anchor="middle" class="lbl body">value → payload (strong ref)</text>
+  <text x="840" y="340" text-anchor="middle" class="lbl sub">client 2 401 993</text>
+
+  <path class="weak" d="M 715 350 V 390"/>
+  <path class="strong" d="M 965 350 V 390"/>
+
+  <rect x="600" y="390" width="230" height="70" rx="6" class="legacy"/>
+  <text x="715" y="415" text-anchor="middle" class="lbl ttl">ThreadLocal&lt;SecurityContext&gt;</text>
+  <text x="715" y="434" text-anchor="middle" class="lbl sub">collected — no strong refs remain</text>
+  <text x="715" y="449" text-anchor="middle" class="lbl sub">key reference cleared by GC</text>
+
+  <rect x="850" y="390" width="230" height="70" rx="6" class="degraded"/>
+  <text x="965" y="415" text-anchor="middle" class="lbl ttl">SecurityContext payload</text>
+  <text x="965" y="434" text-anchor="middle" class="lbl sub">2 MB, client 2 401 993</text>
+  <text x="965" y="449" text-anchor="middle" class="lbl sub">STILL LIVE — leaked</text>
+
+  <rect x="160" y="490" width="800" height="90" rx="6" class="annot"/>
+  <text x="560" y="510" text-anchor="middle" class="lbl hdr">WHY THE VALUE OUTLIVES THE KEY</text>
+  <text x="560" y="530" text-anchor="middle" class="lbl tiny">Entry.key is a WeakReference&lt;ThreadLocal&gt; — cleared once the ThreadLocal itself is unreachable</text>
+  <text x="560" y="548" text-anchor="middle" class="lbl tiny">Entry.value is a plain, strong field — nothing clears it automatically</text>
+  <text x="560" y="566" text-anchor="middle" class="lbl tiny">gateway-http-12 is a pool thread: it is reused forever, so this stale 2 MB entry never dies with it</text>
+
+  <line x1="20" y1="620" x2="1100" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="640" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="653" class="lbl tiny">live object, reachable by a normal strong reference</text>
+  <rect x="380" y="640" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="410" y="653" class="lbl tiny">weakly-referenced object, still otherwise reachable</text>
+  <rect x="740" y="640" width="22" height="16" rx="3" class="legacy"/>
+  <text x="770" y="653" class="lbl tiny">collected object — the weak reference is now null</text>
+
+  <rect x="20" y="664" width="22" height="16" rx="3" class="degraded"/>
+  <text x="50" y="677" class="lbl tiny">leaked live value — strongly held, never cleared</text>
+  <path class="strong" d="M 380 672 H 420"/>
+  <text x="428" y="677" class="lbl tiny">A → B : A holds a strong reference to B</text>
+  <path class="weak" d="M 740 672 H 780"/>
+  <text x="788" y="677" class="lbl tiny">A → B : A holds a weak reference to B</text>
+</svg>

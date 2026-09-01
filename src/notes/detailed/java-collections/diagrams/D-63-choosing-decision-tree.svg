@@ -1,0 +1,254 @@
+<svg viewBox="0 0 2120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Master decision tree for choosing a collection: splits on key-value vs elements, then ordered, sorted, unique, bounded, concurrent, both-ends, enum-keyed and primitive-heavy, reaching eighteen concrete classes">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Root -->
+  <rect x="650" y="30" width="340" height="50" rx="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="820" y="60" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Key-value pairs, or plain elements?</text>
+
+  <!-- Root branches -->
+  <line x1="760" y1="80" x2="210" y2="140" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="450" y="98" width="86" height="22" rx="3" fill="#fef3c7"/>
+  <text x="493" y="114" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">key-value</text>
+
+  <line x1="880" y1="80" x2="1430" y2="140" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1112" y="98" width="86" height="22" rx="3" fill="#fef3c7"/>
+  <text x="1155" y="114" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">elements</text>
+
+  <!-- Map header -->
+  <rect x="40" y="140" width="340" height="50" rx="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="170" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Map: key to value</text>
+  <line x1="210" y1="190" x2="210" y2="220" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Collection header -->
+  <rect x="1260" y="140" width="340" height="50" rx="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="1430" y="170" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Collection: elements only</text>
+  <line x1="1430" y1="190" x2="1430" y2="220" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Collection split -->
+  <rect x="1260" y="220" width="340" height="50" rx="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="1430" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Unique elements (Set)?</text>
+
+  <line x1="1330" y1="270" x2="930" y2="330" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1105" y="288" width="50" height="22" rx="3" fill="#fef3c7"/>
+  <text x="1130" y="304" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+
+  <line x1="1530" y1="270" x2="1590" y2="330" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1535" y="288" width="46" height="22" rx="3" fill="#fef3c7"/>
+  <text x="1558" y="304" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- ==================== MAP CASCADE ==================== -->
+  <!-- D1 -->
+  <rect x="60" y="220" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Sorted + concurrent?</text>
+  <line x1="360" y1="245" x2="420" y2="245" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="365" y="223" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="388" y="238" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="420" y="223" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ConcurrentSkipListMap</text>
+
+  <line x1="210" y1="270" x2="210" y2="315" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="187" y="281" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="210" y="296" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- D2 -->
+  <rect x="60" y="315" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="345" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Concurrent (thread-safe)?</text>
+  <line x1="360" y1="340" x2="420" y2="340" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="365" y="318" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="388" y="333" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="420" y="318" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="345" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ConcurrentHashMap</text>
+
+  <line x1="210" y1="365" x2="210" y2="410" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="187" y="376" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="210" y="391" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- D3 -->
+  <rect x="60" y="410" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="440" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Enum keys?</text>
+  <line x1="360" y1="435" x2="420" y2="435" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="365" y="413" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="388" y="428" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="420" y="413" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="440" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">EnumMap</text>
+
+  <line x1="210" y1="460" x2="210" y2="505" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="187" y="471" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="210" y="486" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- D4 -->
+  <rect x="60" y="505" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="535" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Identity (==) comparison?</text>
+  <line x1="360" y1="530" x2="420" y2="530" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="365" y="508" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="388" y="523" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="420" y="508" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="535" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">IdentityHashMap</text>
+
+  <line x1="210" y1="555" x2="210" y2="600" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="187" y="566" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="210" y="581" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- D5 -->
+  <rect x="60" y="600" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="630" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Sorted by key?</text>
+  <line x1="360" y1="625" x2="420" y2="625" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="365" y="603" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="388" y="618" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="420" y="603" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="630" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">TreeMap</text>
+
+  <line x1="210" y1="650" x2="210" y2="695" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="187" y="661" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="210" y="676" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- D6 -->
+  <rect x="60" y="695" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="725" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Insertion/access order?</text>
+  <line x1="360" y1="720" x2="420" y2="720" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="365" y="698" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="388" y="713" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="420" y="698" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="535" y="725" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">LinkedHashMap</text>
+
+  <line x1="210" y1="745" x2="210" y2="790" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="187" y="756" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="210" y="771" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Map default -->
+  <rect x="60" y="790" width="300" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="820" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashMap</text>
+
+  <!-- ==================== SET CASCADE ==================== -->
+  <!-- S1 -->
+  <rect x="780" y="330" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="930" y="360" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Enum-valued elements?</text>
+  <line x1="1080" y1="355" x2="1120" y2="355" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1085" y="333" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1108" y="348" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1120" y="333" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1235" y="360" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">EnumSet</text>
+
+  <line x1="930" y1="380" x2="930" y2="425" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="907" y="391" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="930" y="406" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- S2 -->
+  <rect x="780" y="425" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="930" y="455" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Dense bit-flag membership?</text>
+  <line x1="1080" y1="450" x2="1120" y2="450" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1085" y="428" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1108" y="443" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1120" y="428" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1235" y="455" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">BitSet</text>
+
+  <line x1="930" y1="475" x2="930" y2="520" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="907" y="486" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="930" y="501" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- S3 -->
+  <rect x="780" y="520" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="930" y="550" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Sorted (NavigableSet)?</text>
+  <line x1="1080" y1="545" x2="1120" y2="545" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1085" y="523" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1108" y="538" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1120" y="523" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1235" y="550" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">TreeSet</text>
+
+  <line x1="930" y1="570" x2="930" y2="615" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="907" y="581" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="930" y="596" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- S4 -->
+  <rect x="780" y="615" width="300" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="930" y="645" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Insertion order matters?</text>
+  <line x1="1080" y1="640" x2="1120" y2="640" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1085" y="618" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1108" y="633" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1120" y="618" width="230" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1235" y="645" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">LinkedHashSet</text>
+
+  <line x1="930" y1="665" x2="930" y2="710" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="907" y="676" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="930" y="691" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Set default -->
+  <rect x="780" y="710" width="300" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="930" y="740" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashSet</text>
+
+  <!-- ==================== QUEUE / LIST CASCADE ==================== -->
+  <!-- Q1 -->
+  <rect x="1420" y="330" width="340" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1590" y="360" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Both-ends push/pop (Deque)?</text>
+  <line x1="1760" y1="355" x2="1800" y2="355" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1765" y="333" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1788" y="348" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1800" y="333" width="280" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1940" y="360" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ArrayDeque</text>
+
+  <line x1="1590" y1="380" x2="1590" y2="425" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1567" y="391" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1590" y="406" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Q2 -->
+  <rect x="1420" y="425" width="340" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1590" y="455" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Read-heavy, rare writes?</text>
+  <line x1="1760" y1="450" x2="1800" y2="450" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1765" y="428" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1788" y="443" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1800" y="428" width="280" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1940" y="455" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">CopyOnWriteArrayList</text>
+
+  <line x1="1590" y1="475" x2="1590" y2="520" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1567" y="486" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1590" y="501" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Q3 -->
+  <rect x="1420" y="520" width="340" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1590" y="550" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Priority ordering needed?</text>
+  <line x1="1760" y1="545" x2="1800" y2="545" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1765" y="523" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1788" y="538" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1800" y="523" width="280" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1940" y="550" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">PriorityQueue</text>
+
+  <line x1="1590" y1="570" x2="1590" y2="615" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1567" y="581" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1590" y="596" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Q4 -->
+  <rect x="1420" y="615" width="340" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1590" y="645" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Concurrent + bounded?</text>
+  <line x1="1760" y1="640" x2="1800" y2="640" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1765" y="618" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1788" y="633" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1800" y="618" width="280" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1940" y="645" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ArrayBlockingQueue</text>
+
+  <line x1="1590" y1="665" x2="1590" y2="710" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1567" y="676" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1590" y="691" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Q5 -->
+  <rect x="1420" y="710" width="340" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="1590" y="740" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Concurrent + unbounded?</text>
+  <line x1="1760" y1="735" x2="1800" y2="735" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1765" y="713" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1788" y="728" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">yes</text>
+  <rect x="1800" y="713" width="280" height="44" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1940" y="740" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">LinkedBlockingQueue</text>
+
+  <line x1="1590" y1="760" x2="1590" y2="805" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1567" y="771" width="46" height="20" rx="3" fill="#fef3c7"/>
+  <text x="1590" y="786" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no</text>
+
+  <!-- Queue/List default -->
+  <rect x="1420" y="805" width="340" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="1590" y="835" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">ArrayList</text>
+</svg>

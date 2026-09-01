@@ -1,0 +1,122 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline comparing scheduleAtFixedRate and scheduleWithFixedDelay for the bonus-expiry sweep, period 5 seconds, one run overrunning to 12 seconds. Fixed-rate lane: firings are pinned to the wall clock at t0+5, t0+10, t0+15, t0+20, t0+25; the run starting at t0+5 overruns to t0+17, so the t0+10 and t0+15 firings queue up and fire back to back immediately at t0+17, drawn bunched, before the schedule catches up and resumes normal 5 second spacing at t0+20 and t0+25. Fixed-delay lane: each run starts exactly 5 seconds after the previous run's completion, so the overrun at t0+5 running to t0+17 pushes every later run back by the same amount — starts at t0, t0+5, t0+17, t0+22, t0+27 — evenly spaced from completion, never bunched.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+    .tick  { stroke: #9ca3af; stroke-width: 3; stroke-dasharray: 1 3; stroke-linecap: round; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SCHEDULEATFIXEDRATE VERSUS SCHEDULEWITHFIXEDDELAY</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">bonus-expiry sweep — scheduled every 5 s, one run overruns to 12 s (t0+5 to t0+17)</text>
+
+  <!-- background gridlines, drawn once, spanning both lanes; x = 100 + t*30 -->
+  <g>
+    <line x1="100" y1="112" x2="100" y2="494" class="grid"/>
+    <line x1="250" y1="112" x2="250" y2="494" class="grid"/>
+    <line x1="400" y1="112" x2="400" y2="494" class="grid"/>
+    <line x1="550" y1="112" x2="550" y2="494" class="grid"/>
+    <line x1="700" y1="112" x2="700" y2="494" class="grid"/>
+    <line x1="850" y1="112" x2="850" y2="494" class="grid"/>
+    <line x1="1000" y1="112" x2="1000" y2="494" class="grid"/>
+  </g>
+
+  <!-- FIXED RATE LANE -->
+  <text x="20" y="80" class="lbl h2">FIXED RATE — scheduleAtFixedRate(sweep, 0, 5, SECONDS)</text>
+
+  <text x="100" y="98" text-anchor="middle" class="lbl tiny">t0</text>
+  <text x="250" y="98" text-anchor="middle" class="lbl tiny">nom. t0+5</text>
+  <text x="400" y="98" text-anchor="middle" class="lbl tiny">nom. t0+10</text>
+  <text x="550" y="98" text-anchor="middle" class="lbl tiny">nom. t0+15</text>
+  <text x="700" y="98" text-anchor="middle" class="lbl tiny">nom. t0+20</text>
+  <text x="850" y="98" text-anchor="middle" class="lbl tiny">nom. t0+25</text>
+
+  <!-- run bars: run1 short; run2 overrun 5->17; run3+run4 bunched at 17; run5 at 20; run6 at 25 -->
+  <rect x="100" y="140" width="30" height="30" rx="4" class="boxR"/>
+  <rect x="250" y="140" width="360" height="30" rx="4" class="boxD"/>
+  <text x="430" y="160" text-anchor="middle" class="lbl body">run2 — OVERRUN 12 s (t0+5 → t0+17)</text>
+
+  <rect x="606" y="140" width="16" height="30" rx="3" class="boxD"/>
+  <text x="614" y="161" text-anchor="middle" class="lbl tiny" style="font-size:10.5px" fill="#1f2937">3</text>
+  <rect x="626" y="140" width="16" height="30" rx="3" class="boxD"/>
+  <text x="634" y="161" text-anchor="middle" class="lbl tiny" style="font-size:10.5px" fill="#1f2937">4</text>
+
+  <rect x="700" y="140" width="30" height="30" rx="4" class="boxR"/>
+  <rect x="850" y="140" width="30" height="30" rx="4" class="boxR"/>
+
+  <text x="115" y="188" text-anchor="middle" class="lbl tiny">run1: t0</text>
+  <text x="624" y="188" text-anchor="middle" class="lbl tiny">run3+run4</text>
+  <text x="624" y="202" text-anchor="middle" class="lbl tiny" style="font-size:10.5px">both fire t0+17 (catch-up)</text>
+  <text x="715" y="188" text-anchor="middle" class="lbl tiny">run5: t0+20</text>
+  <text x="865" y="188" text-anchor="middle" class="lbl tiny">run6: t0+25</text>
+
+  <rect x="20" y="218" width="1000" height="34" rx="4" class="boxD"/>
+  <text x="520" y="240" text-anchor="middle" class="lbl body">firings bunch back to back after an overrun — schedule anchored to the wall clock, not to completion</text>
+
+  <line x1="20" y1="268" x2="1020" y2="268" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- FIXED DELAY LANE -->
+  <text x="20" y="288" class="lbl h2">FIXED DELAY — scheduleWithFixedDelay(sweep, 0, 5, SECONDS)</text>
+  <text x="20" y="304" class="lbl sub">each run starts exactly 5 s after the previous run's completion — no wall-clock anchor</text>
+
+  <rect x="100" y="322" width="30" height="30" rx="4" class="boxR"/>
+  <text x="115" y="370" text-anchor="middle" class="lbl tiny">run1: t0</text>
+
+  <rect x="250" y="322" width="360" height="30" rx="4" class="boxD"/>
+  <text x="430" y="342" text-anchor="middle" class="lbl body">run2 — OVERRUN 12 s (t0+5 → t0+17)</text>
+
+  <rect x="610" y="322" width="30" height="30" rx="4" class="boxR"/>
+  <text x="625" y="370" text-anchor="middle" class="lbl tiny">run3: t0+17</text>
+
+  <rect x="760" y="322" width="30" height="30" rx="4" class="boxR"/>
+  <text x="775" y="370" text-anchor="middle" class="lbl tiny">run4: t0+22</text>
+
+  <rect x="910" y="322" width="30" height="30" rx="4" class="boxR"/>
+  <text x="925" y="370" text-anchor="middle" class="lbl tiny">run5: t0+27</text>
+
+  <line x1="640" y1="337" x2="760" y2="337" stroke="#4b5563" stroke-width="1.3"/>
+  <text x="700" y="331" text-anchor="middle" class="lbl tiny" style="font-size:10.5px">5 s gap</text>
+  <line x1="790" y1="337" x2="910" y2="337" stroke="#4b5563" stroke-width="1.3"/>
+  <text x="850" y="331" text-anchor="middle" class="lbl tiny" style="font-size:10.5px">5 s gap</text>
+
+  <rect x="20" y="388" width="1000" height="52" rx="4" class="boxR"/>
+  <text x="520" y="408" text-anchor="middle" class="lbl body">every later run shifts by the same 12 s the overrun cost — spacing from</text>
+  <text x="520" y="426" text-anchor="middle" class="lbl body">completion stays a constant 5 s, drawn evenly, never bunched</text>
+
+  <line x1="20" y1="456" x2="1020" y2="456" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- SHARED TIME AXIS -->
+  <text x="60" y="481" text-anchor="end" class="lbl tiny">time (s) →</text>
+  <line x1="100" y1="480" x2="1000" y2="480" class="axis"/>
+  <polygon points="1000,480 992,475 992,485" fill="#475569"/>
+  <text x="100" y="500" text-anchor="middle" class="lbl tiny">t0</text>
+  <text x="250" y="500" text-anchor="middle" class="lbl tiny">t0+5</text>
+  <text x="400" y="500" text-anchor="middle" class="lbl tiny">t0+10</text>
+  <text x="550" y="500" text-anchor="middle" class="lbl tiny">t0+15</text>
+  <text x="700" y="500" text-anchor="middle" class="lbl tiny">t0+20</text>
+  <text x="850" y="500" text-anchor="middle" class="lbl tiny">t0+25</text>
+  <text x="1000" y="500" text-anchor="middle" class="lbl tiny">t0+30</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="528" x2="1020" y2="528" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="540" width="20" height="14" rx="3" class="boxR"/>
+  <text x="46" y="552" class="lbl tiny">normal-duration run, actual firing time labelled</text>
+  <rect x="20" y="564" width="20" height="14" rx="3" class="boxD"/>
+  <text x="46" y="576" class="lbl tiny">the overrunning run (12 s), or a bunched catch-up run fired late</text>
+  <line x1="500" y1="547" x2="500" y2="571" class="grid" stroke="#d1d5db" stroke-width="1"/>
+  <text x="512" y="552" class="lbl tiny">shared reference gridline every 5 s</text>
+  <text x="512" y="576" class="lbl tiny">"nom." = the wall-clock-anchored fixed-rate firing time</text>
+</svg>

@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1180 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of a hook's exit contract. A hook process returns one of three exit codes: 0 means success, with stdout sent to the debug log except for UserPromptSubmit, UserPromptExpansion and SessionStart where stdout is shown to Claude instead; 2 is a blocking error, the only code that blocks without any JSON, and stderr is fed back to Claude; any other code is a non-blocking error. A parallel path shows a hook emitting JSON on stdout instead of relying on the exit code, listing every field of hookSpecificOutput: hookEventName, permissionDecision, permissionDecisionReason, decision, additionalContext, continue, updatedInput, retry, systemMessage, plus the top-level field terminalSequence. A highlighted merge node states the point of the diagram: exit code 2 overrides a JSON permissionDecision of allow — the blocking exit code always wins over a permissive JSON decision.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .badf  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trir); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="920" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HOOK EXIT CODES AND THE JSON CONTRACT</text>
+  <line x1="20" y1="42" x2="1160" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- entry -->
+  <rect x="420" y="56" width="220" height="46" rx="6" class="boxP"/>
+  <text x="530" y="78" text-anchor="middle" class="lbl node">hook process returns</text>
+  <text x="530" y="94" text-anchor="middle" class="lbl sub">exit code + stdout/stderr</text>
+
+  <!-- band header: exit code path -->
+  <text x="60" y="126" class="lbl h2">EXIT-CODE PATH</text>
+
+  <path class="flow" d="M 530 102 V 116 H 150 V 146"/>
+  <path class="flow" d="M 530 102 V 146"/>
+  <path class="flow" d="M 530 102 V 116 H 1040 V 146"/>
+
+  <!-- exit 0 -->
+  <rect x="60" y="146" width="180" height="66" rx="6" class="boxOk"/>
+  <text x="150" y="168" text-anchor="middle" class="lbl node">exit 0</text>
+  <text x="150" y="186" text-anchor="middle" class="lbl sub">success</text>
+  <text x="150" y="202" text-anchor="middle" class="lbl sub">stdout &#8594; debug log</text>
+
+  <path class="flow" d="M 150 212 V 236"/>
+  <rect x="30" y="236" width="240" height="64" rx="6" class="boxWeak"/>
+  <text x="150" y="256" text-anchor="middle" class="lbl tiny" font-weight="700">exception: shown to Claude for</text>
+  <text x="150" y="272" text-anchor="middle" class="lbl tiny">UserPromptSubmit,</text>
+  <text x="150" y="288" text-anchor="middle" class="lbl tiny">UserPromptExpansion, SessionStart</text>
+
+  <!-- exit 2 -->
+  <rect x="440" y="146" width="180" height="66" rx="6" class="boxBad"/>
+  <text x="530" y="168" text-anchor="middle" class="lbl node">exit 2</text>
+  <text x="530" y="186" text-anchor="middle" class="lbl sub">blocking error</text>
+  <text x="530" y="202" text-anchor="middle" class="lbl sub">stderr fed back to Claude</text>
+
+  <path class="flow" d="M 620 179 H 660"/>
+  <rect x="660" y="146" width="260" height="66" rx="6" class="boxAnn"/>
+  <text x="790" y="168" text-anchor="middle" class="lbl tiny" font-weight="700">the only code that blocks</text>
+  <text x="790" y="184" text-anchor="middle" class="lbl tiny" font-weight="700">without any JSON</text>
+
+  <!-- other -->
+  <rect x="950" y="146" width="180" height="66" rx="6" class="boxWeak"/>
+  <text x="1040" y="168" text-anchor="middle" class="lbl node">anything else</text>
+  <text x="1040" y="186" text-anchor="middle" class="lbl sub">non-zero, not 2</text>
+  <text x="1040" y="202" text-anchor="middle" class="lbl sub">non-blocking error</text>
+
+  <!-- JSON branch off the same entry, dropped down a clear corridor at x=300 -->
+  <path class="flow" d="M 530 102 V 116 H 300 V 356"/>
+
+  <!-- band header: JSON path -->
+  <text x="60" y="336" class="lbl h2">PARALLEL JSON PATH &#8212; stdout carries a JSON object instead</text>
+  <line x1="20" y1="344" x2="1160" y2="344" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="90" y="356" width="420" height="316" rx="6" class="boxP"/>
+  <text x="106" y="380" class="lbl node">hookSpecificOutput fields</text>
+  <line x1="106" y1="390" x2="494" y2="390" stroke="#d1d5db" stroke-width="1"/>
+  <text x="106" y="412" class="lbl body">hookEventName</text>
+  <text x="106" y="436" class="lbl body">permissionDecision</text>
+  <text x="106" y="460" class="lbl body">permissionDecisionReason</text>
+  <text x="106" y="484" class="lbl body">decision</text>
+  <text x="106" y="508" class="lbl body">additionalContext</text>
+  <text x="106" y="532" class="lbl body">continue</text>
+  <text x="106" y="556" class="lbl body">updatedInput</text>
+  <text x="106" y="580" class="lbl body">retry</text>
+  <text x="106" y="604" class="lbl body">systemMessage</text>
+  <line x1="106" y1="622" x2="494" y2="622" stroke="#d1d5db" stroke-width="1"/>
+  <text x="106" y="646" class="lbl body" font-weight="700">terminalSequence</text>
+  <text x="106" y="662" class="lbl sub">(top-level field, not nested in hookSpecificOutput)</text>
+
+  <path class="flow" d="M 510 436 H 660"/>
+  <rect x="660" y="396" width="230" height="80" rx="6" class="boxHi"/>
+  <text x="775" y="420" text-anchor="middle" class="lbl node">permissionDecision:</text>
+  <text x="775" y="438" text-anchor="middle" class="lbl node">&quot;allow&quot;</text>
+  <text x="775" y="458" text-anchor="middle" class="lbl sub">a JSON-only permissive result</text>
+
+  <!-- merge node: exit 2 overrides JSON allow, two independent corridors -->
+  <path class="badf" d="M 530 212 V 230 H 920 V 796 H 950 V 800"/>
+  <path class="flow" d="M 775 476 V 800"/>
+
+  <rect x="600" y="800" width="360" height="90" rx="6" class="boxBad"/>
+  <text x="780" y="826" text-anchor="middle" class="lbl node">MERGE: exit 2 overrides</text>
+  <text x="780" y="844" text-anchor="middle" class="lbl node">JSON permissionDecision: &quot;allow&quot;</text>
+  <text x="780" y="862" text-anchor="middle" class="lbl sub">the blocking exit code wins even when the</text>
+  <text x="780" y="877" text-anchor="middle" class="lbl sub">same hook's JSON says allow</text>
+
+  <!-- legend -->
+  <line x1="20" y1="710" x2="1160" y2="710" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="722" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="735" class="lbl tiny">entry / JSON field panel</text>
+  <rect x="220" y="722" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="250" y="735" class="lbl tiny">exit 0 success</text>
+  <rect x="380" y="722" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="410" y="735" class="lbl tiny">exit 2 blocking / merge outcome</text>
+  <rect x="620" y="722" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="650" y="735" class="lbl tiny">JSON permissionDecision: allow</text>
+  <rect x="880" y="722" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="910" y="735" class="lbl tiny">non-blocking / secondary detail</text>
+
+  <path class="flow" d="M 20 758 H 60"/>
+  <text x="68" y="763" class="lbl tiny">A &#8594; B : control/data flows to B</text>
+  <path class="badf" d="M 320 758 H 360"/>
+  <text x="368" y="763" class="lbl tiny">A &#8594; B : A overrides B at the merge</text>
+</svg>

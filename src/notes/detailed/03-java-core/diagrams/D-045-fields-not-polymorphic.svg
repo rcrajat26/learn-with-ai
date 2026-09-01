@@ -1,0 +1,84 @@
+<svg viewBox="0 0 1040 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Fields are not polymorphic. One CardWithdrawal heap object holds two distinct live field slots: WithdrawalTransaction.state = PENDING_VERIFICATION and CardWithdrawal.state = DEP-301 CAPTURED. A WithdrawalTransaction-typed reference wt reads the superclass slot via getfield WithdrawalTransaction.state, a CardWithdrawal-typed reference cw reads the subclass slot via getfield CardWithdrawal.state, and a third read using the cast ((WithdrawalTransaction) cw).state is routed back into the superclass slot, proving the cast changes which field is read. An annotation panel gives the verified measured output: PENDING_VERIFICATION, DEP-301 CAPTURED, PENDING_VERIFICATION -- same object, three reads, two answers, decided by the static type of the expression.">
+  <defs>
+    <marker id="arrow045" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="780" fill="#ffffff"/>
+
+  <text x="520" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Fields are not polymorphic</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- left reference -->
+  <rect x="50" y="190" width="240" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="170" y="215" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WithdrawalTransaction wt</text>
+  <text x="170" y="235" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">declared as WithdrawalTransaction</text>
+
+  <!-- right reference -->
+  <rect x="750" y="190" width="240" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="870" y="215" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardWithdrawal cw</text>
+  <text x="870" y="235" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">declared as CardWithdrawal</text>
+
+  <!-- object -->
+  <rect x="380" y="140" width="280" height="200" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="520" y="162" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardWithdrawal instance (heap)</text>
+  <line x1="400" y1="170" x2="640" y2="170" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="400" y="185" width="240" height="65" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="520" y="210" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WithdrawalTransaction.state</text>
+  <text x="520" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">= "PENDING_VERIFICATION"</text>
+
+  <rect x="400" y="258" width="240" height="65" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="520" y="283" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CardWithdrawal.state</text>
+  <text x="520" y="303" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">= "DEP-301 CAPTURED"</text>
+
+  <!-- left arrow: wt -> superclass slot -->
+  <path d="M 290 225 H 345 V 217 H 400" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow045)"/>
+  <text x="170" y="280" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">getfield WithdrawalTransaction</text>
+  <text x="170" y="294" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">.state:Ljava/lang/String;</text>
+
+  <!-- right arrow: cw -> subclass slot -->
+  <path d="M 750 225 H 700 V 290 H 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow045)"/>
+  <text x="870" y="280" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">getfield CardWithdrawal</text>
+  <text x="870" y="294" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">.state:Ljava/lang/String;</text>
+
+  <!-- cast box -->
+  <rect x="750" y="430" width="240" height="70" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="870" y="455" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CAST EXPRESSION</text>
+  <text x="870" y="475" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">((WithdrawalTransaction) cw).state</text>
+
+  <!-- cast arrow: cast -> superclass slot -->
+  <path d="M 750 465 H 720 V 217 H 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow045)"/>
+  <text x="855" y="405" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">cast routes the read back to</text>
+  <text x="855" y="419" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">WithdrawalTransaction.state</text>
+
+  <!-- annotation panel -->
+  <rect x="100" y="560" width="840" height="140" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="120" y="582" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">VERIFIED &#8212; measured program output (same object, three reads)</text>
+  <line x1="120" y1="590" x2="920" y2="590" stroke="#d1d5db" stroke-width="1"/>
+  <text x="120" y="610" font-family="sans-serif" font-size="11" fill="#1f2937">wt.state read -&gt; "PENDING_VERIFICATION"</text>
+  <text x="120" y="628" font-family="sans-serif" font-size="11" fill="#1f2937">cw.state read -&gt; "DEP-301 CAPTURED"</text>
+  <text x="120" y="646" font-family="sans-serif" font-size="11" fill="#1f2937">((WithdrawalTransaction) cw).state read -&gt; "PENDING_VERIFICATION"</text>
+  <text x="120" y="664" font-family="sans-serif" font-size="11" fill="#1f2937">Same heap object, three reads, two distinct answers -- decided entirely</text>
+  <text x="120" y="682" font-family="sans-serif" font-size="11" fill="#1f2937">by the static (compile-time) type of the expression, not the runtime class.</text>
+
+  <!-- legend -->
+  <text x="100" y="722" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="100" y1="730" x2="940" y2="730" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="110" y="742" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="138" y="755" font-family="sans-serif" font-size="11" fill="#4b5563">reference variable (its declared/static type)</text>
+
+  <rect x="450" y="742" width="22" height="16" rx="3" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="478" y="755" font-family="sans-serif" font-size="11" fill="#4b5563">superclass field slot</text>
+
+  <rect x="650" y="742" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="678" y="755" font-family="sans-serif" font-size="11" fill="#4b5563">subclass field slot / cast expression</text>
+
+  <line x1="110" y1="766" x2="132" y2="766" stroke="#475569" stroke-width="2" marker-end="url(#arrow045)"/>
+  <text x="138" y="771" font-family="sans-serif" font-size="11" fill="#4b5563">getfield read reaching a specific slot</text>
+</svg>

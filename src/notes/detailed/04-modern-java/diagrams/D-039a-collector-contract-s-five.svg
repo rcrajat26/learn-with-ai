@@ -1,0 +1,59 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 4 of the Collector contract for groupingBy(deposit -> deposit.rail(),
+     counting()) over card and bank deposits. supplier() is called once and creates the empty
+     mutable container, a HashMap, that the accumulation will fold into.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 1/4 — supplier() CREATES THE CONTAINER</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="380" height="60" rx="6" class="boxP"/>
+  <text x="230" y="90" text-anchor="middle" class="lbl node">groupingBy(Deposit::rail, counting())</text>
+  <text x="230" y="108" text-anchor="middle" class="lbl sub">card and bank deposits, not yet consumed</text>
+
+  <path class="flow" d="M 420 96 H 480"/>
+  <text x="450" y="90" text-anchor="middle" class="lbl sub">supplier()</text>
+
+  <rect x="480" y="66" width="380" height="60" rx="6" class="boxH"/>
+  <text x="670" y="90" text-anchor="middle" class="lbl node">HashMap::new</text>
+  <text x="670" y="108" text-anchor="middle" class="lbl sub">called exactly once per collection</text>
+
+  <path class="flow" d="M 670 126 V 158"/>
+
+  <rect x="480" y="160" width="200" height="60" rx="6" class="boxH"/>
+  <text x="580" y="184" text-anchor="middle" class="lbl node">{ } empty map</text>
+  <text x="580" y="202" text-anchor="middle" class="lbl sub">no CARD / BANK entries yet</text>
+
+  <rect x="40" y="248" width="820" height="70" rx="6" class="panel"/>
+  <text x="56" y="270" class="lbl tiny" font-weight="700">Where this fits</text>
+  <text x="56" y="288" class="lbl tiny">supplier() is a Supplier&lt;M&gt; — no input. It runs once whether the stream is</text>
+  <text x="56" y="304" class="lbl tiny">sequential or parallel; each parallel split gets its own container from it.</text>
+
+  <line x1="20" y1="340" x2="880" y2="340" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="352" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="365" class="lbl tiny">input / collector spec</text>
+  <rect x="300" y="352" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="365" class="lbl tiny">container produced by supplier()</text>
+  <path class="flow" d="M 560 360 H 600"/>
+  <text x="608" y="365" class="lbl tiny">A &#8594; B : B is produced from A</text>
+</svg>

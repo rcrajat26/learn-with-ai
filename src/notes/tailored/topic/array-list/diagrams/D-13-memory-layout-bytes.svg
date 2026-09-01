@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1360 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three memory-layout panels under compressed oops on JDK 21.0.7, storing one LedgerEntry.
+     Panel A: new ArrayList of LedgerEntry holding one element costs 80 bytes total — a 24-byte
+     ArrayList object (12-byte header, 4-byte modCount, 4-byte size, 4-byte elementData reference)
+     pointing at a 56-byte Object array of length 10 (12-byte header, 4-byte length, 10 four-byte
+     references). Panel B: new ArrayList constructed with initial capacity 1 costs 48 bytes total —
+     the same 24-byte ArrayList object pointing at a 24-byte Object array of length 1, padded from
+     20 to 24 for 8-byte alignment. Panel C: a LinkedList holding one element costs 56 bytes total —
+     a 32-byte LinkedList object, padded from 28, holding first and last references, pointing at a
+     24-byte Node object holding item, next and prev references. An annotation panel reports the
+     measured JVM flags, UseCompressedOops true, UseCompressedClassPointers true,
+     ObjectAlignmentInBytes 8, and a second annotation panel reports that measured byte counts across
+     200,000 instances matched the arithmetic to within 0.2 bytes in every case except the noise-
+     affected empty-ArrayList reading.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .total { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AN ARRAYLIST IN BYTES</text>
+  <line x1="20" y1="44" x2="1340" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl sub">Element type LedgerEntry (Appendix C.2) — compressed oops, compressed class pointers, 8-byte alignment. Measured JDK 21.0.7, macOS/aarch64.</text>
+
+  <!-- Panel A -->
+  <text x="20" y="98" class="lbl h2">PANEL A — new ArrayList&lt;&gt;(), +1 element</text>
+  <line x1="20" y1="108" x2="440" y2="108" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <rect x="20" y="130" width="420" height="95" rx="6" class="boxP"/>
+  <text x="230" y="155" text-anchor="middle" class="lbl node">ArrayList object</text>
+  <text x="230" y="176" text-anchor="middle" class="lbl body">= 24 bytes total</text>
+  <text x="230" y="196" text-anchor="middle" class="lbl sub">header 12 · modCount 4 · size 4 · elementData ref 4</text>
+  <text x="230" y="212" text-anchor="middle" class="lbl sub">elementData points at the backing array below</text>
+
+  <path class="flow" d="M 230 225 V 255"/>
+
+  <rect x="20" y="257" width="420" height="105" rx="6" class="boxR"/>
+  <text x="230" y="282" text-anchor="middle" class="lbl node">Object[10] array (LedgerEntry[])</text>
+  <text x="230" y="303" text-anchor="middle" class="lbl body">= 56 bytes total</text>
+  <text x="230" y="323" text-anchor="middle" class="lbl sub">header 12 · length 4 · 10 &#215; ref 4 = 40</text>
+  <text x="230" y="341" text-anchor="middle" class="lbl sub">1 slot holds the LedgerEntry ref, 9 slots null</text>
+  <text x="230" y="357" text-anchor="middle" class="lbl sub">DEFAULT_CAPACITY = 10</text>
+
+  <text x="230" y="392" text-anchor="middle" class="lbl total">24 + 56 = 80 bytes</text>
+
+  <!-- Panel B -->
+  <text x="470" y="98" class="lbl h2">PANEL B — new ArrayList&lt;&gt;(1), +1 element</text>
+  <line x1="470" y1="108" x2="890" y2="108" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <rect x="470" y="130" width="420" height="95" rx="6" class="boxP"/>
+  <text x="680" y="155" text-anchor="middle" class="lbl node">ArrayList object</text>
+  <text x="680" y="176" text-anchor="middle" class="lbl body">= 24 bytes total</text>
+  <text x="680" y="196" text-anchor="middle" class="lbl sub">header 12 · modCount 4 · size 4 · elementData ref 4</text>
+  <text x="680" y="212" text-anchor="middle" class="lbl sub">same fields as Panel A — only the array differs</text>
+
+  <path class="flow" d="M 680 225 V 255"/>
+
+  <rect x="470" y="257" width="420" height="105" rx="6" class="boxR"/>
+  <text x="680" y="282" text-anchor="middle" class="lbl node">Object[1] array (LedgerEntry[])</text>
+  <text x="680" y="303" text-anchor="middle" class="lbl body">= 24 bytes total (padded)</text>
+  <text x="680" y="323" text-anchor="middle" class="lbl sub">header 12 · length 4 · 1 &#215; ref 4 = 20</text>
+  <text x="680" y="341" text-anchor="middle" class="lbl sub">20 has no 8-byte-aligned size &#8594; rounds to 24</text>
+  <text x="680" y="357" text-anchor="middle" class="lbl sub">the constructor argument is the only difference</text>
+
+  <text x="680" y="392" text-anchor="middle" class="lbl total">24 + 24 = 48 bytes</text>
+
+  <!-- Panel C -->
+  <text x="920" y="98" class="lbl h2">PANEL C — LinkedList&lt;LedgerEntry&gt;, +1 element</text>
+  <line x1="920" y1="108" x2="1340" y2="108" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <rect x="920" y="130" width="420" height="95" rx="6" class="boxP"/>
+  <text x="1130" y="155" text-anchor="middle" class="lbl node">LinkedList object</text>
+  <text x="1130" y="176" text-anchor="middle" class="lbl body">= 32 bytes total (padded)</text>
+  <text x="1130" y="196" text-anchor="middle" class="lbl sub">header 12 · modCount 4 · size 4 · first 4 · last 4 = 28</text>
+  <text x="1130" y="212" text-anchor="middle" class="lbl sub">28 &#8594; rounds to 32; first and last both point at the node</text>
+
+  <path class="flow" d="M 1130 225 V 255"/>
+
+  <rect x="920" y="257" width="420" height="105" rx="6" class="boxR"/>
+  <text x="1130" y="282" text-anchor="middle" class="lbl node">Node&lt;LedgerEntry&gt; object</text>
+  <text x="1130" y="303" text-anchor="middle" class="lbl body">= 24 bytes total</text>
+  <text x="1130" y="323" text-anchor="middle" class="lbl sub">header 12 · item ref 4 · next ref 4 · prev ref 4</text>
+  <text x="1130" y="341" text-anchor="middle" class="lbl sub">24 is already 8-byte aligned, no padding needed</text>
+  <text x="1130" y="357" text-anchor="middle" class="lbl sub">next and prev both null for a single-node list</text>
+
+  <text x="1130" y="392" text-anchor="middle" class="lbl total">32 + 24 = 56 bytes</text>
+
+  <!-- Annotation panels -->
+  <rect x="20" y="420" width="650" height="150" rx="6" class="boxAnno"/>
+  <text x="38" y="444" class="lbl tiny" style="font-weight:700">Measured JVM flags — JDK 21.0.7, -XX:+PrintFlagsFinal -version</text>
+  <text x="38" y="466" class="lbl tiny">UseCompressedOops = true</text>
+  <text x="38" y="486" class="lbl tiny">UseCompressedClassPointers = true</text>
+  <text x="38" y="506" class="lbl tiny">ObjectAlignmentInBytes = 8</text>
+  <text x="38" y="528" class="lbl tiny" style="font-weight:700">&#8594; every reference costs 4 bytes; every object size rounds up to a multiple of 8</text>
+  <text x="38" y="548" class="lbl tiny">12-byte header = 8-byte mark word + 4-byte compressed class pointer</text>
+
+  <rect x="690" y="420" width="650" height="150" rx="6" class="boxAnno"/>
+  <text x="708" y="444" class="lbl tiny" style="font-weight:700">Arithmetic vs measured — 200,000 instances, 4 forced GCs, -Xmx2g -Xms2g</text>
+  <text x="708" y="466" class="lbl tiny">ArrayList&lt;&gt;() empty: 24 arithmetic vs 21.4 measured — noise-affected at this size</text>
+  <text x="708" y="486" class="lbl tiny">ArrayList&lt;&gt;() + 1: 80 arithmetic vs 80.2 measured</text>
+  <text x="708" y="506" class="lbl tiny">ArrayList&lt;&gt;(1) + 1: 48 arithmetic vs 48.1 measured</text>
+  <text x="708" y="526" class="lbl tiny">LinkedList + 1: 56 arithmetic vs 56.1 measured</text>
+  <text x="708" y="548" class="lbl tiny" style="font-weight:700">The three matches carry the arithmetic; the empty row is the outlier</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="600" x2="1340" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="614" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="627" class="lbl tiny">container object — fixed-size header and scalar fields</text>
+  <rect x="400" y="614" width="22" height="16" rx="3" class="boxR"/>
+  <text x="430" y="627" class="lbl tiny">backing storage — array or node holding the payload</text>
+  <path class="flow" d="M 780 622 H 820"/>
+  <text x="828" y="627" class="lbl tiny">A &#8594; B : A holds a reference to B</text>
+  <rect x="1120" y="614" width="22" height="16" rx="3" class="boxAnno"/>
+  <text x="1150" y="627" class="lbl tiny">measured fact / JVM flag</text>
+</svg>

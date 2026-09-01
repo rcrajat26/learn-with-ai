@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after: what a record generates. Left, before: the one-line declaration record
+     StakeSplit(Money bonusPortion, Money cashPortion) {}, with nothing else written by hand. Right, after:
+     the compiler expands it into final class StakeSplit extends java.lang.Record, implicitly final, holding
+     two private final fields bonusPortion and cashPortion; the canonical constructor StakeSplit(Money
+     bonusPortion, Money cashPortion); the accessors Money bonusPortion() and Money cashPortion(), named
+     after the component, not a JavaBean getter; and the object methods boolean equals(Object o), int
+     hashCode(), and String toString(), all derived from every component.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT A RECORD GENERATES</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="60" class="lbl h2">SOURCE — BEFORE</text>
+  <text x="400" y="60" class="lbl h2">COMPILER GENERATES — AFTER</text>
+
+  <!-- LEFT: source -->
+  <rect x="20" y="90" width="340" height="90" rx="6" class="boxP"/>
+  <text x="34" y="114" class="lbl body">record StakeSplit(</text>
+  <text x="34" y="132" class="lbl body">  Money bonusPortion,</text>
+  <text x="34" y="150" class="lbl body">  Money cashPortion) {}</text>
+
+  <rect x="20" y="200" width="340" height="76" rx="6" class="panel"/>
+  <text x="34" y="220" class="lbl tiny" font-weight="700">what's NOT written</text>
+  <text x="34" y="238" class="lbl tiny">no fields, no constructor,</text>
+  <text x="34" y="254" class="lbl tiny">no accessors, no equals,</text>
+  <text x="34" y="270" class="lbl tiny">no hashCode, no toString</text>
+
+  <path class="flow" d="M 360 135 H 400"/>
+
+  <!-- RIGHT: generated class -->
+  <rect x="400" y="90" width="680" height="610" rx="6" class="boxP"/>
+  <text x="740" y="112" text-anchor="middle" class="lbl node">final class StakeSplit extends java.lang.Record</text>
+  <text x="740" y="130" text-anchor="middle" class="lbl sub">implicit final — a record can never be extended</text>
+
+  <rect x="420" y="150" width="640" height="90" rx="6" class="boxH"/>
+  <text x="436" y="170" class="lbl node" fill="#b45309">PRIVATE FINAL FIELDS</text>
+  <line x1="436" y1="178" x2="1044" y2="178" stroke="#b45309" stroke-width="1"/>
+  <text x="436" y="198" class="lbl sub">private final Money bonusPortion;</text>
+  <text x="436" y="216" class="lbl sub">private final Money cashPortion;</text>
+
+  <rect x="420" y="250" width="640" height="60" rx="6" class="boxH"/>
+  <text x="436" y="270" class="lbl node" fill="#b45309">CANONICAL CONSTRUCTOR</text>
+  <text x="436" y="292" class="lbl sub">StakeSplit(Money bonusPortion, Money cashPortion)</text>
+
+  <rect x="420" y="320" width="640" height="90" rx="6" class="boxH"/>
+  <text x="436" y="340" class="lbl node" fill="#b45309">ACCESSORS</text>
+  <line x1="436" y1="348" x2="1044" y2="348" stroke="#b45309" stroke-width="1"/>
+  <text x="436" y="368" class="lbl sub">Money bonusPortion()</text>
+  <text x="436" y="386" class="lbl sub">Money cashPortion()</text>
+
+  <rect x="420" y="420" width="640" height="110" rx="6" class="boxH"/>
+  <text x="436" y="440" class="lbl node" fill="#b45309">OBJECT METHODS (based on all fields)</text>
+  <line x1="436" y1="448" x2="1044" y2="448" stroke="#b45309" stroke-width="1"/>
+  <text x="436" y="468" class="lbl sub">boolean equals(Object o)</text>
+  <text x="436" y="486" class="lbl sub">int hashCode()</text>
+  <text x="436" y="504" class="lbl sub">String toString()</text>
+
+  <rect x="420" y="550" width="640" height="90" rx="6" class="panel"/>
+  <text x="436" y="570" class="lbl tiny" font-weight="700">naming rule</text>
+  <text x="436" y="588" class="lbl tiny">accessor name = component name — bonusPortion(), never getBonusPortion()</text>
+  <text x="436" y="606" class="lbl tiny">toString() format: StakeSplit[bonusPortion=.., cashPortion=..]</text>
+  <text x="436" y="624" class="lbl tiny">equals/hashCode compare every component, not object identity</text>
+
+  <!-- legend -->
+  <line x1="20" y1="730" x2="1100" y2="730" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="744" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="757" class="lbl tiny">source type / generated class</text>
+  <rect x="300" y="744" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="757" class="lbl tiny">a generated member group</text>
+  <rect x="550" y="744" width="22" height="16" rx="3" class="panel"/>
+  <text x="580" y="757" class="lbl tiny">annotation — rule to remember</text>
+  <path class="flow" d="M 830 752 H 870"/>
+  <text x="878" y="757" class="lbl tiny">A → B : compiler generates B</text>
+</svg>

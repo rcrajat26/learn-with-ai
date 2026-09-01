@@ -1,0 +1,130 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison of a Spring Boot request path for POST stake reserve handled
+     by PaymentService, against 55,000 peak concurrent sessions. Left side, before: Tomcat's servlet
+     executor is a platform-thread pool with maxThreads=200; requests beyond 200 in flight queue behind
+     the pool, so maxThreads acts as an accidental rate limiter against the 55k peak, and the diagram
+     labels the gate as 200-wide. Right side, after: spring.threads.virtual.enabled=true switches the
+     servlet executor to hand out one virtual thread per request, so there is no concurrency cap at the
+     container and the queue is gone; an annotation panel states what the flag switches — the servlet
+     request-handling executor and Spring's @Async default executor — and what it does not switch, which
+     is any explicitly configured thread pool such as a JDBC connection pool or a custom @Async executor
+     bean, both of which still block platform threads exactly as before.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 11.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1f2937; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trir); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">POST /stake/reserve THROUGH TOMCAT — BEFORE AND AFTER VIRTUAL THREADS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="30" y="66" class="lbl h2">BEFORE — PLATFORM THREADS, maxThreads=200</text>
+  <text x="590" y="66" class="lbl h2">AFTER — spring.threads.virtual.enabled=true</text>
+  <line x1="560" y1="52" x2="560" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ LEFT: BEFORE ============ -->
+  <rect x="30" y="82" width="500" height="56" rx="6" class="boxD"/>
+  <text x="280" y="104" text-anchor="middle" class="lbl node" fill="#b91c1c">55,000 peak concurrent sessions</text>
+  <text x="280" y="122" text-anchor="middle" class="lbl sub">calling POST /stake/reserve on PaymentService</text>
+
+  <path class="fail" d="M 280 138 V 168"/>
+
+  <rect x="30" y="170" width="500" height="66" rx="6" class="boxD"/>
+  <text x="46" y="192" class="lbl node" fill="#b91c1c">request queue</text>
+  <text x="46" y="210" class="lbl body">every request past 200 in flight waits here</text>
+  <text x="46" y="226" class="lbl sub">unbounded growth under sustained 55k peak</text>
+
+  <path class="fail" d="M 280 236 V 266"/>
+
+  <rect x="30" y="268" width="500" height="80" rx="6" class="boxH"/>
+  <text x="46" y="290" class="lbl node">Tomcat servlet executor</text>
+  <text x="46" y="308" class="lbl code">server.tomcat.threads.max = 200</text>
+  <text x="46" y="326" class="lbl body">200 platform threads, one per in-flight request</text>
+  <text x="46" y="342" class="lbl sub">maxThreads is the accidental rate limiter</text>
+
+  <path class="flow" d="M 280 348 V 378"/>
+
+  <rect x="30" y="380" width="500" height="60" rx="6" class="boxW"/>
+  <text x="46" y="402" class="lbl node">PaymentService.reserveStake(...)</text>
+  <text x="46" y="420" class="lbl sub">one platform thread blocked for the call's duration</text>
+
+  <rect x="30" y="456" width="500" height="80" rx="6" class="panel"/>
+  <text x="46" y="478" class="lbl tiny" font-weight="700">The 200-wide gate</text>
+  <text x="46" y="496" class="lbl tiny">200 threads against 55,000 peak sessions: only 200</text>
+  <text x="46" y="512" class="lbl tiny">requests execute at once, the rest wait in the queue —</text>
+  <text x="46" y="528" class="lbl tiny">throughput is capped well below what the CPU allows</text>
+
+  <!-- ============ RIGHT: AFTER ============ -->
+  <rect x="590" y="82" width="500" height="56" rx="6" class="boxR"/>
+  <text x="840" y="104" text-anchor="middle" class="lbl node" fill="#15803d">55,000 peak concurrent sessions</text>
+  <text x="840" y="122" text-anchor="middle" class="lbl sub">calling POST /stake/reserve on PaymentService</text>
+
+  <path class="flow" d="M 840 138 V 168"/>
+
+  <rect x="590" y="170" width="500" height="46" rx="6" class="boxR"/>
+  <text x="840" y="199" text-anchor="middle" class="lbl node" fill="#15803d">queue gone — no wait state</text>
+
+  <path class="flow" d="M 840 216 V 246"/>
+
+  <rect x="590" y="248" width="500" height="80" rx="6" class="boxH"/>
+  <text x="606" y="270" class="lbl node">Tomcat servlet executor</text>
+  <text x="606" y="288" class="lbl code">spring.threads.virtual.enabled = true</text>
+  <text x="606" y="306" class="lbl body">one virtual thread minted per request</text>
+  <text x="606" y="322" class="lbl sub">no concurrency cap at the container</text>
+
+  <path class="flow" d="M 840 328 V 358"/>
+
+  <rect x="590" y="360" width="500" height="60" rx="6" class="boxR"/>
+  <text x="606" y="382" class="lbl node">PaymentService.reserveStake(...)</text>
+  <text x="606" y="400" class="lbl sub">virtual thread parks the carrier is freed, not blocked</text>
+
+  <rect x="590" y="456" width="500" height="156" rx="6" class="panel"/>
+  <text x="606" y="478" class="lbl tiny" font-weight="700">What the flag switches</text>
+  <text x="606" y="496" class="lbl tiny">the servlet request-handling executor, and Spring's</text>
+  <text x="606" y="512" class="lbl tiny">default @Async executor — both hand out virtual</text>
+  <text x="606" y="528" class="lbl tiny">threads instead of pooled platform threads</text>
+  <text x="606" y="550" class="lbl tiny" font-weight="700">What it does NOT switch</text>
+  <text x="606" y="568" class="lbl tiny">any explicitly configured pool — a JDBC connection</text>
+  <text x="606" y="584" class="lbl tiny">pool or a custom @Async executor bean still hands out</text>
+  <text x="606" y="600" class="lbl tiny">platform threads and can still block them, unchanged</text>
+
+  <!-- legend -->
+  <line x1="20" y1="656" x2="1100" y2="656" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="670" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="683" class="lbl tiny">bottleneck / blocked state (before)</text>
+  <rect x="300" y="670" width="22" height="16" rx="3" class="boxR"/>
+  <text x="330" y="683" class="lbl tiny">unblocked / resolved state (after)</text>
+  <rect x="600" y="670" width="22" height="16" rx="3" class="boxH"/>
+  <text x="630" y="683" class="lbl tiny">the configuration point (the flag)</text>
+  <rect x="880" y="670" width="22" height="16" rx="3" class="boxW"/>
+  <text x="910" y="683" class="lbl tiny">unaffected downstream call</text>
+  <rect x="20" y="696" width="22" height="16" rx="3" class="panel"/>
+  <text x="50" y="709" class="lbl tiny">annotation panel — explanatory note</text>
+  <path class="flow" d="M 300 704 H 340"/>
+  <text x="348" y="709" class="lbl tiny">A → B : request flows from A to B</text>
+</svg>

@@ -1,0 +1,234 @@
+<svg viewBox="0 0 1140 2800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-panel diagram of how javac duplicates a finally block into every exit path. Panel 1: PaymentService.split has a try that returns, a catch for ArithmeticException, and a finally that calls audit. The javap -c listing shows the identical iload_0, invokestatic audit body copied three times, highlighted amber: PC 5-6 on the normal-return path before the stashed try-result is reloaded from a local and returned, PC 14-15 on the catch path, and PC 21-22 inside a synthetic any handler, whose full PC 20-26 span is framed in red because it re-runs audit then rethrows the saved throwable from local slot 3 with aload_3; athrow. The exception table shows a third row, from 11 to 14 target 20 any, which guards the catch block itself so finally still runs even if the catch throws. Panel 2: PaymentRunFileWriter.flush uses try-with-resources over two resources; the javap listing shows the close calls inlined with no synthetic closeResource method, closing file then ledger in reverse declaration order, each cascade shown with its normal-path close highlighted green and its primary-exception-local, retry, and addSuppressed sequence highlighted red, ending in a rethrow of the primary exception. A closing note states the null check seen for effectively-final resource locals is absent here because javac proved the two constructor calls cannot return null.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyB{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="2800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">finally is duplicated into every exit path</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= PANEL 1 ================= -->
+  <text x="20" y="66" class="h2">PANEL 1 &#8212; try / catch / finally &#8212; PaymentService.split</text>
+  <line x1="20" y1="74" x2="1120" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="90" width="1020" height="220" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="112" class="bodyB">source</text>
+  <g class="code">
+    <text x="80" y="132">static int split(int stakeMinor) {</text>
+    <text x="80" y="150">    try {</text>
+    <text x="80" y="168">        return stakeMinor / 10;</text>
+    <text x="80" y="186">    } catch (ArithmeticException e) {</text>
+    <text x="80" y="204">        return 0;</text>
+    <text x="80" y="222">    } finally {</text>
+    <text x="80" y="240">        audit(stakeMinor);</text>
+    <text x="80" y="258">    }</text>
+    <text x="80" y="276">}</text>
+  </g>
+
+  <rect x="60" y="330" width="1020" height="410" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="352" class="bodyB">javap -c -p PaymentService.split</text>
+
+  <!-- any-handler outer frame (degraded), drawn before its nested copy-3 highlight -->
+  <rect x="70" y="632" width="1000" height="90" rx="4" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <!-- three duplicated finally-body highlights (amber) -->
+  <rect x="70" y="434" width="1000" height="36" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <rect x="70" y="560" width="1000" height="36" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <rect x="70" y="650" width="1000" height="36" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+
+  <g class="code">
+    <text x="90" y="374">0: iload_0</text>
+    <text x="90" y="392">1: bipush        10</text>
+    <text x="90" y="410">3: idiv</text>
+    <text x="90" y="428">4: istore_1</text>
+    <text x="90" y="446">5: iload_0</text>
+    <text x="90" y="464">6: invokestatic  #19   // Method audit:(I)V</text>
+    <text x="90" y="482">9: iload_1</text>
+    <text x="90" y="500">10: ireturn</text>
+    <text x="90" y="518">11: astore_1</text>
+    <text x="90" y="536">12: iconst_0</text>
+    <text x="90" y="554">13: istore_2</text>
+    <text x="90" y="572">14: iload_0</text>
+    <text x="90" y="590">15: invokestatic  #19   // Method audit:(I)V</text>
+    <text x="90" y="608">18: iload_2</text>
+    <text x="90" y="626">19: ireturn</text>
+    <text x="90" y="644">20: astore_3</text>
+    <text x="90" y="662">21: iload_0</text>
+    <text x="90" y="680">22: invokestatic  #19   // Method audit:(I)V</text>
+    <text x="90" y="698">25: aload_3</text>
+    <text x="90" y="716">26: athrow</text>
+  </g>
+
+  <text x="1050" y="459" text-anchor="end" class="smallb" fill="#b45309">copy 1 &#8212; normal return</text>
+  <text x="1050" y="585" text-anchor="end" class="smallb" fill="#b45309">copy 2 &#8212; catch path</text>
+  <text x="1050" y="648" text-anchor="end" class="smallb" fill="#b91c1c">synthetic any handler (PC 20&#8211;26)</text>
+  <text x="1050" y="675" text-anchor="end" class="smallb" fill="#b45309">copy 3 &#8212; finally body</text>
+
+  <rect x="60" y="760" width="1020" height="190" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="782" class="bodyB">Exception table</text>
+  <rect x="80" y="796" width="940" height="22" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+  <g class="smallb">
+    <text x="100" y="812">from</text>
+    <text x="220" y="812">to</text>
+    <text x="340" y="812">target</text>
+    <text x="460" y="812">type</text>
+  </g>
+  <rect x="330" y="852" width="60" height="42" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <g class="code">
+    <text x="100" y="840">0</text><text x="220" y="840">5</text><text x="345" y="840">11</text><text x="460" y="840">Class java/lang/ArithmeticException</text>
+    <text x="100" y="864">0</text><text x="220" y="864">5</text><text x="345" y="864">20</text><text x="460" y="864">any</text>
+    <text x="100" y="888">11</text><text x="220" y="888">14</text><text x="345" y="888">20</text><text x="460" y="888">any</text>
+  </g>
+  <text x="460" y="912" class="small">both "any" rows target PC 20 &#8212; the synthetic handler that runs finally then rethrows.</text>
+  <text x="460" y="928" class="small">row 3 (11&#8211;14) guards the CATCH BLOCK ITSELF: finally still runs if the catch throws.</text>
+
+  <rect x="60" y="970" width="1020" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="992" class="smallb" fill="#2563eb">THE FINALLY BODY IS EMITTED THREE TIMES, BYTE-FOR-BYTE IDENTICAL</text>
+  <text x="80" y="1010" class="small">PC 5&#8211;6, PC 14&#8211;15 and PC 21&#8211;22 are all: iload_0; invokestatic audit:(I)V &#8212; the same two instructions, copied.</text>
+  <text x="80" y="1026" class="small">The try's result is stashed in a local (istore_1 @ 4) so finally can run before ireturn reloads it (iload_1 @ 9).</text>
+  <text x="80" y="1042" class="small">The catch's result is stashed the same way (istore_2 @ 13, reloaded by iload_2 @ 18) for exactly the same reason.</text>
+  <text x="80" y="1058" class="small">javac does not share the three copies as one subroutine &#8212; the jsr/ret bytecodes that once did this were removed.</text>
+
+  <rect x="60" y="1090" width="1020" height="70" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="1112" class="smallb" fill="#b91c1c">RETURN INSIDE finally DISCARDS THE PENDING THROW</text>
+  <text x="80" y="1130" class="small">PC 25&#8211;26 (aload_3; athrow) rethrows the saved Throwable from slot 3 after the any handler's audit runs.</text>
+  <text x="80" y="1146" class="small">A return statement inside finally would replace those two instructions with ireturn &#8212; silently swallowing it.</text>
+
+  <!-- ================= PANEL 2 ================= -->
+  <text x="20" y="1186" class="h2">PANEL 2 &#8212; TRY-WITH-RESOURCES, JDK 21 SHAPE &#8212; PaymentRunFileWriter.flush</text>
+  <line x1="20" y1="1194" x2="1120" y2="1194" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="1210" width="1020" height="170" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="1232" class="bodyB">source</text>
+  <g class="code">
+    <text x="80" y="1252">static void flush(String runId) {</text>
+    <text x="80" y="1270">    try (LedgerConnection ledger = new LedgerConnection();</text>
+    <text x="80" y="1288">         PaymentRunFileWriter file = new PaymentRunFileWriter()) {</text>
+    <text x="80" y="1306">        ledger.write(runId);</text>
+    <text x="80" y="1324">        file.append(runId);</text>
+    <text x="80" y="1342">    }</text>
+    <text x="80" y="1360">}</text>
+  </g>
+
+  <rect x="60" y="1400" width="1020" height="270" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="1422" class="bodyB">javap -c -p -v flush &#8212; setup and body (no synthetic $closeResource method: only flush and &lt;init&gt; are listed)</text>
+  <g class="code">
+    <text x="90" y="1442">0: new           #7    // class LedgerConnection</text>
+    <text x="90" y="1458">3: dup</text>
+    <text x="90" y="1474">4: invokespecial #9    // Method LedgerConnection."&lt;init&gt;":()V</text>
+    <text x="90" y="1490">7: astore_1</text>
+    <text x="90" y="1506">8: new           #10   // class PaymentRunFileWriter</text>
+    <text x="90" y="1522">11: dup</text>
+    <text x="90" y="1538">12: invokespecial #12   // Method PaymentRunFileWriter."&lt;init&gt;":()V</text>
+    <text x="90" y="1554">15: astore_2</text>
+    <text x="90" y="1570">16: aload_1</text>
+    <text x="90" y="1586">17: aload_0</text>
+    <text x="90" y="1602">18: invokevirtual  #13  // Method LedgerConnection.write:(Ljava/lang/String;)V</text>
+    <text x="90" y="1618">21: aload_2</text>
+    <text x="90" y="1634">22: aload_0</text>
+    <text x="90" y="1650">23: invokevirtual  #17  // Method PaymentRunFileWriter.append:(Ljava/lang/String;)V</text>
+  </g>
+
+  <!-- FILE cascade (closes first, reverse declaration order) -->
+  <rect x="60" y="1690" width="1020" height="280" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="1712" class="bodyB">file (slot 2) close/suppress cascade &#8212; closes FIRST, reverse declaration order</text>
+  <rect x="70" y="1720" width="1000" height="54" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <rect x="70" y="1774" width="1000" height="180" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <g class="code">
+    <text x="90" y="1732">26: aload_2</text>
+    <text x="90" y="1750">27: invokevirtual  #20  // Method PaymentRunFileWriter.close:()V</text>
+    <text x="90" y="1768">30: goto          51                          (normal path continues at ledger's close)</text>
+    <text x="90" y="1786">33: astore_3     // PRIMARY EXCEPTION, stashed in local slot 3</text>
+    <text x="90" y="1804">34: aload_2</text>
+    <text x="90" y="1822">35: invokevirtual  #20  // Method PaymentRunFileWriter.close:()V     [retry, guarded 34&#8211;38)</text>
+    <text x="90" y="1840">38: goto          49</text>
+    <text x="90" y="1858">41: astore        4     // close-retry's own exception</text>
+    <text x="90" y="1876">43: aload_3</text>
+    <text x="90" y="1894">44: aload         4</text>
+    <text x="90" y="1912">46: invokevirtual  #25  // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V</text>
+    <text x="90" y="1930">49: aload_3</text>
+    <text x="90" y="1948">50: athrow                                    (rethrows the PRIMARY, slot 3)</text>
+  </g>
+  <text x="1050" y="1746" text-anchor="end" class="smallb" fill="#15803d">normal close</text>
+  <text x="1050" y="1796" text-anchor="end" class="smallb" fill="#b91c1c">primary exception local + retry + addSuppressed + rethrow</text>
+
+  <!-- LEDGER cascade (closes second) -->
+  <rect x="60" y="1990" width="1020" height="310" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="2012" class="bodyB">ledger (slot 1) close/suppress cascade &#8212; closes SECOND</text>
+  <rect x="70" y="2020" width="1000" height="54" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <rect x="70" y="2074" width="1000" height="180" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <rect x="70" y="2254" width="1000" height="18" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <g class="code">
+    <text x="90" y="2032">51: aload_1</text>
+    <text x="90" y="2050">52: invokevirtual  #29  // Method LedgerConnection.close:()V</text>
+    <text x="90" y="2068">55: goto          74                          (normal path: both resources closed cleanly)</text>
+    <text x="90" y="2086">58: astore_2     // PRIMARY EXCEPTION, stashed in local slot 2</text>
+    <text x="90" y="2104">59: aload_1</text>
+    <text x="90" y="2122">60: invokevirtual  #29  // Method LedgerConnection.close:()V         [retry, guarded 59&#8211;63)</text>
+    <text x="90" y="2140">63: goto          72</text>
+    <text x="90" y="2158">66: astore_3     // close-retry's own exception</text>
+    <text x="90" y="2176">67: aload_2</text>
+    <text x="90" y="2194">68: aload_3</text>
+    <text x="90" y="2212">69: invokevirtual  #25  // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V</text>
+    <text x="90" y="2230">72: aload_2</text>
+    <text x="90" y="2248">73: athrow                                    (rethrows the PRIMARY, slot 2)</text>
+    <text x="90" y="2272">74: return                                    (the shared normal-completion exit)</text>
+  </g>
+  <text x="1050" y="2046" text-anchor="end" class="smallb" fill="#15803d">normal close</text>
+  <text x="1050" y="2096" text-anchor="end" class="smallb" fill="#b91c1c">primary exception local + retry + addSuppressed + rethrow</text>
+
+  <rect x="60" y="2320" width="1020" height="210" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="2342" class="bodyB">Exception table</text>
+  <rect x="80" y="2356" width="940" height="22" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+  <g class="smallb">
+    <text x="100" y="2372">from</text>
+    <text x="220" y="2372">to</text>
+    <text x="340" y="2372">target</text>
+    <text x="460" y="2372">type</text>
+  </g>
+  <g class="code">
+    <text x="100" y="2400">16</text><text x="220" y="2400">26</text><text x="345" y="2400">33</text><text x="460" y="2400">Class java/lang/Throwable   (file's body &#8594; file's own catch)</text>
+    <text x="100" y="2424">34</text><text x="220" y="2424">38</text><text x="345" y="2424">41</text><text x="460" y="2424">Class java/lang/Throwable   (file's close retry &#8594; addSuppressed)</text>
+    <text x="100" y="2448">8</text><text x="220" y="2448">51</text><text x="345" y="2448">58</text><text x="460" y="2448">Class java/lang/Throwable   (whole body incl. file's cascade &#8594; ledger's catch)</text>
+    <text x="100" y="2472">59</text><text x="220" y="2472">63</text><text x="345" y="2472">66</text><text x="460" y="2472">Class java/lang/Throwable   (ledger's close retry &#8594; addSuppressed)</text>
+  </g>
+  <text x="460" y="2496" class="small">two nested cascades, one per resource &#8212; each guards its own body range AND its own close-retry range.</text>
+  <text x="80" y="2512" class="small">(all four rows share type Throwable: the compiler cannot narrow a resource's close() checked exception here.)</text>
+
+  <rect x="60" y="2550" width="1020" height="90" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="2572" class="smallb" fill="#2563eb">NULL CHECK ABSENT &#8212; RESOURCES PROVEN NON-NULL</text>
+  <text x="80" y="2590" class="small">javac proved both "new LedgerConnection()" and "new PaymentRunFileWriter()" cannot be null, so no null check</text>
+  <text x="80" y="2606" class="small">precedes either close() above. A resource whose expression COULD be null &#8212; e.g. "try (ledger)" over an</text>
+  <text x="80" y="2622" class="small">effectively-final local &#8212; emits "aload_N; ifnull" before each close instead; measured separately, not shown here.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="2676" class="h2">LEGEND</text>
+  <line x1="20" y1="2684" x2="1120" y2="2684" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="2700" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="2713" class="small">primary &#8212; subject method source</text>
+
+  <rect x="30" y="2726" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="2739" class="small">highlight &#8212; the duplicated finally body, copied byte-for-byte at each exit</text>
+
+  <rect x="30" y="2752" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="2765" class="small">resolved &#8212; the normal-path close; the shared normal-completion return</text>
+
+  <rect x="600" y="2700" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="628" y="2713" class="small">weak &#8212; Code-attribute / exception-table scaffolding</text>
+
+  <rect x="600" y="2726" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="628" y="2739" class="small">degraded &#8212; the synthetic any handler; a close-retry's primary-exception cascade</text>
+
+  <rect x="600" y="2752" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="628" y="2765" class="small">annotation &#8212; explanatory note panel</text>
+</svg>

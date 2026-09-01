@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="AbstractTask decomposition tree for a parallel stream over 2,800,000 stake reservations on an 8-core box. ForkJoinPool.commonPool's parallelism is availableProcessors minus one, so 7, and LEAF_TARGET equals that parallelism shifted left by two, giving 28. suggestTargetSize divides the 2,800,000 estimate by 28, floored and clamped to a minimum of 1, giving a target leaf size of 100,000 and a resulting leaf count of 28 — roughly four leaf tasks per pool worker thread. Both formulas are flagged as requiring verification against the actual AbstractTask.java source before the printed numbers are trusted.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ABSTRACTTASK DECOMPOSITION — 2,800,000 RESERVATIONS, 8-CORE BOX</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="340" y="56" width="360" height="66" rx="6" class="boxP"/>
+  <text x="520" y="80" text-anchor="middle" class="lbl node">root AbstractTask</text>
+  <text x="520" y="99" text-anchor="middle" class="lbl body code">sizeEstimate = 2,800,000 Reservation</text>
+  <text x="520" y="114" text-anchor="middle" class="lbl sub">2.8M/day stake reservations (Appendix A)</text>
+
+  <!-- formula panel 1 -->
+  <path class="flow" d="M 520 122 V 148"/>
+  <rect x="60" y="150" width="920" height="96" rx="6" class="boxH"/>
+  <text x="76" y="172" class="lbl h2" fill="#b45309">LEAF_TARGET — needs verification against AbstractTask.java</text>
+  <text x="76" y="192" class="lbl code">LEAF_TARGET = ForkJoinPool.getCommonPoolParallelism() &lt;&lt; 2</text>
+  <text x="76" y="212" class="lbl code">commonPool parallelism = availableProcessors() - 1 = 8 - 1 = 7</text>
+  <text x="76" y="230" class="lbl code">LEAF_TARGET = 7 &lt;&lt; 2 = 28</text>
+
+  <!-- common pool width both halves -->
+  <path class="flow" d="M 520 246 V 272"/>
+  <rect x="180" y="274" width="290" height="60" rx="6" class="boxWk"/>
+  <text x="325" y="296" text-anchor="middle" class="lbl node">pool worker threads</text>
+  <text x="325" y="315" text-anchor="middle" class="lbl body code">7 = availableProcessors() - 1</text>
+
+  <rect x="570" y="274" width="290" height="60" rx="6" class="boxWk"/>
+  <text x="715" y="296" text-anchor="middle" class="lbl node">+ submitting thread</text>
+  <text x="715" y="315" text-anchor="middle" class="lbl body code">effective width = 7 + 1 = 8 cores</text>
+
+  <!-- formula panel 2 -->
+  <path class="flow" d="M 325 334 V 360"/>
+  <path class="flow" d="M 715 334 V 360"/>
+  <rect x="60" y="362" width="920" height="96" rx="6" class="boxH"/>
+  <text x="76" y="384" class="lbl h2" fill="#b45309">suggestTargetSize — needs verification against AbstractTask.java</text>
+  <text x="76" y="404" class="lbl code">suggestTargetSize(sizeEstimate) = sizeEstimate / getLeafTarget(), floored, clamped to &#8805; 1</text>
+  <text x="76" y="424" class="lbl code">targetSize = 2,800,000 / 28 = 100,000  (exact — no remainder to floor away here)</text>
+  <text x="76" y="442" class="lbl code">leafCount = sizeEstimate / targetSize = 2,800,000 / 100,000 = 28 leaves</text>
+
+  <!-- bus to leaves -->
+  <path class="flow" d="M 520 458 V 490"/>
+  <path d="M 240 490 H 800" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 240 490 V 520"/>
+  <path class="flow" d="M 373 490 V 520"/>
+  <path class="flow" d="M 520 490 V 520"/>
+  <path class="flow" d="M 667 490 V 520"/>
+  <path class="flow" d="M 800 490 V 520"/>
+
+  <rect x="150" y="520" width="180" height="70" rx="6" class="boxR"/>
+  <text x="240" y="544" text-anchor="middle" class="lbl node">leaf 1</text>
+  <text x="240" y="562" text-anchor="middle" class="lbl body code">100,000</text>
+  <text x="240" y="578" text-anchor="middle" class="lbl sub">Reservation</text>
+
+  <rect x="283" y="520" width="180" height="70" rx="6" class="boxR"/>
+  <text x="373" y="544" text-anchor="middle" class="lbl node">leaf 2</text>
+  <text x="373" y="562" text-anchor="middle" class="lbl body code">100,000</text>
+  <text x="373" y="578" text-anchor="middle" class="lbl sub">Reservation</text>
+
+  <rect x="430" y="520" width="180" height="70" rx="6" class="boxR"/>
+  <text x="520" y="544" text-anchor="middle" class="lbl node">leaf ... 26 more</text>
+  <text x="520" y="562" text-anchor="middle" class="lbl body code">100,000 each</text>
+  <text x="520" y="578" text-anchor="middle" class="lbl sub">identical target size</text>
+
+  <rect x="577" y="520" width="180" height="70" rx="6" class="boxR"/>
+  <text x="667" y="544" text-anchor="middle" class="lbl node">leaf 27</text>
+  <text x="667" y="562" text-anchor="middle" class="lbl body code">100,000</text>
+  <text x="667" y="578" text-anchor="middle" class="lbl sub">Reservation</text>
+
+  <rect x="710" y="520" width="180" height="70" rx="6" class="boxR"/>
+  <text x="800" y="544" text-anchor="middle" class="lbl node">leaf 28</text>
+  <text x="800" y="562" text-anchor="middle" class="lbl body code">100,000</text>
+  <text x="800" y="578" text-anchor="middle" class="lbl sub">Reservation</text>
+
+  <!-- roughly 4 per core annotation -->
+  <rect x="60" y="612" width="920" height="72" rx="6" class="boxAnn"/>
+  <text x="76" y="634" class="lbl node" font-size="13px">28 leaves over 7 pool worker threads = 4 leaves per worker</text>
+  <text x="76" y="654" class="lbl tiny">Matches getLeafTarget()'s own javadoc: "we over-partition, currently to approximately four tasks per</text>
+  <text x="76" y="670" class="lbl tiny">processor, which enables others to help out if leaf tasks are uneven or some processors are otherwise busy."</text>
+
+  <!-- verification warning -->
+  <rect x="60" y="700" width="920" height="106" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="76" y="722" class="lbl node" font-size="13px" fill="#b91c1c">UNVERIFIED — check against AbstractTask.java before trusting these numbers</text>
+  <text x="76" y="742" class="lbl tiny">This diagram's arithmetic assumes getLeafTarget() reads ForkJoinPool.commonPool()'s parallelism at</text>
+  <text x="76" y="758" class="lbl tiny">construction time and availableProcessors() = 8 on the box in question. getLeafTarget() actually reads the</text>
+  <text x="76" y="774" class="lbl tiny">current pool's parallelism when the caller is a ForkJoinWorkerThread, so a task resubmitted into a custom</text>
+  <text x="76" y="790" class="lbl tiny">pool gets a different LEAF_TARGET than the one drawn here — re-derive against the source, not this figure.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="822" x2="1020" y2="822" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="836" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="849" class="lbl tiny">root task / total estimate</text>
+  <rect x="260" y="836" width="22" height="16" rx="3" class="boxWk"/>
+  <text x="290" y="849" class="lbl tiny">pool width components</text>
+  <rect x="480" y="836" width="22" height="16" rx="3" class="boxH"/>
+  <text x="510" y="849" class="lbl tiny">formula — flagged unverified</text>
+  <rect x="720" y="836" width="22" height="16" rx="3" class="boxR"/>
+  <text x="750" y="849" class="lbl tiny">leaf task</text>
+  <rect x="20" y="862" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="50" y="875" class="lbl tiny">unverified-claim warning panel</text>
+  <path class="flow" d="M 850 844 H 890"/>
+  <text x="898" y="849" class="lbl tiny">A → B</text>
+</svg>

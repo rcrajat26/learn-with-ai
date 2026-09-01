@@ -1,0 +1,82 @@
+<svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Per-element memory: ArrayList spends 4 bytes of array slot per element while LinkedList.Node spends a 12-byte object header plus three 4-byte references, 24 bytes total, a 6x overhead, drawn to scale, with the shared element object shown once for fairness">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="24" rx="4" fill="#e5e7eb"/>
+  <text x="400" y="37" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Per-element bookkeeping cost: ArrayList slot vs LinkedList.Node (drawn to scale, 8px per byte)</text>
+
+  <!-- ArrayList block: 4 bytes -> 32px wide -->
+  <text x="80" y="80" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayList</text>
+  <rect x="80" y="90" width="32" height="60" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <rect x="120" y="105" width="90" height="30" rx="3" fill="#e5e7eb"/>
+  <text x="165" y="125" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4 bytes</text>
+  <rect x="80" y="160" width="200" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="90" y="173" font-family="sans-serif" font-size="11" fill="#1f2937">one array slot = one Object reference</text>
+
+  <!-- LinkedList.Node block: 24 bytes -> 192px wide, subdivided -->
+  <text x="80" y="230" font-family="sans-serif" font-size="13" fill="#1f2937">LinkedList.Node</text>
+  <!-- header 12 bytes -> 96px -->
+  <rect x="80" y="240" width="96" height="60" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <!-- prev ref 4 bytes -> 32px -->
+  <rect x="176" y="240" width="32" height="60" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <!-- next ref 4 bytes -> 32px -->
+  <rect x="208" y="240" width="32" height="60" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <!-- item ref 4 bytes -> 32px -->
+  <rect x="240" y="240" width="32" height="60" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+
+  <rect x="80" y="310" width="96" height="18" rx="3" fill="#fef3c7"/>
+  <text x="128" y="323" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">12B header</text>
+  <rect x="176" y="310" width="32" height="18" rx="3" fill="#dbeafe"/>
+  <text x="192" y="323" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">4B</text>
+  <rect x="208" y="310" width="32" height="18" rx="3" fill="#dbeafe"/>
+  <text x="224" y="323" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">4B</text>
+  <rect x="240" y="310" width="32" height="18" rx="3" fill="#dcfce7"/>
+  <text x="256" y="323" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">4B</text>
+
+  <rect x="80" y="334" width="88" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="124" y="347" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(mark+klass)</text>
+  <rect x="176" y="335" width="32" height="16" rx="3" fill="#e5e7eb"/>
+  <text x="192" y="347" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">prev</text>
+  <rect x="208" y="335" width="32" height="16" rx="3" fill="#e5e7eb"/>
+  <text x="224" y="347" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">next</text>
+  <rect x="240" y="335" width="32" height="16" rx="3" fill="#e5e7eb"/>
+  <text x="256" y="347" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">item</text>
+
+  <rect x="80" y="360" width="192" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="90" y="373" font-family="sans-serif" font-size="11" fill="#1f2937">Node total = 12 + 4 + 4 + 4 = 24 bytes (compressed oops, 64-bit JVM)</text>
+
+  <!-- ratio callout -->
+  <rect x="330" y="90" width="140" height="270" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="205" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">24 / 4</text>
+  <text x="400" y="230" text-anchor="middle" font-family="sans-serif" font-size="26" fill="#1f2937">= 6x</text>
+  <text x="400" y="255" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">overhead per</text>
+  <text x="400" y="270" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">element, before</text>
+  <text x="400" y="285" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">the element itself</text>
+  <text x="400" y="300" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">is even counted</text>
+
+  <!-- shared element object, shown once for fairness -->
+  <rect x="530" y="140" width="230" height="120" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="645" y="165" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">the element object itself</text>
+  <text x="645" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">(e.g. an Integer or a</text>
+  <text x="645" y="208" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">user record) exists once</text>
+  <text x="645" y="226" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">no matter which list holds</text>
+  <text x="645" y="244" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">it — shown here for fairness</text>
+
+  <line x1="112" y1="120" x2="530" y2="190" stroke="#737373" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <line x1="272" y1="270" x2="530" y2="220" stroke="#737373" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+
+  <rect x="530" y="280" width="230" height="80" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="545" y="302" font-family="sans-serif" font-size="11" fill="#1f2937">Both structures point at the</text>
+  <text x="545" y="318" font-family="sans-serif" font-size="11" fill="#1f2937">same shared element cost —</text>
+  <text x="545" y="334" font-family="sans-serif" font-size="11" fill="#1f2937">the 6x gap is pure bookkeeping</text>
+  <text x="545" y="350" font-family="sans-serif" font-size="11" fill="#1f2937">overhead LinkedList adds on top.</text>
+
+  <rect x="20" y="400" width="760" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="40" y="423" font-family="sans-serif" font-size="12" fill="#1f2937">ArrayList: contiguous elementData[] slot, 4 bytes/element (a compressed-oop reference), plus the shared element.</text>
+  <text x="40" y="443" font-family="sans-serif" font-size="12" fill="#1f2937">LinkedList: a heap-allocated Node object per element — 24 bytes of pure pointer/header overhead, plus the same element.</text>
+</svg>

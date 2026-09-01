@@ -1,0 +1,98 @@
+<svg viewBox="0 0 1120 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of filter before groupingBy versus filtering as a downstream collector, grouping card deposits by rail. Shared input: CARD deposits of 65 and 82, BANK deposits of 480 and 150; predicate amount greater than 100, and CARD's maximum of 82 never exceeds it. Left, BEFORE: filter(p) then collect(groupingBy(Deposit::rail)) produces a map containing only BANK to [480, 150] — the CARD key is absent from the map entirely because the classifier never ran on a CARD element. Right, AFTER: collect(groupingBy(Deposit::rail, filtering(p, toList()))) produces a map with CARD to an empty list and BANK to [480, 150] — the CARD key is present with an empty list because groupingBy creates the bucket before filtering runs inside it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxR  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FILTER(p) BEFORE groupingBy VS. filtering(p, toList()) AS DOWNSTREAM</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl dense">same input, same predicate, two ways to keep only deposits over 100 while grouping by rail</text>
+
+  <!-- Shared input -->
+  <rect x="340" y="90" width="440" height="100" rx="6" class="boxP"/>
+  <text x="560" y="114" text-anchor="middle" class="lbl node">cardDeposits : List&lt;Deposit&gt;</text>
+  <text x="560" y="136" text-anchor="middle" class="lbl body">CARD 65 · CARD 82</text>
+  <text x="560" y="154" text-anchor="middle" class="lbl body">BANK 480 · BANK 150</text>
+  <text x="560" y="174" text-anchor="middle" class="lbl sub">predicate: amount() &gt; 100 — CARD's max (82) never exceeds it</text>
+
+  <!-- fan-out bus -->
+  <path class="flow" d="M 560 190 V 210"/>
+  <path d="M 290 210 H 830" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 290 210 V 234"/>
+  <path class="flow" d="M 830 210 V 234"/>
+
+  <!-- LEFT lane: BEFORE -->
+  <text x="40" y="250" class="lbl h2">BEFORE — filter(p) THEN groupingBy</text>
+  <line x1="40" y1="258" x2="540" y2="258" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="280" class="lbl tiny">.filter(d -&gt; d.amount() &gt; 100).collect(groupingBy(Deposit::rail))</text>
+
+  <rect x="60" y="300" width="460" height="70" rx="6" class="boxG"/>
+  <text x="290" y="324" text-anchor="middle" class="lbl node">resulting map</text>
+  <text x="290" y="344" text-anchor="middle" class="lbl body">BANK -&gt; [480, 150]</text>
+  <text x="290" y="360" text-anchor="middle" class="lbl sub">the only entry — one key total</text>
+
+  <rect x="60" y="390" width="460" height="80" rx="6" class="boxR"/>
+  <text x="290" y="414" text-anchor="middle" class="lbl node">CARD — key absent from map</text>
+  <text x="290" y="434" text-anchor="middle" class="lbl body">classifier never saw a CARD element to key on</text>
+  <text x="290" y="452" text-anchor="middle" class="lbl sub">map.get(CARD) returns null, not an empty list</text>
+
+  <!-- RIGHT lane: AFTER -->
+  <text x="580" y="250" class="lbl h2">AFTER — groupingBy(rail, filtering(p, toList()))</text>
+  <line x1="580" y1="258" x2="1080" y2="258" stroke="#d1d5db" stroke-width="1"/>
+  <text x="580" y="280" class="lbl tiny">.collect(groupingBy(Deposit::rail, filtering(d -&gt; d.amount()&gt;100, toList())))</text>
+
+  <rect x="600" y="300" width="460" height="100" rx="6" class="boxG"/>
+  <text x="830" y="324" text-anchor="middle" class="lbl node">resulting map</text>
+  <text x="830" y="344" text-anchor="middle" class="lbl body">CARD -&gt; []</text>
+  <text x="830" y="362" text-anchor="middle" class="lbl body">BANK -&gt; [480, 150]</text>
+  <text x="830" y="382" text-anchor="middle" class="lbl sub">both keys present — one empty, one populated</text>
+
+  <rect x="600" y="420" width="460" height="60" rx="6" class="boxG"/>
+  <text x="830" y="444" text-anchor="middle" class="lbl node">CARD key present, list empty</text>
+  <text x="830" y="464" text-anchor="middle" class="lbl sub">map.get(CARD) is [], never null — safe iteration</text>
+
+  <!-- Comparison panel -->
+  <rect x="40" y="520" width="1040" height="120" rx="6" class="panel"/>
+  <text x="60" y="544" class="lbl body" font-weight="700">why the key disappears on the left</text>
+  <text x="60" y="566" class="lbl tiny">filter() removes elements before groupingBy ever runs, so the classifier Deposit::rail is never invoked for a CARD element — the key is never created.</text>
+  <text x="60" y="586" class="lbl tiny">filtering() runs downstream, inside the collector, after groupingBy has already opened a bucket per classifier value — every key gets an entry, even an empty one.</text>
+  <text x="60" y="608" class="lbl tiny">rule of thumb: use filter() upstream only when a missing key is acceptable; use filtering() downstream when callers expect map.get(key) to never return null.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="660" x2="1100" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="672" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="685" class="lbl tiny">shared input stream</text>
+
+  <rect x="230" y="672" width="22" height="16" rx="3" class="boxG"/>
+  <text x="260" y="685" class="lbl tiny">correct / present map entry</text>
+
+  <rect x="470" y="672" width="22" height="16" rx="3" class="boxR"/>
+  <text x="500" y="685" class="lbl tiny">gotcha — key silently absent</text>
+
+  <rect x="720" y="672" width="22" height="16" rx="3" class="panel"/>
+  <text x="750" y="685" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 900 680 H 940"/>
+  <text x="948" y="685" class="lbl tiny">A → B : A produces B</text>
+</svg>

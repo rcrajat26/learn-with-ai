@@ -1,0 +1,218 @@
+<svg viewBox="0 0 1100 1220" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ABA on a Treiber stack of pending withdrawal transactions, read top to bottom over
+     time. Frame 1: payment-run-worker-1 reads top as node X, WD-501, captures next as Y, WD-502,
+     and is descheduled. Frame 2: payment-run-worker-2 pops X, pops Y, then pushes X back, leaving
+     Y unlinked. Frame 3: worker-1 resumes and its compareAndSet from X to its stale captured next
+     Y succeeds, because top is X again by coincidence. Frame 4: the stack now points at Y, a node
+     that had already been removed, and WD-501, legitimately re-pushed by worker-2, is silently
+     lost. Below, the AtomicStampedReference version tags every change with a stamp, 7 then 8 then
+     9, so worker-1's compareAndSet, expecting stamp 7, fails safely even though the reference is X
+     again.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .frameNum { font-size: 13px; font-weight: 700; fill: #b45309; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weakE { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             stroke-linejoin: round; marker-end: url(#triW); }
+    .timeAx{ fill: none; stroke: #4b5563; stroke-width: 2; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="1220" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ABA: THE VALUE IS THE SAME, THE WORLD IS NOT</text>
+  <line x1="20" y1="42" x2="1080" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="58" class="lbl h2">TREIBER STACK OF PENDING WithdrawalTransactions — READ DOWNWARD OVER TIME</text>
+
+  <!-- time axis -->
+  <path class="timeAx" d="M 34 72 V 800"/>
+  <text x="18" y="68" class="lbl tiny" fill="#4b5563">time</text>
+
+  <!-- ============ FRAME 1 ============ -->
+  <text x="60" y="88" class="lbl frameNum">FRAME 1</text>
+  <text x="150" y="88" class="lbl h2">payment-run-worker-1 reads top = X, captures next = Y, then is descheduled</text>
+  <line x1="60" y1="96" x2="1070" y2="96" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <rect x="100" y="112" width="200" height="34" rx="4" class="boxH"/>
+  <text x="200" y="134" text-anchor="middle" class="lbl body">top → X (WD-501)</text>
+  <path class="flow" d="M 200 146 V 158"/>
+  <rect x="100" y="160" width="200" height="34" rx="4" class="boxP"/>
+  <text x="200" y="182" text-anchor="middle" class="lbl body">Y (WD-502)</text>
+  <path class="flow" d="M 200 194 V 206"/>
+  <rect x="100" y="208" width="200" height="34" rx="4" class="boxP"/>
+  <text x="200" y="230" text-anchor="middle" class="lbl body">Z (WD-503)</text>
+
+  <rect x="360" y="108" width="680" height="140" rx="6" class="boxA"/>
+  <text x="380" y="128" class="lbl body" font-weight="700">payment-run-worker-1</text>
+  <text x="380" y="148" class="lbl tiny">1. reads top = X (WD-501)</text>
+  <text x="380" y="166" class="lbl tiny">2. captures local next = Y (WD-502), read from X.next</text>
+  <text x="380" y="184" class="lbl tiny">3. preempted before compareAndSet(top: X → Y) runs</text>
+  <text x="380" y="210" class="lbl body" font-weight="700">payment-run-worker-2</text>
+  <text x="380" y="228" class="lbl tiny">idle — has not yet touched the stack</text>
+
+  <!-- ============ FRAME 2 ============ -->
+  <text x="60" y="288" class="lbl frameNum">FRAME 2</text>
+  <text x="150" y="288" class="lbl h2">payment-run-worker-2 pops X, pops Y, then pushes X back</text>
+  <line x1="60" y1="296" x2="1070" y2="296" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <rect x="100" y="312" width="200" height="34" rx="4" class="boxH"/>
+  <text x="200" y="334" text-anchor="middle" class="lbl body">top → X (WD-501)</text>
+  <path class="flow" d="M 200 346 V 358"/>
+  <rect x="100" y="360" width="200" height="34" rx="4" class="boxP"/>
+  <text x="200" y="382" text-anchor="middle" class="lbl body">Z (WD-503)</text>
+
+  <rect x="330" y="336" width="180" height="34" rx="4" class="boxW"/>
+  <text x="420" y="358" text-anchor="middle" class="lbl body">Y (WD-502)</text>
+  <path class="weakE" d="M 300 360 H 330"/>
+  <text x="420" y="382" text-anchor="middle" class="lbl sub">unlinked, not reclaimed</text>
+
+  <rect x="540" y="308" width="500" height="140" rx="6" class="boxA"/>
+  <text x="560" y="328" class="lbl body" font-weight="700">payment-run-worker-2</text>
+  <text x="560" y="348" class="lbl tiny">4. pop() → returns X (WD-501); top becomes Y</text>
+  <text x="560" y="366" class="lbl tiny">5. pop() → returns Y (WD-502); top becomes Z</text>
+  <text x="560" y="384" class="lbl tiny">6. push(X) → top becomes X again — same reference,</text>
+  <text x="560" y="400" class="lbl tiny">   different generation of the stack underneath it</text>
+  <text x="560" y="424" class="lbl body" font-weight="700">payment-run-worker-1</text>
+  <text x="560" y="442" class="lbl tiny">still descheduled, holding stale local next = Y</text>
+
+  <!-- ============ FRAME 3 ============ -->
+  <text x="60" y="488" class="lbl frameNum">FRAME 3</text>
+  <text x="150" y="488" class="lbl h2">worker-1 resumes; its compareAndSet(top: X → Y) succeeds</text>
+  <line x1="60" y1="496" x2="1070" y2="496" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <text x="120" y="520" class="lbl sub">before CAS</text>
+  <rect x="100" y="528" width="180" height="34" rx="4" class="boxP"/>
+  <text x="190" y="550" text-anchor="middle" class="lbl body">top → X (WD-501)</text>
+  <path class="flow" d="M 190 562 V 574"/>
+  <rect x="100" y="576" width="180" height="34" rx="4" class="boxP"/>
+  <text x="190" y="598" text-anchor="middle" class="lbl body">Z (WD-503)</text>
+
+  <rect x="320" y="540" width="220" height="60" rx="6" class="boxR"/>
+  <text x="430" y="564" text-anchor="middle" class="lbl body" font-weight="700">CAS(top, X, Y)</text>
+  <text x="430" y="584" text-anchor="middle" class="lbl sub">succeeds — top still reads X</text>
+  <path class="flow" d="M 280 545 H 320"/>
+  <path class="flow" d="M 540 570 H 580"/>
+
+  <text x="670" y="520" class="lbl sub">after CAS</text>
+  <rect x="650" y="528" width="180" height="34" rx="4" class="boxH"/>
+  <text x="740" y="550" text-anchor="middle" class="lbl body">top → Y (WD-502)</text>
+  <path class="flow" d="M 740 562 V 574"/>
+  <rect x="650" y="576" width="180" height="34" rx="4" class="boxP"/>
+  <text x="740" y="598" text-anchor="middle" class="lbl body">Z (WD-503)</text>
+
+  <rect x="860" y="528" width="180" height="82" rx="6" class="boxD"/>
+  <text x="950" y="550" text-anchor="middle" class="lbl body" font-weight="700">worker-1's view</text>
+  <text x="950" y="568" text-anchor="middle" class="lbl tiny">believes it swapped</text>
+  <text x="950" y="584" text-anchor="middle" class="lbl tiny">X for its next, Y —</text>
+  <text x="950" y="600" text-anchor="middle" class="lbl tiny">unaware X was reused</text>
+
+  <!-- ============ FRAME 4 ============ -->
+  <text x="60" y="688" class="lbl frameNum">FRAME 4</text>
+  <text x="150" y="688" class="lbl h2">the stack now points at Y, a node already removed — WD-501 is lost</text>
+  <line x1="60" y1="696" x2="1070" y2="696" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <rect x="100" y="712" width="200" height="34" rx="4" class="boxH"/>
+  <text x="200" y="734" text-anchor="middle" class="lbl body">top → Y (WD-502)</text>
+  <path class="flow" d="M 200 746 V 758"/>
+  <rect x="100" y="760" width="200" height="34" rx="4" class="boxP"/>
+  <text x="200" y="782" text-anchor="middle" class="lbl body">Z (WD-503)</text>
+
+  <rect x="360" y="712" width="200" height="60" rx="4" class="boxD" stroke-dasharray="3 3"/>
+  <text x="460" y="734" text-anchor="middle" class="lbl body">X (WD-501)</text>
+  <text x="460" y="752" text-anchor="middle" class="lbl sub">unreachable — dropped</text>
+  <path class="weakE" d="M 300 728 H 360"/>
+
+  <rect x="600" y="700" width="440" height="90" rx="6" class="boxD"/>
+  <text x="620" y="722" class="lbl body" font-weight="700">lost element: WD-501</text>
+  <text x="620" y="742" class="lbl tiny">a pending withdrawal that worker-2 legitimately</text>
+  <text x="620" y="758" class="lbl tiny">re-pushed — silently dropped because worker-1's</text>
+  <text x="620" y="774" class="lbl tiny">stale CAS only checked the reference, not history</text>
+
+  <!-- ============ AtomicStampedReference ============ -->
+  <text x="20" y="850" class="lbl h1">THE FIX — AtomicStampedReference&lt;WithdrawalTransaction&gt;</text>
+  <line x1="20" y1="860" x2="1080" y2="860" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="878" class="lbl h2">EVERY STRUCTURAL CHANGE BUMPS A STAMP — worker-1's CAS NOW CHECKS STAMP TOO</text>
+
+  <rect x="60" y="900" width="260" height="70" rx="6" class="boxP"/>
+  <text x="190" y="924" text-anchor="middle" class="lbl body">stamp = 7</text>
+  <text x="190" y="944" text-anchor="middle" class="lbl body">ref = X (WD-501)</text>
+  <text x="190" y="960" text-anchor="middle" class="lbl sub">worker-1 reads this pair</text>
+
+  <path class="flow" d="M 320 935 H 400"/>
+  <text x="360" y="927" text-anchor="middle" class="lbl sub">worker-2: pop()</text>
+
+  <rect x="402" y="900" width="260" height="70" rx="6" class="boxH"/>
+  <text x="532" y="924" text-anchor="middle" class="lbl body">stamp = 8</text>
+  <text x="532" y="944" text-anchor="middle" class="lbl body">ref = Y (WD-502)</text>
+  <text x="532" y="960" text-anchor="middle" class="lbl sub">stamp bumped on every change</text>
+
+  <path class="flow" d="M 662 935 H 742"/>
+  <text x="702" y="918" text-anchor="middle" class="lbl sub">worker-2:</text>
+  <text x="702" y="930" text-anchor="middle" class="lbl sub">pop()+push(X)</text>
+
+  <rect x="744" y="900" width="260" height="70" rx="6" class="boxH"/>
+  <text x="874" y="924" text-anchor="middle" class="lbl body">stamp = 9</text>
+  <text x="874" y="944" text-anchor="middle" class="lbl body">ref = X (WD-501)</text>
+  <text x="874" y="960" text-anchor="middle" class="lbl sub">ref matches worker-1's read, stamp does not</text>
+
+  <path class="flow" d="M 874 970 V 1000"/>
+
+  <rect x="60" y="1002" width="944" height="90" rx="6" class="boxD"/>
+  <text x="80" y="1026" class="lbl body" font-weight="700">worker-1: compareAndSet(expectedRef=X, expectedStamp=7, newRef=Y, newStamp=8)</text>
+  <text x="80" y="1048" class="lbl tiny">FAILS — current stamp is 9, not the expected 7, even though the reference reads as X again</text>
+  <text x="80" y="1066" class="lbl tiny">worker-1 retries from a fresh read instead of silently corrupting the stack</text>
+
+  <!-- legend -->
+  <line x1="20" y1="1130" x2="1080" y2="1130" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="1144" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="1157" class="lbl tiny">stack node / stamped state</text>
+
+  <rect x="260" y="1144" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="1157" class="lbl tiny">top pointer / changed stamp</text>
+
+  <rect x="530" y="1144" width="22" height="16" rx="3" class="boxR"/>
+  <text x="560" y="1157" class="lbl tiny">CAS action</text>
+
+  <rect x="680" y="1144" width="22" height="16" rx="3" class="boxW"/>
+  <text x="710" y="1157" class="lbl tiny">unlinked node</text>
+
+  <rect x="850" y="1144" width="22" height="16" rx="3" class="boxD"/>
+  <text x="880" y="1157" class="lbl tiny">lost data / CAS failure</text>
+
+  <rect x="20" y="1170" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="1183" class="lbl tiny">annotation panel — per-thread step log</text>
+
+  <path class="flow" d="M 260 1170 H 300"/>
+  <text x="308" y="1175" class="lbl tiny">A → B : primary flow / pointer</text>
+
+  <path class="weakE" d="M 600 1170 H 640"/>
+  <text x="648" y="1175" class="lbl tiny">A → B : weak / stale link</text>
+</svg>

@@ -1,0 +1,162 @@
+<svg viewBox="0 0 1180 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart showing that a hook cannot unblock a permission deny. One tool call flows first through rule collection, then through deny, ask and allow checks in that fixed order, and only after all three checks does it reach the PreToolUse hook, then the mode default, then the user prompt. The hook sits strictly after rule evaluation, never before it. Trace one: a call that matches deny is blocked at the deny check; a PreToolUse hook further down the chain that returns allow never runs and cannot reverse the block. Trace two: a call that matches ask reaches the ask check and is queued to prompt the user; a PreToolUse hook returning allow does not skip the prompt — the call still asks.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .badf  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#trir); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A HOOK CANNOT UNBLOCK A DENY</text>
+  <line x1="20" y1="42" x2="1160" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">rule evaluation completes in full before the PreToolUse hook ever runs</text>
+
+  <!-- main chain, left to right -->
+  <rect x="20" y="90" width="150" height="60" rx="6" class="boxP"/>
+  <text x="95" y="114" text-anchor="middle" class="lbl node">tool call</text>
+  <text x="95" y="132" text-anchor="middle" class="lbl sub">Bash(rm -rf /prod)</text>
+
+  <path class="flow" d="M 170 120 H 210"/>
+  <rect x="210" y="90" width="150" height="60" rx="6" class="boxP"/>
+  <text x="285" y="114" text-anchor="middle" class="lbl node">rule collection</text>
+  <text x="285" y="132" text-anchor="middle" class="lbl sub">gather deny/ask/allow lists</text>
+
+  <path class="flow" d="M 360 120 H 400"/>
+  <rect x="400" y="90" width="130" height="60" rx="6" class="boxBad"/>
+  <text x="465" y="114" text-anchor="middle" class="lbl node">deny?</text>
+  <text x="465" y="132" text-anchor="middle" class="lbl sub">checked first</text>
+
+  <path class="flow" d="M 530 120 H 570"/>
+  <rect x="570" y="90" width="130" height="60" rx="6" class="boxHi"/>
+  <text x="635" y="114" text-anchor="middle" class="lbl node">ask?</text>
+  <text x="635" y="132" text-anchor="middle" class="lbl sub">checked second</text>
+
+  <path class="flow" d="M 700 120 H 740"/>
+  <rect x="740" y="90" width="130" height="60" rx="6" class="boxOk"/>
+  <text x="805" y="114" text-anchor="middle" class="lbl node">allow?</text>
+  <text x="805" y="132" text-anchor="middle" class="lbl sub">checked third</text>
+
+  <path class="flow" d="M 870 120 H 910"/>
+  <rect x="910" y="90" width="150" height="60" rx="6" class="boxWeak"/>
+  <text x="985" y="114" text-anchor="middle" class="lbl node">PreToolUse hook</text>
+  <text x="985" y="132" text-anchor="middle" class="lbl sub">runs strictly after rules</text>
+
+  <path class="flow" d="M 985 150 V 186 H 660 V 210"/>
+  <rect x="500" y="210" width="320" height="56" rx="6" class="boxWeak"/>
+  <text x="660" y="232" text-anchor="middle" class="lbl node">mode's default</text>
+  <text x="660" y="248" text-anchor="middle" class="lbl sub">applies only if no rule and no hook decided</text>
+
+  <path class="flow" d="M 660 266 V 296"/>
+  <rect x="540" y="296" width="240" height="50" rx="6" class="boxP"/>
+  <text x="660" y="320" text-anchor="middle" class="lbl node">user prompt</text>
+  <text x="660" y="336" text-anchor="middle" class="lbl sub">final fallback</text>
+
+  <!-- annotation: ordering is the point -->
+  <rect x="20" y="176" width="330" height="90" rx="6" class="boxAnn"/>
+  <text x="36" y="200" class="lbl h2">Ordering is the whole content</text>
+  <text x="36" y="222" class="lbl tiny">rule collection &#8594; deny &#8594; ask &#8594; allow &#8594;</text>
+  <text x="36" y="238" class="lbl tiny">PreToolUse hook &#8594; mode default &#8594; prompt.</text>
+  <text x="36" y="254" class="lbl tiny">the hook sits strictly after rule evaluation.</text>
+
+  <!-- band header: trace 1 -->
+  <text x="20" y="400" class="lbl h2">TRACE 1 &#8212; deny match, hook returns allow</text>
+  <line x1="20" y1="408" x2="1160" y2="408" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="424" width="180" height="56" rx="6" class="boxP"/>
+  <text x="110" y="446" text-anchor="middle" class="lbl node">call matches</text>
+  <text x="110" y="463" text-anchor="middle" class="lbl sub">deny: Bash(rm -rf *)</text>
+
+  <path class="flow" d="M 200 452 H 240"/>
+  <rect x="240" y="424" width="180" height="56" rx="6" class="boxBad"/>
+  <text x="330" y="446" text-anchor="middle" class="lbl node">deny check: match</text>
+  <text x="330" y="463" text-anchor="middle" class="lbl sub">evaluation stops here</text>
+
+  <path class="badf" d="M 420 452 H 460"/>
+  <rect x="460" y="424" width="230" height="56" rx="6" class="boxWeak"/>
+  <text x="575" y="446" text-anchor="middle" class="lbl node">PreToolUse hook: allow</text>
+  <text x="575" y="463" text-anchor="middle" class="lbl sub">never invoked &#8212; unreachable</text>
+
+  <path class="flow" d="M 690 452 H 730"/>
+  <rect x="730" y="424" width="180" height="56" rx="6" class="boxBad"/>
+  <text x="820" y="446" text-anchor="middle" class="lbl node">result: blocked</text>
+  <text x="820" y="463" text-anchor="middle" class="lbl sub">hook's allow has no effect</text>
+
+  <!-- band header: trace 2 -->
+  <text x="20" y="536" class="lbl h2">TRACE 2 &#8212; ask match, hook returns allow</text>
+  <line x1="20" y1="544" x2="1160" y2="544" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="560" width="180" height="56" rx="6" class="boxP"/>
+  <text x="110" y="582" text-anchor="middle" class="lbl node">call matches</text>
+  <text x="110" y="599" text-anchor="middle" class="lbl sub">ask: Bash(git push *)</text>
+
+  <path class="flow" d="M 200 588 H 240"/>
+  <rect x="240" y="560" width="180" height="56" rx="6" class="boxHi"/>
+  <text x="330" y="582" text-anchor="middle" class="lbl node">ask check: match</text>
+  <text x="330" y="599" text-anchor="middle" class="lbl sub">queued to prompt</text>
+
+  <path class="badf" d="M 420 588 H 460"/>
+  <rect x="460" y="560" width="230" height="56" rx="6" class="boxWeak"/>
+  <text x="575" y="582" text-anchor="middle" class="lbl node">PreToolUse hook: allow</text>
+  <text x="575" y="599" text-anchor="middle" class="lbl sub">runs, but does not skip the prompt</text>
+
+  <path class="flow" d="M 690 588 H 730"/>
+  <rect x="730" y="560" width="180" height="56" rx="6" class="boxHi"/>
+  <text x="820" y="582" text-anchor="middle" class="lbl node">result: still prompts</text>
+  <text x="820" y="599" text-anchor="middle" class="lbl sub">user is asked to approve</text>
+
+  <!-- key law annotation -->
+  <rect x="960" y="424" width="200" height="192" rx="6" class="boxAnn"/>
+  <text x="976" y="448" class="lbl h2">The law</text>
+  <line x1="976" y1="458" x2="1144" y2="458" stroke="#d1d5db" stroke-width="1"/>
+  <text x="976" y="480" class="lbl tiny">a PreToolUse hook can</text>
+  <text x="976" y="496" class="lbl tiny">add a deny or an ask</text>
+  <text x="976" y="512" class="lbl tiny">of its own, but it cannot</text>
+  <text x="976" y="528" class="lbl tiny">reach back and reverse</text>
+  <text x="976" y="544" class="lbl tiny">a deny or ask that the</text>
+  <text x="976" y="560" class="lbl tiny">rule lists already</text>
+  <text x="976" y="576" class="lbl tiny">decided upstream of it.</text>
+  <text x="976" y="596" class="lbl tiny" font-weight="700">rules outrank the hook.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1160" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="725" class="lbl tiny">call / rule stage</text>
+  <rect x="200" y="712" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="230" y="725" class="lbl tiny">deny match / blocked outcome</text>
+  <rect x="470" y="712" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="500" y="725" class="lbl tiny">ask match / prompt outcome</text>
+  <rect x="740" y="712" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="770" y="725" class="lbl tiny">allow check</text>
+  <rect x="900" y="712" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="930" y="725" class="lbl tiny">hook / mode default (no rule effect)</text>
+
+  <rect x="20" y="742" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="50" y="755" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 260 750 H 300"/>
+  <text x="308" y="755" class="lbl tiny">A &#8594; B : evaluation proceeds to B</text>
+  <path class="badf" d="M 620 750 H 660"/>
+  <text x="668" y="755" class="lbl tiny">A &#8594; B : B is reached but cannot override A</text>
+</svg>

@@ -1,0 +1,154 @@
+<svg viewBox="0 0 1100 870" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree: can the immediate caller do something about this failure? Five branches fan out from the root over a shared bus. Branch 1, input itself is invalid, leads to IllegalArgumentException for a malformed coupon code hitting BonusService.grant(code). Branch 2, input ok but receiver's state is wrong, leads to IllegalStateException for a stake reservation attempted on an account still at AO-400 SUBMITTED instead of AA-801 ACTIVATED. Branch 3, expected outcome the caller can't fix, leads to domain unchecked exceptions InsufficientFundsException and RestrictedActionException for an insufficient balance or a STAKE_BLOCKED restriction block at 1,200 stake reservations per second. Branch 4, caller can retry or recover, leads to a checked exception for a PSP timeout on card capture at p99 11 seconds authorise and 6 seconds capture, where the compiler forcing the decision is worth the signature cost. Branch 5, caller is inside a stream or map pipeline, leads to a Result of T, E type for a ledger imbalance found by FundsLedger during a batched PaymentRun, where a checked exception would not compose. An annotation panel states that checked-versus-unchecked is a compile-time rule under JLS 11.2, not a runtime distinction, and that the modern lean toward unchecked is driven by lambdas and streams being unable to propagate a checked exception, signature pollution up every intermediate frame, and the empty catch block that results.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .tiny{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:10.5px;fill:#4b5563;}
+      .tinyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .edge{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+    </style>
+    <marker id="arr081" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="870" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Checked or unchecked &#8212; can the immediate caller do something about it?</text>
+  <line x1="20" y1="42" x2="1080" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT -->
+  <rect x="390" y="60" width="320" height="54" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="550" y="84" text-anchor="middle" class="body" font-weight="bold">can the immediate caller</text>
+  <text x="550" y="103" text-anchor="middle" class="body" font-weight="bold">do something about it?</text>
+
+  <!-- STUB + BUS -->
+  <path d="M 549.5 114 V 134" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="129.5" y1="134" x2="969.5" y2="134" stroke="#475569" stroke-width="2"/>
+
+  <!-- DROPS (broken around the edge label so text is never crossed) -->
+  <path d="M 129.5 134 V 148" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 129.5 184 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr081)"/>
+  <path d="M 339.5 134 V 148" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 339.5 184 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr081)"/>
+  <path d="M 549.5 134 V 148" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 549.5 184 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr081)"/>
+  <path d="M 759.5 134 V 148" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 759.5 184 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr081)"/>
+  <path d="M 969.5 134 V 148" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 969.5 184 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr081)"/>
+
+  <!-- EDGE LABELS -->
+  <text x="129.5" y="163" text-anchor="middle" class="edge">input itself</text>
+  <text x="129.5" y="179" text-anchor="middle" class="edge">is invalid</text>
+
+  <text x="339.5" y="163" text-anchor="middle" class="edge">input ok, receiver's</text>
+  <text x="339.5" y="179" text-anchor="middle" class="edge">state is wrong</text>
+
+  <text x="549.5" y="163" text-anchor="middle" class="edge">expected outcome,</text>
+  <text x="549.5" y="179" text-anchor="middle" class="edge">caller can't fix it</text>
+
+  <text x="759.5" y="163" text-anchor="middle" class="edge">caller can retry</text>
+  <text x="759.5" y="179" text-anchor="middle" class="edge">or recover</text>
+
+  <text x="969.5" y="163" text-anchor="middle" class="edge">inside a stream /</text>
+  <text x="969.5" y="179" text-anchor="middle" class="edge">map pipeline</text>
+
+  <!-- LEAF 1: IllegalArgumentException -->
+  <rect x="32" y="210" width="195" height="48" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="129.5" y="230" text-anchor="middle" class="body" font-weight="bold">IllegalArgument</text>
+  <text x="129.5" y="248" text-anchor="middle" class="body" font-weight="bold">Exception</text>
+  <rect x="32" y="264" width="195" height="210" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.3"/>
+  <text x="46" y="286" class="small">malformed coupon code hits</text>
+  <text x="46" y="303" class="small">BonusService.grant(code):</text>
+  <text x="46" y="320" class="small">caller passed garbage &#8212;</text>
+  <text x="46" y="337" class="small">validation error at the</text>
+  <text x="46" y="354" class="small">boundary</text>
+
+  <!-- LEAF 2: IllegalStateException -->
+  <rect x="242" y="210" width="195" height="48" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="339.5" y="230" text-anchor="middle" class="body" font-weight="bold">IllegalState</text>
+  <text x="339.5" y="248" text-anchor="middle" class="body" font-weight="bold">Exception</text>
+  <rect x="242" y="264" width="195" height="210" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.3"/>
+  <text x="256" y="286" class="small">stake reservation attempted</text>
+  <text x="256" y="303" class="small">on an account still at</text>
+  <text x="256" y="320" class="small">AO-400 SUBMITTED, not</text>
+  <text x="256" y="337" class="small">AA-801 ACTIVATED: the</text>
+  <text x="256" y="354" class="small">argument is fine &#8212; receiver</text>
+  <text x="256" y="371" class="small">is in the wrong state</text>
+
+  <!-- LEAF 3: domain unchecked -->
+  <rect x="452" y="210" width="195" height="48" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="549.5" y="230" text-anchor="middle" class="body" font-weight="bold">domain unchecked</text>
+  <text x="549.5" y="248" text-anchor="middle" class="body" font-weight="bold">exception</text>
+  <rect x="452" y="264" width="195" height="210" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.3"/>
+  <text x="466" y="283" class="tinyb">InsufficientFunds</text>
+  <text x="466" y="296" class="tinyb">Exception</text>
+  <text x="466" y="314" class="tinyb">RestrictedAction</text>
+  <text x="466" y="327" class="tinyb">Exception</text>
+  <text x="466" y="347" class="small">&#8594; insufficient balance, or</text>
+  <text x="466" y="364" class="small">STAKE_BLOCKED restriction</text>
+  <text x="466" y="381" class="small">block @ 1,200 stake</text>
+  <text x="466" y="398" class="small">reservations/sec &#8212;</text>
+  <text x="466" y="415" class="small">expected outcome, caller</text>
+  <text x="466" y="432" class="small">can't repair it</text>
+
+  <!-- LEAF 4: checked exception -->
+  <rect x="662" y="210" width="195" height="48" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="759.5" y="239" text-anchor="middle" class="body" font-weight="bold">checked exception</text>
+  <rect x="662" y="264" width="195" height="210" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.3"/>
+  <text x="676" y="286" class="small">PSP timeout on card capture</text>
+  <text x="676" y="303" class="small">(p99 11s authorise / 6s</text>
+  <text x="676" y="320" class="small">capture): caller can retry</text>
+  <text x="676" y="337" class="small">or fall back to the bank</text>
+  <text x="676" y="354" class="small">rail &#8212; worth the signature</text>
+  <text x="676" y="371" class="small">cost</text>
+
+  <!-- LEAF 5: Result<T, E> -->
+  <rect x="872" y="210" width="195" height="48" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="969.5" y="239" text-anchor="middle" class="code" font-weight="bold">Result&lt;T, E&gt;</text>
+  <rect x="872" y="264" width="195" height="210" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.3"/>
+  <text x="886" y="286" class="small">ledger imbalance found by</text>
+  <text x="886" y="303" class="small">FundsLedger in a batched</text>
+  <text x="886" y="320" class="small">PaymentRun: caller is</text>
+  <text x="886" y="337" class="small">inside a stream/map</text>
+  <text x="886" y="354" class="small">pipeline where a checked</text>
+  <text x="886" y="371" class="small">exception can't compose</text>
+
+  <!-- ANNOTATION PANEL -->
+  <rect x="32" y="500" width="938" height="150" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="48" y="522" class="smallb" fill="#2563eb">THE ACTUAL RULE &#8212; AND ITS COST</text>
+  <text x="48" y="546" class="small">checked-vs-unchecked is a COMPILE-TIME rule (JLS 11.2), not a runtime distinction &#8212; nothing about how these five branches</text>
+  <text x="48" y="565" class="small">execute differs at runtime.</text>
+  <text x="48" y="588" class="small">the modern lean toward unchecked is driven by: lambdas/streams cannot propagate a checked exception through a functional</text>
+  <text x="48" y="607" class="small">interface; signature pollution up every intermediate frame between throw and catch; and the empty catch block that results</text>
+  <text x="48" y="626" class="small">when a caller is forced to "handle" something it has no way to act on.</text>
+
+  <!-- LEGEND -->
+  <text x="20" y="684" class="h2">LEGEND</text>
+  <line x1="20" y1="692" x2="1080" y2="692" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="42" y="706" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="719" class="small">primary &#8212; the decision root: can the immediate caller act on this failure</text>
+
+  <rect x="42" y="730" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="70" y="743" class="small">degraded &#8212; unchecked exception thrown: IllegalArgumentException, IllegalStateException, domain unchecked</text>
+
+  <rect x="42" y="754" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="70" y="767" class="small">highlight &#8212; the point: a checked exception, because the immediate caller can genuinely recover</text>
+
+  <rect x="42" y="778" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="70" y="791" class="small">resolved &#8212; Result&lt;T, E&gt;: correct modern form inside a stream/functional pipeline</text>
+
+  <rect x="42" y="802" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="815" class="small">annotation &#8212; the actual compile-time rule and its cost</text>
+
+  <line x1="42" y1="834" x2="68" y2="834" stroke="#475569" stroke-width="2" marker-end="url(#arr081)"/>
+  <text x="76" y="838" class="small">decision edge &#8212; condition routes root &#8594; bus &#8594; leaf; arrowhead lands on the leaf</text>
+</svg>

@@ -1,0 +1,90 @@
+<svg viewBox="0 0 1080 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three kinds of thread confinement plus a fourth. Ad-hoc confinement, drawn dashed and labelled
+     fragile, relies on convention only such as only the gateway thread touches this ClientRestrictions cache, with
+     nothing in the type system enforcing it. Stack confinement keeps a StakeSplit local inside
+     FundsLedger.reserveStake, never returned and unreachable from other stacks. ThreadLocal gives each thread its
+     own per-thread slot. A fourth kind, instance confinement, is drawn as a separate row beneath the other three,
+     reached by its own edge from the root: a private final Object lock inside FundsLedger guards the wallet's four
+     buckets and no reference to the lock or the guarded fields ever escapes the instance.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWdash { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 6 4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THREE KINDS OF CONFINEMENT — PLUS A FOURTH</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="340" y="70" width="360" height="100" rx="6" class="boxP"/>
+  <text x="520" y="90" text-anchor="middle" class="lbl tinyB">THE PROBLEM</text>
+  <text x="520" y="112" text-anchor="middle" class="lbl node">thread confinement</text>
+  <text x="520" y="132" text-anchor="middle" class="lbl sub">data reachable from exactly one thread</text>
+  <text x="520" y="150" text-anchor="middle" class="lbl sub">needs no synchronization</text>
+
+  <!-- row1: the three kinds -->
+  <path class="bus" d="M 480 170 V 200"/>
+  <path class="bus" d="M 200 200 H 840"/>
+  <path class="flow" d="M 200 200 V 240"/>
+  <path class="flow" d="M 520 200 V 240"/>
+  <path class="flow" d="M 840 200 V 240"/>
+
+  <rect x="60" y="240" width="280" height="170" rx="6" class="boxWdash"/>
+  <text x="200" y="262" text-anchor="middle" class="lbl tinyB">AD-HOC CONFINEMENT — FRAGILE</text>
+  <text x="200" y="286" text-anchor="middle" class="lbl node">convention only</text>
+  <text x="200" y="308" text-anchor="middle" class="lbl sub">only the request thread touches it</text>
+  <text x="200" y="326" text-anchor="middle" class="lbl sub">nothing in the type system enforces this</text>
+  <text x="200" y="346" text-anchor="middle" class="lbl sub">e.g. "only the gateway thread touches</text>
+  <text x="200" y="364" text-anchor="middle" class="lbl sub">this ClientRestrictions cache"</text>
+
+  <rect x="380" y="240" width="280" height="170" rx="6" class="boxR"/>
+  <text x="520" y="262" text-anchor="middle" class="lbl tinyB">STACK CONFINEMENT</text>
+  <text x="520" y="286" text-anchor="middle" class="lbl node">StakeSplit local</text>
+  <text x="520" y="308" text-anchor="middle" class="lbl sub">inside FundsLedger.reserveStake(...)</text>
+  <text x="520" y="326" text-anchor="middle" class="lbl sub">never returned, never escapes —</text>
+  <text x="520" y="344" text-anchor="middle" class="lbl sub">unreachable from other stacks</text>
+
+  <rect x="700" y="240" width="280" height="170" rx="6" class="boxR"/>
+  <text x="840" y="262" text-anchor="middle" class="lbl tinyB">THREADLOCAL</text>
+  <text x="840" y="286" text-anchor="middle" class="lbl node">a per-thread slot</text>
+  <text x="840" y="308" text-anchor="middle" class="lbl sub">ThreadLocal&lt;StakeSplit&gt;</text>
+  <text x="840" y="326" text-anchor="middle" class="lbl sub">each thread's get()/set() sees</text>
+  <text x="840" y="344" text-anchor="middle" class="lbl sub">only its own value</text>
+
+  <!-- row2: the fourth kind, own exit x, own path -->
+  <path class="flow" d="M 680 170 V 185 H 1010 V 500"/>
+
+  <rect x="160" y="500" width="880" height="140" rx="6" class="boxP"/>
+  <text x="180" y="522" class="lbl tinyB">A FOURTH KIND — INSTANCE CONFINEMENT (often combined with the three above)</text>
+  <text x="600" y="548" text-anchor="middle" class="lbl node">private final Object lock guards the wallet's four buckets</text>
+  <text x="600" y="570" text-anchor="middle" class="lbl sub">no reference to the lock or the guarded fields ever escapes the instance</text>
+  <text x="600" y="590" text-anchor="middle" class="lbl sub">e.g. FundsLedger's lock protecting all four wallet buckets</text>
+
+  <line x1="20" y1="660" x2="1060" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="678" width="22" height="16" rx="3" class="boxWdash"/>
+  <text x="70" y="690" class="lbl tiny">ad-hoc — convention only, fragile</text>
+  <rect x="400" y="678" width="22" height="16" rx="3" class="boxR"/>
+  <text x="430" y="690" class="lbl tiny">stack / ThreadLocal — enforced by scope or API</text>
+  <rect x="40" y="704" width="22" height="16" rx="3" class="boxP"/>
+  <text x="70" y="716" class="lbl tiny">confinement concept / instance confinement (the fourth kind)</text>
+  <path class="flow" d="M 700 706 H 750"/>
+  <text x="760" y="710" class="lbl tiny">A → B : A is a kind or application of B</text>
+</svg>

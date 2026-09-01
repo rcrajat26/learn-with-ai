@@ -1,0 +1,72 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3: deposits.stream() has run. A Spliterator is bound to the 95,000-element CardDeposit array and wrapped by the stream's source stage. filter, map and collect have not been called yet; only two objects exist so far.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .dim   { fill: #9ca3af; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STREAM ANATOMY — FRAME 1 OF 3: SOURCE SPLITERATOR BOUND</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="54" width="860" height="34" rx="5" class="panel"/>
+  <text x="34" y="76" class="lbl code">deposits<tspan font-weight="700">.stream()</tspan><tspan class="dim">.filter(d -&gt; d.amount() &gt; 65).map(Deposit::amount).collect(toList())</tspan></text>
+
+  <rect x="40" y="120" width="200" height="66" rx="6" class="boxP"/>
+  <text x="140" y="146" text-anchor="middle" class="lbl body">CardDeposit[] deposits</text>
+  <text x="140" y="164" text-anchor="middle" class="lbl sub">95,000 elements</text>
+
+  <path class="flow" d="M 240 153 H 300"/>
+  <text x="270" y="145" text-anchor="middle" class="lbl sub">binds</text>
+
+  <rect x="300" y="120" width="220" height="66" rx="6" class="boxH"/>
+  <text x="410" y="146" text-anchor="middle" class="lbl body">Spliterator&lt;CardDeposit&gt;</text>
+  <text x="410" y="164" text-anchor="middle" class="lbl sub">bound to the array, unconsumed</text>
+
+  <path class="flow" d="M 520 153 H 580"/>
+  <text x="550" y="145" text-anchor="middle" class="lbl sub">wraps</text>
+
+  <rect x="580" y="120" width="240" height="66" rx="6" class="boxR"/>
+  <text x="700" y="146" text-anchor="middle" class="lbl body">Stream&lt;CardDeposit&gt;</text>
+  <text x="700" y="164" text-anchor="middle" class="lbl sub">source stage — this is deposits.stream()</text>
+
+  <rect x="40" y="220" width="780" height="140" rx="6" class="panel"/>
+  <text x="60" y="246" class="lbl body" font-weight="700">objects that exist so far</text>
+  <text x="60" y="270" class="lbl tiny">1. CardDeposit[] deposits — 95,000 elements, untouched</text>
+  <text x="60" y="292" class="lbl tiny">2. Spliterator&lt;CardDeposit&gt; — bound to the array, no traversal started</text>
+  <text x="60" y="314" class="lbl tiny">3. Stream&lt;CardDeposit&gt; source stage — wraps the Spliterator</text>
+  <text x="60" y="340" class="lbl tiny" fill="#b45309" font-weight="700">filter, map and collect have not been called yet</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="386" x2="880" y2="386" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="398" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="411" class="lbl tiny">the backing data</text>
+  <rect x="200" y="398" width="22" height="16" rx="3" class="boxH"/>
+  <text x="230" y="411" class="lbl tiny">the object this frame is about</text>
+  <rect x="440" y="398" width="22" height="16" rx="3" class="boxR"/>
+  <text x="470" y="411" class="lbl tiny">a created stream stage</text>
+  <rect x="640" y="398" width="22" height="16" rx="3" class="panel"/>
+  <text x="670" y="411" class="lbl tiny">annotation panel / code line</text>
+
+  <path class="flow" d="M 20 428 H 60"/>
+  <text x="68" y="433" class="lbl tiny">A → B : A is bound to or wrapped by B</text>
+</svg>

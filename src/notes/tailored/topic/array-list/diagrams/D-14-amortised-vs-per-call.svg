@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost chart contrasting per-add cost with the amortised average, for stake
+     settlements appended to a List of LedgerEntry. Eight small bars near the left show the first
+     eight resizes, with heights proportional to elements copied: 10, 15, 22, 33, 49, 73, 109, 163.
+     A dashed gap marks 21 further resizes as capacity grows from 244 toward roughly 71,140. A tall
+     bar in the failure palette near the right marks the resize nearest 100,000 elements, labelled
+     as the p99.99 latency outlier one request can hit; its exact copy count is not in the measured
+     data, so only its relative height is shown. A flat horizontal line runs the full width of the
+     chart at a height representing 2.13 copies per element, the amortised average computed from
+     213,413 total copies over 100,000 elements across 24 grow calls. Two annotation panels report
+     the amortised-bound arithmetic and explain why the spike, not the average, is what one unlucky
+     caller experiences.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .axis   { stroke: #475569; stroke-width: 2; }
+    .avgln  { fill: none; stroke: #475569; stroke-width: 2.4; }
+    .gapln  { stroke: #9ca3af; stroke-width: 1.4; stroke-dasharray: 4 3; }
+
+    .barN  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+    .barR  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .barF  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.8; }
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AMORTISED IS NOT PER-CALL</text>
+  <line x1="20" y1="44" x2="1180" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl sub">Stake settlements appended to a List&lt;LedgerEntry&gt; — 2.8M/day, 1,200/sec sustained, 3,400/sec burst (Appendix A.2)</text>
+
+  <!-- axes -->
+  <line x1="90" y1="90" x2="90" y2="420" class="axis"/>
+  <line x1="90" y1="420" x2="1140" y2="420" class="axis"/>
+  <text x="94" y="82" class="lbl sub">elements copied per add() call (linear scale, shared by bars and average line)</text>
+  <text x="1140" y="436" text-anchor="end" class="lbl sub">successive grow() calls, in order &#8594;</text>
+
+  <!-- normal-add baseline band, left -->
+  <rect x="100" y="412" width="320" height="8" class="barN"/>
+  <!-- resize bars 1-8 -->
+  <!-- r1: 10 -> h 23 -->
+  <rect x="102" y="397" width="16" height="23" class="barR"/>
+  <text x="110" y="391" text-anchor="middle" class="lbl sub">10</text>
+  <text x="110" y="434" text-anchor="middle" class="lbl tiny">r1</text>
+
+  <!-- r2: 15 -> h 29.5 -->
+  <rect x="142" y="390.5" width="16" height="29.5" class="barR"/>
+  <text x="150" y="384.5" text-anchor="middle" class="lbl sub">15</text>
+  <text x="150" y="434" text-anchor="middle" class="lbl tiny">r2</text>
+
+  <!-- r3: 22 -> h 38.6 -->
+  <rect x="182" y="381.4" width="16" height="38.6" class="barR"/>
+  <text x="190" y="375.4" text-anchor="middle" class="lbl sub">22</text>
+  <text x="190" y="434" text-anchor="middle" class="lbl tiny">r3</text>
+
+  <!-- r4: 33 -> h 52.9 -->
+  <rect x="222" y="367.1" width="16" height="52.9" class="barR"/>
+  <text x="230" y="361.1" text-anchor="middle" class="lbl sub">33</text>
+  <text x="230" y="434" text-anchor="middle" class="lbl tiny">r4</text>
+
+  <!-- r5: 49 -> h 73.7 -->
+  <rect x="262" y="346.3" width="16" height="73.7" class="barR"/>
+  <text x="270" y="340.3" text-anchor="middle" class="lbl sub">49</text>
+  <text x="270" y="434" text-anchor="middle" class="lbl tiny">r5</text>
+
+  <!-- r6: 73 -> h 104.9 -->
+  <rect x="302" y="315.1" width="16" height="104.9" class="barR"/>
+  <text x="310" y="309.1" text-anchor="middle" class="lbl sub">73</text>
+  <text x="310" y="434" text-anchor="middle" class="lbl tiny">r6</text>
+
+  <!-- r7: 109 -> h 151.7 -->
+  <rect x="342" y="268.3" width="16" height="151.7" class="barR"/>
+  <text x="350" y="262.3" text-anchor="middle" class="lbl sub">109</text>
+  <text x="350" y="434" text-anchor="middle" class="lbl tiny">r7</text>
+
+  <!-- r8: 163 -> h 221.9 -->
+  <rect x="382" y="198.1" width="16" height="221.9" class="barR"/>
+  <text x="390" y="192.1" text-anchor="middle" class="lbl sub">163</text>
+  <text x="390" y="434" text-anchor="middle" class="lbl tiny">r8</text>
+
+  <!-- gap -->
+  <line x1="440" y1="90" x2="440" y2="420" class="gapln"/>
+  <line x1="760" y1="90" x2="760" y2="420" class="gapln"/>
+  <text x="600" y="240" text-anchor="middle" class="lbl sub">21 more resizes —</text>
+  <text x="600" y="256" text-anchor="middle" class="lbl sub">capacity climbs from 244 toward</text>
+  <text x="600" y="272" text-anchor="middle" class="lbl sub">roughly 71,140 elements</text>
+  <text x="600" y="288" text-anchor="middle" class="lbl sub">(ArraysSupport.newLength recurrence)</text>
+
+  <!-- final highlighted spike -->
+  <rect x="852" y="130" width="16" height="290" class="barF"/>
+  <text x="860" y="122" text-anchor="middle" class="lbl sub" style="font-weight:700">r24</text>
+  <text x="860" y="102" text-anchor="middle" class="lbl tiny" style="font-weight:700; fill:#b91c1c;">p99.99 outlier</text>
+
+  <!-- normal-add baseline band, right -->
+  <rect x="900" y="412" width="230" height="8" class="barN"/>
+
+  <!-- running average line -->
+  <path class="avgln" d="M 90 407.2 H 1140"/>
+  <text x="960" y="398" text-anchor="middle" class="lbl body" style="font-weight:700">&#8776; 2.13 copies/element</text>
+
+  <!-- Annotation panels -->
+  <rect x="20" y="460" width="560" height="150" rx="6" class="boxAnno"/>
+  <text x="38" y="484" class="lbl tiny" style="font-weight:700">The amortised bound</text>
+  <text x="38" y="506" class="lbl tiny">24 grow() calls carry an empty list to 100,000 elements</text>
+  <text x="38" y="526" class="lbl tiny">213,413 elements copied in total across all 24 resizes</text>
+  <text x="38" y="546" class="lbl tiny">213,413 &#247; 100,000 = 2.13 copies per element inserted</text>
+  <text x="38" y="566" class="lbl tiny">Computed from the ArraysSupport.newLength recurrence, JDK 21.0.7</text>
+  <text x="38" y="586" class="lbl tiny" style="font-weight:700">The flat line is that 2.13 — one number, no spikes</text>
+
+  <rect x="620" y="460" width="560" height="150" rx="6" class="boxAnno"/>
+  <text x="638" y="484" class="lbl tiny" style="font-weight:700">Why the spike matters</text>
+  <text x="638" y="506" class="lbl tiny">A resize copies every existing element in one blocking call</text>
+  <text x="638" y="526" class="lbl tiny">During a 3,400/sec settlement burst (Appendix A.2), whichever</text>
+  <text x="638" y="546" class="lbl tiny">settlement lands on that add() pays the full copy alone</text>
+  <text x="638" y="566" class="lbl tiny">The other 99.99% of adds that day never see this cost</text>
+  <text x="638" y="586" class="lbl tiny" style="font-weight:700">Amortised bound protects the sum, not the unlucky request</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="626" x2="1180" y2="626" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="640" width="20" height="10" class="barN"/>
+  <text x="48" y="649" class="lbl tiny">normal add() — O(1) amortised, cost &#8776; 1</text>
+  <rect x="420" y="636" width="18" height="16" class="barR"/>
+  <text x="446" y="649" class="lbl tiny">resize add() — cost = elements copied</text>
+  <rect x="820" y="636" width="18" height="16" class="barF"/>
+  <text x="846" y="649" class="lbl tiny">the p99.99 outlier</text>
+  <path class="avgln" d="M 20 672 H 60"/>
+  <text x="68" y="677" class="lbl tiny">running average cost per add(), flat at &#8776; 2.13 copies/element</text>
+</svg>

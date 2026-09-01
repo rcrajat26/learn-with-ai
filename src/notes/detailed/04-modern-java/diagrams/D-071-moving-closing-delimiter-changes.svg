@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Moving the closing delimiter changes the string. The same three-line SQL text
+     block that reads FundsLedger is drawn twice against a column ruler. Left: the closing triple
+     quote is aligned under the content at column 4, so the common minimum indentation is 4, the
+     4-space prefix is stripped, and the resulting three lines are left-margin flush. Right: the
+     closing triple quote is moved four columns to the left, to column 0, so the common minimum
+     indentation becomes 0, nothing is stripped, and the resulting three lines each keep 4 leading
+     spaces, highlighted as the extra indentation that survives into the string's value.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "Menlo", "Consolas", monospace; font-size: 12px; fill: #1f2937; }
+    .ruler { font-family: "Menlo", "Consolas", monospace; font-size: 9.5px; fill: #4b5563; }
+
+    .boxF  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MOVING THE CLOSING DELIMITER CHANGES THE STRING</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="58" class="lbl sub">Same source SQL against FundsLedger, only the closing """ column differs</text>
+
+  <text x="20" y="82" class="lbl h2">LEFT — CLOSING """ ALIGNED WITH CONTENT, COLUMN 4</text>
+  <text x="580" y="82" class="lbl h2">RIGHT — CLOSING """ MOVED FOUR COLUMNS LEFT, COLUMN 0</text>
+
+  <!-- LEFT source block -->
+  <rect x="20" y="94" width="500" height="200" rx="6" class="boxF"/>
+  <text x="60" y="114" class="lbl ruler">0   1   2   3   4   5   6   7   8</text>
+  <line x1="56" y1="120" x2="500" y2="120" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="36" y="140" class="lbl code">String q =</text>
+  <text x="36" y="160" class="lbl code">    """</text>
+  <text x="36" y="180" class="lbl code">    SELECT position, amount</text>
+  <text x="36" y="200" class="lbl code">    FROM   FundsLedger</text>
+  <text x="36" y="220" class="lbl code">    WHERE  client_id = ?</text>
+  <rect x="36" y="228" width="70" height="18" class="boxY"/>
+  <text x="42" y="242" class="lbl code" fill="#b45309">    """;</text>
+  <text x="120" y="242" class="lbl sub">closing at col 4 — same as content</text>
+  <path class="flow" d="M 260 250 V 270"/>
+
+  <rect x="20" y="294" width="500" height="150" rx="6" class="boxR"/>
+  <text x="36" y="316" class="lbl body" font-weight="700">min(4, 4, 4, 4) = 4 -&gt; prefix 4 stripped</text>
+  <text x="40" y="336" class="lbl code">|SELECT position, amount</text>
+  <text x="40" y="356" class="lbl code">|FROM   FundsLedger</text>
+  <text x="40" y="376" class="lbl code">|WHERE  client_id = ?</text>
+  <text x="40" y="404" class="lbl sub">left-margin marker | sits at column 0 on every line</text>
+  <text x="40" y="422" class="lbl sub">no leading spaces reach the runtime String value</text>
+
+  <!-- RIGHT source block -->
+  <rect x="580" y="94" width="520" height="200" rx="6" class="boxF"/>
+  <text x="620" y="114" class="lbl ruler">0   1   2   3   4   5   6   7   8</text>
+  <line x1="616" y1="120" x2="1080" y2="120" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="596" y="140" class="lbl code">String q =</text>
+  <text x="596" y="160" class="lbl code">    """</text>
+  <text x="596" y="180" class="lbl code">    SELECT position, amount</text>
+  <text x="596" y="200" class="lbl code">    FROM   FundsLedger</text>
+  <text x="596" y="220" class="lbl code">    WHERE  client_id = ?</text>
+  <rect x="596" y="228" width="40" height="18" class="boxD"/>
+  <text x="596" y="242" class="lbl code" fill="#b91c1c">""";</text>
+  <text x="644" y="242" class="lbl sub">closing at col 0 — four cols left of content</text>
+  <path class="flow" d="M 820 250 V 270"/>
+
+  <rect x="580" y="294" width="520" height="150" rx="6" class="boxD"/>
+  <text x="596" y="316" class="lbl body" font-weight="700">min(4, 4, 4, 0) = 0 -&gt; nothing stripped</text>
+  <rect x="609" y="324" width="28" height="16" fill="#fecaca" stroke="none"/>
+  <text x="600" y="336" class="lbl code">|    SELECT position, amount</text>
+  <rect x="609" y="344" width="28" height="16" fill="#fecaca" stroke="none"/>
+  <text x="600" y="356" class="lbl code">|    FROM   FundsLedger</text>
+  <rect x="609" y="364" width="28" height="16" fill="#fecaca" stroke="none"/>
+  <text x="600" y="376" class="lbl code">|    WHERE  client_id = ?</text>
+  <text x="600" y="404" class="lbl sub">left-margin marker | still at column 0, but content now starts</text>
+  <text x="600" y="420" class="lbl sub">at column 4 — the highlighted 4 spaces are part of the String</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="466" width="1080" height="120" rx="6" class="boxY"/>
+  <text x="36" y="490" class="lbl body" font-weight="700">Why this bites in practice</text>
+  <text x="36" y="512" class="lbl sub">The closing delimiter's column is itself a candidate for the minimum-indentation calculation (Frame 3 of D-070).</text>
+  <text x="36" y="530" class="lbl sub">Re-indenting a block in an editor that only moves the closing """ — without moving the content — silently changes</text>
+  <text x="36" y="548" class="lbl sub">every line's leading whitespace in the resulting String, which breaks a SQL string comparison, a JSON diff in a</text>
+  <text x="36" y="566" class="lbl sub">test assertion, or a hash of the query text used for FundsLedger's query-plan cache key.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="710" x2="1100" y2="710" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="722" width="22" height="16" rx="3" class="boxY"/>
+  <text x="50" y="735" class="lbl tiny">closing delimiter aligned with content (col 4)</text>
+  <rect x="340" y="722" width="22" height="16" rx="3" class="boxD"/>
+  <text x="370" y="735" class="lbl tiny">closing delimiter shifted left (col 0) / extra leading spaces that survive</text>
+  <rect x="820" y="722" width="22" height="16" rx="3" class="boxR"/>
+  <text x="850" y="735" class="lbl tiny">stripped result, left-margin flush</text>
+  <path class="flow" d="M 20 754 V 754 H 60"/>
+  <text x="70" y="759" class="lbl tiny">arrow: source text block -&gt; computed String value</text>
+</svg>

@@ -1,0 +1,135 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Comparison over an empty stream of reservations. Left: groupingBy(r -> r.amount().compareTo(MAX) &gt; 0) over an empty stream produces an empty map; calling get(true) returns null, and unboxing that null into a boolean throws NullPointerException. Right: partitioningBy over the same empty stream always produces a two-entry map, false to an empty list and true to an empty list; get(true) returns an empty list, never null.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PARTITIONINGBY ALWAYS HAS BOTH KEYS — GROUPINGBY DOES NOT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl dense">Source: an empty stream of Reservation over the QuizStakes stake-reservation feed (2.8M/day, avg value 4.20)</text>
+
+  <!-- Section band headers -->
+  <text x="40" y="98" class="lbl h2">GROUPINGBY SIDE — r -&gt; r.amount().compareTo(MAX) &gt; 0</text>
+  <line x1="40" y1="106" x2="540" y2="106" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="580" y="98" class="lbl h2">PARTITIONINGBY SIDE — same predicate</text>
+  <line x1="580" y1="106" x2="1080" y2="106" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- LEFT: groupingBy -->
+  <rect x="60" y="140" width="440" height="60" rx="6" class="boxP"/>
+  <text x="280" y="164" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt; (empty)</text>
+  <text x="280" y="184" text-anchor="middle" class="lbl sub">no elements reach the collector</text>
+
+  <path class="flow" d="M 280 200 V 226"/>
+  <text x="360" y="220" class="lbl sub">.collect(groupingBy(...))</text>
+
+  <rect x="60" y="230" width="440" height="70" rx="6" class="boxG"/>
+  <text x="280" y="256" text-anchor="middle" class="lbl node">Map&lt;Boolean,List&lt;Reservation&gt;&gt;</text>
+  <text x="280" y="278" text-anchor="middle" class="lbl body">{ } — zero entries</text>
+  <text x="280" y="293" text-anchor="middle" class="lbl sub">no key was ever seen, so none is created</text>
+
+  <path class="flow" d="M 280 300 V 326"/>
+  <text x="380" y="320" class="lbl sub">.get(true)</text>
+
+  <rect x="60" y="330" width="440" height="60" rx="6" class="boxW"/>
+  <text x="280" y="354" text-anchor="middle" class="lbl node">get(true) returns null</text>
+  <text x="280" y="374" text-anchor="middle" class="lbl sub">Boolean key never inserted into the map</text>
+
+  <path class="fail" d="M 280 390 V 416"/>
+  <text x="380" y="410" class="lbl sub">unboxed to boolean</text>
+
+  <rect x="60" y="420" width="440" height="76" rx="6" class="boxD"/>
+  <text x="280" y="446" text-anchor="middle" class="lbl node">NullPointerException</text>
+  <text x="280" y="466" text-anchor="middle" class="lbl body">null cannot be unboxed to boolean</text>
+  <text x="280" y="484" text-anchor="middle" class="lbl sub">e.g. `if (byHigh.get(true).isEmpty())` throws here</text>
+
+  <!-- RIGHT: partitioningBy -->
+  <rect x="600" y="140" width="480" height="60" rx="6" class="boxP"/>
+  <text x="840" y="164" text-anchor="middle" class="lbl node">Stream&lt;Reservation&gt; (empty)</text>
+  <text x="840" y="184" text-anchor="middle" class="lbl sub">no elements reach the collector</text>
+
+  <path class="flow" d="M 840 200 V 226"/>
+  <text x="940" y="220" class="lbl sub">.collect(partitioningBy(...))</text>
+
+  <rect x="600" y="230" width="480" height="130" rx="6" class="boxG"/>
+  <text x="840" y="254" text-anchor="middle" class="lbl node">Map&lt;Boolean,List&lt;Reservation&gt;&gt;</text>
+  <text x="840" y="274" text-anchor="middle" class="lbl sub">both partitions pre-materialized, regardless of input</text>
+
+  <rect x="622" y="286" width="200" height="34" rx="4" class="boxW"/>
+  <text x="722" y="308" text-anchor="middle" class="lbl dense">false → [ ]</text>
+
+  <rect x="838" y="286" width="200" height="34" rx="4" class="boxW"/>
+  <text x="938" y="308" text-anchor="middle" class="lbl dense">true → [ ]</text>
+
+  <text x="840" y="344" text-anchor="middle" class="lbl sub">2 entries always — a partition has exactly two outcomes</text>
+
+  <path class="flow" d="M 840 360 V 396"/>
+  <text x="940" y="390" class="lbl sub">.get(true)</text>
+
+  <rect x="600" y="400" width="480" height="60" rx="6" class="boxG"/>
+  <text x="840" y="424" text-anchor="middle" class="lbl node">get(true) returns [ ]</text>
+  <text x="840" y="444" text-anchor="middle" class="lbl sub">empty List&lt;Reservation&gt;, never null</text>
+
+  <path class="flow" d="M 840 460 V 486"/>
+  <text x="940" y="480" class="lbl sub">.isEmpty()</text>
+
+  <rect x="600" y="490" width="480" height="60" rx="6" class="boxG"/>
+  <text x="840" y="514" text-anchor="middle" class="lbl node">true — no NPE</text>
+  <text x="840" y="534" text-anchor="middle" class="lbl sub">callers can chain safely with no null-check</text>
+
+  <!-- Annotation panel -->
+  <rect x="60" y="580" width="1020" height="130" rx="6" class="panel"/>
+  <text x="80" y="604" class="lbl body" font-weight="700">Why the contract differs</text>
+  <text x="80" y="626" class="lbl tiny">groupingBy's key set is built from whatever keys the predicate actually produced during the run — an</text>
+  <text x="80" y="644" class="lbl tiny">empty or skewed input can omit a Boolean value entirely.</text>
+  <text x="80" y="666" class="lbl tiny">partitioningBy is specified over Boolean, a two-valued type — the collector allocates both slots up</text>
+  <text x="80" y="684" class="lbl tiny">front (Collectors.partitioningBy backs the map with a fixed two-branch holder), so both keys exist even</text>
+  <text x="80" y="702" class="lbl tiny">when zero, or only one, kind of element was seen.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="730" x2="1100" y2="730" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="742" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="755" class="lbl tiny">stream source</text>
+
+  <rect x="180" y="742" width="22" height="16" rx="3" class="boxG"/>
+  <text x="210" y="755" class="lbl tiny">successful / concrete result</text>
+
+  <rect x="420" y="742" width="22" height="16" rx="3" class="boxW"/>
+  <text x="450" y="755" class="lbl tiny">missing / absent value</text>
+
+  <rect x="640" y="742" width="22" height="16" rx="3" class="boxD"/>
+  <text x="670" y="755" class="lbl tiny">thrown exception</text>
+
+  <path class="flow" d="M 850 750 H 890"/>
+  <text x="898" y="755" class="lbl tiny">A → B : B is produced from A</text>
+
+  <path class="fail" d="M 20 778 H 60"/>
+  <text x="68" y="783" class="lbl tiny">A → B : B is the failure consequence of A</text>
+</svg>

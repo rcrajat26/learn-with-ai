@@ -1,0 +1,111 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Left, run-harness is a prose executor where the model reads the playbook and decides what comes next. Right, run-conductor calls conductor advance which returns the routing decision from folded run state in a harness database. The two are not interchangeable: a resume-at stage flag is rejected outright rather than approximated, and progress-verifier scores against a versioned rubric file and emits one verdict line.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .adapter { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+             marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">/RUN-HARNESS VS /RUN-CONDUCTOR — NOT INTERCHANGEABLE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="70" text-anchor="middle" class="lbl h2">LEFT — /run-harness (prose executor)</text>
+  <text x="840" y="70" text-anchor="middle" class="lbl h2">RIGHT — /run-conductor (deterministic)</text>
+  <line x1="560" y1="56" x2="560" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="100" y="88" width="360" height="70" rx="6" class="boxP"/>
+  <text x="280" y="112" text-anchor="middle" class="lbl node">/run-harness</text>
+  <text x="280" y="132" text-anchor="middle" class="lbl sub">the model reads the playbook</text>
+  <text x="280" y="148" text-anchor="middle" class="lbl sub">and decides what comes next, in prose</text>
+
+  <path class="flow" d="M 280 158 V 182"/>
+
+  <rect x="100" y="182" width="360" height="70" rx="6" class="boxL"/>
+  <text x="280" y="206" text-anchor="middle" class="lbl node">next step: judgment call</text>
+  <text x="280" y="226" text-anchor="middle" class="lbl sub">re-derived from the playbook text</text>
+  <text x="280" y="242" text-anchor="middle" class="lbl sub">each time the loop turns</text>
+
+  <rect x="660" y="88" width="360" height="70" rx="6" class="boxR"/>
+  <text x="840" y="112" text-anchor="middle" class="lbl node">/run-conductor</text>
+  <text x="840" y="132" text-anchor="middle" class="lbl sub">calls: conductor advance</text>
+  <text x="840" y="148" text-anchor="middle" class="lbl sub">a deterministic routing function</text>
+
+  <path class="flow" d="M 840 158 V 182"/>
+
+  <rect x="660" y="182" width="360" height="70" rx="6" class="boxA"/>
+  <text x="840" y="204" text-anchor="middle" class="lbl node">folded run state</text>
+  <text x="840" y="222" text-anchor="middle" class="lbl sub">features/&lt;slug&gt;/state/harness.db</text>
+  <text x="840" y="238" text-anchor="middle" class="lbl sub">next stage returned as data, not prose</text>
+
+  <path class="flow" d="M 840 252 V 276"/>
+
+  <rect x="660" y="276" width="360" height="52" rx="6" class="boxR"/>
+  <text x="840" y="300" text-anchor="middle" class="lbl node">next step: routing decision</text>
+  <text x="840" y="316" text-anchor="middle" class="lbl sub">same input, same output — every run</text>
+
+  <rect x="100" y="276" width="360" height="52" rx="6" class="boxL"/>
+  <text x="280" y="300" text-anchor="middle" class="lbl node">next step: judgment call</text>
+  <text x="280" y="316" text-anchor="middle" class="lbl sub">same input can yield a different next step</text>
+
+  <text x="560" y="360" text-anchor="middle" class="lbl body">not interchangeable — prose judgment does not fold into replayable state</text>
+
+  <rect x="60" y="392" width="460" height="94" rx="6" class="boxD"/>
+  <text x="290" y="414" text-anchor="middle" class="lbl h2">--resume-at &lt;stage&gt; — REJECTED</text>
+  <text x="290" y="434" text-anchor="middle" class="lbl sub">not approximated by re-reading the playbook</text>
+  <text x="290" y="452" text-anchor="middle" class="lbl sub">reason: prose has no folded state to resume from —</text>
+  <text x="290" y="468" text-anchor="middle" class="lbl sub">a stage name alone cannot reconstruct history</text>
+
+  <rect x="600" y="392" width="460" height="94" rx="6" class="boxA"/>
+  <text x="830" y="414" text-anchor="middle" class="lbl h2">progress-verifier — SCORES AND EMITS A VERDICT</text>
+  <text x="830" y="434" text-anchor="middle" class="lbl sub">scores against the versioned rubric:</text>
+  <text x="830" y="450" text-anchor="middle" class="lbl sub">control-plane/judge-rubrics/progress-verifier.yaml</text>
+  <text x="830" y="468" text-anchor="middle" class="lbl sub">emits exactly one verdict line</text>
+
+  <path class="adapter" d="M 830 486 V 520"/>
+
+  <rect x="660" y="520" width="340" height="46" rx="6" class="boxL"/>
+  <text x="830" y="548" text-anchor="middle" class="lbl body">verdict: progressing | stalled</text>
+
+  <line x1="20" y1="600" x2="1100" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="608" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="620" class="lbl tiny">entry point</text>
+  <rect x="150" y="608" width="22" height="14" rx="3" class="boxA"/>
+  <text x="180" y="620" class="lbl tiny">state / rubric artifact</text>
+  <rect x="350" y="608" width="22" height="14" rx="3" class="boxL"/>
+  <text x="380" y="620" class="lbl tiny">resulting decision</text>
+  <rect x="530" y="608" width="22" height="14" rx="3" class="boxR"/>
+  <text x="560" y="620" class="lbl tiny">deterministic path / step</text>
+  <rect x="740" y="608" width="22" height="14" rx="3" class="boxD"/>
+  <text x="770" y="620" class="lbl tiny">rejected, not approximated</text>
+  <path class="flow" d="M 20 640 H 60"/>
+  <text x="68" y="645" class="lbl tiny">A → B : A produces B</text>
+  <path class="adapter" d="M 300 640 H 340"/>
+  <text x="348" y="645" class="lbl tiny">A → B : scoring produces a verdict, not inheritance</text>
+</svg>

@@ -1,0 +1,94 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Duration.ofDays(1) versus Period.ofDays(1) for a QuizStakes bonus granted at local 23:00 on 2026-03-28 in Europe/London, the night before the spring-forward, expiring in 1 day. Shared grant: 2026-03-28T23:00Z[Europe/London], offset Z because the spring transition is not until 2026-03-29T01:00Z, instant 2026-03-28T23:00:00Z. Left half, Duration.ofDays(1), time-based and exactly 24 hours: grant.plus(Duration.ofDays(1)) equals 2026-03-30T00:00+01:00[Europe/London], instant 2026-03-29T23:00:00Z, local time landed on 00:00 on 2026-03-30; grant.plusHours(24) gives the identical result. Right half, Period.ofDays(1), date-based and one calendar day: grant.plus(Period.ofDays(1)) equals 2026-03-29T23:00+01:00[Europe/London], instant 2026-03-29T22:00:00Z, local time landed on 23:00 on 2026-03-29, the same wall-clock time one calendar day later; grant.plusDays(1) gives the identical result. A highlighted panel states the divergence: Duration.between(periodResult.toInstant(), durationResult.toInstant()) equals PT1H, shown in red, because Duration preserved elapsed time and shifted the wall clock while Period preserved the wall clock and shifted elapsed time. An annotation panel states the QuizStakes stakes: the bonus expiry rule is 30 days from grant, and whether that means 30 times 24 hours (Duration) or 30 calendar days (Period) is a business decision, not an implementation detail — across a DST boundary the two answers differ by an hour, enough to expire a bonus a client believed was still live, reversing it to PROMOTIONAL_EXPENSE.">
+
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;font-weight:bold;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr078" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Duration.ofDays(1) versus Period.ofDays(1)</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="small">Scenario: a QuizStakes bonus granted at local 23:00 on 2026-03-28 in Europe/London &#8212; the night before the spring-forward &#8212; expiring "in 1 day".</text>
+
+  <!-- shared grant -->
+  <rect x="310" y="76" width="500" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="330" y="98" class="body" font-weight="bold">Grant: 2026-03-28T23:00Z[Europe/London]</text>
+  <line x1="330" y1="108" x2="790" y2="108" stroke="#2563eb" stroke-width="1"/>
+  <text x="330" y="128" class="small">offset Z (GMT) &#8212; spring transition not until 2026-03-29T01:00Z</text>
+  <text x="330" y="146" class="code">grant.toInstant() = 2026-03-28T23:00:00Z</text>
+
+  <!-- fan bus down to both halves -->
+  <path d="M 560 166 V 190" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 285 190 H 560 H 835" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 285 190 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr078)"/>
+  <path d="M 835 190 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr078)"/>
+
+  <!-- LEFT: Duration -->
+  <rect x="20" y="210" width="530" height="170" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="40" y="232" class="body" font-weight="bold">Duration.ofDays(1) &#8212; time-based, exactly 24 hours</text>
+  <line x1="40" y1="242" x2="530" y2="242" stroke="#b45309" stroke-width="1"/>
+  <text x="40" y="262" class="code">grant.plus(Duration.ofDays(1))</text>
+  <text x="40" y="280" class="code">= 2026-03-30T00:00+01:00[Europe/London]</text>
+  <text x="40" y="298" class="code">instant = 2026-03-29T23:00:00Z</text>
+  <text x="40" y="320" class="smallb">local time landed on: 00:00 on 2026-03-30</text>
+  <text x="40" y="340" class="small">grant.plusHours(24) gives the identical result</text>
+
+  <!-- RIGHT: Period -->
+  <rect x="570" y="210" width="530" height="170" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="590" y="232" class="body" font-weight="bold">Period.ofDays(1) &#8212; date-based, one calendar day</text>
+  <line x1="590" y1="242" x2="1080" y2="242" stroke="#15803d" stroke-width="1"/>
+  <text x="590" y="262" class="code">grant.plus(Period.ofDays(1))</text>
+  <text x="590" y="280" class="code">= 2026-03-29T23:00+01:00[Europe/London]</text>
+  <text x="590" y="298" class="code">instant = 2026-03-29T22:00:00Z</text>
+  <text x="590" y="320" class="smallb">local time landed on: 23:00 on 2026-03-29 (same wall clock)</text>
+  <text x="590" y="340" class="small">grant.plusDays(1) gives the identical result</text>
+
+  <!-- DIVERGENCE -->
+  <rect x="20" y="400" width="1080" height="80" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="40" y="422" class="code">Duration.between(periodResult.toInstant(), durationResult.toInstant()) =</text>
+  <text x="620" y="422" class="codeR">PT1H</text>
+  <text x="40" y="442" class="small">Duration preserved elapsed time and shifted the wall clock; Period preserved the wall clock and shifted elapsed time.</text>
+  <text x="40" y="460" class="small">A Duration add on a ZonedDateTime may land on a local time the operator never entered; a Period add keeps the wall clock.</text>
+
+  <!-- QUIZSTAKES ANNOTATION -->
+  <rect x="20" y="500" width="1080" height="120" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="522" class="h2">QUIZSTAKES STAKES</text>
+  <line x1="40" y1="532" x2="1080" y2="532" stroke="#2563eb" stroke-width="1"/>
+  <text x="40" y="554" class="small">The bonus expiry rule is 30 days from grant. Whether that is 30 &#215; 24 hours (Duration) or 30 calendar days (Period) is a</text>
+  <text x="40" y="572" class="small">business decision, not an implementation detail &#8212; and across a DST boundary the two answers differ by an hour,</text>
+  <text x="40" y="590" class="small">enough to expire a bonus a client believed was still live, reversing it to PROMOTIONAL_EXPENSE.</text>
+  <text x="40" y="608" class="small">Duration may make the elapsed interval land on an unexpected local time; Period may make the interval 23 or 25 hours.</text>
+
+  <!-- LEGEND -->
+  <text x="20" y="654" class="h2">LEGEND</text>
+  <line x1="20" y1="662" x2="1100" y2="662" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="678" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="691" class="small">shared grant &#8212; the bonus grant instant / local time, common to both halves</text>
+
+  <rect x="30" y="702" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="715" class="small">highlight &#8212; the Duration.ofDays(1) result, and the divergence panel (the point of the diagram)</text>
+
+  <rect x="590" y="678" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="618" y="691" class="small">the Period.ofDays(1) result</text>
+
+  <rect x="590" y="702" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="618" y="715" class="small">annotation panel &#8212; QuizStakes bonus-expiry framing, not a node</text>
+
+  <text x="30" y="738" class="codeR">PT1H</text>
+  <text x="80" y="738" class="small">red text &#8212; the one-hour divergence between the Duration and Period results</text>
+
+</svg>

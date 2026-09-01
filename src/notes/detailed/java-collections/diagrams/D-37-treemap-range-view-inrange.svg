@@ -1,0 +1,79 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TreeMap submap range view: put calls are checked by inRange before reaching the backing tree; keys outside the view's bounds throw IllegalArgumentException while keys inside pass through">
+  <defs>
+    <marker id="arrow37" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="30" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">TreeMap.subMap(20, 50) — every mutation is filtered through inRange()</text>
+
+  <!-- Key axis -->
+  <line x1="60" y1="120" x2="740" y2="120" stroke="#737373" stroke-width="2" marker-end="url(#arrow37)"/>
+  <rect x="40" y="106" width="30" height="20" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="121" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="710" y="106" width="40" height="20" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="730" y="121" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">100</text>
+
+  <!-- subMap bracket: keys 20..50, fromInclusive true, toExclusive true. axis scale: key k -> x = 60 + (k/100)*680 -->
+  <rect x="196" y="95" width="272" height="16" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="332" y="86" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">subMap(20, 50) view range</text>
+  <line x1="196" y1="90" x2="196" y2="140" stroke="#525252" stroke-width="3"/>
+  <line x1="468" y1="90" x2="468" y2="140" stroke="#525252" stroke-width="3"/>
+  <rect x="176" y="144" width="40" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="196" y="157" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">20</text>
+  <rect x="448" y="144" width="40" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="468" y="157" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">50</text>
+
+  <!-- key markers on axis: 30 (inside range, accepted) and 60 (outside range, rejected) -->
+  <circle cx="264" cy="120" r="7" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <rect x="244" y="72" width="40" height="18" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="264" y="85" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">30</text>
+
+  <circle cx="468" cy="120" r="7" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <rect x="530" y="72" width="40" height="18" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="550" y="85" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">60</text>
+  <line x1="550" y1="90" x2="530" y2="112" stroke="#737373" stroke-width="2" marker-end="url(#arrow37)"/>
+
+  <!-- ==== two outcome panels ==== -->
+  <rect x="40" y="190" width="340" height="26" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="208" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Attempt 1: submap.put(60, v)</text>
+
+  <rect x="420" y="190" width="340" height="26" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="590" y="208" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Attempt 2: submap.put(30, v)</text>
+
+  <rect x="60" y="230" width="120" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="120" y="254" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">key = 60</text>
+
+  <line x1="180" y1="250" x2="230" y2="250" stroke="#737373" stroke-width="2" marker-end="url(#arrow37)"/>
+
+  <rect x="230" y="230" width="140" height="40" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="300" y="248" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">inRange(60)?</text>
+  <text x="300" y="262" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">60 &gt;= 50 (toExclusive)</text>
+
+  <line x1="300" y1="270" x2="300" y2="310" stroke="#737373" stroke-width="2" marker-end="url(#arrow37)"/>
+
+  <rect x="200" y="315" width="200" height="50" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="300" y="335" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">false: outside range</text>
+  <text x="300" y="352" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">throws IllegalArgumentException</text>
+
+  <rect x="440" y="230" width="120" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="500" y="254" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">key = 30</text>
+
+  <line x1="560" y1="250" x2="610" y2="250" stroke="#737373" stroke-width="2" marker-end="url(#arrow37)"/>
+
+  <rect x="610" y="230" width="140" height="40" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="248" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">inRange(30)?</text>
+  <text x="680" y="262" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">20 &lt;= 30 &lt; 50</text>
+
+  <line x1="680" y1="270" x2="680" y2="310" stroke="#737373" stroke-width="2" marker-end="url(#arrow37)"/>
+
+  <rect x="580" y="315" width="200" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="335" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">true: inside range</text>
+  <text x="680" y="352" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">delegates to backing TreeMap.put(30, v)</text>
+
+  <rect x="40" y="400" width="720" height="80" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="425" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">subMap/headMap/tailMap return a NavigableMap VIEW backed by the same red-black tree,</text>
+  <text x="400" y="445" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">not a copy. Every mutating call on the view (put, remove) is range-checked by inRange()</text>
+  <text x="400" y="465" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">before touching the tree — a key outside the view's [from, to) bounds is always rejected.</text>
+</svg>

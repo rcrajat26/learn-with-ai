@@ -1,0 +1,116 @@
+<svg viewBox="0 0 1120 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Exhaustive enum switch expression versus one with default, over RestrictionType. Left: an exhaustive switch expression covering all nine constants with no default compiles; adding DORMANT_FROZEN to the enum then fails with javac's real message, the switch expression does not cover all possible input values. Right: the same switch with a default arrow compiles both before and after the constant is added, silently routing DORMANT_FROZEN to the default arm with no warning. A third panel shows that even the no-default form still relies on a compiler-synthesized unmatched branch: recompiling only the enum after Exhaustive.class was built against the three-constant version and rerunning it throws java.lang.MatchException, not IncompatibleClassChangeError, verified by actually running it on this machine.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .code  { font-size: 12.5px; }
+    .body  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .frame   { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.3; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxErr  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow    { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">EXHAUSTIVE ENUM SWITCH VS. A default ARM</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="56" width="1040" height="60" rx="6" class="boxWeak"/>
+  <text x="56" y="74" class="lbl body" font-weight="700">enum RestrictionType — 9 constants, before change</text>
+  <text x="56" y="90" class="lbl body">DEPOSIT_BLOCKED · STAKE_BLOCKED · WITHDRAWAL_BLOCKED · DEPOSIT_LIMITED · WITHDRAWAL_HELD</text>
+  <text x="56" y="106" class="lbl body">SOURCE_OF_FUNDS_REQUIRED · ALL_BLOCKED · SELF_EXCLUDED · COOLING_OFF</text>
+
+  <line x1="560" y1="132" x2="560" y2="440" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="40" y="146" class="lbl h2">EXHAUSTIVE SWITCH EXPRESSION — NO default</text>
+  <text x="600" y="146" class="lbl h2">SWITCH EXPRESSION WITH default -&gt;</text>
+
+  <!-- left code -->
+  <rect x="40" y="156" width="500" height="90" rx="4" class="frame"/>
+  <text x="56" y="178" class="lbl code">switch (t) {</text>
+  <text x="72" y="198" class="lbl code">case DEPOSIT_BLOCKED, …, COOLING_OFF -&gt; describe(t);</text>
+  <text x="56" y="218" class="lbl code">}</text>
+  <rect x="56" y="226" width="90" height="16" rx="4" class="boxOk"/>
+  <text x="101" y="238" text-anchor="middle" class="lbl tiny">compiles</text>
+
+  <path class="flow" d="M 290 262 V 286"/>
+  <text x="300" y="278" class="lbl sub">+ DORMANT_FROZEN added to enum</text>
+
+  <rect x="40" y="290" width="500" height="80" rx="6" class="boxErr"/>
+  <text x="56" y="310" class="lbl code" font-weight="700">javac --release 21 Restriction1.java</text>
+  <text x="56" y="330" class="lbl code">error: the switch expression does not cover</text>
+  <text x="56" y="348" class="lbl code">all possible input values</text>
+  <text x="56" y="364" class="lbl sub">verified: real javac output, quoted exactly</text>
+
+  <!-- right code -->
+  <rect x="580" y="156" width="500" height="110" rx="4" class="frame"/>
+  <text x="596" y="178" class="lbl code">switch (t) {</text>
+  <text x="612" y="198" class="lbl code">case DEPOSIT_BLOCKED, …, COOLING_OFF -&gt; describe(t);</text>
+  <text x="612" y="218" class="lbl code">default -&gt; "unspecified";</text>
+  <text x="596" y="238" class="lbl code">}</text>
+  <rect x="596" y="246" width="90" height="16" rx="4" class="boxOk"/>
+  <text x="641" y="258" text-anchor="middle" class="lbl tiny">compiles</text>
+
+  <path class="flow" d="M 830 282 V 306"/>
+  <text x="840" y="298" class="lbl sub">+ DORMANT_FROZEN added to enum</text>
+
+  <rect x="580" y="310" width="500" height="80" rx="6" class="boxOk"/>
+  <text x="596" y="330" class="lbl code" font-weight="700">javac --release 21: compiles clean, no warning</text>
+  <text x="596" y="350" class="lbl code">DORMANT_FROZEN silently falls to default -&gt;</text>
+  <text x="596" y="368" class="lbl sub">no signal that a new constant was added</text>
+
+  <!-- panel 3 -->
+  <text x="40" y="424" class="lbl h2">SYNTHETIC DEFAULT — VERIFIED AT RUNTIME (javac --release 21, run on JDK 25)</text>
+  <rect x="40" y="434" width="1040" height="240" rx="4" class="frame"/>
+
+  <text x="56" y="458" class="lbl body">Even the no-default exhaustive form still compiles an</text>
+  <text x="56" y="476" class="lbl body">unmatched branch into the class file. Exhaustive.class was</text>
+  <text x="56" y="494" class="lbl body">compiled against a 3-constant RestrictionType (DEPOSIT_BLOCKED,</text>
+  <text x="56" y="512" class="lbl body">STAKE_BLOCKED, WITHDRAWAL_BLOCKED).</text>
+  <text x="56" y="530" class="lbl body">Recompiling only the enum to add DORMANT_FROZEN, then</text>
+  <text x="56" y="548" class="lbl body">rerunning the old Exhaustive.class unchanged reaches it:</text>
+
+  <rect x="56" y="562" width="460" height="80" rx="6" class="boxErr"/>
+  <text x="70" y="582" class="lbl code">Exception in thread "main"</text>
+  <text x="70" y="600" class="lbl code">java.lang.MatchException</text>
+  <text x="70" y="618" class="lbl sub">at Exhaustive.describe(Exhaustive.java:3)</text>
+  <text x="70" y="632" class="lbl sub">at Exhaustive.main(Exhaustive.java:11)</text>
+
+  <rect x="540" y="454" width="520" height="200" rx="6" class="panel"/>
+  <text x="554" y="476" class="lbl body" font-weight="700">NOT IncompatibleClassChangeError</text>
+  <text x="554" y="494" class="lbl body">That name describes older javac's enum $SwitchMap</text>
+  <text x="554" y="510" class="lbl body">ordinal-array lowering for switch statements.</text>
+  <text x="554" y="528" class="lbl body">The JEP 361 switch-expression bytecode this file</text>
+  <text x="554" y="544" class="lbl body">compiles to reaches its synthesized unmatched</text>
+  <text x="554" y="560" class="lbl body">branch instead, and that branch throws</text>
+  <text x="554" y="576" class="lbl body" font-weight="700">java.lang.MatchException</text>
+  <text x="554" y="594" class="lbl sub">— confirmed by actually running the two-step</text>
+  <text x="554" y="610" class="lbl sub">separate-compilation reproduction above.</text>
+  <text x="554" y="630" class="lbl sub">RestrictionType is the QuizStakes enum; DORMANT_FROZEN</text>
+  <text x="554" y="646" class="lbl sub">is one of its real restriction constants.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="690" x2="1100" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="700" width="22" height="14" rx="3" class="boxWeak"/>
+  <text x="50" y="712" class="lbl tiny">enum declaration</text>
+  <rect x="180" y="700" width="22" height="14" rx="3" class="frame"/>
+  <text x="210" y="712" class="lbl tiny">code listing (no semantic fill)</text>
+  <rect x="420" y="700" width="22" height="14" rx="3" class="boxOk"/>
+  <text x="450" y="712" class="lbl tiny">compiles / matches</text>
+  <rect x="620" y="700" width="22" height="14" rx="3" class="boxErr"/>
+  <text x="650" y="712" class="lbl tiny">compile error / thrown exception</text>
+  <rect x="850" y="700" width="22" height="14" rx="3" class="panel"/>
+  <text x="880" y="712" class="lbl tiny">annotation: verified correction</text>
+</svg>

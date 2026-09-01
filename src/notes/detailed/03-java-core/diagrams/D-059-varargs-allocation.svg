@@ -1,0 +1,97 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three step sequence showing varargs allocate an array per call, for void audit(String action, Object... context). Step 1: the call site audit with three context arguments, once per stake reservation. Step 2: the compiler synthesises new Object array containing those three arguments. Step 3: at 2.8 million calls per day, one array each, an Object array of 3 elements is 28 bytes padded to 32 bytes, so total is 2.8 million times 32 bytes equals 89,600,000 bytes, about 89.6 megabytes per day. A side annotation panel notes that audit of a single string receives an empty zero-length array, not null, and that audit(null) still resolves to the varargs overload.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .tiny  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .bold  { font-weight: 700; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">VARARGS ALLOCATE AN ARRAY PER CALL</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl tiny">void audit(String action, Object... context)</text>
+
+  <!-- Frame 1 -->
+  <rect x="100" y="90" width="620" height="80" rx="4" class="boxP"/>
+  <circle cx="80" cy="105" r="14" class="pill"/>
+  <text x="80" y="110" text-anchor="middle" class="lbl body bold">1</text>
+  <text x="120" y="120" class="lbl node">CALL SITE</text>
+  <text x="120" y="142" class="lbl body">audit("DEP-301 CAPTURED", stakeId, split, ledger);</text>
+  <text x="120" y="160" class="lbl sub">// one call per stake reservation &#8212; 3 context arguments</text>
+
+  <path class="flow" d="M 410 170 V 210"/>
+
+  <!-- Frame 2 -->
+  <rect x="100" y="230" width="620" height="90" rx="4" class="boxH"/>
+  <circle cx="80" cy="245" r="14" class="pill"/>
+  <text x="80" y="250" text-anchor="middle" class="lbl body bold">2</text>
+  <text x="120" y="258" class="lbl node">COMPILER SYNTHESIS</text>
+  <text x="120" y="280" class="lbl body">audit("DEP-301 CAPTURED",</text>
+  <text x="120" y="298" class="lbl body">&#160;&#160;new Object[]{ stakeId, split, ledger });</text>
+  <text x="120" y="314" class="lbl sub">// one Object[3] allocated per invocation, every time</text>
+
+  <path class="flow" d="M 410 320 V 360"/>
+
+  <!-- Frame 3 -->
+  <rect x="100" y="380" width="620" height="150" rx="4" class="boxR"/>
+  <circle cx="80" cy="395" r="14" class="pill"/>
+  <text x="80" y="400" text-anchor="middle" class="lbl body bold">3</text>
+  <text x="120" y="408" class="lbl node">COST AT SCALE</text>
+  <text x="120" y="430" class="lbl body">Object[3] = 12 (header) + 4 (length) + 3 &#215; 4 (refs)</text>
+  <text x="120" y="448" class="lbl body">&#160;&#160;&#160;&#160;= 28 bytes &#8594; padded to 32 bytes (8-aligned)</text>
+  <text x="120" y="472" class="lbl body bold">2.8M stake reservations/day &#215; 32 bytes/array</text>
+  <text x="120" y="492" class="lbl body bold">&#160;&#160;&#160;&#160;= 89,600,000 bytes &#8776; 89.6 MB/day</text>
+  <text x="120" y="514" class="lbl sub">// garbage the moment audit() returns &#8212; short-lived, GC pressure</text>
+
+  <!-- Side annotation panel -->
+  <rect x="760" y="230" width="320" height="300" rx="4" class="panel"/>
+  <text x="780" y="255" class="lbl tiny bold">EDGE CASES</text>
+  <text x="780" y="280" class="lbl tiny">audit("x") receives context =</text>
+  <text x="780" y="296" class="lbl tiny">new Object[0] &#8212; empty array, not null</text>
+  <text x="780" y="320" class="lbl tiny">audit(null) still selects the</text>
+  <text x="780" y="336" class="lbl tiny">varargs overload audit(String,</text>
+  <text x="780" y="352" class="lbl tiny">Object...) &#8212; context becomes null,</text>
+  <text x="780" y="368" class="lbl tiny">not an empty array</text>
+  <text x="780" y="392" class="lbl tiny">NullPointerException only occurs if</text>
+  <text x="780" y="408" class="lbl tiny">context is later dereferenced without</text>
+  <text x="780" y="424" class="lbl tiny">a null-check inside audit()</text>
+  <text x="780" y="448" class="lbl tiny">Every non-edge call still pays the</text>
+  <text x="780" y="464" class="lbl tiny">Object[] allocation shown in step 2</text>
+
+  <line x1="20" y1="560" x2="1100" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="582" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="596" width="20" height="14" class="boxP"/>
+  <text x="46" y="607" class="lbl tiny">call site (source)</text>
+
+  <rect x="220" y="596" width="20" height="14" class="boxH"/>
+  <text x="246" y="607" class="lbl tiny">compiler-synthesised allocation (the thing this diagram is about)</text>
+
+  <rect x="660" y="596" width="20" height="14" class="boxR"/>
+  <text x="686" y="607" class="lbl tiny">computed cost / final result</text>
+
+  <rect x="900" y="596" width="20" height="14" class="pill"/>
+  <text x="926" y="607" class="lbl tiny">step number</text>
+
+  <path class="flow" d="M 20 622 H 70"/>
+  <text x="80" y="626" class="lbl tiny">solid arrow, A &#8594; B: step A completes before step B begins</text>
+
+  <rect x="500" y="616" width="20" height="14" class="panel"/>
+  <text x="526" y="627" class="lbl tiny">annotation panel &#8212; edge-case prose</text>
+</svg>

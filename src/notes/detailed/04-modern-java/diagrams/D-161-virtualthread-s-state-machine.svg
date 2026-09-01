@@ -1,0 +1,145 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="VirtualThread's state machine, nine states: NEW, STARTED, RUNNABLE, RUNNING,
+     PARKING, PARKED, PINNED, YIELDING, TERMINATED. NEW moves to STARTED on start(). STARTED moves
+     to RUNNABLE when the scheduler accepts it. RUNNABLE moves to RUNNING on mount by a carrier.
+     RUNNING moves to PARKING on a blocking call, then to PARKED on a successful yield, or to PINNED
+     on a failed yield while holding a monitor or a native frame. RUNNING also moves through
+     YIELDING back to RUNNABLE on Thread.yield() or preemption. PARKED and PINNED both return to
+     RUNNABLE on unpark. RUNNING moves to TERMINATED on completion.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .edget  { font-size: 11px; fill: #1f2937; }
+    .panelh { font-size: 13px; font-weight: 700; }
+    .warnrow{ font-size: 11px; fill: #b91c1c; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+    .bad  { fill: none; stroke: #b91c1c; stroke-width: 2; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">VIRTUALTHREAD'S STATE MACHINE — NINE STATES</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Row 1: NEW, STARTED, RUNNABLE -->
+  <rect x="40" y="70" width="150" height="60" rx="6" class="boxL"/>
+  <text x="115" y="105" text-anchor="middle" class="lbl node">NEW</text>
+
+  <rect x="260" y="70" width="150" height="60" rx="6" class="boxL"/>
+  <text x="335" y="105" text-anchor="middle" class="lbl node">STARTED</text>
+
+  <rect x="480" y="70" width="170" height="60" rx="6" class="boxH"/>
+  <text x="565" y="105" text-anchor="middle" class="lbl node">RUNNABLE</text>
+
+  <path class="flow" d="M 190 100 H 260"/>
+  <text x="225" y="90" text-anchor="middle" class="lbl edget">start()</text>
+
+  <path class="flow" d="M 410 100 H 480"/>
+  <text x="445" y="90" text-anchor="middle" class="lbl edget">schedule</text>
+
+  <!-- Row 2: RUNNING -->
+  <path class="flow" d="M 565 130 V 170"/>
+  <text x="555" y="150" text-anchor="end" class="lbl edget">mount</text>
+
+  <rect x="470" y="170" width="190" height="60" rx="6" class="boxP"/>
+  <text x="565" y="205" text-anchor="middle" class="lbl node">RUNNING</text>
+
+  <!-- RUNNING -> YIELDING -> RUNNABLE (two explicit edges, right side) -->
+  <rect x="780" y="170" width="180" height="60" rx="6" class="boxH"/>
+  <text x="870" y="196" text-anchor="middle" class="lbl node">YIELDING</text>
+  <text x="870" y="216" text-anchor="middle" class="lbl sub">successful yield attempt</text>
+
+  <path class="flow" d="M 660 195 H 780"/>
+  <text x="700" y="160" text-anchor="middle" class="lbl edget">Thread.yield() / preempt</text>
+
+  <path class="flow" d="M 870 170 V 90 H 650"/>
+  <text x="760" y="80" text-anchor="middle" class="lbl edget">back to RUNNABLE</text>
+
+  <!-- RUNNING -> PARKING -->
+  <path class="flow" d="M 565 230 V 270"/>
+  <text x="620" y="255" class="lbl edget">blocking call</text>
+
+  <rect x="470" y="270" width="190" height="60" rx="6" class="boxH"/>
+  <text x="565" y="305" text-anchor="middle" class="lbl node">PARKING</text>
+
+  <!-- PARKING -> PARKED (success) -->
+  <path class="flow" d="M 520 330 V 370"/>
+  <text x="440" y="355" text-anchor="middle" class="lbl edget">successful yield</text>
+
+  <rect x="380" y="370" width="190" height="60" rx="6" class="boxL"/>
+  <text x="475" y="405" text-anchor="middle" class="lbl node">PARKED</text>
+
+  <!-- PARKING -> PINNED (failed yield) -->
+  <path class="bad" d="M 610 330 V 370"/>
+  <text x="700" y="355" text-anchor="middle" class="lbl edget">failed yield — pinned</text>
+
+  <rect x="610" y="370" width="200" height="60" rx="6" class="boxD"/>
+  <text x="710" y="398" text-anchor="middle" class="lbl node">PINNED</text>
+  <text x="710" y="418" text-anchor="middle" class="lbl sub">synchronized / native frame</text>
+
+  <!-- PARKED -> RUNNABLE (unpark), long back edge left side -->
+  <path class="flow" d="M 380 400 H 60 V 100 H 40"/>
+  <text x="95" y="250" text-anchor="middle" class="lbl edget" transform="rotate(-90 95 250)">unpark</text>
+
+  <!-- PINNED -> RUNNABLE (unpark), back edge -->
+  <path class="flow" d="M 810 400 H 960 V 115 H 650"/>
+  <text x="925" y="250" text-anchor="middle" class="lbl edget" transform="rotate(-90 925 250)">unpark</text>
+
+  <!-- RUNNING -> TERMINATED -->
+  <path class="flow" d="M 565 230 V 480 H 335 V 520"/>
+  <text x="420" y="500" text-anchor="middle" class="lbl edget">completion</text>
+
+  <rect x="260" y="520" width="150" height="60" rx="6" class="boxR"/>
+  <text x="335" y="555" text-anchor="middle" class="lbl node">TERMINATED</text>
+
+  <!-- Annotation panel -->
+  <rect x="40" y="620" width="960" height="120" rx="6" class="panel"/>
+  <text x="56" y="644" class="lbl panelh">PINNING, VERSION-SCOPED</text>
+  <text x="56" y="668" class="lbl tiny">On Java 21, holding a monitor (synchronized) or a native/foreign frame during a blocking</text>
+  <text x="56" y="686" class="lbl tiny">call fails the yield and pins the carrier — the jdk.VirtualThreadPinned JFR event fires.</text>
+  <text x="56" y="704" class="lbl warnrow">JEP 491 (Java 24) removes the synchronized cause; native/foreign frames still pin at 24.</text>
+  <text x="56" y="722" class="lbl tiny">ReentrantLock instead of synchronized avoids this — but only as a Java-21-scoped fix.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="770" x2="1020" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="782" width="22" height="16" rx="3" class="boxL"/>
+  <text x="50" y="794" class="lbl tiny">idle / not currently scheduled</text>
+  <rect x="260" y="782" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="794" class="lbl tiny">transient / in-progress state</text>
+  <rect x="500" y="782" width="22" height="16" rx="3" class="boxP"/>
+  <text x="530" y="794" class="lbl tiny">actively executing</text>
+  <rect x="700" y="782" width="22" height="16" rx="3" class="boxD"/>
+  <text x="730" y="794" class="lbl tiny">degraded (pinned)</text>
+  <rect x="880" y="782" width="22" height="16" rx="3" class="boxR"/>
+  <text x="910" y="794" class="lbl tiny">terminal</text>
+
+  <path d="M 20 822 H 50" class="flow"/>
+  <text x="60" y="826" class="lbl tiny">A &#8594; B : normal transition</text>
+  <path d="M 300 822 H 330" class="bad"/>
+  <text x="340" y="826" class="lbl tiny">A &#8594; B : failed-yield transition</text>
+</svg>

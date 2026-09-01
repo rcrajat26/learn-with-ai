@@ -1,0 +1,140 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two different bytecode shapes for the same critical section. Left, javap -c of a synchronized block in PaymentService showing explicit monitorenter, the guarded body, monitorexit on the normal path, and a synthetic exception handler that runs a second monitorexit before rethrowing, plus its exception table entry spanning the try region with type any. Right, javap -v of a synchronized method showing only the ACC_SYNCHRONIZED access flag with no monitorenter or monitorexit bytecodes at all — the JVM enters and exits the monitor implicitly around the call.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; }
+    .monoB { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">BLOCK VERSUS METHOD: TWO DIFFERENT BYTECODE SHAPES FOR ONE CRITICAL SECTION</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT PANEL: synchronized block -->
+  <rect x="20" y="56" width="530" height="600" rx="8" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="285" y="80" text-anchor="middle" class="lbl h2">SYNCHRONIZED BLOCK — javap -c PaymentService.capture(...)</text>
+  <line x1="40" y1="90" x2="530" y2="90" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="102" width="490" height="46" rx="6" class="boxW"/>
+  <text x="56" y="120" class="lbl mono">source: synchronized (ledgerLock) {</text>
+  <text x="56" y="136" class="lbl mono">  ledger.applyCapture(reservation); }</text>
+
+  <rect x="40" y="158" width="490" height="252" rx="6" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+  <text x="56" y="176" class="lbl monoB">0:  aload_1</text>
+  <text x="56" y="192" class="lbl monoB">1:  dup</text>
+  <text x="56" y="208" class="lbl monoB">2:  astore_2</text>
+  <rect x="48" y="216" width="220" height="20" rx="3" class="boxH"/>
+  <text x="56" y="230" class="lbl monoB">3:  monitorenter</text>
+  <text x="56" y="248" class="lbl mono">4:  aload_0</text>
+  <text x="56" y="264" class="lbl mono">5:  getfield #7  // ledger</text>
+  <text x="56" y="280" class="lbl mono">8:  aload_1        // reservation</text>
+  <text x="56" y="296" class="lbl mono">9:  invokevirtual #9  // applyCapture</text>
+  <rect x="48" y="304" width="220" height="20" rx="3" class="boxH"/>
+  <text x="56" y="318" class="lbl monoB">12: monitorexit</text>
+  <text x="270" y="318" class="lbl sub">normal exit</text>
+  <text x="56" y="336" class="lbl mono">13: goto 21</text>
+  <rect x="48" y="344" width="188" height="20" rx="3" class="boxD"/>
+  <text x="56" y="358" class="lbl monoB">16: astore_3</text>
+  <text x="246" y="358" class="lbl sub">exception handler</text>
+  <text x="56" y="376" class="lbl mono">17: aload_2</text>
+  <rect x="48" y="384" width="188" height="20" rx="3" class="boxD"/>
+  <text x="56" y="398" class="lbl monoB">18: monitorexit</text>
+  <text x="246" y="398" class="lbl sub">2nd exit, exceptional path</text>
+
+  <path class="flow" d="M 285 410 V 428"/>
+
+  <rect x="40" y="428" width="490" height="30" rx="6" class="boxD"/>
+  <text x="285" y="448" text-anchor="middle" class="lbl mono">21: aload_3   22: athrow      // rethrow original exception</text>
+
+  <path class="flow" d="M 285 458 V 476"/>
+
+  <rect x="40" y="476" width="490" height="90" rx="6" class="boxA"/>
+  <text x="56" y="496" class="lbl node">Exception table</text>
+  <text x="56" y="516" class="lbl mono">from    to    target  type</text>
+  <text x="56" y="534" class="lbl mono">4       12    16      any</text>
+  <text x="56" y="552" class="lbl sub">any catch handler synthesized just to guarantee monitorexit runs</text>
+
+  <rect x="40" y="576" width="490" height="66" rx="6" class="boxH"/>
+  <text x="285" y="598" text-anchor="middle" class="lbl node">compiler-emitted structure</text>
+  <text x="285" y="618" text-anchor="middle" class="lbl sub">1 monitorenter, 2 monitorexit (normal + exceptional), 1 exception</text>
+  <text x="285" y="632" text-anchor="middle" class="lbl sub">table row — the javac guarantee that the lock always releases</text>
+
+  <!-- RIGHT PANEL: synchronized method -->
+  <rect x="570" y="56" width="530" height="600" rx="8" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="835" y="80" text-anchor="middle" class="lbl h2">SYNCHRONIZED METHOD — javap -v PaymentService</text>
+  <line x1="590" y1="90" x2="1080" y2="90" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="590" y="102" width="490" height="46" rx="6" class="boxW"/>
+  <text x="606" y="120" class="lbl mono">source: synchronized void applyCapture(</text>
+  <text x="606" y="136" class="lbl mono">  Reservation reservation) { ledger... }</text>
+
+  <rect x="590" y="158" width="490" height="118" rx="6" class="boxP"/>
+  <text x="606" y="178" class="lbl node">method declaration in class file</text>
+  <text x="606" y="200" class="lbl mono">applyCapture(LReservation;)V</text>
+  <rect x="606" y="210" width="220" height="22" rx="3" class="boxH"/>
+  <text x="612" y="226" class="lbl monoB">flags: (0x0021) ACC_PUBLIC,</text>
+  <text x="606" y="252" class="lbl monoB">        ACC_SYNCHRONIZED</text>
+  <text x="606" y="270" class="lbl sub">flag set once on the method_info, not per call site</text>
+
+  <path class="flow" d="M 835 276 V 294"/>
+
+  <rect x="590" y="294" width="490" height="150" rx="6" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+  <text x="606" y="314" class="lbl node">Code attribute — the body</text>
+  <text x="606" y="334" class="lbl mono">0: aload_0</text>
+  <text x="606" y="350" class="lbl mono">1: getfield #7   // ledger</text>
+  <text x="606" y="366" class="lbl mono">4: aload_1       // reservation</text>
+  <text x="606" y="382" class="lbl mono">5: invokevirtual #9  // applyCapture</text>
+  <text x="606" y="398" class="lbl mono">8: return</text>
+  <text x="606" y="420" class="lbl sub">no monitorenter, no monitorexit, no exception table row —</text>
+  <text x="606" y="434" class="lbl sub">the flag alone tells the JVM to lock/unlock around the call</text>
+
+  <path class="flow" d="M 835 444 V 462"/>
+
+  <rect x="590" y="462" width="490" height="90" rx="6" class="boxD"/>
+  <text x="835" y="482" text-anchor="middle" class="lbl node">where the lock/unlock actually happens</text>
+  <text x="835" y="502" text-anchor="middle" class="lbl body">inside the JVM's invocation sequence — monitor is entered</text>
+  <text x="835" y="518" text-anchor="middle" class="lbl body">before the frame runs and exited when it returns or throws,</text>
+  <text x="835" y="534" text-anchor="middle" class="lbl body">invisible to bytecode disassembly of the body itself</text>
+
+  <rect x="590" y="576" width="490" height="66" rx="6" class="boxH"/>
+  <text x="835" y="598" text-anchor="middle" class="lbl node">no exception table entry needed</text>
+  <text x="835" y="618" text-anchor="middle" class="lbl sub">unlock-on-throw is a JVM invocation-protocol guarantee, not</text>
+  <text x="835" y="632" text-anchor="middle" class="lbl sub">a compiler-synthesized handler as with the block form</text>
+
+  <!-- legend -->
+  <line x1="20" y1="676" x2="1100" y2="676" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="688" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="701" class="lbl tiny">monitorenter / monitorexit / ACC_SYNCHRONIZED — the lock op itself</text>
+  <rect x="440" y="688" width="22" height="16" rx="3" class="boxD"/>
+  <text x="470" y="701" class="lbl tiny">exceptional-path bytecode / exception table</text>
+  <rect x="780" y="688" width="22" height="16" rx="3" class="boxA"/>
+  <text x="810" y="701" class="lbl tiny">structural annotation panel</text>
+
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="725" class="lbl tiny">source snippet</text>
+  <rect x="200" y="712" width="22" height="16" rx="3" class="boxP"/>
+  <text x="230" y="725" class="lbl tiny">method_info / access flags</text>
+  <path class="flow" d="M 480 720 H 520"/>
+  <text x="528" y="725" class="lbl tiny">control / narrative flow down the panel</text>
+</svg>

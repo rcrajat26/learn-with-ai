@@ -1,0 +1,40 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3: list A B C, next() returns B, cursor advances to 2">
+  <rect x="20" y="20" width="760" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="400" y="38" text-anchor="middle" font-family="sans-serif" font-size="15"
+        fill="#1f2937">Frame 1: next() returns B</text>
+
+  <!-- list cells: A B C at indices 0 1 2 -->
+  <g font-family="sans-serif">
+    <rect x="260" y="100" width="80" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="300" y="135" text-anchor="middle" font-size="15" fill="#1f2937">A</text>
+    <rect x="260" y="162" width="80" height="18" rx="3" fill="#e5e7eb"/>
+    <text x="300" y="175" text-anchor="middle" font-size="11" fill="#1f2937">index 0</text>
+
+    <rect x="360" y="100" width="80" height="60" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="400" y="135" text-anchor="middle" font-size="15" fill="#1f2937">B</text>
+    <rect x="360" y="162" width="80" height="18" rx="3" fill="#fef3c7"/>
+    <text x="400" y="175" text-anchor="middle" font-size="11" fill="#1f2937">index 1 (returned)</text>
+
+    <rect x="460" y="100" width="80" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="500" y="135" text-anchor="middle" font-size="15" fill="#1f2937">C</text>
+    <rect x="460" y="162" width="80" height="18" rx="3" fill="#e5e7eb"/>
+    <text x="500" y="175" text-anchor="middle" font-size="11" fill="#1f2937">index 2</text>
+  </g>
+
+  <rect x="330" y="60" width="140" height="18" rx="3" fill="#dbeafe"/>
+  <text x="400" y="73" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">size = 3</text>
+
+  <!-- cursor pointer at 2 -->
+  <line x1="540" y1="200" x2="540" y2="160" stroke="#525252" stroke-width="2" marker-end="url(#arrow31a)"/>
+  <defs>
+    <marker id="arrow31a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+  <rect x="480" y="205" width="120" height="18" rx="3" fill="#dbeafe"/>
+  <text x="540" y="218" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">cursor = 2</text>
+
+  <rect x="220" y="240" width="360" height="20" rx="3" fill="#dcfce7"/>
+  <text x="400" y="254" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cursor now points past B, ready for next element</text>
+</svg>

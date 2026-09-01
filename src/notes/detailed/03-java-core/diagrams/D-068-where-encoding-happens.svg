@@ -1,0 +1,92 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Where encoding happens: bytes decode to a UTF-16 String via new String(bytes, charset), then encode back via getBytes(charset). Java 17 no-arg calls use the platform default and can mojibake; Java 18+ defaults to UTF-8 per JEP 400.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#1f2937">Where encoding actually happens</text>
+
+  <!-- VERSION TRAP banner -->
+  <rect x="300" y="46" width="300" height="26" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">VERSION TRAP: no-arg default charset</text>
+
+  <!-- Panel A: Java 17 -->
+  <rect x="20" y="90" width="860" height="230" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="102" width="220" height="24" rx="3" fill="#dbeafe"/>
+  <text x="146" y="119" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Panel A: Java 8-17 (no JEP 400)</text>
+
+  <!-- flow A -->
+  <rect x="40" y="150" width="130" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="105" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bank-statement</text>
+  <text x="105" y="192" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">file bytes (UTF-8)</text>
+
+  <line x1="170" y1="180" x2="255" y2="180" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="172" y="152" width="86" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="215" y="167" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new String(b)</text>
+
+  <rect x="260" y="150" width="150" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="335" y="172" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">in-memory</text>
+  <text x="335" y="189" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">UTF-16 String</text>
+
+  <line x1="410" y1="180" x2="495" y2="180" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="412" y="152" width="86" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="455" y="167" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">getBytes()</text>
+
+  <rect x="500" y="150" width="150" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="575" y="172" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bytes out</text>
+  <text x="575" y="189" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(platform default)</text>
+
+  <rect x="660" y="150" width="180" height="60" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="750" y="172" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">JVM default charset:</text>
+  <text x="750" y="189" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">windows-1252 (Windows)</text>
+
+  <!-- mojibake example -->
+  <rect x="40" y="240" width="360" height="66" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="220" y="262" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Client name &quot;Zoé&quot; (UTF-8 bytes on disk)</text>
+  <text x="220" y="282" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">decoded as windows-1252 →</text>
+  <text x="220" y="300" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">&quot;ZoÃ©&quot; (mojibake)</text>
+
+  <rect x="430" y="240" width="410" height="66" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="635" y="262" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Root cause: no-arg new String(bytes) / getBytes()</text>
+  <text x="635" y="282" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">silently use Charset.defaultCharset(), which varies</text>
+  <text x="635" y="300" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">by OS/locale — never guaranteed UTF-8 before JEP 400</text>
+
+  <!-- Panel B: Java 18+ -->
+  <rect x="20" y="330" width="860" height="230" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="342" width="260" height="24" rx="3" fill="#dcfce7"/>
+  <text x="166" y="359" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Panel B: Java 18+ (JEP 400)</text>
+
+  <rect x="40" y="390" width="130" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="105" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bank-statement</text>
+  <text x="105" y="432" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">file bytes (UTF-8)</text>
+
+  <line x1="170" y1="420" x2="255" y2="420" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="172" y="392" width="86" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="215" y="407" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new String(b)</text>
+
+  <rect x="260" y="390" width="150" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="335" y="412" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">in-memory</text>
+  <text x="335" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">UTF-16 String</text>
+
+  <line x1="410" y1="420" x2="495" y2="420" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="412" y="392" width="86" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="455" y="407" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">getBytes()</text>
+
+  <rect x="500" y="390" width="150" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="575" y="412" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bytes out</text>
+  <text x="575" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(UTF-8)</text>
+
+  <rect x="660" y="390" width="180" height="60" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="750" y="412" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">JVM default charset:</text>
+  <text x="750" y="429" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">UTF-8, always</text>
+
+  <rect x="40" y="480" width="800" height="60" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="440" y="502" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">&quot;Zoé&quot; round-trips correctly: decode UTF-8 → encode UTF-8</text>
+  <text x="440" y="522" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Charset.defaultCharset() == UTF_8 on every platform since JEP 400 (Java 18)</text>
+
+  <rect x="60" y="580" width="780" height="26" rx="3" fill="#e5e7eb"/>
+  <text x="450" y="598" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Amber-highlighted arrows are the ONLY two places a Charset choice matters — the rest is already decoded UTF-16</text>
+</svg>

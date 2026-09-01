@@ -1,0 +1,114 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of IDENTITY_FINISH over a stream of 95,000 card-deposit LedgerEntry objects. Left, Collectors.toUnmodifiableList lacks IDENTITY_FINISH: the accumulation pass builds an ArrayList of 95,000 elements via add, then a second finisher pass walks all 95,000 elements again through toArray and wraps them in a trusted unmodifiable list, touching 190,000 elements in total. Right, Collectors.toList carries IDENTITY_FINISH: the same 95,000-element ArrayList accumulation pass runs, then the finisher is the identity function, a cast with no element touches, so only 95,000 element touches occur in total. The saved work is stated as 95,000 element touches avoided per collection of this size.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">IDENTITY_FINISH SKIPS A WHOLE PASS OVER 95,000 CARD DEPOSITS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">LEFT — Collectors.toUnmodifiableList(), no IDENTITY_FINISH</text>
+  <text x="580" y="64" class="lbl h2">RIGHT — Collectors.toList(), IDENTITY_FINISH set</text>
+  <line x1="560" y1="52" x2="560" y2="640" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: two passes -->
+  <rect x="50" y="90" width="460" height="80" rx="6" class="boxP"/>
+  <text x="280" y="112" text-anchor="middle" class="lbl node">ACCUMULATION PASS</text>
+  <text x="280" y="132" text-anchor="middle" class="lbl dense mono">ArrayList::new, List::add</text>
+  <text x="280" y="150" text-anchor="middle" class="lbl sub">95,000 LedgerEntry rows added, one walk</text>
+
+  <path class="flow" d="M 280 170 V 210"/>
+
+  <rect x="50" y="210" width="460" height="80" rx="6" class="boxP"/>
+  <text x="280" y="232" text-anchor="middle" class="lbl node">CONTAINER</text>
+  <text x="280" y="252" text-anchor="middle" class="lbl dense mono">ArrayList&lt;LedgerEntry&gt;, size 95,000</text>
+  <text x="280" y="270" text-anchor="middle" class="lbl sub">the accumulator's own working type A</text>
+
+  <path class="flow" d="M 280 290 V 330"/>
+  <text x="290" y="316" class="lbl tiny">finisher(a)</text>
+
+  <rect x="50" y="330" width="460" height="90" rx="6" class="boxD"/>
+  <text x="280" y="352" text-anchor="middle" class="lbl node">FINISHER PASS — 2nd walk</text>
+  <text x="280" y="372" text-anchor="middle" class="lbl dense mono">list.toArray() over all 95,000</text>
+  <text x="280" y="390" text-anchor="middle" class="lbl dense mono">listFromTrustedArray(array)</text>
+  <text x="280" y="408" text-anchor="middle" class="lbl sub">every element touched a second time</text>
+
+  <path class="flow" d="M 280 420 V 460"/>
+
+  <rect x="50" y="460" width="460" height="70" rx="6" class="boxR"/>
+  <text x="280" y="484" text-anchor="middle" class="lbl node">RESULT</text>
+  <text x="280" y="504" text-anchor="middle" class="lbl dense">unmodifiable List&lt;LedgerEntry&gt;, size 95,000</text>
+
+  <rect x="50" y="546" width="460" height="70" rx="6" class="boxAnn"/>
+  <text x="66" y="568" class="lbl node">190,000 element touches</text>
+  <text x="66" y="588" class="lbl tiny">95,000 to build the list + 95,000 to copy into the trusted array</text>
+
+  <!-- RIGHT: one pass -->
+  <rect x="630" y="90" width="460" height="80" rx="6" class="boxP"/>
+  <text x="860" y="112" text-anchor="middle" class="lbl node">ACCUMULATION PASS</text>
+  <text x="860" y="132" text-anchor="middle" class="lbl dense mono">ArrayList::new, List::add</text>
+  <text x="860" y="150" text-anchor="middle" class="lbl sub">95,000 LedgerEntry rows added, one walk</text>
+
+  <path class="flow" d="M 860 170 V 210"/>
+
+  <rect x="630" y="210" width="460" height="80" rx="6" class="boxP"/>
+  <text x="860" y="232" text-anchor="middle" class="lbl node">CONTAINER</text>
+  <text x="860" y="252" text-anchor="middle" class="lbl dense mono">ArrayList&lt;LedgerEntry&gt;, size 95,000</text>
+  <text x="860" y="270" text-anchor="middle" class="lbl sub">identical accumulator, same type A</text>
+
+  <path class="flow" d="M 860 290 V 330"/>
+  <text x="870" y="316" class="lbl tiny">finisher = a -&gt; (R) a</text>
+
+  <rect x="630" y="330" width="460" height="90" rx="6" class="boxR"/>
+  <text x="860" y="352" text-anchor="middle" class="lbl node">IDENTITY_FINISH — cast only</text>
+  <text x="860" y="372" text-anchor="middle" class="lbl dense mono">CH_ID characteristic set</text>
+  <text x="860" y="390" text-anchor="middle" class="lbl dense mono">A and R are the same object</text>
+  <text x="860" y="408" text-anchor="middle" class="lbl sub">not one element is touched again</text>
+
+  <path class="flow" d="M 860 420 V 460"/>
+
+  <rect x="630" y="460" width="460" height="70" rx="6" class="boxR"/>
+  <text x="860" y="484" text-anchor="middle" class="lbl node">RESULT</text>
+  <text x="860" y="504" text-anchor="middle" class="lbl dense">the same ArrayList&lt;LedgerEntry&gt;, size 95,000</text>
+
+  <rect x="630" y="546" width="460" height="70" rx="6" class="boxAnn"/>
+  <text x="646" y="568" class="lbl node">95,000 element touches</text>
+  <text x="646" y="588" class="lbl tiny">only the build walk; the 2nd walk is skipped entirely</text>
+
+  <line x1="20" y1="654" x2="1100" y2="654" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="668" width="1060" height="56" rx="6" class="boxAnn"/>
+  <text x="36" y="690" class="lbl node">SAVED WORK: 95,000 element touches per collection of this size</text>
+  <text x="36" y="708" class="lbl tiny">190,000 (toUnmodifiableList) − 95,000 (toList) = 95,000 touches skipped by IDENTITY_FINISH alone</text>
+
+  <line x1="20" y1="736" x2="1100" y2="736" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="20" y="744" width="22" height="10" rx="2" class="boxP"/>
+  <text x="50" y="753" class="lbl tiny">accumulation / container</text>
+  <rect x="220" y="744" width="22" height="10" rx="2" class="boxD"/>
+  <text x="250" y="753" class="lbl tiny">2nd pass — the walk IDENTITY_FINISH avoids</text>
+  <rect x="540" y="744" width="22" height="10" rx="2" class="boxR"/>
+  <text x="570" y="753" class="lbl tiny">terminal result</text>
+  <path class="flow" d="M 700 749 H 740"/>
+  <text x="748" y="753" class="lbl tiny">accumulate → finish, top to bottom</text>
+</svg>

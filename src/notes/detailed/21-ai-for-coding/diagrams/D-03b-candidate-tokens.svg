@@ -1,0 +1,56 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Step 2 of 3. A bar chart of candidate next tokens with their probabilities: the token &quot; the&quot; at 0.42, &quot; a&quot; at 0.31, &quot; an&quot; at 0.15, and all remaining tokens grouped as others at 0.12, summing to 1.00.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node { font-size: 15px; font-weight: 600; }
+    .body { font-size: 13px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STEP 2 OF 3 — CANDIDATE NEXT TOKENS (A PROBABILITY DISTRIBUTION)</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="60" y1="280" x2="840" y2="280" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- bar 1: " the" 0.42 -->
+  <rect x="80" y="154" width="100" height="126" class="boxH"/>
+  <text x="130" y="140" text-anchor="middle" class="lbl node">0.42</text>
+  <text x="130" y="300" text-anchor="middle" class="lbl body">" the"</text>
+
+  <!-- bar 2: " a" 0.31 -->
+  <rect x="240" y="187" width="100" height="93" class="boxH"/>
+  <text x="290" y="173" text-anchor="middle" class="lbl node">0.31</text>
+  <text x="290" y="300" text-anchor="middle" class="lbl body">" a"</text>
+
+  <!-- bar 3: " an" 0.15 -->
+  <rect x="400" y="235" width="100" height="45" class="boxH"/>
+  <text x="450" y="221" text-anchor="middle" class="lbl node">0.15</text>
+  <text x="450" y="300" text-anchor="middle" class="lbl body">" an"</text>
+
+  <!-- bar 4: others 0.12 -->
+  <rect x="560" y="244" width="100" height="36" class="boxW"/>
+  <text x="610" y="230" text-anchor="middle" class="lbl node">0.12</text>
+  <text x="610" y="300" text-anchor="middle" class="lbl body">others</text>
+
+  <rect x="700" y="140" width="140" height="140" rx="6" class="boxA"/>
+  <text x="720" y="162" class="lbl h1" style="letter-spacing:0">SUM</text>
+  <text x="720" y="188" class="lbl body">0.42 + 0.31</text>
+  <text x="720" y="206" class="lbl body">+ 0.15 + 0.12</text>
+  <text x="720" y="230" class="lbl node">= 1.00</text>
+
+  <line x1="20" y1="330" x2="880" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="342" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="355" class="lbl tiny">top three candidates by probability</text>
+  <rect x="360" y="342" width="22" height="16" rx="3" class="boxW"/>
+  <text x="390" y="355" class="lbl tiny">remaining candidates, grouped</text>
+  <rect x="680" y="342" width="22" height="16" rx="3" class="boxA"/>
+  <text x="705" y="355" class="lbl tiny">annotation</text>
+</svg>

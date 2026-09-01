@@ -1,0 +1,201 @@
+<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels for BonusService double-checked locking. Panel 1: the classic
+     broken version over a plain private static BonusService instance; new BonusService()
+     executes as step A allocate, step B assign the instance field, step C run the constructor,
+     and B is permitted to reorder before C, so balance-view-2 can pass the first unlocked check
+     and return a partially-constructed instance. Panel 2: the fixed version declares instance
+     private static volatile, which forbids reordering B before C and creates a release edge from
+     settlement-ingest-3's write to an acquire edge on balance-view-2's read, making the whole
+     constructed object visible. Panel 3: a local-variable-caching variant that reads instance
+     into a local result at most twice and returns the cached local, removing the extra volatile
+     read that the straightforward fixed version performs at its final return statement.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .2px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .hb    { fill: none; stroke: #15803d; stroke-width: 2.4; stroke-dasharray: 6 4; marker-end: url(#triG); }
+    .reorder { fill: none; stroke: #b91c1c; stroke-width: 2.2; stroke-dasharray: 5 3; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">DOUBLE-CHECKED LOCKING OVER BonusService &#8212; BROKEN, FIXED, OPTIMIZED</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- PANEL 1: BROKEN -->
+  <rect x="20" y="56" width="440" height="26" rx="4" class="boxD"/>
+  <text x="240" y="74" text-anchor="middle" class="lbl h2">PANEL 1 &#8212; CLASSIC DCL, BROKEN</text>
+
+  <rect x="40" y="92" width="400" height="170" rx="6" class="boxP"/>
+  <text x="56" y="112" class="lbl mono" font-weight="700">class BonusService {</text>
+  <text x="72" y="130" class="lbl mono">private static BonusService instance;</text>
+  <text x="72" y="148" class="lbl mono">static BonusService getInstance() {</text>
+  <text x="88" y="166" class="lbl mono">if (instance == null)             // 1</text>
+  <text x="104" y="184" class="lbl mono">synchronized (BonusService.class) {</text>
+  <text x="120" y="202" class="lbl mono">if (instance == null)           // 2</text>
+  <text x="136" y="220" class="lbl mono" font-weight="700">instance = new BonusService();</text>
+  <text x="72" y="238" class="lbl mono">} return instance; } }</text>
+
+  <path class="flow" d="M 240 262 V 278"/>
+
+  <rect x="40" y="278" width="400" height="116" rx="6" class="boxD"/>
+  <text x="56" y="298" class="lbl body" font-weight="700">new BonusService() executes as:</text>
+  <text x="56" y="316" class="lbl mono">A  allocate memory (fields uninitialized)</text>
+  <text x="56" y="334" class="lbl mono" font-weight="700">B  assign instance = &lt;address&gt;</text>
+  <text x="56" y="352" class="lbl mono">C  run BonusService() constructor</text>
+  <path class="reorder" d="M 400 352 V 330"/>
+  <text x="56" y="376" class="lbl tiny" fill="#b91c1c" font-weight="700">B may reorder before C &#8212; no happens-before forbids it</text>
+
+  <path class="flow" d="M 240 394 V 410"/>
+
+  <rect x="40" y="410" width="400" height="50" rx="6" class="boxW"/>
+  <text x="56" y="430" class="lbl body">balance-view-2: check 1 (unlocked)</text>
+  <text x="56" y="446" class="lbl sub">sees instance != null after reordered B</text>
+
+  <path class="reorder" d="M 240 460 V 476"/>
+
+  <rect x="40" y="476" width="400" height="54" rx="6" class="boxD"/>
+  <text x="56" y="496" class="lbl body" font-weight="700">returns instance &#8212; fields not yet run</text>
+  <text x="56" y="514" class="lbl sub mono">bonus rate field still 0 / null &#8212; wrong or NPE</text>
+
+  <rect x="40" y="540" width="400" height="100" rx="6" class="boxA"/>
+  <text x="56" y="560" class="lbl body" font-weight="600">Numbered failure:</text>
+  <text x="56" y="578" class="lbl sub">check 1 passes without the lock (step B visible,</text>
+  <text x="56" y="594" class="lbl sub">step C not). balance-view-2 never re-checks under</text>
+  <text x="56" y="610" class="lbl sub">the monitor, so it returns the half-built object</text>
+  <text x="56" y="626" class="lbl sub">from step B directly.</text>
+
+  <!-- PANEL 2: FIXED -->
+  <rect x="480" y="56" width="440" height="26" rx="4" class="boxR"/>
+  <text x="700" y="74" text-anchor="middle" class="lbl h2">PANEL 2 &#8212; FIXED: private static volatile instance</text>
+
+  <rect x="500" y="92" width="400" height="170" rx="6" class="boxP"/>
+  <text x="516" y="112" class="lbl mono" font-weight="700">class BonusService {</text>
+  <text x="532" y="130" class="lbl mono" font-weight="700">private static volatile BonusService instance;</text>
+  <text x="532" y="148" class="lbl mono">static BonusService getInstance() {</text>
+  <text x="548" y="166" class="lbl mono">if (instance == null)             // 1</text>
+  <text x="564" y="184" class="lbl mono">synchronized (BonusService.class) {</text>
+  <text x="580" y="202" class="lbl mono">if (instance == null)           // 2</text>
+  <text x="596" y="220" class="lbl mono">instance = new BonusService();</text>
+  <text x="532" y="238" class="lbl mono">} return instance; } }</text>
+
+  <path class="flow" d="M 700 262 V 278"/>
+
+  <rect x="500" y="278" width="400" height="100" rx="6" class="boxR"/>
+  <text x="516" y="298" class="lbl body" font-weight="700">volatile forbids B before C:</text>
+  <text x="516" y="316" class="lbl sub">the write to instance carries a StoreStore</text>
+  <text x="516" y="332" class="lbl sub">barrier &#8212; the constructor's writes (step C) are</text>
+  <text x="516" y="348" class="lbl sub">flushed before the reference (step B) is visible.</text>
+  <text x="516" y="366" class="lbl sub">Order A, C, B is enforced &#8212; never B before C.</text>
+
+  <path class="flow" d="M 700 378 V 394"/>
+
+  <rect x="500" y="394" width="400" height="50" rx="6" class="boxR"/>
+  <text x="516" y="414" class="lbl body">settlement-ingest-3: instance = new BonusService();</text>
+  <text x="516" y="430" class="lbl sub">release: full write barrier on assignment</text>
+
+  <path class="hb" d="M 700 444 V 470"/>
+  <text x="710" y="462" class="lbl tiny" fill="#15803d" font-weight="700">happens-before</text>
+
+  <rect x="500" y="470" width="400" height="54" rx="6" class="boxR"/>
+  <text x="516" y="490" class="lbl body">balance-view-2: BonusService b = instance;</text>
+  <text x="516" y="508" class="lbl sub">acquire: sees the fully constructed object</text>
+
+  <rect x="500" y="534" width="400" height="90" rx="6" class="boxA"/>
+  <text x="516" y="554" class="lbl body" font-weight="600">Guaranteed:</text>
+  <text x="516" y="572" class="lbl sub">no thread can observe instance before its</text>
+  <text x="516" y="588" class="lbl sub">constructor has fully run &#8212; volatile ties the</text>
+  <text x="516" y="604" class="lbl sub">release in settlement-ingest-3 to the acquire</text>
+  <text x="516" y="620" class="lbl sub">in balance-view-2.</text>
+
+  <!-- PANEL 3: LOCAL-VARIABLE CACHING -->
+  <rect x="940" y="56" width="440" height="26" rx="4" class="boxH"/>
+  <text x="1160" y="74" text-anchor="middle" class="lbl h2">PANEL 3 &#8212; LOCAL-VARIABLE CACHING VARIANT</text>
+
+  <rect x="960" y="92" width="400" height="190" rx="6" class="boxP"/>
+  <text x="976" y="112" class="lbl mono" font-weight="700">private static volatile BonusService instance;</text>
+  <text x="976" y="130" class="lbl mono">static BonusService getInstance() {</text>
+  <text x="992" y="148" class="lbl mono" font-weight="700">BonusService result = instance;  // read #1</text>
+  <text x="992" y="166" class="lbl mono">if (result == null) {</text>
+  <text x="1008" y="184" class="lbl mono">synchronized (BonusService.class) {</text>
+  <text x="1024" y="202" class="lbl mono" font-weight="700">result = instance;              // read #2</text>
+  <text x="1024" y="220" class="lbl mono">if (result == null)</text>
+  <text x="1040" y="238" class="lbl mono">instance = result = new BonusService();</text>
+  <text x="1008" y="256" class="lbl mono">} }</text>
+  <text x="976" y="274" class="lbl mono" font-weight="700">return result;  // cached local, no extra read</text>
+
+  <path class="flow" d="M 1160 282 V 298"/>
+
+  <rect x="960" y="298" width="400" height="80" rx="6" class="boxH"/>
+  <text x="976" y="318" class="lbl body" font-weight="700">read count:</text>
+  <text x="976" y="336" class="lbl sub">fast path (already built): exactly 1 volatile read</text>
+  <text x="976" y="352" class="lbl sub">slow path (first build): 2 volatile reads, both</text>
+  <text x="976" y="368" class="lbl sub">captured into result and reused for the return.</text>
+
+  <path class="flow" d="M 1160 378 V 394"/>
+
+  <rect x="960" y="394" width="400" height="90" rx="6" class="boxA"/>
+  <text x="976" y="414" class="lbl body" font-weight="600">removed vs. panel 2:</text>
+  <text x="976" y="432" class="lbl sub">panel 2's "return instance;" is a further</text>
+  <text x="976" y="448" class="lbl sub">volatile read beyond the two checks. This</text>
+  <text x="976" y="464" class="lbl sub">variant returns the already-cached local</text>
+  <text x="976" y="480" class="lbl sub">result instead, removing that extra read.</text>
+
+  <rect x="960" y="504" width="400" height="70" rx="6" class="boxR"/>
+  <text x="976" y="526" class="lbl body" font-weight="600">Same guarantee as panel 2:</text>
+  <text x="976" y="544" class="lbl sub">still one volatile field, same release/acquire</text>
+  <text x="976" y="560" class="lbl sub">edge &#8212; only the read count changes.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="660" x2="1380" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="672" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="685" class="lbl tiny">source code</text>
+
+  <rect x="180" y="672" width="22" height="16" rx="3" class="boxD"/>
+  <text x="210" y="685" class="lbl tiny">broken step / observed failure</text>
+
+  <rect x="440" y="672" width="22" height="16" rx="3" class="boxR"/>
+  <text x="470" y="685" class="lbl tiny">correct, guaranteed-visible step</text>
+
+  <rect x="720" y="672" width="22" height="16" rx="3" class="boxH"/>
+  <text x="750" y="685" class="lbl tiny">optimization step (still correct)</text>
+
+  <rect x="1000" y="672" width="22" height="16" rx="3" class="boxW"/>
+  <text x="1030" y="685" class="lbl tiny">reading thread / actor</text>
+
+  <rect x="1200" y="672" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1230" y="685" class="lbl tiny">annotation</text>
+
+  <path class="flow" d="M 20 706 H 60"/>
+  <text x="68" y="711" class="lbl tiny">program order / sequential step</text>
+
+  <path class="reorder" d="M 320 706 H 360"/>
+  <text x="368" y="711" class="lbl tiny">reordering permitted in the absence of volatile</text>
+
+  <path class="hb" d="M 780 706 H 820"/>
+  <text x="828" y="711" class="lbl tiny">happens-before: volatile release &#8594; acquire</text>
+</svg>

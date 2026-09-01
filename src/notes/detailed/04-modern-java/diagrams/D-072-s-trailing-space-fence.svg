@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Backslash-s as a trailing-space fence in a text block. Top row: a fixed-width
+     banking-partner payout file amount field for value 480.00 padded to width 10. Left, without
+     backslash-s, the trailing spaces are incidental whitespace and get stripped, leaving a
+     6-character field where 10 was required. Right, with backslash-s as the last character on the
+     line, the preceding literal spaces are no longer trailing and survive, plus the escape itself
+     contributes one more space, producing the correct 10-character field. Bottom row: a second
+     escape, backslash at the end of a line, which suppresses that line's terminator so two source
+     lines join into one logical line with no embedded newline in the resulting string, contrasted
+     against the same two lines without the trailing backslash, which keep the newline.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "Menlo", "Consolas", monospace; font-size: 12px; fill: #1f2937; }
+
+    .boxF  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.4; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.4; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">\s AS A TRAILING-SPACE FENCE — BANKING PARTNER PAYOUT FILE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="58" class="lbl sub">Fixed-width amount field, target width 10, value 480.00 (6 chars, needs 4 trailing pad spaces)</text>
+
+  <text x="20" y="82" class="lbl h2">LEFT — WITHOUT \s</text>
+  <text x="580" y="82" class="lbl h2">RIGHT — WITH \s AS LAST CHARACTER</text>
+
+  <!-- LEFT -->
+  <rect x="20" y="94" width="500" height="150" rx="6" class="boxF"/>
+  <text x="36" y="118" class="lbl code">String field =</text>
+  <text x="36" y="138" class="lbl code">    """</text>
+  <text x="36" y="158" class="lbl code">    480.00    </text>
+  <rect x="128" y="146" width="60" height="18" class="boxD"/>
+  <text x="200" y="158" class="lbl sub">4 trailing spaces, plain</text>
+  <text x="36" y="178" class="lbl code">    """;</text>
+  <text x="36" y="200" class="lbl sub">incidental-whitespace strip removes all 4 — they are trailing</text>
+  <text x="36" y="216" class="lbl sub">whitespace with nothing non-blank after them on the line</text>
+
+  <rect x="20" y="254" width="500" height="90" rx="6" class="boxD"/>
+  <text x="36" y="278" class="lbl body" font-weight="700">field.length() == 6   (expected 10)</text>
+  <text x="36" y="298" class="lbl code">"480.00"</text>
+  <text x="36" y="318" class="lbl sub">payout file writer misaligns every column after this field</text>
+
+  <!-- RIGHT -->
+  <rect x="580" y="94" width="520" height="150" rx="6" class="boxF"/>
+  <text x="596" y="118" class="lbl code">String field =</text>
+  <text x="596" y="138" class="lbl code">    """</text>
+  <text x="596" y="158" class="lbl code">    480.00   \s</text>
+  <rect x="676" y="146" width="30" height="18" class="boxY"/>
+  <text x="716" y="158" class="lbl sub">\s fences 3 literal spaces + itself = 1 more</text>
+  <text x="596" y="178" class="lbl code">    """;</text>
+  <text x="596" y="200" class="lbl sub">the 3 spaces before \s are no longer trailing — \s follows</text>
+  <text x="596" y="216" class="lbl sub">them on the line, so stripping never reaches them</text>
+
+  <rect x="580" y="254" width="520" height="90" rx="6" class="boxR"/>
+  <text x="596" y="278" class="lbl body" font-weight="700">field.length() == 10   (correct)</text>
+  <text x="596" y="298" class="lbl code">"480.00    "</text>
+  <text x="596" y="318" class="lbl sub">width matches the fixed-format spec the partner expects</text>
+
+  <!-- second row: line-continuation backslash -->
+  <line x1="20" y1="374" x2="1100" y2="374" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="398" class="lbl h2">SECOND ESCAPE — \ AT END OF LINE SUPPRESSES THE LINE TERMINATOR</text>
+
+  <text x="20" y="420" class="lbl h2">WITHOUT TRAILING \</text>
+  <text x="580" y="420" class="lbl h2">WITH TRAILING \</text>
+
+  <rect x="20" y="432" width="500" height="130" rx="6" class="boxF"/>
+  <text x="36" y="456" class="lbl code">"""</text>
+  <text x="36" y="476" class="lbl code">DEP-301 CAPTURED</text>
+  <text x="36" y="496" class="lbl code">from banking partner payout file""";</text>
+  <rect x="20" y="510" width="500" height="42" rx="6" class="boxD"/>
+  <text x="36" y="534" class="lbl code">"DEP-301 CAPTURED\nfrom banking partner payout file"</text>
+
+  <rect x="580" y="432" width="520" height="130" rx="6" class="boxF"/>
+  <text x="596" y="456" class="lbl code">"""</text>
+  <rect x="722" y="464" width="12" height="18" fill="#fef3c7" stroke="none"/>
+  <text x="596" y="476" class="lbl code">DEP-301 CAPTURED \</text>
+  <text x="596" y="496" class="lbl code">from banking partner payout file""";</text>
+  <rect x="580" y="510" width="520" height="42" rx="6" class="boxR"/>
+  <text x="596" y="534" class="lbl code">"DEP-301 CAPTURED from banking partner payout file"</text>
+
+  <!-- annotation -->
+  <rect x="20" y="580" width="1080" height="90" rx="6" class="boxY"/>
+  <text x="36" y="604" class="lbl body" font-weight="700">Both escapes fight the same default: text blocks otherwise normalize whitespace at line boundaries.</text>
+  <text x="36" y="624" class="lbl sub">\s pins one space that would otherwise be stripped as trailing incidental whitespace (top row).</text>
+  <text x="36" y="642" class="lbl sub">\ (line continuation) removes a line terminator that would otherwise become an embedded \n (bottom row) —</text>
+  <text x="36" y="658" class="lbl sub">it does not remove or add any spaces around the join, only the terminator itself.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="725" class="lbl tiny">stripped away / wrong result</text>
+  <rect x="260" y="712" width="22" height="16" rx="3" class="boxY"/>
+  <text x="290" y="725" class="lbl tiny">the escape sequence itself (\s or \)</text>
+  <rect x="560" y="712" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="725" class="lbl tiny">correct resulting string value</text>
+  <rect x="820" y="712" width="22" height="16" rx="3" class="boxF"/>
+  <text x="850" y="725" class="lbl tiny">source text block as written</text>
+</svg>

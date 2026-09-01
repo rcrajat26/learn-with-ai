@@ -1,0 +1,98 @@
+<svg viewBox="0 0 820 1080" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Shift distances are masked to the operand width for int and long, with a side panel on unsigned right shift of a negative byte">
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="410" y="40" text-anchor="middle" font-family="sans-serif" font-size="15"
+        fill="#1f2937">Shift distances are masked</text>
+
+  <rect x="60" y="56" width="700" height="32" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="78" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">int mask = 1;  // bit for DEPOSIT_BLOCKED</text>
+
+  <!-- Frame 1 -->
+  <rect x="20" y="100" width="780" height="160" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="112" width="90" height="24" rx="3" fill="#dbeafe"/>
+  <text x="81" y="129" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 1</text>
+  <text x="420" y="129" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A full 31-bit shift is within range, nothing is masked away</text>
+
+  <rect x="60" y="150" width="330" height="46" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="178" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">mask &lt;&lt; 31</text>
+
+  <line x1="390" y1="173" x2="440" y2="173" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="450" y="150" width="310" height="46" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="178" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">31 &amp; 0x1f = 31 -&gt; result 0x80000000</text>
+
+  <text x="410" y="230" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for int, the shift count is masked to the low 5 bits (0x1f), so 31 is left untouched</text>
+
+  <!-- Frame 2 -->
+  <rect x="20" y="280" width="780" height="180" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="292" width="90" height="24" rx="3" fill="#fef3c7"/>
+  <text x="81" y="309" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 2</text>
+  <text x="420" y="309" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">32 wraps back to a shift of zero: the value is unchanged</text>
+
+  <rect x="60" y="330" width="330" height="46" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="358" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">mask &lt;&lt; 32</text>
+
+  <line x1="390" y1="353" x2="440" y2="353" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="450" y="330" width="310" height="46" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="605" y="358" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">32 &amp; 0x1f = 0 -&gt; result unchanged</text>
+
+  <rect x="60" y="390" width="700" height="46" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="418" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">mask &lt;&lt; 32 == mask &lt;&lt; 0 == mask == 1  (VERSION TRAP: no ArithmeticException is thrown)</text>
+
+  <!-- Frame 3 -->
+  <rect x="20" y="480" width="780" height="200" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="492" width="90" height="24" rx="3" fill="#fef3c7"/>
+  <text x="81" y="509" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 3</text>
+  <text x="420" y="509" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">The same masking rule for long, but with a wider window</text>
+
+  <rect x="60" y="530" width="330" height="46" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="558" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">long mask = 1L; mask &lt;&lt; 64</text>
+
+  <line x1="390" y1="553" x2="440" y2="553" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="450" y="530" width="310" height="46" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="605" y="558" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">64 &amp; 0x3f = 0 -&gt; result unchanged</text>
+
+  <text x="410" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for long, the shift distance is masked with 0x3f (low 6 bits), not 0x1f</text>
+  <text x="410" y="632" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">mask &lt;&lt; 64 == mask &lt;&lt; 0 == mask == 1L</text>
+  <text x="410" y="654" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a distance that "looks" like a full-width shift silently becomes a no-op shift</text>
+
+  <!-- Side panel -->
+  <rect x="20" y="700" width="780" height="360" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="712" width="230" height="24" rx="3" fill="#dbeafe"/>
+  <text x="151" y="729" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Side panel: byte &gt;&gt;&gt; is promoted first</text>
+
+  <text x="410" y="762" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">byte flags = -8;  int widened = flags &gt;&gt;&gt; 1;  // flags is promoted to int before the shift</text>
+
+  <rect x="60" y="790" width="330" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="225" y="812" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">byte flags = -8 (8 bits)</text>
+  <text x="225" y="836" text-anchor="middle" font-family="monospace" font-size="13" fill="#1f2937">11111000</text>
+
+  <line x1="390" y1="825" x2="440" y2="825" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="380" y="850" width="90" height="22" rx="3" fill="#fef3c7"/>
+  <text x="425" y="866" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">sign-extend to int</text>
+
+  <rect x="450" y="790" width="310" height="70" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="812" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">promoted int (32 bits)</text>
+  <text x="605" y="836" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">11111111 11111111 11111111 11111000</text>
+
+  <line x1="605" y1="860" x2="605" y2="900" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="520" y="870" width="170" height="22" rx="3" fill="#fef3c7"/>
+  <text x="605" y="886" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">&gt;&gt;&gt; 1 (unsigned)</text>
+
+  <rect x="220" y="910" width="380" height="70" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="932" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">result: 2147483644</text>
+  <text x="410" y="956" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">01111111 11111111 11111111 11111100</text>
+
+  <text x="410" y="1010" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&gt;&gt;&gt; fills the vacated bit with 0 only after promotion to int; the sign bit of the</text>
+  <text x="410" y="1032" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">original byte is gone the moment it is widened, so the shift sees a large positive int, not -8</text>
+
+</svg>

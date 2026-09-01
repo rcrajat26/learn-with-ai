@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1120 1040" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after diagram of what javac 21 generates for captured locals. Left: BonusService.register(String couponCode) source containing an anonymous Runnable and a lambda, both referencing the parameter couponCode; the anonymous class also reads the enclosing instance field position. Right: verified javap -p -c output for the generated class BonusService dollar 1, showing synthetic final fields val$couponCode and this$0, and a constructor that writes both synthetic fields with putfield at bytecode offsets 2 and 7 before invoking Object.init at offset 11 -- the synthetic captures are stored before the superclass constructor runs. A second box shows the lambda produced no class file at all: its body became the private method lambda$register$0 on the enclosing class, referenced from BootstrapMethods as REF_invokeStatic bootstrapped by LambdaMetafactory.metafactory. Two annotation panels explain the copy semantics that require captured locals to be effectively final, and list the three confirmed generated class file names: BonusService$1, BonusService$1LocalTask, and BonusService$GrantTask.">
+  <defs>
+    <marker id="arrow120" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1040" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">this$0 and val$x in the class file</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">SOURCE</text>
+  <text x="560" y="62" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WHAT javac 21 EMITTED (verified: javap -p -c, JDK 21.0.7)</text>
+  <line x1="20" y1="70" x2="520" y2="70" stroke="#d1d5db" stroke-width="1"/>
+  <line x1="560" y1="70" x2="1100" y2="70" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ============ LEFT LANE ============ -->
+  <rect x="20" y="82" width="500" height="210" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="104" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">SOURCE &#8212; BonusService.register(...)</text>
+  <text x="36" y="122" font-family="monospace" font-size="11" fill="#1f2937">class BonusService {</text>
+  <text x="36" y="138" font-family="monospace" font-size="11" fill="#1f2937">  private String position = ...;</text>
+  <text x="36" y="154" font-family="monospace" font-size="11" fill="#1f2937">  void register(String couponCode) {</text>
+  <text x="36" y="170" font-family="monospace" font-size="11" fill="#1f2937">    Runnable r = new Runnable() {</text>
+  <text x="36" y="186" font-family="monospace" font-size="11" fill="#1f2937">      public void run() {</text>
+  <text x="36" y="202" font-family="monospace" font-size="11" fill="#1f2937">        println(couponCode + position);</text>
+  <text x="36" y="218" font-family="monospace" font-size="11" fill="#1f2937">      }</text>
+  <text x="36" y="234" font-family="monospace" font-size="11" fill="#1f2937">    };</text>
+  <text x="36" y="250" font-family="monospace" font-size="11" fill="#1f2937">    Runnable r2 =</text>
+  <text x="36" y="266" font-family="monospace" font-size="11" fill="#1f2937">      () -&gt; println(couponCode);</text>
+
+  <rect x="20" y="308" width="500" height="170" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="330" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ANONYMOUS CLASS &#8212; CAPTURES 2 THINGS</text>
+  <text x="36" y="348" font-family="sans-serif" font-size="11" fill="#1f2937">couponCode (the parameter) -&gt; copied into</text>
+  <text x="36" y="366" font-family="sans-serif" font-size="11" fill="#1f2937">a synthetic final field val$couponCode</text>
+  <text x="36" y="384" font-family="sans-serif" font-size="11" fill="#1f2937">BonusService.this (the enclosing instance)</text>
+  <text x="36" y="402" font-family="sans-serif" font-size="11" fill="#1f2937">-&gt; copied into a synthetic final field</text>
+  <text x="36" y="420" font-family="sans-serif" font-size="11" fill="#1f2937">this$0, because run() also reads the</text>
+  <text x="36" y="438" font-family="sans-serif" font-size="11" fill="#1f2937">instance field position</text>
+
+  <rect x="20" y="494" width="500" height="150" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="516" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LAMBDA &#8212; CAPTURES 1 THING</text>
+  <text x="36" y="534" font-family="sans-serif" font-size="11" fill="#1f2937">couponCode only -&gt; passed as a plain</text>
+  <text x="36" y="552" font-family="sans-serif" font-size="11" fill="#1f2937">parameter to the synthetic method</text>
+  <text x="36" y="570" font-family="sans-serif" font-size="11" fill="#1f2937">lambda$register$0(String); no this$0 &#8212;</text>
+  <text x="36" y="588" font-family="sans-serif" font-size="11" fill="#1f2937">the lambda body never touches an</text>
+  <text x="36" y="606" font-family="sans-serif" font-size="11" fill="#1f2937">instance member</text>
+
+  <!-- ============ RIGHT LANE ============ -->
+  <rect x="560" y="82" width="540" height="260" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="576" y="104" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">javap -p -c BonusService$1 (constructor)</text>
+  <text x="576" y="124" font-family="monospace" font-size="11" fill="#1f2937">final java.lang.String val$couponCode;</text>
+  <text x="576" y="140" font-family="monospace" font-size="11" fill="#1f2937">final BonusService this$0;</text>
+  <text x="576" y="164" font-family="monospace" font-size="11" fill="#1f2937">BonusService$1();</text>
+  <text x="576" y="180" font-family="monospace" font-size="11" fill="#1f2937">   0: aload_0</text>
+  <text x="576" y="196" font-family="monospace" font-size="11" fill="#1f2937">   1: aload_1</text>
+  <rect x="572" y="204" width="516" height="16" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+  <text x="576" y="212" font-family="monospace" font-size="11" fill="#1f2937">   2: putfield  #1   // this$0:LBonusService;</text>
+  <text x="576" y="228" font-family="monospace" font-size="11" fill="#1f2937">   5: aload_0</text>
+  <text x="576" y="244" font-family="monospace" font-size="11" fill="#1f2937">   6: aload_2</text>
+  <rect x="572" y="252" width="516" height="16" fill="#fef3c7" stroke="#b45309" stroke-width="1.2"/>
+  <text x="576" y="260" font-family="monospace" font-size="11" fill="#1f2937">   7: putfield  #7   // val$couponCode:...;</text>
+  <text x="576" y="276" font-family="monospace" font-size="11" fill="#1f2937">  10: aload_0</text>
+  <text x="576" y="292" font-family="monospace" font-size="11" fill="#1f2937">  11: invokespecial #11 // Object.&lt;init&gt;:()V</text>
+  <text x="576" y="308" font-family="monospace" font-size="11" fill="#1f2937">  14: return</text>
+  <line x1="1080" y1="204" x2="1080" y2="288" stroke="#475569" stroke-width="2" marker-end="url(#arrow120)"/>
+
+  <text x="560" y="362" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">Object.&lt;init&gt;() at offset 11 runs LAST</text>
+  <text x="560" y="380" font-family="sans-serif" font-size="11" fill="#4b5563">both synthetic captures (offsets 2 &amp; 7) are stored</text>
+  <text x="560" y="398" font-family="sans-serif" font-size="11" fill="#4b5563">before it &#8212; legal only because they are compiler-generated</text>
+
+  <rect x="560" y="420" width="540" height="190" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="576" y="442" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LAMBDA &#8212; NO CLASS FILE GENERATED</text>
+  <text x="576" y="460" font-family="sans-serif" font-size="11" fill="#1f2937">the lambda body becomes a PRIVATE method</text>
+  <text x="576" y="478" font-family="sans-serif" font-size="11" fill="#1f2937">on the enclosing class itself:</text>
+  <text x="576" y="496" font-family="monospace" font-size="11" fill="#1f2937">  private static void</text>
+  <text x="576" y="514" font-family="monospace" font-size="11" fill="#1f2937">  lambda$register$0(String couponCode)</text>
+  <text x="576" y="532" font-family="sans-serif" font-size="11" fill="#1f2937">referenced from BootstrapMethods as:</text>
+  <text x="576" y="550" font-family="monospace" font-size="11" fill="#1f2937">  REF_invokeStatic BonusService.</text>
+  <text x="576" y="568" font-family="monospace" font-size="11" fill="#1f2937">  lambda$register$0:(Ljava/lang/String;)V</text>
+  <text x="576" y="586" font-family="sans-serif" font-size="11" fill="#1f2937">  bootstrapped by LambdaMetafactory.metafactory</text>
+
+  <!-- ============ ANNOTATION PANELS ============ -->
+  <rect x="20" y="670" width="530" height="210" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="692" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">THE COPY SEMANTICS</text>
+  <text x="36" y="712" font-family="sans-serif" font-size="11" fill="#1f2937">val$couponCode is a COPY of the local's value</text>
+  <text x="36" y="730" font-family="sans-serif" font-size="11" fill="#1f2937">taken at the moment the instance was</text>
+  <text x="36" y="748" font-family="sans-serif" font-size="11" fill="#1f2937">constructed. If the local were later reassigned,</text>
+  <text x="36" y="766" font-family="sans-serif" font-size="11" fill="#1f2937">the copy would silently disagree with it, and</text>
+  <text x="36" y="784" font-family="sans-serif" font-size="11" fill="#1f2937">there is no mechanism to keep the two in sync &#8212;</text>
+  <text x="36" y="802" font-family="sans-serif" font-size="11" fill="#1f2937">which is exactly why captured locals must be</text>
+  <text x="36" y="820" font-family="sans-serif" font-size="11" fill="#1f2937">effectively final rather than aliased.</text>
+
+  <rect x="570" y="670" width="530" height="210" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="586" y="692" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CONFIRMED CLASS FILE NAMES (javac 21, this machine)</text>
+  <text x="586" y="712" font-family="monospace" font-size="11" fill="#1f2937">BonusService$1          &#8212; the anonymous Runnable</text>
+  <text x="586" y="730" font-family="monospace" font-size="11" fill="#1f2937">BonusService$1LocalTask &#8212; a local class named</text>
+  <text x="586" y="748" font-family="monospace" font-size="11" fill="#1f2937">                           LocalTask</text>
+  <text x="586" y="766" font-family="monospace" font-size="11" fill="#1f2937">BonusService$GrantTask  &#8212; a named inner class</text>
+  <text x="586" y="784" font-family="sans-serif" font-size="11" fill="#4b5563">(confirmed by listing the output directory</text>
+  <text x="586" y="802" font-family="sans-serif" font-size="11" fill="#4b5563">after: javac -d . BonusService.java)</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="910" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="20" y1="918" x2="1100" y2="918" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="927" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="68" y="939" font-family="sans-serif" font-size="11" fill="#4b5563">source-side box &#8212; capturing construct</text>
+
+  <rect x="40" y="951" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="68" y="963" font-family="sans-serif" font-size="11" fill="#4b5563">generated bytecode fact &#8212; javap -p -c output</text>
+
+  <rect x="40" y="975" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="68" y="987" font-family="sans-serif" font-size="11" fill="#4b5563">highlighted instruction &#8212; synthetic field write</text>
+
+  <rect x="620" y="927" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="648" y="939" font-family="sans-serif" font-size="11" fill="#4b5563">no class file emitted &#8212; folded into enclosing class</text>
+
+  <rect x="620" y="951" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="963" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; verified fact / semantics rule</text>
+
+  <line x1="620" y1="983" x2="642" y2="983" stroke="#475569" stroke-width="2" marker-end="url(#arrow120)"/>
+  <text x="648" y="987" font-family="sans-serif" font-size="11" fill="#4b5563">bytecode ordering: earlier writes feed later step</text>
+</svg>

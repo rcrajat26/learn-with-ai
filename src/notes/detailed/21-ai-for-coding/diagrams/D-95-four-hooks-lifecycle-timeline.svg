@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of a Claude Code session with four hook marks. SessionStart runs branch-context.sh, which injects branch name, dirty-file count and failing-test count as tagged advisory lines and exits 0. PreToolUse on Bash runs block-destructive-bash.sh, which returns a JSON permissionDecision of deny with a reason, a blocking posture. PostToolUse on Edit or Write runs format-on-edit.sh, which reads tool_input.file_path from stdin via jq and exits 0 as advisory. Stop runs require-green-build.sh, which uses the continue field and warns that the build takes about four minutes, a blocking posture.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FOUR HOOKS ON THE SESSION LIFECYCLE (&#167; 4.2)</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- session axis -->
+  <line class="flow" x1="60" y1="120" x2="960" y2="120"/>
+  <text x="960" y="112" text-anchor="end" class="lbl tiny">session time</text>
+
+  <!-- mark 1: SessionStart -->
+  <circle cx="140" cy="120" r="6" fill="#15803d" stroke="#15803d"/>
+  <line x1="140" y1="126" x2="140" y2="160" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="40" y="160" width="200" height="34" rx="4" class="boxR"/>
+  <text x="140" y="182" text-anchor="middle" class="lbl tiny mono" font-weight="700">SessionStart</text>
+
+  <rect x="20" y="206" width="240" height="180" rx="6" class="boxR"/>
+  <text x="34" y="226" class="lbl tiny mono" font-weight="700">branch-context.sh</text>
+  <text x="34" y="246" class="lbl tiny">injects, as tagged advisory lines:</text>
+  <text x="34" y="264" class="lbl tiny mono">[branch] feature/order-status</text>
+  <text x="34" y="280" class="lbl tiny mono">[dirty-files] 4</text>
+  <text x="34" y="296" class="lbl tiny mono">[failing-tests] 2</text>
+  <text x="34" y="322" class="lbl tiny" font-weight="700">posture: advisory</text>
+  <text x="34" y="340" class="lbl tiny mono">set +e ; exit 0</text>
+  <text x="34" y="360" class="lbl tiny">never blocks session start</text>
+
+  <!-- mark 2: PreToolUse -->
+  <circle cx="360" cy="120" r="6" fill="#b91c1c" stroke="#b91c1c"/>
+  <line x1="360" y1="126" x2="360" y2="160" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="260" y="160" width="200" height="34" rx="4" class="boxD"/>
+  <text x="360" y="182" text-anchor="middle" class="lbl tiny mono" font-weight="700">PreToolUse : Bash</text>
+
+  <rect x="270" y="206" width="240" height="180" rx="6" class="boxD"/>
+  <text x="284" y="226" class="lbl tiny mono" font-weight="700">block-destructive-bash.sh</text>
+  <text x="284" y="246" class="lbl tiny">returns JSON on stdout:</text>
+  <text x="284" y="266" class="lbl tiny mono">{ "permissionDecision":</text>
+  <text x="284" y="282" class="lbl tiny mono">    "deny",</text>
+  <text x="284" y="298" class="lbl tiny mono">  "reason": "rm -rf blocked" }</text>
+  <text x="284" y="322" class="lbl tiny" font-weight="700">posture: blocking</text>
+  <text x="284" y="340" class="lbl tiny mono">non-zero exit on match</text>
+  <text x="284" y="360" class="lbl tiny">stops the Bash call before it runs</text>
+
+  <!-- mark 3: PostToolUse -->
+  <circle cx="600" cy="120" r="6" fill="#15803d" stroke="#15803d"/>
+  <line x1="600" y1="126" x2="600" y2="160" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="490" y="160" width="220" height="34" rx="4" class="boxR"/>
+  <text x="600" y="182" text-anchor="middle" class="lbl tiny mono" font-weight="700">PostToolUse : Edit|Write</text>
+
+  <rect x="500" y="206" width="240" height="180" rx="6" class="boxR"/>
+  <text x="514" y="226" class="lbl tiny mono" font-weight="700">format-on-edit.sh</text>
+  <text x="514" y="246" class="lbl tiny">reads stdin, extracts via jq:</text>
+  <text x="514" y="266" class="lbl tiny mono">jq -r '.tool_input.file_path'</text>
+  <text x="514" y="286" class="lbl tiny">then reformats that one file</text>
+  <text x="514" y="322" class="lbl tiny" font-weight="700">posture: advisory</text>
+  <text x="514" y="340" class="lbl tiny mono">set +e ; exit 0</text>
+  <text x="514" y="360" class="lbl tiny">formats but never fails the edit</text>
+
+  <!-- mark 4: Stop -->
+  <circle cx="860" cy="120" r="6" fill="#b91c1c" stroke="#b91c1c"/>
+  <line x1="860" y1="126" x2="860" y2="160" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="760" y="160" width="200" height="34" rx="4" class="boxD"/>
+  <text x="860" y="182" text-anchor="middle" class="lbl tiny mono" font-weight="700">Stop</text>
+
+  <rect x="750" y="206" width="250" height="180" rx="6" class="boxD"/>
+  <text x="764" y="226" class="lbl tiny mono" font-weight="700">require-green-build.sh</text>
+  <text x="764" y="246" class="lbl tiny">runs the build, then emits:</text>
+  <text x="764" y="266" class="lbl tiny mono">{ "decision": "block",</text>
+  <text x="764" y="282" class="lbl tiny mono">  "continue": false }</text>
+  <text x="764" y="302" class="lbl tiny">on a red build</text>
+  <text x="764" y="326" class="lbl tiny" font-weight="700">posture: blocking</text>
+  <text x="764" y="344" class="lbl tiny mono">non-zero exit on red build</text>
+
+  <rect x="750" y="410" width="250" height="70" rx="6" class="boxA"/>
+  <text x="764" y="432" class="lbl tiny" font-weight="700">warning: build takes ~4 minutes</text>
+  <text x="764" y="452" class="lbl tiny">every Stop attempt re-runs it in full —</text>
+  <text x="764" y="468" class="lbl tiny">a slow gate the agent cannot skip</text>
+
+  <!-- legend -->
+  <line x1="20" y1="520" x2="1020" y2="520" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="534" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="547" class="lbl tiny">advisory hook — set +e / exit 0, never blocks</text>
+  <rect x="420" y="534" width="22" height="16" rx="3" class="boxD"/>
+  <text x="450" y="547" class="lbl tiny">blocking hook — non-zero exit / deny stops the flow</text>
+  <rect x="820" y="534" width="22" height="16" rx="3" class="boxA"/>
+  <text x="850" y="547" class="lbl tiny">annotation — operational warning</text>
+  <line x1="20" y1="568" x2="50" y2="568" class="flow"/>
+  <text x="58" y="573" class="lbl tiny">session lifecycle axis, left to right</text>
+</svg>

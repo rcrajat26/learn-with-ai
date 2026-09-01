@@ -1,0 +1,99 @@
+<svg viewBox="0 0 1120 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-column comparison of the project .claude directory and its user-level twin at ~/.claude. The project column lists settings.json, settings.local.json, CLAUDE.md, rules, commands, skills, agents, hooks, .mcp.json, .lsp.json, and agent-memory. The user column repeats those shapes and adds projects, plugins, keybindings.json, and the tool-owned ~claude.json, which is marked do-not-hand-edit. A third panel below lists what lives outside the repo deliberately: the plugin cache, session transcripts, and the auto-memory directory.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE .claude TREE AND ITS USER TWIN</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <rect x="20" y="56" width="520" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="280" y="76" text-anchor="middle" class="lbl h2">PROJECT: repo/.claude/</text>
+  <rect x="580" y="56" width="520" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="840" y="76" text-anchor="middle" class="lbl h2">USER: ~/.claude/</text>
+
+  <!-- project panel -->
+  <rect x="20" y="100" width="520" height="330" rx="6" class="boxP"/>
+  <text x="36" y="122" class="lbl node">repo/.claude/</text>
+  <line x1="36" y1="130" x2="524" y2="130" stroke="#d1d5db" stroke-width="1"/>
+  <text x="36" y="152" class="lbl body">settings.json</text>
+  <text x="270" y="152" class="lbl body">settings.local.json</text>
+  <text x="36" y="174" class="lbl body">CLAUDE.md</text>
+  <text x="270" y="174" class="lbl body">rules/</text>
+  <text x="36" y="196" class="lbl body">commands/</text>
+  <text x="270" y="196" class="lbl body">skills/</text>
+  <text x="36" y="218" class="lbl body">agents/</text>
+  <text x="270" y="218" class="lbl body">hooks/</text>
+  <text x="36" y="240" class="lbl body">.mcp.json</text>
+  <text x="270" y="240" class="lbl body">.lsp.json</text>
+  <text x="36" y="262" class="lbl body">agent-memory/</text>
+  <text x="36" y="292" class="lbl sub" font-weight="700">shared with the team, checked into git:</text>
+  <text x="36" y="308" class="lbl sub">settings.json, CLAUDE.md, rules/, commands/,</text>
+  <text x="36" y="322" class="lbl sub">skills/, agents/, hooks/, .mcp.json, .lsp.json</text>
+  <text x="36" y="344" class="lbl sub" font-weight="700">local-only, gitignored:</text>
+  <text x="36" y="360" class="lbl sub">settings.local.json, agent-memory/</text>
+
+  <!-- user panel -->
+  <rect x="580" y="100" width="520" height="330" rx="6" class="boxP"/>
+  <text x="596" y="122" class="lbl node">~/.claude/</text>
+  <line x1="596" y1="130" x2="1084" y2="130" stroke="#d1d5db" stroke-width="1"/>
+  <text x="596" y="152" class="lbl body">settings.json</text>
+  <text x="830" y="152" class="lbl body">CLAUDE.md</text>
+  <text x="596" y="174" class="lbl body">rules/</text>
+  <text x="830" y="174" class="lbl body">commands/</text>
+  <text x="596" y="196" class="lbl body">skills/</text>
+  <text x="830" y="196" class="lbl body">agents/</text>
+  <text x="596" y="218" class="lbl body">hooks/</text>
+  <text x="830" y="218" class="lbl body">projects/</text>
+  <text x="596" y="240" class="lbl body">plugins/</text>
+  <text x="830" y="240" class="lbl body">keybindings.json</text>
+  <rect x="596" y="256" width="468" height="34" rx="4" class="boxG"/>
+  <text x="608" y="277" class="lbl body" font-weight="700">~/.claude.json — tool-owned, do not hand-edit</text>
+  <text x="596" y="312" class="lbl sub" font-weight="700">same shapes as the project tree, plus:</text>
+  <text x="596" y="328" class="lbl sub">projects/, plugins/, keybindings.json — user scope only</text>
+  <text x="596" y="350" class="lbl sub" font-weight="700">~/.claude.json is machine-managed state, not config to edit by hand</text>
+
+  <!-- outside repo panel -->
+  <path class="flow" d="M 280 430 V 470 H 560 V 470"/>
+  <path class="flow" d="M 840 430 V 470 H 560 V 470"/>
+  <rect x="160" y="482" width="800" height="150" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="176" y="504" class="lbl h2">OUTSIDE THE REPO DELIBERATELY</text>
+  <line x1="176" y1="512" x2="944" y2="512" stroke="#d1d5db" stroke-width="1"/>
+  <text x="176" y="534" class="lbl tiny" font-weight="700">plugin cache</text>
+  <text x="176" y="550" class="lbl tiny">downloaded plugin code — never versioned with the project</text>
+  <text x="176" y="574" class="lbl tiny" font-weight="700">session transcripts</text>
+  <text x="176" y="590" class="lbl tiny">full conversation logs, kept per machine, not per repo</text>
+  <text x="176" y="614" class="lbl tiny" font-weight="700">auto-memory directory</text>
+  <text x="560" y="614" class="lbl tiny">written by agents at runtime, not authored by hand</text>
+
+  <line x1="20" y1="676" x2="1100" y2="676" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="688" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="701" class="lbl tiny">config directory or file</text>
+  <rect x="230" y="688" width="22" height="16" rx="3" class="boxG"/>
+  <text x="260" y="701" class="lbl tiny">tool-owned — do not hand-edit</text>
+  <rect x="500" y="688" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="530" y="701" class="lbl tiny">annotation panel (facts, not a config node)</text>
+  <path class="flow" d="M 780 696 H 820"/>
+  <text x="828" y="701" class="lbl tiny">A → B : both trees feed into B, outside either repo</text>
+</svg>

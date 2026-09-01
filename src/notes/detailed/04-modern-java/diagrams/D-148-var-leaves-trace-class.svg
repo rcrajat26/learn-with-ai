@@ -1,0 +1,108 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after: an explicitly typed ArrayList of String local ids and a var
+     ids assigned the same new ArrayList of String compile to byte-for-byte identical Code
+     arrays, verified with javac release 21 and javap dash c dash p dash l dash v. Both class
+     files carry a LocalVariableTable entry typed ArrayList and a LocalVariableTypeTable entry
+     typed ArrayList of String for the slot, because var is resolved at compile time and only
+     ever changes what the compiler writes for the reader, never what it emits for the JVM. A
+     note explains why a field or a method parameter can never use var: separate compilation
+     means another class file must be able to read the field's or parameter's type from this
+     class's descriptor without re-deriving it from an initialiser it cannot see.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE var LEAVES A TRACE IN THE CLASS FILE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="1060" y="20" width="30" height="20" rx="4" class="pill"/>
+  <text x="1075" y="35" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+
+  <text x="20" y="64" class="lbl h2">BEFORE — EXPLICIT TYPE</text>
+  <text x="580" y="64" class="lbl h2">AFTER — var</text>
+
+  <rect x="20" y="76" width="520" height="90" rx="6" class="boxP"/>
+  <text x="40" y="102" class="lbl body mono">ArrayList&lt;String&gt; ids =</text>
+  <text x="40" y="122" class="lbl body mono">    new ArrayList&lt;String&gt;();</text>
+  <text x="40" y="142" class="lbl body mono">ids.add("CLI-1");</text>
+
+  <rect x="580" y="76" width="520" height="90" rx="6" class="boxP"/>
+  <text x="600" y="102" class="lbl body mono">var ids =</text>
+  <text x="600" y="122" class="lbl body mono">    new ArrayList&lt;String&gt;();</text>
+  <text x="600" y="142" class="lbl body mono">ids.add("CLI-1");</text>
+
+  <path class="flow" d="M 280 166 V 190 H 560 V 210"/>
+  <path class="flow" d="M 840 166 V 190 H 570 V 210"/>
+  <text x="560" y="184" text-anchor="middle" class="lbl tiny" font-weight="700">javac --release 21 -g</text>
+
+  <rect x="60" y="214" width="1000" height="196" rx="6" class="boxR"/>
+  <text x="80" y="238" class="lbl body" font-weight="700">javap -c -p -l -v — Code, identical in both class files</text>
+  <text x="80" y="260" class="lbl dense mono">0: new  #7            // class java/util/ArrayList</text>
+  <text x="80" y="278" class="lbl dense mono">3: dup</text>
+  <text x="80" y="296" class="lbl dense mono">4: invokespecial #9   // ArrayList."&lt;init&gt;":()V</text>
+  <text x="80" y="314" class="lbl dense mono">7: astore_0</text>
+  <text x="80" y="332" class="lbl dense mono">8: aload_0 · 9: ldc #10 // String CLI-1</text>
+  <text x="80" y="350" class="lbl dense mono">11: invokevirtual #12  // ArrayList.add:(Object)Z</text>
+  <text x="80" y="368" class="lbl dense mono">14: pop</text>
+  <text x="80" y="386" class="lbl dense mono">15: return</text>
+  <text x="640" y="260" class="lbl dense" font-weight="700">byte-for-byte identical —</text>
+  <text x="640" y="278" class="lbl dense" font-weight="700">same opcodes, same operands,</text>
+  <text x="640" y="296" class="lbl dense" font-weight="700">same constant-pool indices</text>
+  <text x="640" y="322" class="lbl tiny">only LineNumberTable differs, and only</text>
+  <text x="640" y="338" class="lbl tiny">because the var version starts three</text>
+  <text x="640" y="354" class="lbl tiny">source lines further down the file.</text>
+
+  <rect x="60" y="426" width="480" height="120" rx="6" class="boxA"/>
+  <text x="80" y="450" class="lbl body" font-weight="700">LocalVariableTable (both)</text>
+  <text x="80" y="472" class="lbl tiny mono">Start Length Slot Name Signature</text>
+  <text x="80" y="490" class="lbl tiny mono">    8      8    0  ids  Ljava/util/ArrayList;</text>
+  <text x="80" y="512" class="lbl tiny">the reader-facing type — erased to the raw class,</text>
+  <text x="80" y="528" class="lbl tiny">present with -g regardless of var or explicit source.</text>
+
+  <rect x="580" y="426" width="480" height="120" rx="6" class="boxA"/>
+  <text x="600" y="450" class="lbl body" font-weight="700">LocalVariableTypeTable (both)</text>
+  <text x="600" y="472" class="lbl tiny mono">Start Length Slot Name Signature</text>
+  <text x="600" y="490" class="lbl tiny mono">    8      8    0  ids  Ljava/util/ArrayList</text>
+  <text x="600" y="504" class="lbl tiny mono">                          &lt;Ljava/lang/String;&gt;;</text>
+  <text x="600" y="524" class="lbl tiny">the full generic signature — var's inferred type</text>
+  <text x="600" y="540" class="lbl tiny">ArrayList&lt;String&gt; is what ends up recorded here.</text>
+
+  <rect x="60" y="570" width="1000" height="140" rx="6" class="boxA"/>
+  <text x="80" y="596" class="lbl body" font-weight="700">why a field or a parameter could never work this way — separate compilation</text>
+  <text x="80" y="618" class="lbl tiny">a local's type is resolved and thrown away inside one method body, in one compilation unit, by one javac invocation.</text>
+  <text x="80" y="636" class="lbl tiny">a field's type and a parameter's type are part of the class's public descriptor — another class file, compiled separately,</text>
+  <text x="80" y="654" class="lbl tiny">possibly years later and without the source of this class present at all, must be able to read that type from the</text>
+  <text x="80" y="672" class="lbl tiny">already-compiled .class file's constant pool. There is no initialiser expression visible at that point to infer from —</text>
+  <text x="80" y="690" class="lbl tiny">so the language requires an explicit, denotable type on every field and every parameter, with no var exception.</text>
+
+  <line x1="20" y1="726" x2="1100" y2="726" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="734" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="746" class="lbl tiny">source, before/after pair</text>
+  <rect x="240" y="734" width="20" height="14" rx="3" class="boxR"/>
+  <text x="266" y="746" class="lbl tiny">verified identical compiler output</text>
+  <rect x="520" y="734" width="20" height="14" rx="3" class="boxA"/>
+  <text x="546" y="746" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 760 741 H 800"/>
+  <text x="808" y="746" class="lbl tiny">A → B : A compiles to B (javac --release 21)</text>
+</svg>

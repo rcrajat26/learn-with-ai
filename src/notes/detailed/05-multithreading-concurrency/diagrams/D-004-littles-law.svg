@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Little's law, L equals lambda times W, sized for QuizStakes stake
+     reservations. Arrival rate lambda is 1,200 reservations per second. At the card PSP's
+     authorise p50 of 240 milliseconds, required concurrency L is 288 concurrent tasks. At the
+     p99 of 11 seconds, required concurrency L is 13,200 concurrent tasks. A 200-thread
+     platform pool caps effective concurrency at W = 167 milliseconds; beyond that, arrivals
+     queue instead of running, while a virtual-thread pool follows L = lambda W with no cap in
+     this range.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .body  { font-size: 12.5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pt    { fill: #fef3c7; stroke: #b45309; stroke-width: 1.8; }
+
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .tick  { stroke: #475569; stroke-width: 1.3; }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 2 3; }
+    .vthr  { fill: none; stroke: #15803d; stroke-width: 2.2; stroke-linejoin: round; }
+    .plat  { fill: none; stroke: #b91c1c; stroke-width: 2.2; stroke-linejoin: round; }
+    .lead  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="650" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">LITTLE'S LAW SIZES THE POOL — L = λW FOR STAKE RESERVATIONS</text>
+  <line x1="20" y1="42" x2="980" y2="42" class="rule"/>
+
+  <rect x="20" y="52" width="430" height="34" rx="6" class="panel"/>
+  <text x="34" y="73" class="lbl body">L = λW, λ = 1,200 stake reservations / sec</text>
+
+  <!-- axes, log-log -->
+  <line x1="100" y1="560" x2="100" y2="100" class="axis"/>
+  <line x1="100" y1="560" x2="900" y2="560" class="axis"/>
+
+  <!-- y gridlines/ticks: L = 1,10,100,1000,10000,100000 -->
+  <line x1="100" y1="560" x2="900" y2="560" class="grid"/>
+  <text x="88" y="564" text-anchor="end" class="lbl sub">1</text>
+  <line x1="100" y1="468" x2="900" y2="468" class="grid"/>
+  <text x="88" y="472" text-anchor="end" class="lbl sub">10</text>
+  <line x1="100" y1="376" x2="900" y2="376" class="grid"/>
+  <text x="88" y="380" text-anchor="end" class="lbl sub">100</text>
+  <line x1="100" y1="284" x2="900" y2="284" class="grid"/>
+  <text x="88" y="288" text-anchor="end" class="lbl sub">1,000</text>
+  <line x1="100" y1="192" x2="900" y2="192" class="grid"/>
+  <text x="88" y="196" text-anchor="end" class="lbl sub">10,000</text>
+  <line x1="100" y1="100" x2="900" y2="100" class="grid"/>
+  <text x="88" y="104" text-anchor="end" class="lbl sub">100,000</text>
+  <text x="40" y="330" text-anchor="middle" class="lbl sub" transform="rotate(-90 40 330)">L — concurrent tasks</text>
+
+  <!-- x ticks: W = 0.01, 0.1, 1, 10, 100 sec -->
+  <line x1="100" y1="560" x2="100" y2="566" class="tick"/>
+  <text x="100" y="582" text-anchor="middle" class="lbl sub">0.01 s</text>
+  <line x1="300" y1="560" x2="300" y2="566" class="tick"/>
+  <text x="300" y="582" text-anchor="middle" class="lbl sub">0.1 s</text>
+  <line x1="500" y1="560" x2="500" y2="566" class="tick"/>
+  <text x="500" y="582" text-anchor="middle" class="lbl sub">1 s</text>
+  <line x1="700" y1="560" x2="700" y2="566" class="tick"/>
+  <text x="700" y="582" text-anchor="middle" class="lbl sub">10 s</text>
+  <line x1="900" y1="560" x2="900" y2="566" class="tick"/>
+  <text x="900" y="582" text-anchor="middle" class="lbl sub">100 s</text>
+  <text x="500" y="602" text-anchor="middle" class="lbl sub">W — service time (log scale)</text>
+
+  <!-- virtual-thread line: L = 1200 W, uncapped -->
+  <polyline class="vthr" points="100,460.7 884.2,100"/>
+
+  <!-- platform pool line: follows L = 1200 W up to the 200-thread cap, then flat -->
+  <polyline class="plat" points="100,460.7 344.4,348.3 900,348.3"/>
+
+  <!-- p50 and p99 must-show points, on the virtual-thread line -->
+  <circle cx="376.0" cy="333.7" r="4.5" class="pt"/>
+  <path class="lead" d="M 200 260 H 300 V 333.7 H 371"/>
+  <rect x="90" y="222" width="240" height="46" rx="6" class="panel"/>
+  <text x="210" y="240" text-anchor="middle" class="lbl node">p50: 240 ms → L = 288</text>
+  <text x="210" y="256" text-anchor="middle" class="lbl sub">1,200/sec × 0.240 s</text>
+
+  <circle cx="708.3" cy="180.9" r="4.5" class="pt"/>
+  <path class="lead" d="M 780 130 H 760 V 180.9 H 713"/>
+  <rect x="640" y="94" width="250" height="46" rx="6" class="panel"/>
+  <text x="765" y="112" text-anchor="middle" class="lbl node">p99: 11 s → L = 13,200</text>
+  <text x="765" y="128" text-anchor="middle" class="lbl sub">1,200/sec × 11 s</text>
+
+  <!-- cap intersection -->
+  <circle cx="344.4" cy="348.3" r="4.5" fill="#f5f5f4" stroke="#78716c" stroke-width="1.8"/>
+  <path class="lead" d="M 420 400 H 400 V 348.3 H 349"/>
+  <rect x="356" y="404" width="260" height="46" rx="6" class="panel"/>
+  <text x="486" y="422" text-anchor="middle" class="lbl node">200-thread pool caps here</text>
+  <text x="486" y="438" text-anchor="middle" class="lbl sub">W ≈ 167 ms; beyond it, arrivals queue</text>
+
+  <line x1="20" y1="614" x2="980" y2="614" class="rule"/>
+  <line x1="20" y1="624" x2="46" y2="624" stroke="#15803d" stroke-width="2.2"/>
+  <text x="54" y="629" class="lbl tiny">virtual threads: L = λW, no cap in this range</text>
+  <line x1="380" y1="624" x2="406" y2="624" stroke="#b91c1c" stroke-width="2.2"/>
+  <text x="414" y="629" class="lbl tiny">platform pool: L = λW until 200 threads, then flat (queueing)</text>
+  <circle cx="30" cy="639" r="4.5" class="pt"/>
+  <text x="44" y="644" class="lbl tiny">must-show point: p50 / p99 concurrency</text>
+  <circle cx="500" cy="639" r="4.5" fill="#f5f5f4" stroke="#78716c" stroke-width="1.8"/>
+  <text x="514" y="644" class="lbl tiny">legacy: 200-thread cap intersection</text>
+</svg>

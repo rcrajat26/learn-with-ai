@@ -1,0 +1,88 @@
+<svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="High-entropy-in-high-bits collision: Integer keys 65536, 131072, 196608 all hash to bin 0 without spreading, but spread across bins 1, 2, 3 with h xor (h unsigned-shift-right 16)">
+  <defs>
+    <marker id="arrow87" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="30" y="34" font-family="sans-serif" font-size="18" fill="#1f2937" font-weight="bold">High-entropy-in-high-bits collision</text>
+  <text x="30" y="54" font-family="sans-serif" font-size="13" fill="#1f2937">Keys: Integer 65536, 131072, 196608 (multiples of 2^16; hashCode() returns the value itself)</text>
+
+  <!-- FRAME 1 -->
+  <text x="30" y="86" font-family="sans-serif" font-size="15" fill="#1f2937" font-weight="bold">Frame 1 — without the spread: hashCode &amp; 15</text>
+
+  <g font-family="sans-serif" font-size="12" fill="#1f2937">
+    <rect x="30" y="100" width="230" height="26" rx="3" fill="#e5e7eb"/>
+    <text x="145" y="118" text-anchor="middle">65536 &amp; 15 = 0</text>
+    <rect x="270" y="100" width="230" height="26" rx="3" fill="#e5e7eb"/>
+    <text x="385" y="118" text-anchor="middle">131072 &amp; 15 = 0</text>
+    <rect x="510" y="100" width="230" height="26" rx="3" fill="#e5e7eb"/>
+    <text x="625" y="118" text-anchor="middle">196608 &amp; 15 = 0</text>
+  </g>
+
+  <!-- table 1: 16 slots -->
+  <g>
+    <rect x="30" y="160" width="840" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <rect x="30" y="160" width="52.5" height="50" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="56" y="190" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">0</text>
+    <text x="108" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">1</text>
+    <text x="161" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">2</text>
+    <text x="213" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">3</text>
+    <text x="266" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">...</text>
+    <text x="843" y="190" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">15</text>
+    <line x1="82.5" y1="160" x2="82.5" y2="210" stroke="#737373" stroke-width="1"/>
+  </g>
+
+  <!-- three arrows converge on bin 0 -->
+  <line x1="145" y1="126" x2="70" y2="158" stroke="#737373" stroke-width="2" marker-end="url(#arrow87)"/>
+  <line x1="385" y1="126" x2="65" y2="158" stroke="#737373" stroke-width="2" marker-end="url(#arrow87)"/>
+  <line x1="625" y1="126" x2="60" y2="158" stroke="#737373" stroke-width="2" marker-end="url(#arrow87)"/>
+
+  <rect x="130" y="225" width="500" height="30" rx="4" fill="#fee2e2"/>
+  <text x="380" y="245" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">one bin, a 3-long chain, O(n) lookup</text>
+
+  <!-- FRAME 2 -->
+  <text x="30" y="300" font-family="sans-serif" font-size="15" fill="#1f2937" font-weight="bold">Frame 2 — with h ^ (h &gt;&gt;&gt; 16)</text>
+
+  <g font-family="sans-serif" font-size="12" fill="#1f2937">
+    <rect x="30" y="314" width="270" height="46" rx="3" fill="#e5e7eb"/>
+    <text x="165" y="332" text-anchor="middle">65536 ^ 1 = 65537</text>
+    <text x="165" y="352" text-anchor="middle" font-weight="bold">65537 &amp; 15 = 1</text>
+
+    <rect x="315" y="314" width="270" height="46" rx="3" fill="#e5e7eb"/>
+    <text x="450" y="332" text-anchor="middle">131072 ^ 2 = 131074</text>
+    <text x="450" y="352" text-anchor="middle" font-weight="bold">131074 &amp; 15 = 2</text>
+
+    <rect x="600" y="314" width="270" height="46" rx="3" fill="#e5e7eb"/>
+    <text x="735" y="332" text-anchor="middle">196608 ^ 3 = 196611</text>
+    <text x="735" y="352" text-anchor="middle" font-weight="bold">196611 &amp; 15 = 3</text>
+  </g>
+
+  <!-- table 2: 16 slots -->
+  <g>
+    <rect x="30" y="420" width="840" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="56" y="450" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">0</text>
+    <rect x="82.5" y="420" width="52.5" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="108" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1</text>
+    <rect x="135" y="420" width="52.5" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="161" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2</text>
+    <rect x="187.5" y="420" width="52.5" height="50" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="213" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">3</text>
+    <text x="266" y="450" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">...</text>
+    <text x="843" y="450" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">15</text>
+  </g>
+
+  <!-- arrows landing on bins 1,2,3 -->
+  <line x1="165" y1="360" x2="108" y2="418" stroke="#737373" stroke-width="2" marker-end="url(#arrow87)"/>
+  <line x1="450" y1="360" x2="161" y2="418" stroke="#737373" stroke-width="2" marker-end="url(#arrow87)"/>
+  <line x1="735" y1="360" x2="213" y2="418" stroke="#737373" stroke-width="2" marker-end="url(#arrow87)"/>
+
+  <rect x="130" y="500" width="500" height="30" rx="4" fill="#dcfce7"/>
+  <text x="380" y="520" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">three bins, O(1) lookup</text>
+
+  <rect x="30" y="550" width="840" height="70" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="574" font-family="sans-serif" font-size="12" fill="#1f2937">Without the spread, three keys that differ only in high bits (bits 16-17) collapse to the same low-4-bit</text>
+  <text x="45" y="594" font-family="sans-serif" font-size="12" fill="#1f2937">index because &amp; 15 only ever looks at the bottom 4 bits. Folding high bits down via xor-shift fixes this.</text>
+</svg>

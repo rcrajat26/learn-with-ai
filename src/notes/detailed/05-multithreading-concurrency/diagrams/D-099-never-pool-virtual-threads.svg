@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1120 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Never pool virtual threads; bound with a Semaphore instead. Left, the anti-pattern:
+     a fixed pool of virtual threads re-imposes the concurrency limit that virtual threads were
+     meant to remove, and queued card PSP authorise calls wait behind the pool's fixed size instead
+     of the resource that is actually scarce. Right, the fix: one virtual thread per task, with a
+     Semaphore of 20 permits placed directly in front of the PaymentService connection pool, so the
+     20 connection ceiling is enforced at the resource that has it, and any queueing happens at the
+     semaphore, not at thread creation.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+    .deg  { fill: none; stroke: #b91c1c; stroke-width: 2; marker-end: url(#triD); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">NEVER POOL VIRTUAL THREADS — BOUND WITH A Semaphore INSTEAD</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">ANTI-PATTERN — FIXED POOL OF VIRTUAL THREADS</text>
+  <text x="580" y="66" class="lbl h2">FIX — ONE VT PER TASK, BOUNDED BY A Semaphore(20)</text>
+  <line x1="560" y1="56" x2="560" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: anti-pattern -->
+  <rect x="40" y="86" width="220" height="70" rx="6" class="boxW"/>
+  <text x="150" y="108" text-anchor="middle" class="lbl body">gateway-http-7..N</text>
+  <text x="150" y="128" text-anchor="middle" class="lbl sub">card PSP authorise tasks</text>
+  <text x="150" y="144" text-anchor="middle" class="lbl sub">submitted continuously</text>
+
+  <path class="flow" d="M 150 156 V 180"/>
+
+  <rect x="40" y="180" width="220" height="110" rx="6" class="boxDeg"/>
+  <text x="150" y="204" text-anchor="middle" class="lbl node" font-weight="700">newFixedThreadPool</text>
+  <text x="150" y="224" text-anchor="middle" class="lbl body">(20, Thread.ofVirtual())</text>
+  <text x="150" y="244" text-anchor="middle" class="lbl sub" font-weight="700">re-imposes the 20-task limit</text>
+  <text x="150" y="260" text-anchor="middle" class="lbl sub" font-weight="700">that VTs are meant to remove</text>
+  <text x="150" y="276" text-anchor="middle" class="lbl sub">pool, not I/O, caps throughput</text>
+
+  <path class="deg" d="M 150 290 V 314"/>
+  <text x="180" y="306" class="lbl tiny">queues here</text>
+
+  <rect x="40" y="314" width="220" height="90" rx="6" class="boxDeg"/>
+  <text x="150" y="338" text-anchor="middle" class="lbl body" font-weight="700">work queue backs up</text>
+  <text x="150" y="358" text-anchor="middle" class="lbl sub">tasks wait on the POOL,</text>
+  <text x="150" y="374" text-anchor="middle" class="lbl sub">not on the PSP or the DB —</text>
+  <text x="150" y="390" text-anchor="middle" class="lbl sub">the wrong bottleneck</text>
+
+  <path class="flow" d="M 150 404 V 428"/>
+
+  <rect x="40" y="428" width="220" height="90" rx="6" class="boxW"/>
+  <text x="150" y="452" text-anchor="middle" class="lbl body">CardPaymentsClient</text>
+  <text x="150" y="472" text-anchor="middle" class="lbl sub">→ PSP authorise, 240 ms p50</text>
+  <text x="150" y="488" text-anchor="middle" class="lbl sub">only 20 tasks in flight ever,</text>
+  <text x="150" y="504" text-anchor="middle" class="lbl sub" font-weight="700">regardless of real capacity</text>
+
+  <rect x="290" y="180" width="270" height="150" rx="6" class="boxAnn"/>
+  <text x="310" y="204" class="lbl h2">WHY IT DEFEATS THE POINT</text>
+  <text x="310" y="228" class="lbl tiny">Virtual threads are cheap so you</text>
+  <text x="310" y="244" class="lbl tiny">can create one per task and let</text>
+  <text x="310" y="260" class="lbl tiny">the actual scarce resource (a</text>
+  <text x="310" y="276" class="lbl tiny">connection pool, a rate limit)</text>
+  <text x="310" y="292" class="lbl tiny">be the only throttle. A fixed VT</text>
+  <text x="310" y="308" class="lbl tiny">pool throttles before that, on a</text>
+  <text x="310" y="324" class="lbl tiny">number picked for platform threads.</text>
+
+  <!-- RIGHT: fix -->
+  <rect x="600" y="86" width="220" height="70" rx="6" class="boxW"/>
+  <text x="710" y="108" text-anchor="middle" class="lbl body">gateway-http-7..N</text>
+  <text x="710" y="128" text-anchor="middle" class="lbl sub">card PSP authorise tasks</text>
+  <text x="710" y="144" text-anchor="middle" class="lbl sub">submitted continuously</text>
+
+  <path class="flow" d="M 710 156 V 180"/>
+
+  <rect x="600" y="180" width="220" height="90" rx="6" class="boxH"/>
+  <text x="710" y="204" text-anchor="middle" class="lbl node" font-weight="700">Thread.ofVirtual()</text>
+  <text x="710" y="224" text-anchor="middle" class="lbl body">.start(task) per request</text>
+  <text x="710" y="244" text-anchor="middle" class="lbl sub">unbounded — no pool ceiling</text>
+  <text x="710" y="260" text-anchor="middle" class="lbl sub">creation isn't the limit</text>
+
+  <path class="flow" d="M 710 270 V 294"/>
+
+  <rect x="600" y="294" width="220" height="110" rx="6" class="boxP"/>
+  <text x="710" y="318" text-anchor="middle" class="lbl node" font-weight="700">Semaphore(20)</text>
+  <text x="710" y="338" text-anchor="middle" class="lbl body">acquire() before the call</text>
+  <text x="710" y="358" text-anchor="middle" class="lbl sub" font-weight="700">bound moved to the resource</text>
+  <text x="710" y="374" text-anchor="middle" class="lbl sub" font-weight="700">that actually has one</text>
+  <text x="710" y="390" text-anchor="middle" class="lbl sub">queue forms HERE, on permits</text>
+
+  <path class="flow" d="M 710 404 V 428"/>
+
+  <rect x="600" y="428" width="220" height="90" rx="6" class="boxR"/>
+  <text x="710" y="452" text-anchor="middle" class="lbl body">PaymentService connection pool</text>
+  <text x="710" y="472" text-anchor="middle" class="lbl sub" font-weight="700">20-connection ceiling</text>
+  <text x="710" y="488" text-anchor="middle" class="lbl sub">→ CardPaymentsClient → PSP</text>
+  <text x="710" y="504" text-anchor="middle" class="lbl sub">240 ms p50 authorise</text>
+
+  <rect x="850" y="294" width="220" height="110" rx="6" class="boxAnn"/>
+  <text x="870" y="318" class="lbl h2">RESULT</text>
+  <text x="870" y="340" class="lbl tiny">55 000 concurrent sessions</text>
+  <text x="870" y="356" class="lbl tiny">can each hold their own VT</text>
+  <text x="870" y="372" class="lbl tiny">while only 20 ever touch the</text>
+  <text x="870" y="388" class="lbl tiny">connection pool at once</text>
+
+  <!-- legend -->
+  <line x1="20" y1="540" x2="1100" y2="540" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="552" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="565" class="lbl tiny">task / client stage</text>
+  <rect x="280" y="552" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="310" y="565" class="lbl tiny">anti-pattern / wrong bottleneck</text>
+  <rect x="560" y="552" width="22" height="16" rx="3" class="boxH"/>
+  <text x="590" y="565" class="lbl tiny">subject of the diagram</text>
+  <rect x="810" y="552" width="22" height="16" rx="3" class="boxP"/>
+  <text x="840" y="565" class="lbl tiny">enforces the bound</text>
+
+  <rect x="20" y="574" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="587" class="lbl tiny">the actual scarce resource</text>
+  <rect x="280" y="574" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="310" y="587" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 610 H 60"/>
+  <text x="70" y="615" class="lbl tiny">A → B : A submits to / feeds B</text>
+  <path class="deg" d="M 300 610 H 340"/>
+  <text x="350" y="615" class="lbl tiny">A → B : A causes queueing/degradation at B</text>
+</svg>

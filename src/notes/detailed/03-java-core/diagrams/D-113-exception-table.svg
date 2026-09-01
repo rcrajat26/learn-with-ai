@@ -1,0 +1,164 @@
+<svg viewBox="0 0 1140 1460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-frame diagram of PaymentService.reserve's exception table. Frame 1 shows the source, the Code attribute instruction stream with the guarded range [0,4) bracketed around aload_0 through areturn, the catch handler at PC 5 highlighted as resolved, and below it the exception table with two rows — one for IOException and one for SQLException — both pointing at target PC 5, their target cells highlighted and joined by a dashed line up to the handler block, because javac merged the multi-catch into a single handler. An annotation panel states that instruction 0 is aload_0, the first instruction of the try body, so a try the JVM never throws inside costs exactly zero — the guarded range is metadata in the Code attribute, not an instruction. Frame 2 shows athrow executing in FundsLedger.append, propagating with a solid red arrow down to PaymentService.reserve where the exception table above is searched and a match is found at target 5, and a dotted grey arrow to StakeController.post labelled as never searched because the match already stopped the walk in reserve. A closing note states the search proceeds outward, frame by frame, and the first matching row in table order wins, which is why javac rejects a catch clause shadowed by an earlier, broader one.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyB{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeB{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;font-weight:bold;fill:#1f2937;}
+    </style>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="arrRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="arrGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="1460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">The exception table costs nothing to enter &#8212; PaymentService.reserve</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; CODE ATTRIBUTE: INSTRUCTION STREAM AND EXCEPTION TABLE</text>
+  <line x1="20" y1="74" x2="1120" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- source panel -->
+  <rect x="60" y="90" width="1020" height="190" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="112" class="bodyB">PaymentService.reserve(String roundId) &#8212; source</text>
+  <g class="code">
+    <text x="80" y="134">static String reserve(String roundId) {</text>
+    <text x="80" y="152">    try {</text>
+    <text x="80" y="170">        return capture(roundId);        // throws IOException, SQLException</text>
+    <text x="80" y="188">    } catch (IOException | SQLException e) {</text>
+    <text x="80" y="206">        return "DEP-309";</text>
+    <text x="80" y="224">    }</text>
+    <text x="80" y="242">}</text>
+  </g>
+
+  <!-- bytecode panel -->
+  <rect x="60" y="300" width="1020" height="170" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="322" class="bodyB">javap -c -p -v PaymentService.reserve &#8212; Code attribute (stack=1, locals=2, args_size=1)</text>
+
+  <!-- resolved handler highlight, drawn before text -->
+  <rect x="70" y="388" width="1000" height="56" rx="4" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+
+  <!-- guarded-range bracket for PC [0,4) -->
+  <path d="M 88 336 H 94 M 88 336 V 386 M 88 386 H 94" fill="none" stroke="#2563eb" stroke-width="1.6"/>
+
+  <g class="code" xml:space="preserve">
+    <text x="105" y="344">   0: aload_0</text>
+    <text x="105" y="362">   1: invokestatic  #7    // Method capture:(Ljava/lang/String;)Ljava/lang/String;</text>
+    <text x="105" y="380">   4: areturn</text>
+    <text x="105" y="398">   5: astore_1</text>
+    <text x="105" y="416">   6: ldc           #17   // String DEP-309</text>
+    <text x="105" y="434">   8: areturn</text>
+  </g>
+
+  <!-- zero-cost annotation panel -->
+  <rect x="60" y="480" width="620" height="60" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="500" class="smallb" fill="#2563eb">ZERO-COST TRY</text>
+  <text x="80" y="518" class="small">instruction 0 is aload_0 &#8212; the try body's first instruction. Nothing "enters" the try;</text>
+  <text x="80" y="534" class="small">range [0,4) is Code-attribute metadata &#8212; a try the JVM never throws inside costs zero.</text>
+
+  <!-- exception table panel -->
+  <rect x="60" y="560" width="1020" height="170" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="582" class="bodyB">Exception table</text>
+
+  <rect x="80" y="596" width="940" height="22" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+  <g class="smallb">
+    <text x="100" y="612">from</text>
+    <text x="220" y="612">to</text>
+    <text x="340" y="612">target</text>
+    <text x="460" y="612">type</text>
+  </g>
+
+  <!-- highlight over both target cells, drawn before row text -->
+  <rect x="330" y="624" width="60" height="48" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+
+  <g class="code">
+    <text x="100" y="640">0</text>
+    <text x="220" y="640">4</text>
+    <text x="345" y="640">5</text>
+    <text x="460" y="640">Class java/io/IOException</text>
+    <text x="100" y="664">0</text>
+    <text x="220" y="664">4</text>
+    <text x="345" y="664">5</text>
+    <text x="460" y="664">Class java/sql/SQLException</text>
+  </g>
+  <text x="460" y="700" class="small">both rows target PC 5 &#8212; javac merged the multi-catch into one shared handler</text>
+  <text x="460" y="716" class="small">(the compiler rejects any earlier, broader catch that would shadow this one)</text>
+
+  <!-- dashed join from highlighted target cells up to the handler block -->
+  <path d="M 360 624 V 550 H 850 V 444" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrGreen)"/>
+  <text x="864" y="470" class="smallb" fill="#15803d">target 5 &#8594; handler</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="760" class="h2">FRAME 2 &#8212; athrow SEARCHES THE EXCEPTION TABLE, FRAME BY FRAME</text>
+  <line x1="20" y1="768" x2="1120" y2="768" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="250" y="790" width="640" height="70" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="270" y="818" class="bodyB">FundsLedger.append</text>
+  <text x="270" y="838" class="body">athrow executes here &#8212; IOException thrown</text>
+
+  <path d="M 570 860 V 930" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrRed)"/>
+  <text x="595" y="885" class="small">no match in append's own table &#8212; append declares none</text>
+  <text x="595" y="899" class="small">frame popped, search continues in the caller</text>
+
+  <rect x="250" y="930" width="640" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="270" y="958" class="bodyB">PaymentService.reserve</text>
+  <text x="270" y="978" class="body">table searched here: row [0,4) target 5 matches IOException</text>
+
+  <path d="M 570 1000 V 1070" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrGrey)"/>
+  <text x="595" y="1025" class="small">match found &#8212; search stops here</text>
+  <text x="595" y="1039" class="small">StakeController.post is never consulted</text>
+
+  <rect x="250" y="1070" width="640" height="70" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="270" y="1098" class="bodyB">StakeController.post</text>
+  <text x="270" y="1118" class="body">never searched &#8212; match already found upstream</text>
+
+  <rect x="60" y="1160" width="1020" height="70" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="1182" class="smallb" fill="#2563eb">WHY TABLE ORDER MATTERS</text>
+  <text x="80" y="1202" class="small">search proceeds outward, frame by frame; the FIRST matching row in table order wins &#8212;</text>
+  <text x="80" y="1220" class="small">which is why javac rejects a catch clause shadowed by an earlier, broader one.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1270" class="h2">LEGEND</text>
+  <line x1="20" y1="1278" x2="1120" y2="1278" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1292" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1305" class="small">primary &#8212; subject method source and its instruction stream</text>
+
+  <rect x="30" y="1318" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1331" class="small">highlight &#8212; multi-catch exception-table rows sharing one handler</text>
+
+  <rect x="30" y="1344" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="1357" class="small">resolved &#8212; the catch handler block; the frame where the match is found</text>
+
+  <rect x="600" y="1292" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="628" y="1305" class="small">weak &#8212; Code-attribute scaffolding; the frame never searched</text>
+
+  <rect x="600" y="1318" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="628" y="1331" class="small">degraded &#8212; the frame where athrow originates</text>
+
+  <rect x="600" y="1344" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="628" y="1357" class="small">annotation &#8212; explanatory note panel</text>
+
+  <line x1="30" y1="1382" x2="56" y2="1382" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrGreen)"/>
+  <text x="64" y="1387" class="small">handler-target join: table row's target PC &#8722;&gt; its handler; arrow points at the handler</text>
+
+  <line x1="30" y1="1406" x2="56" y2="1406" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrRed)"/>
+  <text x="64" y="1411" class="small">exception propagation: athrow direction, frame to frame; arrow points at the frame entered</text>
+
+  <line x1="30" y1="1430" x2="56" y2="1430" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrGrey)"/>
+  <text x="64" y="1435" class="small">weak/inferred: path not taken once the search already matched</text>
+</svg>

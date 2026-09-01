@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Inside Optional&lt;Client&gt;: a live instance on the heap is a 16-byte object
+     header plus a single 4-byte value reference field, 20 bytes padded to 24 for 8-byte
+     alignment. Optional.empty() never allocates: two independent call sites, one from a
+     ClientLookup miss and one from a BonusService miss, both return the same shared
+     private static final Optional EMPTY instance, and == on the two results is true. The
+     Optional class carries the jdk.internal.ValueBased annotation, whose consequence is
+     never synchronize on an Optional and never depend on its identity.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triW); }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triS); }
+  </style>
+  <defs>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">INSIDE Optional&lt;Client&gt; — HEAP LAYOUT AND THE SHARED EMPTY</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Section A: live instance -->
+  <text x="20" y="66" class="lbl h2">A LIVE INSTANCE — Optional.of(client) FROM ClientLookup.byId(ClientId)</text>
+
+  <rect x="40" y="80" width="360" height="150" rx="6" class="boxP"/>
+  <text x="220" y="104" text-anchor="middle" class="lbl node">Optional&lt;Client&gt; instance</text>
+  <line x1="60" y1="114" x2="380" y2="114" stroke="#2563eb" stroke-width="1"/>
+  <text x="60" y="136" class="lbl dense">object header</text>
+  <text x="380" y="136" text-anchor="end" class="lbl dense mono">16 bytes</text>
+  <text x="60" y="156" class="lbl sub">mark word + compressed klass pointer</text>
+  <text x="60" y="180" class="lbl dense">value</text>
+  <text x="380" y="180" text-anchor="end" class="lbl dense mono">4 bytes</text>
+  <text x="60" y="200" class="lbl sub">reference field, compressed oop → Client</text>
+  <line x1="60" y1="210" x2="380" y2="210" stroke="#2563eb" stroke-width="1"/>
+  <text x="60" y="222" class="lbl body" font-weight="600">total 16 + 4 = 20 bytes → padded 24</text>
+
+  <path class="flow" d="M 400 155 H 460"/>
+  <text x="430" y="147" text-anchor="middle" class="lbl sub">value →</text>
+
+  <rect x="464" y="118" width="220" height="76" rx="6" class="boxW"/>
+  <text x="574" y="148" text-anchor="middle" class="lbl node">Client</text>
+  <text x="574" y="170" text-anchor="middle" class="lbl sub">heap object, ClientId 2 941 883</text>
+  <text x="574" y="186" text-anchor="middle" class="lbl sub">the referent — not copied into Optional</text>
+
+  <rect x="740" y="80" width="260" height="150" rx="6" class="boxA"/>
+  <text x="758" y="102" class="lbl body" font-weight="700">why not smaller</text>
+  <text x="758" y="122" class="lbl tiny">Optional is a real object, not a</text>
+  <text x="758" y="136" class="lbl tiny">value type on Java 21 — every non-</text>
+  <text x="758" y="150" class="lbl tiny">empty Optional pays header + ref</text>
+  <text x="758" y="164" class="lbl tiny">on top of the wrapped Client.</text>
+  <text x="758" y="184" class="lbl tiny" font-weight="600">8-byte alignment pads 20 → 24.</text>
+  <text x="758" y="204" class="lbl sub">32-bit ref shown; 8B without</text>
+  <text x="758" y="216" class="lbl sub">compressed oops (&gt; 32GB heap).</text>
+
+  <!-- Section B: shared EMPTY -->
+  <text x="20" y="272" class="lbl h2">B THE SHARED EMPTY — TWO INDEPENDENT MISSES, ONE INSTANCE</text>
+
+  <rect x="60" y="292" width="300" height="72" rx="6" class="boxW"/>
+  <text x="210" y="318" text-anchor="middle" class="lbl node">call site A</text>
+  <text x="210" y="338" text-anchor="middle" class="lbl sub">ClientLookup.byId(ClientId) miss</text>
+  <text x="210" y="352" text-anchor="middle" class="lbl sub">returns Optional.empty()</text>
+
+  <rect x="680" y="292" width="300" height="72" rx="6" class="boxW"/>
+  <text x="830" y="318" text-anchor="middle" class="lbl node">call site B</text>
+  <text x="830" y="338" text-anchor="middle" class="lbl sub">BonusService.activeBonusFor(ClientId) miss</text>
+  <text x="830" y="352" text-anchor="middle" class="lbl sub">returns Optional.empty()</text>
+
+  <rect x="370" y="400" width="300" height="86" rx="6" class="boxH"/>
+  <text x="520" y="424" text-anchor="middle" class="lbl node">EMPTY</text>
+  <text x="520" y="444" text-anchor="middle" class="lbl dense mono">private static final Optional&lt;?&gt; EMPTY</text>
+  <text x="520" y="462" text-anchor="middle" class="lbl sub">allocated exactly once, at class-init</text>
+  <text x="520" y="476" text-anchor="middle" class="lbl sub">Optional.empty() returns this, cast unchecked</text>
+
+  <path class="weak" d="M 210 364 V 380 H 460 V 400"/>
+  <path class="weak" d="M 830 364 V 380 H 580 V 400"/>
+
+  <rect x="380" y="500" width="280" height="46" rx="6" class="boxA"/>
+  <text x="520" y="522" text-anchor="middle" class="lbl body" font-weight="700">call site A result == call site B result</text>
+  <text x="520" y="538" text-anchor="middle" class="lbl tiny">true — both are the same EMPTY reference</text>
+
+  <path class="flow" d="M 520 486 V 500"/>
+
+  <!-- Section C: annotation -->
+  <text x="20" y="584" class="lbl h2">C CLASS-LEVEL CONTRACT</text>
+
+  <rect x="40" y="600" width="960" height="122" rx="6" class="boxA"/>
+  <text x="60" y="624" class="lbl body mono" font-weight="700">@jdk.internal.ValueBased</text>
+  <text x="60" y="642" class="lbl dense">annotated on java.util.Optional&lt;T&gt; itself</text>
+  <text x="60" y="664" class="lbl tiny" font-weight="600">consequence 1 — do not synchronize on an Optional instance.</text>
+  <text x="60" y="680" class="lbl tiny">the JVM may in a future release freely substitute or elide instances of a value-based class.</text>
+  <text x="60" y="700" class="lbl tiny" font-weight="600">consequence 2 — do not depend on Optional's identity.</text>
+  <text x="60" y="716" class="lbl tiny">only EMPTY's identity is guaranteed stable; two non-empty Optionals wrapping equal values need not be ==.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="738" x2="1020" y2="738" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="746" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="758" class="lbl tiny">live instance</text>
+  <rect x="160" y="746" width="20" height="14" rx="3" class="boxH"/>
+  <text x="186" y="758" class="lbl tiny">shared singleton (highlight)</text>
+  <rect x="370" y="746" width="20" height="14" rx="3" class="boxW"/>
+  <text x="396" y="758" class="lbl tiny">referent / call site</text>
+  <rect x="520" y="746" width="20" height="14" rx="3" class="boxA"/>
+  <text x="546" y="758" class="lbl tiny">annotation panel</text>
+  <path class="weak" d="M 700 753 H 740"/>
+  <text x="748" y="758" class="lbl tiny">A → B : weak / points-to (no allocation)</text>
+</svg>

@@ -1,0 +1,118 @@
+<svg viewBox="0 0 1040 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two lanes on one time axis compare working without plan mode against working with plan mode. Without a plan: a prompt leads straight to a large diff, then review, then an expensive correction after the diff already exists, with the correction and rework shaded as wasted work. With a plan, using --permission-mode plan: read-only exploration via EnterPlanMode leads to a reviewable plan, the correction is applied to the plan itself before code changes, then ExitPlanMode allows execution, ending in a smaller review. The plan text is stored via the plansDirectory setting.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PLAN MODE MOVES THE CORRECTION EARLIER</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- time axis -->
+  <line x1="60" y1="56" x2="1000" y2="56" stroke="#9ca3af" stroke-width="1.3"/>
+  <text x="1000" y="52" text-anchor="end" class="lbl sub">time -&gt;</text>
+
+  <!-- Lane 1: without plan -->
+  <text x="20" y="80" class="lbl h2">WITHOUT A PLAN</text>
+
+  <rect x="60" y="96" width="130" height="60" rx="6" class="boxP"/>
+  <text x="125" y="122" text-anchor="middle" class="lbl node">prompt</text>
+  <text x="125" y="140" text-anchor="middle" class="lbl sub">plain request</text>
+
+  <path class="flow" d="M 190 126 H 250"/>
+
+  <rect x="250" y="96" width="150" height="60" rx="6" class="boxW"/>
+  <text x="325" y="122" text-anchor="middle" class="lbl node">large diff</text>
+  <text x="325" y="140" text-anchor="middle" class="lbl sub">many files edited</text>
+
+  <path class="flow" d="M 400 126 H 460"/>
+
+  <rect x="460" y="96" width="130" height="60" rx="6" class="boxP"/>
+  <text x="525" y="122" text-anchor="middle" class="lbl node">review</text>
+  <text x="525" y="140" text-anchor="middle" class="lbl sub">of the whole diff</text>
+
+  <path class="flow" d="M 590 126 H 650"/>
+
+  <rect x="650" y="90" width="330" height="72" rx="6" class="boxD"/>
+  <text x="815" y="112" text-anchor="middle" class="lbl node">expensive correction</text>
+  <text x="815" y="130" text-anchor="middle" class="lbl sub">after the diff already exists</text>
+  <text x="815" y="146" text-anchor="middle" class="lbl sub">rework: re-edit, re-review, re-test</text>
+
+  <!-- rework shading -->
+  <rect x="650" y="90" width="330" height="72" rx="6" fill="#b91c1c" opacity="0.08"/>
+
+  <!-- Lane 2: with plan -->
+  <text x="20" y="200" class="lbl h2">WITH A PLAN &#8212; --permission-mode plan</text>
+
+  <rect x="60" y="216" width="150" height="66" rx="6" class="boxW"/>
+  <text x="135" y="240" text-anchor="middle" class="lbl node">read-only</text>
+  <text x="135" y="256" text-anchor="middle" class="lbl node">exploration</text>
+  <text x="135" y="272" text-anchor="middle" class="lbl sub">EnterPlanMode</text>
+
+  <path class="flow" d="M 210 249 H 260"/>
+
+  <rect x="260" y="216" width="160" height="66" rx="6" class="boxP"/>
+  <text x="340" y="242" text-anchor="middle" class="lbl node">reviewable plan</text>
+  <text x="340" y="260" text-anchor="middle" class="lbl sub">stored via</text>
+  <text x="340" y="274" text-anchor="middle" class="lbl sub">plansDirectory</text>
+
+  <path class="flow" d="M 420 249 H 470"/>
+
+  <rect x="470" y="210" width="200" height="78" rx="6" class="boxR"/>
+  <text x="570" y="234" text-anchor="middle" class="lbl node">correction applied</text>
+  <text x="570" y="252" text-anchor="middle" class="lbl node">to the plan</text>
+  <text x="570" y="270" text-anchor="middle" class="lbl sub">before any code changes</text>
+  <text x="570" y="284" text-anchor="middle" class="lbl sub">cheap: plain text edit</text>
+
+  <path class="flow" d="M 670 249 H 720"/>
+
+  <rect x="720" y="216" width="130" height="66" rx="6" class="boxP"/>
+  <text x="785" y="240" text-anchor="middle" class="lbl node">execute</text>
+  <text x="785" y="256" text-anchor="middle" class="lbl sub">ExitPlanMode</text>
+  <text x="785" y="272" text-anchor="middle" class="lbl sub">runs the plan</text>
+
+  <path class="flow" d="M 850 249 H 900"/>
+
+  <rect x="900" y="216" width="100" height="66" rx="6" class="boxR"/>
+  <text x="950" y="242" text-anchor="middle" class="lbl node">smaller</text>
+  <text x="950" y="258" text-anchor="middle" class="lbl node">review</text>
+  <text x="950" y="274" text-anchor="middle" class="lbl sub">matches the plan</text>
+
+  <!-- annotation panel -->
+  <rect x="60" y="316" width="940" height="86" rx="6" class="boxA"/>
+  <text x="76" y="336" class="lbl tiny" font-weight="700">Why this is cheaper</text>
+  <text x="76" y="354" class="lbl tiny">Plan mode runs the exploration phase with tool calls read-only, so nothing on disk changes until ExitPlanMode is called.</text>
+  <text x="76" y="370" class="lbl tiny">The correction happens on the plan text at that reviewable checkpoint &#8212; a text edit &#8212; not on a diff already spread across files.</text>
+  <text x="76" y="386" class="lbl tiny">The plan itself is persisted under the plansDirectory setting, so the reviewable artifact has a durable location.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="416" x2="1020" y2="416" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="428" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="441" class="lbl tiny">prompt / control step</text>
+  <rect x="230" y="428" width="22" height="16" rx="3" class="boxW"/>
+  <text x="260" y="441" class="lbl tiny">exploration / raw diff</text>
+  <rect x="470" y="428" width="22" height="16" rx="3" class="boxR"/>
+  <text x="500" y="441" class="lbl tiny">correction / resolved outcome</text>
+  <rect x="740" y="428" width="22" height="16" rx="3" class="boxD"/>
+  <text x="770" y="441" class="lbl tiny">expensive correction (shaded = rework)</text>
+</svg>

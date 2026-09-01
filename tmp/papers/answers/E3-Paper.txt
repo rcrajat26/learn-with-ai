@@ -1,0 +1,110 @@
+Section 1 — DSA & Data Structures
+Q1. HashMap vs TreeMap: what ordering does each give when you iterate, and what are the complexities of get/put in each?
+- hashmap doesnt give any order, while treemap gives increasing order. for HM - get and put is O(1), for TM get and put is O(logN)
+--------------
+Q2. Binary search requires a precondition on the data. What is it, why does the algorithm break without it, and how many comparisons (roughly) does it need for 1,000,000 elements?
+- For Binary search the data must be sorted (inc/dec), the search is based on the value if smaller than current node, it lies left of the current otherwise right of the node. If the data is not sorted any data can occur anywhere breaking the binary search. it needs log2(1,000,000) approx 20 iterations to find the data.
+--------------
+==============
+Section 2 — Java Core
+Q3. What are the three distinct uses of the final keyword, and what does each prevent? Does a final List field mean the list can't change?
+- final variable cant be assigned with a different value (if holding a reference, cant change its reference but value stored in the reference can be changed)
+- final method cant be overridden in the child class
+- final class cant be inherited (hence abstract class or interface cant be final)
+- a final list means the assigned list cant be changed to a different list but the list can be operated upon add/remove/update are allowed.
+--------------
+Q4. Primitives vs wrapper classes (int vs Integer): name two differences, and one place where only the wrapper works.
+- primitive is a simple value not a class
+- hence primitive doesn't support any methods.
+- While wrapper class is a wrapper around the particular primitive provides methods to operate on the value.
+- In the collections we can only use wrapper class and not primitive types
+--------------
+==============
+Section 3 — Concurrency & JVM
+Q5. JVM memory: what lives on the heap vs on a thread's stack? Which error does each produce when exhausted?
+- objects created live on heap while stack holds references to those objects and primitive values.
+- stack when exhausted gives stackoverflow, heap when exhausted gives OutOfMemoryException
+--------------
+Q6. What is a deadlock? Describe the minimal setup with two threads and two locks that produces one.
+- Deadlock is a situation where 2 thread have acquired lock on some resources and waiting for each other to release the lock.
+=========================================
+- ***********ADD ANSWER HERE************|
+=========================================
+--------------
+==============
+Section 4 — Spring & JPA
+Q7. What does @Transactional on a service method do — what starts, and what are the two possible endings?
+- lets say there are n operations, any one of those fail we roll back all the previous actions
+- We pass everything and persist all the entities or one of the operation fails and we will not persist any entities.
+--------------
+Q8. Spring Data JPA's findById returns Optional<T>. What problem does that design solve compared to returning T (or null)?
+(Not sure on this)
+--------------
+==============
+Section 5 — SQL & Databases
+Q9. Primary key vs foreign key vs unique constraint — one sentence each on what they enforce.
+- Primary key is the principal identifier for each row in a given table which must be unique.
+- Foreign Key is primary key of another table referenced in the current table.
+- Unique constraint ensures the data entered for that particular column remains unique across all rows.
+--------------
+Q10. What is a database index? What does it speed up, and what does it cost you?
+- Not fully aware of the concept
+- The database index is applied on a column which makes it searchable on faster speed.
+- It costs us additional space i guess
+--------------
+==============
+Section 6 — Networking & OS
+Q11. What extra protection does HTTPS give over HTTP? Name the two main things an attacker on the same network can do to plain HTTP traffic.
+- HTTP encrypts the data being exchanged
+- Not entirely sure but the plain exchange of data can maliciously by using attacks like MiM i guess
+--------------
+Q12. You suspect a process is hogging the CPU on a Linux box. Which command shows you live per-process CPU/memory? And how do you stop a process once you know its PID (name the polite way and the forceful way)?
+(Not sure on this)
+--------------
+==============
+Section 7 — API & Web Security
+Q13. Authentication vs authorization — define each, and give the HTTP status code conventionally used when each one fails.
+- Authentication is whether the user has right credentials - on failure we reply 401. Authorization is whether the user has role to access the requested resource - on failure we reply 403.
+--------------
+Q14. What does it mean for an operation to be idempotent? Which HTTP methods are idempotent by contract, and why does it matter for retries?
+- An Idempotent operation is the one which upon multiple tries won't change the state of resource
+- by contract GET and DELETE are idempotent
+- a non-idempotent operation upon retrying can create duplicate copies of the resource or subresource
+--------------
+==============
+Section 8 — Messaging & Caching
+Q15. In messaging, what do the terms producer, consumer, and broker mean? What happens to messages if all consumers are temporarily down?
+- A producer is the one who initiates the message, broker connects the producer and consumers based on topic, consumer accepts the message and processes the message.
+- Retry happens to all the consumers
+--------------
+Q16. Cache hit vs cache miss. Your cache shows a 15% hit ratio — is the cache helping? What would you check?
+- Cache hit is when we have the requested key's data in the cache, cache miss is when we have not cached the data for requested key
+- A low cache hit ratio means cache isn't helping, we would check the cache to see if have enough space
+--------------
+==============
+Section 9 — Testing & Craft
+Q17. Read this test and state what it verifies, and one thing about its structure that follows good practice:
+@Test
+void appliesTenPercentDiscountForLoyalCustomers() {
+    Customer c = new Customer("id-1", LoyaltyTier.GOLD);   // given
+    BigDecimal price = service.priceFor(c, item);           // when
+    assertThat(price).isEqualByComparingTo("90.00");        // then
+}
+- It verifies if the GOLD tier members get 10% discount
+- It creates data in given supplies operations to be done in when and checking is done in then following a good practice.
+--------------
+Q18. Why do teams use feature branches and pull requests instead of everyone committing straight to main? Two reasons.
+- It poses risk of wrong/bug-prone code to be merged.
+- When a pipeline on main fails it blocks everyone who is taking a pull from main till the issue is fixed
+--------------
+==============
+Section 10 — Cloud & DevOps
+Q19. AWS: what is a region, what is an availability zone, and why would you run a service across two AZs?
+- AWS region such as ap-southeast-1 is a specific geolocation where the set of AWS DCs are located, an AZ is the DC(s) in the given AWS region.
+- Deploying on multiple AZs ensure HA, if any one DC is down other remains up.
+--------------
+Q20. What is a rollback? Name two things about how you build/deploy that make rollbacks fast and safe.
+- a rollback is process of deploying previous working version back to the servers.
+- keeping checkpoints/tags and integrating a rollback step in the same pipeline
+--------------
+==============

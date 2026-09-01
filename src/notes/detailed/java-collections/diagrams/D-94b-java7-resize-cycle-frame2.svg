@@ -1,0 +1,56 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Java 7 concurrent resize cycle frame 2 of 4: T1 preempted mid-transfer holding stale locals e=A next=B">
+  <defs>
+    <marker id="arrow94b" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="32" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937">Java 7's concurrent-resize cycle -- frame 2 of 4</text>
+
+  <!-- code box -->
+  <rect x="40" y="48" width="820" height="96" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="70" font-family="sans-serif" font-size="13" fill="#1f2937">
+    <tspan x="60" dy="0">Entry&lt;K,V&gt; next = e.next;</tspan>
+    <tspan x="60" dy="20">int i = indexFor(e.hash, newCapacity);</tspan>
+    <tspan x="60" dy="20">e.next = newTable[i];</tspan>
+    <tspan x="60" dy="20">newTable[i] = e;</tspan>
+  </text>
+
+  <!-- old table -->
+  <rect x="60" y="165" width="340" height="130" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="188" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">old table, bin[i] (unchanged)</text>
+
+  <rect x="90" y="210" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="125" y="235" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+  <line x1="160" y1="230" x2="210" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow94b)"/>
+  <rect x="210" y="210" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="245" y="235" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+  <line x1="280" y1="230" x2="330" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow94b)"/>
+  <text x="345" y="235" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">null</text>
+  <text x="230" y="278" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">A -&gt; B -&gt; null</text>
+
+  <!-- new table -->
+  <rect x="500" y="165" width="340" height="130" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="188" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">new table</text>
+  <text x="670" y="235" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">not written by either thread yet</text>
+
+  <!-- T1 preempted, amber, with locals -->
+  <rect x="60" y="330" width="340" height="110" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="230" y="352" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">T1 -- preempted mid-transfer</text>
+  <rect x="80" y="364" width="140" height="60" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="150" y="388" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">e = A</text>
+  <text x="150" y="408" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">next = B</text>
+  <text x="310" y="400" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">T1's local variables (stale)</text>
+
+  <!-- T2 waiting -->
+  <rect x="500" y="330" width="340" height="70" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="358" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">T2</text>
+  <text x="670" y="380" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">runs uninterrupted from here</text>
+
+  <!-- write log -->
+  <rect x="60" y="460" width="780" height="70" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="490" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">pointer writes so far: none yet</text>
+  <text x="450" y="512" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">T1 has only read e.next into "next" -- it has not written anything to A, B, or newTable</text>
+</svg>

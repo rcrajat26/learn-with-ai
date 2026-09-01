@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1120 1100" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Try-with-resources close order and suppression, four frames, plus a hand-written finally comparison. Frame 1: a LedgerConnection named ledger is declared first, a PaymentRunFileWriter named file is declared second. Frame 2: the try body throws LedgerImbalanceException with message run PR-2026-08-29 debits 4820.00 credits 4819.67. Frame 3: resources close in reverse declaration order — file.close() runs first and itself throws IOException, payment-run file handle already released; ledger.close() runs second and completes normally. Frame 4: the resulting stack trace shows LedgerImbalanceException as the primary exception with the IOException attached underneath a Suppressed line, because ledger.close() succeeded there is no second suppressed entry. The comparison panel shows the same scenario written with a hand-written finally block instead of try-with-resources: the finally block's file.close() throws IOException, which propagates and destroys the in-flight LedgerImbalanceException — labeled primary exception lost, because a hand-written finally has no suppression mechanism.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+    <marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="arrGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1100" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">try-with-resources: close order and suppression &#8212; a PaymentRun</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; DECLARATION ORDER</text>
+  <line x1="20" y1="74" x2="1100" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="90" width="460" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="112" class="bodyb">1 &#8212; declared first</text>
+  <text x="80" y="136" class="code">LedgerConnection ledger</text>
+
+  <rect x="600" y="90" width="460" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="620" y="112" class="bodyb">2 &#8212; declared second</text>
+  <text x="620" y="136" class="code">PaymentRunFileWriter file</text>
+
+  <text x="60" y="182" class="small">try (LedgerConnection ledger = ...; PaymentRunFileWriter file = ...) &#8212; opened top to bottom, in this order</text>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="210" class="h2">FRAME 2 &#8212; BODY THROWS</text>
+  <line x1="20" y1="218" x2="1100" y2="218" stroke="#d1d5db" stroke-width="1"/>
+
+  <path d="M 560 160 V 230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <rect x="60" y="230" width="1000" height="80" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="252" class="bodyb">the try body throws:</text>
+  <text x="80" y="274" class="code">LedgerImbalanceException: run PR-2026-08-29 debits 4820.00 credits 4819.67</text>
+  <text x="80" y="296" class="small">(uncaught here &#8212; propagates outward, but the resources must close first)</text>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="330" class="h2">FRAME 3 &#8212; REVERSE CLOSE</text>
+  <line x1="20" y1="338" x2="1100" y2="338" stroke="#d1d5db" stroke-width="1"/>
+
+  <path d="M 560 310 V 360" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="290" y1="360" x2="830" y2="360" stroke="#475569" stroke-width="2"/>
+  <path d="M 290 360 V 390" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <path d="M 830 360 V 390" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <rect x="60" y="390" width="460" height="110" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="412" class="bodyb">1st closed: file.close()</text>
+  <text x="80" y="434" class="code">throws IOException:</text>
+  <text x="80" y="456" class="code">  payment-run file handle already released</text>
+  <text x="80" y="478" class="small">(does not replace the primary &#8212; see Frame 4)</text>
+
+  <rect x="600" y="390" width="460" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="620" y="412" class="bodyb">2nd closed: ledger.close()</text>
+  <text x="620" y="434" class="code">completes normally &#8212; nothing to attach</text>
+
+  <!-- FRAME 4 -->
+  <text x="20" y="520" class="h2">FRAME 4 &#8212; RESULT</text>
+  <line x1="20" y1="528" x2="1100" y2="528" stroke="#d1d5db" stroke-width="1"/>
+
+  <path d="M 290 500 V 556" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrG)"/>
+  <path d="M 830 460 V 556" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrGray)"/>
+
+  <rect x="60" y="556" width="1000" height="120" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="578" class="bodyb">the printed stack trace:</text>
+  <text x="80" y="600" class="code">LedgerImbalanceException: run PR-2026-08-29 debits 4820.00 credits 4819.67</text>
+  <text x="80" y="618" class="code">  at PaymentService.run(PaymentService.java:142)</text>
+  <text x="80" y="636" class="code">  Suppressed: java.io.IOException: payment-run file handle already released</text>
+  <text x="80" y="656" class="small">(ledger.close() succeeded &#8212; no second Suppressed entry is added)</text>
+
+  <!-- COMPARISON -->
+  <text x="20" y="696" class="h2">COMPARISON &#8212; HAND-WRITTEN finally (NO TRY-WITH-RESOURCES)</text>
+  <line x1="20" y1="704" x2="1100" y2="704" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="720" width="460" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="742" class="bodyb">try body</text>
+  <text x="80" y="764" class="code">throw new LedgerImbalanceException(...)</text>
+  <text x="80" y="788" class="bodyb" fill="#b91c1c">[DESTROYED at runtime]</text>
+
+  <path d="M 520 765 H 600" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <rect x="600" y="720" width="460" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="620" y="742" class="bodyb">finally</text>
+  <text x="620" y="764" class="code">file.close();  // throws IOException</text>
+  <text x="620" y="788" class="small">this IOException is what the caller actually sees</text>
+
+  <rect x="60" y="826" width="1000" height="100" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="848" class="bodyb" fill="#b91c1c">PRIMARY EXCEPTION LOST</text>
+  <text x="80" y="870" class="small">Hand-written finally has no suppression mechanism: the IOException from</text>
+  <text x="80" y="890" class="small">close() replaces LedgerImbalanceException entirely &#8212; the caller never learns</text>
+  <text x="80" y="910" class="small">the payment run was imbalanced.</text>
+
+  <!-- LEGEND -->
+  <text x="20" y="966" class="h2">LEGEND</text>
+  <line x1="20" y1="974" x2="1100" y2="974" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="990" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1003" class="small">primary &#8212; resources as declared / opened</text>
+
+  <rect x="30" y="1016" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="58" y="1029" class="small">degraded &#8212; an exception is thrown here (body, close(), or the printed result)</text>
+
+  <rect x="30" y="1042" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="1055" class="small">resolved &#8212; close() completes normally, nothing to attach</text>
+
+  <line x1="640" y1="998" x2="666" y2="998" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <text x="674" y="1003" class="small">A &#8594; B : primary flow, control passes from A to B</text>
+
+  <line x1="640" y1="1024" x2="666" y2="1024" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrG)"/>
+  <text x="674" y="1029" class="small">A &#8594; B : B is attached under A's Suppressed[] array</text>
+
+  <line x1="640" y1="1050" x2="666" y2="1050" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrGray)"/>
+  <text x="674" y="1055" class="small">A &#8594; B : informational &#8212; no exception carried on this path</text>
+</svg>

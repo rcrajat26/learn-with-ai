@@ -1,0 +1,162 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Stream.concat called in a loop over five deposit pages builds a left-deep binary tree
+     five levels deep: concat5 at depth 5 wraps concat4 at depth 4, which wraps concat3 at depth 3, which
+     wraps concat2 at depth 2, which wraps concat1 at depth 1, whose children are Stream.empty() and
+     page1.stream(). Traversal recurses through all five nested levels and throws StackOverflowError once
+     the loop runs over many pages. The fix on the right collects the same five sources into a List and
+     flat-maps them, a structure only one level deep.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 11.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .depth { font-size: 10.5px; font-weight: 700; fill: #b45309; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">Stream.concat IN A LOOP BUILDS A LEFT-DEEP TREE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="30" y="66" class="lbl h2">LEFT-DEEP CONCAT TREE — 5 LEVELS DEEP</text>
+  <text x="590" y="66" class="lbl h2">COLLECT + flatMap — 1 LEVEL DEEP</text>
+  <line x1="560" y1="52" x2="560" y2="820" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ LEFT: left-deep tree ============ -->
+
+  <!-- concat_5 root, depth 5 -->
+  <rect x="90" y="86" width="140" height="50" rx="6" class="boxH"/>
+  <text x="160" y="107" text-anchor="middle" class="lbl node">concat_5</text>
+  <text x="160" y="123" text-anchor="middle" class="lbl depth">depth 5 (root)</text>
+
+  <path class="flow" d="M 160 136 V 176"/>
+  <path class="flow" d="M 200 136 V 156 H 340 V 176"/>
+
+  <!-- page5 leaf -->
+  <rect x="270" y="178" width="140" height="46" rx="6" class="boxW"/>
+  <text x="340" y="200" text-anchor="middle" class="lbl node">page5.stream()</text>
+  <text x="340" y="216" text-anchor="middle" class="lbl sub">leaf, right child</text>
+
+  <!-- concat_4 depth4 -->
+  <rect x="90" y="178" width="140" height="50" rx="6" class="boxH"/>
+  <text x="160" y="199" text-anchor="middle" class="lbl node">concat_4</text>
+  <text x="160" y="215" text-anchor="middle" class="lbl depth">depth 4</text>
+
+  <path class="flow" d="M 160 228 V 268"/>
+  <path class="flow" d="M 200 228 V 248 H 340 V 268"/>
+
+  <rect x="270" y="270" width="140" height="46" rx="6" class="boxW"/>
+  <text x="340" y="292" text-anchor="middle" class="lbl node">page4.stream()</text>
+  <text x="340" y="308" text-anchor="middle" class="lbl sub">leaf, right child</text>
+
+  <!-- concat_3 depth3 -->
+  <rect x="90" y="270" width="140" height="50" rx="6" class="boxH"/>
+  <text x="160" y="291" text-anchor="middle" class="lbl node">concat_3</text>
+  <text x="160" y="307" text-anchor="middle" class="lbl depth">depth 3</text>
+
+  <path class="flow" d="M 160 320 V 360"/>
+  <path class="flow" d="M 200 320 V 340 H 340 V 360"/>
+
+  <rect x="270" y="362" width="140" height="46" rx="6" class="boxW"/>
+  <text x="340" y="384" text-anchor="middle" class="lbl node">page3.stream()</text>
+  <text x="340" y="400" text-anchor="middle" class="lbl sub">leaf, right child</text>
+
+  <!-- concat_2 depth2 -->
+  <rect x="90" y="362" width="140" height="50" rx="6" class="boxH"/>
+  <text x="160" y="383" text-anchor="middle" class="lbl node">concat_2</text>
+  <text x="160" y="399" text-anchor="middle" class="lbl depth">depth 2</text>
+
+  <path class="flow" d="M 160 412 V 452"/>
+  <path class="flow" d="M 200 412 V 432 H 340 V 452"/>
+
+  <rect x="270" y="454" width="140" height="46" rx="6" class="boxW"/>
+  <text x="340" y="476" text-anchor="middle" class="lbl node">page2.stream()</text>
+  <text x="340" y="492" text-anchor="middle" class="lbl sub">leaf, right child</text>
+
+  <!-- concat_1 depth1 -->
+  <rect x="90" y="454" width="140" height="50" rx="6" class="boxH"/>
+  <text x="160" y="475" text-anchor="middle" class="lbl node">concat_1</text>
+  <text x="160" y="491" text-anchor="middle" class="lbl depth">depth 1</text>
+
+  <path class="flow" d="M 130 504 V 524 H 70 V 544"/>
+  <path class="flow" d="M 190 504 V 524 H 250 V 544"/>
+
+  <rect x="10" y="546" width="120" height="46" rx="6" class="boxW"/>
+  <text x="70" y="568" text-anchor="middle" class="lbl node">Stream.empty()</text>
+  <text x="70" y="584" text-anchor="middle" class="lbl sub">left child, loop seed</text>
+
+  <rect x="190" y="546" width="120" height="46" rx="6" class="boxW"/>
+  <text x="250" y="568" text-anchor="middle" class="lbl node">page1.stream()</text>
+  <text x="250" y="584" text-anchor="middle" class="lbl sub">leaf, right child</text>
+
+  <!-- StackOverflowError callout at root -->
+  <rect x="60" y="620" width="440" height="66" rx="6" class="boxD"/>
+  <text x="80" y="642" class="lbl node" fill="#b91c1c">StackOverflowError at traversal</text>
+  <text x="80" y="660" class="lbl tiny">a terminal op (e.g. .count()) recurses through all 5 nested</text>
+  <text x="80" y="676" class="lbl tiny">concat levels; with thousands of pages this exceeds the stack</text>
+
+  <rect x="60" y="704" width="440" height="70" rx="6" class="panel"/>
+  <text x="76" y="724" class="lbl tiny" font-weight="700">Loop that built this</text>
+  <text x="76" y="742" class="lbl tiny">Stream&lt;Money&gt; merged = Stream.empty();</text>
+  <text x="76" y="760" class="lbl tiny">for (var page : pages) merged = Stream.concat(merged, page.stream());</text>
+
+  <!-- ============ RIGHT: flatMap, 1 level ============ -->
+
+  <rect x="620" y="86" width="380" height="180" rx="6" class="boxW"/>
+  <text x="636" y="108" class="lbl body" font-weight="700">List&lt;Stream&lt;Money&gt;&gt; pages — the same 5 sources</text>
+  <line x1="636" y1="118" x2="984" y2="118" stroke="#9ca3af" stroke-width="1"/>
+  <text x="636" y="138" class="lbl tiny">page1.stream()</text>
+  <text x="636" y="156" class="lbl tiny">page2.stream()</text>
+  <text x="636" y="174" class="lbl tiny">page3.stream()</text>
+  <text x="636" y="192" class="lbl tiny">page4.stream()</text>
+  <text x="636" y="210" class="lbl tiny">page5.stream()</text>
+  <text x="636" y="234" class="lbl sub">List.of(page1, page2, page3, page4, page5)</text>
+  <text x="636" y="250" class="lbl sub">— one flat collection, not a nested tree</text>
+
+  <path class="flow" d="M 810 266 V 296"/>
+
+  <rect x="660" y="298" width="300" height="56" rx="6" class="boxH"/>
+  <text x="810" y="320" text-anchor="middle" class="lbl node">.stream().flatMap(List::stream)</text>
+  <text x="810" y="340" text-anchor="middle" class="lbl depth">depth 1</text>
+
+  <path class="flow" d="M 810 354 V 384"/>
+
+  <rect x="660" y="386" width="300" height="52" rx="6" class="boxR"/>
+  <text x="810" y="408" text-anchor="middle" class="lbl node">Stream&lt;Money&gt; merged</text>
+  <text x="810" y="424" text-anchor="middle" class="lbl sub">flat structure, no nesting</text>
+
+  <rect x="620" y="470" width="380" height="70" rx="6" class="panel"/>
+  <text x="636" y="490" class="lbl tiny" font-weight="700">Why depth stays 1</text>
+  <text x="636" y="508" class="lbl tiny">flatMap unwraps every source stream once, in a single</text>
+  <text x="636" y="524" class="lbl tiny">stage — the pages list can grow to any size without adding depth</text>
+
+  <!-- legend -->
+  <line x1="20" y1="800" x2="1020" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="814" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="827" class="lbl tiny">concat / flatMap operation, depth labelled</text>
+  <rect x="330" y="814" width="22" height="16" rx="3" class="boxW"/>
+  <text x="360" y="827" class="lbl tiny">source leaf (page stream or Stream.empty())</text>
+  <rect x="660" y="814" width="22" height="16" rx="3" class="boxR"/>
+  <text x="690" y="827" class="lbl tiny">merged result</text>
+  <rect x="820" y="814" width="22" height="16" rx="3" class="boxD"/>
+  <text x="850" y="827" class="lbl tiny">thrown error</text>
+  <path class="flow" d="M 20 858 H 60"/>
+  <text x="68" y="863" class="lbl tiny">A → B : B is a child of / produced from A</text>
+</svg>

@@ -1,0 +1,130 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree: does a new method in an interface count toward the single abstract method. If it overrides a public Object method such as equals, hashCode or toString, it does not count, as with Comparator's redundant equals override. If it is default, static or private, it does not count. If it declares its own type parameters it counts toward the SAM but makes the interface unusable as a lambda target. Otherwise it counts and the interface is a valid functional interface.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT COUNTS TOWARD THE SINGLE ABSTRACT METHOD</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT -->
+  <rect x="320" y="60" width="400" height="70" rx="6" class="boxP"/>
+  <text x="520" y="88" text-anchor="middle" class="lbl node">NEW METHOD ADDED TO THE INTERFACE</text>
+  <text x="520" y="110" text-anchor="middle" class="lbl body">is this method abstract?</text>
+
+  <!-- trunk + bus -->
+  <path class="bus" d="M 520 130 V 170"/>
+  <path class="bus" d="M 150 170 H 870"/>
+
+  <!-- drops to branches -->
+  <path class="flow" d="M 150 170 V 210"/>
+  <path class="flow" d="M 390 170 V 210"/>
+  <path class="flow" d="M 630 170 V 210"/>
+  <path class="flow" d="M 870 170 V 210"/>
+
+  <!-- BRANCH 1: overrides public Object method -->
+  <rect x="40" y="210" width="220" height="90" rx="6" class="boxW"/>
+  <text x="150" y="232" text-anchor="middle" class="lbl node">PUBLIC Object METHOD</text>
+  <text x="150" y="250" text-anchor="middle" class="lbl body">equals, hashCode, toString</text>
+  <text x="80" y="266" class="lbl sub">does not count toward SAM</text>
+  <text x="90" y="282" class="lbl sub">(e.g. Comparator.equals)</text>
+
+  <!-- BRANCH 2: default/static/private -->
+  <rect x="280" y="210" width="220" height="90" rx="6" class="boxW"/>
+  <text x="390" y="232" text-anchor="middle" class="lbl node">MODIFIER EXCLUSION</text>
+  <text x="390" y="250" text-anchor="middle" class="lbl body">default / static / private</text>
+  <text x="320" y="266" class="lbl sub">does not count toward SAM</text>
+
+  <!-- BRANCH 3: own type parameters -->
+  <rect x="520" y="210" width="220" height="90" rx="6" class="boxW"/>
+  <text x="630" y="232" text-anchor="middle" class="lbl node">OWN TYPE PARAMETERS</text>
+  <text x="630" y="250" text-anchor="middle" class="lbl body">declares &lt;T&gt; on the method</text>
+  <text x="565" y="266" class="lbl sub">counts toward SAM, but —</text>
+  <text x="580" y="282" class="lbl sub">blocks lambda target</text>
+
+  <!-- BRANCH 4: otherwise -->
+  <rect x="760" y="210" width="220" height="90" rx="6" class="boxW"/>
+  <text x="870" y="232" text-anchor="middle" class="lbl node">OTHERWISE</text>
+  <text x="870" y="250" text-anchor="middle" class="lbl body">plain abstract method</text>
+  <text x="800" y="266" class="lbl sub">no Object override,</text>
+  <text x="790" y="282" class="lbl sub">no own type parameters</text>
+
+  <!-- edges to leaves -->
+  <path class="flow" d="M 150 300 V 360 H 230 V 420"/>
+  <path class="flow" d="M 390 300 V 360 H 310 V 420"/>
+  <path class="flow" d="M 630 300 V 420"/>
+  <path class="flow" d="M 870 300 V 420"/>
+
+  <!-- LEAF: NOT FUNCTIONAL -->
+  <rect x="140" y="420" width="260" height="90" rx="6" class="boxD"/>
+  <text x="270" y="452" text-anchor="middle" class="lbl node" fill="#b91c1c">NOT FUNCTIONAL</text>
+  <text x="270" y="474" text-anchor="middle" class="lbl body" fill="#b91c1c">excluded from SAM count</text>
+  <text x="270" y="492" text-anchor="middle" class="lbl sub">(0 abstract methods added)</text>
+
+  <!-- LEAF: FUNCTIONAL BUT NOT LAMBDA-IMPLEMENTABLE -->
+  <rect x="505" y="420" width="250" height="90" rx="6" class="boxH"/>
+  <text x="630" y="452" text-anchor="middle" class="lbl node" fill="#b45309">FUNCTIONAL</text>
+  <text x="630" y="474" text-anchor="middle" class="lbl body" fill="#b45309">but not lambda-implementable</text>
+  <text x="630" y="492" text-anchor="middle" class="lbl sub">own type param blocks target</text>
+
+  <!-- LEAF: FUNCTIONAL -->
+  <rect x="780" y="420" width="180" height="90" rx="6" class="boxR"/>
+  <text x="870" y="452" text-anchor="middle" class="lbl node" fill="#15803d">FUNCTIONAL</text>
+  <text x="870" y="474" text-anchor="middle" class="lbl body" fill="#15803d">SAM count = 1</text>
+  <text x="870" y="492" text-anchor="middle" class="lbl sub">valid lambda target</text>
+
+  <!-- ANNOTATION PANELS -->
+  <rect x="40" y="545" width="460" height="110" rx="6" class="panel"/>
+  <text x="60" y="568" class="lbl body" font-weight="700">Comparator&lt;T&gt; EXAMPLE</text>
+  <text x="60" y="586" class="lbl tiny">Comparator&lt;T&gt; declares boolean equals(Object)</text>
+  <text x="60" y="602" class="lbl tiny">— that overrides Object.equals -&gt; does not count.</text>
+  <text x="60" y="618" class="lbl tiny">compare(T,T) has no Object override and no own</text>
+  <text x="60" y="634" class="lbl tiny">type parameters -&gt; it counts. SAM = compare only.</text>
+
+  <rect x="540" y="545" width="440" height="110" rx="6" class="panel"/>
+  <text x="560" y="568" class="lbl body" font-weight="700">WHY OWN TYPE PARAMETERS BLOCK LAMBDAS</text>
+  <text x="560" y="586" class="lbl tiny">A lambda body cannot supply &lt;T&gt; — the compiler</text>
+  <text x="560" y="602" class="lbl tiny">has no target-type way to infer it, so the</text>
+  <text x="560" y="618" class="lbl tiny">interface stays functional but is unusable as</text>
+  <text x="560" y="634" class="lbl tiny">a lambda target (anonymous class only).</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="680" x2="1020" y2="680" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="694" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="707" class="lbl tiny">subject condition (root)</text>
+  <rect x="20" y="718" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="731" class="lbl tiny">decision condition</text>
+  <rect x="20" y="742" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="755" class="lbl tiny">not functional</text>
+  <rect x="20" y="766" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="779" class="lbl tiny">functional, not lambda-implementable</text>
+
+  <rect x="460" y="694" width="22" height="16" rx="3" class="boxR"/>
+  <text x="490" y="707" class="lbl tiny">functional (valid SAM)</text>
+  <rect x="460" y="718" width="22" height="16" rx="3" class="panel"/>
+  <text x="490" y="731" class="lbl tiny">annotation / worked example</text>
+  <path class="flow" d="M 460 748 H 500"/>
+  <text x="508" y="753" class="lbl tiny">A → B : B follows from A</text>
+</svg>

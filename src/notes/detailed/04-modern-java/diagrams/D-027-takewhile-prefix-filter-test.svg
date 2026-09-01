@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1120 440" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison over the ordered stake amounts 4.20, 3.33, 12.00, 2.10, 1.05 with predicate amount less than 5. Left, filter tests every element and keeps 4.20, 3.33, 2.10, 1.05, dropping only 12.00. Right, takeWhile stops at the first failing element, 12.00, so 2.10 and 1.05 are never evaluated, and the output is the prefix 4.20, 3.33 only.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #374151; }
+    .fail  { font-size: 10.5px; fill: #b91c1c; font-weight: 700; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .stop  { stroke: #b91c1c; stroke-width: 1.8; stroke-dasharray: 6 4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="440" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TAKEWHILE IS A PREFIX, FILTER IS A TEST</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl tiny">INPUT (ordered): 4.20, 3.33, 12.00, 2.10, 1.05 — predicate: amount &lt; 5</text>
+
+  <line x1="560" y1="85" x2="560" y2="360" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: filter -->
+  <text x="20" y="92" class="lbl h2">FILTER — TESTS EVERY ELEMENT</text>
+
+  <rect x="40" y="110" width="80" height="50" rx="5" class="boxR"/>
+  <text x="80" y="130" text-anchor="middle" class="lbl body">4.20</text>
+  <text x="80" y="146" text-anchor="middle" class="lbl sub">PASS</text>
+
+  <rect x="140" y="110" width="80" height="50" rx="5" class="boxR"/>
+  <text x="180" y="130" text-anchor="middle" class="lbl body">3.33</text>
+  <text x="180" y="146" text-anchor="middle" class="lbl sub">PASS</text>
+
+  <rect x="240" y="110" width="80" height="50" rx="5" class="boxD"/>
+  <text x="280" y="130" text-anchor="middle" class="lbl body">12.00</text>
+  <text x="280" y="146" text-anchor="middle" class="lbl fail">FAIL</text>
+
+  <rect x="340" y="110" width="80" height="50" rx="5" class="boxR"/>
+  <text x="380" y="130" text-anchor="middle" class="lbl body">2.10</text>
+  <text x="380" y="146" text-anchor="middle" class="lbl sub">PASS</text>
+
+  <rect x="440" y="110" width="80" height="50" rx="5" class="boxR"/>
+  <text x="480" y="130" text-anchor="middle" class="lbl body">1.05</text>
+  <text x="480" y="146" text-anchor="middle" class="lbl sub">PASS</text>
+
+  <path class="flow" d="M 280 160 V 175 H 230 V 200"/>
+  <text x="300" y="180" class="lbl sub">filter(amount &lt; 5)</text>
+
+  <rect x="40" y="200" width="80" height="50" rx="5" class="boxR"/>
+  <text x="80" y="220" text-anchor="middle" class="lbl body">4.20</text>
+  <text x="80" y="236" text-anchor="middle" class="lbl sub">out[0]</text>
+
+  <rect x="140" y="200" width="80" height="50" rx="5" class="boxR"/>
+  <text x="180" y="220" text-anchor="middle" class="lbl body">3.33</text>
+  <text x="180" y="236" text-anchor="middle" class="lbl sub">out[1]</text>
+
+  <rect x="240" y="200" width="80" height="50" rx="5" class="boxR"/>
+  <text x="280" y="220" text-anchor="middle" class="lbl body">2.10</text>
+  <text x="280" y="236" text-anchor="middle" class="lbl sub">out[2]</text>
+
+  <rect x="340" y="200" width="80" height="50" rx="5" class="boxR"/>
+  <text x="380" y="220" text-anchor="middle" class="lbl body">1.05</text>
+  <text x="380" y="236" text-anchor="middle" class="lbl sub">out[3]</text>
+
+  <rect x="40" y="270" width="480" height="80" rx="6" class="boxA"/>
+  <text x="56" y="290" class="lbl tiny" font-weight="700">filter() CONTRACT</text>
+  <text x="56" y="308" class="lbl tiny">All 5 elements are tested against the predicate</text>
+  <text x="56" y="324" class="lbl tiny">4 pass and are kept, in original relative order</text>
+  <text x="56" y="340" class="lbl tiny">1 fails (12.00) and is dropped, not in output</text>
+
+  <!-- RIGHT: takeWhile -->
+  <text x="600" y="92" class="lbl h2">TAKEWHILE — STOPS AT FIRST FAILURE</text>
+
+  <rect x="600" y="110" width="80" height="50" rx="5" class="boxR"/>
+  <text x="640" y="130" text-anchor="middle" class="lbl body">4.20</text>
+  <text x="640" y="146" text-anchor="middle" class="lbl sub">PASS</text>
+
+  <rect x="700" y="110" width="80" height="50" rx="5" class="boxR"/>
+  <text x="740" y="130" text-anchor="middle" class="lbl body">3.33</text>
+  <text x="740" y="146" text-anchor="middle" class="lbl sub">PASS</text>
+
+  <rect x="800" y="110" width="80" height="50" rx="5" class="boxD"/>
+  <text x="840" y="130" text-anchor="middle" class="lbl body">12.00</text>
+  <text x="840" y="146" text-anchor="middle" class="lbl fail">FAIL — stop</text>
+
+  <rect x="900" y="110" width="80" height="50" rx="5" class="boxW"/>
+  <text x="940" y="130" text-anchor="middle" class="lbl body">2.10</text>
+  <text x="940" y="146" text-anchor="middle" class="lbl sub">not evaluated</text>
+
+  <rect x="1000" y="110" width="80" height="50" rx="5" class="boxW"/>
+  <text x="1040" y="130" text-anchor="middle" class="lbl body">1.05</text>
+  <text x="1040" y="146" text-anchor="middle" class="lbl sub">not evaluated</text>
+
+  <line x1="890" y1="95" x2="890" y2="260" class="stop"/>
+  <text x="896" y="104" class="lbl fail">STOP</text>
+  <text x="896" y="255" class="lbl tiny">traversal ends here</text>
+
+  <path class="flow" d="M 640 160 V 200"/>
+  <path class="flow" d="M 740 160 V 200"/>
+
+  <rect x="600" y="200" width="80" height="50" rx="5" class="boxR"/>
+  <text x="640" y="220" text-anchor="middle" class="lbl body">4.20</text>
+  <text x="640" y="236" text-anchor="middle" class="lbl sub">out[0]</text>
+
+  <rect x="700" y="200" width="80" height="50" rx="5" class="boxR"/>
+  <text x="740" y="220" text-anchor="middle" class="lbl body">3.33</text>
+  <text x="740" y="236" text-anchor="middle" class="lbl sub">out[1]</text>
+
+  <rect x="600" y="270" width="480" height="80" rx="6" class="boxA"/>
+  <text x="616" y="290" class="lbl tiny" font-weight="700">takeWhile() CONTRACT</text>
+  <text x="616" y="308" class="lbl tiny">Evaluates the prefix only, stops at first failure (12.00)</text>
+  <text x="616" y="324" class="lbl tiny">2.10 and 1.05 are never evaluated, not just excluded</text>
+  <text x="616" y="340" class="lbl tiny">Output = longest passing prefix: [4.20, 3.33]</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="368" x2="1100" y2="368" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="380" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="393" class="lbl tiny">tested, passes predicate — kept</text>
+  <rect x="320" y="380" width="22" height="16" rx="3" class="boxD"/>
+  <text x="350" y="393" class="lbl tiny">tested, fails predicate — excluded</text>
+  <rect x="620" y="380" width="22" height="16" rx="3" class="boxW"/>
+  <text x="650" y="393" class="lbl tiny">never evaluated (takeWhile only)</text>
+  <path class="flow" d="M 900 388 H 940"/>
+  <text x="950" y="393" class="lbl tiny">A → B : B is produced from A</text>
+</svg>

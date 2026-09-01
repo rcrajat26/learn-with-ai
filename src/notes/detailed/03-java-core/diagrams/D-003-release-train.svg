@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1400 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline from Java 8 to Java 25 with a tick every 6 months, LTS releases at 8, 11, 17, 21 and 25 drawn taller, Java 21 marked as this guide's baseline, and six version-trap features pinned to their release: substring copy 7, indy concat 9, nestmates 11, helpful NPE default 15, strictfp no-op 17, UTF-8 default 18">
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="700" y="28" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937">The release train and where 21 sits</text>
+  <rect x="520" y="40" width="360" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="700" y="55" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">axis from Java 8 to Java 25, one tick every 6 months</text>
+
+  <!-- main axis -->
+  <line x1="40" y1="250" x2="1360" y2="250" stroke="#737373" stroke-width="2"/>
+
+  <!-- ticks: version -> x  7:60 8:131 9:202 10:273 11:344 12:416 13:487 14:558 15:629 16:700 17:771 18:842 19:913 20:984 21:1056 22:1127 23:1198 24:1269 25:1340 -->
+  <g stroke="#737373" stroke-width="2">
+    <line x1="60" y1="240" x2="60" y2="260"/>
+    <line x1="131" y1="225" x2="131" y2="265"/>
+    <line x1="202" y1="240" x2="202" y2="260"/>
+    <line x1="273" y1="240" x2="273" y2="260"/>
+    <line x1="344" y1="225" x2="344" y2="265"/>
+    <line x1="416" y1="240" x2="416" y2="260"/>
+    <line x1="487" y1="240" x2="487" y2="260"/>
+    <line x1="558" y1="240" x2="558" y2="260"/>
+    <line x1="629" y1="240" x2="629" y2="260"/>
+    <line x1="700" y1="240" x2="700" y2="260"/>
+    <line x1="771" y1="225" x2="771" y2="265"/>
+    <line x1="842" y1="240" x2="842" y2="260"/>
+    <line x1="913" y1="240" x2="913" y2="260"/>
+    <line x1="984" y1="240" x2="984" y2="260"/>
+    <line x1="1127" y1="240" x2="1127" y2="260"/>
+    <line x1="1198" y1="240" x2="1198" y2="260"/>
+    <line x1="1269" y1="240" x2="1269" y2="260"/>
+  </g>
+  <!-- LTS 21, drawn with emphasis stroke -->
+  <line x1="1056" y1="225" x2="1056" y2="265" stroke="#525252" stroke-width="4"/>
+  <!-- LTS 25 -->
+  <line x1="1340" y1="225" x2="1340" y2="265" stroke="#737373" stroke-width="2"/>
+
+  <!-- version labels under axis -->
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <text x="60" y="285" text-anchor="middle">Java 7</text>
+    <text x="131" y="285" text-anchor="middle">Java 8</text>
+    <text x="202" y="285" text-anchor="middle">Java 9</text>
+    <text x="273" y="285" text-anchor="middle">Java 10</text>
+    <text x="344" y="285" text-anchor="middle">Java 11</text>
+    <text x="416" y="285" text-anchor="middle">Java 12</text>
+    <text x="487" y="285" text-anchor="middle">Java 13</text>
+    <text x="558" y="285" text-anchor="middle">Java 14</text>
+    <text x="629" y="285" text-anchor="middle">Java 15</text>
+    <text x="700" y="285" text-anchor="middle">Java 16</text>
+    <text x="771" y="285" text-anchor="middle">Java 17</text>
+    <text x="842" y="285" text-anchor="middle">Java 18</text>
+    <text x="913" y="285" text-anchor="middle">Java 19</text>
+    <text x="984" y="285" text-anchor="middle">Java 20</text>
+    <text x="1056" y="285" text-anchor="middle">Java 21</text>
+    <text x="1127" y="285" text-anchor="middle">Java 22</text>
+    <text x="1198" y="285" text-anchor="middle">Java 23</text>
+    <text x="1269" y="285" text-anchor="middle">Java 24</text>
+    <text x="1340" y="285" text-anchor="middle">Java 25</text>
+  </g>
+
+  <!-- LTS tags -->
+  <g>
+    <rect x="111" y="300" width="40" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="131" y="315" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">LTS</text>
+    <rect x="324" y="300" width="40" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="344" y="315" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">LTS</text>
+    <rect x="751" y="300" width="40" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="771" y="315" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">LTS</text>
+    <rect x="1036" y="300" width="40" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="1056" y="315" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">LTS</text>
+    <rect x="1320" y="300" width="40" height="20" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="1340" y="315" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">LTS</text>
+  </g>
+
+  <!-- Java 21 baseline callout, row A -->
+  <g>
+    <rect x="976" y="70" width="160" height="40" rx="5" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="1056" y="86" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Java 21</text>
+    <text x="1056" y="102" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this guide's baseline</text>
+    <line x1="1056" y1="110" x2="1056" y2="225" stroke="#525252" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+
+  <!-- row A traps: 7, 11, 17 -->
+  <g>
+    <rect x="20" y="70" width="130" height="40" rx="5" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="85" y="94" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">substring copy 7</text>
+    <line x1="60" y1="110" x2="60" y2="240" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+  <g>
+    <rect x="284" y="70" width="130" height="40" rx="5" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="349" y="94" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">nestmates 11</text>
+    <line x1="344" y1="110" x2="344" y2="225" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+  <g>
+    <rect x="706" y="70" width="140" height="40" rx="5" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="776" y="94" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">strictfp no-op 17</text>
+    <line x1="771" y1="110" x2="771" y2="225" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+
+  <!-- row B traps: 9, 15, 18 -->
+  <g>
+    <rect x="137" y="130" width="140" height="40" rx="5" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="207" y="154" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">indy concat 9</text>
+    <line x1="202" y1="170" x2="202" y2="240" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+  <g>
+    <rect x="549" y="130" width="180" height="40" rx="5" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="639" y="154" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">helpful NPE default 15</text>
+    <line x1="629" y1="170" x2="629" y2="240" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+  <g>
+    <rect x="762" y="130" width="160" height="40" rx="5" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="842" y="154" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">UTF-8 default 18</text>
+    <line x1="842" y1="170" x2="842" y2="240" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  </g>
+</svg>

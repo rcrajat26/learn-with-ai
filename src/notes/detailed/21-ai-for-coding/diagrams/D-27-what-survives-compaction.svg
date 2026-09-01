@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after diagram of a compaction. Before: the full transcript, the invoked skills, nested CLAUDE.md files, path-scoped rules, and conversation-only instructions are all present. After: a summary block replaces the transcript, the project-root CLAUDE.md is re-read fresh from disk, and only the most recent invocation of each skill survives within a budget of the first 5,000 tokens per skill and 25,000 tokens combined, filled newest-first. Nested CLAUDE.md files, path-scoped rules, conversation-only instructions, and any skill invocation beyond the budget are drawn in the degraded, lost style.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .degE  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triD); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT SURVIVES A COMPACTION</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="60" y="66" class="lbl h2">BEFORE COMPACTION</text>
+  <text x="700" y="66" class="lbl h2">AFTER COMPACTION</text>
+  <line x1="560" y1="52" x2="560" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: before boxes -->
+  <rect x="60" y="80" width="320" height="56" rx="6" class="boxP"/>
+  <text x="220" y="105" text-anchor="middle" class="lbl node">full transcript</text>
+  <text x="220" y="123" text-anchor="middle" class="lbl sub">every turn, every tool call</text>
+
+  <rect x="60" y="150" width="320" height="56" rx="6" class="boxP"/>
+  <text x="220" y="175" text-anchor="middle" class="lbl node">invoked skills</text>
+  <text x="220" y="193" text-anchor="middle" class="lbl sub">every skill invoked this session</text>
+
+  <rect x="60" y="220" width="320" height="56" rx="6" class="boxP"/>
+  <text x="220" y="245" text-anchor="middle" class="lbl node">nested CLAUDE.md files</text>
+  <text x="220" y="263" text-anchor="middle" class="lbl sub">subdirectory-scoped, loaded on demand</text>
+
+  <rect x="60" y="290" width="320" height="56" rx="6" class="boxP"/>
+  <text x="220" y="315" text-anchor="middle" class="lbl node">path-scoped rules</text>
+  <text x="220" y="333" text-anchor="middle" class="lbl sub">.claude/rules/ activated by paths:</text>
+
+  <rect x="60" y="360" width="320" height="56" rx="6" class="boxP"/>
+  <text x="220" y="385" text-anchor="middle" class="lbl node">conversation-only instructions</text>
+  <text x="220" y="403" text-anchor="middle" class="lbl sub">said in chat, never written to a file</text>
+
+  <!-- RIGHT: after boxes, survive -->
+  <rect x="700" y="80" width="360" height="56" rx="6" class="boxOk"/>
+  <text x="880" y="105" text-anchor="middle" class="lbl node">summary block</text>
+  <text x="880" y="123" text-anchor="middle" class="lbl sub">condensed replacement for the transcript</text>
+
+  <rect x="700" y="150" width="360" height="90" rx="6" class="boxOk"/>
+  <text x="880" y="172" text-anchor="middle" class="lbl node">most recent invocation of each skill</text>
+  <text x="880" y="190" text-anchor="middle" class="lbl sub">kept only within budget, filled newest-first</text>
+  <text x="880" y="208" text-anchor="middle" class="lbl body">first 5,000 tokens per skill</text>
+  <text x="880" y="226" text-anchor="middle" class="lbl body">25,000 tokens combined</text>
+
+  <rect x="700" y="256" width="360" height="56" rx="6" class="boxOk"/>
+  <text x="880" y="281" text-anchor="middle" class="lbl node">project-root CLAUDE.md</text>
+  <text x="880" y="299" text-anchor="middle" class="lbl sub">re-read fresh from disk</text>
+
+  <!-- lost panel -->
+  <rect x="700" y="330" width="360" height="220" rx="6" class="boxBad"/>
+  <text x="716" y="354" class="lbl h2">Lost at compaction</text>
+  <text x="716" y="376" class="lbl tiny">nested CLAUDE.md files</text>
+  <text x="716" y="396" class="lbl tiny">path-scoped rules</text>
+  <text x="716" y="416" class="lbl tiny">conversation-only instructions</text>
+  <text x="716" y="436" class="lbl tiny">older skill invocations, superseded</text>
+  <text x="716" y="452" class="lbl tiny">by a newer call to the same skill</text>
+  <text x="716" y="472" class="lbl tiny">any skill invocation once the</text>
+  <text x="716" y="488" class="lbl tiny">25,000-token combined budget</text>
+  <text x="716" y="504" class="lbl tiny">is exhausted, oldest dropped first</text>
+  <text x="716" y="528" class="lbl tiny">none of these are re-derived —</text>
+  <text x="716" y="544" class="lbl tiny">re-invoke or re-state to restore</text>
+
+  <!-- edges: exit at distinct x offsets -->
+  <path class="flow" d="M 380 108 H 440 V 108 H 700"/>
+  <path class="flow" d="M 380 178 H 460 V 195 H 700"/>
+  <path class="degE" d="M 380 248 H 480 V 400 H 700"/>
+  <path class="degE" d="M 380 318 H 500 V 420 H 700"/>
+  <path class="degE" d="M 380 388 H 520 V 440 H 700"/>
+
+  <line x1="20" y1="580" x2="1100" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="592" width="1080" height="80" rx="6" class="boxAnn"/>
+  <text x="36" y="614" class="lbl h2">Budget arithmetic</text>
+  <text x="36" y="636" class="lbl tiny">Per-skill cap: 5,000 tokens for the most recent invocation of that skill. Combined cap across all skills: 25,000 tokens.</text>
+  <text x="36" y="654" class="lbl tiny">Filled newest-first: the most recently invoked skills are kept first; once the running total would exceed 25,000, older ones are dropped.</text>
+
+  <line x1="20" y1="694" x2="1100" y2="694" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- legend -->
+  <rect x="20" y="706" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="719" class="lbl tiny">present before compaction</text>
+
+  <rect x="260" y="706" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="290" y="719" class="lbl tiny">survives compaction</text>
+
+  <rect x="480" y="706" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="510" y="719" class="lbl tiny">lost at compaction (degraded)</text>
+
+  <line x1="740" y1="714" x2="780" y2="714" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="790" y="719" class="lbl tiny">A → B : A becomes B</text>
+
+  <line x1="920" y1="714" x2="960" y2="714" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#triD)"/>
+  <text x="970" y="719" class="lbl tiny">A → lost</text>
+</svg>

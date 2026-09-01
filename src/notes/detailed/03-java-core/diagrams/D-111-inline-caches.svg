@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="State-transition diagram of one call site, rail.authorise(intent), observed over time by the HotSpot JIT. State 1 monomorphic: only CardRail seen, JIT emits a single class-check guard and inlines the body. Transition to State 2 bimorphic when BankRail appears: two class checks, both bodies still inlinable. Transition to State 3 megamorphic when SuspenseRail also appears: the guard is abandoned and the JIT emits a real virtual-table dispatch, no longer inlined. A deoptimisation loop runs back from State 1: an uncommon trap fires when an unexpected receiver klass arrives, deoptimising the compiled frame back to the interpreter and recompiling with a wider profile. Two annotation panels explain that this entire mechanism is HotSpot implementation detail absent from the JLS and JVMS, and that the practical consequence is that call-site receiver diversity, not the final keyword, determines dispatch cost after warm-up.">
+  <defs>
+    <marker id="arrow111" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="900" fill="#ffffff"/>
+
+  <text x="600" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Monomorphic, bimorphic, megamorphic</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="600" y="60" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">one call site: rail.authorise(intent) &#8212; observed over time</text>
+
+  <!-- ============ STATE 1 : MONOMORPHIC ============ -->
+  <rect x="20" y="82" width="260" height="230" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="36" y="104" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">STATE 1 &#8212; MONOMORPHIC</text>
+  <text x="36" y="122" font-family="sans-serif" font-size="11" fill="#1f2937">receiver seen: CardRail only</text>
+  <text x="36" y="140" font-family="sans-serif" font-size="11" fill="#1f2937">JIT emits: if (receiver.klass</text>
+  <text x="36" y="158" font-family="sans-serif" font-size="11" fill="#1f2937">== CardRail) { inlined body }</text>
+  <text x="36" y="176" font-family="sans-serif" font-size="11" fill="#1f2937">else { deopt }</text>
+  <text x="36" y="204" font-family="sans-serif" font-size="11" fill="#4b5563">final/private buy nothing extra &#8212;</text>
+  <text x="36" y="222" font-family="sans-serif" font-size="11" fill="#4b5563">already devirtualised by the JIT</text>
+
+  <!-- ============ STATE 2 : BIMORPHIC ============ -->
+  <rect x="470" y="82" width="260" height="230" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="486" y="104" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">STATE 2 &#8212; BIMORPHIC</text>
+  <text x="486" y="122" font-family="sans-serif" font-size="11" fill="#1f2937">receivers seen: CardRail,</text>
+  <text x="486" y="140" font-family="sans-serif" font-size="11" fill="#1f2937">BankRail</text>
+  <text x="486" y="158" font-family="sans-serif" font-size="11" fill="#1f2937">JIT emits: two class checks,</text>
+  <text x="486" y="176" font-family="sans-serif" font-size="11" fill="#1f2937">both bodies still inlinable</text>
+  <text x="486" y="194" font-family="sans-serif" font-size="11" fill="#1f2937">(small branch on klass)</text>
+
+  <!-- ============ STATE 3 : MEGAMORPHIC ============ -->
+  <rect x="920" y="82" width="260" height="230" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="936" y="104" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">STATE 3 &#8212; MEGAMORPHIC</text>
+  <text x="936" y="122" font-family="sans-serif" font-size="11" fill="#1f2937">receivers seen: CardRail,</text>
+  <text x="936" y="140" font-family="sans-serif" font-size="11" fill="#1f2937">BankRail, SuspenseRail + more</text>
+  <text x="936" y="158" font-family="sans-serif" font-size="11" fill="#1f2937">JIT gives up on the guard;</text>
+  <text x="936" y="176" font-family="sans-serif" font-size="11" fill="#1f2937">emits real vtable dispatch</text>
+  <text x="936" y="194" font-family="sans-serif" font-size="11" fill="#1f2937">body no longer inlined &#8212;</text>
+  <text x="936" y="212" font-family="sans-serif" font-size="11" fill="#1f2937">inlining-enabled optimisations</text>
+  <text x="936" y="230" font-family="sans-serif" font-size="11" fill="#1f2937">are lost too</text>
+
+  <!-- ============ TRANSITIONS ============ -->
+  <text x="375" y="170" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">2nd receiver appears</text>
+  <text x="375" y="188" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">-&gt; emit bimorphic guard</text>
+  <line x1="280" y1="197" x2="470" y2="197" stroke="#475569" stroke-width="2" marker-end="url(#arrow111)"/>
+
+  <text x="825" y="170" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">3rd receiver appears</text>
+  <text x="825" y="188" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">-&gt; fall back to vtable</text>
+  <line x1="730" y1="197" x2="920" y2="197" stroke="#475569" stroke-width="2" marker-end="url(#arrow111)"/>
+
+  <!-- ============ DEOPTIMISATION LOOP (back into STATE 1) ============ -->
+  <path d="M 150 312 V 392 H 20 V 250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow111)"/>
+  <text x="40" y="412" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">UNCOMMON TRAP</text>
+  <text x="40" y="430" font-family="sans-serif" font-size="11" fill="#4b5563">an unexpected receiver klass arrives at the guard -&gt;</text>
+  <text x="40" y="448" font-family="sans-serif" font-size="11" fill="#4b5563">deoptimise the compiled frame, fall back to the</text>
+  <text x="40" y="466" font-family="sans-serif" font-size="11" fill="#4b5563">interpreter, and recompile with the wider profile</text>
+
+  <!-- ============ ANNOTATION PANELS ============ -->
+  <rect x="20" y="506" width="560" height="200" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="528" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">NOT JAVA SEMANTICS &#8212; HOTSPOT IMPLEMENTATION DETAIL</text>
+  <text x="36" y="548" font-family="sans-serif" font-size="11" fill="#1f2937">All of this is HotSpot behaviour, not Java semantics.</text>
+  <text x="36" y="566" font-family="sans-serif" font-size="11" fill="#1f2937">Inline caches, the monomorphic/bimorphic/megamorphic</text>
+  <text x="36" y="584" font-family="sans-serif" font-size="11" fill="#1f2937">thresholds, and the deoptimisation machinery appear</text>
+  <text x="36" y="602" font-family="sans-serif" font-size="11" fill="#1f2937">nowhere in the JLS or the JVMS &#8212; they are one JIT</text>
+  <text x="36" y="620" font-family="sans-serif" font-size="11" fill="#1f2937">compiler's implementation and are version-sensitive.</text>
+  <text x="36" y="638" font-family="sans-serif" font-size="11" fill="#1f2937">The only observable language rule is JVMS section 5.4.6</text>
+  <text x="36" y="656" font-family="sans-serif" font-size="11" fill="#1f2937">method selection; this picture shows how HotSpot makes</text>
+  <text x="36" y="674" font-family="sans-serif" font-size="11" fill="#1f2937">those semantics fast.</text>
+
+  <rect x="600" y="506" width="560" height="200" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="616" y="528" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PRACTICAL CONSEQUENCE</text>
+  <text x="616" y="548" font-family="sans-serif" font-size="11" fill="#1f2937">An interface with one live implementation at a call</text>
+  <text x="616" y="566" font-family="sans-serif" font-size="11" fill="#1f2937">site costs the same as a static call, once warmed up.</text>
+  <text x="616" y="584" font-family="sans-serif" font-size="11" fill="#1f2937">An interface with twenty live implementations at the</text>
+  <text x="616" y="602" font-family="sans-serif" font-size="11" fill="#1f2937">same call site does not &#8212; which is why the shape of a</text>
+  <text x="616" y="620" font-family="sans-serif" font-size="11" fill="#1f2937">call site's receiver population matters more than any</text>
+  <text x="616" y="638" font-family="sans-serif" font-size="11" fill="#1f2937">final keyword ever could.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="740" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="20" y1="748" x2="1180" y2="748" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="753" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="68" y="765" font-family="sans-serif" font-size="11" fill="#4b5563">monomorphic state &#8212; resolved, fast inlined path</text>
+
+  <rect x="40" y="777" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="68" y="789" font-family="sans-serif" font-size="11" fill="#4b5563">bimorphic state &#8212; still inlinable (two-way guard)</text>
+
+  <rect x="40" y="801" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="68" y="813" font-family="sans-serif" font-size="11" fill="#4b5563">megamorphic state &#8212; vtable fallback, no inlining</text>
+
+  <rect x="620" y="753" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="765" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; HotSpot vs. JLS/JVMS fact</text>
+
+  <line x1="620" y1="789" x2="642" y2="789" stroke="#475569" stroke-width="2" marker-end="url(#arrow111)"/>
+  <text x="648" y="793" font-family="sans-serif" font-size="11" fill="#4b5563">primary flow: state transition / deopt loop</text>
+</svg>

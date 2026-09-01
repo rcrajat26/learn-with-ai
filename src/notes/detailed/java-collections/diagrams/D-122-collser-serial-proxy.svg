@@ -1,0 +1,72 @@
+<svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Immutable List.of writeReplace swaps itself for a CollSer proxy carrying a tag byte and an Object array element; on deserialize CollSer.readResolve rebuilds via the List.of factory, while a crafted stream that targets ListN.readObject directly is rejected with InvalidObjectException not serial proxy">
+  <defs>
+    <marker id="arrow122" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="250" y="30" width="300" height="44" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="49" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List.of("a","b","c")</text>
+  <text x="400" y="66" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(an ImmutableCollections.ListN instance)</text>
+
+  <line x1="400" y1="74" x2="400" y2="105" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+
+  <rect x="200" y="105" width="400" height="48" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ListN.writeReplace() is invoked by ObjectOutputStream</text>
+  <text x="400" y="141" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">before this object is ever written to the stream</text>
+
+  <line x1="400" y1="153" x2="400" y2="182" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+
+  <rect x="150" y="182" width="500" height="95" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">returns: new CollSer(tag, array)</text>
+
+  <rect x="180" y="218" width="200" height="40" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="280" y="234" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">tag (byte) = LIST</text>
+  <text x="280" y="250" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">CollSer.IMM_LIST</text>
+
+  <rect x="420" y="218" width="200" height="40" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="520" y="234" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">array (Object[])</text>
+  <text x="520" y="250" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">{"a","b","c"}</text>
+
+  <line x1="400" y1="277" x2="400" y2="303" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+
+  <rect x="180" y="303" width="440" height="40" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="322" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Stream now holds a CollSer object</text>
+  <text x="400" y="337" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">the ListN instance itself is never written</text>
+
+  <line x1="330" y1="343" x2="200" y2="375" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+  <line x1="470" y1="343" x2="600" y2="375" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+
+  <rect x="40" y="378" width="320" height="26" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="396" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">NORMAL: deserialize via the proxy</text>
+
+  <rect x="440" y="378" width="320" height="26" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="396" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ATTACK: bypass the proxy</text>
+
+  <line x1="200" y1="404" x2="200" y2="424" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+  <rect x="40" y="424" width="320" height="44" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="443" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">CollSer.readResolve() is invoked</text>
+  <text x="200" y="460" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">automatically by ObjectInputStream</text>
+
+  <line x1="200" y1="468" x2="200" y2="493" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+  <rect x="40" y="493" width="320" height="70" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="200" y="513" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">switch (tag) { case IMM_LIST -&gt;</text>
+  <text x="200" y="530" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List.of((E[]) array); }</text>
+  <text x="200" y="547" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">rebuilds via the real public factory</text>
+
+  <line x1="600" y1="404" x2="600" y2="424" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+  <rect x="440" y="424" width="320" height="44" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="443" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Crafted stream targets ListN's own</text>
+  <text x="600" y="460" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">class tag directly, skipping CollSer</text>
+
+  <line x1="600" y1="468" x2="600" y2="493" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+  <rect x="440" y="493" width="320" height="34" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="514" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ListN.readObject(ObjectInputStream in) runs</text>
+
+  <line x1="600" y1="527" x2="600" y2="552" stroke="#737373" stroke-width="2" marker-end="url(#arrow122)"/>
+  <rect x="440" y="552" width="320" height="50" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="600" y="572" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">throws InvalidObjectException(</text>
+  <text x="600" y="589" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"not serial proxy")</text>
+</svg>

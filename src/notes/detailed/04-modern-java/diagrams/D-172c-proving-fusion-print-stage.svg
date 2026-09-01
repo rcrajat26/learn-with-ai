@@ -1,0 +1,48 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: the same pipeline with limit(2) and findFirst added, showing the source is never
+     fully traversed — after the second matching reservation, cancellationRequested returns true and the third
+     and later reservations are never pulled from the source at all.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; }
+    .body { font-size: 12.5px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .tiny { font-size: 11px; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxF { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+  </style>
+  <rect x="0" y="0" width="900" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 3 / 3 — WITH limit(2): THE SOURCE IS NEVER FULLY TRAVERSED</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="740" y="18" width="34" height="20" rx="10" class="pill"/>
+  <text x="757" y="33" text-anchor="middle" class="lbl tiny" style="font-weight:700;">3/3</text>
+
+  <text x="20" y="64" class="lbl body">reservations.stream().filter(r -&gt; r.amount() &gt;= 4.20).map(Reservation::stakeSplit)</text>
+  <text x="20" y="82" class="lbl body">  .limit(2).findFirst();</text>
+
+  <rect x="20" y="98" width="860" height="200" rx="6" class="boxR"/>
+  <text x="40" y="122" class="lbl h2">MEASURED — println output; only the first matching Reservation is printed</text>
+  <text x="40" y="148" class="lbl mono">filter 4.20</text>
+  <text x="40" y="166" class="lbl mono">map 4.20</text>
+  <text x="40" y="184" class="lbl mono">result: StakeSplit[bonus=0.42, cash=3.78]</text>
+  <text x="40" y="214" class="lbl tiny" style="fill:#b91c1c; font-weight:700;">No "filter 2.10" line. No "filter 6.00" line. The source's tryAdvance is</text>
+  <text x="40" y="232" class="lbl tiny" style="fill:#b91c1c; font-weight:700;">never called a second time — limit(2) already has enough after element 1.</text>
+  <text x="40" y="256" class="lbl tiny">Measured with reservations.stream().filter(...).map(...).limit(2).findFirst() on JDK 21.</text>
+  <text x="40" y="274" class="lbl tiny">filter and map carry a println; limit's and findFirst's own sinks are JDK-internal and unprintable.</text>
+
+  <rect x="20" y="310" width="860" height="90" rx="6" class="boxA"/>
+  <text x="36" y="330" class="lbl h2" style="font-size:11px;">WHY THE PULL STOPS — cancellationRequested(), inferred from java.util.stream source</text>
+  <text x="36" y="350" class="lbl tiny">findFirst needs 1 element and limit(2) needs at most 2 — both are satisfied after element 1.</text>
+  <text x="36" y="366" class="lbl tiny">Each sink's cancellationRequested() ORs with downstream's, so the signal reaches the source's</text>
+  <text x="36" y="382" class="lbl tiny">forEachRemaining loop, which checks it after every element and exits without a second pull.</text>
+
+  <line x1="20" y1="416" x2="880" y2="416" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="426" width="22" height="14" rx="3" class="boxR"/>
+  <text x="50" y="438" class="lbl tiny">measured / confirmed behaviour</text>
+  <rect x="300" y="426" width="22" height="14" rx="3" class="boxA"/>
+  <text x="330" y="438" class="lbl tiny">annotation panel</text>
+</svg>

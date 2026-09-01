@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="One JSONL transcript turn, annotated. A real transcript path, tilde slash dot claude slash projects slash project slash session slash, leads to one JSONL record file. The record is expanded showing its role, its content blocks including a tool_use block and a tool_result block, and its usage fields; arrows point from the usage fields to where a per-turn token count is read. Two notes: telemetry/transcript.py reads exactly these files to mine friction signals, and cleanupPeriodDays governs how long the files live.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .dense  { font-size: 12.5px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak   { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE JSONL TRANSCRIPT TURN, ANNOTATED</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">TRANSCRIPT PATH</text>
+  <text x="380" y="66" class="lbl h2">ONE EXPANDED JSONL RECORD</text>
+
+  <!-- path breadcrumb, left column -->
+  <rect x="20" y="80" width="300" height="60" rx="6" class="boxW"/>
+  <text x="34" y="104" class="lbl dense">~/.claude/projects/</text>
+  <text x="34" y="122" class="lbl dense">&lt;project&gt;/</text>
+
+  <path class="flow" d="M 170 140 V 170"/>
+
+  <rect x="20" y="174" width="300" height="60" rx="6" class="boxW"/>
+  <text x="34" y="198" class="lbl dense">&lt;session&gt;/</text>
+  <text x="34" y="216" class="lbl sub">one folder per session id</text>
+
+  <path class="flow" d="M 170 234 V 264"/>
+
+  <rect x="20" y="268" width="300" height="60" rx="6" class="boxR"/>
+  <text x="34" y="292" class="lbl dense">&lt;session&gt;.jsonl</text>
+  <text x="34" y="310" class="lbl sub">one line per turn, appended live</text>
+
+  <path class="flow" d="M 320 298 H 372"/>
+
+  <!-- expanded record, right side -->
+  <rect x="376" y="80" width="600" height="420" rx="6" class="boxP"/>
+  <text x="392" y="104" class="lbl node">{</text>
+  <text x="408" y="122" class="lbl dense">"role": "assistant",</text>
+  <text x="408" y="140" class="lbl dense">"content": [</text>
+
+  <rect x="424" y="150" width="536" height="46" rx="4" class="boxW"/>
+  <text x="436" y="170" class="lbl dense">{ "type": "text", "text": "Problem: ... Fix: ..." }</text>
+  <text x="436" y="186" class="lbl sub">a plain assistant text block</text>
+
+  <rect x="424" y="202" width="536" height="60" rx="4" class="boxH"/>
+  <text x="436" y="220" class="lbl dense">{ "type": "tool_use", "id": "toolu_01A9F...",</text>
+  <text x="436" y="236" class="lbl dense">  "name": "Bash", "input": { "command": "pytest -q" } }</text>
+  <text x="436" y="254" class="lbl sub">the tool call this turn issued</text>
+
+  <rect x="424" y="268" width="536" height="60" rx="4" class="boxR"/>
+  <text x="436" y="286" class="lbl dense">{ "type": "tool_result", "tool_use_id": "toolu_01A9F...",</text>
+  <text x="436" y="302" class="lbl dense">  "content": "12 passed in 4.31s" }</text>
+  <text x="436" y="320" class="lbl sub">the result returned for that tool_use id</text>
+
+  <text x="408" y="346" class="lbl dense">],</text>
+  <text x="408" y="366" class="lbl dense">"usage": {</text>
+
+  <rect x="424" y="374" width="536" height="98" rx="4" class="boxH"/>
+  <text x="436" y="392" class="lbl dense">"input_tokens": 1832,</text>
+  <text x="436" y="408" class="lbl dense">"cache_creation_input_tokens": 0,</text>
+  <text x="436" y="424" class="lbl dense">"cache_read_input_tokens": 15230,</text>
+  <text x="436" y="440" class="lbl dense">"output_tokens": 214</text>
+  <text x="436" y="458" class="lbl sub">per-turn token count is read from these four fields</text>
+
+  <text x="408" y="490" class="lbl dense">}</text>
+
+  <!-- arrows from usage fields to a labelled point -->
+  <path class="flow" d="M 960 400 H 1000 V 508"/>
+  <text x="1000" y="500" class="lbl sub" text-anchor="end">read here for</text>
+  <text x="1000" y="514" class="lbl sub" text-anchor="end">per-turn tokens</text>
+
+  <!-- annotation panels -->
+  <rect x="20" y="520" width="480" height="110" rx="6" class="panel"/>
+  <text x="36" y="544" class="lbl tiny" font-weight="700">telemetry/transcript.py</text>
+  <text x="36" y="564" class="lbl tiny">Reads exactly these JSONL files under</text>
+  <text x="36" y="582" class="lbl tiny">~/.claude/projects/&lt;project&gt;/&lt;session&gt;/ to mine friction</text>
+  <text x="36" y="600" class="lbl tiny">signals &#8212; retries, edits after tool errors, long stalls.</text>
+
+  <rect x="520" y="520" width="480" height="110" rx="6" class="panel"/>
+  <text x="536" y="544" class="lbl tiny" font-weight="700">cleanupPeriodDays</text>
+  <text x="536" y="564" class="lbl tiny">A settings.json field that governs how long transcript</text>
+  <text x="536" y="582" class="lbl tiny">folders under ~/.claude/projects/ live before Claude</text>
+  <text x="536" y="600" class="lbl tiny">Code deletes them.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="660" x2="1020" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="674" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="687" class="lbl tiny">path segment / plain content block</text>
+
+  <rect x="280" y="674" width="22" height="16" rx="3" class="boxR"/>
+  <text x="310" y="687" class="lbl tiny">transcript file / tool_result block</text>
+
+  <rect x="560" y="674" width="22" height="16" rx="3" class="boxH"/>
+  <text x="590" y="687" class="lbl tiny">tool_use block / usage fields (what the diagram is about)</text>
+
+  <rect x="20" y="700" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="713" class="lbl tiny">the record / subject container</text>
+
+  <line x1="280" y1="708" x2="310" y2="708" class="flow"/>
+  <text x="318" y="713" class="lbl tiny">A &#8594; B : B follows or is derived from A</text>
+
+  <rect x="560" y="700" width="22" height="16" rx="3" class="panel"/>
+  <text x="590" y="713" class="lbl tiny">annotation / note panel</text>
+</svg>

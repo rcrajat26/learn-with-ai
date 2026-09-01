@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Left: a large language model drawn as one stateless function, with an arrow of text going in from a caller and an arrow of text going out to a harness. Right: two panels list what the model does not have — memory between calls, filesystem, network, clock — and what it cannot do — read a file, run a command, remember yesterday, check whether it is true. An annotation panel states that everything the model appears to do, the harness did.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE MODEL IS ONE FUNCTION: TEXT IN, TEXT OUT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">MODEL</text>
+  <text x="580" y="64" class="lbl h2">WHAT THE MODEL LACKS</text>
+
+  <!-- left: caller -> model -> harness -->
+  <rect x="40" y="115" width="110" height="70" rx="6" class="boxW"/>
+  <text x="95" y="145" text-anchor="middle" class="lbl node">caller</text>
+  <text x="95" y="163" text-anchor="middle" class="lbl sub">outside the model</text>
+
+  <path class="flow" d="M 150 150 H 190"/>
+  <text x="170" y="140" text-anchor="middle" class="lbl sub">text</text>
+
+  <rect x="190" y="95" width="200" height="110" rx="6" class="boxP"/>
+  <text x="290" y="140" text-anchor="middle" class="lbl node">large language</text>
+  <text x="290" y="158" text-anchor="middle" class="lbl node">model</text>
+  <text x="290" y="178" text-anchor="middle" class="lbl sub">stateless function</text>
+  <text x="290" y="192" text-anchor="middle" class="lbl sub">tokens in -&gt; tokens out</text>
+
+  <path class="flow" d="M 390 150 H 430"/>
+  <text x="410" y="140" text-anchor="middle" class="lbl sub">text</text>
+
+  <rect x="430" y="115" width="110" height="70" rx="6" class="boxW"/>
+  <text x="485" y="145" text-anchor="middle" class="lbl node">harness</text>
+  <text x="485" y="163" text-anchor="middle" class="lbl sub">receives the text</text>
+
+  <!-- right: two panels -->
+  <rect x="580" y="90" width="500" height="150" rx="6" class="boxD"/>
+  <text x="600" y="112" class="lbl h2">WHAT IT DOES NOT HAVE</text>
+  <text x="600" y="134" class="lbl body">- memory between calls</text>
+  <text x="600" y="154" class="lbl body">- filesystem</text>
+  <text x="600" y="174" class="lbl body">- network</text>
+  <text x="600" y="194" class="lbl body">- clock</text>
+
+  <rect x="580" y="270" width="500" height="150" rx="6" class="boxD"/>
+  <text x="600" y="292" class="lbl h2">WHAT IT CANNOT DO</text>
+  <text x="600" y="314" class="lbl body">- read a file</text>
+  <text x="600" y="334" class="lbl body">- run a command</text>
+  <text x="600" y="354" class="lbl body">- remember yesterday</text>
+  <text x="600" y="374" class="lbl body">- check whether it is true</text>
+
+  <!-- annotation -->
+  <rect x="40" y="460" width="1040" height="70" rx="6" class="boxA"/>
+  <text x="60" y="482" class="lbl h2">NOTE</text>
+  <text x="60" y="504" class="lbl body">Everything it appears to do — reading a file, running a command, remembering context —</text>
+  <text x="60" y="520" class="lbl body">the harness did, not the model.</text>
+
+  <line x1="20" y1="560" x2="1100" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="572" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="585" class="lbl tiny">the model (stateless function)</text>
+  <rect x="300" y="572" width="22" height="16" rx="3" class="boxW"/>
+  <text x="330" y="585" class="lbl tiny">caller / harness (outside the model)</text>
+  <rect x="620" y="572" width="22" height="16" rx="3" class="boxD"/>
+  <text x="650" y="585" class="lbl tiny">capability or action the model lacks</text>
+  <rect x="960" y="572" width="22" height="16" rx="3" class="boxA"/>
+  <text x="985" y="585" class="lbl tiny">annotation</text>
+  <path class="flow" d="M 20 605 H 60"/>
+  <text x="68" y="609" class="lbl tiny">text flowing through the function</text>
+</svg>

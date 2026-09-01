@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1040 745" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve of platform threads versus virtual threads on an echo server handling a blocking 50
+     millisecond handler, at 1, 1000 and 50000 concurrent connections. Throughput on the left y axis: the
+     platform-thread line rises then flattens and degrades under thread-creation and scheduling overhead,
+     reaching about 11400 requests per second at 50000 connections, while the virtual-thread line keeps climbing
+     to about 229600 requests per second. Measured on this machine; a production platform-thread deployment
+     typically fails outright with OutOfMemoryError unable to create new native thread before reaching 50000
+     threads, which this sandboxed run did not reproduce.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; }
+    .body { font-size: 12.5px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .axis { stroke: #475569; stroke-width: 1.6; }
+    .grid { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 3 3; }
+    .lineV { fill: none; stroke: #15803d; stroke-width: 2.5; }
+    .lineP { fill: none; stroke: #b91c1c; stroke-width: 2.5; }
+    .memV  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; }
+    .memP  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 6 4; }
+    .dotV  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.8; }
+    .dotP  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.8; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+  <rect x="0" y="0" width="1040" height="745" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PLATFORM THREADS VERSUS VIRTUAL THREADS ON THE ECHO SERVER</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Handler: accept a connection, block 50ms (simulated network read), reply. Measured on this machine, JDK 25 runtime, --release 21.</text>
+
+  <!-- plot area: x from 140 to 940, y from 90 (top) to 560 (bottom axis) -->
+  <!-- log-ish x positions for 1, 1000, 50000 -->
+  <line x1="140" y1="560" x2="940" y2="560" class="axis"/>
+  <line x1="140" y1="90" x2="140" y2="560" class="axis"/>
+
+  <!-- horizontal gridlines for throughput axis (left), 0 .. 250000 -->
+  <line x1="140" y1="90"  x2="940" y2="90"  class="grid"/>
+  <line x1="140" y1="184" x2="940" y2="184" class="grid"/>
+  <line x1="140" y1="278" x2="940" y2="278" class="grid"/>
+  <line x1="140" y1="372" x2="940" y2="372" class="grid"/>
+  <line x1="140" y1="466" x2="940" y2="466" class="grid"/>
+
+  <text x="130" y="94"  text-anchor="end" class="lbl tiny">250,000</text>
+  <text x="130" y="188" text-anchor="end" class="lbl tiny">187,500</text>
+  <text x="130" y="282" text-anchor="end" class="lbl tiny">125,000</text>
+  <text x="130" y="376" text-anchor="end" class="lbl tiny">62,500</text>
+  <text x="130" y="470" text-anchor="end" class="lbl tiny">0</text>
+  <text x="60" y="325" text-anchor="middle" class="lbl tiny" transform="rotate(-90 60 325)">throughput (requests/sec, left axis)</text>
+
+  <!-- right axis: computed native/heap footprint MB, 0..52000, same gridlines as left axis -->
+  <line x1="940" y1="90" x2="940" y2="560" class="axis"/>
+  <text x="950" y="94"  class="lbl tiny">52,000</text>
+  <text x="950" y="188" class="lbl tiny">39,000</text>
+  <text x="950" y="282" class="lbl tiny">26,000</text>
+  <text x="950" y="376" class="lbl tiny">13,000</text>
+  <text x="950" y="470" class="lbl tiny">0</text>
+  <text x="1015" y="325" text-anchor="middle" class="lbl tiny" transform="rotate(90 1015 325)">stack/chunk memory, MB — computed (right axis)</text>
+
+  <!-- x categorical positions -->
+  <!-- x=1 -> 200, x=1000 -> 540, x=50000 -> 900 -->
+  <line x1="200" y1="560" x2="200" y2="568" class="axis"/>
+  <line x1="540" y1="560" x2="540" y2="568" class="axis"/>
+  <line x1="900" y1="560" x2="900" y2="568" class="axis"/>
+  <text x="200" y="586" text-anchor="middle" class="lbl body">1</text>
+  <text x="540" y="586" text-anchor="middle" class="lbl body">1,000</text>
+  <text x="900" y="586" text-anchor="middle" class="lbl body">50,000</text>
+  <text x="540" y="604" text-anchor="middle" class="lbl sub">connections (x axis, categorical)</text>
+
+  <!-- throughput scale: y = 466 - value/250000*376 -->
+  <!-- virtual: 1 -> 16.6, 1000 -> 17767.4, 50000 -> 229613.6 -->
+  <!-- platform: 1 -> 19.4, 1000 -> 7928.8, 50000 -> 11387.1 -->
+  <path class="lineV" d="M 200 465.97 L 540 439.24 H 540 L 900 121.4"/>
+  <path class="lineP" d="M 200 465.97 L 540 453.99 L 900 448.87"/>
+
+  <circle cx="200" cy="465.97" r="5" class="dotV"/>
+  <circle cx="540" cy="439.24" r="5" class="dotV"/>
+  <circle cx="900" cy="121.4"  r="5" class="dotV"/>
+  <circle cx="200" cy="465.97" r="5" class="dotP"/>
+  <circle cx="540" cy="453.99" r="5" class="dotP"/>
+  <circle cx="900" cy="448.87" r="5" class="dotP"/>
+
+  <text x="200" y="452" text-anchor="middle" class="lbl tiny" style="fill:#15803d;">16.6/s</text>
+  <text x="540" y="420" text-anchor="middle" class="lbl tiny" style="fill:#15803d; font-weight:700;">17,767/s</text>
+  <text x="900" y="105" text-anchor="middle" class="lbl tiny" style="fill:#15803d; font-weight:700;">229,614/s</text>
+
+  <text x="200" y="486" text-anchor="middle" class="lbl tiny" style="fill:#b91c1c;">19.4/s</text>
+  <text x="540" y="474" text-anchor="middle" class="lbl tiny" style="fill:#b91c1c; font-weight:700;">7,929/s</text>
+  <text x="900" y="434" text-anchor="middle" class="lbl tiny" style="fill:#b91c1c; font-weight:700;">11,387/s</text>
+
+  <!-- computed (not measured) stack/chunk memory: platform = 1MB x N default stack; virtual = ~200B x N idle chunk -->
+  <path class="memP" d="M 200 463.3 L 540 458.8 L 900 104.5"/>
+  <path class="memV" d="M 200 465.9 L 540 465.9 L 900 393.7"/>
+  <circle cx="900" cy="104.5" r="4.5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <circle cx="900" cy="393.7" r="4.5" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="828" y="122" text-anchor="middle" class="lbl tiny" style="fill:#b91c1c;">~50,000 MB stack</text>
+  <text x="900" y="410" text-anchor="middle" class="lbl tiny" style="fill:#15803d;">~10 MB chunks</text>
+
+  <rect x="120" y="590" width="800" height="98" rx="6" class="boxA"/>
+  <text x="136" y="608" class="lbl h2" style="font-size:11px;">FLATTENING, NOT YET FAILING — ON THIS SANDBOX</text>
+  <text x="136" y="626" class="lbl tiny">Throughput, measured: platform 19.4/s -&gt; 7,929/s -&gt; 11,387/s, stalls near 1,000 connections;</text>
+  <text x="136" y="642" class="lbl tiny">virtual 16.6/s -&gt; 17,767/s -&gt; 229,614/s, keeps scaling. Memory, computed not measured: platform's</text>
+  <text x="136" y="658" class="lbl tiny">default 1MB stack x 50,000 threads ~= 50,000MB reserved; virtual's on-heap chunks stay ~10MB.</text>
+  <text x="136" y="674" class="lbl tiny">Production platform-thread runs typically fail with OutOfMemoryError near this count; this sandbox did not.</text>
+
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <path d="M 20 692 H 44" class="lineV"/>
+  <text x="52" y="697" class="lbl tiny">virtual, throughput (measured)</text>
+  <path d="M 340 692 H 364" class="lineP"/>
+  <text x="372" y="697" class="lbl tiny">platform, throughput (measured)</text>
+  <path d="M 20 710 H 44" class="memV"/>
+  <text x="52" y="715" class="lbl tiny">virtual, stack memory (computed)</text>
+  <path d="M 340 710 H 364" class="memP"/>
+  <text x="372" y="715" class="lbl tiny">platform, stack memory (computed)</text>
+</svg>

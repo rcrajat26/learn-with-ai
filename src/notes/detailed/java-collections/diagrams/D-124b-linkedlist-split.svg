@@ -1,0 +1,55 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="LinkedList spliterator walks node by node building unequal, sequential batches with no SUBSIZED characteristic">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+  <rect x="20" y="20" width="360" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">LinkedList: LLSpliterator (no O(1) index)</text>
+
+  <!-- nodes chain -->
+  <g transform="translate(40,80)">
+    <circle cx="10" cy="10" r="14" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="10" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n1</text>
+    <line x1="24" y1="10" x2="60" y2="10" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+    <circle cx="75" cy="10" r="14" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="75" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n2</text>
+    <line x1="89" y1="10" x2="125" y2="10" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+    <circle cx="140" cy="10" r="14" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="140" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n3</text>
+    <line x1="154" y1="10" x2="190" y2="10" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+    <circle cx="205" cy="10" r="14" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="205" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n4</text>
+    <line x1="219" y1="10" x2="255" y2="10" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+    <circle cx="270" cy="10" r="14" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="270" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n5</text>
+    <line x1="284" y1="10" x2="320" y2="10" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+    <circle cx="335" cy="10" r="14" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="335" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n6</text>
+    <line x1="349" y1="10" x2="385" y2="10" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+    <circle cx="400" cy="10" r="14" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="400" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">n7</text>
+  </g>
+
+  <text x="40" y="125" font-family="sans-serif" font-size="13" fill="#1f2937">Batch sizes grow 1, 2, 4... while walking next pointers (must visit each node to count it)</text>
+
+  <!-- batch bars, unequal, sequential -->
+  <rect x="40" y="150" width="30" height="26" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="167" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="80" y="150" width="60" height="26" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="110" y="167" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">2</text>
+  <rect x="150" y="150" width="120" height="26" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="167" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">4 (remainder, unequal)</text>
+
+  <text x="40" y="205" font-family="sans-serif" font-size="13" fill="#1f2937">batch 1 (size 1)   batch 2 (size 2)   batch 3 (size 4, leftover)</text>
+
+  <rect x="420" y="130" width="340" height="130" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="440" y="155" font-family="sans-serif" font-size="13" fill="#1f2937">Splits are sequential, not balanced:</text>
+  <text x="440" y="175" font-family="sans-serif" font-size="13" fill="#1f2937">- each split walks nodes to count them</text>
+  <text x="440" y="193" font-family="sans-serif" font-size="13" fill="#1f2937">- batch sizes are unequal by design</text>
+  <text x="440" y="211" font-family="sans-serif" font-size="13" fill="#1f2937">- characteristics: ORDERED, SIZED</text>
+  <text x="440" y="229" font-family="sans-serif" font-size="13" fill="#1f2937">- NOT SUBSIZED: no exact sub-count</text>
+  <text x="440" y="247" font-family="sans-serif" font-size="13" fill="#1f2937">  guarantee once split further</text>
+</svg>

@@ -1,0 +1,90 @@
+<svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ArrayList Itr fields cursor, lastRet, expectedModCount at four points: fresh iterator, after next(), after remove(), and after a foreign structural mutation, marking exactly where modCount is re-read">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="240" y="10" width="320" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Itr fields across a for-each loop</text>
+
+  <!-- backing list strip, reused across panels -->
+  <!-- Panel 1: fresh -->
+  <rect x="20" y="56" width="370" height="150" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="32" y="66" width="140" height="24" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="102" y="83" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1. fresh iterator</text>
+
+  <rect x="32" y="98" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="107" y="113" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cursor = 0</text>
+  <rect x="192" y="98" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="267" y="113" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">lastRet = -1</text>
+  <rect x="32" y="124" width="310" height="22" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="187" y="139" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">expectedModCount = modCount (snapshot at construction, e.g. 3)</text>
+  <rect x="32" y="152" width="310" height="42" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="187" y="168" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">list.modCount = 3 (no read/write of modCount</text>
+  <text x="187" y="184" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">happens yet - iterator() just captures the field)</text>
+
+  <!-- Panel 2: after next() -->
+  <rect x="410" y="56" width="370" height="150" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="422" y="66" width="150" height="24" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="497" y="83" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2. after next() (twice)</text>
+
+  <rect x="422" y="98" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="497" y="113" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cursor = 2</text>
+  <rect x="582" y="98" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="657" y="113" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">lastRet = 1</text>
+  <rect x="422" y="124" width="310" height="22" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="577" y="139" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">expectedModCount = 3 (unchanged)</text>
+  <rect x="422" y="152" width="310" height="42" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="577" y="168" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">next() calls checkForComodification():</text>
+  <text x="577" y="184" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">reads modCount, compares to expectedModCount, then lastRet = cursor++</text>
+
+  <!-- Panel 3: after remove() -->
+  <rect x="20" y="226" width="370" height="160" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="32" y="236" width="180" height="24" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="122" y="253" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">3. after iterator.remove()</text>
+
+  <rect x="32" y="268" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="107" y="283" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cursor = 1 (reset to lastRet)</text>
+  <rect x="192" y="268" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="267" y="283" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">lastRet = -1</text>
+  <rect x="32" y="294" width="310" height="22" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="187" y="309" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">expectedModCount = modCount (RE-SYNCED to 4)</text>
+  <rect x="32" y="322" width="310" height="56" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="187" y="338" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">list.remove(lastRet) bumps modCount to 4;</text>
+  <text x="187" y="354" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Itr.remove() then re-reads modCount and</text>
+  <text x="187" y="370" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">writes expectedModCount = modCount - self-heals</text>
+
+  <!-- Panel 4: foreign mutation -->
+  <rect x="410" y="226" width="370" height="160" rx="6" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="422" y="236" width="220" height="24" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="532" y="253" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4. after a foreign mutation</text>
+
+  <rect x="422" y="268" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="497" y="283" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cursor = 1 (stale)</text>
+  <rect x="582" y="268" width="150" height="22" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="657" y="283" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">lastRet = -1</text>
+  <rect x="422" y="294" width="310" height="22" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="577" y="309" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">expectedModCount = 4 (stale - list.add() outside iterator made modCount = 5)</text>
+  <rect x="422" y="322" width="310" height="56" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="577" y="338" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">next() call re-reads modCount (=5),</text>
+  <text x="577" y="354" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">compares to expectedModCount (=4), mismatch -&gt;</text>
+  <text x="577" y="370" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">throw ConcurrentModificationException immediately</text>
+
+  <path d="M 400 300 L 410 300" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 400 130 L 410 130" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 200 206 L 200 226" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 590 206 L 590 226" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- modCount re-read summary -->
+  <rect x="20" y="404" width="760" height="90" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="426" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">modCount is re-read at exactly two call sites: hasNext()/next() and Itr.remove()/forEachRemaining()</text>
+  <text x="400" y="446" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Both call checkForComodification() first, which reads the live list.modCount and compares to the iterator's cached expectedModCount</text>
+  <text x="400" y="466" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Only Itr.remove()/add() (CoW-style resync) writes expectedModCount back - a foreign mutation never gets a chance to resync it, hence the throw</text>
+  <text x="400" y="484" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">This is a best-effort check, not a guarantee: it can miss interleavings and must never be relied on for thread-safety</text>
+
+  <rect x="20" y="504" width="760" height="30" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="524" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">lastRet tracks the index last returned by next() so remove() knows which slot to delete; it resets to -1 after every remove()</text>
+</svg>

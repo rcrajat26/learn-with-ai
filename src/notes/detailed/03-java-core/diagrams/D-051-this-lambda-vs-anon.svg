@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1120 970" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of this binding. Left: BonusService.register registers an anonymous Runnable; this inside run() denotes the anonymous BonusService$1 instance, which holds synthetic fields this$0 (BonusService) and val$couponCode reached by dotted edges. Right: the same registration written as a lambda; this inside the body denotes the BonusService instance directly, with no extra object, compiled to a private method lambda$register$0 invoked via invokedynamic and LambdaMetafactory. An annotation panel gives javap-verified names on JDK 21.0.7, and a second panel explains why a bare this behaves differently in each case.">
+  <defs>
+    <marker id="arrow051" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="970" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">this in a lambda versus an anonymous class</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">ANONYMOUS CLASS &#8212; two objects, this is the inner one</text>
+  <line x1="40" y1="72" x2="520" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="840" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">LAMBDA &#8212; one object, this is the enclosing one</text>
+  <line x1="600" y1="72" x2="1080" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ============ SOURCE SNIPPETS ============ -->
+  <rect x="40" y="90" width="480" height="140" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="60" y="110" font-family="sans-serif" font-size="11" fill="#1f2937">void register(String couponCode) {</text>
+  <text x="60" y="128" font-family="sans-serif" font-size="11" fill="#1f2937">  handlers.add(new Runnable() {</text>
+  <text x="60" y="146" font-family="sans-serif" font-size="11" fill="#1f2937">    public void run() {</text>
+  <text x="60" y="164" font-family="sans-serif" font-size="11" fill="#b45309">      // this -&gt; BonusService$1 instance</text>
+  <text x="60" y="182" font-family="sans-serif" font-size="11" fill="#1f2937">      apply(couponCode);</text>
+  <text x="60" y="200" font-family="sans-serif" font-size="11" fill="#1f2937">    }</text>
+  <text x="60" y="218" font-family="sans-serif" font-size="11" fill="#1f2937">  });  }</text>
+
+  <rect x="600" y="90" width="480" height="140" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="620" y="110" font-family="sans-serif" font-size="11" fill="#1f2937">void register(String couponCode) {</text>
+  <text x="620" y="128" font-family="sans-serif" font-size="11" fill="#1f2937">  handlers.add(() -&gt; {</text>
+  <text x="620" y="146" font-family="sans-serif" font-size="11" fill="#b45309">    // this -&gt; BonusService instance</text>
+  <text x="620" y="164" font-family="sans-serif" font-size="11" fill="#1f2937">    apply(couponCode);</text>
+  <text x="620" y="182" font-family="sans-serif" font-size="11" fill="#1f2937">  });</text>
+  <text x="620" y="200" font-family="sans-serif" font-size="11" fill="#1f2937">}</text>
+
+  <!-- ============ this ARROWS ============ -->
+  <line x1="280" y1="230" x2="280" y2="260" stroke="#475569" stroke-width="2" marker-end="url(#arrow051)"/>
+  <text x="292" y="248" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">this</text>
+
+  <line x1="840" y1="230" x2="840" y2="260" stroke="#475569" stroke-width="2" marker-end="url(#arrow051)"/>
+  <text x="852" y="248" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">this</text>
+
+  <!-- ============ HEAP OBJECTS ============ -->
+  <rect x="40" y="260" width="480" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="280" y="282" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService$1 instance</text>
+  <text x="280" y="300" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">final BonusService this$0;</text>
+  <text x="280" y="318" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">final String val$couponCode;</text>
+  <text x="280" y="336" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this denotes THIS object</text>
+
+  <rect x="600" y="260" width="480" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="840" y="282" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService instance</text>
+  <text x="840" y="300" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no extra object is created</text>
+  <text x="840" y="318" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this denotes THIS object directly</text>
+  <text x="840" y="336" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(the enclosing instance)</text>
+
+  <path d="M 150 350 V 430" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow051)"/>
+  <text x="30" y="392" font-family="sans-serif" font-size="11" fill="#b45309">synthetic</text>
+  <text x="20" y="404" font-family="sans-serif" font-size="11" fill="#b45309">this$0</text>
+
+  <path d="M 410 350 V 430" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow051)"/>
+  <text x="420" y="392" font-family="sans-serif" font-size="11" fill="#b45309">synthetic</text>
+  <text x="420" y="404" font-family="sans-serif" font-size="11" fill="#b45309">val$couponCode</text>
+
+  <rect x="40" y="430" width="220" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="150" y="452" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">BonusService instance</text>
+  <text x="150" y="470" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(enclosing instance)</text>
+
+  <rect x="300" y="430" width="220" height="60" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="410" y="452" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">"SPRING26" (String)</text>
+  <text x="410" y="470" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">captured couponCode value</text>
+
+  <rect x="600" y="430" width="480" height="60" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="840" y="452" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">lambda$register$0(String couponCode)</text>
+  <text x="840" y="470" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">private method on BonusService, invoked via invokedynamic</text>
+
+  <text x="280" y="522" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">compiled to: BonusService$1.class</text>
+  <text x="840" y="522" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">NO extra .class file at compile time</text>
+
+  <!-- ============ ANNOTATION PANEL 1 ============ -->
+  <rect x="40" y="560" width="1040" height="120" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="60" y="582" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">VERIFIED via javap on JDK 21.0.7 &#8212; reproduce these names verbatim</text>
+  <text x="60" y="602" font-family="sans-serif" font-size="11" fill="#1f2937">anonymous class file: BonusService$1.class &#8212; declares final String val$couponCode; and final BonusService this$0;</text>
+  <text x="60" y="620" font-family="sans-serif" font-size="11" fill="#1f2937">lambda: NO class file at compile time &#8212; body compiles to private method BonusService.lambda$register$0(String), referenced from</text>
+  <text x="60" y="638" font-family="sans-serif" font-size="11" fill="#1f2937">BootstrapMethods as REF_invokeVirtual BonusService.lambda$register$0:(Ljava/lang/String;)V via LambdaMetafactory.metafactory</text>
+  <text x="60" y="656" font-family="sans-serif" font-size="11" fill="#1f2937">at runtime the lambda's class prints as BonusService$$Lambda/0x00000003010009f8 and getClass().isHidden() returns true</text>
+
+  <!-- ============ ANNOTATION PANEL 2 ============ -->
+  <rect x="40" y="700" width="1040" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="60" y="722" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WHY THIS MATTERS</text>
+  <text x="60" y="742" font-family="sans-serif" font-size="11" fill="#1f2937">Inside the anonymous Runnable, a bare this.register(...) resolves against the ANONYMOUS class itself &#8212; reaching the</text>
+  <text x="60" y="760" font-family="sans-serif" font-size="11" fill="#1f2937">enclosing instance needs BonusService.this.register(...) instead.</text>
+  <text x="60" y="778" font-family="sans-serif" font-size="11" fill="#1f2937">Inside the lambda, a bare this ALREADY IS the BonusService instance, so this.register(...) just works.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="850" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="40" y1="858" x2="1080" y2="858" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="60" y1="878" x2="100" y2="878" stroke="#475569" stroke-width="2" marker-end="url(#arrow051)"/>
+  <text x="110" y="883" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : this inside A denotes object B</text>
+
+  <line x1="560" y1="878" x2="600" y2="878" stroke="#475569" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow051)"/>
+  <text x="610" y="883" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : synthetic captured field on A referencing B</text>
+
+  <rect x="60" y="898" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="90" y="911" font-family="sans-serif" font-size="11" fill="#4b5563">the object that a bare this denotes</text>
+
+  <rect x="560" y="898" width="22" height="16" rx="3" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="590" y="911" font-family="sans-serif" font-size="11" fill="#4b5563">source code / compiled artifact (not a heap object)</text>
+
+  <rect x="60" y="922" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="90" y="935" font-family="sans-serif" font-size="11" fill="#4b5563">the enclosing instance, reached only via this$0</text>
+
+  <rect x="560" y="922" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="590" y="935" font-family="sans-serif" font-size="11" fill="#4b5563">captured synthetic value (val$couponCode)</text>
+</svg>

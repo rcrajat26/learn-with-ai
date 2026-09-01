@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="State-transition diagram for a CyclicBarrier spanning a PaymentRun's four
+     withdrawal windows per day. Three states: intact, tripping, and broken. Intact moves to
+     tripping when the last of the four window-worker parties calls await. Tripping moves back to
+     intact once the barrier action completes and every party is released together for the next
+     window. From intact, a party being interrupted or a party timing out on a timed await both
+     move the barrier to broken; from tripping, the barrier action itself throwing also moves the
+     barrier to broken. In every case every other party still waiting on that generation
+     immediately receives BrokenBarrierException. The only edge out of broken is an explicit
+     reset(), which returns the barrier to intact for a new generation; without a reset, a broken
+     barrier stays broken and every future await on it fails immediately with
+     BrokenBarrierException.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .etxt  { font-size: 11px; fill: #1f2937; }
+
+    .boxWk  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxHi  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trired); }
+    .bus  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trired" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="660" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CyclicBarrier STATES FOR A PaymentRun's FOUR WITHDRAWAL WINDOWS/DAY</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="475" y="59" text-anchor="middle" class="lbl etxt">reset() — the only way out of BROKEN, starts a fresh generation</text>
+  <text x="345" y="83" text-anchor="middle" class="lbl etxt">barrier action completes — all 4 released together, next generation begins</text>
+
+  <!-- INTACT -->
+  <rect x="80" y="100" width="220" height="80" rx="6" class="boxP"/>
+  <text x="190" y="128" text-anchor="middle" class="lbl node">INTACT</text>
+  <text x="190" y="148" text-anchor="middle" class="lbl sub">awaiting parties for the</text>
+  <text x="190" y="162" text-anchor="middle" class="lbl sub">current window-worker generation</text>
+
+  <!-- TRIPPING -->
+  <rect x="410" y="100" width="220" height="80" rx="6" class="boxHi"/>
+  <text x="520" y="128" text-anchor="middle" class="lbl node">TRIPPING</text>
+  <text x="520" y="148" text-anchor="middle" class="lbl sub">last of 4 window-workers</text>
+  <text x="520" y="162" text-anchor="middle" class="lbl sub">arrived; barrier action running</text>
+
+  <!-- BROKEN -->
+  <rect x="740" y="100" width="220" height="80" rx="6" class="boxDeg"/>
+  <text x="850" y="128" text-anchor="middle" class="lbl node">BROKEN</text>
+  <text x="850" y="148" text-anchor="middle" class="lbl sub">generation poisoned; every</text>
+  <text x="850" y="162" text-anchor="middle" class="lbl sub">waiting party gets the exception</text>
+
+  <!-- INTACT -> TRIPPING -->
+  <path class="flow" d="M 300 140 H 410"/>
+  <text x="355" y="133" text-anchor="middle" class="lbl etxt">4th party</text>
+  <text x="355" y="155" text-anchor="middle" class="lbl etxt">calls await()</text>
+
+  <!-- TRIPPING -> INTACT (next generation), enters INTACT top at x=170 -->
+  <path class="flow" d="M 520 100 V 88 H 170 V 100"/>
+
+  <!-- BROKEN -> INTACT (reset), enters INTACT top at x=100, exits BROKEN top at x=850 -->
+  <path class="flow" d="M 850 100 V 64 H 100 V 100"/>
+
+  <!-- fault-trigger boxes -->
+  <rect x="60" y="244" width="260" height="66" rx="6" class="boxDeg"/>
+  <text x="190" y="266" text-anchor="middle" class="lbl body" font-weight="600">party interrupted</text>
+  <text x="190" y="284" text-anchor="middle" class="lbl sub">a window-worker's await()</text>
+  <text x="190" y="298" text-anchor="middle" class="lbl sub">is interrupted while waiting — from INTACT</text>
+
+  <rect x="390" y="244" width="260" height="66" rx="6" class="boxDeg"/>
+  <text x="520" y="266" text-anchor="middle" class="lbl body" font-weight="600">party times out</text>
+  <text x="520" y="284" text-anchor="middle" class="lbl sub">timed await(timeout, unit) expires</text>
+  <text x="520" y="298" text-anchor="middle" class="lbl sub">before the 4th arrives — from INTACT</text>
+
+  <rect x="720" y="244" width="260" height="66" rx="6" class="boxDeg"/>
+  <text x="850" y="266" text-anchor="middle" class="lbl body" font-weight="600">barrier action throws</text>
+  <text x="850" y="284" text-anchor="middle" class="lbl sub">the Runnable passed to the</text>
+  <text x="850" y="298" text-anchor="middle" class="lbl sub">constructor raises — from TRIPPING</text>
+
+  <!-- fan-in bus: three stubs meet a shared horizontal bus at y=224, then one trunk up into BROKEN -->
+  <path class="bus" d="M 190 244 V 224"/>
+  <path class="bus" d="M 520 244 V 224"/>
+  <path class="bus" d="M 850 244 V 224"/>
+  <path class="bus" d="M 190 224 H 850"/>
+  <path class="fail" d="M 850 224 V 180"/>
+  <text x="360" y="218" text-anchor="middle" class="lbl etxt">any one of the three faults breaks the barrier for this generation</text>
+
+  <!-- annotation -->
+  <rect x="60" y="344" width="920" height="130" rx="6" class="boxAnn"/>
+  <text x="76" y="368" class="lbl h2">EVERY OTHER PARTY GETS BrokenBarrierException, NOT ITS OWN AWAIT RESULT</text>
+  <text x="76" y="390" class="lbl tiny">Whichever of the three causes trips the fault — interrupt, timeout, or barrier-action failure —</text>
+  <text x="76" y="406" class="lbl tiny">every window-worker still parked in await() for that generation wakes immediately with</text>
+  <text x="76" y="422" class="lbl tiny">BrokenBarrierException, even the ones that neither timed out nor were interrupted themselves.</text>
+  <text x="76" y="442" class="lbl tiny" font-style="italic">A broken barrier stays broken across further await() calls until reset() is called explicitly —</text>
+  <text x="76" y="458" class="lbl tiny" font-style="italic">there is no automatic recovery, so a PaymentRun's next window must reset() before reusing it.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="504" x2="1020" y2="504" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="516" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="527" class="lbl tiny">INTACT — accepting await() calls</text>
+  <rect x="280" y="516" width="22" height="14" rx="3" class="boxHi"/>
+  <text x="310" y="527" class="lbl tiny">TRIPPING — barrier action in flight</text>
+  <rect x="560" y="516" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="590" y="527" class="lbl tiny">BROKEN / fault trigger</text>
+  <rect x="800" y="516" width="22" height="14" rx="3" class="boxAnn"/>
+  <text x="830" y="527" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 554 H 60"/>
+  <text x="68" y="559" class="lbl tiny">A → B : normal transition, labelled by the cause</text>
+  <path class="fail" d="M 480 554 H 520"/>
+  <text x="528" y="559" class="lbl tiny">A → B : transition into BROKEN, labelled by the fault</text>
+</svg>

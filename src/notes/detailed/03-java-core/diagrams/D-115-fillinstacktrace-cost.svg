@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost-curve diagram, shape only, not measured data. X axis is stack depth from 1 to about 1100 frames; y axis is nanoseconds to construct, throw and catch, labelled as shape not measured. Three lines: a normal exception rises roughly linearly with depth because Throwable's constructor calls fillInStackTrace, which walks every frame, until a vertical red dashed line marks the measured default of -XX:MaxJavaStackTraceDepth at 1024, past which the walk stops and the line goes flat. A stackless exception, built with the four-argument Throwable constructor with writableStackTrace false or by overriding fillInStackTrace to return this, is drawn flat and low across the whole range. A boolean return is drawn as a flat baseline near zero. A marked point partway along the normal curve is called out as the moment getStackTrace or printStackTrace is invoked, when the compact backtrace object is lazily decoded into a StackTraceElement array, a second cost paid only on that call. Annotation panels state that -XX:-StackTraceInThrowable is the JVM-wide off switch with measured default true, and that the case that matters is the insufficient-funds path at 1,200 stake reservations per second, where InsufficientFundsException is thrown as an expected business outcome on the hot path — exactly where a stackless exception earns its keep.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyB{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+    </style>
+    <marker id="arrGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">fillInStackTrace dominates exception cost &#8212; construct-and-throw, shape by stack depth</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- chart frame -->
+  <rect x="60" y="70" width="920" height="380" rx="4" fill="#ffffff" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <!-- axes -->
+  <line x1="90" y1="80" x2="90" y2="450" stroke="#475569" stroke-width="1.5"/>
+  <line x1="90" y1="450" x2="960" y2="450" stroke="#475569" stroke-width="1.5"/>
+
+  <!-- y-axis label, rotated -->
+  <text x="40" y="260" class="small" transform="rotate(-90 40 260)" text-anchor="middle">nanoseconds to construct + throw + catch (shape, not measured)</text>
+
+  <!-- callout box for lazy materialisation, placed in the empty top-left region -->
+  <rect x="95" y="78" width="220" height="100" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="110" y="98" class="smallb" fill="#2563eb">getStackTrace() CALLED HERE</text>
+  <text x="110" y="116" class="small">backtrace object is decoded</text>
+  <text x="110" y="132" class="small">into StackTraceElement[] on</text>
+  <text x="110" y="148" class="small">first access &#8212; a second,</text>
+  <text x="110" y="164" class="small">lazy cost, paid only once.</text>
+
+  <!-- MaxJavaStackTraceDepth cap, vertical dashed reference line -->
+  <line x1="900" y1="80" x2="900" y2="450" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+
+  <!-- three cost curves (straight-segment polylines only) -->
+  <polyline points="91,440 960,440" fill="none" stroke="#9ca3af" stroke-width="2"/>
+  <polyline points="91,400 960,400" fill="none" stroke="#b45309" stroke-width="2"/>
+  <polyline points="91,430 900,110 960,110" fill="none" stroke="#2563eb" stroke-width="2"/>
+
+  <!-- lazy-materialisation marker dot on the normal curve, and its connector -->
+  <circle cx="486" cy="274" r="4" fill="#2563eb" stroke="#ffffff" stroke-width="1.3"/>
+  <path d="M 486 274 V 120 H 315" fill="none" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrGrey)"/>
+
+  <!-- inline curve-end labels, placed in clear space to the right of each line's flat tail -->
+  <text x="950" y="114" class="smallb" fill="#2563eb">normal</text>
+  <text x="950" y="404" class="smallb" fill="#b45309">stackless</text>
+  <text x="950" y="444" class="smallb" fill="#4b5563">boolean</text>
+
+  <!-- ticks -->
+  <line x1="91" y1="450" x2="91" y2="456" stroke="#475569" stroke-width="1.5"/>
+  <line x1="881" y1="450" x2="881" y2="456" stroke="#475569" stroke-width="1.5"/>
+  <line x1="900" y1="450" x2="900" y2="456" stroke="#475569" stroke-width="1.5"/>
+
+  <text x="91" y="468" text-anchor="middle" class="small">1</text>
+  <text x="881" y="468" text-anchor="middle" class="small">1000</text>
+  <text x="900" y="486" text-anchor="middle" class="smallb" fill="#b91c1c">1024 (cap)</text>
+
+  <text x="525" y="504" text-anchor="middle" class="small">x = stack depth (frames). MaxJavaStackTraceDepth measured default: 1024 (intx, product) &#8212; the walk stops and the curve flattens past this line.</text>
+
+  <!-- ================= ANNOTATIONS ================= -->
+  <rect x="60" y="524" width="920" height="60" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="544" class="smallb" fill="#2563eb">-XX:-StackTraceInThrowable</text>
+  <text x="80" y="562" class="small">JVM-wide off switch for fillInStackTrace; measured default on this build: true &#8212; the walk runs unless explicitly disabled.</text>
+  <text x="80" y="578" class="small">The same flat shape is reached another way: override fillInStackTrace() to "return this" without calling the native walk.</text>
+
+  <rect x="60" y="600" width="920" height="80" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="80" y="622" class="smallb" fill="#b45309">THE CASE THAT MATTERS</text>
+  <text x="80" y="640" class="small">InsufficientFundsException thrown as an expected business outcome on the hot path &#8212; the insufficient-funds path at</text>
+  <text x="80" y="656" class="small">1,200 stake reservations/sec. This is exactly where a stackless exception (the flat curve above) earns its keep.</text>
+  <text x="80" y="672" class="small">Four-arg ctor: Throwable(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace=false).</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="700" class="h2">LEGEND</text>
+  <line x1="20" y1="708" x2="1020" y2="708" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="30" y1="724" x2="56" y2="724" stroke="#2563eb" stroke-width="2"/>
+  <text x="64" y="729" class="small">normal exception &#8212; rises ~linearly with depth (fillInStackTrace walks every frame); shape, not measured data</text>
+
+  <line x1="30" y1="746" x2="56" y2="746" stroke="#b45309" stroke-width="2"/>
+  <text x="64" y="751" class="small">stackless exception &#8212; flat, independent of depth (4-arg ctor with writableStackTrace=false, or fillInStackTrace()&#8594;this)</text>
+
+  <line x1="30" y1="768" x2="56" y2="768" stroke="#9ca3af" stroke-width="2"/>
+  <text x="64" y="773" class="small">boolean return &#8212; flat baseline near zero, drawn for comparison only</text>
+
+  <line x1="30" y1="790" x2="56" y2="790" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="64" y="795" class="small">MaxJavaStackTraceDepth cap &#8212; measured default 1024; walk stops and the curve flattens past this depth</text>
+
+  <line x1="30" y1="812" x2="56" y2="812" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrGrey)"/>
+  <text x="64" y="817" class="small">callout pointer &#8212; connects a marked point on a curve to its explanatory note; arrow points at the note</text>
+
+  <rect x="30" y="828" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="64" y="841" class="small">highlight / the point &#8212; the case where a stackless exception earns its keep</text>
+
+  <rect x="30" y="854" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="64" y="867" class="small">annotation &#8212; explanatory note panel</text>
+</svg>

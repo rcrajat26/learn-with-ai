@@ -1,0 +1,145 @@
+<svg viewBox="0 0 1120 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison of two different permission mechanisms. Left: deny Bash removes the tool entirely from the list Claude sees, so Bash never appears as a callable tool and no gate check happens. Right: deny Bash open paren git push star close paren leaves Bash present in the tool list; every Bash call is offered normally and then checked at the permission gate, so a call like git push origin main is blocked while git status runs. An annotation panel states these are two different mechanisms, not two degrees of the same one.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weakE { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">BARE DENY REMOVES THE TOOL; SCOPED DENY BLOCKS THE CALL</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="60" y="66" class="lbl h2">deny: ["Bash"]</text>
+  <text x="620" y="66" class="lbl h2">deny: ["Bash(git push *)"]</text>
+  <line x1="580" y1="52" x2="580" y2="460" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: tool list without Bash -->
+  <rect x="60" y="90" width="460" height="160" rx="6" class="boxAnn"/>
+  <text x="76" y="112" class="lbl h2">Tool list Claude sees</text>
+
+  <rect x="76" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="115" y="140" text-anchor="middle" class="lbl tiny">Read</text>
+  <rect x="160" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="199" y="140" text-anchor="middle" class="lbl tiny">Edit</text>
+  <rect x="244" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="283" y="140" text-anchor="middle" class="lbl tiny">Write</text>
+  <rect x="328" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="367" y="140" text-anchor="middle" class="lbl tiny">Grep</text>
+  <rect x="412" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="451" y="140" text-anchor="middle" class="lbl tiny">Glob</text>
+
+  <rect x="76" y="160" width="100" height="28" rx="4" class="boxOk"/>
+  <text x="126" y="178" text-anchor="middle" class="lbl tiny">WebFetch</text>
+
+  <rect x="200" y="160" width="90" height="28" rx="4" class="boxWeak" stroke-dasharray="4 3"/>
+  <text x="245" y="178" text-anchor="middle" class="lbl tiny sub">(no Bash)</text>
+
+  <text x="290" y="212" class="lbl tiny">Bash is not in this list at all.</text>
+  <text x="290" y="230" class="lbl h2">mechanism: tool removed</text>
+
+  <!-- ghost edge down to no-gate box -->
+  <path class="weakE" d="M 245 188 V 270"/>
+  <rect x="120" y="270" width="260" height="60" rx="6" class="boxWeak"/>
+  <text x="250" y="294" text-anchor="middle" class="lbl node">no gate check happens</text>
+  <text x="250" y="314" text-anchor="middle" class="lbl sub">Bash is never a callable tool</text>
+
+  <!-- RIGHT: tool list with Bash -->
+  <rect x="620" y="90" width="460" height="160" rx="6" class="boxAnn"/>
+  <text x="636" y="112" class="lbl h2">Tool list Claude sees</text>
+
+  <rect x="636" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="675" y="140" text-anchor="middle" class="lbl tiny">Read</text>
+  <rect x="720" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="759" y="140" text-anchor="middle" class="lbl tiny">Edit</text>
+  <rect x="804" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="843" y="140" text-anchor="middle" class="lbl tiny">Write</text>
+  <rect x="888" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="927" y="140" text-anchor="middle" class="lbl tiny">Grep</text>
+  <rect x="972" y="122" width="78" height="28" rx="4" class="boxOk"/>
+  <text x="1011" y="140" text-anchor="middle" class="lbl tiny">Glob</text>
+
+  <rect x="636" y="160" width="100" height="28" rx="4" class="boxOk"/>
+  <text x="686" y="178" text-anchor="middle" class="lbl tiny">WebFetch</text>
+
+  <rect x="760" y="160" width="90" height="28" rx="4" class="boxP"/>
+  <text x="805" y="178" text-anchor="middle" class="lbl tiny">Bash</text>
+
+  <text x="880" y="212" class="lbl tiny">Bash present in list.</text>
+  <text x="880" y="230" class="lbl h2">mechanism: blocked at gate</text>
+
+  <!-- gate flow -->
+  <path class="flow" d="M 805 188 V 265"/>
+  <polygon points="805,265 900,320 805,375 710,320" class="boxP"/>
+  <text x="805" y="315" text-anchor="middle" class="lbl node">matches</text>
+  <text x="805" y="331" text-anchor="middle" class="lbl node">git push *?</text>
+
+  <path class="flow" d="M 900 320 H 950"/>
+  <text x="905" y="312" class="lbl tiny">yes</text>
+  <rect x="950" y="295" width="150" height="50" rx="6" class="boxBad"/>
+  <text x="1025" y="315" text-anchor="middle" class="lbl node">blocked</text>
+  <text x="1025" y="333" text-anchor="middle" class="lbl sub">git push origin main</text>
+
+  <path class="flow" d="M 805 375 V 400"/>
+  <text x="817" y="392" class="lbl tiny">no</text>
+  <rect x="700" y="400" width="210" height="50" rx="6" class="boxOk"/>
+  <text x="805" y="420" text-anchor="middle" class="lbl node">runs</text>
+  <text x="805" y="438" text-anchor="middle" class="lbl sub">git status</text>
+
+  <line x1="20" y1="480" x2="1100" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="492" width="1080" height="150" rx="6" class="boxAnn"/>
+  <text x="36" y="516" class="lbl h2">Two different mechanisms, not two degrees of the same one</text>
+  <text x="36" y="540" class="lbl tiny">deny: ["Bash"] removes Bash from the tool list itself — Claude cannot see or invoke Bash at all, so there is no individual call</text>
+  <text x="36" y="558" class="lbl tiny">left to check against a pattern; the whole tool is gone before any call is made.</text>
+  <text x="36" y="582" class="lbl tiny">deny: ["Bash(git push *)"] leaves Bash present in the tool list — every Bash call is offered normally, then each call is checked</text>
+  <text x="36" y="600" class="lbl tiny">against the pattern at the permission gate; only a matching call such as git push origin main is blocked, while git status runs.</text>
+  <text x="36" y="624" class="lbl tiny">Scoping a deny pattern more tightly never restores tool visibility once the bare tool name has been denied, and a bare tool</text>
+  <text x="36" y="638" class="lbl tiny">name in deny is never a "stricter version" of a scoped pattern — they operate at different points in the pipeline.</text>
+
+  <line x1="20" y1="660" x2="1100" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- legend -->
+  <rect x="20" y="672" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="50" y="685" class="lbl tiny">tool present, no restriction</text>
+
+  <rect x="260" y="672" width="22" height="16" rx="3" class="boxP"/>
+  <text x="290" y="685" class="lbl tiny">tool present, scoped by a pattern</text>
+
+  <rect x="540" y="672" width="22" height="16" rx="3" class="boxWeak" stroke-dasharray="4 3"/>
+  <text x="570" y="685" class="lbl tiny">absent from the tool list</text>
+
+  <rect x="20" y="700" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="50" y="713" class="lbl tiny">call blocked at the gate</text>
+
+  <rect x="260" y="700" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="290" y="713" class="lbl tiny">annotation panel</text>
+
+  <line x1="540" y1="708" x2="580" y2="708" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="590" y="713" class="lbl tiny">A → B : evaluation proceeds to B</text>
+
+  <line x1="820" y1="708" x2="860" y2="708" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#triW)"/>
+  <text x="870" y="713" class="lbl tiny">no gate exists on this path</text>
+</svg>

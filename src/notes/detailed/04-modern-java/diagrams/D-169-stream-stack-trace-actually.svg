@@ -1,0 +1,145 @@
+<svg viewBox="0 0 1120 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="What a stream stack trace actually looks like, captured by actually running the failure. Left: an NPE thrown inside rate() while mapping over card deposits via deposits.stream().map(...).reduce(...) produces nine frames: rate, a synthetic lambda dollar process dollar 0 frame for the lambda passed to map, ReferencePipeline dollar 3 dollar 1 dot accept which is the sink stage wrapping the lambda, AbstractPipeline dot copyInto which drives the loop over the source, wrapAndCopyInto, ReduceOps evaluateSequential, AbstractPipeline evaluate, ReferencePipeline reduce, and process. Right: the same failure written as an explicit for loop produces exactly four frames: rate, processLoop, process, main. A note explains that a long method-reference-heavy pipeline combined with recursion and flatMap risks StackOverflowError because each stage nests another call frame before the source is ever pulled.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 17px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 10.5px; }
+    .monosm{ font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 9.5px; }
+
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT A STREAM STACK TRACE ACTUALLY LOOKS LIKE</text>
+  <line x1="20" y1="44" x2="1100" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="580" y1="60" x2="580" y2="695" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <text x="20" y="64" class="lbl h2">STREAM — deposits.stream().map(d -&gt; ...rate(d)).reduce(...)</text>
+  <text x="20" y="80" class="lbl sub">CardDeposit("DEP-301", 65.00) — rate() hits a null currency lookup</text>
+  <text x="20" y="94" class="lbl sub">captured live: javac/java 25, --release 21 unavailable on this JVM</text>
+
+  <rect x="20" y="106" width="540" height="30" rx="4" class="boxD"/>
+  <text x="30" y="126" class="lbl mono">NullPointerException: Cannot invoke "String.length()"</text>
+  <path class="flow" d="M 290 136 V 140"/>
+
+  <!-- frame stack, top of stack first -->
+  <rect x="20" y="140" width="540" height="40" rx="4" class="boxD"/>
+  <text x="30" y="155" class="lbl mono">at Example.rate(Example.java:16)</text>
+  <text x="30" y="171" class="lbl sub">frame 1 — where the NPE is actually thrown</text>
+
+  <rect x="20" y="186" width="540" height="40" rx="4" class="boxH"/>
+  <text x="30" y="201" class="lbl mono">at Example.lambda$process$0(Example.java:9)</text>
+  <text x="30" y="217" class="lbl sub">frame 2 — synthetic: the compiler-generated body for d -&gt; ...</text>
+
+  <rect x="20" y="232" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="247" class="lbl mono">at ReferencePipeline$3$1.accept(ReferencePipeline.java:214)</text>
+  <text x="30" y="263" class="lbl sub">frame 3 — the map stage's Sink, invoking the lambda per element</text>
+
+  <rect x="20" y="278" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="293" class="lbl mono">at Collections$2.tryAdvance(Collections.java:5182)</text>
+  <text x="30" y="309" class="lbl sub">frame 4 — the backing List's Spliterator pulling one element</text>
+
+  <rect x="20" y="324" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="339" class="lbl mono">at Collections$2.forEachRemaining(Collections.java:5190)</text>
+  <text x="30" y="355" class="lbl sub">frame 5 — spliterator driving the remaining elements</text>
+
+  <rect x="20" y="370" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="385" class="lbl mono">at AbstractPipeline.copyInto(AbstractPipeline.java:570)</text>
+  <text x="30" y="401" class="lbl sub">frame 6 — pushes source elements through the Sink chain</text>
+
+  <rect x="20" y="416" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="431" class="lbl mono">at AbstractPipeline.wrapAndCopyInto(...:560)</text>
+  <text x="30" y="447" class="lbl sub">frame 7 — wraps the terminal Sink around the stage chain</text>
+
+  <rect x="20" y="462" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="477" class="lbl mono">at ReduceOps$ReduceOp.evaluateSequential(...:921)</text>
+  <text x="30" y="493" class="lbl sub">frame 8 — the reduce terminal op's sequential evaluator</text>
+
+  <rect x="20" y="508" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="523" class="lbl mono">at AbstractPipeline.evaluate(AbstractPipeline.java:265)</text>
+  <text x="30" y="539" class="lbl sub">frame 9 — dispatches to the terminal op's evaluator</text>
+
+  <rect x="20" y="554" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="569" class="lbl mono">at ReferencePipeline.reduce(ReferencePipeline.java:693)</text>
+  <text x="30" y="585" class="lbl sub">frame 10 — the public reduce() call site</text>
+
+  <rect x="20" y="600" width="540" height="40" rx="4" class="boxW"/>
+  <text x="30" y="615" class="lbl mono">at Example.process(Example.java:10) / main(:29)</text>
+  <text x="30" y="631" class="lbl sub">frame 11–12 — your code, top and bottom of the pipeline setup</text>
+
+  <rect x="20" y="648" width="540" height="42" rx="4" class="boxA"/>
+  <text x="30" y="664" class="lbl tiny" font-weight="700">12 frames total for one map + one reduce</text>
+  <text x="30" y="679" class="lbl tiny">6 of them are stream machinery, not your code</text>
+
+  <!-- RIGHT -->
+  <text x="600" y="64" class="lbl h2">FOR LOOP — same NullPointerException, same rate() call</text>
+  <text x="600" y="80" class="lbl sub">processLoop iterates CardDeposit rows directly</text>
+  <text x="600" y="94" class="lbl sub">no pipeline stages, no synthetic frames</text>
+
+  <rect x="600" y="106" width="500" height="30" rx="4" class="boxD"/>
+  <text x="610" y="126" class="lbl mono">NullPointerException: Cannot invoke "String.length()"</text>
+
+  <rect x="600" y="140" width="500" height="40" rx="4" class="boxD"/>
+  <text x="610" y="155" class="lbl mono">at Example3.rate(Example3.java:9)</text>
+  <text x="610" y="171" class="lbl sub">frame 1 — same throw site as the stream version</text>
+
+  <rect x="600" y="186" width="500" height="40" rx="4" class="boxW"/>
+  <text x="610" y="201" class="lbl mono">at Example3.processLoop(Example3.java:15)</text>
+  <text x="610" y="217" class="lbl sub">frame 2 — the for loop body calling rate()</text>
+
+  <rect x="600" y="232" width="500" height="40" rx="4" class="boxW"/>
+  <text x="610" y="247" class="lbl mono">at Example3.process(Example3.java:21)</text>
+  <text x="610" y="263" class="lbl sub">frame 3 — the caller that delegates to processLoop</text>
+
+  <rect x="600" y="278" width="500" height="40" rx="4" class="boxW"/>
+  <text x="610" y="293" class="lbl mono">at Example3.main(Example3.java:26)</text>
+  <text x="610" y="309" class="lbl sub">frame 4 — entry point</text>
+
+  <path class="flow" d="M 850 136 V 140"/>
+
+  <rect x="600" y="330" width="500" height="42" rx="4" class="boxA"/>
+  <text x="610" y="346" class="lbl tiny" font-weight="700">4 frames total — exactly your call depth</text>
+  <text x="610" y="361" class="lbl tiny">no synthetic lambda frame, no pipeline machinery</text>
+
+  <rect x="600" y="390" width="500" height="180" rx="6" class="boxH"/>
+  <text x="610" y="410" class="lbl tiny" font-weight="700">Pitfall — StackOverflowError risk</text>
+  <text x="610" y="430" class="lbl tiny">A long method-chain pipeline (many .map/.filter stages) nests</text>
+  <text x="610" y="446" class="lbl tiny">one Sink.accept frame per stage before the source is ever pulled.</text>
+  <text x="610" y="462" class="lbl tiny">flatMap adds another nested sub-stream evaluation per element,</text>
+  <text x="610" y="478" class="lbl tiny">and any recursive call inside a mapping function multiplies that</text>
+  <text x="610" y="494" class="lbl tiny">depth further. A deep pipeline over 2,800,000 stake reservations</text>
+  <text x="610" y="510" class="lbl tiny">with a recursive scoring function inside flatMap is the shape that</text>
+  <text x="610" y="526" class="lbl tiny">exhausts the stack — the for-loop equivalent does not, because</text>
+  <text x="610" y="542" class="lbl tiny">its frame count is bounded by call depth, not pipeline stage count.</text>
+  <text x="610" y="558" class="lbl sub">The failure mode is StackOverflowError, not a slow leak — it is immediate.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="705" x2="1100" y2="705" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="715" width="20" height="14" rx="3" class="boxD"/>
+  <text x="46" y="727" class="lbl tiny">throw site / exception</text>
+  <rect x="230" y="715" width="20" height="14" rx="3" class="boxH"/>
+  <text x="256" y="727" class="lbl tiny">synthetic lambda frame</text>
+  <rect x="440" y="715" width="20" height="14" rx="3" class="boxW"/>
+  <text x="466" y="727" class="lbl tiny">stream machinery / user frame</text>
+  <rect x="700" y="715" width="20" height="14" rx="3" class="boxA"/>
+  <text x="726" y="727" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 900 722 H 940"/>
+  <text x="948" y="727" class="lbl tiny">stack order, top to bottom</text>
+</svg>

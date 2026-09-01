@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1100 840" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The Java 21 sequenced-collections retrofit. Collection side: the new interface SequencedCollection declares addFirst, addLast, getFirst, getLast, removeFirst, removeLast and reversed; List, Deque and the new SequencedSet all extend it; the new SequencedSet is implemented by LinkedHashSet and extended by SortedSet. Map side: the new SequencedMap declares putFirst, putLast, firstEntry, lastEntry, pollFirstEntry, pollLastEntry, sequencedKeySet, sequencedValues, sequencedEntrySet and reversed; it is implemented by LinkedHashMap and extended by SortedMap. Solid arrows mean extends, dashed green arrows mean implements.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .ext   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="840" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SEQUENCED COLLECTIONS — THE JAVA 21 RETROFIT</text>
+  <line x1="20" y1="42" x2="1080" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="lbl h2">COLLECTION SIDE — root: Collection</text>
+  <text x="700" y="62" class="lbl h2">MAP SIDE — root: Map (not a Collection)</text>
+
+  <!-- SequencedCollection -->
+  <rect x="220" y="90" width="260" height="60" rx="6" class="boxH"/>
+  <text x="350" y="114" text-anchor="middle" class="lbl node">SequencedCollection&lt;E&gt;</text>
+  <text x="350" y="134" text-anchor="middle" class="lbl sub">new interface, extends Collection&lt;E&gt;</text>
+
+  <!-- SequencedMap -->
+  <rect x="820" y="90" width="260" height="60" rx="6" class="boxH"/>
+  <text x="950" y="114" text-anchor="middle" class="lbl node">SequencedMap&lt;K,V&gt;</text>
+  <text x="950" y="134" text-anchor="middle" class="lbl sub">new interface, extends Map&lt;K,V&gt;</text>
+
+  <!-- collection bus: List, Deque, SequencedSet -->
+  <path class="ext" d="M 350 150 V 220"/>
+  <path d="M 100 220 H 460" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 100 220 V 250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <path d="M 270 220 V 250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <path d="M 460 220 V 250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+
+  <rect x="30" y="250" width="140" height="60" rx="6" class="boxP"/>
+  <text x="100" y="276" text-anchor="middle" class="lbl node">List&lt;E&gt;</text>
+  <text x="100" y="294" text-anchor="middle" class="lbl sub">existing, gains super</text>
+
+  <rect x="200" y="250" width="140" height="60" rx="6" class="boxP"/>
+  <text x="270" y="276" text-anchor="middle" class="lbl node">Deque&lt;E&gt;</text>
+  <text x="270" y="294" text-anchor="middle" class="lbl sub">existing, gains super</text>
+
+  <rect x="380" y="250" width="160" height="60" rx="6" class="boxH"/>
+  <text x="460" y="276" text-anchor="middle" class="lbl node">SequencedSet&lt;E&gt;</text>
+  <text x="460" y="294" text-anchor="middle" class="lbl sub">new, extends Set&lt;E&gt;</text>
+
+  <!-- map bus: LinkedHashMap, SortedMap -->
+  <path class="ext" d="M 950 150 V 220"/>
+  <path d="M 790 220 H 980" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="impl" d="M 790 220 V 250"/>
+  <path class="ext" d="M 980 220 V 250"/>
+
+  <rect x="710" y="250" width="160" height="60" rx="6" class="boxR"/>
+  <text x="790" y="276" text-anchor="middle" class="lbl node">LinkedHashMap</text>
+  <text x="790" y="294" text-anchor="middle" class="lbl sub">concrete, implements</text>
+
+  <rect x="900" y="250" width="160" height="60" rx="6" class="boxP"/>
+  <text x="980" y="276" text-anchor="middle" class="lbl node">SortedMap&lt;K,V&gt;</text>
+  <text x="980" y="294" text-anchor="middle" class="lbl sub">existing, extends</text>
+
+  <!-- SequencedSet's children -->
+  <path class="ext" d="M 460 310 V 370"/>
+  <path d="M 435 370 H 615" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="impl" d="M 435 370 V 400"/>
+  <path class="ext" d="M 615 370 V 400"/>
+
+  <rect x="350" y="400" width="170" height="60" rx="6" class="boxR"/>
+  <text x="435" y="426" text-anchor="middle" class="lbl node">LinkedHashSet</text>
+  <text x="435" y="444" text-anchor="middle" class="lbl sub">concrete, implements</text>
+
+  <rect x="540" y="400" width="150" height="60" rx="6" class="boxP"/>
+  <text x="615" y="426" text-anchor="middle" class="lbl node">SortedSet&lt;E&gt;</text>
+  <text x="615" y="444" text-anchor="middle" class="lbl sub">existing, extends</text>
+
+  <!-- annotation: SequencedCollection methods -->
+  <rect x="20" y="490" width="640" height="170" rx="6" class="boxAnn"/>
+  <text x="36" y="512" class="lbl node">SequencedCollection&lt;E&gt; — new methods</text>
+  <text x="36" y="528" class="lbl sub">inherited by List, Deque, SequencedSet, LinkedHashSet, SortedSet</text>
+  <text x="36" y="552" class="lbl tiny">void addFirst(E e)</text>
+  <text x="36" y="570" class="lbl tiny">void addLast(E e)</text>
+  <text x="36" y="588" class="lbl tiny">E getFirst()</text>
+  <text x="36" y="606" class="lbl tiny">E getLast()</text>
+  <text x="340" y="552" class="lbl tiny">E removeFirst()</text>
+  <text x="340" y="570" class="lbl tiny">E removeLast()</text>
+  <text x="340" y="588" class="lbl tiny">SequencedCollection&lt;E&gt; reversed()</text>
+  <text x="36" y="630" class="lbl sub">SequencedSet&lt;E&gt; additionally covariantly overrides reversed() to return SequencedSet&lt;E&gt;</text>
+  <text x="36" y="646" class="lbl sub">getFirst() / getLast() on an empty sequenced collection throw NoSuchElementException</text>
+
+  <!-- annotation: SequencedMap methods -->
+  <rect x="700" y="490" width="380" height="230" rx="6" class="boxAnn"/>
+  <text x="716" y="512" class="lbl node">SequencedMap&lt;K,V&gt; — new methods</text>
+  <text x="716" y="532" class="lbl tiny">V putFirst(K k, V v)</text>
+  <text x="716" y="550" class="lbl tiny">V putLast(K k, V v)</text>
+  <text x="716" y="568" class="lbl tiny">Entry&lt;K,V&gt; firstEntry()</text>
+  <text x="716" y="586" class="lbl tiny">Entry&lt;K,V&gt; lastEntry()</text>
+  <text x="716" y="604" class="lbl tiny">Entry&lt;K,V&gt; pollFirstEntry()</text>
+  <text x="716" y="622" class="lbl tiny">Entry&lt;K,V&gt; pollLastEntry()</text>
+  <text x="716" y="640" class="lbl tiny">SequencedSet&lt;K&gt; sequencedKeySet()</text>
+  <text x="716" y="658" class="lbl tiny">SequencedCollection&lt;V&gt; sequencedValues()</text>
+  <text x="716" y="676" class="lbl tiny">SequencedSet&lt;Entry&lt;K,V&gt;&gt; sequencedEntrySet()</text>
+  <text x="716" y="694" class="lbl tiny">SequencedMap&lt;K,V&gt; reversed()</text>
+
+  <line x1="20" y1="750" x2="1080" y2="750" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="762" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="775" class="lbl tiny">new-in-21 interface</text>
+  <rect x="200" y="762" width="22" height="16" rx="3" class="boxP"/>
+  <text x="230" y="775" class="lbl tiny">existing interface</text>
+  <rect x="380" y="762" width="22" height="16" rx="3" class="boxR"/>
+  <text x="410" y="775" class="lbl tiny">concrete class</text>
+  <rect x="540" y="762" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="570" y="775" class="lbl tiny">annotation panel</text>
+
+  <path class="ext" d="M 20 796 H 60"/>
+  <text x="68" y="801" class="lbl tiny">A → B : A extends B</text>
+  <path class="impl" d="M 260 796 H 300"/>
+  <text x="308" y="801" class="lbl tiny">A → B : A implements B</text>
+</svg>

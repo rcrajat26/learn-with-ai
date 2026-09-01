@@ -1,0 +1,158 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three iterator consistency models over ClientRestrictions collections, all under the
+     same concurrent modification: an iterating thread walks the collection while restriction-apply-1
+     inserts DEP-301 CAPTURED. Fail-fast HashMap: modCount changes from 4 to 5, expectedModCount stays
+     4, the mismatch is detected on next() and ConcurrentModificationException is thrown, labelled
+     best-effort, not a guarantee. Weakly consistent ConcurrentHashMap: the traversal continues past
+     the insert, the new entry may or may not be seen, and each existing element is visited at most
+     once. Snapshot CopyOnWriteArrayList: the iterator holds the array captured at creation, the later
+     change is invisible to it, and calling remove on the iterator throws UnsupportedOperationException.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triD); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THREE ITERATOR CONSISTENCY MODELS UNDER ONE CONCURRENT WRITE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Shared trigger: operator-review iterates ClientRestrictions while restriction-apply-1 inserts DEP-301 CAPTURED</text>
+
+  <!-- Column headers -->
+  <text x="200" y="90" text-anchor="middle" class="lbl h2">FAIL-FAST — HashMap</text>
+  <text x="580" y="90" text-anchor="middle" class="lbl h2">WEAKLY CONSISTENT — ConcurrentHashMap</text>
+  <text x="960" y="90" text-anchor="middle" class="lbl h2">SNAPSHOT — CopyOnWriteArrayList</text>
+  <line x1="20" y1="98" x2="1100" y2="98" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ===== Column 1: Fail-fast ===== -->
+  <rect x="60" y="118" width="280" height="60" rx="6" class="boxP"/>
+  <text x="200" y="140" text-anchor="middle" class="lbl node">operator-review</text>
+  <text x="200" y="158" text-anchor="middle" class="lbl sub">iterator over HashMap, expectedModCount = 4</text>
+  <text x="200" y="172" text-anchor="middle" class="lbl sub">modCount (map) = 4</text>
+
+  <path class="flow" d="M 200 178 V 200"/>
+  <rect x="60" y="200" width="280" height="56" rx="6" class="boxY"/>
+  <text x="200" y="222" text-anchor="middle" class="lbl node">restriction-apply-1.put(...)</text>
+  <text x="200" y="240" text-anchor="middle" class="lbl sub">inserts DEP-301 CAPTURED</text>
+  <text x="200" y="252" text-anchor="middle" class="lbl sub">modCount (map) becomes 5</text>
+
+  <path class="fail" d="M 200 256 V 278"/>
+  <rect x="60" y="278" width="280" height="60" rx="6" class="boxD"/>
+  <text x="200" y="298" text-anchor="middle" class="lbl node">next() checks modCount</text>
+  <text x="200" y="316" text-anchor="middle" class="lbl sub">expectedModCount 4 != modCount 5</text>
+  <text x="200" y="330" text-anchor="middle" class="lbl sub">mismatch detected</text>
+
+  <path class="fail" d="M 200 338 V 360"/>
+  <rect x="60" y="360" width="280" height="60" rx="6" class="boxD"/>
+  <text x="200" y="382" text-anchor="middle" class="lbl node">ConcurrentModificationException</text>
+  <text x="200" y="400" text-anchor="middle" class="lbl sub">thrown from next()</text>
+  <text x="200" y="414" text-anchor="middle" class="lbl sub">best-effort detection, not a guarantee</text>
+
+  <!-- ===== Column 2: Weakly consistent ===== -->
+  <rect x="440" y="118" width="280" height="60" rx="6" class="boxP"/>
+  <text x="580" y="140" text-anchor="middle" class="lbl node">operator-review</text>
+  <text x="580" y="158" text-anchor="middle" class="lbl sub">iterator over ConcurrentHashMap</text>
+  <text x="580" y="172" text-anchor="middle" class="lbl sub">bins snapshotted per-bin, no modCount</text>
+
+  <path class="flow" d="M 580 178 V 200"/>
+  <rect x="440" y="200" width="280" height="56" rx="6" class="boxY"/>
+  <text x="580" y="222" text-anchor="middle" class="lbl node">restriction-apply-1.put(...)</text>
+  <text x="580" y="240" text-anchor="middle" class="lbl sub">inserts DEP-301 CAPTURED</text>
+  <text x="580" y="252" text-anchor="middle" class="lbl sub">no exception raised anywhere</text>
+
+  <path class="weak" d="M 580 256 V 278"/>
+  <rect x="440" y="278" width="280" height="72" rx="6" class="boxR"/>
+  <text x="580" y="298" text-anchor="middle" class="lbl node">traversal continues</text>
+  <text x="580" y="316" text-anchor="middle" class="lbl sub">DEP-301 CAPTURED may or may not be seen</text>
+  <text x="580" y="330" text-anchor="middle" class="lbl sub">depends on which bin is visited when</text>
+  <text x="580" y="344" text-anchor="middle" class="lbl sub">each existing element visited at most once</text>
+
+  <path class="weak" d="M 580 350 V 372"/>
+  <rect x="440" y="372" width="280" height="46" rx="6" class="boxA"/>
+  <text x="580" y="392" text-anchor="middle" class="lbl tiny">no crash, no missed removal, no duplicate</text>
+  <text x="580" y="406" text-anchor="middle" class="lbl tiny">just an unspecified view of new inserts</text>
+
+  <!-- ===== Column 3: Snapshot ===== -->
+  <rect x="820" y="118" width="260" height="60" rx="6" class="boxP"/>
+  <text x="950" y="140" text-anchor="middle" class="lbl node">operator-review</text>
+  <text x="950" y="158" text-anchor="middle" class="lbl sub">iterator over CopyOnWriteArrayList</text>
+  <text x="950" y="172" text-anchor="middle" class="lbl sub">holds array ref captured at creation</text>
+
+  <path class="flow" d="M 950 178 V 200"/>
+  <rect x="820" y="200" width="260" height="56" rx="6" class="boxY"/>
+  <text x="950" y="222" text-anchor="middle" class="lbl node">restriction-apply-1.add(...)</text>
+  <text x="950" y="240" text-anchor="middle" class="lbl sub">copies array, appends</text>
+  <text x="950" y="252" text-anchor="middle" class="lbl sub">DEP-301 CAPTURED, new array installed</text>
+
+  <path class="weak" d="M 950 256 V 278"/>
+  <rect x="820" y="278" width="260" height="60" rx="6" class="boxW"/>
+  <text x="950" y="298" text-anchor="middle" class="lbl node">iterator's array is unchanged</text>
+  <text x="950" y="316" text-anchor="middle" class="lbl sub">old array reference still held</text>
+  <text x="950" y="330" text-anchor="middle" class="lbl sub">the new entry is invisible to it</text>
+
+  <path class="fail" d="M 950 338 V 360"/>
+  <rect x="820" y="360" width="260" height="60" rx="6" class="boxD"/>
+  <text x="950" y="380" text-anchor="middle" class="lbl node">iterator.remove()</text>
+  <text x="950" y="398" text-anchor="middle" class="lbl sub">throws UnsupportedOperationException</text>
+  <text x="950" y="412" text-anchor="middle" class="lbl sub">snapshot iterators are read-only</text>
+
+  <!-- Annotation panel -->
+  <rect x="60" y="460" width="1020" height="90" rx="6" class="boxA"/>
+  <text x="80" y="482" class="lbl node">Why the three diverge</text>
+  <text x="80" y="502" class="lbl tiny">Fail-fast trades availability for a loud signal: modCount is a single shared counter, any structural change trips it.</text>
+  <text x="80" y="518" class="lbl tiny">Weakly consistent trades a strict guarantee for throughput: ConcurrentHashMap never blocks readers on a writer's bin.</text>
+  <text x="80" y="534" class="lbl tiny">Snapshot trades memory (a full array copy per write) for iteration that can never throw and never sees a torn state.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="580" x2="1100" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="596" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="609" class="lbl tiny">iterator state</text>
+  <rect x="180" y="596" width="22" height="16" rx="3" class="boxY"/>
+  <text x="210" y="609" class="lbl tiny">concurrent write by restriction-apply-1</text>
+  <rect x="460" y="596" width="22" height="16" rx="3" class="boxR"/>
+  <text x="490" y="609" class="lbl tiny">consistent / defined outcome</text>
+  <rect x="680" y="596" width="22" height="16" rx="3" class="boxW"/>
+  <text x="710" y="609" class="lbl tiny">stale/invisible view (not an error)</text>
+  <rect x="920" y="596" width="22" height="16" rx="3" class="boxD"/>
+  <text x="950" y="609" class="lbl tiny">thrown / unsupported</text>
+
+  <path class="flow" d="M 20 630 H 60"/>
+  <text x="70" y="635" class="lbl tiny">A → B : normal step</text>
+  <path class="weak" d="M 300 630 H 340"/>
+  <text x="350" y="635" class="lbl tiny">A → B : weak/no-guarantee step</text>
+  <path class="fail" d="M 660 630 H 700"/>
+  <text x="710" y="635" class="lbl tiny">A → B : leads to thrown exception</text>
+
+  <rect x="20" y="656" width="1080" height="120" rx="6" class="boxA"/>
+  <text x="40" y="678" class="lbl node">Domain: ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt; over 2.4M registered clients</text>
+  <text x="40" y="698" class="lbl tiny">operator-review walks restriction state during a compliance sweep; restriction-apply-1 concurrently applies</text>
+  <text x="40" y="714" class="lbl tiny">a new DEP-301 CAPTURED restriction from a fraud signal. The same write produces three different reader experiences</text>
+  <text x="40" y="730" class="lbl tiny">depending only on which collection type backs the iteration — none of the three is "wrong", each is a documented contract.</text>
+</svg>

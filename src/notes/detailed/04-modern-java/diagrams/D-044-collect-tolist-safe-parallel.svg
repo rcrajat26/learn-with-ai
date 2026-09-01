@@ -1,0 +1,160 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Comparison of collect(toList()) versus forEach(list::add) on a parallel stream of stake reservations split into four leaves. Left: each of four leaves owns its own ArrayList, sized 700 thousand elements each, merged pairwise up a combiner tree into 1.4 million then 2.8 million, with no shared mutable state. Right: all four leaves call add on one shared ArrayList with no synchronization, producing three observable symptoms: lost elements, interspersed nulls, and ArrayIndexOutOfBoundsException thrown from inside ArrayList.add during concurrent resize.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY COLLECT(TOLIST()) IS SAFE IN PARALLEL AND FOREACH(LIST::ADD) IS NOT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl dense">stakeReservations.parallelStream() over 2.8M reservations/day, split across 4 ForkJoin leaves (700k each)</text>
+
+  <text x="40" y="96" class="lbl h2">SAFE — .collect(toList())</text>
+  <line x1="40" y1="104" x2="540" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="580" y="96" class="lbl h2">UNSAFE — .forEach(list::add)</text>
+  <line x1="580" y1="104" x2="1080" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- LEFT: 4 leaves each own ArrayList -->
+  <rect x="60" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="110" y="152" text-anchor="middle" class="lbl dense">Leaf 1</text>
+  <text x="110" y="170" text-anchor="middle" class="lbl sub">own ArrayList</text>
+
+  <rect x="180" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="230" y="152" text-anchor="middle" class="lbl dense">Leaf 2</text>
+  <text x="230" y="170" text-anchor="middle" class="lbl sub">own ArrayList</text>
+
+  <rect x="300" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="350" y="152" text-anchor="middle" class="lbl dense">Leaf 3</text>
+  <text x="350" y="170" text-anchor="middle" class="lbl sub">own ArrayList</text>
+
+  <rect x="420" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="470" y="152" text-anchor="middle" class="lbl dense">Leaf 4</text>
+  <text x="470" y="170" text-anchor="middle" class="lbl sub">own ArrayList</text>
+
+  <!-- exit points each own x -->
+  <path class="flow" d="M 110 182 V 210"/>
+  <path class="flow" d="M 230 182 V 210"/>
+  <path class="flow" d="M 350 182 V 210"/>
+  <path class="flow" d="M 470 182 V 210"/>
+
+  <text x="170" y="204" text-anchor="middle" class="lbl sub">700k</text>
+  <text x="290" y="204" text-anchor="middle" class="lbl sub">700k</text>
+  <text x="410" y="204" text-anchor="middle" class="lbl sub">700k</text>
+  <text x="530" y="204" text-anchor="middle" class="lbl sub">700k</text>
+
+  <!-- pairwise merge level 1 -->
+  <rect x="90" y="214" width="130" height="52" rx="6" class="boxG"/>
+  <text x="155" y="236" text-anchor="middle" class="lbl dense">combine(1,2)</text>
+  <text x="155" y="254" text-anchor="middle" class="lbl sub">new ArrayList, 1.4M</text>
+
+  <rect x="330" y="214" width="130" height="52" rx="6" class="boxG"/>
+  <text x="395" y="236" text-anchor="middle" class="lbl dense">combine(3,4)</text>
+  <text x="395" y="254" text-anchor="middle" class="lbl sub">new ArrayList, 1.4M</text>
+
+  <path class="flow" d="M 155 266 V 292"/>
+  <path class="flow" d="M 395 266 V 292"/>
+  <text x="155" y="286" text-anchor="middle" class="lbl sub">1.4M</text>
+  <text x="395" y="286" text-anchor="middle" class="lbl sub">1.4M</text>
+
+  <!-- final merge -->
+  <rect x="200" y="296" width="150" height="60" rx="6" class="boxG"/>
+  <text x="275" y="320" text-anchor="middle" class="lbl node">combine(12,34)</text>
+  <text x="275" y="340" text-anchor="middle" class="lbl sub">final ArrayList, 2.8M</text>
+
+  <rect x="60" y="380" width="440" height="90" rx="6" class="boxG"/>
+  <text x="280" y="404" text-anchor="middle" class="lbl node">no shared mutable state</text>
+  <text x="280" y="424" text-anchor="middle" class="lbl dense">each ArrayList is written by exactly one leaf</text>
+  <text x="280" y="444" text-anchor="middle" class="lbl sub">combiner runs single-threaded per merge step</text>
+  <text x="280" y="460" text-anchor="middle" class="lbl sub">result: correct 2.8M-element list, every time</text>
+
+  <!-- RIGHT: shared ArrayList -->
+  <rect x="600" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="650" y="152" text-anchor="middle" class="lbl dense">Leaf 1</text>
+  <text x="650" y="170" text-anchor="middle" class="lbl sub">add()</text>
+
+  <rect x="720" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="770" y="152" text-anchor="middle" class="lbl dense">Leaf 2</text>
+  <text x="770" y="170" text-anchor="middle" class="lbl sub">add()</text>
+
+  <rect x="840" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="890" y="152" text-anchor="middle" class="lbl dense">Leaf 3</text>
+  <text x="890" y="170" text-anchor="middle" class="lbl sub">add()</text>
+
+  <rect x="960" y="130" width="100" height="52" rx="6" class="boxP"/>
+  <text x="1010" y="152" text-anchor="middle" class="lbl dense">Leaf 4</text>
+  <text x="1010" y="170" text-anchor="middle" class="lbl sub">add()</text>
+
+  <!-- bus down to one shared list -->
+  <path class="fail" d="M 650 182 V 200"/>
+  <path class="fail" d="M 770 182 V 200"/>
+  <path class="fail" d="M 890 182 V 200"/>
+  <path class="fail" d="M 1010 182 V 200"/>
+  <line x1="650" y1="200" x2="1010" y2="200" stroke="#b91c1c" stroke-width="2"/>
+  <path class="fail" d="M 830 200 V 220"/>
+
+  <rect x="700" y="224" width="260" height="60" rx="6" class="boxD"/>
+  <text x="830" y="248" text-anchor="middle" class="lbl node">one shared ArrayList</text>
+  <text x="830" y="266" text-anchor="middle" class="lbl sub">no synchronization, unsynchronized resize</text>
+
+  <path class="fail" d="M 830 284 V 310"/>
+
+  <rect x="600" y="314" width="460" height="140" rx="6" class="boxD"/>
+  <text x="830" y="338" text-anchor="middle" class="lbl node" font-weight="700">three observable symptoms</text>
+
+  <rect x="622" y="350" width="416" height="30" rx="4" class="boxD"/>
+  <text x="640" y="370" class="lbl dense">lost elements — a write is overwritten before size() advances</text>
+
+  <rect x="622" y="386" width="416" height="30" rx="4" class="boxD"/>
+  <text x="640" y="406" class="lbl dense">interspersed nulls — unpublished slots read mid-grow()</text>
+
+  <rect x="622" y="422" width="416" height="30" rx="4" class="boxD"/>
+  <text x="640" y="442" class="lbl dense">ArrayIndexOutOfBoundsException inside ArrayList.add</text>
+
+  <!-- Annotation panel -->
+  <rect x="600" y="474" width="460" height="76" rx="6" class="panel"/>
+  <text x="620" y="496" class="lbl dense" font-weight="700">Root cause</text>
+  <text x="620" y="516" class="lbl tiny">elementData[size++] = e is two racing steps: array write, then</text>
+  <text x="620" y="534" class="lbl tiny">size bump — no atomicity, no visibility guarantee</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="580" x2="1100" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="592" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="605" class="lbl tiny">ForkJoin leaf (source split)</text>
+
+  <rect x="260" y="592" width="22" height="16" rx="3" class="boxG"/>
+  <text x="290" y="605" class="lbl tiny">isolated / merged container, safe</text>
+
+  <rect x="580" y="592" width="22" height="16" rx="3" class="boxD"/>
+  <text x="610" y="605" class="lbl tiny">shared mutable state / failure</text>
+
+  <path class="flow" d="M 20 626 H 60"/>
+  <text x="68" y="631" class="lbl tiny">A → B : B is produced from A (safe combine)</text>
+
+  <path class="fail" d="M 460 626 H 500"/>
+  <text x="508" y="631" class="lbl tiny">A → B : concurrent, unsynchronized write from A into B</text>
+</svg>

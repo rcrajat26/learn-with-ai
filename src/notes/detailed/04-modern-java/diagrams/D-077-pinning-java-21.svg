@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of virtual thread pinning on Java 21. Left: a virtual thread
+     blocking on a JDBC socket read inside a synchronized block cannot yield its continuation, so it
+     pins carrier-3, and other runnable virtual threads queue behind it; the
+     -Djdk.tracePinnedThreads=full output is shown. Right: the same logic rewritten with ReentrantLock
+     lets the thread unmount on the blocking call, freeing carrier-3 for other virtual threads. A version
+     trap banner notes that JEP 491 removes the synchronized pinning cause in Java 24, but native and
+     foreign frames still pin on every version.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Consolas, monospace; font-size: 10.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .boxVersion { fill: #fbbf24; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triD); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PINNING ON JAVA 21 — synchronized VS ReentrantLock IN THE JDBC DRIVER PATH</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: synchronized -->
+  <text x="40" y="66" class="lbl h2">BEFORE — synchronized (PINS)</text>
+  <rect x="40" y="78" width="510" height="420" rx="6" class="boxW"/>
+
+  <rect x="60" y="96" width="230" height="150" rx="6" class="boxD"/>
+  <text x="175" y="118" text-anchor="middle" class="lbl node">FundsLedger DAO</text>
+  <text x="175" y="136" text-anchor="middle" class="lbl sub">synchronized (connLock) {</text>
+  <text x="175" y="152" text-anchor="middle" class="lbl sub">socket.read() — blocking JDBC</text>
+  <text x="175" y="168" text-anchor="middle" class="lbl sub">}</text>
+  <text x="175" y="190" text-anchor="middle" class="lbl body" font-weight="700">continuation cannot yield</text>
+  <text x="175" y="206" text-anchor="middle" class="lbl sub">monitor held across the block</text>
+  <text x="175" y="222" text-anchor="middle" class="lbl sub">vthread-5001, DEP-301 flow</text>
+
+  <path class="fail" d="M 290 170 H 340"/>
+  <rect x="340" y="96" width="150" height="150" rx="6" class="boxD"/>
+  <text x="415" y="118" text-anchor="middle" class="lbl node">carrier-3</text>
+  <text x="415" y="136" text-anchor="middle" class="lbl sub">held / pinned</text>
+  <text x="415" y="152" text-anchor="middle" class="lbl sub">cannot service</text>
+  <text x="415" y="168" text-anchor="middle" class="lbl sub">any other vthread</text>
+  <text x="415" y="184" text-anchor="middle" class="lbl sub">until socket.read()</text>
+  <text x="415" y="200" text-anchor="middle" class="lbl sub">returns</text>
+
+  <rect x="60" y="262" width="430" height="60" rx="6" class="boxW"/>
+  <text x="75" y="282" class="lbl tiny" font-weight="700">queued behind carrier-3</text>
+  <text x="75" y="298" class="lbl tiny">vthread-5002, vthread-5003, vthread-5004 (other stake settlements) —</text>
+  <text x="75" y="312" class="lbl tiny">runnable, but no free carrier picks them up while carrier-3 is pinned</text>
+
+  <rect x="60" y="332" width="430" height="150" rx="6" class="boxW"/>
+  <text x="75" y="350" class="lbl tiny" font-weight="700">-Djdk.tracePinnedThreads=full (documented format)</text>
+  <text x="75" y="368" class="lbl mono">Thread[#5001,ForkJoinPool-1-worker-3,5,CarrierThreads]</text>
+  <text x="75" y="382" class="lbl mono">    java.base/j.l.VirtualThread$VThreadContinuation</text>
+  <text x="75" y="396" class="lbl mono">        .onPinned(VirtualThread.java:183)</text>
+  <text x="75" y="410" class="lbl mono">    java.base/java.lang.VirtualThread.park(...)</text>
+  <text x="75" y="424" class="lbl mono">    j.b/j.u.c.locks.LockSupport.park(...)</text>
+  <text x="75" y="438" class="lbl mono">    FundsLedgerDao.readRow(FundsLedgerDao.java:41)</text>
+  <text x="75" y="452" class="lbl mono">        &lt;== monitors:1</text>
+  <text x="75" y="468" class="lbl mono">    FundsLedgerDao.settleStake(FundsLedgerDao.java:22)</text>
+
+  <!-- RIGHT: ReentrantLock -->
+  <text x="580" y="66" class="lbl h2">AFTER — ReentrantLock (UNMOUNTS)</text>
+  <rect x="580" y="78" width="500" height="420" rx="6" class="boxW"/>
+
+  <rect x="600" y="96" width="230" height="150" rx="6" class="boxR"/>
+  <text x="715" y="118" text-anchor="middle" class="lbl node">FundsLedger DAO</text>
+  <text x="715" y="136" text-anchor="middle" class="lbl sub">connLock.lock();</text>
+  <text x="715" y="152" text-anchor="middle" class="lbl sub">try { socket.read(); }</text>
+  <text x="715" y="168" text-anchor="middle" class="lbl sub">finally { connLock.unlock(); }</text>
+  <text x="715" y="190" text-anchor="middle" class="lbl body" font-weight="700">continuation yields normally</text>
+  <text x="715" y="206" text-anchor="middle" class="lbl sub">ReentrantLock parks the vthread</text>
+  <text x="715" y="222" text-anchor="middle" class="lbl sub">vthread-5001, DEP-301 flow</text>
+
+  <path class="flow" d="M 830 170 H 880"/>
+  <rect x="880" y="96" width="150" height="150" rx="6" class="boxR"/>
+  <text x="955" y="118" text-anchor="middle" class="lbl node">carrier-3</text>
+  <text x="955" y="136" text-anchor="middle" class="lbl sub">freed</text>
+  <text x="955" y="152" text-anchor="middle" class="lbl sub">vthread-5001's</text>
+  <text x="955" y="168" text-anchor="middle" class="lbl sub">frames move to a</text>
+  <text x="955" y="184" text-anchor="middle" class="lbl sub">heap StackChunk</text>
+  <text x="955" y="200" text-anchor="middle" class="lbl sub">(see D-074)</text>
+
+  <rect x="600" y="262" width="430" height="60" rx="6" class="boxR"/>
+  <text x="615" y="282" class="lbl tiny" font-weight="700">carrier-3 immediately serves another vthread</text>
+  <text x="615" y="298" class="lbl tiny">vthread-5002 (settleStake) mounts on carrier-3 while vthread-5001</text>
+  <text x="615" y="312" class="lbl tiny">waits on the socket — no queueing behind a pinned carrier</text>
+
+  <rect x="600" y="332" width="430" height="150" rx="6" class="boxAnno"/>
+  <text x="615" y="352" class="lbl tiny" font-weight="700">Why the lock type matters</text>
+  <text x="615" y="372" class="lbl tiny">java.util.concurrent.locks.ReentrantLock parks via</text>
+  <text x="615" y="388" class="lbl tiny">LockSupport, which is virtual-thread-aware: parking</text>
+  <text x="615" y="404" class="lbl tiny">releases the carrier instead of holding it.</text>
+  <text x="615" y="424" class="lbl tiny">synchronized parks via the JVM's built-in monitor,</text>
+  <text x="615" y="440" class="lbl tiny">which on Java 21 has no such release path — the</text>
+  <text x="615" y="456" class="lbl tiny">continuation genuinely cannot yield mid-monitor.</text>
+
+  <!-- version trap banner -->
+  <rect x="40" y="520" width="1040" height="130" rx="8" class="boxVersion"/>
+  <text x="60" y="546" class="lbl h2" fill="#78350f">VERSION TRAP</text>
+  <text x="60" y="570" class="lbl body" fill="#1f2937">JEP 491 (Java 24) removes the synchronized-block pinning cause: on Java 24+, the</text>
+  <text x="60" y="588" class="lbl body" fill="#1f2937">left panel's scenario no longer pins — the continuation can yield out of a monitor.</text>
+  <text x="60" y="612" class="lbl body" fill="#1f2937" font-weight="700">Native and foreign frames still pin on every version, Java 21 through 24+ —</text>
+  <text x="60" y="630" class="lbl body" fill="#1f2937">a JNI call or a foreign-function call on the stack blocks yield regardless of lock type,</text>
+  <text x="60" y="646" class="lbl body" fill="#1f2937">and jdk.VirtualThreadPinned still fires for that case.</text>
+
+  <rect x="700" y="670" width="380" height="70" rx="6" class="boxD"/>
+  <text x="712" y="690" class="lbl tiny" font-weight="700">Reproduction caveat (this diagram's envelope)</text>
+  <text x="712" y="706" class="lbl tiny">this machine runs a JDK 25 / GraalVM 25 runtime, which</text>
+  <text x="712" y="722" class="lbl tiny">already implements JEP 491 — synchronized did not pin</text>
+  <text x="712" y="736" class="lbl tiny">when re-run here; see envelope's unverified line.</text>
+
+  <line x1="20" y1="770" x2="1100" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="790" class="lbl tiny" font-weight="700">LEGEND</text>
+  <rect x="20" y="802" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="815" class="lbl tiny">pinned state — carrier held, cannot yield</text>
+  <rect x="290" y="802" width="22" height="16" rx="3" class="boxR"/>
+  <text x="320" y="815" class="lbl tiny">unmounted state — carrier free, success path</text>
+  <rect x="600" y="802" width="22" height="16" rx="3" class="boxAnno"/>
+  <text x="630" y="815" class="lbl tiny">annotation panel</text>
+  <rect x="800" y="802" width="22" height="16" rx="3" class="boxVersion"/>
+  <text x="830" y="815" class="lbl tiny">version trap banner</text>
+  <path class="fail" d="M 20 838 H 60"/>
+  <text x="68" y="843" class="lbl tiny">A → B : A blocks/degrades B (pinning path)</text>
+  <path class="flow" d="M 400 838 H 440"/>
+  <text x="448" y="843" class="lbl tiny">A → B : A frees/hands off to B (success path)</text>
+</svg>

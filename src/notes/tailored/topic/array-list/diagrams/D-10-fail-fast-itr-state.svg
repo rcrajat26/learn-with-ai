@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1040 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Fail-fast in three ints. The Itr inner class holds cursor, lastRet and
+     expectedModCount; the outer ArrayList holds modCount. checkForComodification compares
+     modCount to expectedModCount at the top of next() and remove(). While synced, next()
+     advances cursor and Itr.remove() resyncs expectedModCount to modCount. A structural
+     change made through the list itself, list.add or list.remove, increments modCount without
+     touching expectedModCount and moves the iterator to a diverged state; the next call to
+     next() throws ConcurrentModificationException. An annotation panel documents the
+     second-to-last-element escape: removing the element before the last one leaves
+     cursor equal to size, so hasNext() returns false and the loop exits before the check
+     ever runs, silently skipping the final element with no exception.">
+  <style>
+    .lbl     { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1      { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2      { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node    { font-size: 15px; font-weight: 600; }
+    .nodeSm  { font-size: 13px; font-weight: 700; }
+    .body    { font-size: 13px; }
+    .sub     { font-size: 10.5px; fill: #4b5563; }
+    .tiny    { font-size: 11px; }
+    .secTiny { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FAIL-FAST IN THREE INTS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- field boxes -->
+  <rect x="40" y="55" width="300" height="110" rx="6" class="boxP"/>
+  <text x="190" y="78" text-anchor="middle" class="lbl node">Itr &#8212; fail-fast iterator</text>
+  <text x="190" y="98" text-anchor="middle" class="lbl body">cursor: int</text>
+  <text x="190" y="116" text-anchor="middle" class="lbl body">lastRet: int (-1 = none)</text>
+  <text x="190" y="133" text-anchor="middle" class="lbl sub">expectedModCount: int (snapshot)</text>
+
+  <rect x="380" y="55" width="300" height="110" rx="6" class="boxP"/>
+  <text x="530" y="78" text-anchor="middle" class="lbl node">ArrayList (outer instance)</text>
+  <text x="530" y="98" text-anchor="middle" class="lbl body">modCount: int (AbstractList)</text>
+  <text x="530" y="116" text-anchor="middle" class="lbl body">size: int</text>
+  <text x="530" y="133" text-anchor="middle" class="lbl sub">structural changes increment modCount</text>
+
+  <!-- panel 1: comodification check -->
+  <rect x="40" y="180" width="940" height="60" rx="6" class="panel"/>
+  <text x="54" y="198" class="lbl h2">checkForComodification() &#8212; called at the top of every next() and Itr.remove()</text>
+  <text x="54" y="218" class="lbl tiny">if (modCount != expectedModCount) throw new ConcurrentModificationException();</text>
+
+  <!-- SYNCED state with self-loops -->
+  <rect x="100" y="310" width="300" height="110" rx="8" class="boxR"/>
+  <text x="250" y="335" text-anchor="middle" class="lbl node">SYNCED</text>
+  <text x="250" y="356" text-anchor="middle" class="lbl body">expectedModCount == modCount</text>
+  <text x="250" y="374" text-anchor="middle" class="lbl sub">cursor advances; lastRet tracks</text>
+  <text x="250" y="389" text-anchor="middle" class="lbl sub">the last index next() returned</text>
+
+  <path class="flow" d="M 180 310 V 280 H 260 V 310"/>
+  <text x="220" y="273" text-anchor="middle" class="lbl tiny">next()</text>
+
+  <path class="flow" d="M 300 310 V 280 H 380 V 310"/>
+  <text x="340" y="273" text-anchor="middle" class="lbl tiny">Itr.remove()</text>
+
+  <!-- DIVERGED state -->
+  <rect x="640" y="310" width="300" height="110" rx="8" class="boxD"/>
+  <text x="790" y="335" text-anchor="middle" class="lbl node">DIVERGED</text>
+  <text x="790" y="356" text-anchor="middle" class="lbl body">modCount != expectedModCount</text>
+  <text x="790" y="374" text-anchor="middle" class="lbl sub">structural change happened</text>
+  <text x="790" y="389" text-anchor="middle" class="lbl sub">outside this iterator</text>
+
+  <path class="flow" d="M 400 345 H 640"/>
+  <text x="520" y="338" text-anchor="middle" class="lbl tiny">list.add(...)</text>
+
+  <path class="flow" d="M 400 385 H 640"/>
+  <text x="520" y="378" text-anchor="middle" class="lbl tiny">list.remove(...)</text>
+
+  <!-- CME terminal -->
+  <rect x="640" y="480" width="300" height="90" rx="8" class="boxD"/>
+  <text x="790" y="505" text-anchor="middle" class="lbl nodeSm">ConcurrentModificationException</text>
+  <text x="790" y="525" text-anchor="middle" class="lbl sub">thrown from Itr.next()</text>
+  <text x="790" y="543" text-anchor="middle" class="lbl sub">via checkForComodification()</text>
+
+  <path class="flow" d="M 790 420 V 480"/>
+  <text x="800" y="453" class="lbl tiny">next()</text>
+
+  <!-- panel 2: the escape hatch -->
+  <rect x="40" y="590" width="960" height="120" rx="6" class="panel"/>
+  <text x="54" y="610" class="lbl h2">THE SECOND-TO-LAST-ELEMENT ESCAPE &#8212; best-effort, not guaranteed</text>
+  <text x="54" y="630" class="lbl tiny">[A, B, C, D]; for-each removes C via list.remove("C") (not itr.remove()) right after next() returns C, so cursor == 3</text>
+  <text x="54" y="650" class="lbl tiny">size becomes 3; hasNext() tests cursor != size &#8594; 3 != 3 &#8594; false &#8212; loop exits before next() ever calls checkForComodification()</text>
+  <text x="54" y="670" class="lbl tiny">No exception thrown. Result silently becomes [A, B, D] &#8212; D is never visited.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="728" x2="1020" y2="728" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="743" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="756" class="lbl tiny">field container &#8212; Itr / ArrayList</text>
+
+  <rect x="330" y="743" width="22" height="16" rx="3" class="boxR"/>
+  <text x="360" y="756" class="lbl tiny">SYNCED &#8212; expectedModCount == modCount</text>
+
+  <rect x="680" y="743" width="22" height="16" rx="3" class="boxD"/>
+  <text x="710" y="756" class="lbl tiny">DIVERGED / thrown ConcurrentModificationException</text>
+
+  <path class="flow" d="M 30 785 H 70"/>
+  <text x="80" y="790" class="lbl tiny">A &#8594; B : method call / state transition</text>
+
+  <rect x="500" y="777" width="22" height="16" rx="3" class="panel"/>
+  <text x="530" y="790" class="lbl tiny">annotation panel &#8212; comodification rule &amp; escape-hatch example</text>
+</svg>

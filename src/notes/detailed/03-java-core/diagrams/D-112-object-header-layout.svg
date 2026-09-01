@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1120 980" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Byte-by-byte layout of a LedgerEntry instance. Left column shows the eight fields in source declaration order with no offsets. Right column shows the same eight fields as HotSpot actually placed them, as a vertical byte-offset stack from address 0 to 48: 8-byte mark word, 4-byte compressed class word, then int phase slotted into the 4-byte gap at offset 12, then the two 8-byte fields, then the 2-byte and 1-byte fields, then the two compressed-oop references last, then 4 bytes of padding, for a total of 48 bytes. One dotted amber connector links declared field 6, int phase, to its actual offset 12 to show the gap-fill reordering. Two annotation panels below explode the mark word's bit fields and list the HotSpot-specific caveats.">
+  <defs>
+    <marker id="arrow112b" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="980" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">The object header and field reordering</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Band headers -->
+  <text x="210" y="66" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">AS DECLARED IN SOURCE</text>
+  <line x1="60" y1="76" x2="360" y2="76" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="815" y="66" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">AS LAID OUT BY HOTSPOT</text>
+  <line x1="600" y1="76" x2="1010" y2="76" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- LEFT COLUMN: declared order, no offsets -->
+  <rect x="60" y="90" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="111" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1. boolean reversed</text>
+
+  <rect x="60" y="128" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="149" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2. Object clientId</text>
+
+  <rect x="60" y="166" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="187" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">3. long sequence</text>
+
+  <rect x="60" y="204" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4. byte disposition</text>
+
+  <rect x="60" y="242" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="263" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">5. Object position</text>
+
+  <rect x="60" y="280" width="300" height="32" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="210" y="301" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">6. int phase</text>
+
+  <rect x="60" y="318" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="339" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">7. short variant</text>
+
+  <rect x="60" y="356" width="300" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="210" y="377" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">8. double amountMinor</text>
+
+  <text x="210" y="405" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">the compiler ignores this order</text>
+
+  <!-- RIGHT COLUMN: measured HotSpot layout, offset ruler on the left of the boxes -->
+  <text x="628" y="111" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+  <rect x="640" y="90" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="111" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">mark word &#8212; 8 bytes</text>
+
+  <text x="628" y="149" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">8</text>
+  <rect x="640" y="128" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="149" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">compressed class word &#8212; 4 bytes</text>
+
+  <text x="612" y="187" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">12</text>
+  <rect x="640" y="166" width="360" height="32" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="820" y="187" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">int phase &#8212; 4 bytes (gap-fill)</text>
+
+  <text x="628" y="225" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">16</text>
+  <rect x="640" y="204" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">long sequence &#8212; 8 bytes</text>
+
+  <text x="628" y="263" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">24</text>
+  <rect x="640" y="242" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="263" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">double amountMinor &#8212; 8 bytes</text>
+
+  <text x="628" y="301" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">32</text>
+  <rect x="640" y="280" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="301" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">short variant &#8212; 2 bytes</text>
+
+  <text x="628" y="339" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">34</text>
+  <rect x="640" y="318" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="339" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">boolean reversed &#8212; 1 byte</text>
+
+  <text x="628" y="377" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">35</text>
+  <rect x="640" y="356" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="377" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">byte disposition &#8212; 1 byte</text>
+
+  <text x="628" y="415" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">36</text>
+  <rect x="640" y="394" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="415" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Object clientId (compressed oop) &#8212; 4 bytes</text>
+
+  <text x="628" y="453" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">40</text>
+  <rect x="640" y="432" width="360" height="32" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="453" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Object position (compressed oop) &#8212; 4 bytes</text>
+
+  <text x="628" y="491" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">44</text>
+  <rect x="640" y="470" width="360" height="32" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="820" y="491" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">padding &#8212; 4 bytes</text>
+
+  <text x="628" y="516" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">48</text>
+
+  <rect x="640" y="512" width="360" height="32" rx="4" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="820" y="533" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">TOTAL: 48 bytes</text>
+
+  <!-- connector: the reordering surprise -->
+  <path d="M 360 296 H 500 V 182 H 640" fill="none" stroke="#b45309" stroke-width="2"
+        stroke-dasharray="3 3" marker-end="url(#arrow112b)"/>
+
+  <!-- ordering rule caption -->
+  <text x="560" y="562" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">ORDERING RULE OBSERVED: gap-fill first, then 8-byte, then 2-byte, then 1-byte, then references last.</text>
+  <text x="560" y="580" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">Naive "longs first" would put sequence at offset 16, wasting bytes 12-15 as dead padding &#8212; the measurement disagrees.</text>
+
+  <!-- ANNOTATION PANELS -->
+  <rect x="60" y="600" width="460" height="170" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="622" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">MARK WORD EXPLOSION (bytes 0-7)</text>
+  <text x="80" y="642" font-family="sans-serif" font-size="11" fill="#1f2937">unused:25 hash:31 unused_gap:1 age:4</text>
+  <text x="80" y="660" font-family="sans-serif" font-size="11" fill="#1f2937">unused_gap:1 lock:2 = 64 bits</text>
+  <text x="80" y="678" font-family="sans-serif" font-size="11" fill="#1f2937">(HotSpot markWord.hpp, JDK 21)</text>
+  <text x="80" y="696" font-family="sans-serif" font-size="11" fill="#1f2937">31 bits: identity hash (System.identityHashCode)</text>
+  <text x="80" y="714" font-family="sans-serif" font-size="11" fill="#1f2937">4 bits: GC age (tenuring generation count)</text>
+  <text x="80" y="732" font-family="sans-serif" font-size="11" fill="#1f2937">2 bits: lock state (unlocked / thin-locked / inflated)</text>
+
+  <rect x="600" y="600" width="440" height="170" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="620" y="622" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CAVEATS</text>
+  <text x="620" y="642" font-family="sans-serif" font-size="11" fill="#1f2937">Layout is NOT specified by JVMS &#8212; it is HotSpot's</text>
+  <text x="620" y="660" font-family="sans-serif" font-size="11" fill="#1f2937">fieldLayoutBuilder, rewritten in JDK 15 by JDK-8237767,</text>
+  <text x="620" y="678" font-family="sans-serif" font-size="11" fill="#1f2937">which also removed -XX:FieldsAllocationStyle.</text>
+  <text x="620" y="696" font-family="sans-serif" font-size="11" fill="#1f2937">Measured with UseCompressedClassPointers=true and</text>
+  <text x="620" y="714" font-family="sans-serif" font-size="11" fill="#1f2937">ObjectAlignmentInBytes=8 (default / ergonomic).</text>
+  <text x="620" y="732" font-family="sans-serif" font-size="11" fill="#1f2937">Without compressed class pointers the header is 16 bytes.</text>
+
+  <!-- LEGEND -->
+  <text x="60" y="796" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="60" y1="804" x2="1100" y2="804" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="70" y="818" width="22" height="16" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="98" y="831" font-family="sans-serif" font-size="11" fill="#4b5563">field slot (declared, or laid out) &#8212; no special meaning</text>
+
+  <rect x="70" y="842" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="98" y="855" font-family="sans-serif" font-size="11" fill="#4b5563">int phase &#8212; the gap-fill surprise (offset 12)</text>
+
+  <rect x="70" y="866" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="98" y="879" font-family="sans-serif" font-size="11" fill="#4b5563">padding (4 bytes, offset 44)</text>
+
+  <rect x="600" y="818" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="628" y="831" font-family="sans-serif" font-size="11" fill="#4b5563">total object size</text>
+
+  <rect x="600" y="842" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="628" y="855" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; measured JDK 21.0.7 fact</text>
+
+  <line x1="600" y1="874" x2="622" y2="874" stroke="#b45309" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow112b)"/>
+  <text x="628" y="879" font-family="sans-serif" font-size="11" fill="#4b5563">declared field &#8594; its actual offset (bridge, not inheritance)</text>
+</svg>

@@ -1,0 +1,131 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="allOf versus anyOf on the identity vendor and watchlist provider futures. Left:
+     CompletableFuture.allOf waits for both CF of IdentityResult and CF of WatchlistResult, returns
+     CF of Void with no payload, so the correct pattern re-reads every source future with
+     thenApply of a stream that maps CompletableFuture colon colon join and collects to a list.
+     Right: CompletableFuture.anyOf races the same two futures. The identity vendor call fails at
+     300 milliseconds, before the watchlist provider succeeds at 1.4 seconds, so anyOf completes at
+     300 milliseconds carrying that failure — it returns CF of Object and completes on the first
+     future to finish, success or failure. A first-successful variant does not exist in the JDK.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .div   { stroke: #d1d5db; stroke-width: 1; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COMPLETABLEFUTURE.ALLOF VS .ANYOF — IDENTITY VENDOR AND WATCHLIST</text>
+  <line x1="20" y1="42" x2="1100" y2="42" class="rule"/>
+
+  <text x="30" y="62" class="lbl h2">ALLOF — WAITS FOR EVERY FUTURE</text>
+  <line x1="30" y1="70" x2="550" y2="70" class="div"/>
+  <text x="580" y="62" class="lbl h2">ANYOF — COMPLETES ON THE FIRST TO FINISH</text>
+  <line x1="570" y1="70" x2="1090" y2="70" class="div"/>
+
+  <line x1="560" y1="50" x2="560" y2="520" class="div"/>
+
+  <!-- row 1: source futures, left -->
+  <rect x="60" y="90" width="180" height="54" rx="6" class="boxP"/>
+  <text x="150" y="112" text-anchor="middle" class="lbl node">CF&lt;IdentityResult&gt;</text>
+  <text x="150" y="128" text-anchor="middle" class="lbl sub">identity vendor</text>
+
+  <rect x="280" y="90" width="180" height="54" rx="6" class="boxP"/>
+  <text x="370" y="112" text-anchor="middle" class="lbl node">CF&lt;WatchlistResult&gt;</text>
+  <text x="370" y="128" text-anchor="middle" class="lbl sub">watchlist provider</text>
+
+  <!-- fan-in bus into allOf -->
+  <path class="flow" d="M 150 144 V 170 H 370 V 144"/>
+  <path class="flow" d="M 260 170 V 190"/>
+
+  <rect x="130" y="190" width="260" height="50" rx="6" class="boxP"/>
+  <text x="260" y="220" text-anchor="middle" class="lbl node">CompletableFuture.allOf(...)</text>
+
+  <path class="flow" d="M 260 240 V 284"/>
+  <rect x="160" y="284" width="200" height="54" rx="6" class="boxW"/>
+  <text x="260" y="306" text-anchor="middle" class="lbl node">CF&lt;Void&gt;</text>
+  <text x="260" y="322" text-anchor="middle" class="lbl sub">no values inside</text>
+
+  <path class="flow" d="M 260 338 V 382"/>
+  <text x="280" y="356" class="lbl tiny">.thenApply(v -&gt; list.stream()</text>
+  <text x="280" y="370" class="lbl tiny">.map(CompletableFuture::join).toList())</text>
+
+  <rect x="140" y="382" width="240" height="54" rx="6" class="boxR"/>
+  <text x="260" y="404" text-anchor="middle" class="lbl node">List&lt;Object&gt;</text>
+  <text x="260" y="420" text-anchor="middle" class="lbl sub">each future re-read via .join()</text>
+
+  <rect x="140" y="450" width="240" height="70" rx="6" class="ann"/>
+  <text x="152" y="467" class="lbl tiny" font-weight="700">WHY RE-READ</text>
+  <text x="152" y="483" class="lbl sub">.allOf/.anyOf never carry the child</text>
+  <text x="152" y="497" class="lbl sub">values — .join() is O(1) once the</text>
+  <text x="152" y="511" class="lbl sub">future is done, safe to call again</text>
+
+  <!-- row 1: source futures, right -->
+  <rect x="620" y="90" width="180" height="54" rx="6" class="boxD"/>
+  <text x="710" y="112" text-anchor="middle" class="lbl node">CF&lt;IdentityResult&gt;</text>
+  <text x="710" y="128" text-anchor="middle" class="lbl sub">fails at 300 ms</text>
+
+  <rect x="840" y="90" width="180" height="54" rx="6" class="boxR"/>
+  <text x="930" y="112" text-anchor="middle" class="lbl node">CF&lt;WatchlistResult&gt;</text>
+  <text x="930" y="128" text-anchor="middle" class="lbl sub">succeeds at 1.4 s</text>
+
+  <!-- fan-in bus into anyOf -->
+  <path class="flow" d="M 710 144 V 170 H 930 V 144"/>
+  <path class="flow" d="M 820 170 V 190"/>
+
+  <rect x="690" y="190" width="260" height="50" rx="6" class="boxP"/>
+  <text x="820" y="220" text-anchor="middle" class="lbl node">CompletableFuture.anyOf(...)</text>
+
+  <path class="flow" d="M 820 240 V 284"/>
+  <rect x="710" y="284" width="220" height="70" rx="6" class="boxD"/>
+  <text x="820" y="306" text-anchor="middle" class="lbl node">CF&lt;Object&gt;</text>
+  <text x="820" y="322" text-anchor="middle" class="lbl sub">completes at 300 ms</text>
+  <text x="820" y="338" text-anchor="middle" class="lbl sub">with the IdentityResult failure</text>
+
+  <rect x="690" y="450" width="280" height="70" rx="6" class="ann"/>
+  <text x="702" y="467" class="lbl tiny" font-weight="700">"FIRST SUCCESSFUL" IS ABSENT</text>
+  <text x="702" y="483" class="lbl sub">anyOf completes on the first stage</text>
+  <text x="702" y="497" class="lbl sub">to finish — success or failure —</text>
+  <text x="702" y="511" class="lbl sub">no first-success variant exists in the JDK</text>
+
+  <!-- legend -->
+  <line x1="20" y1="545" x2="1100" y2="545" class="rule"/>
+
+  <rect x="40" y="565" width="20" height="14" rx="3" class="boxP"/>
+  <text x="68" y="576" class="lbl tiny">ordinary future, or the allOf/anyOf call itself</text>
+
+  <rect x="420" y="565" width="20" height="14" rx="3" class="boxR"/>
+  <text x="448" y="576" class="lbl tiny">succeeded — value available</text>
+
+  <rect x="700" y="565" width="20" height="14" rx="3" class="boxD"/>
+  <text x="728" y="576" class="lbl tiny">failed, or a result that completed exceptionally</text>
+
+  <rect x="40" y="600" width="20" height="14" rx="3" class="boxW"/>
+  <text x="68" y="611" class="lbl tiny">no payload — CF&lt;Void&gt;, must re-read the sources</text>
+
+  <rect x="420" y="600" width="20" height="14" rx="3" class="ann"/>
+  <text x="448" y="611" class="lbl tiny">annotation — API semantics note</text>
+
+  <path class="flow" d="M 700 607 H 750"/>
+  <text x="760" y="611" class="lbl tiny">fan-in: multiple futures feed one combinator</text>
+</svg>

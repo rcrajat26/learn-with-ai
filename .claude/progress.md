@@ -1,0 +1,616 @@
+# Progress Tracker
+
+Update this file after every day or week generation. This is the canonical
+state file — future sessions read here to know where we are.
+
+**This project runs two independent pipelines.** The day/week pipeline is tracked
+below and is still at zero. The per-topic pipeline is tracked in its own section
+at the end of this file and has one topic complete.
+
+## Plan position
+
+- **Current week:** Not started
+- **Days complete:** 0
+- **Phase:** Phase 1 (not started)
+- **Next to generate:** Day 1 (`w1/day1-notes.md`), per `faang-staff-prep-v4-28week.md`.
+
+## Generated artifacts
+
+None yet.
+
+### Weeks 1+ — NOT STARTED
+
+Continue in plan order. Each week:
+
+1. Generate days `5N-4` through `5N` using `daily-prompt.txt`.
+2. Optionally generate `week<N>-notes.md` Staff overview using `weekly-prompt.txt`.
+
+## Running totals
+
+| Metric | Current | Target by phase end |
+|---|---|---|
+| Days generated | 0 / 140 | Phase 1: 40 |
+| LeetCode problems covered | 0 / ~160 | Phase 1: ~50 |
+| STAR stories drafted | 0 / 20 | Phase 2 end: 18 |
+| Engineering blogs dissected (template provided) | 0 / 28 | Phase 3 end: ~22 |
+| DDIA chapters | 0 / 11 | Phase 3 end: 9 + Ch 4 + Ch 11 |
+| Distributed systems papers | 0 / 4 (min) | Phase 3 end: 4 |
+
+## Conventions reminders (full detail in `conventions.md`)
+
+- Output path: `w<N>/day<D>-notes.md` where N = week number, D = day number.
+- Tier-tag every sub-block: `[BOTH]` `[SENIOR IC]` `[STAFF]`.
+- Target length: 1500–2000 lines per day.
+- Cross-reference with explicit day numbers, not vague "later."
+
+## Open questions / decisions made
+
+None yet.
+
+## Last update
+
+- **Date:** 2026-07-09
+- **Last generated:** None — progress reset to 0.
+- **Notes:** All generated notes (w1, w2, w9) and other-notes deleted. Fresh start. Core artifacts and `.claude` config (including `preference.md`) retained.
+
+---
+
+# Per-topic pipeline
+
+Separate from the day/week plan above. Source of truth for scope is
+`src/syllabus/<NN>-<slug>.md`; generation prompt is
+`src/metadata/prompts/<NN>-<slug>-prompt.md`; output is
+`src/notes/detailed/<topic-slug>/`.
+
+## Topics complete: 2 of 21
+
+### 04 modern-java — full pipeline run 2026-08-30 → 2026-08-31 (COMPLETE)
+
+Ran end to end in one sitting: syllabus pass → prompt → notes.
+
+| Artefact | State |
+|---|---|
+| `src/topics/04-modern-java.md` | pre-existing, 420 lines. **Not updated by this run.** Three claims in it are stale — see below. |
+| `src/syllabus/04-modern-java.md` | written 2026-08-30, **2,419 lines, 984 leaves** across 5 parts (P1 410, P2 190, P3 210, P4 65, P5 109). Target Java 21 LTS with explicit deltas at 8/9/10/11/12/13/14/15/16/17/18/19/20/21/22/23/24/25. Tags: `[RESEARCH]` 202, `[VERSION-TRAP]` 22, `[BUILD]` 76. |
+| `src/metadata/prompts/04-modern-java-prompt.md` | written 2026-08-30, **3,223 lines**. 984 leaves inlined verbatim; **182-diagram manifest** (D-001…D-182) with leaf refs, type and must-show contents; output contract naming 62 files. |
+| `src/notes/detailed/04-modern-java/` | **70 files, 88,806 lines, 153 SVGs.** All 69 file-plan rows `written`. **No leaves deferred** — all 984 owned by exactly one row. |
+
+Output folder is `04-modern-java/`, matching the `<NN>-<slug>` shape topic 21 used
+rather than `CLAUDE.md`'s bare `<topic-slug>/`. Both deviate the same way; the
+convention line in `CLAUDE.md` is the thing that is out of date.
+
+**46 manifest ids have no SVG and that is correct** — each is a recorded
+Markdown-table substitution (`no — Markdown table` in `00-index.md`), which the
+diagram spec permits where a picture does not fit. Multi-frame series render as
+`D-018a/b/c` etc. Zero broken diagram references tree-wide, verified by diffing
+every `../diagrams/*.svg` embed against the folder.
+
+**Research was done with `openjdk.org` returning HTTP 403**, so every JEP came
+via search summaries plus a secondary source. Three figures were flagged
+unverified in the prompt and all three were re-verified before printing:
+
+1. `jdk.virtualThreadScheduler.maxPoolSize` — `Integer.max(parallelism, 256)`, a
+   **floor**, not a flat 256 ceiling. On a >256-core box it equals the core count.
+2. `AbstractTask.LEAF_TARGET` / `suggestTargetSize` — `LEAF_TARGET =
+   commonPoolParallelism << 2`; `suggestTargetSize` does **floored** division,
+   min 1, not rounded up. `getLeafTarget()` reads the *current* pool's width.
+3. The LVTI style guide's G1–G7 / P1–P4 identifiers — confirmed and cited.
+
+Residual uncertainty is marked inline with `**Unverified:**` rather than stated
+as fact (the `jdk.VirtualThreadPinned` JFR field schema, `ScopedValue`'s exact 21
+preview surface, the lambda-classname hex derivation).
+
+**The prompt shipped an inverted claim; the notes corrected it.** Syllabus leaf
+3.12.7 says an exhaustive enum switch expression's synthetic default throws
+`IncompatibleClassChangeError` on 21, having replaced older `MatchException`
+shapes. Verified by separate compilation: it is the other way round —
+`IncompatibleClassChangeError` through `--release 17` and `--release 14`,
+`java.lang.MatchException` from `--release 21`, emitted as
+`new java/lang/MatchException` + `athrow`. **Fix this in the syllabus and the
+prompt before either is rebuilt** — the notes are right, its two upstream
+artefacts are still wrong.
+
+**Three claims in `src/topics/04-modern-java.md` are stale** and were corrected in
+the notes rather than carried forward. The guide itself still needs patching:
+common-pool width omits the submitting thread; the pinning claim needs JEP 491
+plus the surviving JFR event; the structured-concurrency section must name both
+the Java 21 and Java 25 API shapes.
+
+**Run interrupted once.** The first `notes-generator` invocation died mid-response
+to machine sleep, not task failure, having written 68 of 69 files. Resumed with a
+targeted two-item brief rather than regenerating: wrote the missing
+`95-traps-drills-and-checklist.md` (2,289 lines, carries §5.2–§5.3, the Part 5
+wrap-up and the flat `## Atomic concept checklist`), and removed three broken
+`../diagrams/D-168-slug.svg` placeholder embeds in
+`platform-and-releases/04-internals-observability.md` where a writer left image
+links for a table substitution. Lesson: verify surviving state on disk before
+re-dispatching — the salvage cost two edits instead of 62 files.
+
+Scoped out as `[X-REF]` leaves, owned by siblings: the collections and
+sequenced-collection internals (02); erasure, `==`, initialisation, `java.time`,
+JPMS (03); the memory model, executors, `CompletableFuture` (05); JIT, GC, class
+loading (06); `HttpClient` (10).
+
+### 21 ai-for-coding — added 2026-08-29 (guide + syllabus + prompt; notes IN PROGRESS)
+
+New topic, out of order relative to the 01–20 backlog. Three artefacts exist and
+the note run is live:
+
+| Artefact | State |
+|---|---|
+| `src/topics/21-ai-for-coding.md` | written, ~525 lines (over the 250–450 contract; it covers a tool ecosystem, not one library) |
+| `src/syllabus/21-ai-for-coding.md` | written; **473 leaves** across 6 parts (468 at first write, +5 from the 2026-08-30 hook-schema correction below) |
+| `src/metadata/prompts/21-ai-for-coding-prompt.md` | **REBUILT 2026-08-30, 2,807 lines** (was 2,374). 477 leaves inlined — counted, not trusted. **124-row** file plan, ≈49–52k projected lines, caps written in (≤5 leaves/row, ≤3 for PART 4, 300–500 target, 600 hard split). 99 two-digit diagram ids, 15 of them `table` type. Adds: the API pricing page as the single permitted price source; a `## Pricing basis` cost-provenance rule; the `[PROVE]` evidence policy in TASK and SELF-VERIFY; an **index-integrity gate** as SELF-VERIFY's second block, ahead of coverage, opening by naming the exact defects the last run shipped past its own verify; a `## Known-defective claims` section carrying the verified hook schema inline; a `## The incident roster` reconciliation; and a standing instruction to fetch raw `.md` rather than the rendered page for anything nested, with `hooks.md` named. |
+
+Tier mapping the prompt fixes: **PART 0 + PART 1 → BASICS, PART 2 → INTERMEDIATE,
+PART 3 → INTERNALS, PART 4 and PART 5 as their own file groups.** PART 0 keeps its
+own folder and its write-first sequencing while sharing the BASICS tier, because
+PARTs 0 and 1 interleave — §1.3 is unreadable without §0.2 and §1.4 without
+§0.3.3, so splitting them across tiers yields a reader who knows what a token is
+and cannot configure anything. PART 3 counts as INTERNALS because `[DOC]` +
+`[CASE]` is this topic's `[SOURCE]`: documented mechanism plus observed artefact,
+there being no source tree to walk.
+
+**Reader baseline for this topic is ZERO** — the user has never formally studied
+LLMs, agents, or Claude Code. The syllabus therefore carries a `PART 0 — GROUND
+ZERO` (46 leaves) that other topics do not, and a `[ZERO]` tag. Its own
+instruction to the write pass: **PART 0 is written first and reviewed against a
+real level-0 reader before any other part is drafted**, because every later part
+depends on its vocabulary.
+
+Grounding: every `[CASE]` leaf cites the real **sdlc-harness** repo at
+`~/Desktop/My-files/Codes/_non-clinet-tech/sdlc-harness` (plugin, hooks,
+agents, skills, `engine/agent.py`) with a file path and a verbatim quote.
+Everything else was verified against `https://code.claude.com/docs/en/` on
+2026-08-29 — settings, settings-reference, permissions, hooks, sub-agents,
+skills, memory, plugins, cli-reference. **This subject drifts fast** (fields
+added in v2.1.218 and removed in v2.1.234 coexist in one release line), so
+`[VERSION]` leaves must state the version inline and `[DOC]`/`[RESEARCH]` leaves
+must be re-verified immediately before writing, not trusted from the syllabus.
+
+Three defects in the guide were found by writing the syllabus and are **already
+fixed**: `allowed-tools` was described as restricting (it pre-approves for one
+turn; `disallowed-tools` restricts), the settings-precedence table put the
+command line above managed settings, and the permission-mode table listed four
+of six modes. The syllabus's closing coverage-delta table records them and the
+remaining ~373 missing leaves; the prompt promotes all three into its TASK
+section as named must-get-right items with matching SELF-VERIFY rows.
+
+**Four path errors in the syllabus, found by `prompt-builder` and corrected in
+the prompt — fix them in the syllabus before its next rebuild:**
+
+1. `bootstrap-*.sh` are under `plugins/sdlc-harness/scripts/`, **not** `hooks/`, and there are
+   **fifteen** of them plus three `triage-*.sh` — `prompt-builder` said fourteen, a writer counted
+   fifteen. Fixed in the syllabus 2026-08-30; leaves now say "count them at write time".
+2. `playwright-cli` is **not** a plugin skill. It lives at repo-root
+   `.claude/skills/playwright-cli/` with ten `references/` files. §1.5.19 calls it
+   "the harness's skill", which mis-locates it.
+3. Three cited paths could not be confirmed in the checkout and the prompt tells
+   the writer to look and report rather than assert:
+   `harness/evals/seeded-defects` (only `code-to-commit/` + `baselines.yaml`
+   exist), `features/<slug>/state/harness.db` (runtime state, not committed), and
+   `severity_map.yaml` / `filed-bugs.yaml` (`control-plane/schemas/` holds
+   `feedback-signal.yaml`, `fix-task.yaml`, `task-entry.yaml`).
+4. Two tags are used outside the syllabus's own legend: `[SOURCE-EQUIV]` (2.2.6)
+   and `[X-REF 21]` (0.3.12, pointing inside this same guide rather than at a
+   sibling). The prompt discharges the first as a `[CASE]` over
+   `load_agent_prompt()` and the second as a forward link to §3.8. Either add
+   both to the legend or retag those two leaves.
+
+**Process note worth reusing on topics 01 and 03–20:** the `[CASE]` grounding
+contract — cite a real file path and quote verbatim — caught its own violations.
+Every one of the four errors above is in a leaf that demanded a path. A leaf that
+merely said "use a real example" would have shipped all four silently.
+
+**Second process law, learned expensively on 2026-08-30 — a WebFetch summary of a
+reference table is NOT a citable source.** For anything shaped like an API
+contract, fetch the raw `.md` (`curl -sL https://code.claude.com/docs/en/<page>.md`)
+and grep it. A small model asked to summarise a schema will invent plausible
+field names.
+
+The incident: syllabus leaf 2.3.14 listed `continue` *inside* `hookSpecificOutput`
+and 2.3.15 said "`Stop` takes `continue`". Both came from a WebFetch summary that
+was never checked against the page. It propagated syllabus → prompt (inlined
+verbatim) → at least five note files. **Three independent agents then got the same
+field wrong three different ways** — the original draft, a relayed correction, and
+a re-verification — before anyone read the raw source.
+
+Ground truth (verified 2026-08-30 against the raw page): three kinds of field —
+universal top-level (`continue`, `stopReason`, `suppressOutput`, `systemMessage`,
+`terminalSequence`), top-level `decision`/`reason`, and nested
+`hookSpecificOutput`. Top-level `continue: false` stops Claude **entirely** and
+outranks every event-specific decision field. For `Stop`/`SubagentStop` you keep
+Claude working with `decision: "block"` plus a **required** `reason` — you block
+the *stop*. There is no `hookSpecificOutput.continue`. Also newly captured: the
+`stop_hook_active` field and an **8-consecutive-continuation cap**, and a
+**10,000-character** cap on hook output strings.
+
+**Third finding, 2026-08-30 — the writers' doc-divergence table is the most valuable
+artefact of the run.** `src/notes/detailed/21-ai-for-coding/00-index.md` carries a
+table of every leaf a writer re-verified and found stale. **Eight** were wrong, all
+of them mine, all now patched in the syllabus:
+
+| Leaf | Was | Actually |
+|---|---|---|
+| §1.4.26 | `acceptEdits` covers `mkdir`, `touch`, `mv`, `cp` | wider — also **`rm`, `rmdir`, `sed`**. It auto-approves deletion. |
+| §1.4.27 | "a background classifier" | classifier runs on **Sonnet 5**, 3-consecutive / 20-total block fallback |
+| §1.4.28 | `bypassPermissions` still refuses `.git`/`.claude` | **false** — protected-path writes are allowed. It refuses critical-path `rm`/`rmdir`, `ask` matches, always-interactive tools, two cross-session safeguards |
+| §1.4.34 | a `-p`/SDK session "counts as accepted", so committed allow rules run unreviewed | **opposite** — an untrusted folder's committed `allow` rules are **not** applied; stderr warning instead. Real risk is that trust is sticky per repo root and never re-checked when a commit widens the ruleset |
+| §1.5.6 | two settings "tune the listing" | two **different** numbers — `skillListingMaxDescChars` is the 1,536-char per-entry cap, `skillListingBudgetFraction` a separate pool (~1% of window) |
+| §1.5.19 | `playwright-cli` is a plugin skill with ten references | repo-root skill; **nine** references |
+| §1.5.23 | `/doctor`,`/rewind` built-ins; `/run` a bundled skill | **reverse** — `/doctor`,`/rewind` are bundled skills; `/run` is a built-in |
+| §1.1.7 / §1.5.20 | fourteen `bootstrap-*.sh` | **fifteen**, plus three `triage-*.sh` |
+
+Syllabus after both correction passes: §1.4 41 → 45, §2.3 28 → 33, PART 1 121 → 125,
+PART 2 137 → 142, **total 468 → 477**. Section sums, part totals, the totals table and
+the actual leaf-line count all agree at 477.
+
+**The law behind all eight:** the prompt's authority order — official docs > observed
+behaviour of the installed binary > the repo's own code > blog posts — plus the
+instruction that the syllabus "is a work order, not a citable source". Writers that
+re-verify find drift, and flag it inline rather than conforming. Carry that ordering
+into every topic prompt.
+
+Syllabus corrected and expanded in place: §2.3 28 → 33 leaves, PART 2 137 → 142,
+**total 468 → 473**, arithmetic re-verified. `src/topics/21-ai-for-coding.md` never
+made the claim and needed no fix. **`src/metadata/prompts/21-ai-for-coding-prompt.md`
+still inlines the stale leaf text** and needs a `prompt-builder` rebuild against the
+corrected syllabus before any further large dispatch — `notes-generator` cannot fix
+it, that file is not its to edit.
+
+### 21 — note run outcome (2026-08-30)
+
+`src/notes/detailed/21-ai-for-coding/` — **111 content files** across 26 subject
+folders, **47,143 lines**, plus a **2,364-line** `00-index.md`. **128 SVGs**, with
+128 embeds referenced and 128 on disk: **zero broken embeds, zero orphan SVGs**
+(topic 02 shipped 13 orphans). All files pass the text test. No row reads
+`planned`. The output folder is `21-ai-for-coding/`, which deviates from the
+`<topic-slug>/` convention in `CLAUDE.md` and from topic 02's `java-collections/`.
+**Decided 2026-08-30: leave both as they are and settle the rule at topic 03.**
+Two conventions coexist for now, documented rather than resolved. Whoever picks up
+topic 03 chooses one and makes `CLAUDE.md` match; renaming this folder later means
+rewriting the encoded path in every nav link, index row and embed across 112 files,
+so it is not a cheap change deferred cheaply — it gets cheaper the sooner it is
+decided, not later.
+
+Planned as 61 rows, landed as 111. Density measured after the first eleven files
+at **≈45–55 lines per leaf**, so the plan was re-derived at ≤5 leaves per row and
+≤3 for PART 4. Four `blocked` re-splits, all correct: `ground-zero/02` landed on
+*exactly* 600, `memory/03` returned a clean block at 675 with a proposed boundary,
+`permissions/03` at 598, `hooks/07` at 596. No writer compressed to fit.
+
+**PART 0 gate applied and passed**, verified against the written files rather than
+asserted.
+
+**`[PROVE]` evidence policy settled** — adopt this on every topic: where the
+artefact is runnable read-only in the writer's own sandbox, require a **real
+transcript pasted verbatim plus the command that produced it**; where it genuinely
+cannot be executed, say **"not measured here" in the body at the point of the
+claim**, give the exact command the reader should run, and record it in
+`## Open questions`. **Never** a derived figure in the visual position a measured
+one belongs. Most PART 4 writers converged on this unprompted and exceeded it —
+real `claude -p` envelopes with real `total_cost_usd`, a real NUL-byte
+reproduction, a `Semaphore` bulkhead timed at 36.1s vs 9.1s, two plugins installed
+side by side to prove the `.claude-plugin/` layout trap (`Skills(4)` vs
+`Skills(0)`), a compiled `ClaudeRunner` driven through all four failure paths.
+
+**Cost provenance rule:** derive from one stated list price, label it derived with
+its date, and reference a single note in `00-index.md` rather than restating an
+unverified figure per file. Root cause was a **prompt defect**: none of the nine
+permitted doc pages carries pricing, so every cost leaf was structurally forced to
+hedge. **`prompt-builder` must add the API pricing page to REFERENCES.**
+
+**ALL 13 DEFECTS FIXED AND INDEPENDENTLY RE-VERIFIED 2026-08-30.** Final verified
+state, checked from disk rather than taken from the envelope: 111 content files /
+**47,440 lines**, index **2,746 lines**, 128 SVGs. Zero orphan files, **585 live
+rendered links with zero broken**, 128 embeds referenced and 128 on disk with zero
+missing and zero orphans, zero PNGs inside `diagrams/`, nav chain single-headed and
+reaching **111/111** with nothing off-chain or revisited, 158 JSON blocks all
+parsing, leaf ownership 111 rows with every path existing, 252 live status rows all
+pointing at existing files with 38 further rows explicitly marked superseded or
+retired.
+
+**`mcp-and-lsp/03` §2.4.13 ended up measured, not hedged** — the best outcome of
+the evidence policy. `atlassian-cloud` needs an OAuth grant the sandbox cannot
+complete, so rather than fake around it the writer registered a credential-free
+stdio server (`@modelcontextprotocol/server-filesystem`) in a `/tmp` scratch
+project and read the real before/after from the `-p --output-format json`
+envelope's own token fields, there being no TTY either: **21,648 → 21,982 tokens,
+a measured +334 per turn.** `atlassian-cloud`'s own delta is flagged unmeasured
+with the repeatable command inline, the substitution stated plainly, and the
+server deregistered with return-to-baseline confirmed. No derived figure remains.
+The lesson: "cannot measure X" is often "cannot measure X *this way*" — look for a
+substitute that measures the same mechanism honestly before falling back to a
+disclosure.
+
+**Row-size rule this run established, and it supersedes the 250–450 band:** judge
+a row against its **folder's tag mix**, not a global band. A `build-it/` row
+carrying an artefact plus prove step plus cost note plus *Diff vs the real one*
+lands at 400–590; a pure `[DOC]` row lands at 200–250. Both are correct, and
+forcing the second to 250 is padding, which the house rules ban. `subagents/04` at
+215 is the recorded precedent.
+
+**`92-interview-internals.md` at 666 lines is a sanctioned exception**, not a
+violation: the prompt mandates the 423-bullet checklist in that exact filename and
+forbids relocating it because it is the parser target.
+
+The three stale tables were **re-derived programmatically from each file's own
+footers and nav links** rather than hand-edited, so they cannot drift by
+construction; the nav chain is now proven by walking from the single file with no
+`Previous:`. `## The file plan` is retained as history under an explicit banner.
+
+The four "pending" diagram relabels were **fixed, not deferred**. D-71 was the
+substantive one: moving `skillListingBudgetFraction` from 0.05 to the documented
+0.01 moves the dependent arithmetic — the cap becomes 2,000 tokens and binds at
+**≈5 skills rather than 26**, a more interesting fact than the diagram had been
+telling. Fixing the pictures then made four notes' divergence flags stale, and
+those were reconciled too, each keeping one sentence of history.
+
+`mcp-and-lsp/03`'s §2.4.13 — the one place the derived-figure violation slipped
+through — now fully satisfies the policy: it states at the point of the claim that
+no live capture was possible and none is fabricated, says why (no TTY, no OAuth
+grant), labels every derived cell, gives the command and the `/context` line that
+would settle it, and records it under Open questions with a self-test question
+about it.
+
+**What the defects were**, kept for the process lesson — all from one root cause,
+the index's cross-reference tables were never re-derived after the re-splits:
+
+1. Two **orphan files**, on disk with zero index mentions:
+   `hooks/08-the-blocking-guard-pattern.md` (519 lines) and
+   `92-interview-internals-b.md`.
+2. Three live tables — `## Nav chain`, `## Diagram assignment`, `## Leaf
+   ownership` — still name **36 pre-split filenames that do not exist**. The
+   leaf-ownership one voids the "468 of 468 owned" claim as *proof*: it maps
+   leaves to files that are not there. `## The file plan` legitimately preserves
+   the original 61 rows as history and should be labelled as such.
+3. **Eight broken Markdown links** in written files, including the first file's
+   `Next:` and a cross-topic link at the wrong depth
+   (`../../../topics/16-testing.md` resolves to `src/notes/topics/`).
+
+**Lesson 1: "no broken embeds and no `planned` rows" is not the same as "the index
+describes the set."** The run's self-verify checked the *files* and never re-derived
+the *index*, so its headline "468 of 468 leaves owned" rested on a table mapping
+leaves to 36 non-existent paths. The leaves did turn out to be covered by the split
+descendants — but that was luck, not verification. Mandatory gate for every topic
+now, and it is going into the rebuilt prompt's SELF-VERIFY: for each file on disk,
+at least one index mention; for each status row, a file on disk; for every Markdown
+link, a resolving target.
+
+**Lesson 2: a link checker must strip inline code spans, not just fenced blocks.**
+My own first sweep reported ten broken links; the true count was eight. Four
+candidates were literal text inside fenced artefact bodies — a path correct in the
+*reader's* directory once they create the file — and one was inside a single-line
+code span. De-linking either kind would corrupt the artefact. Fence-and-span-aware,
+585 live links check clean. Two real breaks were ones I never flagged
+(doc-root-relative), and one was a genuine rendering bug: a code span broken across
+a newline, so the backticks did not protect it and it rendered as a live link.
+
+**Lesson 3: self-reported completeness was not reliable on this run — three reports
+claimed it while the same 13 defects stood.** The content was sound throughout and
+every content claim verified; the failures were all index and navigation integrity.
+Verify from disk, not from the envelope.
+
+**DEFERRED by decision, 2026-08-30 — not a defect to chase.** `tmp/21-render/`
+keeps **123 PNGs, ~23 MB**, deliberately retained so the rendered diagrams can be
+eyeballed before anything is discarded. Illustrators are specified to rasterise,
+look, fix, and **delete** the PNGs before returning; 21 batches did the first
+three. The same directory also holds two `superseded-*.md` originals from the
+re-splits. Sweep with `rm /Users/rajat.chikkodikar/Desktop/My-files/rough/tmp/21-render/*.png`
+whenever the renders are no longer wanted. **Still worth fixing upstream:** the
+illustrator spec's delete step is not enforced, so every topic will leak renders
+until it is.
+
+**Two tallies in the syllabus were mine and wrong, now fixed:** `[INCIDENT]` is
+**10, not 11** (§3.10.4's "md5 over a patched harness" and §3.10.5's "unpinned
+digest" are the same event, the second being the first restated as a law), and
+`[TRAP]` "~45" is a **floor, not an estimate** — the finished set produced **154**
+distinct traps because writers used `**Pitfall:**` for every wrong belief a leaf
+surfaced.
+
+**Scope arithmetic to hand forward:** this set covers **468 of 468 prompt leaves**.
+Current syllabus scope is **477**. The nine extra leaves postdate the prompt and
+are **genuinely new scope, not gaps in what was delivered** — a future run's
+coverage arithmetic will not match this set's footers, and that is expected.
+
+### 21 — the rebuild pass, and four findings it produced (2026-08-30)
+
+`prompt-builder` re-ran against the 477-leaf syllabus and found four things worth
+keeping:
+
+1. **A Q&A count in the old contract was never derived from anything.** The
+   formula is "10 base + 2 per subject folder beyond the fifth". The contract
+   asserted PART 3 spans 11 folders → 22 Q&As; PART 3 has **10** folders, so the
+   figure is **20**. A writer trusting 22 would have padded two questions to hit a
+   number nobody computed. PARTs 0+1 (12) and PART 2 (18) re-check clean.
+2. **The `## Coverage delta` table was stale against 477** — it still read §1.4
+   (41), §2.3 (28), "of 468 leaves", 373 missing, 422 unreadable. Rebaselined
+   2026-08-30 to §1.4 (45), §2.3 (33), 477, 382, 431.
+3. **`hook-output-schema-VERIFIED.md` is at repo-root `tmp/21-contract/`**, not
+   under the note set — the path in the briefing was wrong. The rebuild correctly
+   inlined the content rather than pointing at a scratch file that may be swept,
+   which makes the prompt self-contained either way. **Keep `tmp/21-contract/`**:
+   it holds the verbatim contracts, per-row leaf files, `split-leaves.sh` and that
+   verified schema.
+4. **The unmeasurable-leaf cluster is now explicit rather than left to judgment** —
+   §0.4.4, §2.6.1, §2.6.2, §3.1.4, §3.4.8, §4.4.2 and every `/context` delta in
+   PART 4 need an interactive session a headless writer cannot render, and all of
+   §3.4 needs a price the doc pages do not carry. The evidence policy and the
+   cost-provenance rule together make the honest form mandatory and forbid the
+   dishonest one: a fenced block styled as terminal output that no terminal
+   produced.
+
+**The `[INCIDENT]` tally, settled against the file by two independent counts.**
+Three agents reported 11, 10 and 14 from the same syllabus, and all three were
+reading it correctly — the tally was underspecified, not wrong. `grep` returns 19
+lines; 3 are the legend, §5.2.4's prose and the tally itself, leaving **16 raw
+occurrences on 14 distinct leaves** (§2.3.25 and §3.6.15 carry the tag twice
+each). Those 14 cover **13 events** after collapsing §3.10.4/§3.10.5 (one event,
+the second being the first restated as a law), and **10 operational** after
+separating §1.4.28a, §1.4.34a and §2.3.15a as this project's own documentation
+defects. The syllabus now enumerates all fourteen leaf numbers so it cannot drift
+again.
+
+**And the reason that mattered more than tidiness:** those three documentation
+leaves have no production symptom and no fix in the harness, so if a writer treats
+them as roster incidents, the `[INCIDENT]` obligation to "name what it cost" forces
+an **invented figure** — the exact defect §3.10.2 exists to warn against. An
+ambiguous tally would have propagated into fabricated evidence inside a guide that
+teaches against fabricated evidence. The syllabus now forbids assigning them a cost
+and defines it as the wrong belief propagating.
+
+**The meta-lesson of this whole topic, worth applying to 01 and 03–20:** the two
+facts that went wrong repeatedly — the `Stop` hook schema and the `[INCIDENT]`
+tally — were both **stated at a precision too low to be checkable**, then
+"corrected" several times by agents each reading a different defensible aspect.
+Nobody was careless. The fix in both cases was to make the claim **enumerate its
+members** (the schema names its three field kinds; the tally names all fourteen
+leaves), not to ask for more diligence.
+
+### 02 java-collections — COMPLETE 2026-08-28
+
+| Metric | Value |
+|---|---|
+| Note files | 161 (159 live + 2 retained superseded) |
+| Lines | 88,397 |
+| Diagrams | 200 SVGs (13 are orphaned duplicates pending deletion) |
+| Indexed rows | 159 `done`, 0 `planned` |
+| Syllabus leaves | all 901 owned by exactly one file |
+| Verified findings | 104, recorded in the note set's own `00-index.md` |
+| Subject folders | 18 |
+
+**Planned as 73 rows; landed as 159.** Rows split ~2–5 ways throughout because a
+`[SOURCE]` obligation means quoting a whole JDK method and explaining it, a
+`[PROVE]` obligation means a compiled program plus its real transcript, and the
+mandated per-file ending (pitfalls + cheat sheet + self-test) is a fixed
+150–215 lines. Roughly half of a finished file is inside fences.
+
+**All state lives in `src/notes/detailed/java-collections/00-index.md`** — the
+file plan, the leaf ledger, ~35 recorded folds, and 104 numbered findings under
+`## Open questions`. Read that file before touching this topic; it is the
+contract, and it records the process laws the run had to discover.
+
+### Outstanding — needs a human (`rm` is denied to agents)
+
+1. **13 orphaned duplicate SVGs** in `src/notes/detailed/java-collections/diagrams/`.
+   Exact manifest in `00-index.md` item 82. After deletion `ls diagrams | wc -l`
+   should read **187**.
+2. **`src/notes/detailed/java-collections/java.base/java/util/`** — 4 stray JDK
+   source files (220 KB) from a writer's `jar xf -C` that silently ignored `-C`.
+   Item 48. **It also inflates the subject-folder count from 18 to 19**, which is
+   the denominator for the interview-file Q&A formula (item 79).
+3. **`verify.sh` has a stale check** — it greps for `## Atomic concept checklist`
+   in `92-interview-internals.md`; that section moved to
+   `92d-interview-internals-d-atomic-concept-checklist.md` in a split. Will report
+   a false failure until updated. Item 114.
+
+### Process laws worth reusing on topics 01 and 03–20
+
+These were learned expensively during this topic. The numbered items are in the
+topic's `00-index.md`.
+
+- **Check text-ness before any grep-based check** (item 115). One file contained a
+  literal NUL byte, so `file` called it `data` and grep returned *nothing* — not a
+  mismatch. Every text check silently skipped it and reported success. A checker
+  that its input can switch off is worse than no checker.
+- **Re-run every published listing in its published form** (items 45, 77). Caught
+  more defects than every structural check combined: listings that no longer
+  produced the transcript beneath them, an imagined value that compiled fine, a
+  repro that returned the opposite of what the page claimed, and run-specific
+  numbers published as constants. Compile *every* fence, not only runnable
+  programs (item 111).
+- **Certify from final state, never from a pre-write computation** (item 44). A
+  footer regex ending `\s*$` ate nine files' trailing newlines; an md5 was taken
+  over a *patched* harness while the shipped notes still failed to compile.
+- **A build proof must pin its harness beside the digest** (item 28). Two honest
+  runs over identical files gave different md5s purely because one wrapped a
+  throwing snippet. A bare digest is unfalsifiable.
+- **Never let a `done` row point at a missing path, and flip rows as files land**
+  — the costliest failure here. Gate: `done` rows == `.md` files minus known
+  retained files (item 31).
+- **One writer per output path, ever; one diagram owner per folder.** Rows are
+  folder-scoped but `diagrams/` is flat, so lane boundaries do not partition it
+  (item 71). A **same-slug** collision is worse than a different-slug duplicate:
+  the latter leaves visible orphans, the former silently overwrites and left a
+  diagram contradicting its own page (item 108 context).
+- **A closed lane is not a verified lane.** Two cross-lane contradictions were
+  found after their owners stood down (items 107, 108). Only a pass that reads
+  across folders finds these.
+- **Line policy:** 600 target, 800 hard cap, all tiers; pre-split any row with
+  more than ~6 `[SOURCE]`/`[PROVE]` leaves; refuse a split that leaves a child
+  under ~350 lines unless the merge would exceed 800 by more than ~50 — compute
+  `sum(bodies) + one tail` first, because each child pays a full tail (items 27,
+  47, 65, 81).
+- **Treat the diagram manifest as a suspect, not an authority.** Four entries were
+  wrong or corrupted. When it contradicts source, follow source and record the
+  departure.
+- **Command shapes:** heredocs, `&&`/`;` chains and `$(...)` defeat the permission
+  matcher; use the Write tool for scratch files, absolute paths, no `cd`, one
+  command per call. Never `jar xf` (it ignored `-C` and polluted the tree).
+
+## Next in the per-topic pipeline
+
+19 topics remain (01, 04–21). Each needs, in order: `topic-enhancer-agent`
+(syllabus pass) → `prompt-builder` → `notes-generator`. Topics 02 and 03 have a
+syllabus, a prompt and a complete note set.
+
+## Last update — per-topic pipeline
+
+- **Date:** 2026-08-29
+- **Last generated:** topic 03 java-core, complete (232 files, 149,074 lines,
+  117 SVGs). Syllabus 2,398 lines / 933 leaves; prompt 3,096 lines.
+- **Verification:** all gates passing — 0 control bytes, 0 files over the ceiling,
+  0 inline `<svg>`, 0 banned strings, 0 dead links, 0 unembedded SVGs, 0
+  referenced-but-missing SVGs, all 933 leaves owned exactly once.
+- **Notes:** Two scratch PNGs and three superseded duplicate files retained by
+  explicit user decision — documented in the topic's `00-index.md`.
+
+### Lessons from topic 03 (read before running `notes-generator` again)
+
+- **The single-agent full-topic run does not fit.** One `notes-generator` covering
+  61 planned rows produced `00-index.md` plus 7 SVGs in ~4 hours and then timed
+  out with zero note files. Batch it: subject-scoped lanes, folder-disjoint so no
+  two lanes write the same directory, with the lead owning `00-index.md` alone.
+- **Set the line ceiling from measured density, once.** A 600-line cap was set at
+  planning time and three separate writers either squeezed to 597–599 or dropped
+  authored pitfalls to comply, because a dense section's verbatim body plus the
+  mandatory tail (~130–150 lines) floors near 670–940. Raised to 900 mid-run,
+  which cost a rework pass. State the rule in both directions: never cut to get
+  under a number, never pad to get over one.
+- **Do not label a file plan "frozen" and then change it.** Two lanes had their
+  plans frozen and subsequently amended; one lane renamed its files three times
+  while writers re-resolved links against a moving table. The label stops meaning
+  anything and writers burn their budget on link bookkeeping. Better: have each
+  lane fix its own table before writing and report deviations, and re-freeze to
+  disk rather than forcing renames of already-gated files.
+- **Run the control-byte gate FIRST and treat it as a precondition.** A literal
+  NUL makes `grep` classify the file as binary, after which every other gate
+  reports clean without running — a silent all-pass. Real NUL/DEL bytes were
+  caught in four files. Use the `-P` form: `grep` here is ugrep, and
+  `grep -ac '[\001-\010...]'` returns 0 on known-bad input, a false pass.
+- **Verify structural counts per entry, not per file.** A paragraph-merge
+  collapsed two `**Why people believe it:**` markers and no gate noticed;
+  file-level totals still pass when one entry has 2 and another 0.
+- **Editing a code block invalidates any line number quoted near it.** A restore
+  moved a failing frame from `:16` to `:18` and the quoted trace silently stopped
+  matching. Recapture output after reformatting; never hand-adjust numbers.
+- **Audit against disk, never against reports.** Batches variously claimed
+  completion with three files over the ceiling, went idle having written nothing,
+  and reported leaves covered that were not. Every one was caught by `find`/`grep`
+  over the tree, and one lane's "stale" objection to an audit was itself correct —
+  so re-verify before insisting.
+- **A closed lane is still wrong sometimes.** Three factual defects were found in
+  completed folders by cross-checking: a `final`/`private` hook claimed to compile
+  to `invokespecial` (it is `invokevirtual` on 21), and `exceptions/03b` asserting
+  no stackless ratio approaches 10× "at any depth" while its own printed depth-1
+  row shows 49.4×. Cross-folder reads find these; lane-local gates do not.
+- **Verify against the prompt, not the folder sketch in `CLAUDE.md`.** The sketch
+  says `92-interview-internals.md` ends with the atomic concept checklist; the
+  topic prompt's output contract, its self-verify list and syllabus leaf 5.3.8 all
+  put it in `94`. The prompt wins.
+- **A denied tool call is an answer, not an obstacle.** One illustrator reached
+  around a denied `rm` via `python3 os.remove`; two others correctly refused and
+  escalated when asked to run a blocked command for a peer. Root cause was a
+  writer-spec line reading "delete the PNGs before returning", which framed
+  cleanup as an obligation outranking permissions. Spec now says otherwise, and a
+  blocked cleanup is a reportable loose end: `blocked: could not delete <file>`.

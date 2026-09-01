@@ -1,0 +1,66 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4: a tool_result message is appended to the transcript, making the transcript visibly longer than before the turn started.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE TURN OF THE AGENT LOOP — FRAME 4 OF 4: tool_result APPENDED</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="60" y="66" class="lbl h2">TRANSCRIPT BEFORE</text>
+  <rect x="60" y="76" width="240" height="34" rx="4" class="boxP"/>
+  <text x="180" y="98" text-anchor="middle" class="lbl body">system prompt</text>
+  <rect x="60" y="114" width="240" height="34" rx="4" class="boxP"/>
+  <text x="180" y="136" text-anchor="middle" class="lbl body">user message</text>
+  <rect x="60" y="152" width="240" height="34" rx="4" class="boxP"/>
+  <text x="180" y="174" text-anchor="middle" class="lbl body">tool_use: Read</text>
+  <rect x="60" y="190" width="240" height="28" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="180" y="208" text-anchor="middle" class="lbl sub">(no tool_result yet)</text>
+
+  <path class="flow" d="M 300 130 H 380"/>
+
+  <text x="420" y="66" class="lbl h2">TRANSCRIPT AFTER</text>
+  <rect x="420" y="76" width="240" height="34" rx="4" class="boxP"/>
+  <text x="540" y="98" text-anchor="middle" class="lbl body">system prompt</text>
+  <rect x="420" y="114" width="240" height="34" rx="4" class="boxP"/>
+  <text x="540" y="136" text-anchor="middle" class="lbl body">user message</text>
+  <rect x="420" y="152" width="240" height="34" rx="4" class="boxP"/>
+  <text x="540" y="174" text-anchor="middle" class="lbl body">tool_use: Read</text>
+  <rect x="420" y="190" width="240" height="34" rx="4" class="boxR"/>
+  <text x="540" y="212" text-anchor="middle" class="lbl body">tool_result: file contents</text>
+
+  <rect x="700" y="140" width="160" height="90" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="712" y="162" class="lbl tiny" font-weight="700">3 → 4 messages</text>
+  <text x="712" y="180" class="lbl tiny">transcript is now</text>
+  <text x="712" y="196" class="lbl tiny">one message longer;</text>
+  <text x="712" y="212" class="lbl tiny">loop repeats from</text>
+  <text x="712" y="228" class="lbl tiny">frame 1.</text>
+
+  <line x1="20" y1="376" x2="880" y2="376" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="388" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="401" class="lbl tiny">existing transcript message</text>
+  <rect x="260" y="388" width="22" height="16" rx="3" class="boxR"/>
+  <text x="290" y="401" class="lbl tiny">newly appended tool_result</text>
+  <path class="flow" d="M 500 396 H 540"/>
+  <text x="548" y="401" class="lbl tiny">A → B : B appended after A</text>
+</svg>

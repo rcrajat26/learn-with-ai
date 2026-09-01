@@ -1,0 +1,102 @@
+<svg viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The CAS retry loop for the stake-reservation counter, peaking at 1,200 reservations
+     per second. A thread reads the current count, computes the new count, then calls
+     compareAndSet, implemented as lock cmpxchg on x86 and as LDXR/STXR on AArch64. On success the
+     loop exits. On failure — another thread's CAS won in between — the loop returns to the read
+     step and repeats; nothing is lost, but the work of reading and computing is repeated.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .retry { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE CAS RETRY LOOP — STAKE-RESERVATION COUNTER</text>
+  <line x1="20" y1="42" x2="940" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Box 1: read -->
+  <rect x="340" y="62" width="280" height="64" rx="6" class="boxP"/>
+  <text x="480" y="86" text-anchor="middle" class="lbl node">1. read current value</text>
+  <text x="480" y="106" text-anchor="middle" class="lbl body">count = stakeReservations.get()</text>
+  <text x="480" y="120" text-anchor="middle" class="lbl sub">e.g. 1,199 of 1,200/sec peak</text>
+
+  <path class="flow" d="M 480 126 V 158"/>
+
+  <!-- Box 2: compute -->
+  <rect x="340" y="160" width="280" height="64" rx="6" class="boxP"/>
+  <text x="480" y="184" text-anchor="middle" class="lbl node">2. compute new value</text>
+  <text x="480" y="204" text-anchor="middle" class="lbl body">newCount = count + 1</text>
+  <text x="480" y="218" text-anchor="middle" class="lbl sub">off to the side, not yet visible to anyone</text>
+
+  <path class="flow" d="M 480 224 V 258"/>
+
+  <!-- Box 3: CAS -->
+  <rect x="290" y="260" width="380" height="118" rx="6" class="boxH"/>
+  <text x="480" y="284" text-anchor="middle" class="lbl node">3. compareAndSet(count, newCount)</text>
+  <text x="480" y="306" text-anchor="middle" class="lbl body">x86: lock cmpxchg</text>
+  <text x="480" y="324" text-anchor="middle" class="lbl body">AArch64: LDXR / STXR (load-exclusive / store-exclusive)</text>
+  <text x="480" y="342" text-anchor="middle" class="lbl sub">atomic: swap memory to newCount only if it still equals count</text>
+  <text x="480" y="360" text-anchor="middle" class="lbl sub">single indivisible hardware operation — no lock is held</text>
+
+  <!-- success branch -->
+  <path class="flow" d="M 670 305 H 720"/>
+  <text x="695" y="297" text-anchor="middle" class="lbl tiny">success</text>
+  <rect x="722" y="264" width="216" height="82" rx="6" class="boxR"/>
+  <text x="830" y="290" text-anchor="middle" class="lbl node">4. done</text>
+  <text x="830" y="310" text-anchor="middle" class="lbl body">CAS applied — loop exits</text>
+  <text x="830" y="328" text-anchor="middle" class="lbl sub">count is now newCount</text>
+
+  <!-- failure / retry branch: loops back to box 1 -->
+  <path class="retry" d="M 480 378 V 400 H 110 V 92 H 340"/>
+  <text x="480" y="396" text-anchor="middle" class="lbl tiny" fill="#b91c1c">failure</text>
+
+  <rect x="24" y="420" width="330" height="56" rx="4" class="boxD"/>
+  <text x="40" y="440" class="lbl tiny" fill="#b91c1c">another thread won; nothing is lost,</text>
+  <text x="40" y="458" class="lbl tiny" fill="#b91c1c">but work is repeated</text>
+  <path class="retry" d="M 189 420 V 400"/>
+
+  <!-- legend -->
+  <line x1="20" y1="560" x2="940" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="574" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="587" class="lbl tiny">plain step (read / compute)</text>
+
+  <rect x="270" y="574" width="22" height="16" rx="3" class="boxH"/>
+  <text x="300" y="587" class="lbl tiny">the CAS instruction itself</text>
+
+  <rect x="500" y="574" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="587" class="lbl tiny">success — loop exits</text>
+
+  <rect x="700" y="574" width="22" height="16" rx="3" class="boxD"/>
+  <text x="730" y="587" class="lbl tiny">failure callout</text>
+
+  <path class="flow" d="M 20 606 H 60"/>
+  <text x="68" y="611" class="lbl tiny">A → B : normal flow</text>
+
+  <path class="retry" d="M 300 606 H 340"/>
+  <text x="348" y="611" class="lbl tiny">A → B : retry on CAS failure</text>
+</svg>

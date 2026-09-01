@@ -1,0 +1,65 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 4 of the Collector contract. combiner() merges two partial containers
+     built by a parallel split: the left half's map holds CARD 3 and BANK 1, the right half's map
+     holds CARD 2 and BANK 1, and the merge sums matching keys into CARD 5 and BANK 2.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 3/4 — combiner() MERGES TWO CONTAINERS (PARALLEL CASE)</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="230" height="66" rx="6" class="boxH"/>
+  <text x="155" y="90" text-anchor="middle" class="lbl node">left split's map</text>
+  <text x="155" y="110" text-anchor="middle" class="lbl sub">CARD &#8594; 3, BANK &#8594; 1</text>
+
+  <rect x="630" y="66" width="230" height="66" rx="6" class="boxH"/>
+  <text x="745" y="90" text-anchor="middle" class="lbl node">right split's map</text>
+  <text x="745" y="110" text-anchor="middle" class="lbl sub">CARD &#8594; 2, BANK &#8594; 1</text>
+
+  <path class="flow" d="M 155 132 V 160 H 450 V 188"/>
+  <path class="flow" d="M 745 132 V 160 H 450 V 188"/>
+  <text x="450" y="152" text-anchor="middle" class="lbl sub">combiner(m1, m2)</text>
+
+  <rect x="330" y="190" width="240" height="70" rx="6" class="boxH"/>
+  <text x="450" y="214" text-anchor="middle" class="lbl node">merge: for each key,</text>
+  <text x="450" y="232" text-anchor="middle" class="lbl node">m1.merge(k, v, Long::sum)</text>
+  <text x="450" y="250" text-anchor="middle" class="lbl sub">sums matching downstream counts</text>
+
+  <path class="flow" d="M 450 260 V 288"/>
+
+  <rect x="330" y="290" width="240" height="50" rx="6" class="boxR"/>
+  <text x="450" y="320" text-anchor="middle" class="lbl node">CARD &#8594; 5, BANK &#8594; 2</text>
+
+  <rect x="600" y="290" width="260" height="60" rx="6" class="panel"/>
+  <text x="616" y="310" class="lbl tiny" font-weight="700">Only for parallel streams</text>
+  <text x="616" y="328" class="lbl tiny">A sequential stream never calls</text>
+  <text x="616" y="344" class="lbl tiny">combiner() — one container throughout.</text>
+
+  <line x1="20" y1="368" x2="880" y2="368" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="378" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="391" class="lbl tiny">partial container / merge logic</text>
+  <rect x="300" y="378" width="22" height="16" rx="3" class="boxR"/>
+  <text x="330" y="391" class="lbl tiny">merged result container</text>
+  <path class="flow" d="M 540 386 H 580"/>
+  <text x="588" y="391" class="lbl tiny">A &#8594; B : A feeds into merge B</text>
+</svg>

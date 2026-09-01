@@ -1,0 +1,101 @@
+<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout comparison: List.of(a,b) as a single ImmutableCollections.List12 object of 24 bytes with fields e0 and e1 and no backing array, versus new ArrayList of 24 bytes plus a 10-slot Object array of 56 bytes with 8 slack slots, totalling 80 bytes, about 3.3x more memory">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">List.of(a, b) vs new ArrayList&lt;&gt;(a, b) — Memory Layout</text>
+
+  <rect x="20" y="64" width="760" height="28" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="83" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Assumption: 64-bit HotSpot JVM, compressed oops ON (heap &lt; 32 GB), 8-byte alignment</text>
+
+  <!-- Left: List12 -->
+  <rect x="40" y="104" width="330" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="121" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List.of(a, b) → ImmutableCollections.List12</text>
+
+  <rect x="40" y="140" width="330" height="180" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+
+  <rect x="60" y="152" width="290" height="28" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="170" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">object header — 12 B</text>
+
+  <rect x="60" y="184" width="290" height="28" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">e0 → ref "a" — 4 B</text>
+
+  <rect x="60" y="216" width="290" height="28" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="234" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">e1 → ref "b" — 4 B</text>
+
+  <rect x="60" y="248" width="290" height="18" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="261" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">alignment padding — 4 B</text>
+
+  <rect x="60" y="272" width="290" height="28" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="205" y="290" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no backing array exists</text>
+
+  <rect x="40" y="326" width="330" height="30" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="205" y="346" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">List12 total = 12+4+4 = 20 B → padded to 24 B</text>
+
+  <!-- Right: ArrayList -->
+  <rect x="430" y="104" width="330" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="121" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">new ArrayList&lt;&gt;(a, b)</text>
+
+  <rect x="430" y="140" width="330" height="150" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+
+  <rect x="450" y="152" width="290" height="28" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="170" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">object header — 12 B</text>
+
+  <rect x="450" y="184" width="290" height="28" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">modCount (int) — 4 B</text>
+
+  <rect x="450" y="216" width="290" height="28" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="234" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">size (int) — 4 B</text>
+
+  <rect x="450" y="248" width="290" height="28" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="595" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">elementData (ref) — 4 B</text>
+
+  <rect x="430" y="326" width="330" height="30" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="595" y="346" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayList object total = 12+4+4+4 = 24 B</text>
+
+  <line x1="595" y1="278" x2="400" y2="380" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Array -->
+  <rect x="150" y="380" width="500" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="397" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Object[10] elementData — backing array</text>
+
+  <rect x="100" y="414" width="600" height="52" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+
+  <rect x="110" y="422" width="80" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="437" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">array header</text>
+  <text x="150" y="451" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">16 B</text>
+
+  <rect x="200" y="422" width="49" height="36" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="224.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a</text>
+
+  <rect x="249" y="422" width="49" height="36" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="273.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">b</text>
+
+  <rect x="298" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="322.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="347" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="371.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="396" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="420.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="445" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="469.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="494" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="518.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="543" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="567.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="592" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="616.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+  <rect x="641" y="422" width="49" height="36" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="665.5" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">slack</text>
+
+  <rect x="100" y="478" width="600" height="26" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="495" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Array total = 16 B header + 10×4 B refs = 56 B (8 slots slack)</text>
+
+  <rect x="20" y="512" width="760" height="28" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="530" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayList = 24 B + 56 B = 80 B  |  List12 = 24 B  →  80/24 ≈ 3.3x more memory</text>
+</svg>

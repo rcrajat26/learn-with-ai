@@ -1,0 +1,117 @@
+<svg viewBox="0 0 1080 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy of the built-in tools grouped into six categories: file (Read, Write, Edit, Glob, Grep), shell (Bash), web (WebFetch, WebSearch), delegation (Agent, SendMessage), meta (Skill, ToolSearch), and task/UI (TodoWrite, AskUserQuestion). A side panel explains that core tool schemas load up front while less-common ones are deferred and fetched via ToolSearch, saving tokens.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triw); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triw" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE BUILT-IN TOOLS BY CATEGORY</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="430" y="60" width="220" height="50" rx="6" class="boxR"/>
+  <text x="540" y="90" text-anchor="middle" class="lbl node">built-in tools</text>
+
+  <path class="flow" d="M 480 110 V 130 H 110 V 148"/>
+  <path class="flow" d="M 500 110 V 130 H 260 V 148"/>
+  <path class="flow" d="M 520 110 V 130 H 380 V 148"/>
+  <path class="flow" d="M 560 110 V 130 H 535 V 148"/>
+  <path class="flow" d="M 580 110 V 130 H 695 V 148"/>
+  <path class="flow" d="M 600 110 V 130 H 850 V 148"/>
+
+  <!-- file -->
+  <rect x="20" y="148" width="180" height="118" rx="6" class="boxP"/>
+  <text x="32" y="168" class="lbl node">file</text>
+  <line x1="32" y1="176" x2="188" y2="176" stroke="#d1d5db" stroke-width="1"/>
+  <text x="32" y="196" class="lbl body">Read</text>
+  <text x="32" y="216" class="lbl body">Write</text>
+  <text x="32" y="236" class="lbl body">Edit</text>
+  <text x="112" y="196" class="lbl body">Glob</text>
+  <text x="112" y="216" class="lbl body">Grep</text>
+
+  <!-- shell -->
+  <rect x="220" y="148" width="80" height="118" rx="6" class="boxP"/>
+  <text x="232" y="168" class="lbl node">shell</text>
+  <line x1="232" y1="176" x2="288" y2="176" stroke="#d1d5db" stroke-width="1"/>
+  <text x="232" y="196" class="lbl body">Bash</text>
+
+  <!-- web -->
+  <rect x="340" y="148" width="120" height="118" rx="6" class="boxP"/>
+  <text x="352" y="168" class="lbl node">web</text>
+  <line x1="352" y1="176" x2="448" y2="176" stroke="#d1d5db" stroke-width="1"/>
+  <text x="352" y="196" class="lbl body">WebFetch</text>
+  <text x="352" y="216" class="lbl body">WebSearch</text>
+
+  <!-- delegation -->
+  <rect x="480" y="148" width="150" height="118" rx="6" class="boxP"/>
+  <text x="492" y="168" class="lbl node">delegation</text>
+  <line x1="492" y1="176" x2="618" y2="176" stroke="#d1d5db" stroke-width="1"/>
+  <text x="492" y="196" class="lbl body">Agent</text>
+  <text x="492" y="216" class="lbl body">SendMessage</text>
+
+  <!-- meta -->
+  <rect x="650" y="148" width="130" height="118" rx="6" class="boxP"/>
+  <text x="662" y="168" class="lbl node">meta</text>
+  <line x1="662" y1="176" x2="768" y2="176" stroke="#d1d5db" stroke-width="1"/>
+  <text x="662" y="196" class="lbl body">Skill</text>
+  <text x="662" y="216" class="lbl body">ToolSearch</text>
+
+  <!-- task/UI -->
+  <rect x="800" y="148" width="150" height="118" rx="6" class="boxP"/>
+  <text x="812" y="168" class="lbl node">task / UI</text>
+  <line x1="812" y1="176" x2="938" y2="176" stroke="#d1d5db" stroke-width="1"/>
+  <text x="812" y="196" class="lbl body">TodoWrite</text>
+  <text x="812" y="216" class="lbl body">AskUserQuestion</text>
+
+  <!-- side panel on deferred tools -->
+  <path class="weak" d="M 940 200 H 1010 V 320"/>
+  <rect x="760" y="330" width="280" height="196" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="776" y="352" class="lbl h2">DEFERRED TOOLS</text>
+  <line x1="776" y1="360" x2="1024" y2="360" stroke="#d1d5db" stroke-width="1"/>
+  <text x="776" y="380" class="lbl tiny" font-weight="700">loaded up front:</text>
+  <text x="776" y="396" class="lbl tiny">Read, Write, Edit, Glob, Grep, Bash,</text>
+  <text x="776" y="410" class="lbl tiny">Skill, ToolSearch — used on nearly</text>
+  <text x="776" y="424" class="lbl tiny">every turn.</text>
+  <text x="776" y="446" class="lbl tiny" font-weight="700">fetched later via ToolSearch:</text>
+  <text x="776" y="462" class="lbl tiny">WebFetch, WebSearch, Agent,</text>
+  <text x="776" y="476" class="lbl tiny">SendMessage, TodoWrite,</text>
+  <text x="776" y="490" class="lbl tiny">AskUserQuestion, and MCP tools —</text>
+  <text x="776" y="504" class="lbl tiny">schema loads only when a query names it.</text>
+  <text x="776" y="520" class="lbl tiny" font-weight="700">token saving: ~70% fewer upfront tokens</text>
+
+  <line x1="20" y1="560" x2="1060" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="572" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="585" class="lbl tiny">the tool registry (root)</text>
+  <rect x="230" y="572" width="22" height="16" rx="3" class="boxP"/>
+  <text x="260" y="585" class="lbl tiny">tool category with its tools listed</text>
+  <rect x="520" y="572" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="550" y="585" class="lbl tiny">annotation panel (facts, not a node)</text>
+  <path class="flow" d="M 20 610 H 60"/>
+  <text x="68" y="615" class="lbl tiny">A → B : B is a category of A</text>
+  <path class="weak" d="M 300 610 H 340"/>
+  <text x="348" y="615" class="lbl tiny">weak/reference link to detail panel</text>
+</svg>

@@ -1,0 +1,84 @@
+<svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: collect(toList()) is the terminal operation. It triggers traversal: the Spliterator now pulls elements one at a time through the filter stage, then the map stage, into the ArrayList being built as the result. Before this call, nothing had moved.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .tok   { fill: #b45309; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="490" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STREAM ANATOMY — FRAME 3 OF 3: TERMINAL OP TRIGGERS TRAVERSAL</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="54" width="860" height="34" rx="5" class="panel"/>
+  <text x="34" y="76" class="lbl code" font-weight="700">deposits.stream().filter(d -&gt; d.amount() &gt; 65).map(Deposit::amount).collect(toList())</text>
+
+  <rect x="20" y="120" width="120" height="58" rx="6" class="boxP"/>
+  <text x="80" y="144" text-anchor="middle" class="lbl sub" font-weight="700">deposits</text>
+  <text x="80" y="160" text-anchor="middle" class="lbl sub">95,000</text>
+
+  <path class="flow" d="M 140 149 H 160"/>
+  <circle class="tok" cx="150" cy="149" r="4"/>
+  <rect x="160" y="120" width="120" height="58" rx="6" class="boxR"/>
+  <text x="220" y="144" text-anchor="middle" class="lbl sub" font-weight="700">source</text>
+  <text x="220" y="160" text-anchor="middle" class="lbl sub">pulls 1 at a time</text>
+
+  <path class="flow" d="M 280 149 H 300"/>
+  <circle class="tok" cx="290" cy="149" r="4"/>
+  <rect x="300" y="120" width="140" height="58" rx="6" class="boxH"/>
+  <text x="370" y="144" text-anchor="middle" class="lbl sub" font-weight="700">filter stage</text>
+  <text x="370" y="160" text-anchor="middle" class="lbl sub">amount &gt; 65?</text>
+
+  <path class="flow" d="M 440 149 H 460"/>
+  <circle class="tok" cx="450" cy="149" r="4"/>
+  <rect x="460" y="120" width="140" height="58" rx="6" class="boxH"/>
+  <text x="530" y="144" text-anchor="middle" class="lbl sub" font-weight="700">map stage</text>
+  <text x="530" y="160" text-anchor="middle" class="lbl sub">Deposit::amount</text>
+
+  <path class="flow" d="M 600 149 H 620"/>
+  <circle class="tok" cx="610" cy="149" r="4"/>
+  <rect x="620" y="120" width="220" height="58" rx="6" class="boxR"/>
+  <text x="730" y="140" text-anchor="middle" class="lbl sub" font-weight="700">collect(toList())</text>
+  <text x="730" y="156" text-anchor="middle" class="lbl sub">terminal — builds List&lt;Money&gt;</text>
+
+  <rect x="220" y="200" width="460" height="44" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="450" y="228" text-anchor="middle" class="lbl body" font-weight="700" fill="#15803d">traversal begins here — single pass, one element at a time</text>
+
+  <rect x="40" y="264" width="780" height="140" rx="6" class="panel"/>
+  <text x="60" y="290" class="lbl body" font-weight="700">objects that exist so far</text>
+  <text x="60" y="312" class="lbl tiny">1. CardDeposit[] deposits — 95,000 elements, source of truth</text>
+  <text x="60" y="332" class="lbl tiny">2. source, filter and map stages — chained, unchanged since frame 2</text>
+  <text x="60" y="352" class="lbl tiny">3. collect(toList()) — the terminal op, requests elements from the Spliterator</text>
+  <text x="60" y="372" class="lbl tiny">4. List&lt;Money&gt; result — a new ArrayList, filled as each element completes the chain</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="418" x2="880" y2="418" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="428" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="440" class="lbl tiny">the backing data</text>
+  <rect x="200" y="428" width="22" height="14" rx="3" class="boxR"/>
+  <text x="230" y="440" class="lbl tiny">a stream stage / the result</text>
+  <rect x="420" y="428" width="22" height="14" rx="3" class="boxH"/>
+  <text x="450" y="440" class="lbl tiny">an intermediate stage</text>
+  <circle class="tok" cx="30" cy="459" r="4"/>
+  <text x="45" y="464" class="lbl tiny">one element in flight</text>
+  <path class="flow" d="M 230 459 H 270"/>
+  <text x="278" y="464" class="lbl tiny">A → B : pull direction</text>
+</svg>

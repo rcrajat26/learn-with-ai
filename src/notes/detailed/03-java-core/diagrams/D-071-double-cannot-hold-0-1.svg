@@ -1,0 +1,194 @@
+<svg viewBox="0 0 1000 1260" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence explaining why double cannot hold 0.1 exactly. Frame 1 derives the binary expansion of 0.1 by repeated doubling, showing the remainder cycle re-enters 0.2 at step 6 so the fraction never terminates, exactly like 1/3 = 0.333... in decimal; because binary64 has only 52 mantissa bits the expansion must be cut off and rounded. Frame 2 shows the actual stored bit pattern measured on JDK 21.0.7: doubleToLongBits(0.1) = 0x3fb999999999999a, sign 0, exponent field 01111111011 (biased 1019, unbiased -4), 52-bit mantissa ending ...1010 (rounded up from ...1001 by round-to-nearest-even), hex string 0x1.999999999999ap-4, and the exact stored decimal value 0.1000000000000000055511151231257827021181583404541015625, which is greater than true 0.1 by about 5.55e-18. Frame 3 shows 0.1 + 0.2 prints 0.30000000000000004 and is not equal to 0.3, with the exact BigDecimal values of 0.1, 0.2, 0.3 and their sum, plus a QuizStakes framing panel showing that summing 42.42 as a double 3100 times (one day of bonus grants) yields 131501.99999999543 against an exact 131502.00, and summing 4.20 as a double 2.8 million times (one day of stake reservations) yields 1.1759999999664538E7 against an exact 11760000.00.">
+
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr071" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="1260" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Why double cannot hold 0.1</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== FRAME 1 ===================== -->
+  <text x="20" y="64" class="h2">FRAME 1 &#8212; 0.1 AS A REPEATING BINARY FRACTION</text>
+  <line x1="20" y1="72" x2="980" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- derivation table -->
+  <rect x="40" y="86" width="50" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="90" y="86" width="260" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="350" y="86" width="60" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <rect x="410" y="86" width="210" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="65" y="103" text-anchor="middle" class="smallb">Step</text>
+  <text x="220" y="103" text-anchor="middle" class="smallb">Computation</text>
+  <text x="380" y="103" text-anchor="middle" class="smallb">Digit</text>
+  <text x="515" y="103" text-anchor="middle" class="smallb">Remainder</text>
+
+  <!-- row 1 -->
+  <rect x="40" y="112" width="50" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="90" y="112" width="260" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="350" y="112" width="60" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="410" y="112" width="210" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="65" y="129" text-anchor="middle" class="body">1</text>
+  <text x="220" y="129" text-anchor="middle" class="code">0.1 &#215; 2 = 0.2</text>
+  <text x="380" y="129" text-anchor="middle" class="code">0</text>
+  <text x="515" y="129" text-anchor="middle" class="small">remainder 0.2</text>
+
+  <!-- row 2 (re-entry target) -->
+  <rect x="40" y="138" width="50" height="26" fill="#dbeafe" stroke="#b45309" stroke-width="1.6"/>
+  <rect x="90" y="138" width="260" height="26" fill="#dbeafe" stroke="#b45309" stroke-width="1.6"/>
+  <rect x="350" y="138" width="60" height="26" fill="#dbeafe" stroke="#b45309" stroke-width="1.6"/>
+  <rect x="410" y="138" width="210" height="26" fill="#dbeafe" stroke="#b45309" stroke-width="1.6"/>
+  <text x="65" y="155" text-anchor="middle" class="body">2</text>
+  <text x="220" y="155" text-anchor="middle" class="code">0.2 &#215; 2 = 0.4</text>
+  <text x="380" y="155" text-anchor="middle" class="code">0</text>
+  <text x="515" y="155" text-anchor="middle" class="small">remainder 0.4</text>
+
+  <!-- row 3 -->
+  <rect x="40" y="164" width="50" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="90" y="164" width="260" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="350" y="164" width="60" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="410" y="164" width="210" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="65" y="181" text-anchor="middle" class="body">3</text>
+  <text x="220" y="181" text-anchor="middle" class="code">0.4 &#215; 2 = 0.8</text>
+  <text x="380" y="181" text-anchor="middle" class="code">0</text>
+  <text x="515" y="181" text-anchor="middle" class="small">remainder 0.8</text>
+
+  <!-- row 4 -->
+  <rect x="40" y="190" width="50" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="90" y="190" width="260" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="350" y="190" width="60" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="410" y="190" width="210" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="65" y="207" text-anchor="middle" class="body">4</text>
+  <text x="220" y="207" text-anchor="middle" class="code">0.8 &#215; 2 = 1.6</text>
+  <text x="380" y="207" text-anchor="middle" class="code">1</text>
+  <text x="515" y="207" text-anchor="middle" class="small">carry; remainder 0.6</text>
+
+  <!-- row 5 -->
+  <rect x="40" y="216" width="50" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="90" y="216" width="260" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="350" y="216" width="60" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <rect x="410" y="216" width="210" height="26" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="65" y="233" text-anchor="middle" class="body">5</text>
+  <text x="220" y="233" text-anchor="middle" class="code">0.6 &#215; 2 = 1.2</text>
+  <text x="380" y="233" text-anchor="middle" class="code">1</text>
+  <text x="515" y="233" text-anchor="middle" class="small">carry; remainder 0.2</text>
+
+  <!-- row 6 (cycle repeats, highlight) -->
+  <rect x="40" y="242" width="580" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="330" y="259" text-anchor="middle" class="body">6&#8194; 0.2 &#215; 2 = 0.4 &#8594; remainder 0.2 seen again at step 2 &#8212; the expansion never terminates</text>
+
+  <path d="M 40 255 H 25 V 151 H 40" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr071)"/>
+
+  <!-- decimal analogy panel -->
+  <rect x="640" y="86" width="320" height="182" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="656" y="106" class="smallb">Decimal analogy</text>
+  <text x="656" y="126" class="code">1 / 3 = 0.333...</text>
+  <text x="656" y="144" class="small">(the digit "3" repeats forever)</text>
+  <text x="656" y="172" class="smallb">Binary 0.1</text>
+  <text x="656" y="192" class="code">0.1 = 0.00011001100...</text>
+  <text x="656" y="210" class="small">_2 &#8212; the block "1100" repeats</text>
+  <text x="656" y="228" class="small">forever after the leading 0001</text>
+  <text x="656" y="252" class="small">(re-entry: step 6 revisits step 2's</text>
+  <text x="656" y="266" class="small">remainder 0.2, so it never ends)</text>
+
+  <!-- result box -->
+  <rect x="40" y="280" width="920" height="80" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="500" y="300" text-anchor="middle" class="smallb">RESULT: the binary expansion of 0.1 never terminates &#8212; it must be rounded</text>
+  <text x="500" y="322" text-anchor="middle" class="body">Exactly like 1/3 = 0.333... in decimal: an infinitely repeating fraction.</text>
+  <text x="500" y="344" text-anchor="middle" class="body">binary64 (double) has only 52 mantissa bits, so the expansion is cut off and</text>
+  <text x="500" y="358" text-anchor="middle" class="small">rounded to the nearest representable value &#8212; see Frame 2 below.</text>
+
+  <!-- ===================== FRAME 2 ===================== -->
+  <text x="20" y="382" class="h2">FRAME 2 &#8212; THE NEAREST BINARY64 (THE STORED BIT PATTERN)</text>
+  <line x1="20" y1="390" x2="980" y2="390" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="402" width="70" height="56" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="75" y="420" text-anchor="middle" class="smallb">sign</text>
+  <text x="75" y="440" text-anchor="middle" class="code">0</text>
+
+  <rect x="110" y="402" width="230" height="56" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="225" y="420" text-anchor="middle" class="smallb">exponent (11 bits)</text>
+  <text x="225" y="440" text-anchor="middle" class="code">01111111011</text>
+
+  <rect x="340" y="402" width="620" height="56" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="650" y="420" text-anchor="middle" class="smallb">mantissa (52 bits) &#8212; the point</text>
+  <text x="650" y="442" text-anchor="middle" class="code">1001100110011001100110011001100110011001100110011010</text>
+
+  <!-- measured facts panel A -->
+  <rect x="40" y="474" width="920" height="140" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="52" y="496" class="code">Double.doubleToLongBits(0.1) = 0x3fb999999999999a</text>
+  <text x="52" y="522" class="code">sign = 0&#8194;&#8194;&#8194;exponent field = 01111111011 (biased 1019)</text>
+  <text x="52" y="548" class="body">unbiased exponent = biased &#8722; 1023 = 1019 &#8722; 1023 = &#8722;4</text>
+  <text x="52" y="574" class="code">Double.toHexString(0.1) = 0x1.999999999999ap-4</text>
+  <text x="52" y="600" class="body">mantissa ends "...1010" &#8212; rounded UP from "...1001" by round-to-nearest-even</text>
+
+  <!-- exact decimal panel B -->
+  <rect x="40" y="622" width="920" height="64" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="52" y="644" class="smallb">Exact decimal value stored (measured via new BigDecimal(0.1)):</text>
+  <text x="52" y="668" class="codeG">0.1000000000000000055511151231257827021181583404541015625</text>
+
+  <!-- highlight panel C -->
+  <rect x="40" y="698" width="920" height="40" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="500" y="722" text-anchor="middle" class="body">The stored value is greater than the true 0.1 by about 5.55 &#215; 10&#8722;18</text>
+
+  <!-- ===================== FRAME 3 ===================== -->
+  <text x="20" y="762" class="h2">FRAME 3 &#8212; 0.1 + 0.2 AND THE BONUS-BALANCE FRAMING</text>
+  <line x1="20" y1="770" x2="980" y2="770" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- exact BigDecimal panel D -->
+  <rect x="40" y="782" width="920" height="112" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="52" y="804" class="smallb">Exact decimal values (measured via new BigDecimal(double)):</text>
+  <text x="52" y="826" class="codeG">0.1 &#8594; 0.1000000000000000055511151231257827021181583404541015625</text>
+  <text x="52" y="848" class="codeG">0.2 &#8594; 0.200000000000000011102230246251565404236316680908203125</text>
+  <text x="52" y="870" class="codeG">0.3 &#8594; 0.299999999999999988897769753748434595763683319091796875</text>
+
+  <!-- wrong sum panel E -->
+  <rect x="40" y="906" width="920" height="110" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="52" y="928" class="smallb">0.1 + 0.2 in double arithmetic:</text>
+  <text x="52" y="950" class="codeR">0.1 + 0.2&#8194;&#8194;prints&#8194;&#8194;0.30000000000000004</text>
+  <text x="52" y="972" class="codeR">new BigDecimal(0.1 + 0.2) = 0.3000000000000000444089209850062616169452667236328125</text>
+  <text x="52" y="996" class="body">0.1 + 0.2 == 0.3 &#8594; false: the sum lands one representable step above the nearest double to 0.3</text>
+
+  <!-- QuizStakes annotation panel F -->
+  <rect x="40" y="1032" width="920" height="136" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="52" y="1054" class="smallb">QuizStakes framing &#8212; accumulating a bonus balance in double:</text>
+  <text x="52" y="1076" class="code">sum 42.42 &#215; 3,100 times (3.1k bonus grants/day, avg 42) &#8594; 131501.99999999543</text>
+  <text x="52" y="1098" class="code">exact (BigDecimal) = 131502.00 &#8212; shortfall &#8776; 0.0000046 (reconciliation will flag)</text>
+  <text x="52" y="1120" class="code">sum 4.20 &#215; 2,800,000 times (one day of stake reservations) &#8594; 1.1759999999664538E7</text>
+  <text x="52" y="1142" class="code">exact = 11760000.00 &#8212; error &#8776; &#8722;0.00033546</text>
+
+  <!-- ===================== LEGEND ===================== -->
+  <line x1="20" y1="1182" x2="980" y2="1182" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="1194" width="18" height="14" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="1206" class="small">binary derivation steps</text>
+
+  <rect x="380" y="1194" width="18" height="14" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="406" y="1206" class="small">stored bit pattern &#8212; the point</text>
+
+  <rect x="680" y="1194" width="18" height="14" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="706" y="1206" class="small">neutral panel / decimal analogy</text>
+
+  <rect x="40" y="1218" width="18" height="14" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="66" y="1230" class="small">wrong floating-point sum</text>
+
+  <rect x="380" y="1218" width="18" height="14" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="406" y="1230" class="small">exact BigDecimal value</text>
+
+  <rect x="680" y="1218" width="18" height="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="706" y="1230" class="small">QuizStakes framing panel</text>
+
+</svg>

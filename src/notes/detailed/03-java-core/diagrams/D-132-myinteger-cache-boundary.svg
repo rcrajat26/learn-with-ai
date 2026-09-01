@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 880" role="img" aria-label="The MyInteger cache boundary. A 256-entry cache array spans index 0 holding -128 through index 255 holding 127, with the last slot highlighted as the boundary entry for HIGH = 127. On the left, two references a and b from MyInteger.valueOf(127) both point at the single cached object CACHE[255], so a == b is true. On the right, two references c and d from MyInteger.valueOf(128) each point at a separately allocated new MyInteger(128) of 16 bytes, so c == d is false. Below, a table gives allocation for a 2,800,000-iteration boxing loop: cache on allocates 0 bytes in both JIT configurations; cache off with escape analysis disabled allocates 44,800,000 bytes as 2,800,000 objects; cache off under the default JIT allocates only 3,014,640 bytes as 188,415 objects because C2 scalar-replaces the rest.">
+<defs>
+<style>
+.t { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 15px; font-weight: 700; }
+.band { font-size: 13px; font-weight: 700; }
+.bh { font-size: 13px; font-weight: 700; }
+.idx { font-size: 11px; fill: #4b5563; font-family: Menlo, "SF Mono", monospace; }
+.val { font-size: 13px; font-weight: 700; fill: #1f2937; font-family: Menlo, "SF Mono", monospace; }
+.mono { font-family: Menlo, "SF Mono", monospace; font-size: 12px; fill: #1f2937; }
+.monos { font-family: Menlo, "SF Mono", monospace; font-size: 11px; fill: #1f2937; }
+.monob { font-family: Menlo, "SF Mono", monospace; font-size: 12.5px; font-weight: 700; fill: #1f2937; }
+.monobg { font-family: Menlo, "SF Mono", monospace; font-size: 13px; font-weight: 700; fill: #1f2937; }
+.th { font-size: 11px; font-weight: 700; fill: #1f2937; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.row { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.rowb { font-size: 11px; font-weight: 700; fill: #1f2937; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.leg { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.hair { stroke: #d1d5db; stroke-width: 1.4; fill: none; }
+.bx { stroke-width: 1.5; }
+.solid { stroke: #475569; stroke-width: 2; fill: none; }
+.dash { stroke: #15803d; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+.dot { stroke: #9ca3af; stroke-width: 2; fill: none; stroke-dasharray: 4 3; }
+</style>
+<marker id="arr132s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,0 10,5 0,10" fill="#475569"/></marker>
+<marker id="arr132g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,0 10,5 0,10" fill="#15803d"/></marker>
+<marker id="arr132w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,0 10,5 0,10" fill="#9ca3af"/></marker>
+</defs>
+<rect x="0" y="0" width="1120" height="880" fill="#ffffff"/>
+
+<text class="t title" x="20" y="32">D-132 — MyInteger cache boundary: LOW = -128, HIGH = 127, 256 entries, and what == answers either side</text>
+<path class="hair" d="M 20 44 H 1100"/>
+
+<text class="t band" x="40" y="68">MyInteger.CACHE — private static final MyInteger[256], filled eagerly, configurable bound</text>
+
+<rect class="bx" x="90" y="80" width="130" height="56" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="idx" x="102" y="104">[0]</text><text class="val" x="102" y="126">-128</text>
+<rect class="bx" x="226" y="80" width="130" height="56" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="idx" x="238" y="104">[1]</text><text class="val" x="238" y="126">-127</text>
+<rect class="bx" x="362" y="80" width="130" height="56" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="idx" x="374" y="104">[2 .. 127]</text><text class="val" x="374" y="126">...</text>
+<rect class="bx" x="498" y="80" width="130" height="56" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="idx" x="510" y="104">[128]</text><text class="val" x="510" y="126">0</text>
+<rect class="bx" x="634" y="80" width="130" height="56" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="idx" x="646" y="104">[129 .. 253]</text><text class="val" x="646" y="126">...</text>
+<rect class="bx" x="770" y="80" width="130" height="56" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="idx" x="782" y="104">[254]</text><text class="val" x="782" y="126">126</text>
+<rect class="bx" x="906" y="80" width="130" height="56" fill="#fef3c7" stroke="#b45309"/>
+<text class="idx" x="918" y="104">[255]</text><text class="val" x="918" y="126">127</text>
+
+<path class="dot" marker-end="url(#arr132w)" d="M 971 136 V 156"/>
+<rect class="bx" x="850" y="156" width="210" height="46" fill="#fef3c7" stroke="#b45309"/>
+<text class="rowb" x="862" y="175">boundary entry</text>
+<text class="monos" x="862" y="192">HIGH = 127 -&gt; CACHE[255]</text>
+
+<text class="t band" x="40" y="228">At the bound — valueOf(127)</text>
+<text class="t band" x="600" y="228">One above the bound — valueOf(128)</text>
+
+<!-- LEFT refs -->
+<rect class="bx" x="60" y="244" width="200" height="46" fill="#dbeafe" stroke="#2563eb"/>
+<text class="monob" x="72" y="264">MyInteger a</text>
+<text class="monos" x="72" y="281">= MyInteger.valueOf(127)</text>
+<rect class="bx" x="300" y="244" width="200" height="46" fill="#dbeafe" stroke="#2563eb"/>
+<text class="monob" x="312" y="264">MyInteger b</text>
+<text class="monos" x="312" y="281">= MyInteger.valueOf(127)</text>
+
+<path class="dash" marker-end="url(#arr132g)" d="M 160 290 V 314 H 210 V 344"/>
+<path class="dash" marker-end="url(#arr132g)" d="M 400 290 V 314 H 350 V 344"/>
+
+<rect class="bx" x="140" y="344" width="280" height="48" fill="#fef3c7" stroke="#b45309"/>
+<text class="monob" x="152" y="366">CACHE[255]</text>
+<text class="row" x="152" y="383">the single cached MyInteger(127), 16 B</text>
+
+<path class="solid" marker-end="url(#arr132s)" d="M 280 392 V 424"/>
+<rect class="bx" x="60" y="424" width="440" height="44" fill="#dcfce7" stroke="#15803d"/>
+<text class="monobg" x="280" y="445" text-anchor="middle">a == b   -&gt;   true</text>
+<text class="row" x="280" y="462" text-anchor="middle">both references hold the same cached object</text>
+
+<!-- RIGHT refs -->
+<rect class="bx" x="600" y="244" width="200" height="46" fill="#dbeafe" stroke="#2563eb"/>
+<text class="monob" x="612" y="264">MyInteger c</text>
+<text class="monos" x="612" y="281">= MyInteger.valueOf(128)</text>
+<rect class="bx" x="840" y="244" width="200" height="46" fill="#dbeafe" stroke="#2563eb"/>
+<text class="monob" x="852" y="264">MyInteger d</text>
+<text class="monos" x="852" y="281">= MyInteger.valueOf(128)</text>
+
+<path class="dash" marker-end="url(#arr132g)" d="M 700 290 V 344"/>
+<path class="dash" marker-end="url(#arr132g)" d="M 940 290 V 344"/>
+
+<rect class="bx" x="600" y="344" width="200" height="48" fill="#fee2e2" stroke="#b91c1c"/>
+<text class="monob" x="612" y="366">new MyInteger(128)</text>
+<text class="row" x="612" y="383">16 B, own identity</text>
+<rect class="bx" x="840" y="344" width="200" height="48" fill="#fee2e2" stroke="#b91c1c"/>
+<text class="monob" x="852" y="366">new MyInteger(128)</text>
+<text class="row" x="852" y="383">16 B, own identity</text>
+
+<path class="solid" marker-end="url(#arr132s)" d="M 700 392 V 408 H 760 V 424"/>
+<path class="solid" marker-end="url(#arr132s)" d="M 940 392 V 408 H 880 V 424"/>
+
+<rect class="bx" x="600" y="424" width="440" height="44" fill="#fee2e2" stroke="#b91c1c"/>
+<text class="monobg" x="820" y="445" text-anchor="middle">c == d   -&gt;   false</text>
+<text class="row" x="820" y="462" text-anchor="middle">128 is outside the bound, so each call allocates</text>
+
+<!-- allocation table -->
+<text class="t band" x="40" y="496">Allocation for a 2,800,000-iteration boxing loop (one per stake reservation per day), boxing stakeIndex % 100</text>
+<rect class="bx" x="40" y="508" width="520" height="120" fill="#f3f4f6" stroke="#9ca3af"/>
+<rect class="bx" x="40" y="508" width="520" height="28" fill="#fef3c7" stroke="#b45309"/>
+<text class="th" x="54" y="528">Configuration</text>
+<text class="th" x="400" y="528" text-anchor="end">Allocated bytes</text>
+<text class="th" x="548" y="528" text-anchor="end">Objects</text>
+<text class="mono" x="54" y="556">cache ON,  -XX:-DoEscapeAnalysis</text><text class="mono" x="400" y="556" text-anchor="end">0</text><text class="mono" x="548" y="556" text-anchor="end">0</text>
+<text class="mono" x="54" y="575">cache OFF, -XX:-DoEscapeAnalysis</text><text class="mono" x="400" y="575" text-anchor="end">44,800,000</text><text class="mono" x="548" y="575" text-anchor="end">2,800,000</text>
+<text class="mono" x="54" y="594">cache ON,  default JIT</text><text class="mono" x="400" y="594" text-anchor="end">0</text><text class="mono" x="548" y="594" text-anchor="end">0</text>
+<text class="mono" x="54" y="613">cache OFF, default JIT</text><text class="mono" x="400" y="613" text-anchor="end">3,014,640</text><text class="mono" x="548" y="613" text-anchor="end">188,415</text>
+
+<rect class="bx" x="600" y="508" width="480" height="132" fill="#eff6ff" stroke="#2563eb"/>
+<text class="t bh" x="614" y="528">The cache saves 44.8 MB only when C2 cannot see the box</text>
+<text class="row" x="614" y="548">With escape analysis disabled, cache OFF allocates 44,800,000 B.</text>
+<text class="row" x="614" y="567">Under the default JIT, C2 scalar-replaces the non-escaping boxes.</text>
+<text class="row" x="614" y="586">Cache OFF then allocates only 3,014,640 B - 188,415 survivors.</text>
+<text class="row" x="614" y="605">Those survivors are the interpreter and C1 iterations before C2.</text>
+<text class="row" x="614" y="624">Measured: Oracle JDK 21.0.7, macOS aarch64, compressed oops on.</text>
+
+<rect class="bx" x="40" y="660" width="1040" height="76" fill="#eff6ff" stroke="#2563eb"/>
+<text class="t bh" x="60" y="680">valueOf(int v) — the configurable bound, and where the boundary falls</text>
+<text class="monos" x="60" y="700">LOW = -128, HIGH = 127 (both configurable); CACHE holds HIGH - LOW + 1 = 256 entries, filled eagerly at class init.</text>
+<text class="monos" x="60" y="719">if (LOW &lt;= v &amp;&amp; v &lt;= HIGH) return CACHE[v - LOW]; else return new MyInteger(v);   // MyInteger = 16 B: 12 B header + 4 B int value</text>
+
+<path class="hair" d="M 20 760 H 1100"/>
+
+<rect class="bx" x="40" y="770" width="22" height="12" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="leg" x="70" y="780">cache slot below the boundary; allocation table panel</text>
+<rect class="bx" x="40" y="788" width="22" height="12" fill="#fef3c7" stroke="#b45309"/>
+<text class="leg" x="70" y="798">the boundary entry CACHE[255], and the object both references share</text>
+<rect class="bx" x="40" y="806" width="22" height="12" fill="#fee2e2" stroke="#b91c1c"/>
+<text class="leg" x="70" y="816">MyInteger allocated above the bound, and the false == result</text>
+<rect class="bx" x="40" y="824" width="22" height="12" fill="#dcfce7" stroke="#15803d"/>
+<text class="leg" x="70" y="834">the true == result</text>
+
+<rect class="bx" x="560" y="770" width="22" height="12" fill="#dbeafe" stroke="#2563eb"/>
+<text class="leg" x="590" y="780">reference variable declared in the caller</text>
+<rect class="bx" x="560" y="788" width="22" height="12" fill="#eff6ff" stroke="#2563eb"/>
+<text class="leg" x="590" y="798">annotation panel</text>
+<path class="dash" marker-end="url(#arr132g)" d="M 560 812 H 604"/>
+<text class="leg" x="614" y="816">reference -&gt; object : the variable holds a reference to that object</text>
+<path class="solid" marker-end="url(#arr132s)" d="M 560 830 H 604"/>
+<text class="leg" x="614" y="834">object identity -&gt; == result : the result is produced by comparing them</text>
+<path class="dot" marker-end="url(#arr132w)" d="M 560 848 H 604"/>
+<text class="leg" x="614" y="852">callout -&gt; the cache slot it describes</text>
+</svg>

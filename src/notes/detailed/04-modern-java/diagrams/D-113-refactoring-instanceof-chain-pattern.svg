@@ -1,0 +1,165 @@
+<svg viewBox="0 0 1040 1300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Refactoring an instanceof chain over the sealed Verdict hierarchy into a pattern switch,
+     in four frames. Frame 1: an if/else-if chain of instanceof checks each followed by an explicit cast
+     to DocumentVerdict, ScreeningVerdict, ReviewVerdict or WealthVerdict; the compiler only guarantees the
+     cast succeeds at the point it runs, and nothing checks all four subtypes are handled. Frame 2: type
+     patterns replace the casts, so the compiler guarantees each pattern variable is definitely assigned
+     and correctly typed with no separate cast statement. Frame 3: the chain becomes a pattern switch
+     expression with a default arm; the compiler guarantees the switch is one exhaustive expression over
+     the four listed labels, but a default is still required because the compiler does not yet know
+     Verdict's permitted subtypes are complete. Frame 4: once Verdict is declared sealed with a permits
+     clause naming exactly the four subtypes, the default is removed and the compiler checks exhaustiveness
+     against the permits clause, so a fifth subtype added later without a matching case is a compile error.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; fill: #1f2937; }
+    .codeK { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; fill: #b45309; font-weight: 700; }
+    .body  { font-size: 11.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1300" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">REFACTORING AN instanceof CHAIN OVER Verdict INTO A PATTERN SWITCH</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ FRAME 1 ============ -->
+  <text x="20" y="68" class="lbl h2">FRAME 1 — instanceof + explicit cast</text>
+  <rect x="20" y="80" width="620" height="240" rx="6" class="boxW"/>
+  <text x="36" y="102" class="codeK">if</text><text x="56" y="102" class="code">(verdict instanceof DocumentVerdict) {</text>
+  <text x="52" y="120" class="code">DocumentVerdict dv = (DocumentVerdict) verdict;</text>
+  <text x="36" y="138" class="code">} <tspan class="codeK">else if</tspan> (verdict instanceof ScreeningVerdict) {</text>
+  <text x="52" y="156" class="code">ScreeningVerdict sv = (ScreeningVerdict) verdict;</text>
+  <text x="36" y="174" class="code">} <tspan class="codeK">else if</tspan> (verdict instanceof ReviewVerdict) {</text>
+  <text x="52" y="192" class="code">ReviewVerdict rv = (ReviewVerdict) verdict;</text>
+  <text x="36" y="210" class="code">} <tspan class="codeK">else if</tspan> (verdict instanceof WealthVerdict) {</text>
+  <text x="52" y="228" class="code">WealthVerdict wv = (WealthVerdict) verdict;</text>
+  <text x="36" y="246" class="code">} <tspan class="codeK">else</tspan> {</text>
+  <text x="52" y="264" class="code"><tspan class="codeK">throw new</tspan> IllegalStateException();</text>
+  <text x="36" y="282" class="code">}</text>
+  <text x="36" y="304" class="lbl sub">verdict has static type Verdict, one of the four listed subtypes</text>
+
+  <rect x="672" y="80" width="348" height="240" rx="6" class="panel"/>
+  <text x="688" y="102" class="lbl tiny" font-weight="700">What the compiler guarantees here</text>
+  <text x="688" y="122" class="lbl tiny">Only that each cast succeeds at the</text>
+  <text x="688" y="138" class="lbl tiny">point it runs — instanceof and the</text>
+  <text x="688" y="154" class="lbl tiny">cast are two separate statements the</text>
+  <text x="688" y="170" class="lbl tiny">reader must keep in sync by hand.</text>
+  <text x="688" y="192" class="lbl tiny" font-weight="700">What it does NOT guarantee</text>
+  <text x="688" y="212" class="lbl tiny">Nothing checks that all four Verdict</text>
+  <text x="688" y="228" class="lbl tiny">subtypes are handled, or that a fifth</text>
+  <text x="688" y="244" class="lbl tiny">subtype added later trips a compile</text>
+  <text x="688" y="260" class="lbl tiny">error instead of falling to else.</text>
+
+  <path class="flow" d="M 330 320 V 350"/>
+
+  <!-- ============ FRAME 2 ============ -->
+  <text x="20" y="380" class="lbl h2">FRAME 2 — type patterns replace the casts</text>
+  <rect x="20" y="392" width="620" height="200" rx="6" class="boxP"/>
+  <text x="36" y="414" class="codeK">if</text><text x="56" y="414" class="code">(verdict instanceof DocumentVerdict dv) {</text>
+  <text x="52" y="432" class="code">// dv already typed DocumentVerdict, no cast line</text>
+  <text x="36" y="450" class="code">} <tspan class="codeK">else if</tspan> (verdict instanceof ScreeningVerdict sv) {</text>
+  <text x="52" y="468" class="code">// sv already typed ScreeningVerdict</text>
+  <text x="36" y="486" class="code">} <tspan class="codeK">else if</tspan> (verdict instanceof ReviewVerdict rv) {</text>
+  <text x="52" y="504" class="code">// rv already typed ReviewVerdict</text>
+  <text x="36" y="522" class="code">} <tspan class="codeK">else if</tspan> (verdict instanceof WealthVerdict wv) {</text>
+  <text x="52" y="540" class="code">// wv already typed WealthVerdict</text>
+  <text x="36" y="558" class="code">} <tspan class="codeK">else</tspan> { <tspan class="codeK">throw new</tspan> IllegalStateException(); }</text>
+  <text x="36" y="580" class="lbl sub">the cast statement is gone; the pattern variable IS the cast</text>
+
+  <rect x="672" y="392" width="348" height="200" rx="6" class="panel"/>
+  <text x="688" y="414" class="lbl tiny" font-weight="700">What the compiler guarantees now</text>
+  <text x="688" y="434" class="lbl tiny">dv, sv, rv, wv are definitely assigned</text>
+  <text x="688" y="450" class="lbl tiny">and correctly typed inside their own</text>
+  <text x="688" y="466" class="lbl tiny">branch — the instanceof test and the</text>
+  <text x="688" y="482" class="lbl tiny">narrowing are one atomic statement,</text>
+  <text x="688" y="498" class="lbl tiny">so they cannot drift apart under edit.</text>
+  <text x="688" y="518" class="lbl tiny">Still no exhaustiveness check — the</text>
+  <text x="688" y="534" class="lbl tiny">else arm is still hand-written.</text>
+
+  <path class="flow" d="M 330 592 V 622"/>
+
+  <!-- ============ FRAME 3 ============ -->
+  <text x="20" y="652" class="lbl h2">FRAME 3 — pattern switch, default still present</text>
+  <rect x="20" y="664" width="620" height="184" rx="6" class="boxH"/>
+  <text x="36" y="686" class="code">String outcome = <tspan class="codeK">switch</tspan> (verdict) {</text>
+  <text x="52" y="704" class="code"><tspan class="codeK">case</tspan> DocumentVerdict dv -&gt; dv.outcome();</text>
+  <text x="52" y="722" class="code"><tspan class="codeK">case</tspan> ScreeningVerdict sv -&gt; sv.outcome();</text>
+  <text x="52" y="740" class="code"><tspan class="codeK">case</tspan> ReviewVerdict rv -&gt; rv.outcome();</text>
+  <text x="52" y="758" class="code"><tspan class="codeK">case</tspan> WealthVerdict wv -&gt; wv.outcome();</text>
+  <text x="52" y="776" class="code"><tspan class="codeK">default</tspan> -&gt; <tspan class="codeK">throw new</tspan> IllegalStateException();</text>
+  <text x="36" y="794" class="code">};</text>
+  <text x="36" y="816" class="lbl sub">one switch expression, four case labels, default still required</text>
+
+  <rect x="672" y="664" width="348" height="184" rx="6" class="panel"/>
+  <text x="688" y="686" class="lbl tiny" font-weight="700">What the compiler guarantees now</text>
+  <text x="688" y="706" class="lbl tiny">The four listed subtypes are matched</text>
+  <text x="688" y="722" class="lbl tiny">by type pattern, each arm typed, one</text>
+  <text x="688" y="738" class="lbl tiny">expression producing outcome.</text>
+  <text x="688" y="758" class="lbl tiny" font-weight="700">Why default is still required</text>
+  <text x="688" y="778" class="lbl tiny">Verdict is not yet declared sealed, so</text>
+  <text x="688" y="794" class="lbl tiny">the compiler cannot prove the four</text>
+  <text x="688" y="810" class="lbl tiny">labels cover every possible subtype.</text>
+
+  <path class="flow" d="M 330 848 V 878"/>
+
+  <!-- ============ FRAME 4 ============ -->
+  <text x="20" y="908" class="lbl h2">FRAME 4 — Verdict sealed, default removed, exhaustiveness checked</text>
+  <rect x="20" y="920" width="620" height="234" rx="6" class="boxR"/>
+  <text x="36" y="942" class="codeK">sealed interface</text><text x="182" y="942" class="code">Verdict <tspan class="codeK">permits</tspan></text>
+  <text x="52" y="960" class="code">DocumentVerdict, ScreeningVerdict,</text>
+  <text x="52" y="978" class="code">ReviewVerdict, WealthVerdict {}</text>
+  <text x="36" y="1004" class="code">String outcome = <tspan class="codeK">switch</tspan> (verdict) {</text>
+  <text x="52" y="1022" class="code"><tspan class="codeK">case</tspan> DocumentVerdict dv -&gt; dv.outcome();</text>
+  <text x="52" y="1040" class="code"><tspan class="codeK">case</tspan> ScreeningVerdict sv -&gt; sv.outcome();</text>
+  <text x="52" y="1058" class="code"><tspan class="codeK">case</tspan> ReviewVerdict rv -&gt; rv.outcome();</text>
+  <text x="52" y="1076" class="code"><tspan class="codeK">case</tspan> WealthVerdict wv -&gt; wv.outcome();</text>
+  <text x="52" y="1094" class="code">// no default — sealed hierarchy fully covered</text>
+  <text x="36" y="1112" class="code">};</text>
+  <text x="36" y="1134" class="lbl sub">a fifth permits subtype without a case here is a compile error</text>
+
+  <rect x="672" y="920" width="348" height="234" rx="6" class="panel"/>
+  <text x="688" y="942" class="lbl tiny" font-weight="700">What the compiler guarantees now</text>
+  <text x="688" y="962" class="lbl tiny">Exhaustiveness over Verdict's permits</text>
+  <text x="688" y="978" class="lbl tiny">clause: the four case labels are the</text>
+  <text x="688" y="994" class="lbl tiny">complete set, so no default is needed</text>
+  <text x="688" y="1010" class="lbl tiny">and none is allowed to hide a gap.</text>
+  <text x="688" y="1030" class="lbl tiny" font-weight="700">The trap this sets up</text>
+  <text x="688" y="1050" class="lbl tiny">Adding a fifth subtype to permits and</text>
+  <text x="688" y="1066" class="lbl tiny">recompiling only Verdict.java, without</text>
+  <text x="688" y="1082" class="lbl tiny">recompiling this switch site, produces</text>
+  <text x="688" y="1098" class="lbl tiny">a runtime MatchException — see D-114.</text>
+  <text x="688" y="1120" class="lbl tiny">Sealing does not remove the need to</text>
+  <text x="688" y="1136" class="lbl tiny">redeploy every dependent class file.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="1180" x2="1020" y2="1180" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="1194" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="1207" class="lbl tiny">instanceof + explicit cast (frame 1)</text>
+  <rect x="330" y="1194" width="22" height="16" rx="3" class="boxP"/>
+  <text x="360" y="1207" class="lbl tiny">type pattern, cast folded in (frame 2)</text>
+  <rect x="20" y="1220" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="1233" class="lbl tiny">pattern switch, default still present (frame 3)</text>
+  <rect x="330" y="1220" width="22" height="16" rx="3" class="boxR"/>
+  <text x="360" y="1233" class="lbl tiny">sealed, default removed, exhaustive (frame 4)</text>
+  <rect x="672" y="1194" width="22" height="16" rx="3" class="panel"/>
+  <text x="702" y="1207" class="lbl tiny">what the compiler guarantees at this step</text>
+  <path class="flow" d="M 20 1256 H 60"/>
+  <text x="68" y="1261" class="lbl tiny">A → B : B is the next refactoring step from A</text>
+</svg>

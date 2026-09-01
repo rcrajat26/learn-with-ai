@@ -1,0 +1,178 @@
+<svg viewBox="0 0 1500 1030" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Version timeline of java.util.ArrayList across seven JDK releases: 1.2, 7, 8, 9,
+     13, 16, 21. 1.2 introduces ArrayList as the unsynchronized replacement for Vector. 7 makes
+     allocation lazy, pointing an empty list at one shared EMPTY_ELEMENTDATA. 8 splits that
+     sentinel into EMPTY_ELEMENTDATA and DEFAULTCAPACITY_EMPTY_ELEMENTDATA so default-capacity-10
+     laziness survives, and adds removeIf, replaceAll, sort, forEach, spliterator. 9 refactors
+     grow to return Object array, deletes ensureCapacityInternal and ensureExplicitCapacity,
+     changes Arrays dollar ArrayList toArray to return Object array instead of the covariant type,
+     and introduces List.of and List.copyOf. 13 replaces ArrayList's own MAX_ARRAY_SIZE, newCapacity
+     and hugeCapacity with ArraysSupport.newLength. 16 adds stream toList, which returns an
+     unmodifiable list, unlike the still-mutable Collectors toList. 21 retrofits
+     SequencedCollection, adding getFirst, getLast, addFirst, addLast, removeFirst, removeLast, and
+     inherited reversed. Two annotation panels report that the doubling-capacity claim and the
+     MAX_ARRAY_SIZE-is-the-cap claim are both false in every JDK examined, and show how
+     Movement.entries, an immutable list per Appendix C.6, would be spelled pre-9, in Java 9, and
+     in Java 16.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .hdr   { font-size: 11px; font-weight: 700; fill: #4b5563; }
+    .pillt { font-size: 13px; font-weight: 700; fill: #1f2937; }
+
+    .boxP    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pill    { fill: #fbbf24; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .axis  { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1500" height="1030" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SEVEN RELEASES OF ONE CLASS</text>
+  <line x1="20" y1="44" x2="1480" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl sub">java.util.ArrayList, JDK 1.2 through 21 — every entry read from the actual source in JDK 21.0.7</text>
+
+  <!-- axis -->
+  <path class="axis" d="M 20 460 H 1470"/>
+
+  <!-- pills -->
+  <rect x="133" y="449" width="34" height="22" rx="11" class="pill"/>
+  <text x="150" y="465" text-anchor="middle" class="lbl pillt">1.2</text>
+  <rect x="337" y="449" width="26" height="22" rx="11" class="pill"/>
+  <text x="350" y="465" text-anchor="middle" class="lbl pillt">7</text>
+  <rect x="537" y="449" width="26" height="22" rx="11" class="pill"/>
+  <text x="550" y="465" text-anchor="middle" class="lbl pillt">8</text>
+  <rect x="737" y="449" width="26" height="22" rx="11" class="pill"/>
+  <text x="750" y="465" text-anchor="middle" class="lbl pillt">9</text>
+  <rect x="933" y="449" width="34" height="22" rx="11" class="pill"/>
+  <text x="950" y="465" text-anchor="middle" class="lbl pillt">13</text>
+  <rect x="1133" y="449" width="34" height="22" rx="11" class="pill"/>
+  <text x="1150" y="465" text-anchor="middle" class="lbl pillt">16</text>
+  <rect x="1333" y="449" width="34" height="22" rx="11" class="pill"/>
+  <text x="1350" y="465" text-anchor="middle" class="lbl pillt">21</text>
+
+  <!-- connectors: above nodes 1.2, 8, 13, 21 -->
+  <path class="flow" d="M 150 449 V 360"/>
+  <path class="flow" d="M 550 449 V 360"/>
+  <path class="flow" d="M 950 449 V 360"/>
+  <path class="flow" d="M 1350 449 V 360"/>
+  <!-- connectors: below nodes 7, 9, 16 -->
+  <path class="flow" d="M 350 471 V 560"/>
+  <path class="flow" d="M 750 471 V 560"/>
+  <path class="flow" d="M 1150 471 V 560"/>
+
+  <!-- 1.2 : above, x center 150 -->
+  <rect x="30" y="140" width="240" height="220" rx="6" class="boxP"/>
+  <text x="150" y="170" text-anchor="middle" class="lbl node">1.2 — ArrayList introduced</text>
+  <text x="150" y="195" text-anchor="middle" class="lbl tiny">@since 1.2; replaces the</text>
+  <text x="150" y="213" text-anchor="middle" class="lbl tiny">synchronized Vector as</text>
+  <text x="150" y="231" text-anchor="middle" class="lbl tiny">the default list</text>
+  <text x="150" y="249" text-anchor="middle" class="lbl tiny">serialVersionUID</text>
+  <text x="150" y="267" text-anchor="middle" class="lbl tiny">8683452581122892189L</text>
+
+  <!-- 7 : below, x center 350 -->
+  <rect x="230" y="560" width="240" height="220" rx="6" class="boxP"/>
+  <text x="350" y="590" text-anchor="middle" class="lbl node">7 — Lazy allocation</text>
+  <text x="350" y="615" text-anchor="middle" class="lbl tiny">new ArrayList&lt;&gt;() no</text>
+  <text x="350" y="633" text-anchor="middle" class="lbl tiny">longer eagerly allocates</text>
+  <text x="350" y="651" text-anchor="middle" class="lbl tiny">Object[10] — points at</text>
+  <text x="350" y="669" text-anchor="middle" class="lbl tiny">one shared</text>
+  <text x="350" y="687" text-anchor="middle" class="lbl tiny">EMPTY_ELEMENTDATA</text>
+  <text x="350" y="705" text-anchor="middle" class="lbl tiny">(JDK-6989669)</text>
+
+  <!-- 8 : above, x center 550 -->
+  <rect x="430" y="140" width="240" height="220" rx="6" class="boxP"/>
+  <text x="550" y="170" text-anchor="middle" class="lbl node">8 — Sentinel split</text>
+  <text x="550" y="195" text-anchor="middle" class="lbl tiny">EMPTY_ELEMENTDATA splits</text>
+  <text x="550" y="213" text-anchor="middle" class="lbl tiny">into two constants —</text>
+  <text x="550" y="231" text-anchor="middle" class="lbl tiny">EMPTY_ELEMENTDATA and</text>
+  <text x="550" y="249" text-anchor="middle" class="lbl tiny">DEFAULTCAPACITY_EMPTY_</text>
+  <text x="550" y="267" text-anchor="middle" class="lbl tiny">ELEMENTDATA — keeps the</text>
+  <text x="550" y="285" text-anchor="middle" class="lbl tiny">default-10 laziness</text>
+  <text x="550" y="303" text-anchor="middle" class="lbl tiny">removeIf, sort, forEach,</text>
+  <text x="550" y="321" text-anchor="middle" class="lbl tiny">spliterator arrive</text>
+
+  <!-- 9 : below, x center 750 -->
+  <rect x="630" y="560" width="240" height="220" rx="6" class="boxP"/>
+  <text x="750" y="590" text-anchor="middle" class="lbl node">9 — grow() returns</text>
+  <text x="750" y="608" text-anchor="middle" class="lbl node">Object[]</text>
+  <text x="750" y="633" text-anchor="middle" class="lbl tiny">ensureCapacityInternal /</text>
+  <text x="750" y="651" text-anchor="middle" class="lbl tiny">ensureExplicitCapacity</text>
+  <text x="750" y="669" text-anchor="middle" class="lbl tiny">deleted; grow() now</text>
+  <text x="750" y="687" text-anchor="middle" class="lbl tiny">returns Object[]</text>
+  <text x="750" y="705" text-anchor="middle" class="lbl tiny">Arrays$ArrayList.toArray()</text>
+  <text x="750" y="723" text-anchor="middle" class="lbl tiny">&#8594; Object[], not covariant</text>
+  <text x="750" y="741" text-anchor="middle" class="lbl tiny">(JDK-6260652)</text>
+  <text x="750" y="759" text-anchor="middle" class="lbl tiny">List.of / List.copyOf (JEP 269)</text>
+
+  <!-- 13 : above, x center 950 -->
+  <rect x="830" y="140" width="240" height="220" rx="6" class="boxP"/>
+  <text x="950" y="170" text-anchor="middle" class="lbl node">13 —</text>
+  <text x="950" y="188" text-anchor="middle" class="lbl node">ArraysSupport.newLength</text>
+  <text x="950" y="213" text-anchor="middle" class="lbl tiny">Replaces ArrayList's own</text>
+  <text x="950" y="231" text-anchor="middle" class="lbl tiny">MAX_ARRAY_SIZE, newCapacity,</text>
+  <text x="950" y="249" text-anchor="middle" class="lbl tiny">hugeCapacity</text>
+  <text x="950" y="267" text-anchor="middle" class="lbl tiny">Bisected: absent at</text>
+  <text x="950" y="285" text-anchor="middle" class="lbl tiny">jdk-12+33, present at</text>
+  <text x="950" y="303" text-anchor="middle" class="lbl tiny">jdk-13+33</text>
+
+  <!-- 16 : below, x center 1150 -->
+  <rect x="1030" y="560" width="240" height="220" rx="6" class="boxP"/>
+  <text x="1150" y="590" text-anchor="middle" class="lbl node">16 — stream().toList()</text>
+  <text x="1150" y="615" text-anchor="middle" class="lbl tiny">Returns an unmodifiable</text>
+  <text x="1150" y="633" text-anchor="middle" class="lbl tiny">list — different from</text>
+  <text x="1150" y="651" text-anchor="middle" class="lbl tiny">Collectors.toList(), which</text>
+  <text x="1150" y="669" text-anchor="middle" class="lbl tiny">still returns a mutable</text>
+  <text x="1150" y="687" text-anchor="middle" class="lbl tiny">ArrayList</text>
+
+  <!-- 21 : above, x center 1350 -->
+  <rect x="1230" y="140" width="240" height="220" rx="6" class="boxP"/>
+  <text x="1350" y="170" text-anchor="middle" class="lbl node">21 — SequencedCollection</text>
+  <text x="1350" y="195" text-anchor="middle" class="lbl tiny">JEP 431: ArrayList gains</text>
+  <text x="1350" y="213" text-anchor="middle" class="lbl tiny">getFirst, getLast, addFirst,</text>
+  <text x="1350" y="231" text-anchor="middle" class="lbl tiny">addLast, removeFirst,</text>
+  <text x="1350" y="249" text-anchor="middle" class="lbl tiny">removeLast (@since 21)</text>
+  <text x="1350" y="267" text-anchor="middle" class="lbl tiny">Inherits reversed() from</text>
+  <text x="1350" y="285" text-anchor="middle" class="lbl tiny">List</text>
+
+  <!-- Annotation panels -->
+  <rect x="20" y="800" width="715" height="140" rx="6" class="boxAnno"/>
+  <text x="38" y="824" class="lbl tiny" style="font-weight:700">Two stale claims — verified false against JDK 21.0.7 source</text>
+  <text x="38" y="846" class="lbl tiny">"ArrayList doubles its capacity." False — it has been</text>
+  <text x="38" y="864" class="lbl tiny">oldCapacity + (oldCapacity &gt;&gt; 1), 1.5x, in every released</text>
+  <text x="38" y="882" class="lbl tiny">JDK including Java 8. Vector is what actually doubles.</text>
+  <text x="38" y="900" class="lbl tiny">"MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8 is the cap." False —</text>
+  <text x="38" y="918" class="lbl tiny">no such field exists in JDK 13+; the nearest analogue,</text>
+  <text x="38" y="936" class="lbl tiny">ArraysSupport.SOFT_MAX_ARRAY_LENGTH, sits outside ArrayList.</text>
+
+  <rect x="755" y="800" width="715" height="140" rx="6" class="boxAnno"/>
+  <text x="773" y="824" class="lbl tiny" style="font-weight:700">Movement.entries across three eras (Appendix C.6: immutable list)</text>
+  <text x="773" y="848" class="lbl tiny">pre-9  entries = Collections.unmodifiableList(</text>
+  <text x="773" y="866" class="lbl tiny">                    computed.collect(Collectors.toList()));</text>
+  <text x="773" y="888" class="lbl tiny">9+     entries = List.of(e1, e2, e3, e4); // fixed small set</text>
+  <text x="773" y="906" class="lbl tiny">           or: List.copyOf(computed.collect(Collectors.toList()));</text>
+  <text x="773" y="928" class="lbl tiny">16+    entries = computed.stream().toList(); // unmodifiable directly</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="962" x2="1480" y2="962" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="976" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="989" class="lbl tiny">version milestone — the change introduced in that release</text>
+  <rect x="440" y="976" width="26" height="16" rx="8" class="pill"/>
+  <text x="474" y="989" class="lbl tiny">version pill, placed on the timeline</text>
+  <path class="flow" d="M 760 984 H 800"/>
+  <text x="808" y="989" class="lbl tiny">A &#8594; B : pill A's release introduces the change in box B</text>
+  <rect x="1230" y="976" width="22" height="16" rx="3" class="boxAnno"/>
+  <text x="1260" y="989" class="lbl tiny">annotation — stale claim or code evolution</text>
+</svg>

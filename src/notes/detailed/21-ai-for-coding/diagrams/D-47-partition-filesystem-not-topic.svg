@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after for one-writer-per-output-path. Left, the failure: two parallel agents are each given a folder-scoped lane plus one flat shared directory; both write the same slug into the shared directory, and the second write silently overwrites the first, leaving no orphan file to notice. Right, the fix: a disjoint filesystem partition where each agent owns one path, one writer per path, and a join step that only reads from both paths, never writing. An annotation states the law: partition the filesystem, not the topic.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; stroke-dasharray: 4 3; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .flowD { fill: none; stroke: #b91c1c; stroke-width: 2; marker-end: url(#triR); }
+    .flowR { fill: none; stroke: #15803d; stroke-width: 2; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE WRITER PER OUTPUT PATH, EVER</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Left band header -->
+  <text x="20" y="66" class="lbl h2">THE FAILURE</text>
+  <line x1="20" y1="74" x2="540" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="94" width="220" height="56" rx="6" class="boxP"/>
+  <text x="130" y="118" text-anchor="middle" class="lbl body">agent A</text>
+  <text x="130" y="136" text-anchor="middle" class="lbl sub">folder-scoped lane: a/</text>
+
+  <rect x="300" y="94" width="220" height="56" rx="6" class="boxP"/>
+  <text x="410" y="118" text-anchor="middle" class="lbl body">agent B</text>
+  <text x="410" y="136" text-anchor="middle" class="lbl sub">folder-scoped lane: b/</text>
+
+  <path class="flowD" d="M 130 150 V 190 H 270 V 210"/>
+  <path class="flowD" d="M 410 150 V 190 H 270 V 210"/>
+
+  <rect x="140" y="216" width="260" height="64" rx="6" class="boxD"/>
+  <text x="270" y="238" text-anchor="middle" class="lbl body" style="font-weight:700">shared/notes.md</text>
+  <text x="270" y="256" text-anchor="middle" class="lbl tiny">one flat shared directory</text>
+  <text x="270" y="270" text-anchor="middle" class="lbl tiny">both agents write the same slug</text>
+
+  <rect x="80" y="308" width="380" height="80" rx="6" class="boxAnn"/>
+  <text x="96" y="330" class="lbl tiny" style="font-weight:700">what happens</text>
+  <text x="96" y="350" class="lbl tiny">B writes after A. B's write silently overwrites</text>
+  <text x="96" y="366" class="lbl tiny">A's content at the same path — no orphan file, no error,</text>
+  <text x="96" y="382" class="lbl tiny">nothing to notice. A's work is gone.</text>
+
+  <!-- Right band header -->
+  <text x="580" y="66" class="lbl h2">THE FIX</text>
+  <line x1="580" y1="74" x2="1100" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="580" y="94" width="220" height="56" rx="6" class="boxP"/>
+  <text x="690" y="118" text-anchor="middle" class="lbl body">agent A</text>
+  <text x="690" y="136" text-anchor="middle" class="lbl sub">owns path: parts/a.md</text>
+
+  <rect x="860" y="94" width="220" height="56" rx="6" class="boxP"/>
+  <text x="970" y="118" text-anchor="middle" class="lbl body">agent B</text>
+  <text x="970" y="136" text-anchor="middle" class="lbl sub">owns path: parts/b.md</text>
+
+  <path class="flow" d="M 690 150 V 200"/>
+  <path class="flow" d="M 970 150 V 200"/>
+
+  <rect x="600" y="206" width="180" height="56" rx="6" class="boxR"/>
+  <text x="690" y="232" text-anchor="middle" class="lbl body">parts/a.md</text>
+  <text x="690" y="250" text-anchor="middle" class="lbl tiny">disjoint partition</text>
+
+  <rect x="880" y="206" width="180" height="56" rx="6" class="boxR"/>
+  <text x="970" y="232" text-anchor="middle" class="lbl body">parts/b.md</text>
+  <text x="970" y="250" text-anchor="middle" class="lbl tiny">disjoint partition</text>
+
+  <path class="flowR" d="M 690 262 V 300 H 830 V 320"/>
+  <path class="flowR" d="M 970 262 V 300 H 830 V 320"/>
+
+  <rect x="720" y="326" width="220" height="64" rx="6" class="boxW"/>
+  <text x="830" y="350" text-anchor="middle" class="lbl body">join step</text>
+  <text x="830" y="368" text-anchor="middle" class="lbl tiny">reads parts/a.md + parts/b.md</text>
+  <text x="830" y="382" text-anchor="middle" class="lbl tiny">writes nothing back to either path</text>
+
+  <rect x="620" y="416" width="420" height="72" rx="6" class="boxAnn"/>
+  <text x="636" y="438" class="lbl tiny" style="font-weight:700">what changed</text>
+  <text x="636" y="458" class="lbl tiny">one writer per path, always. the join step is read-only —</text>
+  <text x="636" y="474" class="lbl tiny">it can never clobber a lane's output.</text>
+
+  <!-- Law annotation, full width -->
+  <rect x="200" y="520" width="720" height="70" rx="6" class="boxAnn"/>
+  <text x="560" y="550" text-anchor="middle" class="lbl h2">"PARTITION THE FILESYSTEM, NOT THE TOPIC"</text>
+  <text x="560" y="574" text-anchor="middle" class="lbl tiny">the boundary that prevents a silent overwrite is the write path, not which subject each agent thinks it owns</text>
+
+  <!-- legend -->
+  <line x1="20" y1="630" x2="1100" y2="630" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="646" width="20" height="14" rx="2" class="boxP"/>
+  <text x="46" y="657" class="lbl tiny">agent / worker</text>
+  <rect x="200" y="646" width="20" height="14" rx="2" class="boxD"/>
+  <text x="226" y="657" class="lbl tiny">shared path — collision point (failure side)</text>
+  <rect x="500" y="646" width="20" height="14" rx="2" class="boxR"/>
+  <text x="526" y="657" class="lbl tiny">owned, disjoint output path (fix side)</text>
+  <rect x="800" y="646" width="20" height="14" rx="2" class="boxW"/>
+  <text x="826" y="657" class="lbl tiny">read-only join step</text>
+  <line x1="20" y1="672" x2="50" y2="672" class="flowD"/>
+  <text x="58" y="677" class="lbl tiny">write that collides / overwrites silently</text>
+  <line x1="360" y1="672" x2="390" y2="672" class="flow"/>
+  <text x="398" y="677" class="lbl tiny">write to an owned path</text>
+  <line x1="620" y1="672" x2="650" y2="672" class="flowR"/>
+  <text x="658" y="677" class="lbl tiny">read-only, into the join step</text>
+</svg>

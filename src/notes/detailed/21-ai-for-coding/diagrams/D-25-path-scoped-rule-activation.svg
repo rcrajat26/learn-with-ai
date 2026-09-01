@@ -1,0 +1,86 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="State transition diagram with two states: rule not loaded and rule loaded. The forward edge, labelled with the paths glob double-star slash star dot java, fires when Claude touches a matching file, moving the rule from not loaded to loaded. A second edge shows a non-matching file leaving the state unchanged, looping back to rule not loaded. An annotation panel gives the shared glob budget: 1,000 expanded patterns and a 4 mebibyte cap, what happens on overflow, and the pitfall of bracket expressions written with a literal square bracket.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow    { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weakE   { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PATH-SCOPED RULE: TWO-STATE ACTIVATION</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- State 1 -->
+  <rect x="80" y="120" width="260" height="90" rx="45" class="boxWeak"/>
+  <text x="210" y="158" text-anchor="middle" class="lbl node">rule not loaded</text>
+  <text x="210" y="178" text-anchor="middle" class="lbl sub">.claude/rules/backend.md</text>
+  <text x="210" y="192" text-anchor="middle" class="lbl sub">not yet in context</text>
+
+  <!-- State 2 -->
+  <rect x="700" y="120" width="260" height="90" rx="45" class="boxOk"/>
+  <text x="830" y="158" text-anchor="middle" class="lbl node">rule loaded</text>
+  <text x="830" y="178" text-anchor="middle" class="lbl sub">.claude/rules/backend.md</text>
+  <text x="830" y="192" text-anchor="middle" class="lbl sub">appended to context</text>
+
+  <!-- forward edge -->
+  <path class="flow" d="M 340 150 H 700"/>
+  <rect x="420" y="86" width="200" height="52" rx="6" class="boxAnn"/>
+  <text x="520" y="106" text-anchor="middle" class="lbl tiny">paths: **/*.java</text>
+  <text x="520" y="124" text-anchor="middle" class="lbl tiny">Claude touches a matching file</text>
+
+  <!-- return edge (non-matching file, loops back to state1) -->
+  <path class="weakE" d="M 700 230 V 260 H 340 V 230"/>
+  <rect x="420" y="248" width="200" height="40" rx="6" class="boxAnn"/>
+  <text x="520" y="264" text-anchor="middle" class="lbl tiny">non-matching file touched</text>
+  <text x="520" y="280" text-anchor="middle" class="lbl tiny">state unchanged: stays not loaded</text>
+
+  <line x1="20" y1="330" x2="1020" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Legend -->
+  <rect x="20" y="342" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="50" y="355" class="lbl tiny">rule not loaded (initial state)</text>
+
+  <rect x="280" y="342" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="310" y="355" class="lbl tiny">rule loaded (matched at least once)</text>
+
+  <line x1="540" y1="350" x2="580" y2="350" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="590" y="355" class="lbl tiny">A → B : glob match fires load</text>
+
+  <line x1="820" y1="350" x2="860" y2="350" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#triW)"/>
+  <text x="870" y="355" class="lbl tiny">no-op on miss</text>
+
+  <!-- Annotation panel: budget -->
+  <rect x="20" y="380" width="1000" height="240" rx="6" class="boxAnn"/>
+  <text x="36" y="402" class="lbl h2">Shared glob budget for paths: across all loaded rules</text>
+  <text x="36" y="424" class="lbl tiny">Cap: 1,000 expanded patterns total, and 4 MiB of expanded pattern text, shared across every rule file's paths: glob in the session.</text>
+  <text x="36" y="444" class="lbl tiny">On overflow: once either the 1,000-pattern count or the 4 MiB size is exceeded, further paths: globs stop being expanded/matched —</text>
+  <text x="36" y="460" class="lbl tiny">rules past the cap behave as if they had no paths: filter tightened, so they simply never trigger the match-based load for new files.</text>
+
+  <rect x="36" y="480" width="968" height="120" rx="6" class="boxBad"/>
+  <text x="52" y="502" class="lbl h2">Pitfall: the [ bracket-expression glob</text>
+  <text x="52" y="522" class="lbl tiny">A glob like src/main/[Cc]ontroller/**/*.java uses [Cc] as a character class — matches Controller or controller — same as shell globbing.</text>
+  <text x="52" y="540" class="lbl tiny">Writing a literal, unescaped [ in a paths: entry without a matching ] is invalid glob syntax and either fails to compile the rule's matcher</text>
+  <text x="52" y="558" class="lbl tiny">or is treated as a literal character depending on the glob engine — always close the bracket expression or escape it as \[ if you mean a</text>
+  <text x="52" y="576" class="lbl tiny">literal square bracket in a path, e.g. a directory actually named [legacy] on disk.</text>
+</svg>

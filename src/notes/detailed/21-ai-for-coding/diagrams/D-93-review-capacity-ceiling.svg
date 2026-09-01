@@ -1,0 +1,80 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve. X axis is agent throughput in diffs produced per day. Two curves: agent output rises with more agents; human review capacity is flat because it is bounded by engineer-hours divided by per-diff review minutes, computed as 8 engineers times 6 review hours per day equals 48 engineer-hours per day, divided by 20 minutes per diff equals 144 diffs per day. The two curves cross at 144 diffs per day, marked as the real throughput ceiling. Past that point, adding agents adds unreviewed diffs, not velocity.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+    .curveUp   { fill: none; stroke: #2563eb; stroke-width: 2.4; }
+    .curveFlat { fill: none; stroke: #b91c1c; stroke-width: 2.4; }
+    .pt    { fill: #b45309; stroke: #78350f; stroke-width: 1; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .cross { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">REVIEW CAPACITY IS THE THROUGHPUT CEILING</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- axes -->
+  <line class="axis" d="M 100 520 H 900" marker-end="url(#tri)"/>
+  <line class="axis" d="M 100 520 V 80" marker-end="url(#tri)"/>
+  <text x="500" y="552" text-anchor="middle" class="lbl body">agent throughput — diffs produced per day</text>
+  <text x="40" y="300" text-anchor="middle" class="lbl body" transform="rotate(-90 40 300)">diffs per day</text>
+
+  <!-- x gridline/label at crossing (diffs=144) -->
+  <line class="grid" x1="500" y1="520" x2="500" y2="90"/>
+  <text x="500" y="536" text-anchor="middle" class="lbl sub" font-weight="700">144</text>
+  <text x="100" y="536" text-anchor="middle" class="lbl sub">0</text>
+  <text x="880" y="536" text-anchor="middle" class="lbl sub">280</text>
+
+  <!-- y gridline at 144 -->
+  <line class="cross" x1="100" y1="270" x2="500" y2="270"/>
+  <text x="90" y="274" text-anchor="end" class="lbl sub" font-weight="700">144</text>
+  <line class="cross" x1="500" y1="270" x2="500" y2="520"/>
+
+  <!-- flat human review capacity line, at y=270 -->
+  <line class="curveFlat" x1="100" y1="270" x2="900" y2="270"/>
+
+  <!-- rising agent production curve, crossing the flat line at x=500 (144) -->
+  <path class="curveUp" d="M 100 500 L 260 400 L 380 330 L 500 270 L 640 190 L 780 120 L 900 70"/>
+
+  <!-- crossing point -->
+  <circle cx="500" cy="270" r="6" class="pt"/>
+  <text x="512" y="298" class="lbl tiny" font-weight="700">the real ceiling</text>
+  <text x="512" y="313" class="lbl sub">(144 diffs/day)</text>
+
+  <!-- arithmetic panel: human review capacity -->
+  <rect x="560" y="330" width="330" height="150" rx="6" class="boxAnn"/>
+  <text x="576" y="352" class="lbl tiny" font-weight="700">human review capacity (flat)</text>
+  <text x="576" y="374" class="lbl tiny">8 engineers &#215; 6 review-hours/day</text>
+  <text x="576" y="392" class="lbl tiny" font-weight="700">= 48 engineer-hours/day</text>
+  <text x="576" y="416" class="lbl tiny">20 min/diff = 1/3 engineer-hour/diff</text>
+  <text x="576" y="438" class="lbl tiny">48 engineer-hours/day &#247; (1/3 hour/diff)</text>
+  <text x="576" y="460" class="lbl tiny" font-weight="700">= 144 diffs/day reviewable</text>
+
+  <!-- annotation panel: ceiling meaning -->
+  <rect x="120" y="90" width="360" height="90" rx="6" class="boxAnn"/>
+  <text x="136" y="112" class="lbl tiny" font-weight="700">past 144 diffs/day, agents keep producing</text>
+  <text x="136" y="130" class="lbl tiny">but reviewers cannot open every diff —</text>
+  <text x="136" y="148" class="lbl tiny">adding more agents past this point adds</text>
+  <text x="136" y="166" class="lbl tiny" font-weight="700">unreviewed diffs, not velocity</text>
+
+  <!-- legend -->
+  <line x1="20" y1="576" x2="1020" y2="576" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="592" x2="50" y2="592" class="curveUp"/>
+  <text x="58" y="597" class="lbl tiny">what the agents can produce — rises with agent count</text>
+  <line x1="20" y1="612" x2="50" y2="612" class="curveFlat"/>
+  <text x="58" y="617" class="lbl tiny">what humans can genuinely review — flat, bounded by engineer-hours</text>
+  <circle cx="580" cy="612" r="5" class="pt"/>
+  <text x="592" y="617" class="lbl tiny">crossing point — the real throughput ceiling</text>
+</svg>

@@ -1,0 +1,173 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-frame step sequence on the classic out-of-thin-air example. CLIENT_CASH_AVAILABLE and CLIENT_BONUS_AVAILABLE both start at 0. Worker settlement-ingest-3 runs r1 = CLIENT_CASH_AVAILABLE; CLIENT_BONUS_AVAILABLE = r1. Worker bonus-sweep-1 runs r2 = CLIENT_BONUS_AVAILABLE; CLIENT_CASH_AVAILABLE = r2. Frame 1 shows the forbidden self-justifying cycle: r1 speculatively reads 42 before it is written, causing CLIENT_BONUS_AVAILABLE to become 42, which lets r2 read 42, which writes CLIENT_CASH_AVAILABLE back to 42, closing a speculative loop with no root cause. Frame 2 shows the JLS 17.4.8 committed-action construction refusing to commit 42: each action can only be committed once every action it depends on has already been committed in an earlier numbered set, so the speculative read of 42 can never be justified and both variables are only ever committed as 0.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .spec  { fill: none; stroke: #b91c1c; stroke-width: 2.4; stroke-dasharray: 3 3; marker-end: url(#triR); }
+    .commit{ fill: none; stroke: #15803d; stroke-width: 2.4; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">OUT-OF-THIN-AIR MUST BE FORBIDDEN</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="52" width="1080" height="40" rx="6" class="boxA"/>
+  <text x="36" y="70" class="lbl body">settlement-ingest-3: r1 = CLIENT_CASH_AVAILABLE; CLIENT_BONUS_AVAILABLE = r1;</text>
+  <text x="36" y="86" class="lbl body">bonus-sweep-1: r2 = CLIENT_BONUS_AVAILABLE; CLIENT_CASH_AVAILABLE = r2;   both variables start at 0</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="102" width="580" height="26" rx="6" class="boxD"/>
+  <text x="310" y="120" text-anchor="middle" class="lbl h2">FRAME 1 — the forbidden self-justifying cycle</text>
+
+  <!-- the four steps form a closed rectangle: step1 -> step2 -> step3 -> step4 -> step1 -->
+  <rect x="40" y="140" width="260" height="56" rx="6" class="boxD"/>
+  <text x="55" y="161" class="lbl node">step 1 (speculative)</text>
+  <text x="55" y="179" class="lbl mono">r1 = 42</text>
+  <text x="55" y="192" class="lbl sub">no write of 42 exists yet</text>
+
+  <path class="spec" d="M 300 168 H 340"/>
+
+  <rect x="340" y="140" width="260" height="56" rx="6" class="boxD"/>
+  <text x="355" y="161" class="lbl node">step 2</text>
+  <text x="355" y="179" class="lbl mono">CLIENT_BONUS_AVAILABLE = r1 = 42</text>
+  <text x="355" y="192" class="lbl sub">settlement-ingest-3 writes 42</text>
+
+  <path class="spec" d="M 470 196 V 242"/>
+
+  <rect x="340" y="242" width="260" height="56" rx="6" class="boxD"/>
+  <text x="355" y="263" class="lbl node">step 3 (speculative)</text>
+  <text x="355" y="281" class="lbl mono">r2 = 42</text>
+  <text x="355" y="294" class="lbl sub">bonus-sweep-1 reads step 2's write</text>
+
+  <path class="spec" d="M 340 270 H 300"/>
+
+  <rect x="40" y="242" width="260" height="56" rx="6" class="boxD"/>
+  <text x="55" y="263" class="lbl node">step 4</text>
+  <text x="55" y="281" class="lbl mono">CLIENT_CASH_AVAILABLE = r2 = 42</text>
+  <text x="55" y="294" class="lbl sub">bonus-sweep-1 writes 42</text>
+
+  <path class="spec" d="M 95 242 V 196"/>
+  <text x="115" y="220" class="lbl tiny" fill="#b91c1c" font-weight="700">closes the loop — step 4's write</text>
+  <text x="115" y="233" class="lbl tiny" fill="#b91c1c" font-weight="700">"justifies" step 1's read</text>
+
+  <rect x="640" y="140" width="460" height="158" rx="6" class="boxA"/>
+  <text x="656" y="162" class="lbl node">no root cause anywhere in the cycle</text>
+  <text x="656" y="181" class="lbl tiny">every step in frame 1 depends on a later step —</text>
+  <text x="656" y="196" class="lbl tiny">step 1's read is justified only by step 4's write,</text>
+  <text x="656" y="211" class="lbl tiny">justified only by step 3's read, only by step 2's</text>
+  <text x="656" y="226" class="lbl tiny">write, only by step 1's read in turn.</text>
+  <text x="656" y="241" class="lbl tiny">no action grounds the value in an actual constant</text>
+  <text x="656" y="256" class="lbl tiny">or external input — 42 is invented purely by the</text>
+  <text x="656" y="271" class="lbl tiny">cycle agreeing with itself. Allowing this would let</text>
+  <text x="656" y="286" class="lbl tiny">racy code observe values no execution produced.</text>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="316" width="600" height="26" rx="6" class="boxR"/>
+  <text x="320" y="334" text-anchor="middle" class="lbl h2">FRAME 2 — JLS 17.4.8 committed-action construction refuses to commit 42</text>
+
+  <rect x="40" y="354" width="1060" height="30" rx="6" class="boxW"/>
+  <text x="1070" y="374" text-anchor="end" class="lbl sub">committed set C(0) = {} — nothing committed yet</text>
+
+  <!-- commit set 1: writes of 0 (the actual initial values) -->
+  <rect x="40" y="396" width="240" height="60" rx="6" class="boxR"/>
+  <text x="55" y="416" class="lbl node">commit #1</text>
+  <text x="55" y="434" class="lbl mono">CLIENT_CASH_AVAILABLE = 0</text>
+  <text x="55" y="449" class="lbl sub">default init — depends on nothing</text>
+
+  <rect x="300" y="396" width="240" height="60" rx="6" class="boxR"/>
+  <text x="315" y="416" class="lbl node">commit #2</text>
+  <text x="315" y="434" class="lbl mono">CLIENT_BONUS_AVAILABLE = 0</text>
+  <text x="315" y="449" class="lbl sub">default init — depends on nothing</text>
+
+  <path class="commit" d="M 160 456 V 480"/>
+  <path class="commit" d="M 420 456 V 480"/>
+
+  <!-- commit set 2: reads of 0 -->
+  <rect x="40" y="480" width="240" height="60" rx="6" class="boxR"/>
+  <text x="55" y="500" class="lbl node">commit #3</text>
+  <text x="55" y="518" class="lbl mono">r1 reads CASH_AVAILABLE = 0</text>
+  <text x="55" y="533" class="lbl sub">only value legally visible so far</text>
+
+  <rect x="300" y="480" width="240" height="60" rx="6" class="boxR"/>
+  <text x="315" y="500" class="lbl node">commit #4</text>
+  <text x="315" y="518" class="lbl mono">r2 reads BONUS_AVAILABLE = 0</text>
+  <text x="315" y="533" class="lbl sub">only value legally visible so far</text>
+
+  <path class="commit" d="M 160 540 V 564"/>
+  <path class="commit" d="M 420 540 V 564"/>
+
+  <!-- commit set 3: writes of 0 propagate -->
+  <rect x="40" y="564" width="240" height="60" rx="6" class="boxR"/>
+  <text x="55" y="584" class="lbl node">commit #5</text>
+  <text x="55" y="602" class="lbl mono">CLIENT_BONUS_AVAILABLE = r1 = 0</text>
+  <text x="55" y="617" class="lbl sub">depends only on already-committed #3</text>
+
+  <rect x="300" y="564" width="240" height="60" rx="6" class="boxR"/>
+  <text x="315" y="584" class="lbl node">commit #6</text>
+  <text x="315" y="602" class="lbl mono">CLIENT_CASH_AVAILABLE = r2 = 0</text>
+  <text x="315" y="617" class="lbl sub">depends only on already-committed #4</text>
+
+  <!-- blocked 42 branch -->
+  <rect x="640" y="396" width="460" height="228" rx="6" class="boxD"/>
+  <text x="656" y="418" class="lbl node">42 can never enter any commit set</text>
+  <text x="656" y="438" class="lbl tiny">to commit r1 = 42 at some step k, the write</text>
+  <text x="656" y="454" class="lbl tiny">CLIENT_CASH_AVAILABLE = 42 must already appear</text>
+  <text x="656" y="470" class="lbl tiny">in an earlier commit set C(k-1). But the only writer</text>
+  <text x="656" y="486" class="lbl tiny">of CLIENT_CASH_AVAILABLE is bonus-sweep-1's</text>
+  <text x="656" y="502" class="lbl tiny">CLIENT_CASH_AVAILABLE = r2, which needs r2 = 42</text>
+  <text x="656" y="518" class="lbl tiny">committed first — and r2 = 42 needs</text>
+  <text x="656" y="534" class="lbl tiny">CLIENT_BONUS_AVAILABLE = 42 committed before that,</text>
+  <text x="656" y="550" class="lbl tiny">which circles back to needing r1 = 42 already</text>
+  <text x="656" y="566" class="lbl tiny">committed. Every candidate justification for 42</text>
+  <text x="656" y="582" class="lbl tiny">points to a later commit number, never an earlier</text>
+  <text x="656" y="598" class="lbl tiny">one, so the construction's monotonic commit order</text>
+  <text x="656" y="614" class="lbl node">rejects it. Only 0 is ever committed for both.</text>
+
+  <!-- annotation: general rule -->
+  <rect x="20" y="644" width="1080" height="96" rx="6" class="boxA"/>
+  <text x="36" y="664" class="lbl node">the rule behind the construction</text>
+  <text x="36" y="682" class="lbl body">JLS 17.4.8 builds the set of legal executions by numbering commits 1, 2, 3, ... and only allowing action k to commit a value</text>
+  <text x="36" y="698" class="lbl body">once every action its value causally depends on has committed at some j &lt; k. A cycle where the only justification for each</text>
+  <text x="36" y="714" class="lbl sub">step is a later step can never satisfy j &lt; k for all of them, so the model has no legal execution that commits 42 — only 0.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="756" x2="1100" y2="756" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="768" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="781" class="lbl tiny">speculative / forbidden step</text>
+  <rect x="260" y="768" width="22" height="16" rx="3" class="boxR"/>
+  <text x="290" y="781" class="lbl tiny">legally committed action (value 0)</text>
+  <rect x="560" y="768" width="22" height="16" rx="3" class="boxA"/>
+  <text x="590" y="781" class="lbl tiny">annotation panel</text>
+
+  <path class="spec" d="M 720 768 H 760"/>
+  <text x="768" y="781" class="lbl tiny">speculative dependency (frame 1 only)</text>
+  <path class="commit" d="M 20 800 H 60"/>
+  <text x="68" y="805" class="lbl tiny">commit order edge — depends only on an earlier-numbered commit</text>
+</svg>

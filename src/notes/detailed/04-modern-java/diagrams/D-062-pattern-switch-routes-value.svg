@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1080 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of how a pattern switch on a Verdict selector routes control, including null. Entry passes the selector into the switch. First decision: is the selector null? If yes and the switch has a case null label — here written combined as case null, default — control goes to that shared arm. If yes and no case null label exists anywhere, a NullPointerException is thrown before any type label is tested. If the selector is non-null, the typeSwitch bootstrap method, an invokedynamic call, returns an integer index selecting which case label matched; a tableswitch bytecode instruction dispatches on that index either to the matching case DocumentVerdict d arm or, when no type label matches, falls through to the same shared case null, default arm — so that one box is a merged target reached from two different edges.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HOW A PATTERN SWITCH ROUTES A VALUE, INCLUDING NULL</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl code">switch (v) { case DocumentVerdict d -&gt; ...; case null, default -&gt; ...; }</text>
+
+  <!-- Entry -->
+  <rect x="460" y="80" width="160" height="54" rx="6" class="boxP"/>
+  <text x="540" y="102" text-anchor="middle" class="lbl node">selector v</text>
+  <text x="540" y="120" text-anchor="middle" class="lbl sub">Verdict, entering switch</text>
+
+  <path class="flow" d="M 540 134 V 160"/>
+
+  <!-- Decision: null? -->
+  <rect x="440" y="160" width="200" height="60" rx="6" class="boxW"/>
+  <text x="540" y="184" text-anchor="middle" class="lbl node">is v == null ?</text>
+  <text x="540" y="202" text-anchor="middle" class="lbl sub">tested before any type label</text>
+
+  <!-- null branch left: does a case null label exist anywhere -->
+  <path class="flow" d="M 440 190 H 280 V 240"/>
+  <text x="350" y="222" class="lbl tiny">yes</text>
+
+  <rect x="160" y="244" width="240" height="60" rx="6" class="boxW"/>
+  <text x="280" y="268" text-anchor="middle" class="lbl node">does switch have case null?</text>
+  <text x="280" y="286" text-anchor="middle" class="lbl sub">plain, or combined as null, default</text>
+
+  <path class="fail" d="M 160 274 H 60 V 340"/>
+  <text x="66" y="314" class="lbl tiny">no</text>
+
+  <rect x="20" y="344" width="220" height="70" rx="6" class="boxD"/>
+  <text x="130" y="368" text-anchor="middle" class="lbl node">NullPointerException</text>
+  <text x="130" y="388" text-anchor="middle" class="lbl sub">thrown before any type label</text>
+  <text x="130" y="404" text-anchor="middle" class="lbl sub">is tested</text>
+
+  <!-- non-null branch right -->
+  <path class="flow" d="M 640 190 H 800 V 240"/>
+  <text x="740" y="222" class="lbl tiny">no (non-null)</text>
+
+  <rect x="690" y="244" width="220" height="60" rx="6" class="boxH"/>
+  <text x="800" y="268" text-anchor="middle" class="lbl node">typeSwitch indy</text>
+  <text x="800" y="286" text-anchor="middle" class="lbl sub">invokedynamic bootstrap, tests labels in order</text>
+
+  <path class="flow" d="M 800 304 V 330"/>
+  <text x="924" y="321" class="lbl tiny">returns matching</text>
+  <text x="924" y="335" class="lbl tiny">index</text>
+
+  <rect x="690" y="334" width="220" height="60" rx="6" class="boxH"/>
+  <text x="800" y="358" text-anchor="middle" class="lbl node">tableswitch</text>
+  <text x="800" y="376" text-anchor="middle" class="lbl sub">bytecode dispatch on the returned index</text>
+
+  <!-- tableswitch -> matched type arm -->
+  <path class="flow" d="M 800 394 V 420"/>
+  <text x="965" y="411" text-anchor="end" class="lbl tiny">index matches</text>
+  <text x="965" y="425" text-anchor="end" class="lbl tiny">DocumentVerdict</text>
+
+  <rect x="660" y="424" width="280" height="66" rx="6" class="boxG"/>
+  <text x="800" y="448" text-anchor="middle" class="lbl node">case DocumentVerdict d -&gt;</text>
+  <text x="800" y="468" text-anchor="middle" class="lbl sub">index selected this label's arm; d is bound</text>
+
+  <!-- tableswitch -> no type matched -> merged default target -->
+  <path class="weak" d="M 910 364 H 970 V 630 H 680"/>
+  <text x="974" y="500" class="lbl tiny">no type label</text>
+  <text x="974" y="516" class="lbl tiny">matched →</text>
+  <text x="974" y="530" class="lbl tiny">default</text>
+
+  <!-- case-null-exists yes -> merged target -->
+  <path class="flow" d="M 280 304 V 630 H 440"/>
+  <text x="288" y="470" class="lbl tiny">matches</text>
+  <text x="288" y="486" class="lbl tiny">case null</text>
+
+  <!-- merged target -->
+  <rect x="440" y="600" width="240" height="70" rx="6" class="boxG"/>
+  <text x="560" y="626" text-anchor="middle" class="lbl node">case null, default -&gt;</text>
+  <text x="560" y="646" text-anchor="middle" class="lbl sub">one shared arm — reached from the</text>
+  <text x="560" y="660" text-anchor="middle" class="lbl sub">null path AND the unmatched-type path</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="700" width="1040" height="96" rx="6" class="panel"/>
+  <text x="36" y="722" class="lbl body" font-weight="700">Why the NPE fires before label testing</text>
+  <text x="36" y="742" class="lbl tiny">Without any case null arm, javac still evaluates every type-pattern label using instanceof semantics, and instanceof against null is</text>
+  <text x="36" y="758" class="lbl tiny">false for every type — so a bare pattern switch on a null selector falls through the whole type ladder unmatched and NPEs first,</text>
+  <text x="36" y="774" class="lbl tiny">matching switch's classical null-hostility. A case null (alone, or combined as case null, default) is the only way to route null intentionally.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="812" x2="1060" y2="812" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="824" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="837" class="lbl tiny">selector value</text>
+
+  <rect x="180" y="824" width="22" height="16" rx="3" class="boxW"/>
+  <text x="210" y="837" class="lbl tiny">decision point</text>
+
+  <rect x="340" y="824" width="22" height="16" rx="3" class="boxH"/>
+  <text x="370" y="837" class="lbl tiny">JVM dispatch mechanism</text>
+
+  <rect x="580" y="824" width="22" height="16" rx="3" class="boxG"/>
+  <text x="610" y="837" class="lbl tiny">matched arm runs</text>
+
+  <rect x="800" y="824" width="22" height="16" rx="3" class="boxD"/>
+  <text x="830" y="837" class="lbl tiny">thrown exception</text>
+
+  <path class="flow" d="M 20 862 H 60"/>
+  <text x="68" y="867" class="lbl tiny">A → B : control flow from A to B</text>
+
+  <path class="weak" d="M 400 862 H 440"/>
+  <text x="448" y="867" class="lbl tiny">A → B : A falls through to shared target B</text>
+</svg>

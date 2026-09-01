@@ -1,0 +1,98 @@
+<svg viewBox="0 0 1120 1120" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Return inside finally swallows everything. Before: source of reserveMinor, whose try throws InsufficientFundsException and whose finally unconditionally returns -1. After: the measured javap -c -p bytecode for the equivalent method swallow, JDK 21.0.7, showing the thrown exception at PC 0-9, a synthetic any exception handler at PC 10 that does astore_1, storing the in-flight exception into local slot 1, followed by iconst_m1 and ireturn at PC 11-12, which return -1 without slot 1 ever being read. A highlighted panel states the point: the returned value is -1 and the lost exception is InsufficientFundsException, CLIENT_CASH_AVAILABLE too low. A second measured panel shows the exception table for a try/catch/finally that returns, with three copies of the finally body compiled in: PC 5-6 for the normal-exit path, PC 14-15 for the catch path, and PC 21-22 for the synthetic any handler.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1120" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">return inside finally swallows everything &#8212; reserveMinor / swallow</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BEFORE -->
+  <text x="20" y="66" class="h2">BEFORE &#8212; SOURCE</text>
+  <line x1="20" y1="74" x2="1100" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="90" width="1000" height="210" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <g class="code">
+    <text x="80" y="112">static int reserveMinor(Money stake) {</text>
+    <text x="80" y="132">    try {</text>
+    <text x="80" y="152">        throw new InsufficientFundsException(</text>
+    <text x="80" y="172">            "CLIENT_CASH_AVAILABLE too low");</text>
+    <text x="80" y="192">    } finally {</text>
+    <text x="80" y="212">        return -1;</text>
+    <text x="80" y="232">        // discards the in-flight exception</text>
+    <text x="80" y="252">    }</text>
+    <text x="80" y="272">}</text>
+  </g>
+
+  <!-- AFTER -->
+  <text x="20" y="330" class="h2">AFTER &#8212; javap -c -p, Oracle JDK 21.0.7 (21.0.7+8-LTS-245, macOS aarch64), MEASURED</text>
+  <line x1="20" y1="338" x2="1100" y2="338" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="354" width="1000" height="280" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <g class="code">
+    <text x="80" y="376">static int swallow(int);</text>
+    <text x="80" y="396">  Code:</text>
+    <text x="80" y="416">     0: new           #25   // class InsufficientFundsException</text>
+    <text x="80" y="436">     3: dup</text>
+    <text x="80" y="456">     4: ldc           #27   // String CLIENT_CASH_AVAILABLE too low</text>
+    <text x="80" y="476">     6: invokespecial #29   // Method InsufficientFundsException."&lt;init&gt;":(Ljava/lang/String;)V</text>
+    <text x="80" y="496">     9: athrow</text>
+    <text x="80" y="516">    10: astore_1</text>
+    <text x="80" y="536">    11: iconst_m1</text>
+    <text x="80" y="556">    12: ireturn</text>
+    <text x="80" y="576">  Exception table:</text>
+    <text x="80" y="596">     from    to  target type</text>
+    <text x="80" y="616">         0    11    10   any</text>
+  </g>
+
+  <!-- THE POINT -->
+  <rect x="60" y="650" width="1000" height="110" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="80" y="672" class="bodyb" fill="#b45309">THE POINT &#8212; what actually happens</text>
+  <text x="80" y="694" class="small">PC 10 astore_1 stores the in-flight exception into local slot 1 &#8212; nothing ever reads slot 1.</text>
+  <text x="80" y="714" class="small">PC 11-12 iconst_m1; ireturn returns -1.</text>
+  <text x="80" y="736" class="body">RETURNED VALUE: -1&#160;&#160;&#160;&#160;&#160;LOST EXCEPTION: InsufficientFundsException: CLIENT_CASH_AVAILABLE too low</text>
+
+  <!-- MEASURED: three-copy duplication -->
+  <text x="20" y="800" class="h2">MEASURED &#8212; three-copy finally duplication (try / catch / finally that returns)</text>
+  <line x1="20" y1="808" x2="1100" y2="808" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="824" width="560" height="140" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <g class="code">
+    <text x="80" y="846">Exception table:</text>
+    <text x="80" y="866">   from    to  target type</text>
+    <text x="80" y="886">       0     5    11   Class java/lang/ArithmeticException</text>
+    <text x="80" y="906">       0     5    20   any</text>
+    <text x="80" y="926">      11    14    20   any</text>
+  </g>
+
+  <rect x="640" y="824" width="420" height="140" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="660" y="846" class="bodyb" fill="#2563eb">three copies of the finally body</text>
+  <g class="small">
+    <text x="660" y="868">PC 5-6 &#8212; normal-exit copy</text>
+    <text x="660" y="888">PC 14-15 &#8212; catch-path copy</text>
+    <text x="660" y="908">PC 21-22 &#8212; synthetic any-handler copy</text>
+    <text x="660" y="928">(the same source finally block, compiled three times)</text>
+  </g>
+
+  <!-- LEGEND -->
+  <text x="20" y="1000" class="h2">LEGEND</text>
+  <line x1="20" y1="1008" x2="1100" y2="1008" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1024" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="1037" class="small">source / bytecode &#8212; reference listing, not itself the point</text>
+
+  <rect x="30" y="1050" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1063" class="small">highlight &#8212; the point: the returned value and the lost exception</text>
+
+  <rect x="30" y="1076" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1089" class="small">annotation &#8212; measured exception-table facts</text>
+</svg>

@@ -1,0 +1,79 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="IntegerCache.cache array from -128 to 127 on the heap; two List&lt;Integer&gt; slots at value 127 pointing to the same cached object (== true); two slots at value 128 pointing to two distinct objects (== false)">
+
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Integer.valueOf(int) and the IntegerCache</text>
+
+  <!-- Heap region for cache -->
+  <rect x="40" y="70" width="720" height="120" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="92" font-family="sans-serif" font-size="13" fill="#1f2937">Heap: IntegerCache.cache[] (Integer objects for -128..127, created once at class init)</text>
+
+  <!-- cache cells -->
+  <rect x="60" y="105" width="90" height="60" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="105" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cache[0]</text>
+  <text x="105" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">value = -128</text>
+
+  <rect x="170" y="105" width="90" height="60" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="215" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cache[...]</text>
+  <text x="215" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">...</text>
+
+  <rect x="280" y="105" width="110" height="60" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="335" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cache[255]</text>
+  <text x="335" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">value = 127 (obj A)</text>
+
+  <rect x="410" y="105" width="90" height="60" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="455" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">end of</text>
+  <text x="455" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cache array</text>
+
+  <text x="600" y="140" font-family="sans-serif" font-size="13" fill="#1f2937">cache spans exactly -128..127 (256 entries)</text>
+
+  <!-- objects outside cache for 128 -->
+  <rect x="280" y="220" width="130" height="55" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="345" y="242" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">new Integer</text>
+  <text x="345" y="260" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">value = 128 (obj B)</text>
+
+  <rect x="440" y="220" width="130" height="55" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="505" y="242" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">new Integer</text>
+  <text x="505" y="260" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">value = 128 (obj C)</text>
+
+  <text x="345" y="300" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">128 is outside -128..127, so valueOf() allocates a fresh object each time</text>
+
+  <!-- List slots for 127 -->
+  <text x="90" y="335" font-family="sans-serif" font-size="13" fill="#1f2937">List&lt;Integer&gt; a</text>
+  <rect x="60" y="345" width="140" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="370" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a.get(0) = 127</text>
+
+  <text x="230" y="335" font-family="sans-serif" font-size="13" fill="#1f2937">List&lt;Integer&gt; b</text>
+  <rect x="200" y="345" width="140" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="270" y="370" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">b.get(0) = 127</text>
+
+  <line x1="130" y1="345" x2="335" y2="165" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="270" y1="345" x2="335" y2="165" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="140" y="392" width="220" height="26" rx="3" fill="#dcfce7"/>
+  <text x="250" y="410" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a.get(0) == b.get(0)  is TRUE (obj A shared)</text>
+
+  <!-- List slots for 128 -->
+  <text x="460" y="335" font-family="sans-serif" font-size="13" fill="#1f2937">List&lt;Integer&gt; c</text>
+  <rect x="430" y="345" width="140" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="500" y="370" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">c.get(0) = 128</text>
+
+  <text x="600" y="335" font-family="sans-serif" font-size="13" fill="#1f2937">List&lt;Integer&gt; d</text>
+  <rect x="570" y="345" width="140" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="640" y="370" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">d.get(0) = 128</text>
+
+  <line x1="500" y1="345" x2="345" y2="275" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="640" y1="345" x2="505" y2="275" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="440" y="392" width="260" height="26" rx="3" fill="#fee2e2"/>
+  <text x="570" y="410" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">c.get(0) == d.get(0)  is FALSE (obj B != obj C)</text>
+
+  <rect x="60" y="440" width="680" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="465" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Autoboxing calls Integer.valueOf(int): -128..127 returns the cached object, outside that range allocates new</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,157 @@
+<svg viewBox="0 0 1200 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels. Before, left half: ForkJoinPool.commonPool() with availableProcessors minus one workers plus the submitting thread, so the effective width equals the core count; all workers are blocked calling the identity vendor at its p99 of 38 seconds. Before, right half: an unrelated library's parallel stream is queued behind the blocked workers, so its own latency is inflated even though it shares no data with the identity vendor call. After: a dedicated ExecutorService sized for the identity vendor's blocking calls isolates them from the common pool, so the unrelated parallel stream runs unimpeded on the still-available common pool workers.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triF); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE BLOCKING PARALLEL STREAM STARVES THE WHOLE JVM</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BEFORE panel: two halves -->
+  <text x="20" y="64" class="lbl h2">BEFORE — everything shares ForkJoinPool.commonPool()</text>
+  <line x1="20" y1="72" x2="1180" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="20" y="94" class="lbl h2">LEFT HALF — identity-verification parallel stream owns the pool</text>
+  <text x="610" y="94" class="lbl h2">RIGHT HALF — unrelated parallel stream queues behind it</text>
+
+  <!-- common pool box spanning both halves conceptually, but drawn once with two labelled sub-panels -->
+  <rect x="20" y="108" width="560" height="230" rx="6" class="boxD"/>
+  <text x="300" y="130" text-anchor="middle" class="lbl node">ForkJoinPool.commonPool()</text>
+  <text x="300" y="150" text-anchor="middle" class="lbl dense">parallelism = availableProcessors() − 1</text>
+  <text x="300" y="168" text-anchor="middle" class="lbl dense">+ submitting thread participates</text>
+  <text x="300" y="188" text-anchor="middle" class="lbl node">effective width = core count</text>
+
+  <rect x="44" y="204" width="120" height="46" rx="4" class="boxD"/>
+  <text x="104" y="224" text-anchor="middle" class="lbl tiny">worker 1</text>
+  <text x="104" y="240" text-anchor="middle" class="lbl tiny">BLOCKED</text>
+  <rect x="176" y="204" width="120" height="46" rx="4" class="boxD"/>
+  <text x="236" y="224" text-anchor="middle" class="lbl tiny">worker 2</text>
+  <text x="236" y="240" text-anchor="middle" class="lbl tiny">BLOCKED</text>
+  <rect x="308" y="204" width="120" height="46" rx="4" class="boxD"/>
+  <text x="368" y="224" text-anchor="middle" class="lbl tiny">worker N−1</text>
+  <text x="368" y="240" text-anchor="middle" class="lbl tiny">BLOCKED</text>
+  <rect x="440" y="204" width="120" height="46" rx="4" class="boxD"/>
+  <text x="500" y="224" text-anchor="middle" class="lbl tiny">submitting thread</text>
+  <text x="500" y="240" text-anchor="middle" class="lbl tiny">BLOCKED</text>
+
+  <text x="300" y="270" text-anchor="middle" class="lbl dense">all four call the identity vendor</text>
+  <text x="300" y="288" text-anchor="middle" class="lbl node">p99 = 38s</text>
+  <text x="300" y="306" text-anchor="middle" class="lbl sub">600/min estate-wide cap on the vendor side</text>
+  <text x="300" y="324" text-anchor="middle" class="lbl sub">DocumentVerification.parallelStream() over pending InstrumentVerification</text>
+
+  <!-- right half: unrelated queued work -->
+  <rect x="610" y="108" width="560" height="230" rx="6" class="boxW"/>
+  <text x="890" y="130" text-anchor="middle" class="lbl node">unrelated parallelStream()</text>
+  <text x="890" y="148" text-anchor="middle" class="lbl dense">e.g. groupingBy rail over</text>
+  <text x="890" y="166" text-anchor="middle" class="lbl dense">95,000 card deposits</text>
+
+  <rect x="740" y="196" width="300" height="60" rx="4" class="boxW"/>
+  <text x="890" y="220" text-anchor="middle" class="lbl dense">QUEUED — no free worker</text>
+  <text x="890" y="238" text-anchor="middle" class="lbl sub">shares no data with DocumentVerification</text>
+
+  <path class="fail" d="M 580 240 H 620 V 226 H 740"/>
+
+  <rect x="740" y="270" width="300" height="56" rx="4" class="boxAnn"/>
+  <text x="890" y="292" class="lbl tiny" text-anchor="middle">latency inflated by the identity</text>
+  <text x="890" y="308" class="lbl tiny" text-anchor="middle">vendor's unrelated 38s p99</text>
+
+  <path class="weak" d="M 890 256 V 270"/>
+
+  <!-- AFTER panel: 3 sub-boxes -->
+  <text x="20" y="378" class="lbl h2">AFTER — the identity vendor call moves to a dedicated executor</text>
+  <line x1="20" y1="386" x2="1180" y2="386" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- panel 1: dedicated executor -->
+  <rect x="20" y="404" width="360" height="200" rx="6" class="boxR"/>
+  <text x="200" y="426" text-anchor="middle" class="lbl node">dedicated ExecutorService</text>
+  <text x="200" y="446" text-anchor="middle" class="lbl dense">Executors.newFixedThreadPool(n)</text>
+  <text x="200" y="466" text-anchor="middle" class="lbl sub">sized for I/O wait, not core count</text>
+  <rect x="48" y="482" width="140" height="44" rx="4" class="boxR"/>
+  <text x="118" y="502" text-anchor="middle" class="lbl tiny">worker A</text>
+  <text x="118" y="518" text-anchor="middle" class="lbl tiny">calling vendor</text>
+  <rect x="212" y="482" width="140" height="44" rx="4" class="boxR"/>
+  <text x="282" y="502" text-anchor="middle" class="lbl tiny">worker B</text>
+  <text x="282" y="518" text-anchor="middle" class="lbl tiny">calling vendor</text>
+  <text x="200" y="552" text-anchor="middle" class="lbl dense">p99 = 38s stays isolated here</text>
+  <text x="200" y="572" text-anchor="middle" class="lbl sub">DocumentVerification submits Callable&lt;Verdict&gt;</text>
+  <text x="200" y="588" text-anchor="middle" class="lbl sub">per InstrumentVerification, not via parallelStream()</text>
+
+  <!-- panel 2: common pool now free -->
+  <rect x="420" y="404" width="360" height="200" rx="6" class="boxP"/>
+  <text x="600" y="426" text-anchor="middle" class="lbl node">ForkJoinPool.commonPool()</text>
+  <text x="600" y="446" text-anchor="middle" class="lbl dense">availableProcessors() − 1</text>
+  <text x="600" y="464" text-anchor="middle" class="lbl dense">workers + submitting thread</text>
+  <rect x="448" y="480" width="130" height="44" rx="4" class="boxP"/>
+  <text x="513" y="500" text-anchor="middle" class="lbl tiny">worker 1</text>
+  <text x="513" y="516" text-anchor="middle" class="lbl tiny">FREE</text>
+  <rect x="600" y="480" width="150" height="44" rx="4" class="boxP"/>
+  <text x="675" y="500" text-anchor="middle" class="lbl tiny">submitting thread</text>
+  <text x="675" y="516" text-anchor="middle" class="lbl tiny">FREE</text>
+  <text x="600" y="552" text-anchor="middle" class="lbl dense">effective width = core count</text>
+  <text x="600" y="572" text-anchor="middle" class="lbl sub">nothing here blocks on the vendor</text>
+
+  <!-- panel 3: unrelated stream now fast -->
+  <rect x="820" y="404" width="360" height="200" rx="6" class="boxR"/>
+  <text x="1000" y="426" text-anchor="middle" class="lbl node">unrelated parallelStream()</text>
+  <text x="1000" y="446" text-anchor="middle" class="lbl dense">groupingBy rail over</text>
+  <text x="1000" y="464" text-anchor="middle" class="lbl dense">95,000 card deposits</text>
+  <rect x="850" y="480" width="300" height="60" rx="4" class="boxR"/>
+  <text x="1000" y="504" text-anchor="middle" class="lbl dense">RUNS IMMEDIATELY</text>
+  <text x="1000" y="522" text-anchor="middle" class="lbl sub">every commonPool worker is available</text>
+  <text x="1000" y="560" text-anchor="middle" class="lbl sub">latency no longer coupled</text>
+  <text x="1000" y="576" text-anchor="middle" class="lbl sub">to the identity vendor's p99</text>
+
+  <path class="flow" d="M 380 504 H 420"/>
+  <path class="flow" d="M 780 504 H 820"/>
+
+  <rect x="20" y="624" width="1160" height="70" rx="6" class="boxAnn"/>
+  <text x="36" y="646" class="lbl node">THE FIX</text>
+  <text x="36" y="666" class="lbl tiny">Blocking, latency-heavy I/O (the identity vendor's 38s p99) belongs on a dedicated executor sized for wait time, never inside</text>
+  <text x="36" y="682" class="lbl tiny">a parallelStream(), because every parallel stream in the JVM shares the same ForkJoinPool.commonPool() by default.</text>
+
+  <line x1="20" y1="716" x2="1180" y2="716" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="728" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="741" class="lbl tiny">common pool, blocked worker</text>
+  <rect x="280" y="728" width="22" height="16" rx="3" class="boxW"/>
+  <text x="310" y="741" class="lbl tiny">queued, unrelated work</text>
+  <rect x="500" y="728" width="22" height="16" rx="3" class="boxP"/>
+  <text x="530" y="741" class="lbl tiny">common pool, free worker</text>
+  <rect x="740" y="728" width="22" height="16" rx="3" class="boxR"/>
+  <text x="770" y="741" class="lbl tiny">dedicated executor / healthy fast path</text>
+  <path class="fail" d="M 20 762 H 60"/>
+  <text x="68" y="767" class="lbl tiny">contention / starvation</text>
+  <path class="flow" d="M 260 762 H 300"/>
+  <text x="308" y="767" class="lbl tiny">dispatch to a new pool</text>
+  <path class="weak" d="M 500 762 H 540"/>
+  <text x="548" y="767" class="lbl tiny">downstream effect (latency inflation)</text>
+</svg>

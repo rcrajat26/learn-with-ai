@@ -1,0 +1,107 @@
+<svg viewBox="0 0 1400 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing a custom top-3 collector over withdrawals, run across two ForkJoin leaves. Frame 1: leaf L1 holds a bounded PriorityQueue of size 3 containing withdrawal amounts 42, 92 and 260; leaf L2 holds one containing 65, 180 and 480. Frame 2: the combiner merges both heaps into six candidates and re-bounds to 3, keeping 480, 260 and 180 and discarding 92, 65 and 42 as below the bound. Frame 3: the finisher drains the heap and sorts it descending into the final list [480, 260, 180], because a PriorityQueue's iteration order is heap order, not sorted order.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxR  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A TOP-3 COLLECTOR'S COMBINER, OVER TWO FORKJOIN LEAVES</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl dense">Collector.of(() -&gt; new PriorityQueue&lt;&gt;(3, comparing(WithdrawalTransaction::amount)), TopN::accept, TopN::combine, TopN::finish)</text>
+
+  <!-- vertical dividers between frames -->
+  <line x1="470" y1="90" x2="470" y2="395" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="930" y1="90" x2="930" y2="395" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== FRAME 1 ===================== -->
+  <text x="40" y="96" class="lbl h2">FRAME 1 — EACH LEAF KEEPS A BOUNDED PriorityQueue(3)</text>
+  <line x1="20" y1="104" x2="460" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="130" width="340" height="90" rx="6" class="boxP"/>
+  <text x="230" y="154" text-anchor="middle" class="lbl node">leaf L1 — bounded PQ(3)</text>
+  <text x="230" y="176" text-anchor="middle" class="lbl body">contents: 42, 92, 260</text>
+  <text x="230" y="196" text-anchor="middle" class="lbl sub">min-heap root = 42 (evicted first)</text>
+
+  <rect x="60" y="250" width="340" height="90" rx="6" class="boxP"/>
+  <text x="230" y="274" text-anchor="middle" class="lbl node">leaf L2 — bounded PQ(3)</text>
+  <text x="230" y="296" text-anchor="middle" class="lbl body">contents: 65, 180, 480</text>
+  <text x="230" y="316" text-anchor="middle" class="lbl sub">min-heap root = 65 (evicted first)</text>
+
+  <!-- ===================== FRAME 2 ===================== -->
+  <text x="500" y="96" class="lbl h2">FRAME 2 — COMBINER MERGES &amp; RE-BOUNDS TO 3</text>
+  <line x1="480" y1="104" x2="920" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="520" y="130" width="340" height="70" rx="6" class="boxY"/>
+  <text x="690" y="154" text-anchor="middle" class="lbl node">combine(pq1, pq2)</text>
+  <text x="690" y="174" text-anchor="middle" class="lbl body">merged: 42, 92, 260, 65, 180, 480</text>
+  <text x="690" y="190" text-anchor="middle" class="lbl sub">6 candidates, keep top 3 by amount</text>
+
+  <rect x="520" y="220" width="340" height="70" rx="6" class="boxG"/>
+  <text x="690" y="244" text-anchor="middle" class="lbl node">kept</text>
+  <text x="690" y="264" text-anchor="middle" class="lbl body">480, 260, 180</text>
+  <text x="690" y="280" text-anchor="middle" class="lbl sub">the 3 largest amounts survive</text>
+
+  <rect x="520" y="310" width="340" height="70" rx="6" class="boxR"/>
+  <text x="690" y="334" text-anchor="middle" class="lbl node">discarded</text>
+  <text x="690" y="354" text-anchor="middle" class="lbl body">92, 65, 42</text>
+  <text x="690" y="370" text-anchor="middle" class="lbl sub">evicted — below the bound of 3</text>
+
+  <!-- ===================== FRAME 3 ===================== -->
+  <text x="960" y="96" class="lbl h2">FRAME 3 — FINISHER SORTS DESCENDING</text>
+  <line x1="940" y1="104" x2="1380" y2="104" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="980" y="150" width="340" height="90" rx="6" class="boxG"/>
+  <text x="1150" y="174" text-anchor="middle" class="lbl node">finisher: sorted list</text>
+  <text x="1150" y="196" text-anchor="middle" class="lbl body">[480, 260, 180]</text>
+  <text x="1150" y="216" text-anchor="middle" class="lbl sub">heap order ≠ sorted order — finisher fixes it</text>
+
+  <rect x="980" y="270" width="340" height="100" rx="6" class="panel"/>
+  <text x="1000" y="292" class="lbl body" font-weight="700">why a finisher at all</text>
+  <text x="1000" y="312" class="lbl tiny">a PriorityQueue's iteration order</text>
+  <text x="1000" y="330" class="lbl tiny">is heap order, not sorted order</text>
+  <text x="1000" y="348" class="lbl tiny">finisher drains it, sorts once</text>
+
+  <!-- Bottom summary panel -->
+  <rect x="20" y="410" width="1360" height="90" rx="6" class="panel"/>
+  <text x="40" y="434" class="lbl body" font-weight="700">the three collector functions</text>
+  <text x="40" y="456" class="lbl tiny">accumulator inserts into a leaf's own bounded PriorityQueue(3), evicting the smallest when it exceeds 3 — supplier, accept, combine and finish each run once per leaf or once per merge, never across leaves.</text>
+  <text x="40" y="476" class="lbl tiny">combiner merges two independent PQs and re-bounds to 3 so the intermediate result stays small; finisher runs exactly once, on the root, to present a sorted List&lt;WithdrawalTransaction&gt;.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="520" x2="1380" y2="520" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="532" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="545" class="lbl tiny">per-leaf bounded PriorityQueue</text>
+
+  <rect x="330" y="532" width="22" height="16" rx="3" class="boxY"/>
+  <text x="360" y="545" class="lbl tiny">combiner operation</text>
+
+  <rect x="560" y="532" width="22" height="16" rx="3" class="boxG"/>
+  <text x="590" y="545" class="lbl tiny">kept / final result</text>
+
+  <rect x="800" y="532" width="22" height="16" rx="3" class="boxR"/>
+  <text x="830" y="545" class="lbl tiny">discarded — below the bound</text>
+
+  <rect x="1080" y="532" width="22" height="16" rx="3" class="panel"/>
+  <text x="1110" y="545" class="lbl tiny">annotation panel</text>
+</svg>

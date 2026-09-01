@@ -1,0 +1,84 @@
+<svg viewBox="0 0 1040 520" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy showing four front ends — CLI, the VS Code / JetBrains extension, the desktop app, and the web app — all sitting above one shared bottom layer: the harness, comprising the loop, the tools, and the settings files. All four front ends read the same settings.json, the same .claude directory, and the same permission rules.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="520" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE LOOP, MANY FRONT ENDS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">FRONT ENDS</text>
+  <rect x="20" y="76" width="220" height="70" rx="6" class="boxP"/>
+  <text x="130" y="106" text-anchor="middle" class="lbl node">CLI</text>
+  <text x="130" y="126" text-anchor="middle" class="lbl sub">claude, claude -p</text>
+
+  <rect x="270" y="76" width="220" height="70" rx="6" class="boxP"/>
+  <text x="380" y="100" text-anchor="middle" class="lbl node">VS Code /</text>
+  <text x="380" y="118" text-anchor="middle" class="lbl node">JetBrains extension</text>
+
+  <rect x="520" y="76" width="220" height="70" rx="6" class="boxP"/>
+  <text x="630" y="106" text-anchor="middle" class="lbl node">desktop app</text>
+
+  <rect x="770" y="76" width="220" height="70" rx="6" class="boxP"/>
+  <text x="880" y="106" text-anchor="middle" class="lbl node">web app</text>
+
+  <!-- stubs from each front end down to a shared bus -->
+  <path d="M 130 146 V 190" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 380 146 V 190" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 630 146 V 190" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 880 146 V 190" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 130 190 H 880" fill="none" stroke="#475569" stroke-width="2"/>
+  <!-- single drop from the bus into the harness -->
+  <path class="flow" d="M 505 190 V 226"/>
+
+  <rect x="60" y="226" width="900" height="230" rx="6" class="boxR"/>
+  <text x="80" y="256" class="lbl h2">THE HARNESS</text>
+  <line x1="80" y1="266" x2="940" y2="266" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="80" y="294" class="lbl body">the loop</text>
+  <text x="80" y="312" class="lbl sub">assemble request → model →</text>
+  <text x="80" y="326" class="lbl sub">tool_use → execute → tool_result</text>
+
+  <text x="80" y="352" class="lbl body">the tools</text>
+  <text x="80" y="370" class="lbl sub">Read, Edit, Bash, Agent,</text>
+  <text x="80" y="384" class="lbl sub">ToolSearch, ...</text>
+
+  <text x="80" y="410" class="lbl body">the settings files</text>
+  <text x="80" y="428" class="lbl sub">~/.claude/settings.json, .claude/</text>
+
+  <rect x="480" y="290" width="460" height="140" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="496" y="314" class="lbl tiny" font-weight="700">same regardless of front end:</text>
+  <text x="496" y="336" class="lbl tiny">~/.claude/settings.json</text>
+  <text x="496" y="356" class="lbl tiny">.claude/</text>
+  <text x="496" y="376" class="lbl tiny">permission rules</text>
+  <text x="496" y="404" class="lbl tiny">CLI, IDE extension, desktop app, and web</text>
+  <text x="496" y="418" class="lbl tiny">app all drive the same loop underneath.</text>
+
+  <line x1="20" y1="470" x2="1020" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="482" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="495" class="lbl tiny">front end (presentation layer)</text>
+  <rect x="280" y="482" width="22" height="16" rx="3" class="boxR"/>
+  <text x="310" y="495" class="lbl tiny">shared harness (loop + tools + settings)</text>
+  <path class="flow" d="M 580 490 H 620"/>
+  <text x="628" y="495" class="lbl tiny">A → B : A drives requests into B</text>
+</svg>

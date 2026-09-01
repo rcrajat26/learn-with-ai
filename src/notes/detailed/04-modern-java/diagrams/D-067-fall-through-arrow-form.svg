@@ -1,0 +1,97 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison of a switch over RestrictionSource. Left: a colon switch with a missing break after the SYSTEM_COMPLIANCE case falls through into the ADMIN case, drawn as one continuous red arrow from case SYSTEM_COMPLIANCE through lift = true into case ADMIN's escalate = true, wrongly setting escalate true for SYSTEM_COMPLIANCE. Right: the same logic in arrow form, where SYSTEM_ONBOARDING and SYSTEM_COMPLIANCE share one arm ending at lift = true, only that arm executes, and no break is written or needed.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .code  { font-size: 13px; }
+    .body  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .frame  { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.3; }
+    .hiBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.3; }
+    .hiGood { fill: #dcfce7; stroke: #15803d; stroke-width: 1.3; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flowBad  { fill: none; stroke: #b91c1c; stroke-width: 2; marker-end: url(#triRed); }
+    .flowGood { fill: none; stroke: #15803d; stroke-width: 2; marker-end: url(#triGreen); }
+  </style>
+  <defs>
+    <marker id="triRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FALL-THROUGH: COLON SWITCH VS. ARROW FORM</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="68" class="lbl h2">COLON SWITCH — MISSING break AFTER SYSTEM_COMPLIANCE</text>
+  <text x="600" y="68" class="lbl h2">ARROW FORM — ONE ARM, NO break</text>
+  <line x1="560" y1="52" x2="560" y2="540" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: colon switch -->
+  <rect x="40" y="86" width="480" height="220" rx="4" class="frame"/>
+  <rect x="46" y="144" width="468" height="76" class="hiBad"/>
+
+  <text x="56" y="108" class="lbl code">switch (source) {</text>
+  <text x="72" y="128" class="lbl code">case SYSTEM_ONBOARDING:</text>
+  <text x="72" y="148" class="lbl code">case SYSTEM_COMPLIANCE:</text>
+  <text x="88" y="168" class="lbl code">lift = true;</text>
+  <text x="72" y="188" class="lbl code">case ADMIN:</text>
+  <text x="88" y="208" class="lbl code">escalate = true;</text>
+  <text x="88" y="228" class="lbl code">break;</text>
+  <text x="72" y="248" class="lbl code">default:</text>
+  <text x="88" y="268" class="lbl code">escalate = false;</text>
+  <text x="56" y="288" class="lbl code">}</text>
+
+  <path class="flowBad" d="M 48 150 V 202 H 82"/>
+
+  <rect x="40" y="316" width="480" height="90" rx="6" class="panel"/>
+  <text x="52" y="336" class="lbl body" font-weight="700">WRONG OUTCOME</text>
+  <text x="52" y="354" class="lbl body">source = SYSTEM_COMPLIANCE: control falls through</text>
+  <text x="52" y="370" class="lbl body">lift = true, then straight into case ADMIN's body,</text>
+  <text x="52" y="386" class="lbl body">so escalate = true is set for SYSTEM_COMPLIANCE too.</text>
+
+  <!-- RIGHT: arrow form -->
+  <rect x="600" y="86" width="480" height="190" rx="4" class="frame"/>
+  <rect x="606" y="118" width="468" height="60" class="hiGood"/>
+
+  <text x="616" y="108" class="lbl code">switch (source) {</text>
+  <text x="632" y="128" class="lbl code">case SYSTEM_ONBOARDING,</text>
+  <text x="656" y="148" class="lbl code">SYSTEM_COMPLIANCE -&gt;</text>
+  <text x="656" y="168" class="lbl code">lift = true;</text>
+  <text x="632" y="188" class="lbl code">case ADMIN -&gt; escalate = true;</text>
+  <text x="632" y="208" class="lbl code">default -&gt; escalate = false;</text>
+  <text x="616" y="228" class="lbl code">}</text>
+
+  <path class="flowGood" d="M 612 122 V 164 H 640"/>
+
+  <rect x="600" y="286" width="480" height="90" rx="6" class="panel"/>
+  <text x="612" y="306" class="lbl body" font-weight="700">CORRECT OUTCOME</text>
+  <text x="612" y="324" class="lbl body">source = SYSTEM_COMPLIANCE: only the shared arm</text>
+  <text x="612" y="340" class="lbl body">runs, lift = true, then the switch statement ends.</text>
+  <text x="612" y="356" class="lbl body">No break is written and none is needed to stop it.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="580" x2="1100" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="592" width="22" height="16" rx="3" class="hiBad"/>
+  <text x="50" y="605" class="lbl tiny">colon-switch statement region reached by fall-through</text>
+
+  <rect x="380" y="592" width="22" height="16" rx="3" class="hiGood"/>
+  <text x="410" y="605" class="lbl tiny">arrow-switch arm actually executed</text>
+
+  <path class="flowBad" d="M 660 596 H 692"/>
+  <text x="700" y="605" class="lbl tiny">actual (buggy) fall-through path, one continuous arrow</text>
+
+  <path class="flowGood" d="M 20 620 H 52"/>
+  <text x="60" y="629" class="lbl tiny">single arm entered and exited, arrow form</text>
+
+  <rect x="380" y="616" width="22" height="16" rx="3" class="panel"/>
+  <text x="410" y="629" class="lbl tiny">annotation panel: stated outcome for this input</text>
+</svg>

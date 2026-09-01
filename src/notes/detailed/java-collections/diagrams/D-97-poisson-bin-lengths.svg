@@ -1,0 +1,129 @@
+<svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Bar chart on a logarithmic scale of Poisson bin-length probabilities at load factor 0.75, from the HashMap class comment, showing k=8 as the treeify threshold at roughly 6 in 100 million">
+  <defs>
+    <marker id="arrow97" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="700" fill="none"/>
+  <text x="450" y="32" text-anchor="middle" font-family="sans-serif" font-size="19" fill="#1f2937">Poisson bin lengths at load factor 0.75</text>
+  <rect x="230" y="42" width="440" height="24" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="59" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">P(bin holds exactly k) = e^-0.5 &#183; 0.5^k / k! &#8212; VALUES BELOW ARE ON A LOG SCALE, NOT LINEAR</text>
+
+  <!-- axes -->
+  <line x1="90" y1="80" x2="90" y2="560" stroke="#737373" stroke-width="2"/>
+  <line x1="90" y1="560" x2="870" y2="560" stroke="#737373" stroke-width="2"/>
+
+  <!-- gridlines: decade d=0..8 at y=80+d*60, label 10^-d (d=0 -> "1") -->
+  <g font-family="sans-serif" font-size="12" fill="#1f2937">
+    <line x1="90" y1="80" x2="860" y2="80" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="40" y="72" width="42" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="61" y="84" text-anchor="middle">1</text>
+
+    <line x1="90" y1="140" x2="860" y2="140" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="132" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="144" text-anchor="middle">10&#8315;&#185;</text>
+
+    <line x1="90" y1="200" x2="860" y2="200" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="192" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="204" text-anchor="middle">10&#8315;&#178;</text>
+
+    <line x1="90" y1="260" x2="860" y2="260" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="252" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="264" text-anchor="middle">10&#8315;&#179;</text>
+
+    <line x1="90" y1="320" x2="860" y2="320" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="312" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="324" text-anchor="middle">10&#8315;&#8308;</text>
+
+    <line x1="90" y1="380" x2="860" y2="380" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="372" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="384" text-anchor="middle">10&#8315;&#8309;</text>
+
+    <line x1="90" y1="440" x2="860" y2="440" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="432" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="444" text-anchor="middle">10&#8315;&#8310;</text>
+
+    <line x1="90" y1="500" x2="860" y2="500" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="492" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="504" text-anchor="middle">10&#8315;&#8311;</text>
+
+    <line x1="90" y1="560" x2="860" y2="560" stroke="#e5e7eb" stroke-width="2"/>
+    <rect x="34" y="552" width="48" height="16" rx="3" fill="#e5e7eb"/>
+    <text x="58" y="564" text-anchor="middle">10&#8315;&#8312;</text>
+  </g>
+
+  <text x="30" y="320" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" transform="rotate(-90 30 320)">probability (log scale)</text>
+
+  <!-- bars: x_left = 110 + k*85, width 60, y_top computed from -log10(value)*60 + 80 -->
+  <!-- k=0 -->
+  <rect x="110" y="93" width="60" height="467" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <rect x="105" y="72" width="70" height="18" rx="3" fill="#dcfce7"/>
+  <text x="140" y="85" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.60653066</text>
+  <text x="140" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=0</text>
+
+  <!-- k=1 -->
+  <rect x="195" y="111" width="60" height="449" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <rect x="188" y="90" width="74" height="18" rx="3" fill="#dcfce7"/>
+  <text x="225" y="103" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.30326533</text>
+  <text x="225" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=1</text>
+
+  <!-- k=2 -->
+  <rect x="280" y="147" width="60" height="413" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <rect x="273" y="126" width="74" height="18" rx="3" fill="#dcfce7"/>
+  <text x="310" y="139" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.07581633</text>
+  <text x="310" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=2</text>
+
+  <!-- k=3 -->
+  <rect x="365" y="194" width="60" height="366" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="358" y="173" width="74" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="395" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.01263606</text>
+  <text x="395" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=3</text>
+
+  <!-- k=4 -->
+  <rect x="450" y="248" width="60" height="312" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="442" y="222" width="76" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="480" y="235" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.00157952</text>
+  <text x="480" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=4</text>
+
+  <!-- k=5 -->
+  <rect x="535" y="308" width="60" height="252" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="527" y="282" width="76" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="565" y="295" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.00015795</text>
+  <text x="565" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=5</text>
+
+  <!-- k=6 -->
+  <rect x="620" y="373" width="60" height="187" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="612" y="347" width="76" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="650" y="360" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.00001316</text>
+  <text x="650" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=6</text>
+
+  <!-- k=7 -->
+  <rect x="705" y="442" width="60" height="118" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="697" y="415" width="76" height="18" rx="3" fill="#e5e7eb"/>
+  <text x="735" y="428" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.00000094</text>
+  <text x="735" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=7</text>
+
+  <!-- k=8 : treeify point -->
+  <rect x="790" y="513" width="60" height="47" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <rect x="782" y="486" width="76" height="18" rx="3" fill="#fee2e2"/>
+  <text x="820" y="499" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0.00000006</text>
+  <text x="820" y="580" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">k=8</text>
+  <line x1="785" y1="505" x2="855" y2="505" stroke="#fef3c7" stroke-width="4"/>
+  <rect x="700" y="605" width="240" height="20" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="820" y="619" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">TREEIFY_THRESHOLD = 8</text>
+  <rect x="690" y="628" width="180" height="18" rx="3" fill="#fee2e2"/>
+  <text x="780" y="641" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">~6 in 100,000,000</text>
+
+  <!-- closing line from class comment -->
+  <rect x="600" y="415" width="0" height="0"/>
+  <rect x="20" y="576" width="440" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="240" y="590" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">class comment: "&#8230;more: less than 1 in ten million"</text>
+
+  <!-- caption box -->
+  <rect x="40" y="655" width="820" height="35" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="668" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">&#955; &#8776; 0.5 because a table at load factor 0.75 holds 0.75 entries per bin (JDK comment: "about 0.5 on average for the default resizing threshold of 0.75", with large variance from resize granularity).</text>
+  <text x="450" y="682" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">At 0.75 a bin of 8 is a 1-in-16-million event &#8212; treeification defends against bad hash functions, not against bad luck.</text>
+</svg>

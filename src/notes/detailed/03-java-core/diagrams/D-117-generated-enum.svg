@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1160 1250" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of RestrictionSource enum source code on the left against what javac 21 actually writes to disk on the right: a class extending Enum that is not final because CLIENT carries a constant-specific body, five public static final fields for the constants, a synthetic $VALUES array and $values() helper, a constructor whose real descriptor takes an injected name and ordinal, a clinit that builds each constant and installs $VALUES, an anonymous RestrictionSource$1 subclass generated for CLIENT's overridden method, and new sealed-class metadata (PermittedSubclasses, NestMembers) making the enum implicitly sealed.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+    <marker id="arrS2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrA2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="1250" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">What javac generates for an enum &#8212; RestrictionSource</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="h2">SOURCE &#8212; RestrictionSource.java</text>
+  <line x1="20" y1="72" x2="560" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="600" y="64" class="h2">WHAT javac 21 PUT ON DISK</text>
+  <line x1="600" y1="72" x2="1140" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ===== LEFT LANE : SOURCE ===== -->
+  <rect x="20" y="90" width="540" height="360" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <g class="code">
+    <text x="36" y="114">public enum RestrictionSource {</text>
+    <text x="36" y="136">    SYSTEM_ONBOARDING,</text>
+    <text x="36" y="158">    SYSTEM_COMPLIANCE,</text>
+    <text x="36" y="180">    SYSTEM_LIFECYCLE,</text>
+    <text x="36" y="202">    ADMIN,</text>
+    <text x="36" y="224">    CLIENT {</text>
+    <text x="36" y="246">        @Override</text>
+    <text x="36" y="268">        public boolean reversibleByOperator() {</text>
+    <text x="36" y="290">            return false;</text>
+    <text x="36" y="312">        }</text>
+    <text x="36" y="334">    };</text>
+    <text x="36" y="378">    public boolean reversibleByOperator() {</text>
+    <text x="36" y="400">        return true;</text>
+    <text x="36" y="422">    }</text>
+    <text x="36" y="440">}</text>
+  </g>
+
+  <!-- ===== RIGHT LANE : CLASS HEADER ===== -->
+  <rect x="600" y="90" width="540" height="120" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="616" y="112" class="body" font-weight="bold">class RestrictionSource extends Enum&lt;RestrictionSource&gt;</text>
+  <text x="616" y="132" class="small">flags: (0x4021) ACC_PUBLIC, ACC_SUPER, ACC_ENUM</text>
+  <rect x="616" y="150" width="508" height="48" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="628" y="168" class="smallb" fill="#b45309">ACC_FINAL is absent</text>
+  <text x="628" y="184" class="small">CLIENT's constant body forces a synthetic subclass &#8212; the class can't be final</text>
+
+  <!-- ===== FIELDS PANEL ===== -->
+  <rect x="600" y="230" width="540" height="140" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="616" y="252" class="body" font-weight="bold">5 &#215; public static final RestrictionSource fields</text>
+  <text x="616" y="270" class="small">flags: (0x4019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_ENUM</text>
+  <line x1="616" y1="278" x2="1124" y2="278" stroke="#2563eb" stroke-width="1"/>
+  <g class="smallD">
+    <text x="616" y="298">SYSTEM_ONBOARDING</text>
+    <text x="616" y="316">SYSTEM_COMPLIANCE</text>
+    <text x="616" y="334">SYSTEM_LIFECYCLE</text>
+    <text x="616" y="352">ADMIN</text>
+    <text x="790" y="352" font-weight="bold">CLIENT: see RestrictionSource$1 below</text>
+  </g>
+
+  <!-- ===== $VALUES / $values() PANEL ===== -->
+  <rect x="600" y="390" width="540" height="110" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="616" y="412" class="code" font-weight="bold">private static final RestrictionSource[] $VALUES</text>
+  <text x="616" y="430" class="small">flags: (0x101a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC</text>
+  <text x="616" y="456" class="code" font-weight="bold">private static RestrictionSource[] $values()</text>
+  <text x="616" y="474" class="small">flags: (0x100a) ACC_PRIVATE, ACC_STATIC, ACC_SYNTHETIC</text>
+
+  <!-- ===== CONSTRUCTOR PANEL ===== -->
+  <rect x="600" y="520" width="540" height="100" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="616" y="542" class="code" font-weight="bold">private RestrictionSource()</text>
+  <text x="616" y="560" class="small">as printed by javap's method header &#8212; looks like a no-arg constructor</text>
+  <text x="616" y="594" class="code" fill="#b45309" font-weight="bold">descriptor: (Ljava/lang/String;I)V</text>
+  <text x="800" y="612" class="small">&#8212; contradicts the header: compiler injects name, ordinal</text>
+
+  <!-- ===== CLINIT PANEL ===== -->
+  <rect x="600" y="640" width="540" height="170" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="616" y="662" class="body" font-weight="bold">&lt;clinit&gt; &#8212; one representative constant, repeated per constant</text>
+  <g class="code">
+    <text x="616" y="684">new RestrictionSource</text>
+    <text x="616" y="702">dup</text>
+    <text x="616" y="720">ldc "ADMIN"</text>
+    <text x="616" y="738">iconst_3</text>
+    <text x="616" y="756">invokespecial &lt;init&gt;:(Ljava/lang/String;I)V</text>
+    <text x="616" y="774">putstatic ADMIN</text>
+  </g>
+  <line x1="616" y1="782" x2="1124" y2="782" stroke="#9ca3af" stroke-width="1"/>
+  <text x="616" y="800" class="small">... then, once, after all five: invokestatic $values:()[LRestrictionSource;  /  putstatic $VALUES</text>
+
+  <!-- ===== RestrictionSource$1 PANEL ===== -->
+  <rect x="600" y="830" width="540" height="130" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="616" y="852" class="body" font-weight="bold">final class RestrictionSource$1 extends RestrictionSource</text>
+  <text x="616" y="872" class="small">the anonymous subclass javac generates for CLIENT's constant body</text>
+  <text x="616" y="898" class="code">private RestrictionSource$1(String, int)</text>
+  <text x="616" y="920" class="small">reversibleByOperator() overridden &#8212; bytecode body: iconst_0 / ireturn</text>
+  <text x="616" y="940" class="small">(returns false, overriding the enum's iconst_1 / ireturn default)</text>
+
+  <path d="M 1140 352 H 1152 V 895 H 1140" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrA2)"/>
+
+  <!-- ===== ANNOTATION PANEL ===== -->
+  <rect x="300" y="990" width="560" height="120" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="320" y="1012" class="h2">AND ONE SURPRISE, NEW IN 17+</text>
+  <text x="320" y="1034" class="smallD">PermittedSubclasses: RestrictionSource$1</text>
+  <text x="320" y="1054" class="smallD">NestMembers: RestrictionSource$1</text>
+  <text x="320" y="1074" class="smallD">so the enum is implicitly sealed &#8212; Class.isSealed() == true</text>
+  <text x="320" y="1094" class="small">the same PermittedSubclasses/NestMembers mechanism records CLIENT's anonymous body</text>
+
+  <!-- ===== LEGEND ===== -->
+  <text x="20" y="1152" class="h2">LEGEND</text>
+  <line x1="20" y1="1160" x2="1140" y2="1160" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1172" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1185" class="small">primary &#8212; the generated class header and its constant fields</text>
+
+  <rect x="30" y="1198" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1211" class="small">highlight &#8212; the fact that contradicts the naive reading</text>
+
+  <rect x="620" y="1172" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="648" y="1185" class="small">synthetic / compiler-generated member or source code panel</text>
+
+  <rect x="620" y="1198" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="1211" class="small">annotation panel &#8212; explanatory facts, not node or edge</text>
+
+  <line x1="30" y1="1224" x2="56" y2="1224" stroke="#b45309" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrA2)"/>
+  <text x="64" y="1229" class="small">synthetic link : A &#8722;&gt; B, B is the compiler-injected class behind A's constant</text>
+</svg>

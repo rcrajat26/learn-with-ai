@@ -1,0 +1,39 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="groupingBy with mapping(String::length, toList()) downstream collector: each bucket's words are replaced by their lengths, producing Map of Character to List of Integer: a=[5,7,7], b=[6,10], c=[6]">
+  <defs>
+    <marker id="arrow62c" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">groupingBy(classifier, mapping(String::length, toList())) — same three buckets</text>
+
+  <rect x="80" y="60" width="200" height="70" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a &#8594; [apple(5), avocado(7),</text>
+  <text x="180" y="100" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">apricot(7)]</text>
+
+  <rect x="320" y="60" width="200" height="70" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="420" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">b &#8594; [banana(6),</text>
+  <text x="420" y="100" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">blueberry(10)]</text>
+
+  <rect x="560" y="60" width="160" height="70" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="640" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">c &#8594; [cherry(6)]</text>
+
+  <line x1="400" y1="130" x2="400" y2="175" stroke="#737373" stroke-width="2" marker-end="url(#arrow62c)"/>
+  <rect x="230" y="142" width="340" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="159" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">downstream: mapping(String::length, toList())</text>
+
+  <rect x="150" y="200" width="180" height="60" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="240" y="234" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">a &#8594; [5, 7, 7]</text>
+
+  <rect x="350" y="200" width="180" height="60" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="440" y="234" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">b &#8594; [6, 10]</text>
+
+  <rect x="550" y="200" width="150" height="60" rx="3" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="625" y="234" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">c &#8594; [6]</text>
+
+  <rect x="80" y="272" width="640" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="290" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Map&lt;Character,List&lt;Integer&gt;&gt; — mapping() transforms each element before the toList() finisher collects it</text>
+</svg>

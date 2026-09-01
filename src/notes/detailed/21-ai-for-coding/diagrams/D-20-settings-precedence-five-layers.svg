@@ -1,0 +1,122 @@
+<svg viewBox="0 0 1080 980" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Five stacked precedence bands for Claude Code settings, highest at the top: managed settings, command line via --settings, project local settings.local.json, shared project settings.json, and user settings.json at the bottom. The model key is set at managed settings to opus, at command line to sonnet, and at user settings to haiku; managed settings wins. Two annotation panels mark two false beliefs: more specific wins is false, and command line always wins is false, since managed settings explicitly beats the command line.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #f5f5f4; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triw); }
+    .false { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3;
+             marker-end: url(#trir); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triw" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="trir" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="980" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SETTINGS PRECEDENCE — FIVE LAYERS</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">highest precedence at top — a layer above wins any conflict with a layer below</text>
+
+  <!-- layer 1: managed -->
+  <rect x="60" y="76" width="720" height="66" rx="6" class="boxY"/>
+  <text x="76" y="100" class="lbl node">1. managed settings</text>
+  <text x="76" y="122" class="lbl body">org-deployed policy file — highest precedence, cannot be overridden</text>
+  <rect x="800" y="86" width="240" height="46" rx="4" class="boxY"/>
+  <text x="920" y="106" text-anchor="middle" class="lbl body" font-weight="700">model = "opus"</text>
+  <text x="920" y="124" text-anchor="middle" class="lbl sub" font-weight="700">WINNER for this key</text>
+
+  <!-- layer 2: command line -->
+  <rect x="60" y="156" width="720" height="66" rx="6" class="boxP"/>
+  <text x="76" y="180" class="lbl node">2. command line (--settings)</text>
+  <text x="76" y="202" class="lbl body">flags passed for this invocation only</text>
+  <rect x="800" y="166" width="240" height="46" rx="4" class="boxP"/>
+  <text x="920" y="186" text-anchor="middle" class="lbl body" font-weight="700">model = "sonnet"</text>
+  <text x="920" y="204" text-anchor="middle" class="lbl sub">loses to layer 1</text>
+
+  <!-- layer 3: project local -->
+  <rect x="60" y="236" width="720" height="66" rx="6" class="boxG"/>
+  <text x="76" y="260" class="lbl node">3. project local settings</text>
+  <text x="76" y="282" class="lbl body">.claude/settings.local.json — per-developer, gitignored</text>
+
+  <!-- layer 4: shared project -->
+  <rect x="60" y="316" width="720" height="66" rx="6" class="boxG"/>
+  <text x="76" y="340" class="lbl node">4. shared project settings</text>
+  <text x="76" y="362" class="lbl body">.claude/settings.json — checked into the repo, team-wide</text>
+
+  <!-- layer 5: user -->
+  <rect x="60" y="396" width="720" height="66" rx="6" class="boxG"/>
+  <text x="76" y="420" class="lbl node">5. user settings</text>
+  <text x="76" y="442" class="lbl body">~/.claude/settings.json — lowest precedence, personal default</text>
+  <rect x="800" y="406" width="240" height="46" rx="4" class="boxG"/>
+  <text x="920" y="426" text-anchor="middle" class="lbl body" font-weight="700">model = "haiku"</text>
+  <text x="920" y="444" text-anchor="middle" class="lbl sub">loses to layers 1 and 2</text>
+
+  <!-- winner arrow: from layer1 pill down the right corridor to a resolved callout -->
+  <path class="flow" d="M 920 132 H 790 V 490 H 700 V 508"/>
+  <rect x="440" y="508" width="380" height="50" rx="6" class="boxY"/>
+  <text x="630" y="532" text-anchor="middle" class="lbl node">effective model = opus</text>
+  <text x="630" y="550" text-anchor="middle" class="lbl sub">managed settings resolved this key ahead of every other layer</text>
+
+  <!-- false belief 1 -->
+  <rect x="60" y="596" width="460" height="150" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="620" class="lbl node" fill="#b91c1c">FALSE BELIEF: "more specific wins"</text>
+  <line x1="76" y1="630" x2="504" y2="630" stroke="#d1d5db" stroke-width="1"/>
+  <text x="76" y="652" class="lbl tiny">project local (layer 3) is the most specific file to</text>
+  <text x="76" y="668" class="lbl tiny">this repo and developer, yet it never beats managed</text>
+  <text x="76" y="684" class="lbl tiny">settings (layer 1) or the command line (layer 2).</text>
+  <text x="76" y="708" class="lbl tiny" font-weight="700">precedence is by fixed layer rank, not by specificity.</text>
+
+  <!-- false belief 2 -->
+  <rect x="560" y="596" width="460" height="150" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="620" class="lbl node" fill="#b91c1c">FALSE BELIEF: "command line always wins"</text>
+  <line x1="576" y1="630" x2="1004" y2="630" stroke="#d1d5db" stroke-width="1"/>
+  <text x="576" y="652" class="lbl tiny">the command line (layer 2, model = sonnet) sits above</text>
+  <text x="576" y="668" class="lbl tiny">every project and user file, but managed settings</text>
+  <text x="576" y="684" class="lbl tiny">(layer 1, model = opus) still overrides it.</text>
+  <text x="576" y="708" class="lbl tiny" font-weight="700">managed settings &gt; command line, drawn explicitly below.</text>
+
+  <rect x="576" y="722" width="150" height="16" rx="3" class="boxY"/>
+  <text x="651" y="734" text-anchor="middle" class="lbl tiny" font-weight="700">managed</text>
+  <path class="false" d="M 726 730 H 766"/>
+  <rect x="774" y="722" width="150" height="16" rx="3" class="boxP"/>
+  <text x="849" y="734" text-anchor="middle" class="lbl tiny" font-weight="700">command line</text>
+  <text x="576" y="758" class="lbl sub" font-weight="700">managed beats command line — always</text>
+
+  <line x1="20" y1="880" x2="1060" y2="880" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="892" width="22" height="16" rx="3" class="boxY"/>
+  <text x="50" y="905" class="lbl tiny">managed / highest-precedence layer</text>
+  <rect x="280" y="892" width="22" height="16" rx="3" class="boxP"/>
+  <text x="310" y="905" class="lbl tiny">command-line layer</text>
+  <rect x="480" y="892" width="22" height="16" rx="3" class="boxG"/>
+  <text x="510" y="905" class="lbl tiny">file-based layer (project or user)</text>
+  <rect x="720" y="892" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="750" y="905" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 930 H 60"/>
+  <text x="68" y="935" class="lbl tiny">A → B : resolved value flows to B</text>
+  <path class="false" d="M 320 930 H 360"/>
+  <text x="368" y="935" class="lbl tiny">A → B : A beats B in precedence, contrary to the false belief above it</text>
+</svg>

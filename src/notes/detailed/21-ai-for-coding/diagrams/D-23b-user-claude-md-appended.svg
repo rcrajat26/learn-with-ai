@@ -1,0 +1,51 @@
+<svg viewBox="0 0 1040 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 5 in the CLAUDE.md load order. The user-level file ~/.claude/CLAUDE.md is appended after the managed policy block, growing the assembled block to two entries, still concatenated not overriding.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .stack   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLAUDE.md LOAD ORDER — FRAME 2 OF 5</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl h2">Step 2: the user-level file is appended next</text>
+
+  <rect x="60" y="90" width="920" height="40" rx="6" class="stack"/>
+  <text x="80" y="115" class="lbl body">1. managed policy CLAUDE.md (macOS / Linux-WSL / Windows path, whichever exists)</text>
+
+  <path class="flow" d="M 520 130 V 160"/>
+
+  <rect x="60" y="160" width="920" height="40" rx="6" class="boxRoot"/>
+  <text x="80" y="185" class="lbl node">2. ~/.claude/CLAUDE.md</text>
+  <text x="500" y="185" class="lbl sub">user-level, applies to every project this user opens</text>
+
+  <path class="flow" d="M 520 200 V 230"/>
+  <rect x="380" y="230" width="280" height="60" rx="6" class="boxOk"/>
+  <text x="520" y="256" text-anchor="middle" class="lbl node">assembled block</text>
+  <text x="520" y="276" text-anchor="middle" class="lbl sub">managed policy + user CLAUDE.md, in that order</text>
+
+  <line x1="20" y1="320" x2="1020" y2="320" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="332" width="1000" height="70" rx="6" class="boxAnn"/>
+  <text x="36" y="352" class="lbl h2">Still concatenated</text>
+  <text x="36" y="372" class="lbl tiny">The user file cannot remove or rewrite anything the managed policy file said — its text is added below the managed block, not merged over it.</text>
+  <text x="36" y="388" class="lbl tiny">If both files set contradictory guidance, the model sees both statements; nothing here does key-based override like settings.json layers do.</text>
+</svg>

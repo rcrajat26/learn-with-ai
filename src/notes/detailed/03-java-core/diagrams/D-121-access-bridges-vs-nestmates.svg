@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1120 1200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after diagram, with a version-trap banner, comparing how BonusService$1 reaches the private field position of the enclosing BonusService. Java 8 lane: javac widens access through a synthetic package-private bridge method access$000(BonusService), visible to every class in the package, called with invokestatic. Java 11+ lane: the JVM itself enforces nest membership via NestHost and NestMembers class-file attributes, so the same read compiles to a direct invokevirtual with no bridge; three reflective queries, Class.getNestHost, Class.getNestMembers and Class.isNestmateOf, are named. Two annotation panels explain that pre-11 private access across a nest was not real private access, and that the related bytecode change is that a private instance method call compiles to invokespecial on JDK 8 but to invokevirtual on JDK 11 and JDK 21, both verified by compiling the same source with JDK 8u202 and JDK 21.0.7.">
+  <defs>
+    <marker id="arrow121" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1200" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">access$000 bridges versus nestmates</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ VERSION TRAP BANNER ============ -->
+  <rect x="20" y="54" width="1080" height="50" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <circle cx="52" cy="79" r="16" fill="#fbbf24" stroke="#b45309" stroke-width="1.6"/>
+  <text x="52" y="84" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">11</text>
+  <text x="80" y="72" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">VERSION TRAP &#8212; JEP 181 (Java 11) changed what "private" means across a nest</text>
+  <text x="80" y="90" font-family="sans-serif" font-size="11" fill="#1f2937">before 11, javac faked private access with a widened, package-visible bridge; the JVM had no concept of a nest at all</text>
+
+  <text x="20" y="126" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">JAVA 8 &#8212; SYNTHETIC access$000 BRIDGE (legacy palette)</text>
+  <text x="560" y="126" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">JAVA 11+ &#8212; NESTMATES, JEP 181 (resolved palette)</text>
+  <line x1="20" y1="134" x2="520" y2="134" stroke="#d1d5db" stroke-width="1"/>
+  <line x1="560" y1="134" x2="1100" y2="134" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ============ LEFT LANE : JAVA 8 ============ -->
+  <rect x="20" y="150" width="220" height="90" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="36" y="172" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService$1</text>
+  <text x="36" y="190" font-family="sans-serif" font-size="11" fill="#4b5563">run() wants to read</text>
+  <text x="36" y="208" font-family="sans-serif" font-size="11" fill="#4b5563">BonusService.position</text>
+  <text x="36" y="226" font-family="sans-serif" font-size="11" fill="#4b5563">(a private field)</text>
+
+  <line x1="240" y1="195" x2="330" y2="195" stroke="#78716c" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow121)"/>
+  <text x="285" y="182" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">bridge</text>
+
+  <rect x="330" y="150" width="210" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="346" y="172" font-family="monospace" font-size="11" fill="#1f2937">static java.lang.String</text>
+  <text x="346" y="188" font-family="monospace" font-size="11" fill="#1f2937">access$000(BonusService);</text>
+  <text x="346" y="208" font-family="sans-serif" font-size="11" fill="#1f2937">package-private &#8212; visible to</text>
+  <text x="346" y="226" font-family="sans-serif" font-size="11" fill="#1f2937">every class in the package</text>
+
+  <line x1="435" y1="240" x2="435" y2="280" stroke="#475569" stroke-width="2" marker-end="url(#arrow121)"/>
+
+  <rect x="20" y="280" width="500" height="78" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="36" y="302" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">call site (BonusService$1.run(), javap -c, JDK 8u202):</text>
+  <text x="36" y="322" font-family="monospace" font-size="11" fill="#1f2937">invokestatic #8 // Method BonusService.access$000:</text>
+  <text x="36" y="340" font-family="monospace" font-size="11" fill="#1f2937">  (LBonusService;)Ljava/lang/String;</text>
+
+  <rect x="20" y="372" width="500" height="70" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="36" y="394" font-family="sans-serif" font-size="11" fill="#1f2937">the private member is reached only after a</text>
+  <text x="36" y="412" font-family="sans-serif" font-size="11" fill="#1f2937">detour through the widened, package-visible</text>
+  <text x="36" y="430" font-family="sans-serif" font-size="11" fill="#1f2937">access$000 bridge &#8212; not a direct access</text>
+
+  <!-- ============ RIGHT LANE : JAVA 11+ ============ -->
+  <rect x="560" y="150" width="220" height="90" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="576" y="172" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService$1</text>
+  <text x="576" y="190" font-family="sans-serif" font-size="11" fill="#4b5563">run() wants to read</text>
+  <text x="576" y="208" font-family="sans-serif" font-size="11" fill="#4b5563">BonusService.position</text>
+  <text x="576" y="226" font-family="sans-serif" font-size="11" fill="#4b5563">(a private field)</text>
+
+  <line x1="780" y1="195" x2="870" y2="195" stroke="#475569" stroke-width="2" marker-end="url(#arrow121)"/>
+  <text x="825" y="182" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">direct</text>
+
+  <rect x="870" y="150" width="210" height="90" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="886" y="172" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">BonusService.position</text>
+  <text x="886" y="190" font-family="sans-serif" font-size="11" fill="#1f2937">field read directly &#8212;</text>
+  <text x="886" y="208" font-family="sans-serif" font-size="11" fill="#1f2937">no synthetic accessor</text>
+  <text x="886" y="226" font-family="sans-serif" font-size="11" fill="#1f2937">method exists at all</text>
+
+  <rect x="560" y="280" width="500" height="60" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="576" y="302" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">call site (BonusService$1.run(), javap -c, JDK 21.0.7):</text>
+  <text x="576" y="322" font-family="monospace" font-size="11" fill="#1f2937">getfield #23  // Field BonusService.position:Ljava/lang/String;</text>
+
+  <rect x="560" y="360" width="250" height="120" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="576" y="382" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">BonusService$1.class</text>
+  <text x="576" y="402" font-family="monospace" font-size="11" fill="#1f2937">NestHost: class</text>
+  <text x="576" y="418" font-family="monospace" font-size="11" fill="#1f2937">  BonusService</text>
+
+  <rect x="820" y="360" width="260" height="120" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="836" y="382" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">BonusService.class</text>
+  <text x="836" y="402" font-family="monospace" font-size="11" fill="#1f2937">NestMembers:</text>
+  <text x="836" y="418" font-family="monospace" font-size="11" fill="#1f2937">  BonusService$GrantTask</text>
+  <text x="836" y="434" font-family="monospace" font-size="11" fill="#1f2937">  BonusService$1LocalTask</text>
+  <text x="836" y="450" font-family="monospace" font-size="11" fill="#1f2937">  BonusService$1</text>
+
+  <rect x="560" y="500" width="520" height="100" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="522" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Reflective queries (Java 11+)</text>
+  <text x="576" y="542" font-family="monospace" font-size="11" fill="#1f2937">Class.getNestHost()</text>
+  <text x="576" y="560" font-family="monospace" font-size="11" fill="#1f2937">Class.getNestMembers()</text>
+  <text x="576" y="578" font-family="monospace" font-size="11" fill="#1f2937">Class.isNestmateOf(Class)</text>
+
+  <!-- ============ ANNOTATION PANELS ============ -->
+  <rect x="20" y="660" width="1080" height="190" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="682" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">THE VERSION TRAP: PRE-11 "PRIVATE" WAS NOT REAL PRIVATE ACCESS</text>
+  <text x="36" y="702" font-family="sans-serif" font-size="11" fill="#1f2937">Pre-11, private access across a nest was not real private access. The JVM had no concept of a nest, so javac</text>
+  <text x="36" y="720" font-family="sans-serif" font-size="11" fill="#1f2937">widened the member to package-private through a synthetic bridge, and any class in the same package &#8212; not just</text>
+  <text x="36" y="738" font-family="sans-serif" font-size="11" fill="#1f2937">the nest &#8212; could call it. JEP 181 (Java 11) added the NestHost / NestMembers attributes so the JVM itself</text>
+  <text x="36" y="756" font-family="sans-serif" font-size="11" fill="#1f2937">enforces nest membership, and the bridge became unnecessary.</text>
+
+  <rect x="20" y="870" width="1080" height="150" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="892" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CLOSELY-RELATED BYTECODE CHANGE (also VERIFIED on this machine)</text>
+  <text x="36" y="912" font-family="sans-serif" font-size="11" fill="#1f2937">A call to a private instance method from within the same class compiles to invokespecial on JDK 8u202</text>
+  <text x="36" y="930" font-family="sans-serif" font-size="11" fill="#1f2937">and to invokevirtual on JDK 11 and JDK 21.0.7 &#8212; the same nestmate work changed the instruction. Blog posts</text>
+  <text x="36" y="948" font-family="sans-serif" font-size="11" fill="#1f2937">that say "private methods always use invokespecial" are stale by three LTS releases.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="1050" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="20" y1="1058" x2="1100" y2="1058" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="1067" width="22" height="16" rx="3" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="68" y="1079" font-family="sans-serif" font-size="11" fill="#4b5563">legacy / pre-11 construct</text>
+
+  <rect x="40" y="1091" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="68" y="1103" font-family="sans-serif" font-size="11" fill="#4b5563">resolved / current (Java 11+) direct path</text>
+
+  <rect x="40" y="1115" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="68" y="1127" font-family="sans-serif" font-size="11" fill="#4b5563">degraded &#8212; widened access, weaker than real private</text>
+
+  <rect x="40" y="1139" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="68" y="1151" font-family="sans-serif" font-size="11" fill="#4b5563">synthetic reference / class-file attribute</text>
+
+  <rect x="620" y="1067" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="1079" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; verified fact</text>
+
+  <line x1="620" y1="1099" x2="642" y2="1099" stroke="#475569" stroke-width="2" marker-end="url(#arrow121)"/>
+  <text x="648" y="1103" font-family="sans-serif" font-size="11" fill="#4b5563">primary flow / direct call</text>
+
+  <line x1="620" y1="1123" x2="642" y2="1123" stroke="#78716c" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow121)"/>
+  <text x="648" y="1127" font-family="sans-serif" font-size="11" fill="#4b5563">synthetic bridge, NOT inheritance</text>
+</svg>

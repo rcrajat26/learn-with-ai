@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1120 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart: one uncaught exception cancels every future run of a scheduled task. ScheduledFutureTask.run calls runAndReset, which runs the bonus-expiry sweep body. When the body throws, runAndReset calls setException, which completes the task's future exceptionally. Because the run failed, setNextRunTime and the re-enqueue onto the delay queue are skipped, so the task is never scheduled again. Nobody ever calls get() on a fire-and-forget scheduled task, so the exception is silently swallowed and nothing is logged. A second path shows the fix: wrapping the sweep body in its own try/catch so the body itself never throws out of runAndReset; runAndReset then always returns normally, setNextRunTime and the re-enqueue stay reachable, and the loop back to run keeps firing on schedule.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triF); }
+    .fix   { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="920" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ONE EXCEPTION CANCELS EVERY FUTURE RUN</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">ScheduledThreadPoolExecutor.ScheduledFutureTask, bonus-expiry sweep task (30-day bonus expiry)</text>
+
+  <!-- Failure path (left column) -->
+  <text x="20" y="86" class="lbl h2">FAILURE PATH — uncaught exception in the task body</text>
+
+  <rect x="20" y="98" width="280" height="52" rx="6" class="boxP"/>
+  <text x="160" y="122" text-anchor="middle" class="lbl body mono">ScheduledFutureTask.run()</text>
+  <text x="160" y="140" text-anchor="middle" class="lbl sub">fires on the 5 s period</text>
+
+  <path class="flow" d="M 160 150 V 170"/>
+  <rect x="20" y="170" width="280" height="52" rx="6" class="boxP"/>
+  <text x="160" y="194" text-anchor="middle" class="lbl body mono">runAndReset()</text>
+  <text x="160" y="212" text-anchor="middle" class="lbl sub">runs the sweep body inline</text>
+
+  <path class="flow" d="M 160 222 V 242"/>
+  <rect x="20" y="242" width="280" height="60" rx="6" class="boxD"/>
+  <text x="160" y="264" text-anchor="middle" class="lbl body">sweep body throws</text>
+  <text x="160" y="284" text-anchor="middle" class="lbl sub">e.g. NPE walking Bonus.GRANTED list</text>
+
+  <path class="fail" d="M 160 302 V 322"/>
+  <rect x="20" y="322" width="280" height="60" rx="6" class="boxD"/>
+  <text x="160" y="344" text-anchor="middle" class="lbl body mono">setException(ex)</text>
+  <text x="160" y="362" text-anchor="middle" class="lbl sub">completes the future exceptionally</text>
+
+  <path class="fail" d="M 160 382 V 402"/>
+  <rect x="20" y="402" width="280" height="70" rx="6" class="boxD"/>
+  <text x="160" y="424" text-anchor="middle" class="lbl body">setNextRunTime() SKIPPED</text>
+  <text x="160" y="444" text-anchor="middle" class="lbl body">re-enqueue SKIPPED</text>
+  <text x="160" y="460" text-anchor="middle" class="lbl sub">only a normal return re-arms the task</text>
+
+  <path class="fail" d="M 160 472 V 492"/>
+  <rect x="20" y="492" width="280" height="76" rx="6" class="boxD"/>
+  <text x="160" y="514" text-anchor="middle" class="lbl body">task never runs again</text>
+  <text x="160" y="534" text-anchor="middle" class="lbl body">nobody calls get()</text>
+  <text x="160" y="554" text-anchor="middle" class="lbl sub">fire-and-forget — swallowed silently</text>
+
+  <rect x="20" y="588" width="280" height="60" rx="6" class="boxA"/>
+  <text x="160" y="608" text-anchor="middle" class="lbl body">nothing is logged</text>
+  <text x="160" y="628" text-anchor="middle" class="lbl sub">bonuses stop expiring, no alert fires</text>
+  <path class="fail" d="M 160 568 V 588"/>
+
+  <!-- Fix path (right column) -->
+  <text x="480" y="86" class="lbl h2">THE FIX — try/catch inside the body</text>
+
+  <rect x="480" y="98" width="460" height="52" rx="6" class="boxP"/>
+  <text x="710" y="122" text-anchor="middle" class="lbl body mono">ScheduledFutureTask.run()</text>
+  <text x="710" y="140" text-anchor="middle" class="lbl sub">same entry point</text>
+
+  <path class="flow" d="M 710 150 V 170"/>
+  <rect x="480" y="170" width="460" height="52" rx="6" class="boxP"/>
+  <text x="710" y="194" text-anchor="middle" class="lbl body mono">runAndReset()</text>
+  <text x="710" y="212" text-anchor="middle" class="lbl sub">calls the wrapped sweep body</text>
+
+  <path class="flow" d="M 710 222 V 242"/>
+  <rect x="480" y="242" width="460" height="86" rx="6" class="boxR"/>
+  <text x="710" y="264" text-anchor="middle" class="lbl body mono">try { sweepExpiredBonuses(); }</text>
+  <text x="710" y="284" text-anchor="middle" class="lbl body mono">catch (Exception e) { log.error(..., e); }</text>
+  <text x="710" y="304" text-anchor="middle" class="lbl sub">the body itself never throws out of runAndReset</text>
+  <text x="710" y="320" text-anchor="middle" class="lbl sub">exception is caught and logged where it happens</text>
+
+  <path class="fix" d="M 710 328 V 348"/>
+  <rect x="480" y="348" width="460" height="52" rx="6" class="boxR"/>
+  <text x="710" y="372" text-anchor="middle" class="lbl body">runAndReset() returns normally</text>
+  <text x="710" y="390" text-anchor="middle" class="lbl sub">success path, always taken now</text>
+
+  <path class="fix" d="M 710 400 V 420"/>
+  <rect x="480" y="420" width="460" height="60" rx="6" class="boxR"/>
+  <text x="710" y="442" text-anchor="middle" class="lbl body mono">setNextRunTime() + re-enqueue</text>
+  <text x="710" y="460" text-anchor="middle" class="lbl sub">stays reachable every single run</text>
+
+  <path class="fix" d="M 940 450 H 985 V 124 H 940"/>
+  <text x="1000" y="290" text-anchor="middle" class="lbl tiny" transform="rotate(-90 1000 290)">re-enqueued onto the delay queue, loops back to run()</text>
+
+  <line x1="20" y1="668" x2="1100" y2="668" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="20" y="680" width="1080" height="60" rx="6" class="boxA"/>
+  <text x="560" y="702" text-anchor="middle" class="lbl body">The catch belongs inside the task body, not around the scheduling call — a try/catch wrapped</text>
+  <text x="560" y="722" text-anchor="middle" class="lbl body">around scheduler.scheduleAtFixedRate(...) only guards the one submission, not every future firing.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="760" x2="1100" y2="760" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="772" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="784" class="lbl tiny">executor-internal step (both paths)</text>
+  <rect x="290" y="772" width="20" height="14" rx="3" class="boxD"/>
+  <text x="316" y="784" class="lbl tiny">failure — exception propagates, task dies silently</text>
+  <rect x="640" y="772" width="20" height="14" rx="3" class="boxR"/>
+  <text x="666" y="784" class="lbl tiny">success / fixed — re-enqueue stays reachable</text>
+  <rect x="940" y="772" width="20" height="14" rx="3" class="boxA"/>
+  <text x="966" y="784" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 800 H 60"/>
+  <text x="68" y="805" class="lbl tiny">normal control flow</text>
+  <path class="fail" d="M 280 800 H 320"/>
+  <text x="328" y="805" class="lbl tiny">flow after an uncaught exception</text>
+  <path class="fix" d="M 620 800 H 660"/>
+  <text x="668" y="805" class="lbl tiny">flow once the body catches its own exceptions</text>
+</svg>

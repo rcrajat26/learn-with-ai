@@ -1,0 +1,159 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of a PaymentRun worker's stop flag. Left: draining
+     is a plain boolean; the JIT's C2 compiler hoists the field read out of the loop after
+     enough iterations, producing while (true) that never re-reads memory, so after another
+     thread calls drain(), which sets draining to false, the worker never stops. Right: draining
+     is declared volatile; every iteration re-reads it from main memory through a LoadLoad and
+     LoadStore barrier, so the same drain() call is observed on the very next iteration and the
+     worker exits its loop.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE MISSING volatile STOP FLAG NEVER STOPS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Section band headers -->
+  <rect x="20" y="56" width="520" height="26" rx="4" class="boxD"/>
+  <text x="280" y="74" text-anchor="middle" class="lbl h2">PLAIN boolean draining — WORKER NEVER STOPS</text>
+
+  <rect x="580" y="56" width="520" height="26" rx="4" class="boxR"/>
+  <text x="840" y="74" text-anchor="middle" class="lbl h2">volatile boolean draining — WORKER STOPS</text>
+
+  <!-- LEFT COLUMN -->
+  <!-- source box -->
+  <rect x="40" y="98" width="480" height="120" rx="6" class="boxP"/>
+  <text x="60" y="120" class="lbl body mono" font-weight="600">class PaymentRun {</text>
+  <text x="76" y="140" class="lbl body mono">boolean draining = true;</text>
+  <text x="76" y="160" class="lbl body mono">void worker() {</text>
+  <text x="92" y="178" class="lbl body mono">while (draining) {</text>
+  <text x="108" y="196" class="lbl sub mono">processNextWithdrawal();</text>
+  <text x="60" y="212" class="lbl body mono">}</text>
+
+  <path class="flow" d="M 280 218 V 240"/>
+  <text x="290" y="235" class="lbl sub">C2 hoists the read</text>
+
+  <!-- hoisted pseudo-assembly box -->
+  <rect x="40" y="248" width="480" height="150" rx="6" class="boxD"/>
+  <text x="60" y="270" class="lbl body mono" font-weight="600">; C2-compiled, draining hoisted out</text>
+  <text x="76" y="292" class="lbl body mono">LOAD  r1, [this.draining]</text>
+  <text x="76" y="310" class="lbl sub mono">; read happens ONCE, before the loop</text>
+  <text x="76" y="330" class="lbl body mono">L1:</text>
+  <text x="92" y="348" class="lbl body mono">CMP   r1, 0</text>
+  <text x="92" y="366" class="lbl body mono">JZ    exit</text>
+  <text x="92" y="384" class="lbl body mono">CALL  processNextWithdrawal</text>
+
+  <rect x="40" y="410" width="480" height="60" rx="6" class="boxD"/>
+  <text x="60" y="432" class="lbl body mono">JMP   L1</text>
+  <text x="60" y="452" class="lbl sub mono">; r1 never reloaded &#8594; effectively while (true)</text>
+
+  <path class="flow" d="M 280 470 V 492"/>
+
+  <!-- another thread calls drain() -->
+  <rect x="40" y="500" width="480" height="60" rx="6" class="boxW"/>
+  <text x="60" y="524" class="lbl body">operator-review-1 calls run.drain()</text>
+  <text x="60" y="544" class="lbl sub">sets this.draining = false in main memory</text>
+
+  <path class="weak" d="M 280 560 V 590"/>
+  <text x="290" y="580" class="lbl sub">no effect on r1</text>
+
+  <!-- observation -->
+  <rect x="40" y="598" width="480" height="90" rx="6" class="boxA"/>
+  <text x="60" y="620" class="lbl body" font-weight="600">Observed:</text>
+  <text x="60" y="640" class="lbl dense">worker() spins forever consuming a core;</text>
+  <text x="60" y="658" class="lbl dense">payment-run-worker never exits drain(),</text>
+  <text x="60" y="676" class="lbl dense">the batch never completes its shutdown.</text>
+
+  <!-- RIGHT COLUMN -->
+  <rect x="600" y="98" width="480" height="120" rx="6" class="boxP"/>
+  <text x="620" y="120" class="lbl body mono" font-weight="600">class PaymentRun {</text>
+  <text x="636" y="140" class="lbl body mono">volatile boolean draining = true;</text>
+  <text x="636" y="160" class="lbl body mono">void worker() {</text>
+  <text x="652" y="178" class="lbl body mono">while (draining) {</text>
+  <text x="668" y="196" class="lbl sub mono">processNextWithdrawal();</text>
+  <text x="620" y="212" class="lbl body mono">}</text>
+
+  <path class="flow" d="M 840 218 V 240"/>
+  <text x="850" y="235" class="lbl sub">C2 cannot hoist a volatile read</text>
+
+  <rect x="600" y="248" width="480" height="150" rx="6" class="boxR"/>
+  <text x="620" y="270" class="lbl body mono" font-weight="600">; C2-compiled, draining stays in loop</text>
+  <text x="636" y="292" class="lbl body mono">L1:</text>
+  <text x="652" y="310" class="lbl body mono">LOAD  r1, [this.draining]  ; LoadLoad</text>
+  <text x="652" y="330" class="lbl sub mono">; re-executed every iteration</text>
+  <text x="652" y="350" class="lbl body mono">CMP   r1, 0</text>
+  <text x="652" y="368" class="lbl body mono">JZ    exit</text>
+  <text x="652" y="386" class="lbl body mono">CALL  processNextWithdrawal</text>
+
+  <rect x="600" y="410" width="480" height="60" rx="6" class="boxR"/>
+  <text x="620" y="432" class="lbl body mono">JMP   L1</text>
+  <text x="620" y="452" class="lbl sub mono">; fresh LOAD every pass, sees the new value</text>
+
+  <path class="flow" d="M 840 470 V 492"/>
+
+  <rect x="600" y="500" width="480" height="60" rx="6" class="boxW"/>
+  <text x="620" y="524" class="lbl body">operator-review-1 calls run.drain()</text>
+  <text x="620" y="544" class="lbl sub">volatile write: StoreStore + StoreLoad barrier, flushed</text>
+
+  <path class="flow" d="M 840 560 V 590"/>
+  <text x="850" y="580" class="lbl sub">next LOAD sees false</text>
+
+  <rect x="600" y="598" width="480" height="90" rx="6" class="boxA"/>
+  <text x="620" y="620" class="lbl body" font-weight="600">Observed:</text>
+  <text x="620" y="640" class="lbl dense">on the very next loop iteration, L1's LOAD</text>
+  <text x="620" y="658" class="lbl dense">reads false; JZ exit fires; payment-run-worker</text>
+  <text x="620" y="676" class="lbl dense">returns from worker() and drain() completes.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="706" x2="1100" y2="706" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="718" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="731" class="lbl tiny">source code</text>
+
+  <rect x="180" y="718" width="22" height="16" rx="3" class="boxD"/>
+  <text x="210" y="731" class="lbl tiny">compiled form that misbehaves (hoisted read)</text>
+
+  <rect x="530" y="718" width="22" height="16" rx="3" class="boxR"/>
+  <text x="560" y="731" class="lbl tiny">compiled form that behaves correctly (volatile read)</text>
+
+  <rect x="900" y="718" width="22" height="16" rx="3" class="boxW"/>
+  <text x="930" y="731" class="lbl tiny">external actor / event</text>
+
+  <rect x="20" y="744" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="757" class="lbl tiny">annotation: what the reader observes</text>
+
+  <path class="flow" d="M 260 750 H 300"/>
+  <text x="380" y="756" class="lbl tiny">A &#8594; B : B happens after A (sequential step)</text>
+
+  <path class="weak" d="M 720 750 H 760"/>
+  <text x="770" y="756" class="lbl tiny">A &#8594; B : write has no effect on A (stale register)</text>
+
+  <text x="20" y="785" class="lbl sub">Both loops read the same field, this.draining, in a PaymentRun worker; only the JMM-mandated re-read makes the write from drain() visible.</text>
+</svg>

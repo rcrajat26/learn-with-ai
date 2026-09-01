@@ -1,0 +1,69 @@
+<svg viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: switching to mapToLong(i -> i).sum() accumulates in a long instead of
+     an int. The same stake amounts sum to the correct 2,147,483,751 with no wraparound, because the
+     long accumulator's range vastly exceeds the total. Three totals are compared: the int total
+     before overflow, 2,147,483,501; the wrapped int result, -2,147,483,545; and the correct long
+     result, 2,147,483,751.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="470" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 3/3 — mapToLong(i -&gt; i).sum() PRODUCES THE CORRECT TOTAL</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="360" height="56" rx="6" class="boxR"/>
+  <text x="220" y="90" text-anchor="middle" class="lbl node">2,800,000 stakes (minor units)</text>
+  <text x="220" y="108" text-anchor="middle" class="lbl sub">IntStream.of(stakes).mapToLong(i -&gt; i)</text>
+
+  <path class="flow" d="M 400 94 H 460"/>
+
+  <rect x="460" y="66" width="400" height="56" rx="6" class="boxR"/>
+  <text x="660" y="90" text-anchor="middle" class="lbl node">accumulator: long</text>
+  <text x="660" y="108" text-anchor="middle" class="lbl sub">range &#8811; total, no wrap possible here</text>
+
+  <path class="flow" d="M 660 122 V 154"/>
+
+  <rect x="40" y="156" width="820" height="50" rx="6" class="boxR"/>
+  <text x="450" y="186" text-anchor="middle" class="lbl node">.sum() returns 2,147,483,751</text>
+
+  <line x1="20" y1="232" x2="880" y2="232" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="254" class="lbl body" font-weight="700">All three totals for the same 2,800,000 stakes</text>
+
+  <rect x="40" y="266" width="820" height="42" rx="6" class="boxH"/>
+  <text x="60" y="292" class="lbl body">before overflow (int, second-to-last stake): 2,147,483,501</text>
+
+  <rect x="40" y="314" width="820" height="42" rx="6" class="boxD"/>
+  <text x="60" y="340" class="lbl body">IntStream.sum() (wrapped, wrong): -2,147,483,545</text>
+
+  <rect x="40" y="362" width="820" height="42" rx="6" class="boxR"/>
+  <text x="60" y="388" class="lbl body">mapToLong(i -&gt; i).sum() (correct): 2,147,483,751</text>
+
+  <line x1="20" y1="420" x2="880" y2="420" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="432" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="445" class="lbl tiny">value still within int range</text>
+  <rect x="280" y="432" width="22" height="16" rx="3" class="boxD"/>
+  <text x="310" y="445" class="lbl tiny">wrong / overflowed value</text>
+  <rect x="520" y="432" width="22" height="16" rx="3" class="boxR"/>
+  <text x="550" y="445" class="lbl tiny">correct value</text>
+  <path class="flow" d="M 660 440 H 700"/>
+  <text x="708" y="445" class="lbl tiny">A &#8594; B : B follows from A</text>
+</svg>

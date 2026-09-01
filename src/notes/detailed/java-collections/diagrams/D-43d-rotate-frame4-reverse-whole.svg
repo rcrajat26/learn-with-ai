@@ -1,0 +1,26 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="rotate frame 4: reverse the whole array, producing the final result 5,6,7,1,2,3,4">
+  <rect x="20" y="20" width="360" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="200" y="38" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 4: reverse the whole array</text>
+
+  <g font-family="sans-serif">
+    <rect x="55" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="100" y="115" text-anchor="middle" font-size="15" fill="#1f2937">5</text>
+    <rect x="155" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="200" y="115" text-anchor="middle" font-size="15" fill="#1f2937">6</text>
+    <rect x="255" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="300" y="115" text-anchor="middle" font-size="15" fill="#1f2937">7</text>
+    <rect x="355" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="400" y="115" text-anchor="middle" font-size="15" fill="#1f2937">1</text>
+    <rect x="455" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="500" y="115" text-anchor="middle" font-size="15" fill="#1f2937">2</text>
+    <rect x="555" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="600" y="115" text-anchor="middle" font-size="15" fill="#1f2937">3</text>
+    <rect x="655" y="80" width="90" height="60" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="700" y="115" text-anchor="middle" font-size="15" fill="#1f2937">4</text>
+  </g>
+
+  <rect x="130" y="190" width="540" height="46" rx="3" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="210" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">reverse([4,3,2,1,7,6,5]) &#8594; [5,6,7,1,2,3,4]</text>
+  <text x="400" y="228" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Collections.rotate(list, 3) final result</text>
+</svg>

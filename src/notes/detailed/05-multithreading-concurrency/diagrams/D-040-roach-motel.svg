@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-family comparison around a synchronized(lock) block guarding FundsLedger.reserveStake. Left family, LEGAL MOTIONS: a statement above the block may sink into the block, and a statement below the block may rise into the block; both arrows point inward across the block's boundary. The acquire edge on entry is labelled acquire: forbids hoisting later code earlier. The release edge on exit is labelled release: forbids sinking earlier code later. Right family, ILLEGAL MOTIONS: a statement originally inside the block trying to escape upward or downward out of the block is drawn crossed out, since the compiler and CPU may never reorder it past the acquire or release boundary.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .allow { fill: none; stroke: #15803d; stroke-width: 2.4; marker-end: url(#triG); }
+    .forbid{ fill: none; stroke: #b91c1c; stroke-width: 2.4; stroke-dasharray: 3 3; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ROACH MOTEL: CODE MOVES IN, NEVER OUT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <rect x="20" y="56" width="520" height="28" rx="6" class="boxR"/>
+  <text x="280" y="75" text-anchor="middle" class="lbl h2">LEGAL MOTIONS — sink or rise inward</text>
+
+  <rect x="580" y="56" width="520" height="28" rx="6" class="boxD"/>
+  <text x="840" y="75" text-anchor="middle" class="lbl h2">ILLEGAL MOTIONS — escaping the block</text>
+
+  <!-- LEFT column: statement above, block, statement below -->
+  <rect x="80" y="100" width="380" height="50" rx="6" class="boxW"/>
+  <text x="270" y="122" text-anchor="middle" class="lbl mono">readStake(request)</text>
+  <text x="270" y="138" text-anchor="middle" class="lbl sub">statement above the block</text>
+
+  <path class="allow" d="M 270 150 V 176"/>
+  <text x="290" y="168" class="lbl tiny" fill="#15803d">may sink in</text>
+
+  <rect x="80" y="180" width="380" height="130" rx="6" class="boxH"/>
+  <text x="100" y="202" class="lbl node">synchronized(lock) {</text>
+  <text x="118" y="222" class="lbl mono">FundsLedger.reserveStake(...)</text>
+  <text x="100" y="242" class="lbl node">}</text>
+  <text x="100" y="264" class="lbl sub" fill="#b45309" font-weight="700">entry — acquire semantics</text>
+  <text x="100" y="280" class="lbl sub">forbids hoisting later code to run before entry</text>
+  <text x="100" y="296" class="lbl sub" fill="#b45309" font-weight="700">exit — release semantics (below)</text>
+
+  <path class="allow" d="M 270 310 V 336"/>
+  <text x="290" y="328" class="lbl tiny" fill="#15803d">may rise in</text>
+
+  <rect x="80" y="340" width="380" height="50" rx="6" class="boxW"/>
+  <text x="270" y="362" text-anchor="middle" class="lbl mono">notifyLedgerUpdated(entry)</text>
+  <text x="270" y="378" text-anchor="middle" class="lbl sub">statement below the block</text>
+
+  <rect x="80" y="410" width="380" height="70" rx="6" class="boxA"/>
+  <text x="96" y="430" class="lbl node">both edges pull inward only</text>
+  <text x="96" y="448" class="lbl tiny">readStake may run later, inside the block's window;</text>
+  <text x="96" y="464" class="lbl tiny">notifyLedgerUpdated may run earlier, same reason</text>
+
+  <!-- RIGHT column: escape attempts -->
+  <rect x="640" y="100" width="380" height="50" rx="6" class="boxD"/>
+  <text x="830" y="122" text-anchor="middle" class="lbl mono">readStake(request)</text>
+  <text x="830" y="138" text-anchor="middle" class="lbl sub">would-be escapee, moved above</text>
+
+  <path class="forbid" d="M 830 150 V 176"/>
+  <text x="850" y="168" class="lbl tiny" fill="#b91c1c">forbidden — crosses acquire</text>
+
+  <rect x="640" y="180" width="380" height="130" rx="6" class="boxH"/>
+  <text x="660" y="202" class="lbl node">synchronized(lock) {</text>
+  <text x="678" y="222" class="lbl mono">FundsLedger.reserveStake(...)</text>
+  <text x="660" y="242" class="lbl node">}</text>
+  <text x="660" y="264" class="lbl sub" fill="#b45309" font-weight="700">acquire on entry</text>
+  <text x="660" y="280" class="lbl sub">no read/write inside may cross this line outward</text>
+  <text x="660" y="296" class="lbl sub" fill="#b45309" font-weight="700">release on exit (below)</text>
+
+  <path class="forbid" d="M 830 310 V 336"/>
+  <text x="850" y="328" class="lbl tiny" fill="#b91c1c">forbidden — crosses release</text>
+
+  <rect x="640" y="340" width="380" height="50" rx="6" class="boxD"/>
+  <text x="830" y="362" text-anchor="middle" class="lbl mono">FundsLedger.reserveStake(...)</text>
+  <text x="830" y="378" text-anchor="middle" class="lbl sub">would-be escapee, moved below</text>
+
+  <!-- crossed-out marks -->
+  <line x1="655" y1="105" x2="1005" y2="145" stroke="#b91c1c" stroke-width="2.4"/>
+  <line x1="1005" y1="105" x2="655" y2="145" stroke="#b91c1c" stroke-width="2.4"/>
+  <line x1="655" y1="345" x2="1005" y2="385" stroke="#b91c1c" stroke-width="2.4"/>
+  <line x1="1005" y1="345" x2="655" y2="385" stroke="#b91c1c" stroke-width="2.4"/>
+
+  <rect x="640" y="410" width="380" height="70" rx="6" class="boxA"/>
+  <text x="656" y="430" class="lbl node">the reserveStake call may never leave</text>
+  <text x="656" y="448" class="lbl tiny">compiler/CPU may fold code into the critical section,</text>
+  <text x="656" y="464" class="lbl tiny">never let it leave the acquire/release pair</text>
+
+  <!-- bottom banner -->
+  <rect x="120" y="510" width="880" height="60" rx="8" class="boxH"/>
+  <text x="560" y="534" text-anchor="middle" class="lbl node" font-weight="700">roach motel reordering: code checks in, it doesn't check out</text>
+  <text x="560" y="554" text-anchor="middle" class="lbl body">the JMM lets the JIT and CPU move surrounding statements deeper into a critical section for optimization,</text>
+  <text x="560" y="567" text-anchor="middle" class="lbl sub">but never lets a statement that started inside migrate past the acquire or the release boundary</text>
+
+  <!-- annotation: acquire/release semantics recap -->
+  <rect x="40" y="590" width="1040" height="106" rx="6" class="boxA"/>
+  <text x="56" y="610" class="lbl node">why the asymmetry exists</text>
+  <text x="56" y="630" class="lbl body">acquire (on lock entry) forbids hoisting a later memory access to before the acquire — otherwise a thread could read</text>
+  <text x="56" y="648" class="lbl body">stale ledger state before it actually holds the lock. release (on unlock) forbids sinking an earlier access to after the</text>
+  <text x="56" y="666" class="lbl body">release — otherwise a write to CLIENT_CASH_AVAILABLE inside reserveStake could leak out unflushed. Together they form</text>
+  <text x="56" y="684" class="lbl sub">a one-way membrane: motion inward is free optimization, motion outward would break the mutual-exclusion guarantee.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="716" x2="1100" y2="716" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="728" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="741" class="lbl tiny">statement outside the block</text>
+  <rect x="230" y="728" width="22" height="16" rx="3" class="boxH"/>
+  <text x="260" y="741" class="lbl tiny">synchronized(lock) block on FundsLedger.reserveStake</text>
+  <rect x="590" y="728" width="22" height="16" rx="3" class="boxD"/>
+  <text x="620" y="741" class="lbl tiny">forbidden escape / crossed out</text>
+  <rect x="850" y="728" width="22" height="16" rx="3" class="boxA"/>
+  <text x="880" y="741" class="lbl tiny">annotation panel</text>
+
+  <path class="allow" d="M 20 762 H 60"/>
+  <text x="68" y="767" class="lbl tiny">legal motion inward (sink / rise)</text>
+  <path class="forbid" d="M 340 762 H 380"/>
+  <text x="388" y="767" class="lbl tiny">illegal motion outward across acquire/release</text>
+</svg>

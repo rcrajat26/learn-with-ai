@@ -1,0 +1,98 @@
+<svg viewBox="0 0 940 520" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4 of the Collector contract. finisher() transforms the accumulated
+     container into the declared result type. Top path: a collector without IDENTITY_FINISH runs
+     finisher() to convert, for example an intermediate array into an unmodifiable List. Bottom path:
+     groupingBy with counting() carries IDENTITY_FINISH, so finisher() is skipped and the container
+     itself, a Map from CARD and BANK to their counts, is returned as-is via Function.identity().
+     A legend lists the three Characteristics values: CONCURRENT, UNORDERED, IDENTITY_FINISH.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="940" height="520" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 4/4 — finisher() TRANSFORMS TO THE RESULT TYPE</text>
+  <line x1="20" y1="40" x2="920" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="30" y="64" class="lbl h2">GENERAL CASE — finisher() RUNS</text>
+
+  <rect x="40" y="76" width="220" height="54" rx="6" class="boxH"/>
+  <text x="150" y="98" text-anchor="middle" class="lbl node">intermediate container</text>
+  <text x="150" y="116" text-anchor="middle" class="lbl sub">e.g. Object[] accumulator</text>
+
+  <path class="flow" d="M 260 103 H 320"/>
+  <text x="290" y="95" text-anchor="middle" class="lbl sub">finisher()</text>
+
+  <rect x="320" y="76" width="260" height="54" rx="6" class="boxR"/>
+  <text x="450" y="98" text-anchor="middle" class="lbl node">List.copyOf(array)</text>
+  <text x="450" y="116" text-anchor="middle" class="lbl sub">declared result type</text>
+
+  <line x1="20" y1="150" x2="920" y2="150" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="174" class="lbl h2">THIS COLLECTOR — groupingBy(Deposit::rail, counting())</text>
+
+  <rect x="40" y="186" width="260" height="66" rx="6" class="boxH"/>
+  <text x="170" y="208" text-anchor="middle" class="lbl node">accumulated map</text>
+  <text x="170" y="226" text-anchor="middle" class="lbl sub">CARD &#8594; 95,000</text>
+  <text x="170" y="242" text-anchor="middle" class="lbl sub">BANK &#8594; 6,500</text>
+
+  <path class="weak" d="M 300 219 H 430"/>
+  <text x="365" y="207" text-anchor="middle" class="lbl sub">finisher() skipped</text>
+
+  <rect x="430" y="186" width="140" height="66" rx="6" class="boxW"/>
+  <text x="500" y="212" text-anchor="middle" class="lbl node">IDENTITY_FINISH</text>
+  <text x="500" y="230" text-anchor="middle" class="lbl sub">Function.identity()</text>
+
+  <path class="flow" d="M 570 219 H 600"/>
+
+  <rect x="600" y="186" width="300" height="66" rx="6" class="boxR"/>
+  <text x="750" y="208" text-anchor="middle" class="lbl node">Map&lt;String, Long&gt; returned as-is</text>
+  <text x="750" y="226" text-anchor="middle" class="lbl sub">CARD &#8594; 95,000, BANK &#8594; 6,500</text>
+  <text x="750" y="242" text-anchor="middle" class="lbl sub">the accumulated container itself</text>
+
+  <rect x="40" y="270" width="840" height="86" rx="6" class="panel"/>
+  <text x="56" y="292" class="lbl tiny" font-weight="700">Why IDENTITY_FINISH matters</text>
+  <text x="56" y="310" class="lbl tiny">counting() declares IDENTITY_FINISH, and groupingBy's own finisher composes with the</text>
+  <text x="56" y="326" class="lbl tiny">downstream's — when the downstream is IDENTITY_FINISH, the whole collector is too, so the</text>
+  <text x="56" y="342" class="lbl tiny">Map container built by accumulator() is the final result, no copy or wrap needed.</text>
+
+  <line x1="20" y1="380" x2="920" y2="380" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="398" class="lbl body" font-weight="700">Characteristics (java.util.stream.Collector.Characteristics)</text>
+  <text x="56" y="416" class="lbl tiny">CONCURRENT &#8212; accumulator() may be called from multiple threads on the same shared container</text>
+  <text x="56" y="432" class="lbl tiny">UNORDERED &#8212; the collector does not commit to preserving encounter order</text>
+  <text x="56" y="448" class="lbl tiny">IDENTITY_FINISH &#8212; finisher() is Function.identity() and safely skippable</text>
+
+  <line x1="20" y1="466" x2="920" y2="466" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="478" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="491" class="lbl tiny">intermediate / accumulated container</text>
+  <rect x="330" y="478" width="22" height="16" rx="3" class="boxW"/>
+  <text x="360" y="491" class="lbl tiny">Characteristics flag node</text>
+  <rect x="560" y="478" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="491" class="lbl tiny">final result</text>
+  <path class="flow" d="M 700 486 H 740"/>
+  <text x="748" y="491" class="lbl tiny">finisher() runs</text>
+  <path class="weak" d="M 20 502 H 60"/>
+  <text x="68" y="507" class="lbl tiny">finisher() skipped (IDENTITY_FINISH)</text>
+</svg>

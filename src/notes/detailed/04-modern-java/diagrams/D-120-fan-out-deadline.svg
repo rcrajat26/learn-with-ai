@@ -1,0 +1,142 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A fan-out with one deadline. Top: a StructuredTaskScope joinUntil deadline drawn as a
+     vertical line at 2 seconds across two subtask lanes — IdentityVendorTask at 900 millisecond p50
+     completes inside the deadline, WatchlistProviderTask at 25 second p99 is interrupted and cut off
+     at the deadline, and scope.join() returns with a timeout. Bottom: the alternative of per-subtask
+     timeouts, where IdentityVendorTask completes against its own 1 second timeout and
+     WatchlistProviderTask keeps running toward its own 30 second timeout with no shared deadline to
+     cut it early.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .ah    { font-size: 12px; font-weight: 700; }
+    .axis  { font-size: 10.5px; fill: #4b5563; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .deadline { fill: none; stroke: #b45309; stroke-width: 2; }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A FAN-OUT WITH ONE DEADLINE — StructuredTaskScope.joinUntil</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- GROUP 1 -->
+  <text x="20" y="66" class="lbl h2">STRUCTURED CONCURRENCY — SHARED DEADLINE (joinUntil)</text>
+
+  <line x1="200" y1="100" x2="980" y2="100" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="200" y1="95" x2="200" y2="105" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="356" y1="95" x2="356" y2="105" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="512" y1="95" x2="512" y2="105" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="668" y1="95" x2="668" y2="105" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="824" y1="95" x2="824" y2="105" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="980" y1="95" x2="980" y2="105" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="200" y="118" text-anchor="middle" class="lbl axis">0s</text>
+  <text x="356" y="118" text-anchor="middle" class="lbl axis">0.5s</text>
+  <text x="512" y="118" text-anchor="middle" class="lbl axis">1s</text>
+  <text x="668" y="118" text-anchor="middle" class="lbl axis">1.5s</text>
+  <text x="824" y="118" text-anchor="middle" class="lbl axis">2s</text>
+  <text x="980" y="118" text-anchor="middle" class="lbl axis">2.5s</text>
+
+  <text x="20" y="158" class="lbl body">IdentityVendorTask</text>
+  <text x="20" y="175" class="lbl sub">p50 900 ms</text>
+  <rect x="200" y="148" width="281" height="24" rx="4" class="boxR"/>
+  <text x="340" y="164" text-anchor="middle" class="lbl tiny">COMPLETES</text>
+
+  <text x="20" y="208" class="lbl body">WatchlistProviderTask</text>
+  <text x="20" y="225" class="lbl sub">p99 25 s</text>
+  <rect x="200" y="198" width="624" height="24" rx="4" class="boxD"/>
+  <text x="512" y="214" text-anchor="middle" class="lbl tiny">CUT OFF AT DEADLINE</text>
+  <path class="weak" d="M 824 210 H 980"/>
+  <text x="902" y="196" text-anchor="middle" class="lbl sub">…to p99 25s</text>
+
+  <path class="deadline" d="M 824 90 V 300"/>
+  <text x="830" y="88" class="lbl tiny">joinUntil(Instant) deadline = 2s</text>
+
+  <path class="flow" d="M 824 176 H 800 V 198"/>
+  <text x="772" y="172" text-anchor="end" class="lbl tiny">interrupt()</text>
+
+  <path class="flow" d="M 824 300 V 310"/>
+  <rect x="724" y="310" width="200" height="44" rx="6" class="boxH"/>
+  <text x="824" y="328" text-anchor="middle" class="lbl tiny">scope.join()</text>
+  <text x="824" y="344" text-anchor="middle" class="lbl tiny">returns — TIMEOUT</text>
+
+  <rect x="200" y="380" width="780" height="56" rx="6" class="boxA"/>
+  <text x="216" y="398" class="lbl ah">One deadline governs the whole fan-out</text>
+  <text x="216" y="418" class="lbl tiny">IdentityVendorTask finishes inside 2s; WatchlistProviderTask is interrupted mid-flight, discarding its p99 tail.</text>
+
+  <!-- GROUP 2 -->
+  <text x="20" y="456" class="lbl h2">ALTERNATIVE — PER-SUBTASK TIMEOUTS (NO SHARED DEADLINE)</text>
+
+  <line x1="200" y1="490" x2="980" y2="490" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="200" y1="485" x2="200" y2="495" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="356" y1="485" x2="356" y2="495" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="512" y1="485" x2="512" y2="495" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="668" y1="485" x2="668" y2="495" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="824" y1="485" x2="824" y2="495" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="980" y1="485" x2="980" y2="495" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="200" y="508" text-anchor="middle" class="lbl axis">0s</text>
+  <text x="356" y="508" text-anchor="middle" class="lbl axis">0.5s</text>
+  <text x="512" y="508" text-anchor="middle" class="lbl axis">1s</text>
+  <text x="668" y="508" text-anchor="middle" class="lbl axis">1.5s</text>
+  <text x="824" y="508" text-anchor="middle" class="lbl axis">2s</text>
+  <text x="980" y="508" text-anchor="middle" class="lbl axis">2.5s</text>
+
+  <text x="20" y="548" class="lbl body">IdentityVendorTask</text>
+  <text x="20" y="565" class="lbl sub">own timeout 1 s</text>
+  <rect x="200" y="538" width="281" height="24" rx="4" class="boxR"/>
+  <text x="340" y="554" text-anchor="middle" class="lbl tiny">COMPLETES (900 ms &lt; 1s)</text>
+  <path class="weak" d="M 512 530 V 570"/>
+  <text x="512" y="524" text-anchor="middle" class="lbl sub">own timeout 1s</text>
+
+  <text x="20" y="598" class="lbl body">WatchlistProviderTask</text>
+  <text x="20" y="615" class="lbl sub">own timeout 30 s</text>
+  <rect x="200" y="588" width="780" height="24" rx="4" class="boxD"/>
+  <text x="590" y="604" text-anchor="middle" class="lbl tiny">IN FLIGHT — continues past window</text>
+  <text x="976" y="580" text-anchor="end" class="lbl sub">→ own timeout 30s (off-scale)</text>
+
+  <rect x="200" y="650" width="780" height="70" rx="6" class="boxA"/>
+  <text x="216" y="668" class="lbl ah">No shared cutoff</text>
+  <text x="216" y="686" class="lbl tiny">WatchlistProviderTask is bounded only by its own 30s timeout, independent of IdentityVendorTask's completion —</text>
+  <text x="216" y="702" class="lbl tiny">there is no joinUntil to interrupt it early.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="736" x2="1020" y2="736" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="750" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="763" class="lbl tiny">subtask completes</text>
+
+  <rect x="270" y="750" width="22" height="16" rx="3" class="boxD"/>
+  <text x="300" y="763" class="lbl tiny">subtask in flight / cut off</text>
+
+  <rect x="520" y="750" width="22" height="16" rx="3" class="boxH"/>
+  <text x="550" y="763" class="lbl tiny">scope return marker</text>
+
+  <rect x="770" y="750" width="22" height="16" rx="3" class="boxA"/>
+  <text x="800" y="763" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 780 H 60"/>
+  <text x="68" y="785" class="lbl tiny">A → B : A causes B</text>
+
+  <path class="deadline" d="M 350 780 H 390"/>
+  <text x="398" y="785" class="lbl tiny">joinUntil deadline line</text>
+
+  <path class="weak" d="M 680 780 H 720"/>
+  <text x="728" y="785" class="lbl tiny">hypothetical / independent timeout</text>
+</svg>

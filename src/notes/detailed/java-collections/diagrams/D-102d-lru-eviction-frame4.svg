@@ -1,0 +1,55 @@
+<svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4: removeNode evicts B, leaving C, A, D as the surviving chain">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="36" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937" font-weight="bold">The LRU eviction cycle -- frame 4 of 4</text>
+  <text x="450" y="58" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">removeNode(hash(B), B, null, false, true) executes the eviction</text>
+
+  <rect x="40" y="80" width="820" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="52" y="102" font-family="sans-serif" font-size="12" fill="#1f2937">protected boolean removeEldestEntry(Map.Entry&lt;K,V&gt; eldest) {</text>
+  <text x="70" y="122" font-family="sans-serif" font-size="12" fill="#1f2937">return size() &gt; 3;</text>
+  <text x="52" y="142" font-family="sans-serif" font-size="12" fill="#1f2937">}</text>
+  <text x="52" y="160" font-family="sans-serif" font-size="12" fill="#1f2937">override in effect on this map</text>
+
+  <text x="450" y="200" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">final chain: C -&gt; A -&gt; D  (head = C, tail = D, size = 3)</text>
+
+  <g font-family="sans-serif">
+    <rect x="150" y="220" width="80" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="190" y="250" text-anchor="middle" font-size="15" fill="#1f2937">C</text>
+    <rect x="330" y="220" width="80" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="370" y="250" text-anchor="middle" font-size="15" fill="#1f2937">A</text>
+    <rect x="510" y="220" width="80" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="550" y="250" text-anchor="middle" font-size="15" fill="#1f2937">D</text>
+
+    <line x1="230" y1="238" x2="328" y2="238" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="328" y1="252" x2="230" y2="252" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="410" y1="238" x2="508" y2="238" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="508" y1="252" x2="410" y2="252" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  </g>
+
+  <rect x="150" y="277" width="150" height="20" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="291" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">head = C (eldest)</text>
+  <rect x="480" y="277" width="150" height="20" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="555" y="291" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">tail = D (youngest)</text>
+
+  <!-- Detached, evicted B -->
+  <rect x="690" y="220" width="120" height="50" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="750" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+  <text x="750" y="285" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">detached</text>
+
+  <rect x="40" y="320" width="820" height="120" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="60" y="345" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">B evicted -- and note it was B, not the key inserted longest ago in</text>
+  <text x="60" y="365" font-family="sans-serif" font-size="13" fill="#1f2937">wall-clock terms, because get(A) in frame 2 rescued A from being the</text>
+  <text x="60" y="385" font-family="sans-serif" font-size="13" fill="#1f2937">eldest. Without that get(A), A -- inserted first -- would have been the</text>
+  <text x="60" y="405" font-family="sans-serif" font-size="13" fill="#1f2937">one evicted instead.</text>
+  <text x="60" y="425" font-family="sans-serif" font-size="13" fill="#1f2937">size() &gt; 3 becomes false again once B is removed; size = 3 restored.</text>
+
+  <rect x="40" y="460" width="820" height="60" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="488" font-family="sans-serif" font-size="13" fill="#1f2937">Surviving chain C -&gt; A -&gt; D is the true recency order: C least</text>
+  <text x="60" y="508" font-family="sans-serif" font-size="13" fill="#1f2937">recently used, D most recently used (just inserted).</text>
+</svg>

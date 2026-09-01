@@ -1,0 +1,222 @@
+<svg viewBox="0 0 1040 790" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="removeIf runs two passes over six Restriction elements. Pass one evaluates
+     the predicate on each element and sets a bit in a long[] deathRow at the relative index
+     of every doomed element, here R1 and R4, expired restrictions. Between the passes the
+     modCount is checked against expectedModCount; a mismatch throws ConcurrentModificationException,
+     otherwise modCount increments. Pass two compacts the array, copying each surviving element
+     to the write cursor w and skipping doomed slots, then shiftTailOverGap clears the trailing
+     slots to null.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .secTiny{ font-size: 11px; fill: #4b5563; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; stroke-dasharray: 6 4; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="790" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">REMOVEIF'S TWO PASSES</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- PASS 1 -->
+  <text x="30" y="58" class="lbl h2">PASS 1 — MARK (deathRow bitset)</text>
+  <text x="30" y="72" class="lbl secTiny">filter.test(Restriction) == true &#8658; setBit(deathRow, i - beg)</text>
+
+  <!-- row 1: Restriction elements -->
+  <g>
+    <rect x="30" y="82" width="120" height="60" rx="6" class="boxP"/>
+    <text x="90" y="102" text-anchor="middle" class="lbl node">R0</text>
+    <text x="90" y="120" text-anchor="middle" class="lbl body">C-2201</text>
+    <text x="90" y="135" text-anchor="middle" class="lbl sub">ACTIVE</text>
+
+    <rect x="166" y="82" width="120" height="60" rx="6" class="boxD"/>
+    <text x="226" y="102" text-anchor="middle" class="lbl node">R1</text>
+    <text x="226" y="120" text-anchor="middle" class="lbl body">C-3387</text>
+    <text x="226" y="135" text-anchor="middle" class="lbl sub">EXPIRED 02:14</text>
+
+    <rect x="302" y="82" width="120" height="60" rx="6" class="boxP"/>
+    <text x="362" y="102" text-anchor="middle" class="lbl node">R2</text>
+    <text x="362" y="120" text-anchor="middle" class="lbl body">C-5510</text>
+    <text x="362" y="135" text-anchor="middle" class="lbl sub">ACTIVE</text>
+
+    <rect x="438" y="82" width="120" height="60" rx="6" class="boxP"/>
+    <text x="498" y="102" text-anchor="middle" class="lbl node">R3</text>
+    <text x="498" y="120" text-anchor="middle" class="lbl body">C-1187</text>
+    <text x="498" y="135" text-anchor="middle" class="lbl sub">ACTIVE</text>
+
+    <rect x="574" y="82" width="120" height="60" rx="6" class="boxD"/>
+    <text x="634" y="102" text-anchor="middle" class="lbl node">R4</text>
+    <text x="634" y="120" text-anchor="middle" class="lbl body">C-9902</text>
+    <text x="634" y="135" text-anchor="middle" class="lbl sub">EXPIRED 05:40</text>
+
+    <rect x="710" y="82" width="120" height="60" rx="6" class="boxP"/>
+    <text x="770" y="102" text-anchor="middle" class="lbl node">R5</text>
+    <text x="770" y="120" text-anchor="middle" class="lbl body">C-4471</text>
+    <text x="770" y="135" text-anchor="middle" class="lbl sub">ACTIVE</text>
+  </g>
+
+  <!-- predicate arrows into deathRow bits -->
+  <path class="flow" d="M 90 142 V 168"/>
+  <path class="flow" d="M 226 142 V 168"/>
+  <path class="flow" d="M 362 142 V 168"/>
+  <path class="flow" d="M 498 142 V 168"/>
+  <path class="flow" d="M 634 142 V 168"/>
+  <path class="flow" d="M 770 142 V 168"/>
+
+  <!-- deathRow bit cells -->
+  <g>
+    <rect x="70" y="168" width="40" height="40" rx="4" class="boxW"/>
+    <text x="90" y="182" text-anchor="middle" class="lbl sub">i0</text>
+    <text x="90" y="200" text-anchor="middle" class="lbl body">0</text>
+
+    <rect x="206" y="168" width="40" height="40" rx="4" class="boxD"/>
+    <text x="226" y="182" text-anchor="middle" class="lbl sub">i1</text>
+    <text x="226" y="200" text-anchor="middle" class="lbl body">1</text>
+
+    <rect x="342" y="168" width="40" height="40" rx="4" class="boxW"/>
+    <text x="362" y="182" text-anchor="middle" class="lbl sub">i2</text>
+    <text x="362" y="200" text-anchor="middle" class="lbl body">0</text>
+
+    <rect x="478" y="168" width="40" height="40" rx="4" class="boxW"/>
+    <text x="498" y="182" text-anchor="middle" class="lbl sub">i3</text>
+    <text x="498" y="200" text-anchor="middle" class="lbl body">0</text>
+
+    <rect x="614" y="168" width="40" height="40" rx="4" class="boxD"/>
+    <text x="634" y="182" text-anchor="middle" class="lbl sub">i4</text>
+    <text x="634" y="200" text-anchor="middle" class="lbl body">1</text>
+
+    <rect x="750" y="168" width="40" height="40" rx="4" class="boxW"/>
+    <text x="770" y="182" text-anchor="middle" class="lbl sub">i5</text>
+    <text x="770" y="200" text-anchor="middle" class="lbl body">0</text>
+  </g>
+  <text x="30" y="222" class="lbl secTiny">deathRow = nBits(6) = new long[1]. Bits 6&#8211;63 of deathRow[0] stay 0 &#8212; one long word covers 64 elements.</text>
+
+  <!-- Panel A: bitset helpers -->
+  <rect x="30" y="240" width="980" height="105" rx="6" class="panel"/>
+  <text x="44" y="258" class="lbl h2">BITSET HELPERS &#8212; nBits &#183; setBit &#183; isClear</text>
+  <text x="44" y="278" class="lbl tiny">nBits(n) = new long[((n - 1) &gt;&gt; 6) + 1]  &#8212; one long word covers 64 elements</text>
+  <text x="44" y="298" class="lbl tiny">setBit(bits, i): bits[i &gt;&gt; 6] |= 1L &lt;&lt; i  &#8212; marks relative index i doomed</text>
+  <text x="44" y="318" class="lbl tiny">isClear(bits, i): (bits[i &gt;&gt; 6] &amp; (1L &lt;&lt; i)) == 0  &#8212; true when index i survives</text>
+
+  <!-- Panel B: modCount check -->
+  <rect x="30" y="360" width="980" height="70" rx="6" class="panel"/>
+  <text x="44" y="378" class="lbl h2">COMODIFICATION CHECK &#8212; sits between pass one and pass two</text>
+  <text x="44" y="399" class="lbl tiny">if (modCount != expectedModCount) throw new ConcurrentModificationException();</text>
+  <text x="44" y="418" class="lbl tiny">else { modCount++; }  &#8212; pass two (compaction) starts only once this passes</text>
+
+  <!-- PASS 2 -->
+  <text x="30" y="452" class="lbl h2">PASS 2 &#8212; COMPACT (write cursor w, then shiftTailOverGap)</text>
+
+  <!-- before-compaction row -->
+  <g>
+    <rect x="30" y="464" width="120" height="62" rx="6" class="boxP"/>
+    <text x="90" y="484" text-anchor="middle" class="lbl node">R0</text>
+    <text x="90" y="502" text-anchor="middle" class="lbl body">C-2201</text>
+    <text x="90" y="518" text-anchor="middle" class="lbl sub">survives</text>
+
+    <rect x="166" y="464" width="120" height="62" rx="6" class="boxD"/>
+    <text x="226" y="484" text-anchor="middle" class="lbl node">R1</text>
+    <text x="226" y="502" text-anchor="middle" class="lbl body">C-3387</text>
+    <text x="226" y="518" text-anchor="middle" class="lbl sub">DOOMED (skip)</text>
+
+    <rect x="302" y="464" width="120" height="62" rx="6" class="boxP"/>
+    <text x="362" y="484" text-anchor="middle" class="lbl node">R2</text>
+    <text x="362" y="502" text-anchor="middle" class="lbl body">C-5510</text>
+    <text x="362" y="518" text-anchor="middle" class="lbl sub">survives</text>
+
+    <rect x="438" y="464" width="120" height="62" rx="6" class="boxP"/>
+    <text x="498" y="484" text-anchor="middle" class="lbl node">R3</text>
+    <text x="498" y="502" text-anchor="middle" class="lbl body">C-1187</text>
+    <text x="498" y="518" text-anchor="middle" class="lbl sub">survives</text>
+
+    <rect x="574" y="464" width="120" height="62" rx="6" class="boxD"/>
+    <text x="634" y="484" text-anchor="middle" class="lbl node">R4</text>
+    <text x="634" y="502" text-anchor="middle" class="lbl body">C-9902</text>
+    <text x="634" y="518" text-anchor="middle" class="lbl sub">DOOMED (skip)</text>
+
+    <rect x="710" y="464" width="120" height="62" rx="6" class="boxP"/>
+    <text x="770" y="484" text-anchor="middle" class="lbl node">R5</text>
+    <text x="770" y="502" text-anchor="middle" class="lbl body">C-4471</text>
+    <text x="770" y="518" text-anchor="middle" class="lbl sub">survives</text>
+  </g>
+
+  <!-- compaction arrows, staggered corridors, zero crossings -->
+  <path class="flow" d="M 90 526 V 614"/>
+  <path class="flow" d="M 362 526 V 554 H 226 V 614"/>
+  <path class="flow" d="M 498 526 V 569 H 362 V 614"/>
+  <path class="flow" d="M 770 526 V 584 H 498 V 614"/>
+
+  <!-- after-compaction row -->
+  <g>
+    <rect x="30" y="614" width="120" height="62" rx="6" class="boxR"/>
+    <text x="90" y="634" text-anchor="middle" class="lbl node">R0</text>
+    <text x="90" y="652" text-anchor="middle" class="lbl body">C-2201</text>
+    <text x="90" y="668" text-anchor="middle" class="lbl sub">es[0]</text>
+
+    <rect x="166" y="614" width="120" height="62" rx="6" class="boxR"/>
+    <text x="226" y="634" text-anchor="middle" class="lbl node">R2</text>
+    <text x="226" y="652" text-anchor="middle" class="lbl body">C-5510</text>
+    <text x="226" y="668" text-anchor="middle" class="lbl sub">es[1]</text>
+
+    <rect x="302" y="614" width="120" height="62" rx="6" class="boxR"/>
+    <text x="362" y="634" text-anchor="middle" class="lbl node">R3</text>
+    <text x="362" y="652" text-anchor="middle" class="lbl body">C-1187</text>
+    <text x="362" y="668" text-anchor="middle" class="lbl sub">es[2]</text>
+
+    <rect x="438" y="614" width="120" height="62" rx="6" class="boxR"/>
+    <text x="498" y="634" text-anchor="middle" class="lbl node">R5</text>
+    <text x="498" y="652" text-anchor="middle" class="lbl body">C-4471</text>
+    <text x="498" y="668" text-anchor="middle" class="lbl sub">es[3]</text>
+
+    <rect x="574" y="614" width="120" height="62" rx="6" class="boxW"/>
+    <text x="634" y="634" text-anchor="middle" class="lbl node">&#8212;</text>
+    <text x="634" y="652" text-anchor="middle" class="lbl body">null</text>
+    <text x="634" y="668" text-anchor="middle" class="lbl sub">cleared</text>
+
+    <rect x="710" y="614" width="120" height="62" rx="6" class="boxW"/>
+    <text x="770" y="634" text-anchor="middle" class="lbl node">&#8212;</text>
+    <text x="770" y="652" text-anchor="middle" class="lbl body">null</text>
+    <text x="770" y="668" text-anchor="middle" class="lbl sub">cleared</text>
+  </g>
+
+  <text x="30" y="690" class="lbl secTiny">w = 4 after the loop &#8594; new size becomes 4 (was 6). shiftTailOverGap(es, 4, 6) nulls es[4] and es[5] for GC.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="708" x2="1020" y2="708" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="720" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="733" class="lbl tiny">active / surviving element</text>
+
+  <rect x="330" y="720" width="22" height="16" rx="3" class="boxD"/>
+  <text x="360" y="733" class="lbl tiny">predicate true &#8212; doomed, bit set to 1</text>
+
+  <rect x="660" y="720" width="22" height="16" rx="3" class="boxW"/>
+  <text x="690" y="733" class="lbl tiny">bit clear (0), or slot nulled after compaction</text>
+
+  <rect x="30" y="746" width="22" height="16" rx="3" class="boxR"/>
+  <text x="60" y="759" class="lbl tiny">final compacted slot (survivor moved to w)</text>
+
+  <path class="flow" d="M 340 754 H 380"/>
+  <text x="390" y="759" class="lbl tiny">A &#8594; B : B produced from / copied from A</text>
+
+  <rect x="700" y="746" width="22" height="16" rx="3" class="panel"/>
+  <text x="730" y="759" class="lbl tiny">annotation panel &#8212; helper methods / modCount rule</text>
+</svg>

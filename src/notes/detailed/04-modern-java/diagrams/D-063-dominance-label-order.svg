@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four panels on pattern-switch label dominance. Panel 1, before: case Verdict v written before case DocumentVerdict d — compile error, this case label is dominated by a preceding case label, because the general Verdict label already matches every DocumentVerdict. Panel 2, after: the specific DocumentVerdict label placed first, then the general Verdict label — compiles. Panel 3: a guarded case DocumentVerdict d when d.outcome() == REFERRED placed before its unguarded twin case DocumentVerdict d — compiles, because a guard removes the label from dominance analysis; the compiler cannot prove the guarded label matches everything the unguarded one matches. Panel 4: a total type pattern case Object o together with a trailing default label — compile error, default label is unreachable, because the total pattern already covers every remaining value.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">DOMINANCE AND LABEL ORDER IN A PATTERN SWITCH OVER Verdict</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Panel 1: BEFORE (broken order) -->
+  <text x="20" y="66" class="lbl h2">BEFORE — GENERAL LABEL FIRST</text>
+  <line x1="20" y1="74" x2="540" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="84" width="520" height="150" rx="6" class="boxD"/>
+  <text x="36" y="108" class="lbl code">case Verdict v -&gt; ...</text>
+  <text x="36" y="128" class="lbl code">case DocumentVerdict d -&gt; ...</text>
+  <text x="36" y="152" class="lbl body" font-weight="700">error: this case label is dominated</text>
+  <text x="36" y="170" class="lbl body" font-weight="700">by a preceding case label</text>
+  <text x="36" y="192" class="lbl sub">Verdict v already matches every DocumentVerdict,</text>
+  <text x="36" y="208" class="lbl sub">so the DocumentVerdict arm can never run — swallowed.</text>
+
+  <!-- Panel 2: AFTER (fixed order) -->
+  <text x="580" y="66" class="lbl h2">AFTER — SPECIFIC LABEL FIRST</text>
+  <line x1="580" y1="74" x2="1100" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="580" y="84" width="520" height="150" rx="6" class="boxG"/>
+  <text x="596" y="108" class="lbl code">case DocumentVerdict d -&gt; ...</text>
+  <text x="596" y="128" class="lbl code">case Verdict v -&gt; ...</text>
+  <text x="596" y="152" class="lbl body" font-weight="700">compiles</text>
+  <text x="596" y="174" class="lbl sub">DocumentVerdict is tested first, so it gets first refusal;</text>
+  <text x="596" y="190" class="lbl sub">Verdict v remains reachable as the catch-all for every</text>
+  <text x="596" y="206" class="lbl sub">other Verdict subtype (ScreeningVerdict, ReviewVerdict, WealthVerdict).</text>
+
+  <!-- Panel 3: guard removes from dominance -->
+  <text x="20" y="266" class="lbl h2">GUARDED LABEL BEFORE ITS UNGUARDED TWIN</text>
+  <line x1="20" y1="274" x2="540" y2="274" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="284" width="520" height="170" rx="6" class="boxG"/>
+  <text x="36" y="308" class="lbl code">case DocumentVerdict d</text>
+  <text x="36" y="326" class="lbl code">    when d.outcome() == REFERRED -&gt; ...</text>
+  <text x="36" y="346" class="lbl code">case DocumentVerdict d -&gt; ...</text>
+  <text x="36" y="370" class="lbl body" font-weight="700">compiles</text>
+  <text x="36" y="392" class="lbl sub">a when guard removes the label from dominance analysis:</text>
+  <text x="36" y="408" class="lbl sub">the compiler cannot prove the guarded arm matches every</text>
+  <text x="36" y="424" class="lbl sub">DocumentVerdict, only the REFERRED-outcome ones, so the</text>
+  <text x="36" y="440" class="lbl sub">unguarded twin below it is still reachable and required.</text>
+
+  <!-- Panel 4: total pattern + default -->
+  <text x="580" y="266" class="lbl h2">TOTAL TYPE PATTERN PLUS DEFAULT</text>
+  <line x1="580" y1="274" x2="1100" y2="274" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="580" y="284" width="520" height="170" rx="6" class="boxD"/>
+  <text x="596" y="308" class="lbl code">case Object o -&gt; ...</text>
+  <text x="596" y="326" class="lbl code">default -&gt; ...</text>
+  <text x="596" y="350" class="lbl body" font-weight="700">error: default label is unreachable</text>
+  <text x="596" y="374" class="lbl sub">case Object o is a total pattern for a Verdict selector — it</text>
+  <text x="596" y="390" class="lbl sub">matches every possible non-null value on its own, so no value</text>
+  <text x="596" y="406" class="lbl sub">is left over for default to catch. javac treats the trailing</text>
+  <text x="596" y="422" class="lbl sub">default as dead code and refuses to compile it.</text>
+
+  <!-- Dominance flowchart: shows swallowing visually -->
+  <text x="20" y="484" class="lbl h2">HOW SWALLOWING HAPPENS AT RUNTIME — PANEL 1's ORDER</text>
+  <line x1="20" y1="492" x2="1100" y2="492" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="512" width="200" height="56" rx="6" class="boxP"/>
+  <text x="140" y="536" text-anchor="middle" class="lbl node">v : DocumentVerdict</text>
+  <text x="140" y="554" text-anchor="middle" class="lbl sub">runtime type, enters switch</text>
+
+  <path class="flow" d="M 240 540 H 300"/>
+
+  <rect x="300" y="512" width="220" height="56" rx="6" class="boxW"/>
+  <text x="410" y="536" text-anchor="middle" class="lbl node">case Verdict v</text>
+  <text x="410" y="554" text-anchor="middle" class="lbl sub">first label in source order</text>
+
+  <path class="flow" d="M 520 540 H 580"/>
+  <text x="550" y="530" text-anchor="middle" class="lbl tiny">matches</text>
+
+  <rect x="580" y="512" width="240" height="56" rx="6" class="boxG"/>
+  <text x="700" y="536" text-anchor="middle" class="lbl node">case Verdict v -&gt; runs</text>
+  <text x="700" y="554" text-anchor="middle" class="lbl sub">the general arm always wins here</text>
+
+  <path class="fail" d="M 820 568 V 600 H 430 V 636"/>
+  <text x="600" y="594" text-anchor="middle" class="lbl tiny">case DocumentVerdict d is never reached from this value</text>
+
+  <rect x="300" y="640" width="260" height="56" rx="6" class="boxD"/>
+  <text x="430" y="664" text-anchor="middle" class="lbl node">DocumentVerdict arm: dead</text>
+  <text x="430" y="682" text-anchor="middle" class="lbl sub">this is what "dominated" means at runtime</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="716" width="1080" height="86" rx="6" class="panel"/>
+  <text x="36" y="738" class="lbl body" font-weight="700">The rule underlying all four panels</text>
+  <text x="36" y="758" class="lbl tiny">javac performs static dominance analysis on unguarded type-pattern labels: label B is dominated if an earlier label A's type is a</text>
+  <text x="36" y="774" class="lbl tiny">supertype of B's type (or A is a total pattern). Guards break this analysis because the compiler cannot statically prove coverage of a</text>
+  <text x="36" y="790" class="lbl tiny">boolean condition, so a guarded label never dominates and is never dominated by a same-type unguarded label placed after it.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="820" x2="1100" y2="820" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="832" width="22" height="16" rx="3" class="boxG"/>
+  <text x="50" y="845" class="lbl tiny">compiles / reachable arm</text>
+
+  <rect x="240" y="832" width="22" height="16" rx="3" class="boxD"/>
+  <text x="270" y="845" class="lbl tiny">compile error / dead code</text>
+
+  <rect x="460" y="832" width="22" height="16" rx="3" class="boxW"/>
+  <text x="490" y="845" class="lbl tiny">runtime test point</text>
+
+  <rect x="640" y="832" width="22" height="16" rx="3" class="boxP"/>
+  <text x="670" y="845" class="lbl tiny">value entering switch</text>
+
+  <path class="flow" d="M 820 840 H 860"/>
+  <text x="868" y="845" class="lbl tiny">A → B : control flow</text>
+
+  <path class="fail" d="M 20 866 H 60"/>
+  <text x="68" y="871" class="lbl tiny">A → B : A prevents B from ever being reached</text>
+</svg>

@@ -1,0 +1,71 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 4 of the Collector contract. accumulator() folds each deposit into the
+     map: a CARD deposit routes to key CARD and increments its counting() downstream, a BANK deposit
+     routes to key BANK and increments its own counter, one element at a time.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 2/4 — accumulator() FOLDS EACH ELEMENT IN</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="64" width="200" height="50" rx="6" class="boxP"/>
+  <text x="140" y="94" text-anchor="middle" class="lbl node">CARD deposit, 65</text>
+
+  <rect x="40" y="126" width="200" height="50" rx="6" class="boxP"/>
+  <text x="140" y="156" text-anchor="middle" class="lbl node">BANK deposit, 480</text>
+
+  <path class="flow" d="M 240 89 H 340"/>
+  <path class="flow" d="M 240 151 H 340"/>
+  <text x="290" y="70" text-anchor="middle" class="lbl sub">accumulator()</text>
+
+  <rect x="340" y="64" width="220" height="112" rx="6" class="boxH"/>
+  <text x="450" y="90" text-anchor="middle" class="lbl node">map.computeIfAbsent(rail, k -&gt; ...)</text>
+  <text x="450" y="110" text-anchor="middle" class="lbl sub">route deposit to its rail's key</text>
+  <text x="450" y="130" text-anchor="middle" class="lbl sub">then feed downstream counting()</text>
+  <text x="450" y="150" text-anchor="middle" class="lbl sub">accumulator: count += 1</text>
+
+  <path class="flow" d="M 560 100 H 600"/>
+
+  <rect x="600" y="64" width="260" height="50" rx="6" class="boxR"/>
+  <text x="730" y="94" text-anchor="middle" class="lbl node">CARD &#8594; 1 (running count)</text>
+
+  <path class="flow" d="M 560 150 H 600"/>
+
+  <rect x="600" y="126" width="260" height="50" rx="6" class="boxR"/>
+  <text x="730" y="156" text-anchor="middle" class="lbl node">BANK &#8594; 1 (running count)</text>
+
+  <rect x="40" y="198" width="820" height="66" rx="6" class="panel"/>
+  <text x="56" y="220" class="lbl tiny" font-weight="700">Called once per element</text>
+  <text x="56" y="238" class="lbl tiny">BiConsumer&lt;M, T&gt; — mutates the container in place and returns nothing.</text>
+  <text x="56" y="254" class="lbl tiny">Over 95,000 CARD and 6,500 BANK deposits, this runs 101,500 times.</text>
+
+  <line x1="20" y1="290" x2="880" y2="290" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="302" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="315" class="lbl tiny">input deposit element</text>
+  <rect x="300" y="302" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="315" class="lbl tiny">accumulator logic</text>
+  <rect x="500" y="302" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="315" class="lbl tiny">mutated container state</text>
+  <path class="flow" d="M 700 310 H 740"/>
+  <text x="748" y="315" class="lbl tiny">A &#8594; B : A is folded into B</text>
+</svg>

@@ -1,0 +1,168 @@
+<svg viewBox="0 0 1400 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame sequence showing how a pattern switch over Verdict compiles. Frame one:
+     the source switch with four type-pattern cases over DocumentVerdict, ScreeningVerdict,
+     ReviewVerdict and WealthVerdict. Frame two: the compiled code calls invokedynamic to
+     SwitchBootstraps.typeSwitch, passing a label list of Class objects as static arguments, with a
+     note that the same bootstrap accepts String and Integer constants and EnumDesc entries when a
+     switch mixes constant labels with type patterns. Frame three: the bootstrap's call site returns
+     the integer index of the first matching label, or minus one for no match. Frame four: an
+     ordinary tableswitch dispatches on that index, falling to a synthetic default that throws
+     MatchException. A javap -c listing compiled with javac --release 21 is shown beside the frames,
+     and a cost note states this shape is closer to an optimised if-chain than to a true jump table,
+     since the expensive type-testing work happens once inside the cached bootstrap call site.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; stroke-dasharray: 4 3; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .frame { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A PATTERN SWITCH OVER Verdict COMPILES TO typeSwitch, THEN tableswitch</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Frame 1 -->
+  <rect x="20" y="58" width="320" height="330" rx="6" class="frame"/>
+  <text x="36" y="80" class="lbl h2">FRAME 1 — SOURCE</text>
+  <rect x="36" y="94" width="288" height="270" rx="6" class="boxP"/>
+  <text x="50" y="116" class="lbl dense mono">switch (v) {</text>
+  <text x="66" y="140" class="lbl dense mono">case DocumentVerdict dv</text>
+  <text x="90" y="158" class="lbl dense mono">-&gt; "DOCUMENT";</text>
+  <text x="66" y="182" class="lbl dense mono">case ScreeningVerdict sv</text>
+  <text x="90" y="200" class="lbl dense mono">-&gt; "SCREENING";</text>
+  <text x="66" y="224" class="lbl dense mono">case ReviewVerdict rv</text>
+  <text x="90" y="242" class="lbl dense mono">-&gt; "REVIEW";</text>
+  <text x="66" y="266" class="lbl dense mono">case WealthVerdict wv</text>
+  <text x="90" y="284" class="lbl dense mono">-&gt; "WEALTH";</text>
+  <text x="50" y="308" class="lbl dense mono">}</text>
+  <text x="50" y="336" class="lbl sub">v : Verdict, a sealed interface —</text>
+  <text x="50" y="352" class="lbl sub">all four permitted subtypes covered</text>
+
+  <path class="flow" d="M 340 224 H 360"/>
+
+  <!-- Frame 2 -->
+  <rect x="364" y="58" width="360" height="330" rx="6" class="frame"/>
+  <text x="380" y="80" class="lbl h2">FRAME 2 — invokedynamic TO typeSwitch</text>
+  <rect x="380" y="94" width="328" height="90" rx="6" class="boxH"/>
+  <text x="544" y="116" text-anchor="middle" class="lbl body" style="font-weight:700;">invokedynamic #13</text>
+  <text x="544" y="136" text-anchor="middle" class="lbl dense mono">typeSwitch(Object,int):int</text>
+  <text x="544" y="154" text-anchor="middle" class="lbl sub">bootstrap: SwitchBootstraps.typeSwitch</text>
+  <text x="544" y="170" text-anchor="middle" class="lbl sub">selector v, start index 0</text>
+
+  <path class="flow" d="M 544 184 V 202"/>
+
+  <rect x="380" y="206" width="328" height="150" rx="6" class="boxW"/>
+  <text x="394" y="226" class="lbl tiny" style="font-weight:700;">static label-list arguments</text>
+  <text x="394" y="244" class="lbl tiny mono">Class: DocumentVerdict</text>
+  <text x="394" y="260" class="lbl tiny mono">Class: ScreeningVerdict</text>
+  <text x="394" y="276" class="lbl tiny mono">Class: ReviewVerdict</text>
+  <text x="394" y="292" class="lbl tiny mono">Class: WealthVerdict</text>
+  <text x="394" y="312" class="lbl tiny">general bootstrap shape also accepts:</text>
+  <text x="394" y="328" class="lbl tiny mono">String / Integer constants, EnumDesc</text>
+  <text x="394" y="344" class="lbl tiny">(when constant labels mix with patterns)</text>
+
+  <path class="flow" d="M 724 224 H 744"/>
+
+  <!-- Frame 3 -->
+  <rect x="748" y="58" width="300" height="330" rx="6" class="frame"/>
+  <text x="764" y="80" class="lbl h2">FRAME 3 — BOOTSTRAP RETURNS INDEX</text>
+  <rect x="764" y="120" width="268" height="120" rx="6" class="boxR"/>
+  <text x="898" y="144" text-anchor="middle" class="lbl body" style="font-weight:700;">call site returns int</text>
+  <text x="898" y="166" text-anchor="middle" class="lbl dense">index of first label whose</text>
+  <text x="898" y="184" text-anchor="middle" class="lbl dense">Class isInstance(v) is true</text>
+  <text x="898" y="204" text-anchor="middle" class="lbl dense mono">DocumentVerdict → 0</text>
+  <text x="898" y="222" text-anchor="middle" class="lbl dense mono">no match → -1</text>
+
+  <path class="flow" d="M 898 240 V 260"/>
+  <rect x="764" y="264" width="268" height="70" rx="6" class="boxW"/>
+  <text x="898" y="286" text-anchor="middle" class="lbl tiny">result is left on the operand</text>
+  <text x="898" y="302" text-anchor="middle" class="lbl tiny">stack for the next bytecode —</text>
+  <text x="898" y="318" text-anchor="middle" class="lbl tiny">an ordinary int, nothing special</text>
+
+  <path class="flow" d="M 1048 224 H 1068"/>
+
+  <!-- Frame 4 -->
+  <rect x="1072" y="58" width="308" height="330" rx="6" class="frame"/>
+  <text x="1088" y="80" class="lbl h2">FRAME 4 — ORDINARY tableswitch</text>
+  <rect x="1088" y="94" width="276" height="150" rx="6" class="boxP"/>
+  <text x="1226" y="114" text-anchor="middle" class="lbl body mono" style="font-weight:700;">tableswitch { 0 to 3</text>
+  <text x="1226" y="134" text-anchor="middle" class="lbl dense mono">0: -&gt; "DOCUMENT"</text>
+  <text x="1226" y="152" text-anchor="middle" class="lbl dense mono">1: -&gt; "SCREENING"</text>
+  <text x="1226" y="170" text-anchor="middle" class="lbl dense mono">2: -&gt; "REVIEW"</text>
+  <text x="1226" y="188" text-anchor="middle" class="lbl dense mono">3: -&gt; "WEALTH"</text>
+  <text x="1226" y="206" text-anchor="middle" class="lbl dense mono">default: -&gt; throw</text>
+  <text x="1226" y="224" text-anchor="middle" class="lbl dense mono">MatchException }</text>
+
+  <path class="flow" d="M 1226 244 V 264"/>
+  <rect x="1088" y="268" width="276" height="66" rx="6" class="boxD"/>
+  <text x="1226" y="290" text-anchor="middle" class="lbl tiny" style="font-weight:700;">synthetic default</text>
+  <text x="1226" y="308" text-anchor="middle" class="lbl tiny mono">new MatchException(String, Throwable)</text>
+  <text x="1226" y="324" text-anchor="middle" class="lbl tiny">unreachable here — v is exhaustively covered</text>
+
+  <!-- javap listing -->
+  <text x="20" y="418" class="lbl h2">javap -c -p -v Classify.class (compiled --release 21)</text>
+  <rect x="20" y="428" width="900" height="212" rx="6" class="boxW"/>
+  <text x="34" y="450" class="lbl tiny mono">9: aload_1</text>
+  <text x="34" y="466" class="lbl tiny mono">10: iload_2</text>
+  <text x="34" y="482" class="lbl tiny mono">11: invokedynamic #13,  0   // InvokeDynamic #0:typeSwitch:(Ljava/lang/Object;I)I</text>
+  <text x="34" y="498" class="lbl tiny mono">16: tableswitch   { // 0 to 3</text>
+  <text x="34" y="514" class="lbl tiny mono">              0: 58   1: 68   2: 79   3: 90   default: 48 }</text>
+  <text x="34" y="534" class="lbl tiny mono">48: new #17           // class java/lang/MatchException</text>
+  <text x="34" y="550" class="lbl tiny mono">54: invokespecial #19 // MatchException."&lt;init&gt;":(Ljava/lang/String;Ljava/lang/Throwable;)V</text>
+  <text x="34" y="566" class="lbl tiny mono">57: athrow</text>
+  <text x="34" y="586" class="lbl tiny mono">BootstrapMethods:</text>
+  <text x="34" y="602" class="lbl tiny mono">  0: REF_invokeStatic java/lang/runtime/SwitchBootstraps.typeSwitch</text>
+  <text x="34" y="618" class="lbl tiny mono">     Method arguments: DocumentVerdict, ScreeningVerdict, ReviewVerdict, WealthVerdict</text>
+
+  <!-- cost annotation -->
+  <rect x="940" y="428" width="440" height="212" rx="6" class="boxA"/>
+  <text x="954" y="450" class="lbl body" style="font-weight:700;">Cost note</text>
+  <text x="954" y="472" class="lbl tiny">Closer to an optimised if-chain than to a true jump</text>
+  <text x="954" y="488" class="lbl tiny">table: the typeSwitch call site does the sequential</text>
+  <text x="954" y="504" class="lbl tiny">isInstance testing once and caches the linkage, so</text>
+  <text x="954" y="520" class="lbl tiny">repeat dispatches skip re-testing — but the labels</text>
+  <text x="954" y="536" class="lbl tiny">are still tried in source order on a cache miss, not</text>
+  <text x="954" y="552" class="lbl tiny">hashed or table-indexed the way an int/enum switch's</text>
+  <text x="954" y="568" class="lbl tiny">tableswitch already is by the time it runs.</text>
+  <text x="954" y="592" class="lbl tiny" style="font-weight:700;">Version trap</text>
+  <text x="954" y="610" class="lbl tiny mono">IncompatibleClassChangeError (&lt;21) vs</text>
+  <text x="954" y="626" class="lbl tiny mono">java.lang.MatchException (21+) — same default</text>
+
+  <!-- legend -->
+  <line x1="20" y1="656" x2="1380" y2="656" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="668" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="680" class="lbl tiny">bytecode dispatch step</text>
+  <rect x="219" y="668" width="22" height="14" rx="3" class="boxH"/>
+  <text x="249" y="680" class="lbl tiny">typeSwitch call site</text>
+  <rect x="406" y="668" width="22" height="14" rx="3" class="boxR"/>
+  <text x="436" y="680" class="lbl tiny">value produced (index)</text>
+  <rect x="605" y="668" width="22" height="14" rx="3" class="boxD"/>
+  <text x="635" y="680" class="lbl tiny">thrown exception</text>
+  <rect x="768" y="668" width="22" height="14" rx="3" class="boxW"/>
+  <text x="798" y="680" class="lbl tiny">verified compiler / static-argument detail</text>
+  <rect x="1060" y="668" width="22" height="14" rx="3" class="boxA"/>
+  <text x="1090" y="680" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 700 H 60"/>
+  <text x="68" y="705" class="lbl tiny">A → B : B is the next step in compilation / execution, left to right across the four frames</text>
+</svg>

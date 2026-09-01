@@ -1,0 +1,60 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Java 7 concurrent resize cycle frame 3 of 4: T2 finishes transferring the bin, head insertion reverses it to B then A">
+  <defs>
+    <marker id="arrow94c" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="32" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937">Java 7's concurrent-resize cycle -- frame 3 of 4</text>
+
+  <!-- code box -->
+  <rect x="40" y="48" width="820" height="96" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="70" font-family="sans-serif" font-size="13" fill="#1f2937">
+    <tspan x="60" dy="0">Entry&lt;K,V&gt; next = e.next;</tspan>
+    <tspan x="60" dy="20">int i = indexFor(e.hash, newCapacity);</tspan>
+    <tspan x="60" dy="20">e.next = newTable[i];</tspan>
+    <tspan x="60" dy="20">newTable[i] = e;</tspan>
+  </text>
+
+  <!-- old table -->
+  <rect x="60" y="165" width="340" height="110" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="188" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">old bin (unchanged by T2's reads)</text>
+  <rect x="90" y="205" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="125" y="230" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+  <line x1="160" y1="225" x2="210" y2="225" stroke="#737373" stroke-width="2" marker-end="url(#arrow94c)"/>
+  <rect x="210" y="205" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="245" y="230" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+  <line x1="280" y1="225" x2="330" y2="225" stroke="#737373" stroke-width="2" marker-end="url(#arrow94c)"/>
+  <text x="345" y="230" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">null</text>
+
+  <!-- T1 still preempted -->
+  <rect x="60" y="285" width="340" height="90" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="230" y="307" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">T1 -- still preempted</text>
+  <text x="230" y="330" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">e = A, next = B (stale)</text>
+  <text x="230" y="352" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">has not resumed execution</text>
+
+  <!-- T2 new table, finished, green -->
+  <rect x="500" y="165" width="340" height="140" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="188" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">T2's new table -- finished</text>
+  <rect x="530" y="210" width="70" height="40" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="565" y="235" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+  <line x1="600" y1="230" x2="650" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow94c)"/>
+  <rect x="650" y="210" width="70" height="40" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="685" y="235" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+  <line x1="720" y1="230" x2="770" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow94c)"/>
+  <text x="790" y="235" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">null</text>
+  <text x="670" y="278" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">B -&gt; A -&gt; null</text>
+  <text x="670" y="296" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">correct, but reversed -- head insertion</text>
+
+  <!-- write log numbered 1-4 -->
+  <rect x="60" y="390" width="780" height="150" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="450" y="412" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">T2's pointer writes, in order</text>
+  <text x="80" y="436" font-family="sans-serif" font-size="13" fill="#1f2937">
+    <tspan x="80" dy="0">(1) A.next = null      -- A moved first, becomes tail of new bin</tspan>
+    <tspan x="80" dy="24">(2) newTable[i] = A     -- new bin head is temporarily A</tspan>
+    <tspan x="80" dy="24">(3) B.next = A          -- B moved second, points at A</tspan>
+    <tspan x="80" dy="24">(4) newTable[i] = B     -- new bin head becomes B; final: B -&gt; A -&gt; null</tspan>
+  </text>
+</svg>

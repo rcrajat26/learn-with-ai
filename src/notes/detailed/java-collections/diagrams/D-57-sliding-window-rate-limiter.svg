@@ -1,0 +1,154 @@
+<svg viewBox="0 0 800 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three time-step timeline of a sliding-window rate limiter backed by TreeMap of timestamp to count, showing headMap(now-window).clear() evicting the expired prefix and subMap(now-window,true,now,true) summing the live window">
+  <defs>
+    <marker id="arrow57" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="4" width="760" height="28" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="23" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Sliding-window rate limiter — TreeMap&lt;Long,Integer&gt; timestamp &#8594; count</text>
+
+  <!-- ================= PANEL 1: t = 100 ================= -->
+  <g>
+    <rect x="20" y="40" width="300" height="28" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="170" y="59" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">now = 100, window = 20</text>
+
+    <!-- boxes: slots 0..5 => t=70,80,85,90,95,100 -->
+    <rect x="80" y="66" width="50" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="105" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">70:2</text>
+
+    <rect x="146" y="66" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="171" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">80:3</text>
+    <rect x="212" y="66" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="237" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">85:1</text>
+    <rect x="278" y="66" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="303" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">90:4</text>
+    <rect x="344" y="66" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="369" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">95:2</text>
+    <rect x="410" y="66" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="435" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">100:3</text>
+
+    <line x1="60" y1="130" x2="740" y2="130" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <text x="750" y="134" font-family="sans-serif" font-size="11" fill="#1f2937">t</text>
+
+    <line x1="113" y1="40" x2="113" y2="230" stroke="#525252" stroke-width="2" stroke-dasharray="5,4"/>
+    <rect x="55" y="204" width="120" height="22" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="115" y="219" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">now - window = 80</text>
+
+    <line x1="460" y1="40" x2="460" y2="230" stroke="#525252" stroke-width="2" stroke-dasharray="5,4"/>
+    <rect x="420" y="204" width="90" height="22" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="465" y="219" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">now = 100</text>
+
+    <rect x="80" y="146" width="50" height="16" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <path d="M 105,146 L 105,116" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <rect x="30" y="172" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="105" y="188" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">headMap(80).clear() &#8594; {70}</text>
+
+    <rect x="146" y="146" width="314" height="16" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <path d="M 303,146 L 303,116" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <rect x="250" y="172" width="290" height="24" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="395" y="188" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">subMap(80,true,100,true).values().sum() = 13</text>
+  </g>
+
+  <!-- ================= PANEL 2: t = 110 ================= -->
+  <g>
+    <rect x="20" y="340" width="300" height="28" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="170" y="359" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">now = 110, window = 20</text>
+
+    <!-- boxes: slots 1..7 => t=80,85,90,95,100,105,110 -->
+    <rect x="146" y="366" width="50" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="171" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">80:3</text>
+    <rect x="212" y="366" width="50" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="237" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">85:1</text>
+
+    <rect x="278" y="366" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="303" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">90:4</text>
+    <rect x="344" y="366" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="369" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">95:2</text>
+    <rect x="410" y="366" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="435" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">100:3</text>
+
+    <rect x="476" y="334" width="34" height="16" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="1"/>
+    <text x="493" y="346" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new</text>
+    <rect x="476" y="366" width="50" height="34" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="501" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">105:2</text>
+
+    <rect x="542" y="334" width="34" height="16" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="1"/>
+    <text x="559" y="346" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new</text>
+    <rect x="542" y="366" width="50" height="34" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="567" y="387" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">110:3</text>
+
+    <line x1="60" y1="430" x2="740" y2="430" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <text x="750" y="434" font-family="sans-serif" font-size="11" fill="#1f2937">t</text>
+
+    <line x1="245" y1="340" x2="245" y2="530" stroke="#525252" stroke-width="2" stroke-dasharray="5,4"/>
+    <rect x="185" y="504" width="120" height="22" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="245" y="519" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">now - window = 90</text>
+
+    <line x1="592" y1="340" x2="592" y2="530" stroke="#525252" stroke-width="2" stroke-dasharray="5,4"/>
+    <rect x="547" y="504" width="90" height="22" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="592" y="519" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">now = 110</text>
+
+    <rect x="146" y="446" width="116" height="16" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <path d="M 204,446 L 204,416" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <rect x="150" y="472" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="225" y="488" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">headMap(90).clear() &#8594; {80,85}</text>
+
+    <rect x="278" y="446" width="314" height="16" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <path d="M 435,446 L 435,416" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <rect x="380" y="472" width="290" height="24" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="525" y="488" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">subMap(90,true,110,true).values().sum() = 14</text>
+  </g>
+
+  <!-- ================= PANEL 3: t = 120 ================= -->
+  <g>
+    <rect x="20" y="640" width="300" height="28" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="170" y="659" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">now = 120, window = 20</text>
+
+    <!-- boxes: slots 3..9 => t=90,95,100,105,110,115,120 -->
+    <rect x="278" y="666" width="50" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="303" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">90:4</text>
+    <rect x="344" y="666" width="50" height="34" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="369" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">95:2</text>
+
+    <rect x="410" y="666" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="435" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">100:3</text>
+    <rect x="476" y="666" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="501" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">105:2</text>
+    <rect x="542" y="666" width="50" height="34" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="567" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">110:3</text>
+
+    <rect x="608" y="634" width="34" height="16" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="1"/>
+    <text x="625" y="646" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new</text>
+    <rect x="608" y="666" width="50" height="34" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="633" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">115:1</text>
+
+    <rect x="674" y="634" width="34" height="16" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="1"/>
+    <text x="691" y="646" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new</text>
+    <rect x="674" y="666" width="50" height="34" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+    <text x="699" y="687" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">120:4</text>
+
+    <line x1="60" y1="730" x2="750" y2="730" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <text x="758" y="734" font-family="sans-serif" font-size="11" fill="#1f2937">t</text>
+
+    <line x1="377" y1="640" x2="377" y2="830" stroke="#525252" stroke-width="2" stroke-dasharray="5,4"/>
+    <rect x="317" y="804" width="130" height="22" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="382" y="819" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">now - window = 100</text>
+
+    <line x1="724" y1="640" x2="724" y2="830" stroke="#525252" stroke-width="2" stroke-dasharray="5,4"/>
+    <rect x="679" y="804" width="90" height="22" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="724" y="819" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">now = 120</text>
+
+    <rect x="278" y="746" width="116" height="16" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <path d="M 336,746 L 336,716" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <rect x="280" y="772" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="355" y="788" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">headMap(100).clear() &#8594; {90,95}</text>
+
+    <rect x="410" y="746" width="314" height="16" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <path d="M 567,746 L 567,716" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow57)"/>
+    <rect x="510" y="772" width="290" height="24" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="655" y="788" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">subMap(100,true,120,true).values().sum() = 13</text>
+  </g>
+</svg>

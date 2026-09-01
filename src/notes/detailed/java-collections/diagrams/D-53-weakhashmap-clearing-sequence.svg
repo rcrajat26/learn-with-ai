@@ -1,0 +1,63 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="WeakHashMap clearing sequence timeline: strong reachability, dropped strong ref, GC clears and enqueues, expungeStaleEntries on next operation, entry unlinked, with an arbitrary-length gap between drop and unlink">
+  <defs>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="30" y="35" font-family="sans-serif" font-size="15" fill="#1f2937" font-weight="bold">Entry&lt;K,V&gt; extends WeakReference&lt;Object&gt; implements Map.Entry&lt;K,V&gt;; ReferenceQueue&lt;Object&gt; queue field</text>
+
+  <!-- timeline axis -->
+  <line x1="60" y1="220" x2="740" y2="220" stroke="#737373" stroke-width="2" marker-end="url(#arrow3)"/>
+  <text x="720" y="245" font-family="sans-serif" font-size="13" fill="#1f2937">time</text>
+
+  <!-- point 1 -->
+  <circle cx="100" cy="220" r="6" fill="#525252"/>
+  <rect x="30" y="260" width="140" height="70" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="100" y="278" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">1. Live</text>
+  <text x="100" y="296" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">key K strongly</text>
+  <text x="100" y="310" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">reachable, entry live</text>
+  <text x="100" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">in table</text>
+
+  <!-- point 2 -->
+  <circle cx="260" cy="220" r="6" fill="#525252"/>
+  <rect x="190" y="260" width="140" height="80" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="260" y="278" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">2. Dropped</text>
+  <text x="260" y="296" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">last strong ref to</text>
+  <text x="260" y="310" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">K goes away. Entry</text>
+  <text x="260" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">still present;</text>
+  <text x="260" y="338" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">size() still counts it</text>
+
+  <!-- point 3 -->
+  <circle cx="440" cy="220" r="6" fill="#525252"/>
+  <rect x="370" y="260" width="140" height="80" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="440" y="278" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">3. GC clears</text>
+  <text x="440" y="296" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">collector clears the</text>
+  <text x="440" y="310" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">weak referent K,</text>
+  <text x="440" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">enqueues Entry on</text>
+  <text x="440" y="338" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">the ReferenceQueue</text>
+
+  <!-- point 4 -->
+  <circle cx="600" cy="220" r="6" fill="#525252"/>
+  <rect x="530" y="260" width="140" height="80" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="600" y="278" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">4. Next op</text>
+  <text x="600" y="296" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">any subsequent map</text>
+  <text x="600" y="310" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">operation (get/put/</text>
+  <text x="600" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">size) calls</text>
+  <text x="600" y="338" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">expungeStaleEntries()</text>
+
+  <!-- point 5 -->
+  <circle cx="720" cy="220" r="6" fill="#525252"/>
+  <rect x="655" y="150" width="140" height="60" rx="6" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="725" y="168" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937" font-weight="bold">5. Unlinked</text>
+  <text x="725" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">entry removed</text>
+  <text x="725" y="200" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">from table, size--</text>
+  <line x1="720" y1="210" x2="720" y2="215" stroke="#737373" stroke-width="2"/>
+
+  <!-- gap annotation between 2 and 5 -->
+  <line x1="260" y1="350" x2="720" y2="350" stroke="#737373" stroke-width="2" stroke-dasharray="6,4"/>
+  <rect x="400" y="360" width="340" height="26" rx="3" fill="#fef3c7"/>
+  <text x="570" y="378" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">arbitrary-length gap: entry can linger from point 2 until point 5 -- no guaranteed bound</text>
+</svg>

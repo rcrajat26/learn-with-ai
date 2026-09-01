@@ -1,0 +1,58 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 4: a coding agent generates a file that contains a literal NUL byte among ordinary text bytes.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 1 OF 4 — THE CHECKER THAT SWITCHED ITSELF OFF</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="80" width="220" height="70" rx="6" class="boxP"/>
+  <text x="170" y="108" text-anchor="middle" class="lbl node">coding agent</text>
+  <text x="170" y="128" text-anchor="middle" class="lbl sub">writes generated file</text>
+
+  <path class="flow" d="M 280 115 H 360"/>
+
+  <rect x="360" y="70" width="440" height="230" rx="6" class="boxD"/>
+  <text x="580" y="96" text-anchor="middle" class="lbl node">generated file — bytes on disk</text>
+
+  <rect x="390" y="112" width="380" height="40" rx="4" fill="#ffffff" stroke="#b91c1c" stroke-width="1.3"/>
+  <text x="404" y="137" class="lbl body mono">public class Order {</text>
+
+  <rect x="390" y="160" width="380" height="40" rx="4" fill="#ffffff" stroke="#b91c1c" stroke-width="1.3"/>
+  <text x="404" y="185" class="lbl body mono">int status<tspan fill="#b91c1c" font-weight="700">\0</tspan>Code;</text>
+
+  <rect x="600" y="160" width="60" height="40" rx="4" class="boxD"/>
+  <text x="630" y="180" text-anchor="middle" class="lbl tiny" font-weight="700">0x00</text>
+  <text x="630" y="193" text-anchor="middle" class="lbl sub">NUL byte</text>
+
+  <rect x="390" y="208" width="380" height="40" rx="4" fill="#ffffff" stroke="#b91c1c" stroke-width="1.3"/>
+  <text x="404" y="233" class="lbl body mono">}</text>
+
+  <text x="390" y="270" class="lbl tiny">a single literal NUL byte (0x00) sits inside an otherwise ordinary source file</text>
+  <text x="390" y="286" class="lbl sub">— e.g. from a truncated write, a bad decode, or a copy from a binary buffer</text>
+
+  <line x1="20" y1="330" x2="880" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="342" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="355" class="lbl tiny">byte content that will defeat text-based checks</text>
+  <rect x="360" y="342" width="22" height="16" rx="3" class="boxP"/>
+  <text x="390" y="355" class="lbl tiny">the agent producing the artifact</text>
+</svg>

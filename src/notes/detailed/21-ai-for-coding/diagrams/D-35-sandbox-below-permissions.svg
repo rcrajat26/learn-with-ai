@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1000 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three stacked layers, top to bottom: the model's intent, shaped by the prompt and CLAUDE.md; the permission rules enforced by the harness, meaning permissions.allow, permissions.deny and permissions.ask; and the OS sandbox at the bottom, covering sandbox.enabled, filesystem allow and deny lists, the network allowlist, and credential masking. An arrow shows a Python subprocess opening a file directly: it originates in the model's intent layer, passes straight through the permission rules layer untouched, and is stopped only at the OS sandbox layer.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bypass{ fill: none; stroke: #b91c1c; stroke-width: 2.4; stroke-linejoin: round; marker-end: url(#triD); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="760" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-35 — THE SANDBOX IS THE LAYER BELOW PERMISSIONS</text>
+  <line x1="20" y1="40" x2="980" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">LAYER 1 — MODEL'S INTENT</text>
+  <rect x="20" y="76" width="700" height="90" rx="6" class="boxP"/>
+  <text x="370" y="102" text-anchor="middle" class="lbl node">shaped by the prompt and CLAUDE.md</text>
+  <text x="370" y="124" text-anchor="middle" class="lbl body">the model decides to run: python3 -c "open('/etc/shadow').read()"</text>
+  <text x="370" y="146" text-anchor="middle" class="lbl sub">intent alone carries no enforcement — it is just what the model wants to do</text>
+
+  <rect x="740" y="76" width="240" height="90" rx="6" class="boxD"/>
+  <text x="860" y="100" text-anchor="middle" class="lbl node">Python subprocess</text>
+  <text x="860" y="120" text-anchor="middle" class="lbl body">opens the file directly —</text>
+  <text x="860" y="138" text-anchor="middle" class="lbl body">not through a tool call</text>
+
+  <path class="bypass" d="M 860 166 V 214"/>
+
+  <text x="20" y="204" class="lbl h2">LAYER 2 — PERMISSION RULES (enforced by the harness)</text>
+  <rect x="20" y="214" width="700" height="90" rx="6" class="boxW"/>
+  <text x="370" y="240" text-anchor="middle" class="lbl node">permissions.allow · permissions.deny · permissions.ask</text>
+  <text x="370" y="262" text-anchor="middle" class="lbl body">gates tool calls the model issues through the harness</text>
+  <text x="370" y="284" text-anchor="middle" class="lbl sub">a subprocess opening a file itself never issues a tool call — nothing here inspects it</text>
+
+  <rect x="740" y="214" width="240" height="90" rx="6" class="boxD"/>
+  <text x="860" y="264" text-anchor="middle" class="lbl node">passes straight</text>
+  <text x="860" y="284" text-anchor="middle" class="lbl node">through, untouched</text>
+
+  <path class="bypass" d="M 860 304 V 362"/>
+
+  <text x="20" y="352" class="lbl h2">LAYER 3 — OS SANDBOX</text>
+  <rect x="20" y="362" width="700" height="120" rx="6" class="boxW"/>
+  <text x="370" y="388" text-anchor="middle" class="lbl node">sandbox.enabled</text>
+  <text x="40" y="412" class="lbl body">· filesystem allow / deny lists</text>
+  <text x="40" y="432" class="lbl body">· network allowlist</text>
+  <text x="40" y="452" class="lbl body">· credential masking</text>
+  <text x="370" y="472" text-anchor="middle" class="lbl sub">enforced by the operating system itself, below the harness — it sees every syscall</text>
+
+  <rect x="740" y="362" width="240" height="120" rx="6" class="boxD"/>
+  <text x="860" y="392" text-anchor="middle" class="lbl node">STOPPED HERE</text>
+  <text x="860" y="414" text-anchor="middle" class="lbl body">the open() syscall hits</text>
+  <text x="860" y="432" text-anchor="middle" class="lbl body">the filesystem deny list</text>
+  <text x="860" y="454" text-anchor="middle" class="lbl body">and is rejected by the OS</text>
+
+  <rect x="60" y="516" width="880" height="106" rx="6" class="panel"/>
+  <text x="80" y="540" class="lbl h2">WHY THE ARROW MATTERS</text>
+  <text x="80" y="562" class="lbl body">Permission rules only see actions the model takes through declared tool calls. A subprocess</text>
+  <text x="80" y="580" class="lbl body">that opens a file with its own syscalls never goes through that layer at all — it is invisible to</text>
+  <text x="80" y="598" class="lbl body">permissions.deny. Only the OS sandbox, which mediates every syscall regardless of how it was</text>
+  <text x="80" y="614" class="lbl body">issued, can actually stop it.</text>
+
+  <line x1="20" y1="654" x2="980" y2="654" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="666" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="679" class="lbl tiny">model intent layer</text>
+  <rect x="220" y="666" width="22" height="16" rx="3" class="boxW"/>
+  <text x="250" y="679" class="lbl tiny">enforcement layer (rules or sandbox)</text>
+  <rect x="540" y="666" width="22" height="16" rx="3" class="boxD"/>
+  <text x="570" y="679" class="lbl tiny">the bypassing subprocess / where it is finally stopped</text>
+  <path class="bypass" d="M 20 704 H 60"/>
+  <text x="70" y="709" class="lbl tiny">A → B : bypasses A, reaches B untouched, thick red = the file-open path</text>
+</svg>

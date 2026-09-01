@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The three layers beneath a virtual thread. Top: java.lang.VirtualThread, the public
+     handle. Thread.currentThread() called from within it returns this VirtualThread object, never
+     the carrier. Beneath it: jdk.internal.vm.Continuation, which holds the suspended call stack.
+     Beneath that: the scheduler, a ForkJoinPool constructed with asyncMode true, which the JDK
+     source comments as FIFO. At the bottom: platform carrier threads, which actually run on the
+     OS. A dashed weak link shows the carrier is reachable only through internal API, never through
+     the public Thread surface.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .mono   { font-family: "SF Mono", Consolas, monospace; font-size: 12px; fill: #1f2937; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .panelh { font-size: 13px; font-weight: 700; }
+    .warnrow{ font-size: 11px; fill: #b91c1c; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+    .impl { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">THE THREE LAYERS BENEATH A VIRTUAL THREAD</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Layer 1: VirtualThread -->
+  <rect x="330" y="66" width="380" height="76" rx="6" class="boxP"/>
+  <text x="520" y="92" text-anchor="middle" class="lbl node">java.lang.VirtualThread</text>
+  <text x="520" y="112" text-anchor="middle" class="lbl body">public handle — extends Thread</text>
+  <text x="520" y="130" text-anchor="middle" class="lbl sub">the object user code holds and joins</text>
+
+  <!-- currentThread callout -->
+  <rect x="20" y="66" width="270" height="76" rx="6" class="panel"/>
+  <text x="34" y="88" class="lbl panelh">Thread.currentThread()</text>
+  <text x="34" y="108" class="lbl tiny">called from code running on a</text>
+  <text x="34" y="124" class="lbl tiny">virtual thread returns THIS object —</text>
+  <text x="34" y="140" class="lbl tiny">never the carrier platform thread.</text>
+  <path class="flow" d="M 290 104 H 330"/>
+
+  <!-- corridor 1 -->
+  <path class="flow" d="M 520 142 V 176"/>
+  <text x="536" y="164" class="lbl tiny">delegates stack ops to</text>
+
+  <!-- Layer 2: Continuation -->
+  <rect x="290" y="176" width="460" height="76" rx="6" class="boxH"/>
+  <text x="520" y="202" text-anchor="middle" class="lbl node">jdk.internal.vm.Continuation</text>
+  <text x="520" y="222" text-anchor="middle" class="lbl body">holds the suspended call stack (frames)</text>
+  <text x="520" y="240" text-anchor="middle" class="lbl sub">yield() unmounts it; run() remounts it</text>
+
+  <!-- corridor 2 -->
+  <path class="flow" d="M 520 252 V 286"/>
+  <text x="536" y="274" class="lbl tiny">scheduled to run by</text>
+
+  <!-- Layer 3: FIFO ForkJoinPool scheduler -->
+  <rect x="230" y="286" width="580" height="90" rx="6" class="boxR"/>
+  <text x="520" y="312" text-anchor="middle" class="lbl node">ForkJoinPool scheduler</text>
+  <text x="520" y="332" text-anchor="middle" class="lbl body">new ForkJoinPool(parallelism, ..., asyncMode=true, ...)</text>
+  <text x="520" y="352" text-anchor="middle" class="lbl sub">source comment on asyncMode: // FIFO</text>
+  <text x="520" y="368" text-anchor="middle" class="lbl sub">maxPoolSize = Integer.max(parallelism, 256) — a floor</text>
+
+  <!-- corridor 3 -->
+  <path class="flow" d="M 520 376 V 410"/>
+  <text x="536" y="398" class="lbl tiny">mounted onto</text>
+
+  <!-- Layer 4: carrier threads -->
+  <rect x="150" y="410" width="740" height="90" rx="6" class="boxL"/>
+  <text x="520" y="436" text-anchor="middle" class="lbl node">platform carrier threads</text>
+  <text x="520" y="456" text-anchor="middle" class="lbl body">real OS threads — actually execute the mounted frames</text>
+  <text x="520" y="476" text-anchor="middle" class="lbl sub">count bounded by scheduler parallelism, default availableProcessors()</text>
+  <text x="520" y="492" text-anchor="middle" class="lbl sub">JDK.carrierThread</text>
+
+  <!-- weak link: carrier reachable only via internal API -->
+  <path class="weak" d="M 710 104 H 940 V 450 H 890"/>
+  <rect x="830" y="530" width="190" height="80" rx="6" class="panel"/>
+  <text x="844" y="552" class="lbl panelh">INTERNAL API ONLY</text>
+  <text x="844" y="572" class="lbl tiny">The carrier is reachable</text>
+  <text x="844" y="588" class="lbl tiny">only via jdk.internal.misc /</text>
+  <text x="844" y="604" class="lbl tiny">JVM TI — no public getter.</text>
+  <path class="weak" d="M 925 500 V 530"/>
+
+  <!-- Annotation panel: what user code sees vs what runs -->
+  <rect x="20" y="650" width="1000" height="90" rx="6" class="panel"/>
+  <text x="36" y="672" class="lbl panelh">WHAT USER CODE SEES VS WHAT ACTUALLY RUNS</text>
+  <text x="36" y="694" class="lbl tiny">User code only ever touches java.lang.VirtualThread — Continuation, the scheduler, and the</text>
+  <text x="36" y="714" class="lbl tiny">carrier are all implementation detail hidden behind the public Thread API surface.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="750" x2="1020" y2="750" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="762" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="774" class="lbl tiny">public handle</text>
+  <rect x="180" y="762" width="22" height="16" rx="3" class="boxH"/>
+  <text x="210" y="774" class="lbl tiny">internal subject of the diagram</text>
+  <rect x="420" y="762" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="774" class="lbl tiny">scheduler (concrete)</text>
+  <rect x="620" y="762" width="22" height="16" rx="3" class="boxL"/>
+  <text x="650" y="774" class="lbl tiny">retained OS resource</text>
+  <path d="M 800 770 H 830" class="flow"/>
+  <text x="840" y="774" class="lbl tiny">A &#8594; B : layered on</text>
+</svg>

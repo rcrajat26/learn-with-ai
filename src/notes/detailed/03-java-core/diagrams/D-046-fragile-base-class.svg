@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1040 1240" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The fragile base class. CountingRestrictionSet extends HashSet of RestrictionKey and increments addAttempts in both add and addAll. Frame 1: addAll of three RestrictionKeys increments addAttempts to 3. Frame 2: the inherited HashSet.addAll internally calls this.add three times, and each virtual call lands back in the override, incrementing addAttempts again. Frame 3: the measured result on JDK 21.0.7 is size() = 3 but addAttempts = 6 -- the counter is wrong. The fix frame shows a forwarding-composition CountingRestrictionSet that holds a delegate Set and forwards addAll unchanged, so the delegate's internal self-use of add cannot re-enter the counter, giving addAttempts = 3. An annotation panel explains this as a base-class documentation failure, not a subclass bug.">
+  <defs>
+    <marker id="arrow046" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1240" fill="#ffffff"/>
+
+  <text x="520" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">The fragile base class</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="60" y="64" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 1 &#8212; addAll of three keys</text>
+  <line x1="60" y1="72" x2="980" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="80" y="90" width="400" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">restrictionSet.addAll(List.of(STAKE_BLOCKED,</text>
+  <text x="280" y="132" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">DEPOSIT_BLOCKED, WITHDRAWAL_HELD))</text>
+
+  <line x1="480" y1="125" x2="560" y2="125" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+
+  <rect x="560" y="90" width="400" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="760" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CountingRestrictionSet</text>
+  <text x="760" y="132" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">size = 3, addAttempts = 3 (correct so far)</text>
+
+  <!-- FRAME 2 -->
+  <text x="60" y="210" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 2 &#8212; HashSet.addAll self-uses this.add three times</text>
+  <line x1="60" y1="218" x2="980" y2="218" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="310" y="230" width="420" height="60" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="520" y="254" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">HashSet.addAll(collection)</text>
+  <text x="520" y="272" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">iterates and calls this.add(e) per element</text>
+
+  <path d="M 420 290 V 305 H 220 V 320" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+  <path d="M 520 290 V 320" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+  <path d="M 620 290 V 305 H 820 V 320" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+
+  <rect x="120" y="320" width="200" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="220" y="344" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this.add(STAKE_BLOCKED)</text>
+  <text x="220" y="362" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">virtual call -&gt; override</text>
+
+  <rect x="420" y="320" width="200" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="520" y="344" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this.add(DEPOSIT_BLOCKED)</text>
+  <text x="520" y="362" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">virtual call -&gt; override</text>
+
+  <rect x="720" y="320" width="200" height="60" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="820" y="344" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this.add(WITHDRAWAL_HELD)</text>
+  <text x="820" y="362" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">virtual call -&gt; override</text>
+
+  <path d="M 220 380 V 395 H 420 V 410" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+  <path d="M 520 380 V 410" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+  <path d="M 820 380 V 395 H 620 V 410" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+
+  <rect x="310" y="410" width="420" height="75" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="520" y="435" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CountingRestrictionSet.add(key) override</text>
+  <text x="520" y="453" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">addAttempts++ runs on EVERY call, including</text>
+  <text x="520" y="470" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">the three self-uses triggered by addAll above</text>
+
+  <!-- FRAME 3 -->
+  <text x="60" y="510" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 3 &#8212; the counter lies</text>
+  <line x1="60" y1="518" x2="980" y2="518" stroke="#d1d5db" stroke-width="1"/>
+  <text x="520" y="536" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">VERIFIED measured output on JDK 21.0.7: size=3 addAttempts=6</text>
+
+  <rect x="150" y="550" width="340" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="320" y="578" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">addAttempts = 6</text>
+  <text x="320" y="598" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">3 (initial addAll) + 3 (self-use re-entry)</text>
+  <text x="320" y="618" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">WRONG per-element accounting</text>
+
+  <rect x="550" y="550" width="340" height="90" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="720" y="578" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">size() = 3</text>
+  <text x="720" y="598" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">HashSet's own bookkeeping is unaffected</text>
+  <text x="720" y="618" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">CORRECT element count</text>
+
+  <!-- FIX FRAME -->
+  <text x="60" y="670" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">THE FIX &#8212; forwarding composition</text>
+  <line x1="60" y1="678" x2="980" y2="678" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="150" y="700" width="340" height="130" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="320" y="724" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CountingRestrictionSet</text>
+  <text x="320" y="746" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">holds: Set&lt;RestrictionKey&gt; delegate</text>
+  <text x="320" y="768" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">addAll(c):</text>
+  <text x="320" y="788" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">addAttempts += c.size();</text>
+  <text x="320" y="808" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">delegate.addAll(c);</text>
+
+  <path d="M 490 765 H 650" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+  <text x="570" y="755" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">forwards unchanged</text>
+
+  <rect x="650" y="700" width="280" height="130" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="790" y="724" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">delegate</text>
+  <text x="790" y="744" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">HashSet&lt;RestrictionKey&gt;</text>
+  <text x="790" y="764" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">receives the forwarded call;</text>
+  <text x="790" y="784" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">internal self-use of add() stays</text>
+  <text x="790" y="804" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">inside, never re-enters counter</text>
+
+  <rect x="350" y="850" width="340" height="60" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="520" y="875" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">addAttempts = 3 (correct)</text>
+  <text x="520" y="893" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">one increment per addAll call, sized to c.size()</text>
+
+  <!-- annotation panel -->
+  <rect x="70" y="945" width="900" height="150" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="90" y="967" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">A BASE-CLASS DOCUMENTATION FAILURE, NOT A SUBCLASS BUG</text>
+  <line x1="90" y1="975" x2="950" y2="975" stroke="#d1d5db" stroke-width="1"/>
+  <text x="90" y="995" font-family="sans-serif" font-size="11" fill="#1f2937">HashSet/AbstractCollection's addAll is specified only by its external contract</text>
+  <text x="90" y="1013" font-family="sans-serif" font-size="11" fill="#1f2937">(adds all elements); it never documents that it self-uses add() internally.</text>
+  <text x="90" y="1031" font-family="sans-serif" font-size="11" fill="#1f2937">CountingRestrictionSet is correct against the API and wrong against the</text>
+  <text x="90" y="1049" font-family="sans-serif" font-size="11" fill="#1f2937">implementation -- only the base class documenting its own self-use (as</text>
+  <text x="90" y="1067" font-family="sans-serif" font-size="11" fill="#1f2937">AbstractList does for some methods) could have prevented this.</text>
+
+  <!-- legend -->
+  <text x="70" y="1120" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="70" y1="1128" x2="970" y2="1128" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="90" y="1148" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="118" y="1161" font-family="sans-serif" font-size="11" fill="#4b5563">call site / composition wrapper</text>
+
+  <rect x="560" y="1148" width="22" height="16" rx="3" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="588" y="1161" font-family="sans-serif" font-size="11" fill="#4b5563">superclass / delegate implementation</text>
+
+  <rect x="90" y="1172" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="118" y="1185" font-family="sans-serif" font-size="11" fill="#4b5563">re-entrant override (self-use lands here)</text>
+
+  <rect x="560" y="1172" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="588" y="1185" font-family="sans-serif" font-size="11" fill="#4b5563">wrong measured value</text>
+
+  <rect x="90" y="1196" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="118" y="1209" font-family="sans-serif" font-size="11" fill="#4b5563">correct measured value</text>
+
+  <line x1="560" y1="1204" x2="582" y2="1204" stroke="#475569" stroke-width="2" marker-end="url(#arrow046)"/>
+  <text x="588" y="1209" font-family="sans-serif" font-size="11" fill="#4b5563">call / delegation flow</text>
+</svg>

@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1040 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Who declares what. Seven panels give member counts along ArrayList's
+     declaring types: Iterable 3, Collection 21, SequencedCollection 7, List 36 instance
+     plus 13 static factories, AbstractCollection 15, AbstractList 17 plus the modCount
+     field, and ArrayList 41 members plus 3 constructors. Dotted arrows from all six
+     ancestor panels converge on the ArrayList panel, showing that ArrayList inherits and
+     mostly overrides their members. A highlighted callout inside the ArrayList panel names
+     the only two members ArrayList declares fresh: trimToSize and ensureCapacity.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .tiny  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .weakEdge     { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; marker-end: url(#triGrey); }
+    .weakEdgeNoHd { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="triGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="660" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHO DECLARES WHAT</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- row 1: four interface panels -->
+  <rect x="30"  y="90" width="230" height="170" rx="6" class="boxP"/>
+  <text x="42" y="112" class="lbl node">Iterable — 3 members</text>
+  <line x1="42" y1="122" x2="248" y2="122" stroke="#93c5fd" stroke-width="1"/>
+  <text x="42" y="140" class="lbl tiny">iterator()</text>
+  <text x="42" y="158" class="lbl tiny">forEach(Consumer)</text>
+  <text x="42" y="176" class="lbl tiny">spliterator()</text>
+
+  <rect x="280" y="90" width="230" height="170" rx="6" class="boxP"/>
+  <text x="292" y="112" class="lbl node">Collection — 21 members</text>
+  <line x1="292" y1="122" x2="498" y2="122" stroke="#93c5fd" stroke-width="1"/>
+  <text x="292" y="140" class="lbl tiny">stream() / parallelStream()</text>
+  <text x="292" y="158" class="lbl tiny">removeIf(Predicate)</text>
+  <text x="292" y="176" class="lbl tiny">toArray(IntFunction)</text>
+  <text x="292" y="194" class="lbl tiny">containsAll(Collection)</text>
+
+  <rect x="530" y="90" width="230" height="170" rx="6" class="boxP"/>
+  <text x="542" y="112" class="lbl node">SequencedCollection — 7</text>
+  <line x1="542" y1="122" x2="748" y2="122" stroke="#93c5fd" stroke-width="1"/>
+  <text x="542" y="140" class="lbl tiny">reversed()</text>
+  <text x="542" y="158" class="lbl tiny">addFirst(E) / addLast(E)</text>
+  <text x="542" y="176" class="lbl tiny">getFirst() / getLast()</text>
+  <text x="542" y="194" class="lbl tiny">removeFirst() / removeLast()</text>
+
+  <rect x="780" y="90" width="230" height="170" rx="6" class="boxP"/>
+  <text x="792" y="112" class="lbl node">List — 36 + 13 static</text>
+  <line x1="792" y1="122" x2="998" y2="122" stroke="#93c5fd" stroke-width="1"/>
+  <text x="792" y="140" class="lbl tiny">get(int) / set(int, E)</text>
+  <text x="792" y="158" class="lbl tiny">add(int, E) / indexOf(Object)</text>
+  <text x="792" y="176" class="lbl tiny">subList(int, int) / sort(Cmp)</text>
+  <text x="792" y="194" class="lbl tiny">List.of(...) / List.copyOf(c)</text>
+
+  <!-- row 2: two class panels + ArrayList -->
+  <rect x="25" y="320" width="310" height="190" rx="6" class="boxR"/>
+  <text x="37" y="342" class="lbl node">AbstractCollection — 15</text>
+  <line x1="37" y1="352" x2="323" y2="352" stroke="#86efac" stroke-width="1"/>
+  <text x="37" y="372" class="lbl tiny">toArray() / toArray(T[])</text>
+  <text x="37" y="392" class="lbl tiny">containsAll(Collection&lt;?&gt;)</text>
+  <text x="37" y="412" class="lbl tiny">toString()</text>
+
+  <rect x="365" y="320" width="310" height="190" rx="6" class="boxR"/>
+  <text x="377" y="342" class="lbl node">AbstractList — 17 + modCount</text>
+  <line x1="377" y1="352" x2="663" y2="352" stroke="#86efac" stroke-width="1"/>
+  <text x="377" y="372" class="lbl tiny">equals(Object) / hashCode()</text>
+  <text x="377" y="392" class="lbl tiny">removeRange(int, int)</text>
+  <text x="377" y="412" class="lbl tiny">listIterator(int)</text>
+  <text x="377" y="432" class="lbl tiny">protected transient int modCount</text>
+
+  <rect x="705" y="320" width="310" height="190" rx="6" class="boxH"/>
+  <text x="717" y="342" class="lbl node">ArrayList — 41 + 3 ctors</text>
+  <line x1="717" y1="352" x2="1003" y2="352" stroke="#fcd34d" stroke-width="1"/>
+  <rect x="717" y="362" width="286" height="60" rx="4" class="boxA"/>
+  <text x="727" y="378" class="lbl tiny" font-weight="700">Fresh declarations (2):</text>
+  <text x="727" y="394" class="lbl tiny">trimToSize()</text>
+  <text x="727" y="410" class="lbl tiny">ensureCapacity(int)</text>
+  <text x="717" y="438" class="lbl tiny">Everything else: an override of a</text>
+  <text x="717" y="454" class="lbl tiny">List/Collection/AbstractList member,</text>
+  <text x="717" y="470" class="lbl tiny">or an inherited default method.</text>
+
+  <!-- row 1 -> ArrayList: shared bus, single trunk -->
+  <path class="weakEdgeNoHd" d="M 145 260 V 290"/>
+  <path class="weakEdgeNoHd" d="M 395 260 V 290"/>
+  <path class="weakEdgeNoHd" d="M 645 260 V 290"/>
+  <path class="weakEdgeNoHd" d="M 895 260 V 290"/>
+  <path class="weakEdgeNoHd" d="M 145 290 H 895"/>
+  <path class="weakEdge" d="M 860 290 V 320"/>
+
+  <!-- AbstractCollection -> ArrayList, routed below both panels -->
+  <path class="weakEdgeNoHd" d="M 180 510 V 535 H 860"/>
+  <path class="weakEdge" d="M 860 535 V 510"/>
+
+  <!-- AbstractList -> ArrayList, own exit y and entry x -->
+  <path class="weakEdgeNoHd" d="M 520 510 V 555 H 900"/>
+  <path class="weakEdge" d="M 900 555 V 510"/>
+
+  <!-- legend -->
+  <line x1="20" y1="580" x2="1020" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="592" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="605" class="lbl tiny">interface panel — inherited members</text>
+  <rect x="400" y="592" width="22" height="16" rx="3" class="boxR"/>
+  <text x="432" y="605" class="lbl tiny">abstract class panel — same</text>
+  <rect x="650" y="592" width="22" height="16" rx="3" class="boxH"/>
+  <text x="682" y="605" class="lbl tiny">ArrayList — the subject panel</text>
+  <path class="weakEdge" d="M 20 620 H 42"/>
+  <text x="52" y="629" class="lbl tiny">ancestor &#8594; ArrayList : members inherited here, mostly overridden</text>
+</svg>

@@ -1,0 +1,118 @@
+<svg viewBox="0 0 1500 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing how javac desugars a lambda in FundsLedger.reserveStake.
+     Frame 1: the source lambda amount arrow amount.compareTo(stakeAmount) greater-or-equal 0,
+     assigned to a Predicate of BigDecimal. Frame 2: javac emits it as the private synthetic
+     method lambda dollar reserveStake dollar 0, marked static because reserveStake itself is
+     static and the lambda captures no this. Frame 3: the call site in reserveStake's bytecode is
+     replaced by invokedynamic pound 7, whose bootstrap method is
+     LambdaMetafactory.metafactory, verified with javap -c -p -v on a --release 21 build.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 12.5px; font-weight: 700; }
+    .code { font-size: 11px; }
+    .codes{ font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .ann  { font-size: 11px; fill: #1e3a8a; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1500" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HOW javac DESUGARS A LAMBDA — FundsLedger.reserveStake</text>
+  <line x1="20" y1="42" x2="1480" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl codes">compiled with: javac --release 21 FundsLedger.java  (verified on this machine)</text>
+
+  <!-- connecting arrows between frames -->
+  <path class="flow" d="M 480 300 H 500"/>
+  <path class="flow" d="M 960 300 H 980"/>
+
+  <!-- ============ FRAME 1 ============ -->
+  <text x="40" y="92" class="lbl h2">FRAME 1 — SOURCE LAMBDA</text>
+  <rect x="40" y="100" width="440" height="190" rx="6" class="boxP"/>
+  <text x="52" y="120" class="lbl code">class FundsLedger {</text>
+  <text x="52" y="138" class="lbl code">  static boolean reserveStake(</text>
+  <text x="52" y="156" class="lbl code">      BigDecimal stakeAmount, ...) {</text>
+  <text x="52" y="174" class="lbl code">    Predicate&lt;BigDecimal&gt; sufficient =</text>
+  <text x="52" y="192" class="lbl code">      amount -&gt; amount.compareTo(stakeAmount)</text>
+  <text x="52" y="210" class="lbl code">                &gt;= 0;   // line 5</text>
+  <text x="52" y="228" class="lbl code">    return guard.test(stakeAmount)</text>
+  <text x="52" y="246" class="lbl code">      &amp;&amp; sufficient.test(stakeAmount);  // line 6</text>
+  <text x="52" y="270" class="lbl codes">one source lambda, no field, no local class</text>
+
+  <rect x="40" y="300" width="440" height="120" rx="6" class="boxW"/>
+  <text x="52" y="320" class="lbl codes">javap -c -p -v FundsLedger.class</text>
+  <text x="52" y="340" class="lbl code">LineNumberTable:</text>
+  <text x="52" y="358" class="lbl code">  line 5: 0   (lambda body starts pc 0)</text>
+  <text x="52" y="376" class="lbl code">  line 6: 7   (guard/sufficient.test calls)</text>
+  <text x="52" y="398" class="lbl codes">source line 5 is where invokedynamic lands</text>
+
+  <!-- ============ FRAME 2 ============ -->
+  <text x="500" y="92" class="lbl h2">FRAME 2 — SYNTHETIC METHOD</text>
+  <rect x="500" y="100" width="440" height="190" rx="6" class="boxP"/>
+  <text x="512" y="120" class="lbl code">private static boolean</text>
+  <text x="512" y="138" class="lbl code">  lambda$reserveStake$0(</text>
+  <text x="512" y="156" class="lbl code">    BigDecimal amount,</text>
+  <text x="512" y="174" class="lbl code">    BigDecimal stakeAmount) {</text>
+  <text x="512" y="192" class="lbl code">  return amount.compareTo(stakeAmount)</text>
+  <text x="512" y="210" class="lbl code">    &gt;= 0;</text>
+  <text x="512" y="228" class="lbl code">}</text>
+  <text x="512" y="252" class="lbl codes">static: reserveStake is itself static —</text>
+  <text x="512" y="268" class="lbl codes">the lambda has no `this` to capture</text>
+
+  <rect x="500" y="300" width="440" height="120" rx="6" class="boxW"/>
+  <text x="512" y="320" class="lbl codes">javap -c -p -v FundsLedger.class</text>
+  <text x="512" y="340" class="lbl code">private static boolean</text>
+  <text x="512" y="358" class="lbl code">  lambda$reserveStake$0(BigDecimal, BigDecimal);</text>
+  <text x="512" y="376" class="lbl code">flags: ACC_PRIVATE, ACC_STATIC, ACC_SYNTHETIC</text>
+  <text x="512" y="394" class="lbl code">0: aload_1  1: aload_0  2: invokevirtual #16</text>
+
+  <!-- ============ FRAME 3 ============ -->
+  <text x="980" y="92" class="lbl h2">FRAME 3 — CALL SITE REPLACED</text>
+  <rect x="980" y="100" width="440" height="190" rx="6" class="boxP"/>
+  <text x="992" y="120" class="lbl code">static boolean reserveStake(</text>
+  <text x="992" y="138" class="lbl code">    BigDecimal stakeAmount,</text>
+  <text x="992" y="156" class="lbl code">    Predicate&lt;BigDecimal&gt; guard) {</text>
+  <text x="992" y="174" class="lbl code">  0: aload_0</text>
+  <text x="992" y="192" class="lbl code">  1: invokedynamic #7, 0</text>
+  <text x="992" y="210" class="lbl code">  6: astore_2   // sufficient</text>
+  <text x="992" y="234" class="lbl codes">the "amount -&gt; ..." expression is GONE from</text>
+  <text x="992" y="250" class="lbl codes">the call site; only invokedynamic remains</text>
+
+  <rect x="980" y="300" width="440" height="120" rx="6" class="boxW"/>
+  <text x="992" y="320" class="lbl codes">javap -c -p -v FundsLedger.class</text>
+  <text x="992" y="340" class="lbl code">1: invokedynamic #7, 0</text>
+  <text x="992" y="358" class="lbl code">  // InvokeDynamic #0:test:(BigDecimal)Predicate</text>
+  <text x="992" y="376" class="lbl code">BootstrapMethods: 0: #42 REF_invokeStatic</text>
+  <text x="992" y="394" class="lbl code">  LambdaMetafactory.metafactory:(...)CallSite;</text>
+
+  <!-- annotation panel: bootstrap arguments summary, ties frame 3 forward to D-126 -->
+  <path class="flow" d="M 1200 420 V 460"/>
+  <rect x="1000" y="460" width="440" height="120" rx="6" class="boxA"/>
+  <text x="1012" y="480" class="lbl ann" font-weight="700">Method arguments (constant pool, static):</text>
+  <text x="1012" y="500" class="lbl ann">#36 interfaceMethodType (Ljava/lang/Object;)Z</text>
+  <text x="1012" y="518" class="lbl ann">#37 implementation → lambda$reserveStake$0</text>
+  <text x="1012" y="536" class="lbl ann">#40 dynamicMethodType (BigDecimal;)Z</text>
+  <text x="1012" y="556" class="lbl ann">field-by-field detail in D-126</text>
+
+  <!-- legend -->
+  <line x1="20" y1="650" x2="1480" y2="650" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="663" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="676" class="lbl tiny">source / bytecode of reserveStake (unfolds left to right)</text>
+  <rect x="420" y="663" width="22" height="16" rx="3" class="boxW"/>
+  <text x="450" y="676" class="lbl tiny">javap -c -p -v output for that frame</text>
+  <rect x="700" y="663" width="22" height="16" rx="3" class="boxA"/>
+  <text x="730" y="676" class="lbl tiny">annotation panel, cross-reference to D-126</text>
+  <path class="flow" d="M 1060 671 H 1110"/>
+  <text x="1118" y="676" class="lbl tiny">frame sequence, left → right</text>
+</svg>

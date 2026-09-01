@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1100 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Where each variable kind lives when FundsLedger.reserveStake runs. The thread stack frame holds three slots: this, a reference to the FundsLedger instance on the heap; stake, a reference to a Money object on the heap; and attempt, a plain int with no reference at all, sitting inline in the frame. The heap holds the FundsLedger instance, the Money object, whose amount field is itself a reference to a BigDecimal object, and a separate BigDecimal holding 100. The class-static area in metaspace holds static final MAX_BONUS, a reference to that BigDecimal 100 object. The arrows from this, from stake, and from MAX_BONUS all cross the GC boundary into the heap; the arrow from Money's amount field to its BigDecimal is heap-internal and does not cross the boundary. The heap is collected by the garbage collector; the stack frame and the class-static area are GC roots that keep the objects they reference alive.">
+  <defs>
+    <marker id="arrow011" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" font-family="sans-serif" font-size="15" font-weight="bold"
+        fill="#1f2937">Where each variable kind lives</text>
+  <line x1="20" y1="42" x2="1080" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <text x="40" y="62" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">THREAD STACK (a GC root)</text>
+  <text x="420" y="62" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">HEAP — collected by the GC</text>
+  <text x="850" y="62" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">CLASS-STATIC AREA (a GC root)</text>
+
+  <!-- GC boundary markers -->
+  <line x1="405" y1="76" x2="405" y2="430" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="835" y1="76" x2="835" y2="430" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="410" y="88" font-family="sans-serif" font-size="11" fill="#4b5563">GC boundary</text>
+
+  <!-- STACK FRAME -->
+  <rect x="40" y="80" width="320" height="170" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="100" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">FundsLedger.reserveStake(</text>
+  <text x="200" y="116" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">int attempt, Money stake)</text>
+
+  <rect x="56" y="132" width="288" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="200" y="149" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">this : FundsLedger (reference)</text>
+
+  <rect x="56" y="164" width="288" height="26" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"
+        stroke-dasharray="6 4"/>
+  <text x="200" y="181" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">attempt : int = 3 — no reference</text>
+
+  <rect x="56" y="196" width="288" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="200" y="213" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">stake : Money (reference)</text>
+
+  <text x="200" y="238" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">attempt's bits live inside this frame; there is nothing on the heap to point at</text>
+
+  <!-- HEAP -->
+  <rect x="440" y="132" width="180" height="26" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="530" y="149" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">FundsLedger instance</text>
+
+  <rect x="440" y="196" width="340" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="610" y="213" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">Money (the stake)</text>
+  <rect x="452" y="222" width="170" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="537" y="239" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">amount : BigDecimal</text>
+
+  <rect x="522" y="300" width="200" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="622" y="316" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">BigDecimal instance</text>
+  <text x="622" y="332" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">unscaled value for the stake, e.g. 4.20</text>
+
+  <rect x="540" y="360" width="200" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="640" y="376" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">BigDecimal instance</text>
+  <text x="640" y="392" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">value 100 — the bonus cap</text>
+
+  <!-- CLASS-STATIC AREA -->
+  <rect x="850" y="132" width="200" height="100" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="950" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">FundsLedger.class</text>
+  <rect x="862" y="160" width="176" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="950" y="177" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#1f2937">static final MAX_BONUS</text>
+  <text x="950" y="205" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">: BigDecimal, one copy</text>
+  <text x="950" y="218" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">shared by the class</text>
+
+  <!-- arrows: this -> FundsLedger instance -->
+  <path d="M 344 145 H 440" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow011)"/>
+  <text x="392" y="129" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">crosses GC boundary</text>
+
+  <!-- arrows: stake -> Money -->
+  <path d="M 344 209 H 440" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow011)"/>
+  <text x="392" y="228" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">crosses GC boundary</text>
+
+  <!-- arrow: Money.amount -> BigDecimal (stake amount), heap-internal -->
+  <path d="M 537 248 V 300" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow011)"/>
+  <text x="470" y="278" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">heap-internal, no boundary crossed</text>
+
+  <!-- arrow: MAX_BONUS -> BigDecimal 100 -->
+  <path d="M 950 232 V 380 H 740" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow011)"/>
+  <text x="920" y="290" text-anchor="middle" font-family="sans-serif" font-size="11"
+        fill="#4b5563">crosses GC boundary</text>
+
+  <!-- annotation panel -->
+  <rect x="440" y="440" width="610" height="90" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="456" y="460" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">GC boundary — who is a root, what gets collected</text>
+  <text x="456" y="480" font-family="sans-serif" font-size="11"
+        fill="#1f2937">The heap is the only region the garbage collector sweeps. The thread stack frame</text>
+  <text x="456" y="496" font-family="sans-serif" font-size="11"
+        fill="#1f2937">(this, stake) and the class-static area (MAX_BONUS) are never collected — they are</text>
+  <text x="456" y="512" font-family="sans-serif" font-size="11"
+        fill="#1f2937">roots. A heap object stays alive only while a root, or a chain from a root, reaches it.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="620" x2="1080" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="634" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="647" font-family="sans-serif" font-size="11" fill="#4b5563">object / frame — primary subject</text>
+  <rect x="300" y="634" width="22" height="16" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1.6"/>
+  <text x="330" y="647" font-family="sans-serif" font-size="11" fill="#4b5563">a slot holding a reference</text>
+  <rect x="520" y="634" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"
+        stroke-dasharray="6 4"/>
+  <text x="550" y="647" font-family="sans-serif" font-size="11" fill="#4b5563">a primitive slot — no reference, no arrow</text>
+  <line x1="40" y1="660" x2="76" y2="660" stroke="#475569" stroke-width="2" marker-end="url(#arrow011)"/>
+  <text x="86" y="665" font-family="sans-serif" font-size="11" fill="#4b5563">reference arrow, labelled if it crosses the GC boundary</text>
+  <rect x="420" y="658" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="450" y="671" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel</text>
+</svg>

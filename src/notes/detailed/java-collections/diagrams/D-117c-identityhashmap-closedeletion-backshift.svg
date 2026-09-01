@@ -1,0 +1,67 @@
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3: closeDeletion(d=4) scans forward from idx 6 with i += 2 wraparound, finds C whose hash 2 lies between d and i, and back-shifts C into the hole at idx 4">
+  <defs>
+    <marker id="arrow117c" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="24" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="37" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">
+    Frame 3 of 3 — closeDeletion(d=4) back-shifts C to repair the run
+  </text>
+
+  <!-- before state (top row) -->
+  <text x="60" y="70" font-family="sans-serif" font-size="13" fill="#1f2937">before:</text>
+  <rect x="130" y="55" width="110" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="185" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx0 empty</text>
+  <rect x="250" y="55" width="110" height="34" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="305" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx2 A</text>
+  <rect x="370" y="55" width="110" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="425" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx4 null (d)</text>
+  <rect x="490" y="55" width="110" height="34" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="545" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx6 C (i)</text>
+
+  <line x1="545" y1="89" x2="545" y2="112" stroke="#737373" stroke-width="2" marker-end="url(#arrow117c)"/>
+  <rect x="420" y="94" width="250" height="20" rx="3" fill="#fef3c7"/>
+  <text x="545" y="109" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    i = nextKeyIndex(4,8) = 6; item = C; r = hash(C,8) = 2
+  </text>
+
+  <rect x="60" y="120" width="720" height="46" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="420" y="139" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    test: (i &lt; r &amp;&amp; (r &lt;= d || d &lt;= i)) || (r &lt;= d &amp;&amp; d &lt;= i)
+  </text>
+  <text x="420" y="157" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    i=6, r=2, d=4 → 6&lt;2 is false, but (r&lt;=d &amp;&amp; d&lt;=i) = (2&lt;=4 &amp;&amp; 4&lt;=6) = true → C must move to d
+  </text>
+
+  <!-- after state -->
+  <text x="60" y="205" font-family="sans-serif" font-size="13" fill="#1f2937">after swap:</text>
+  <rect x="130" y="190" width="110" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="185" y="212" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx0 empty</text>
+  <rect x="250" y="190" width="110" height="34" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="305" y="212" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx2 A</text>
+  <rect x="370" y="190" width="110" height="34" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="425" y="212" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx4 C</text>
+  <rect x="490" y="190" width="110" height="34" rx="4" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <text x="545" y="212" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">idx6 empty (d)</text>
+
+  <path d="M 545 190 C 545 165, 425 165, 425 188" fill="none" stroke="#525252" stroke-width="2" marker-end="url(#arrow117c)"/>
+  <rect x="430" y="163" width="150" height="20" rx="3" fill="#fef3c7"/>
+  <text x="505" y="178" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    tab[4]=C, tab[6]=null, d=6
+  </text>
+
+  <rect x="60" y="236" width="720" height="64" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="420" y="255" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    loop continues: i = nextKeyIndex(6,8) = 0 (6+2=8=len, wraps to 0); tab[0] == null → loop stops.
+  </text>
+  <text x="420" y="273" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    Final table: idx2=A, idx4=C, idx6=empty. get(C) now hashes to 2, probes idx2 (A), idx4 (C) — found.
+  </text>
+  <text x="420" y="291" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    Source: IdentityHashMap.closeDeletion(int d), java.util.IdentityHashMap lines 600-627 (JDK 21).
+  </text>
+</svg>

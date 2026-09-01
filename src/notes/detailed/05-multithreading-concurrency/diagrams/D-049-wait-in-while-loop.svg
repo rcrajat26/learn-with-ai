@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1040 1080" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of the lost wakeup on WithdrawalQueue, time running downward, two
+     lanes. Broken version: at t1 withdrawal-intake-1 enqueues WD-6650 and calls notify(),
+     but the wait set is empty so the signal wakes nobody and is discarded; at t2, later than
+     t1, payment-run-worker-2 reaches wait() and blocks forever, because the condition holds
+     no memory of the earlier notify(). Fixed version below: the same interleaving, but the
+     producer's update to queue.size persists in memory; the consumer checks
+     queue.isEmpty() inside a while loop before deciding to wait, sees size is already 1, and
+     proceeds immediately without ever calling wait().">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13.5px; font-weight: 700; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-size: 11.5px; font-family: "Courier New", monospace; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .frame { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri475); }
+    .guide { stroke: #9ca3af; stroke-width: 1.3; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1080" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE LOST WAKEUP</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="1010" y="58" text-anchor="end" class="lbl tiny" font-weight="700">TIME</text>
+  <path class="flow" d="M 1020 63 V 985"/>
+
+  <!-- SECTION 1: BROKEN -->
+  <text x="30" y="64" class="lbl h2">BROKEN — notify() FIRES BEFORE THE WAITER CALLS wait()</text>
+  <rect x="40" y="74" width="960" height="430" rx="8" class="frame"/>
+  <line x1="520" y1="90" x2="520" y2="484" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="270" y="100" text-anchor="middle" class="lbl body" font-weight="600">withdrawal-intake-1 — producer</text>
+  <text x="790" y="100" text-anchor="middle" class="lbl body" font-weight="600">payment-run-worker-2 — consumer</text>
+
+  <line x1="60" y1="150" x2="1000" y2="150" class="guide"/>
+  <text x="1005" y="154" class="lbl tiny" font-weight="700">t1</text>
+
+  <rect x="110" y="165" width="320" height="70" rx="6" class="boxR"/>
+  <text x="270" y="185" text-anchor="middle" class="lbl body">enqueues WD-6650</text>
+  <text x="270" y="203" text-anchor="middle" class="lbl sub">queue.size: 0 to 1</text>
+  <text x="270" y="220" text-anchor="middle" class="lbl sub">calls notify()</text>
+
+  <path class="flow" d="M 270 235 V 300 H 380"/>
+
+  <rect x="380" y="260" width="280" height="80" rx="6" class="boxD"/>
+  <text x="520" y="280" text-anchor="middle" class="lbl body" font-weight="600">WAIT SET: empty</text>
+  <text x="520" y="298" text-anchor="middle" class="lbl sub">notify() wakes nobody —</text>
+  <text x="520" y="315" text-anchor="middle" class="lbl sub">the signal is discarded, gone forever</text>
+
+  <path class="flow" d="M 660 300 H 780 V 385"/>
+
+  <line x1="60" y1="370" x2="1000" y2="370" class="guide"/>
+  <text x="1005" y="374" class="lbl tiny" font-weight="700">t2</text>
+
+  <rect x="630" y="385" width="320" height="80" rx="6" class="boxD"/>
+  <text x="790" y="405" text-anchor="middle" class="lbl body">reaches wait() — checks nothing persistent</text>
+  <text x="790" y="423" text-anchor="middle" class="lbl sub">WD-6650 is already queued, but the earlier</text>
+  <text x="790" y="440" text-anchor="middle" class="lbl sub">notify() is gone — calls wait(), BLOCKED FOREVER</text>
+
+  <text x="60" y="497" class="lbl tiny">t2 &gt; t1 : the waiter arrives after the signal fired and the condition variable held no memory of it.</text>
+
+  <!-- SECTION 2: FIXED -->
+  <text x="30" y="530" class="lbl h2">FIXED — A STATE VARIABLE CHECKED INSIDE A while LOOP</text>
+  <rect x="40" y="545" width="960" height="350" rx="8" class="frame"/>
+  <line x1="520" y1="561" x2="520" y2="875" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="270" y="571" text-anchor="middle" class="lbl body" font-weight="600">withdrawal-intake-1 — producer</text>
+  <text x="790" y="571" text-anchor="middle" class="lbl body" font-weight="600">payment-run-worker-2 — consumer</text>
+
+  <line x1="60" y1="610" x2="1000" y2="610" class="guide"/>
+  <text x="1005" y="614" class="lbl tiny" font-weight="700">t1</text>
+
+  <rect x="110" y="625" width="320" height="70" rx="6" class="boxR"/>
+  <text x="270" y="645" text-anchor="middle" class="lbl code">enqueues WD-6650</text>
+  <text x="270" y="663" text-anchor="middle" class="lbl sub">queue.size: 0 to 1 (state persists)</text>
+  <text x="270" y="680" text-anchor="middle" class="lbl sub">calls notify()</text>
+
+  <path class="flow" d="M 270 695 V 735 H 380"/>
+
+  <rect x="380" y="705" width="280" height="60" rx="6" class="boxR"/>
+  <text x="520" y="727" text-anchor="middle" class="lbl body" font-weight="600">queue.size = 1</text>
+  <text x="520" y="745" text-anchor="middle" class="lbl sub">held in memory, independent of notify()</text>
+
+  <path class="flow" d="M 660 735 H 780 V 800"/>
+
+  <line x1="60" y1="785" x2="1000" y2="785" class="guide"/>
+  <text x="1005" y="789" class="lbl tiny" font-weight="700">t2</text>
+
+  <rect x="630" y="800" width="320" height="75" rx="6" class="boxR"/>
+  <text x="790" y="819" text-anchor="middle" class="lbl code">while (queue.isEmpty()) wait();</text>
+  <text x="790" y="837" text-anchor="middle" class="lbl sub">checks queue.isEmpty(): false (size 1)</text>
+  <text x="790" y="854" text-anchor="middle" class="lbl sub">loop body skipped — dequeues WD-6650 at once</text>
+
+  <rect x="40" y="910" width="960" height="80" rx="8" class="boxA"/>
+  <text x="55" y="932" class="lbl tiny" font-weight="700">THE FIX IS NOT TIMING LUCK</text>
+  <text x="55" y="951" class="lbl sub">queue.size is guarded state that persists regardless of when notify() fires. Checking it in a</text>
+  <text x="55" y="968" class="lbl sub">while loop before deciding to wait closes the lost-wakeup window; notify() itself carries no memory.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="1010" x2="1020" y2="1010" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1023" width="22" height="16" rx="3" class="boxR"/>
+  <text x="60" y="1036" class="lbl tiny">state change that persists in memory</text>
+
+  <rect x="330" y="1023" width="22" height="16" rx="3" class="boxD"/>
+  <text x="360" y="1036" class="lbl tiny">lost signal / blocked forever</text>
+
+  <rect x="600" y="1023" width="22" height="16" rx="3" class="boxA"/>
+  <text x="630" y="1036" class="lbl tiny">explanatory note</text>
+
+  <path class="flow" d="M 800 1030 H 832"/>
+  <text x="840" y="1036" class="lbl tiny">A → B : effect of A observed at B</text>
+</svg>

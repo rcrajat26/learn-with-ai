@@ -1,0 +1,72 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Java 7 concurrent resize cycle frame 4 of 4: T1 resumes with stale locals, writes A.next=B, creating a cycle A to B to A that spins get() forever">
+  <defs>
+    <marker id="arrow94d" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="32" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#1f2937">Java 7's concurrent-resize cycle -- frame 4 of 4</text>
+
+  <!-- code box -->
+  <rect x="40" y="48" width="820" height="96" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="60" y="70" font-family="sans-serif" font-size="13" fill="#1f2937">
+    <tspan x="60" dy="0">Entry&lt;K,V&gt; next = e.next;</tspan>
+    <tspan x="60" dy="20">int i = indexFor(e.hash, newCapacity);</tspan>
+    <tspan x="60" dy="20">e.next = newTable[i];   -- T1 resumes here, newTable[i] is now B</tspan>
+    <tspan x="60" dy="20">newTable[i] = e;</tspan>
+  </text>
+
+  <!-- T1 resumes box -->
+  <rect x="40" y="154" width="380" height="80" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="230" y="176" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">T1 resumes with stale locals</text>
+  <text x="230" y="198" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">e = A, next = B</text>
+  <text x="230" y="218" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">write (5) A.next = newTable[i] = B</text>
+
+  <!-- write log recap -->
+  <rect x="440" y="154" width="420" height="80" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="650" y="174" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">all writes so far, in order</text>
+  <text x="460" y="194" font-family="sans-serif" font-size="12" fill="#1f2937">
+    <tspan x="460" dy="0">(1) A.next=null (2) newTable[i]=A</tspan>
+    <tspan x="460" dy="18">(3) B.next=A (4) newTable[i]=B (5) A.next=B</tspan>
+  </text>
+
+  <!-- cycle diagram -->
+  <rect x="80" y="255" width="360" height="180" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="260" y="278" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">resulting linked list -- a cycle</text>
+
+  <rect x="130" y="300" width="70" height="40" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="165" y="325" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">A</text>
+  <rect x="290" y="300" width="70" height="40" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="325" y="325" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">B</text>
+
+  <!-- A.next = B (write 5), top arrow -->
+  <path d="M 200 310 L 290 310" stroke="#737373" stroke-width="2" fill="none" marker-end="url(#arrow94d)"/>
+  <rect x="205" y="285" width="80" height="20" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="245" y="299" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(5) A.next=B</text>
+
+  <!-- B.next = A (write 3), bottom arrow looping back -->
+  <path d="M 290 335 C 260 375, 195 375, 165 340" stroke="#737373" stroke-width="2" fill="none" marker-end="url(#arrow94d)"/>
+  <rect x="180" y="360" width="80" height="20" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="220" y="374" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(3) B.next=A</text>
+
+  <text x="260" y="410" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A -&gt; B -&gt; A -&gt; B -&gt; ... forever</text>
+
+  <!-- get spin box -->
+  <rect x="480" y="255" width="380" height="180" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="278" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">a later get(k) walking this bin</text>
+  <rect x="510" y="300" width="320" height="50" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="330" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">while ((e = e.next) != null)</text>
+  <text x="670" y="372" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">never terminates</text>
+  <text x="670" y="394" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">100% CPU on one core, forever --</text>
+  <text x="670" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the classic Java 7 production hang</text>
+
+  <!-- bottom note -->
+  <rect x="40" y="455" width="820" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="480" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">
+    <tspan x="450" dy="0">T1's local "next" pointed at B before T2 ever ran; when T1 resumes it blindly</tspan>
+    <tspan x="450" dy="20">re-links A using data that is now stale, closing the loop T2 already built.</tspan>
+    <tspan x="450" dy="20">Java 8's lo/hi split (D-95 territory for its own bugs) removed head insertion entirely.</tspan>
+  </text>
+</svg>

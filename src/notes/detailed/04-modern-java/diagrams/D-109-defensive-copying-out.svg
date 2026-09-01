@@ -1,0 +1,177 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after defensive copying for record PaymentRun with RunId id,
+     List of WithdrawalTransaction items, and byte array signature. Before: the record stores
+     the caller's exact list and array; run.items() and run.signature() return the identical
+     objects, so the caller's later mutations — callerList.add(rogueTxn) and
+     callerSig[0] = 0x00 — mutate the record's state too. After: the compact constructor calls
+     List.copyOf(items) and signature.clone(), producing four distinct objects — the caller's
+     list, the caller's array, the record's copied list, and the record's cloned array — and the
+     same mutation attempts have no effect because they land on a different object. The accessor
+     signature() calls clone() again on every read, a copy-out, so even reading the array never
+     hands out the record's real array.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .title { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-size: 13px; font-family: "SFMono-Regular", Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">DEFENSIVE COPYING, IN AND OUT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="54" width="1080" height="34" rx="5" class="boxW"/>
+  <text x="560" y="76" text-anchor="middle" class="lbl code">record PaymentRun(RunId id, List&lt;WithdrawalTransaction&gt; items, byte[] signature)</text>
+
+  <!-- section headers -->
+  <text x="20" y="112" class="lbl h2">BEFORE — NO DEFENSIVE COPY</text>
+  <line x1="20" y1="118" x2="550" y2="118" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="580" y="112" class="lbl h2">AFTER — COPY IN AND OUT</text>
+  <line x1="580" y1="118" x2="1100" y2="118" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ LEFT: BEFORE ============ -->
+  <rect x="40" y="140" width="230" height="50" rx="6" class="boxP"/>
+  <text x="155" y="160" text-anchor="middle" class="lbl title">caller's items</text>
+  <text x="155" y="178" text-anchor="middle" class="lbl sub">ArrayList&lt;WithdrawalTransaction&gt;</text>
+
+  <rect x="290" y="140" width="230" height="50" rx="6" class="boxP"/>
+  <text x="405" y="160" text-anchor="middle" class="lbl title">caller's signature</text>
+  <text x="405" y="178" text-anchor="middle" class="lbl sub">byte[] (mutable)</text>
+
+  <path class="flow" d="M 175 190 V 210 H 220 V 230"/>
+  <path class="flow" d="M 440 190 V 210 H 340 V 230"/>
+
+  <rect x="150" y="230" width="260" height="90" rx="6" class="boxH"/>
+  <text x="280" y="252" text-anchor="middle" class="lbl node">PaymentRun</text>
+  <text x="280" y="272" text-anchor="middle" class="lbl sub">items → same reference as caller</text>
+  <text x="280" y="288" text-anchor="middle" class="lbl sub">signature → same array as caller</text>
+  <text x="280" y="308" text-anchor="middle" class="lbl sub">no copy in the constructor</text>
+
+  <path class="flow" d="M 220 320 V 340 H 165 V 360"/>
+  <path class="flow" d="M 340 320 V 340 H 405 V 360"/>
+
+  <rect x="60" y="360" width="210" height="50" rx="6" class="boxW"/>
+  <text x="165" y="380" text-anchor="middle" class="lbl title">run.items()</text>
+  <text x="165" y="398" text-anchor="middle" class="lbl sub">identical object, not a copy</text>
+
+  <rect x="300" y="360" width="210" height="50" rx="6" class="boxW"/>
+  <text x="405" y="380" text-anchor="middle" class="lbl title">run.signature()</text>
+  <text x="405" y="398" text-anchor="middle" class="lbl sub">identical array, not a copy</text>
+
+  <rect x="60" y="440" width="210" height="52" rx="6" class="boxD"/>
+  <text x="165" y="461" text-anchor="middle" class="lbl code">callerList.add(rogueTxn)</text>
+  <text x="165" y="479" text-anchor="middle" class="lbl sub">caller mutates the shared list</text>
+
+  <rect x="300" y="440" width="210" height="52" rx="6" class="boxD"/>
+  <text x="405" y="461" text-anchor="middle" class="lbl code">callerSig[0] = 0x00</text>
+  <text x="405" y="479" text-anchor="middle" class="lbl sub">caller mutates the shared array</text>
+
+  <path class="flow" d="M 165 440 V 420 H 220 V 320"/>
+  <path class="flow" d="M 405 440 V 420 H 340 V 320"/>
+
+  <rect x="40" y="510" width="480" height="100" rx="6" class="boxA"/>
+  <text x="56" y="530" class="lbl title">Consequence</text>
+  <text x="56" y="548" class="lbl sub">PaymentRun stores the caller's exact List and byte[] instances.</text>
+  <text x="56" y="564" class="lbl sub">Any mutation by the caller — or anything else holding the</text>
+  <text x="56" y="580" class="lbl sub">reference — is visible through run.items() and run.signature().</text>
+  <text x="56" y="596" class="lbl sub">"Record immutability" here is field-reassignment-only.</text>
+
+  <!-- ============ RIGHT: AFTER ============ -->
+  <rect x="590" y="140" width="220" height="50" rx="6" class="boxP"/>
+  <text x="700" y="160" text-anchor="middle" class="lbl title">caller's items</text>
+  <text x="700" y="178" text-anchor="middle" class="lbl sub">ArrayList&lt;WithdrawalTransaction&gt;</text>
+
+  <rect x="850" y="140" width="220" height="50" rx="6" class="boxP"/>
+  <text x="960" y="160" text-anchor="middle" class="lbl title">caller's signature</text>
+  <text x="960" y="178" text-anchor="middle" class="lbl sub">byte[] (mutable)</text>
+
+  <path class="flow" d="M 730 190 V 210 H 780 V 230"/>
+  <path class="flow" d="M 930 190 V 210 H 900 V 230"/>
+
+  <rect x="700" y="230" width="260" height="90" rx="6" class="boxH"/>
+  <text x="830" y="252" text-anchor="middle" class="lbl node">compact constructor</text>
+  <text x="830" y="272" text-anchor="middle" class="lbl code" font-size="11.5">items = List.copyOf(items);</text>
+  <text x="830" y="288" text-anchor="middle" class="lbl code" font-size="11.5">signature = signature.clone();</text>
+  <text x="830" y="306" text-anchor="middle" class="lbl sub">copy-in, both fields</text>
+
+  <path class="flow" d="M 780 320 V 340 H 720 V 360"/>
+  <path class="flow" d="M 900 320 V 340 H 980 V 360"/>
+
+  <rect x="610" y="360" width="220" height="60" rx="6" class="boxR"/>
+  <text x="720" y="380" text-anchor="middle" class="lbl title">record's items</text>
+  <text x="720" y="397" text-anchor="middle" class="lbl sub">List.copyOf(...) — immutable</text>
+  <text x="720" y="412" text-anchor="middle" class="lbl sub">distinct object #2</text>
+
+  <rect x="870" y="360" width="220" height="60" rx="6" class="boxR"/>
+  <text x="980" y="380" text-anchor="middle" class="lbl title">record's signature</text>
+  <text x="980" y="397" text-anchor="middle" class="lbl sub">signature.clone() copy-in</text>
+  <text x="980" y="412" text-anchor="middle" class="lbl sub">distinct object #4</text>
+
+  <rect x="610" y="450" width="220" height="52" rx="6" class="boxD"/>
+  <text x="720" y="471" text-anchor="middle" class="lbl code">callerList.add(rogueTxn)</text>
+  <text x="720" y="489" text-anchor="middle" class="lbl sub">attempted mutation</text>
+
+  <rect x="870" y="450" width="220" height="52" rx="6" class="boxD"/>
+  <text x="980" y="471" text-anchor="middle" class="lbl code">callerSig[0] = 0x00</text>
+  <text x="980" y="489" text-anchor="middle" class="lbl sub">attempted mutation</text>
+
+  <path class="weak" d="M 720 450 V 432"/>
+  <text x="726" y="440" class="lbl sub">✕ no effect</text>
+  <path class="weak" d="M 980 450 V 432"/>
+  <text x="986" y="440" class="lbl sub">✕ no effect</text>
+
+  <rect x="590" y="520" width="480" height="120" rx="6" class="boxA"/>
+  <text x="606" y="540" class="lbl title">Copy-out too</text>
+  <text x="606" y="558" class="lbl sub">items() returns the same List.copyOf instance — already</text>
+  <text x="606" y="574" class="lbl sub">immutable, no further copy needed leaving the record.</text>
+  <text x="606" y="590" class="lbl sub">signature() calls signature.clone() again on every read —</text>
+  <text x="606" y="606" class="lbl sub">object #5, #6, ... a fresh clone per call — so a caller who</text>
+  <text x="606" y="622" class="lbl sub">mutates a returned array only mutates that throwaway copy.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="670" x2="1100" y2="670" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="684" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="697" class="lbl tiny">caller's object</text>
+
+  <rect x="200" y="684" width="22" height="16" rx="3" class="boxH"/>
+  <text x="230" y="697" class="lbl tiny">the record / its constructor</text>
+
+  <rect x="430" y="684" width="22" height="16" rx="3" class="boxR"/>
+  <text x="460" y="697" class="lbl tiny">record's own copy/clone</text>
+
+  <rect x="650" y="684" width="22" height="16" rx="3" class="boxD"/>
+  <text x="680" y="697" class="lbl tiny">mutation attempt</text>
+
+  <rect x="850" y="684" width="22" height="16" rx="3" class="boxW"/>
+  <text x="880" y="697" class="lbl tiny">accessor / declaration</text>
+
+  <path class="flow" d="M 20 720 H 60"/>
+  <text x="70" y="724" class="lbl tiny">A → B : B is assigned/produced from A</text>
+
+  <path class="weak" d="M 400 720 H 440"/>
+  <text x="450" y="724" class="lbl tiny">attempted mutation reaching nothing — has no effect</text>
+</svg>

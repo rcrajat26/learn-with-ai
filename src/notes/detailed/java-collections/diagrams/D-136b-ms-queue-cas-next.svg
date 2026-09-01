@@ -1,0 +1,44 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame B: producer CASing p.next from null to new node then attempting a tail CAS that is allowed to fail">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="16"
+        fill="#1f2937" font-weight="bold">Frame B — enqueue: CAS next, then a best-effort tail CAS</text>
+
+  <rect x="60" y="100" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="95" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">B</text>
+  <line x1="130" y1="120" x2="180" y2="120" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="185" y="100" width="70" height="40" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="220" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">C (=p)</text>
+  <line x1="255" y1="120" x2="305" y2="120" stroke="#525252" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+  <text x="280" y="108" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1. NEXT.compareAndSet(p, null, newNode)</text>
+
+  <rect x="310" y="100" width="80" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="350" y="118" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">D newNode</text>
+  <text x="350" y="132" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(new item)</text>
+
+  <!-- tail still at t (pointing at B, stale) -->
+  <rect x="60" y="45" width="60" height="26" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="90" y="63" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">tail=t</text>
+  <line x1="90" y1="71" x2="95" y2="98" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- attempted tail CAS to D -->
+  <line x1="120" y1="55" x2="345" y2="98" stroke="#737373" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrow)"/>
+  <rect x="140" y="45" width="240" height="24" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="260" y="62" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">2. if (p != t) TAIL.weakCompareAndSet(this, t, newNode)</text>
+
+  <rect x="60" y="160" width="700" height="30" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="180" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">source: ConcurrentLinkedQueue.java line 361 (NEXT.compareAndSet) and line 366 (TAIL.weakCompareAndSet)</text>
+
+  <rect x="60" y="200" width="700" height="80" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="410" y="220" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">"One slack" policy: the tail CAS is OPTIONAL and NOT RETRIED on failure.</text>
+  <text x="410" y="238" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Successful CAS of p.next is the true linearization point for the enqueue —</text>
+  <text x="410" y="256" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">newNode is live and part of the queue whether or not the tail hop succeeds.</text>
+  <text x="410" y="272" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">A failed tail CAS just leaves tail one node further behind — see Frame A.</text>
+</svg>

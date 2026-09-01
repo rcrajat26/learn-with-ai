@@ -1,0 +1,50 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: the actual interleaved per-element trace for the same pipeline, printed line by line
+     for the first three stake reservations of 4.20, 2.10 and 6.00 — filter, map and forEach for each reservation
+     run to completion before the next reservation is pulled from the source, proving vertical fusion through the
+     whole pipeline for one element at a time.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; }
+    .body { font-size: 12.5px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .tiny { font-size: 11px; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+  </style>
+  <rect x="0" y="0" width="900" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 2 / 3 — THE ACTUAL INTERLEAVED PER-ELEMENT TRACE</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="740" y="18" width="34" height="20" rx="10" class="pill"/>
+  <text x="757" y="33" text-anchor="middle" class="lbl tiny" style="font-weight:700;">2/3</text>
+
+  <text x="20" y="64" class="lbl body">Same source code as frame 1 — measured JDK 21 output, unchanged.</text>
+
+  <rect x="20" y="80" width="860" height="330" rx="6" class="boxR"/>
+  <text x="40" y="104" class="lbl h2">MEASURED — one Reservation is fully pushed through before the next is pulled</text>
+
+  <text x="40" y="130" class="lbl mono">filter 4.20</text>
+  <text x="40" y="148" class="lbl mono">map 4.20</text>
+  <text x="40" y="166" class="lbl mono">forEach StakeSplit[bonus=0.42, cash=3.78]</text>
+
+  <text x="40" y="196" class="lbl mono">filter 2.10</text>
+  <text x="240" y="196" class="lbl tiny" style="fill:#b91c1c;">rejected — 2.10 &lt; 4.20, map/forEach never called for it</text>
+
+  <text x="40" y="226" class="lbl mono">filter 6.00</text>
+  <text x="40" y="244" class="lbl mono">map 6.00</text>
+  <text x="40" y="262" class="lbl mono">forEach StakeSplit[bonus=0.60, cash=5.40]</text>
+
+  <text x="40" y="292" class="lbl tiny" style="font-weight:700;">Reading order top to bottom is the pull order, not the declaration order:</text>
+  <text x="40" y="310" class="lbl tiny">filter(4.20) → map(4.20) → forEach(4.20) → filter(2.10) → filter(6.00) → map(6.00) → forEach(6.00)</text>
+  <text x="40" y="332" class="lbl tiny">No "map" line ever appears for 2.10 — filter's false short-circuits that element at stage 1,</text>
+  <text x="40" y="350" class="lbl tiny">it never reaches stage 2 or 3. This is what "vertical fusion" means: one element rides the</text>
+  <text x="40" y="368" class="lbl tiny">whole 3-stage sink chain in one call stack before the source is asked for the next element.</text>
+  <text x="40" y="392" class="lbl tiny" style="fill:#4b5563;">Bonus split uses the 10%-capped-at-100 rule; 4.20 -&gt; 0.42/3.78, 6.00 -&gt; 0.60/5.40.</text>
+
+  <line x1="20" y1="428" x2="880" y2="428" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="438" width="22" height="14" rx="3" class="boxR"/>
+  <text x="50" y="450" class="lbl tiny">measured / confirmed behaviour</text>
+</svg>

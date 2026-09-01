@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 1000" role="img" aria-label="Growth trace of MyStringBuilder appending 1,000,000 characters from a start capacity of 16 under the rule newCap = 2 * old + 2. The upper plot shows capacity against characters appended on log-log axes as a step function with sixteen risers, one per reallocation, each riser marked with a point; the final flat run sits at capacity 1,179,646. The table below lists all sixteen grows with old capacity, new capacity and characters copied, from 16 to 34 copying 16 chars, up to 589,822 to 1,179,646 copying 589,822 chars. Totals: 16 reallocations, final capacity 1,179,646, 1,179,598 characters copied, 2,359,196 bytes copied at 2 bytes per char, a copy ratio of 1.1796 n against the theoretical amortised bound of roughly 2 n. End slack is 179,646 unused char slots, or 359,292 wasted bytes.">
+<defs>
+<style>
+.t { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 15px; font-weight: 700; }
+.band { font-size: 13px; font-weight: 700; }
+.bh { font-size: 13px; font-weight: 700; }
+.ax { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.axt { font-size: 11px; font-weight: 700; fill: #1f2937; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.mono { font-family: Menlo, "SF Mono", monospace; font-size: 12px; fill: #1f2937; }
+.th { font-size: 11px; font-weight: 700; fill: #1f2937; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.row { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.rowb { font-size: 11px; font-weight: 700; fill: #1f2937; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.leg { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.hair { stroke: #d1d5db; stroke-width: 1.4; fill: none; }
+.grid { stroke: #d1d5db; stroke-width: 1.3; fill: none; }
+.bx { stroke-width: 1.5; }
+.axis { stroke: #475569; stroke-width: 1.6; fill: none; }
+.solid { stroke: #475569; stroke-width: 2; fill: none; }
+</style>
+<marker id="arr131s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,0 10,5 0,10" fill="#475569"/></marker>
+</defs>
+<rect x="0" y="0" width="1040" height="1000" fill="#ffffff"/>
+
+<text class="t title" x="20" y="32">D-131 — MyStringBuilder growth: capacity under newCap = 2 * old + 2, start 16, appending 1,000,000 chars</text>
+<path class="hair" d="M 20 44 H 1020"/>
+
+<text class="t band" x="40" y="66">Capacity curve — both axes log; each riser is one reallocation (16 in total)</text>
+<text class="axt" x="110" y="88">capacity, char slots (log scale)</text>
+
+<!-- gridlines -->
+<path class="grid" d="M 285 95 V 380"/>
+<path class="grid" d="M 459 95 V 380"/>
+<path class="grid" d="M 634 95 V 380"/>
+<path class="grid" d="M 808 95 V 380"/>
+<path class="grid" d="M 983 95 V 380"/>
+<path class="grid" d="M 110 325 H 1000"/>
+<path class="grid" d="M 110 270 H 1000"/>
+<path class="grid" d="M 110 215 H 1000"/>
+<path class="grid" d="M 110 160 H 1000"/>
+<path class="grid" d="M 110 105 H 1000"/>
+
+<!-- axes -->
+<path class="axis" d="M 110 95 V 380"/>
+<path class="axis" d="M 110 380 H 1000"/>
+
+<!-- y tick labels -->
+<text class="ax" x="104" y="384" text-anchor="end">10</text>
+<text class="ax" x="104" y="329" text-anchor="end">100</text>
+<text class="ax" x="104" y="274" text-anchor="end">1k</text>
+<text class="ax" x="104" y="219" text-anchor="end">10k</text>
+<text class="ax" x="104" y="164" text-anchor="end">100k</text>
+<text class="ax" x="104" y="109" text-anchor="end">1M</text>
+
+<!-- x tick labels -->
+<text class="ax" x="110" y="398" text-anchor="middle">10</text>
+<text class="ax" x="285" y="398" text-anchor="middle">100</text>
+<text class="ax" x="459" y="398" text-anchor="middle">1,000</text>
+<text class="ax" x="634" y="398" text-anchor="middle">10,000</text>
+<text class="ax" x="808" y="398" text-anchor="middle">100,000</text>
+<text class="ax" x="983" y="398" text-anchor="middle">1,000,000</text>
+<text class="axt" x="555" y="420" text-anchor="middle">characters appended (log scale)</text>
+
+<!-- step function -->
+<path class="solid" marker-end="url(#arr131s)" d="M 110 368.8 H 145.6 V 350.9 H 202.8 V 333.6 H 257.5 V 316.7 H 311.1 V 300 H 364.2 V 283.4 H 417 V 266.9 H 469.6 V 250.4 H 522.2 V 233.8 H 574.8 V 217.3 H 627.4 V 200.7 H 679.9 V 184.2 H 732.6 V 167.7 H 785 V 151.2 H 837.5 V 134.7 H 890.1 V 118.2 H 942.6 V 101.7 H 982.5"/>
+
+<!-- reallocation points -->
+<circle cx="145.6" cy="350.9" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="202.8" cy="333.6" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="257.5" cy="316.7" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="311.1" cy="300" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="364.2" cy="283.4" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="417" cy="266.9" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="469.6" cy="250.4" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="522.2" cy="233.8" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="574.8" cy="217.3" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="627.4" cy="200.7" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="679.9" cy="184.2" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="732.6" cy="167.7" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="785" cy="151.2" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="837.5" cy="134.7" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="890.1" cy="118.2" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<circle cx="942.6" cy="101.7" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+
+<!-- trace table -->
+<text class="t band" x="40" y="434">Reallocation trace — every grow, with the chars it copied</text>
+<rect class="bx" x="40" y="444" width="520" height="344" fill="#f3f4f6" stroke="#9ca3af"/>
+<rect class="bx" x="40" y="444" width="520" height="28" fill="#fef3c7" stroke="#b45309"/>
+<text class="th" x="54" y="464">grow</text>
+<text class="th" x="130" y="464">old cap</text>
+<text class="th" x="250" y="464">new cap</text>
+<text class="th" x="390" y="464">chars copied</text>
+
+<text class="mono" x="54" y="490">1</text><text class="mono" x="130" y="490">16</text><text class="mono" x="250" y="490">34</text><text class="mono" x="390" y="490">16</text>
+<text class="mono" x="54" y="509">2</text><text class="mono" x="130" y="509">34</text><text class="mono" x="250" y="509">70</text><text class="mono" x="390" y="509">34</text>
+<text class="mono" x="54" y="528">3</text><text class="mono" x="130" y="528">70</text><text class="mono" x="250" y="528">142</text><text class="mono" x="390" y="528">70</text>
+<text class="mono" x="54" y="547">4</text><text class="mono" x="130" y="547">142</text><text class="mono" x="250" y="547">286</text><text class="mono" x="390" y="547">142</text>
+<text class="mono" x="54" y="566">5</text><text class="mono" x="130" y="566">286</text><text class="mono" x="250" y="566">574</text><text class="mono" x="390" y="566">286</text>
+<text class="mono" x="54" y="585">6</text><text class="mono" x="130" y="585">574</text><text class="mono" x="250" y="585">1,150</text><text class="mono" x="390" y="585">574</text>
+<text class="mono" x="54" y="604">7</text><text class="mono" x="130" y="604">1,150</text><text class="mono" x="250" y="604">2,302</text><text class="mono" x="390" y="604">1,150</text>
+<text class="mono" x="54" y="623">8</text><text class="mono" x="130" y="623">2,302</text><text class="mono" x="250" y="623">4,606</text><text class="mono" x="390" y="623">2,302</text>
+<text class="mono" x="54" y="642">9</text><text class="mono" x="130" y="642">4,606</text><text class="mono" x="250" y="642">9,214</text><text class="mono" x="390" y="642">4,606</text>
+<text class="mono" x="54" y="661">10</text><text class="mono" x="130" y="661">9,214</text><text class="mono" x="250" y="661">18,430</text><text class="mono" x="390" y="661">9,214</text>
+<text class="mono" x="54" y="680">11</text><text class="mono" x="130" y="680">18,430</text><text class="mono" x="250" y="680">36,862</text><text class="mono" x="390" y="680">18,430</text>
+<text class="mono" x="54" y="699">12</text><text class="mono" x="130" y="699">36,862</text><text class="mono" x="250" y="699">73,726</text><text class="mono" x="390" y="699">36,862</text>
+<text class="mono" x="54" y="718">13</text><text class="mono" x="130" y="718">73,726</text><text class="mono" x="250" y="718">147,454</text><text class="mono" x="390" y="718">73,726</text>
+<text class="mono" x="54" y="737">14</text><text class="mono" x="130" y="737">147,454</text><text class="mono" x="250" y="737">294,910</text><text class="mono" x="390" y="737">147,454</text>
+<text class="mono" x="54" y="756">15</text><text class="mono" x="130" y="756">294,910</text><text class="mono" x="250" y="756">589,822</text><text class="mono" x="390" y="756">294,910</text>
+<text class="mono" x="54" y="775">16</text><text class="mono" x="130" y="775">589,822</text><text class="mono" x="250" y="775">1,179,646</text><text class="mono" x="390" y="775">589,822</text>
+
+<!-- totals -->
+<text class="t band" x="600" y="434">Totals and the amortised bound</text>
+<rect class="bx" x="600" y="444" width="400" height="150" fill="#dcfce7" stroke="#15803d"/>
+<text class="t bh" x="614" y="464">Measured grand total</text>
+<text class="row" x="614" y="484">reallocations</text><text class="rowb" x="986" y="484" text-anchor="end">16</text>
+<text class="row" x="614" y="503">final capacity</text><text class="rowb" x="986" y="503" text-anchor="end">1,179,646 slots</text>
+<text class="row" x="614" y="522">chars copied</text><text class="rowb" x="986" y="522" text-anchor="end">1,179,598</text>
+<text class="row" x="614" y="541">bytes copied (2 B per char)</text><text class="rowb" x="986" y="541" text-anchor="end">2,359,196 B</text>
+<text class="row" x="614" y="560">copy cost ratio</text><text class="rowb" x="986" y="560" text-anchor="end">1.1796 n</text>
+<text class="row" x="614" y="579">theoretical amortised bound</text><text class="rowb" x="986" y="579" text-anchor="end">~2 n</text>
+
+<rect class="bx" x="600" y="614" width="400" height="116" fill="#eff6ff" stroke="#2563eb"/>
+<text class="t bh" x="614" y="634">Slack left at the end</text>
+<text class="row" x="614" y="654">1,179,646 capacity - 1,000,000 appended</text>
+<text class="row" x="614" y="673">= 179,646 unused char slots</text>
+<text class="row" x="614" y="692">= 359,292 wasted bytes, held live</text>
+<text class="row" x="614" y="711">2 * old + 2 can overshoot by up to ~2x</text>
+
+<rect class="bx" x="600" y="750" width="400" height="116" fill="#eff6ff" stroke="#2563eb"/>
+<text class="t bh" x="614" y="770">Why 1.1796 n, not 2 n</text>
+<text class="row" x="614" y="790">Geometric growth: chars copied = final cap - 48</text>
+<text class="row" x="614" y="809">1,179,646 - 48 = 1,179,598, so 1.1796 n</text>
+<text class="row" x="614" y="828">The bound is ~2 n; the constant depends on</text>
+<text class="row" x="614" y="847">where n falls between two grows.</text>
+
+<path class="hair" d="M 20 890 H 1020"/>
+
+<circle cx="51" cy="906" r="3.4" fill="#fbbf24" stroke="#b45309" stroke-width="1.4"/>
+<text class="leg" x="70" y="910">reallocation point - one per grow, 16 in total</text>
+<rect class="bx" x="40" y="918" width="22" height="12" fill="#dcfce7" stroke="#15803d"/>
+<text class="leg" x="70" y="928">measured grand total for the run</text>
+<rect class="bx" x="40" y="936" width="22" height="12" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="leg" x="70" y="946">reallocation trace table panel</text>
+<rect class="bx" x="40" y="954" width="22" height="12" fill="#fef3c7" stroke="#b45309"/>
+<text class="leg" x="70" y="964">trace table header row</text>
+
+<rect class="bx" x="540" y="900" width="22" height="12" fill="#eff6ff" stroke="#2563eb"/>
+<text class="leg" x="570" y="910">annotation panel</text>
+<path class="solid" marker-end="url(#arr131s)" d="M 540 924 H 584"/>
+<text class="leg" x="594" y="928">step curve -&gt; end of 1,000,000 appends : each riser is one grow</text>
+<path class="grid" d="M 540 942 H 584"/>
+<text class="leg" x="594" y="946">hairline - decade gridline on the log axes; table header rule</text>
+</svg>

@@ -1,0 +1,155 @@
+<svg viewBox="0 0 1160 1300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layouts of four java.time types on Oracle JDK 21.0.7 macOS aarch64, drawn to scale by byte size and measured as heap deltas over 2,000,000 instances. Instant measures 24.2 bytes: a final long seconds since the 1970 epoch and a final int nanos from 0 to 999,999,999 always non-negative, so a pre-epoch instant has negative seconds and positive nanos; 12-byte header plus 8 plus 4 equals 24, exactly on the alignment boundary; used for QuizStakes Movement.postedAt and LedgerEntry.postedAt, costing about 475 megabytes per day at 19.8 million ledger entries. LocalDate measures 24.3 bytes from a final int year and two final short fields month and day, 12 plus 4 plus 2 plus 2 equals 20 aligned to 24, with no epoch day stored; used for client date of birth. LocalTime measures 24.3 bytes from three final byte fields hour minute second plus a final int nano, 12 plus 1 plus 1 plus 1 plus 1 byte padding plus 4 equals 20 aligned to 24, plus a cached static array of the 24 whole-hour instances, so LocalTime.of(14,0) == LocalTime.of(14,0) is true while LocalTime.of(14,30) == LocalTime.of(14,30) is false, a reference-equality trap. ZonedDateTime measures 96.0 bytes total: its own 24-byte shell (header 12 plus three references to LocalDateTime, ZoneOffset, ZoneId) containing a LocalDateTime measured at 72.0 bytes, itself a 24-byte shell over a nested LocalDate 24 and LocalTime 24, giving 24 plus 72 equals 96; used for the QuizStakes PaymentRun payout window. An explanation panel states why both ZoneOffset and ZoneId are stored: the ZoneId such as Europe/London is the region carrying rules that change through the year, needed to schedule the future correctly, while the ZoneOffset such as plus one hour is the resolved answer for one instant, needed because during a DST overlap the local time and region alone are ambiguous, for example Europe/London 2026-10-25T01:30 has two valid offsets +01:00 and Z an hour apart, and storing only the offset would lose the region needed for future date arithmetic. A comparison row shows Long.valueOf measured at 24.1 bytes on the same run.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr127" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="1300" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">The java.time field layouts &#8212; four measured objects, drawn to scale by byte size</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="h2">SECTION 1 &#8212; INSTANT, LOCALDATE, LOCALTIME (JDK 21.0.7 lib/src.zip field declarations)</text>
+  <line x1="20" y1="74" x2="1140" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- Instant -->
+  <rect x="30" y="90" width="360" height="220" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="46" y="112" class="smallb">Instant &#8212; 24.2 bytes measured</text>
+  <rect x="46" y="122" width="328" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="54" y="140" class="code">private final long seconds;</text>
+  <rect x="46" y="148" width="328" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="54" y="166" class="code">private final int nanos;</text>
+  <text x="46" y="188" class="small">nanos: 0..999,999,999, always non-negative &#8212;</text>
+  <text x="46" y="202" class="small">pre-epoch instant has negative seconds, positive nanos</text>
+  <text x="46" y="220" class="small">12 hdr + 8 + 4 = 24, exactly on alignment</text>
+  <text x="46" y="238" class="smallb">QuizStakes: Movement.postedAt, LedgerEntry.postedAt</text>
+  <text x="46" y="256" class="codeR">19.8M/day &#215; 24 &#8776; 475.2 MB/day</text>
+  <text x="46" y="272" class="small">MAX.toEpochMilli() throws</text>
+  <text x="46" y="286" class="small">ArithmeticException: long overflow</text>
+
+  <!-- LocalDate -->
+  <rect x="410" y="90" width="330" height="220" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="426" y="112" class="smallb">LocalDate &#8212; 24.3 bytes measured</text>
+  <rect x="426" y="122" width="298" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="434" y="140" class="code">private final int year;</text>
+  <rect x="426" y="148" width="298" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="434" y="166" class="code">private final short month;</text>
+  <rect x="426" y="174" width="298" height="26" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="434" y="192" class="code">private final short day;</text>
+  <text x="426" y="212" class="small">12 + 4 + 2 + 2 = 20 &#8594; 24 after alignment</text>
+  <text x="426" y="230" class="codeR">no epoch day stored &#8212;</text>
+  <text x="426" y="246" class="codeR">toEpochDay() computes it every call</text>
+  <text x="426" y="268" class="smallb">QuizStakes: client date of birth,</text>
+  <text x="426" y="284" class="smallb">PaymentRun business date</text>
+
+  <!-- LocalTime -->
+  <rect x="770" y="90" width="360" height="220" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="786" y="112" class="smallb">LocalTime &#8212; 24.3 bytes measured</text>
+  <rect x="786" y="122" width="328" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="794" y="139" class="code">private final byte hour, minute, second;</text>
+  <rect x="786" y="146" width="328" height="24" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="794" y="163" class="code">private final int nano;</text>
+  <text x="786" y="188" class="small">12 + 1+1+1 + 1 pad + 4 = 20 &#8594; 24</text>
+  <text x="786" y="206" class="small">static final LocalTime[] HOURS = new LocalTime[24];</text>
+  <rect x="786" y="214" width="328" height="66" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="794" y="232" class="codeG">of(14,0) == of(14,0)  &#8594;  true</text>
+  <text x="794" y="250" class="codeR">of(14,30) == of(14,30)  &#8594;  false</text>
+  <text x="794" y="268" class="small">TRAP: cached whole hours make == look reliable</text>
+
+  <!-- Section 2: ZonedDateTime composite -->
+  <text x="20" y="350" class="h2">SECTION 2 &#8212; ZONEDDATETIME, THE COMPOSITE (96.0 bytes measured, the point of this diagram)</text>
+  <line x1="20" y1="358" x2="1140" y2="358" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ZonedDateTime shell -->
+  <rect x="300" y="376" width="560" height="80" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="316" y="398" class="smallb">ZonedDateTime &#8212; 96.0 bytes total (24 shell + 72 nested LocalDateTime)</text>
+  <rect x="316" y="406" width="176" height="40" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="324" y="422" class="code">LocalDateTime</text>
+  <text x="324" y="438" class="code">dateTime;</text>
+  <rect x="500" y="406" width="168" height="40" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="508" y="422" class="code">ZoneOffset</text>
+  <text x="508" y="438" class="code">offset;</text>
+  <rect x="676" y="406" width="168" height="40" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="684" y="422" class="code">ZoneId zone;</text>
+  <text x="684" y="438" class="small">shared, cached</text>
+
+  <!-- bus down to LocalDateTime -->
+  <path d="M 404 436 V 452 H 460 V 468" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr127)"/>
+
+  <!-- LocalDateTime nested -->
+  <rect x="300" y="488" width="560" height="180" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="316" y="510" class="smallb">LocalDateTime &#8212; 72.0 bytes measured (24 shell + LocalDate 24 + LocalTime 24)</text>
+  <rect x="316" y="520" width="270" height="28" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.2"/>
+  <text x="324" y="539" class="code">private final LocalDate date;</text>
+  <rect x="316" y="550" width="270" height="28" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.2"/>
+  <text x="324" y="569" class="code">private final LocalTime time;</text>
+  <text x="606" y="535" class="small">shell: 12 hdr + 2 references = 24</text>
+
+  <!-- bus fan out to LocalDate/LocalTime -->
+  <path d="M 451 558 V 580 H 400 V 596" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr127)"/>
+  <path d="M 451 558 V 580 H 660 V 596" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr127)"/>
+
+  <rect x="316" y="616" width="230" height="42" fill="#dcfce7" stroke="#15803d" stroke-width="1.4"/>
+  <text x="324" y="642" class="code">LocalDate  &#8212;  24.0 bytes</text>
+
+  <rect x="576" y="616" width="230" height="42" fill="#dcfce7" stroke="#15803d" stroke-width="1.4"/>
+  <text x="584" y="642" class="code">LocalTime  &#8212;  24.0 bytes</text>
+
+  <text x="880" y="520" class="body">24 (ZonedDateTime shell)</text>
+  <text x="880" y="540" class="body">+ 72 (LocalDateTime)</text>
+  <text x="880" y="560" class="codeR">= 96 total</text>
+  <text x="880" y="582" class="small">QuizStakes: the PaymentRun</text>
+  <text x="880" y="598" class="small">payout window</text>
+
+  <!-- Explanation panel -->
+  <rect x="20" y="692" width="1120" height="270" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="36" y="714" class="smallb">WHY BOTH THE OFFSET AND THE ZONE ARE STORED &#8212; the point of this diagram</text>
+  <text x="36" y="736" class="body">ZoneId (Europe/London) is the REGION: it carries rules that change several times a year as tzdb updates, and it</text>
+  <text x="36" y="754" class="body">is what you need to schedule anything in the future correctly.</text>
+  <text x="36" y="776" class="body">ZoneOffset (+01:00) is the RESOLVED ANSWER for this particular instant.</text>
+  <text x="36" y="800" class="smallb">1. DST overlap makes local time + region alone ambiguous:</text>
+  <rect x="56" y="810" width="1064" height="30" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.4"/>
+  <text x="64" y="830" class="codeR">Europe/London 2026-10-25T01:30 &#8594; getValidOffsets = [+01:00, Z]  &#8212; two valid offsets, an hour apart</text>
+  <text x="36" y="858" class="body">Storing the resolved offset is what fixes which of the two this object means.</text>
+  <text x="36" y="880" class="smallb">2. Storing only the offset would lose the region, so plusDays/plusMonths could not know the next transition.</text>
+  <rect x="36" y="894" width="1064" height="52" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="44" y="914" class="code">Long.valueOf(...) measured 24.1 bytes on the same run and build &#8212; comparable to Instant/LocalDate/LocalTime</text>
+  <text x="44" y="932" class="small">a useful size reference point for the four java.time objects above</text>
+
+  <!-- legend -->
+  <text x="20" y="992" class="h2">LEGEND</text>
+  <line x1="20" y1="1000" x2="1140" y2="1000" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1012" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1025" class="small">Instant &#8212; epoch seconds + nanos, 24.2 bytes</text>
+
+  <rect x="30" y="1038" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="1051" class="small">LocalDate / LocalTime &#8212; date-only or time-only fields, ~24.3 bytes each</text>
+
+  <rect x="30" y="1064" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1077" class="small">ZonedDateTime &#8212; the composite, 96.0 bytes, the point of this diagram</text>
+
+  <rect x="620" y="1012" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="648" y="1025" class="small">nested LocalDateTime/LocalDate/LocalTime field-row panels</text>
+
+  <rect x="620" y="1038" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="1051" class="small">explanation / measured-value panel</text>
+
+  <rect x="620" y="1064" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="648" y="1077" class="small">the LocalTime == trap and the DST-overlap ambiguity example</text>
+
+  <line x1="30" y1="1102" x2="56" y2="1102" stroke="#475569" stroke-width="2" marker-end="url(#arr127)"/>
+  <text x="64" y="1107" class="small">containment edge: parent object holds a reference to the nested child object</text>
+</svg>

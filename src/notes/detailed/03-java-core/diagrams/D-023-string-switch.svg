@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1000 1110" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A switch on a QuizStakes restriction type name such as SELF_EXCLUDED compiles to two nested bytecode switches: stage one is a lookupswitch on String.hashCode() (SELF_EXCLUDED hashes to 305,966,429, STAKE_BLOCKED to -421,468,697, COOLING_OFF to -1,856,892,951), which only picks a candidate; stage two's block then calls equals() to confirm the candidate because two distinct names could in principle share a hash, setting a dense int index (0, 1 or 2) or leaving it at -1 to fall through to default; a final tableswitch on that dense index selects the actual case body.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1000" height="1110" fill="#ffffff"/>
+
+  <text x="500" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">switch on a String is two stages: lookupswitch on hashCode(), then tableswitch on a dense index</text>
+  <text x="500" y="50" text-anchor="middle" font-family="monospace" font-size="12" fill="#4b5563">switch (restriction.typeName()) { case "SELF_EXCLUDED" -&gt; blockStake(); case "STAKE_BLOCKED" -&gt; ...; case "COOLING_OFF" -&gt; ...; default -&gt; ...; }</text>
+
+  <!-- Frame 1 -->
+  <rect x="30" y="90" width="940" height="210" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+  <text x="50" y="110" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 1 — stage one: lookupswitch on String.hashCode()</text>
+  <text x="50" y="130" font-family="monospace" font-size="11" fill="#4b5563">int h = typeName.hashCode();  // h = 305,966,429 when typeName is "SELF_EXCLUDED"</text>
+
+  <rect x="60" y="150" width="220" height="36" rx="4" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="170" y="173" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">-1,856,892,951</text>
+  <rect x="290" y="150" width="220" height="36" rx="4" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="173" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">COOLING_OFF (index 2)</text>
+
+  <rect x="60" y="192" width="220" height="36" rx="4" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="170" y="215" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">-421,468,697</text>
+  <rect x="290" y="192" width="220" height="36" rx="4" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="215" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">STAKE_BLOCKED (index 1)</text>
+
+  <rect x="60" y="234" width="220" height="36" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="170" y="257" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">305,966,429</text>
+  <rect x="290" y="234" width="220" height="36" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="257" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">SELF_EXCLUDED (index 0) — MATCH</text>
+
+  <path d="M 510 252 H 560" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="560" y="225" width="220" height="54" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="247" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">index = 0 (candidate,</text>
+  <text x="670" y="264" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">not yet confirmed)</text>
+
+  <!-- Frame 2 -->
+  <rect x="30" y="320" width="940" height="200" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+  <text x="50" y="340" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 2 — equals() confirms the match (hash collisions are possible)</text>
+
+  <rect x="60" y="370" width="260" height="50" rx="6" fill="#f3f4f6" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="391" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">candidate index = 0</text>
+  <text x="190" y="408" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(from hash match)</text>
+
+  <path d="M 320 395 H 360" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="360" y="370" width="320" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="520" y="399" text-anchor="middle" font-family="monospace" font-size="11" fill="#1f2937">typeName.equals("SELF_EXCLUDED")?</text>
+
+  <path d="M 680 395 V 365 H 760" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 680 395 V 425 H 760" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="760" y="345" width="180" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="850" y="369" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">true -&gt; index = 0</text>
+
+  <rect x="760" y="405" width="180" height="40" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="850" y="429" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">false -&gt; index = -1</text>
+
+  <text x="500" y="465" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#4b5563">two distinct names can share a hash, so equals() is mandatory</text>
+  <text x="500" y="483" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#4b5563">index stays -1 on mismatch, falling to default</text>
+
+  <!-- Frame 3 -->
+  <rect x="30" y="540" width="940" height="150" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+  <text x="50" y="560" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 3 — stage two: tableswitch on the dense int index</text>
+
+  <rect x="60" y="590" width="160" height="50" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="140" y="619" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">index = 0</text>
+
+  <path d="M 220 615 H 280" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="280" y="580" width="280" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="420" y="598" text-anchor="middle" font-family="monospace" font-size="11" fill="#1f2937">tableswitch (0..2)</text>
+  <text x="420" y="613" text-anchor="middle" font-family="monospace" font-size="11" fill="#1f2937">0 -&gt; L_self_excluded</text>
+  <text x="420" y="628" text-anchor="middle" font-family="monospace" font-size="11" fill="#1f2937">1 -&gt; L_stake_blocked, 2 -&gt; L_cooling_off</text>
+
+  <path d="M 560 615 H 640" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="640" y="590" width="300" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="790" y="619" text-anchor="middle" font-family="monospace" font-size="11" fill="#1f2937">case "SELF_EXCLUDED" -&gt; block the stake</text>
+
+  <!-- javap listing -->
+  <rect x="30" y="710" width="940" height="340" rx="6" fill="#eff6ff" stroke="#d1d5db" stroke-width="1.6"/>
+  <text x="50" y="730" font-family="sans-serif" font-size="13" fill="#1f2937">javap -c skeleton — instructions labelled by frame</text>
+
+  <text x="60" y="752" font-family="monospace" font-size="11" fill="#1f2937">0: aload_1</text>
+  <text x="60" y="766" font-family="monospace" font-size="11" fill="#1f2937">1: invokevirtual java/lang/String.hashCode:()I<tspan fill="#4b5563">  // Frame 1: compute hash</tspan></text>
+  <text x="60" y="780" font-family="monospace" font-size="11" fill="#1f2937">4: istore_2</text>
+  <text x="60" y="794" font-family="monospace" font-size="11" fill="#1f2937">5: iconst_m1</text>
+  <text x="60" y="808" font-family="monospace" font-size="11" fill="#1f2937">6: istore_3<tspan fill="#4b5563">  // index = -1 (default: no match yet)</tspan></text>
+  <text x="60" y="822" font-family="monospace" font-size="11" fill="#1f2937">7: iload_2</text>
+  <text x="60" y="836" font-family="monospace" font-size="11" fill="#1f2937">8: lookupswitch { // 3<tspan fill="#4b5563">  // Frame 1: stage-one switch on hash</tspan></text>
+  <text x="60" y="850" font-family="monospace" font-size="11" fill="#1f2937">    -1856892951: 36  (COOLING_OFF)</text>
+  <text x="60" y="864" font-family="monospace" font-size="11" fill="#1f2937">    -421468697: 50   (STAKE_BLOCKED)</text>
+  <text x="60" y="878" font-family="monospace" font-size="11" fill="#1f2937">    305966429: 64    (SELF_EXCLUDED)   default: 78 }</text>
+  <text x="60" y="892" font-family="monospace" font-size="11" fill="#1f2937">64: aload_1</text>
+  <text x="60" y="906" font-family="monospace" font-size="11" fill="#1f2937">65: ldc "SELF_EXCLUDED"</text>
+  <text x="60" y="920" font-family="monospace" font-size="11" fill="#1f2937">67: invokevirtual java/lang/String.equals:(Ljava/lang/Object;)Z<tspan fill="#4b5563">  // Frame 2: equals confirms</tspan></text>
+  <text x="60" y="934" font-family="monospace" font-size="11" fill="#1f2937">70: ifeq 78</text>
+  <text x="60" y="948" font-family="monospace" font-size="11" fill="#1f2937">73: iconst_0</text>
+  <text x="60" y="962" font-family="monospace" font-size="11" fill="#1f2937">74: istore_3<tspan fill="#4b5563">  // index = 0 confirmed</tspan></text>
+  <text x="60" y="976" font-family="monospace" font-size="11" fill="#1f2937">78: iload_3</text>
+  <text x="60" y="990" font-family="monospace" font-size="11" fill="#1f2937">79: tableswitch { // 0 to 2<tspan fill="#4b5563">  // Frame 3: stage-two switch on index</tspan></text>
+  <text x="60" y="1004" font-family="monospace" font-size="11" fill="#1f2937">    0: 90   1: 100   2: 110   default: 120 }</text>
+  <text x="60" y="1018" font-family="monospace" font-size="11" fill="#1f2937">90: ... <tspan fill="#4b5563">// case "SELF_EXCLUDED" -&gt; block the stake</tspan></text>
+  <text x="60" y="1032" font-family="monospace" font-size="11" fill="#1f2937">120: goto default_body <tspan fill="#4b5563">// index stayed -1</tspan></text>
+
+  <!-- Legend -->
+  <line x1="30" y1="1065" x2="970" y2="1065" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="40" y="1073" width="14" height="14" fill="#f3f4f6" stroke="#737373" stroke-width="1.6"/>
+  <text x="60" y="1085" font-family="sans-serif" font-size="11" fill="#4b5563">hash bucket / candidate</text>
+  <rect x="240" y="1073" width="14" height="14" fill="#fef3c7" stroke="#737373" stroke-width="1.6"/>
+  <text x="260" y="1085" font-family="sans-serif" font-size="11" fill="#4b5563">matched hash / dense index (subject)</text>
+  <rect x="520" y="1073" width="14" height="14" fill="#dbeafe" stroke="#737373" stroke-width="1.6"/>
+  <text x="540" y="1085" font-family="sans-serif" font-size="11" fill="#4b5563">instruction / bytecode</text>
+  <rect x="720" y="1073" width="14" height="14" fill="#dcfce7" stroke="#737373" stroke-width="1.6"/>
+  <text x="740" y="1085" font-family="sans-serif" font-size="11" fill="#4b5563">confirmed / case body</text>
+  <rect x="870" y="1073" width="14" height="14" fill="#fee2e2" stroke="#737373" stroke-width="1.6"/>
+  <text x="890" y="1085" font-family="sans-serif" font-size="11" fill="#4b5563">mismatch</text>
+</svg>

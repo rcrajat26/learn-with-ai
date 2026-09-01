@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1080 790" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three ordered compile steps for a SQL text block that reads CLIENT_CASH_AVAILABLE positions, and no other order. Step 1 normalises CRLF line terminators to a single line-feed character, leaving the literal backslash-n the author typed untouched. Step 2 strips the incidental leading whitespace shared by every line, leaving the literal backslash-s the author typed untouched. Step 3 translates escape sequences last, turning that backslash-n into a real line break and that backslash-s into a real trailing space that survives into the final string.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .code  { font-size: 11px; }
+    .body  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .frame  { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.3; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .order  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.3; }
+
+    .esc    { fill: #b45309; }
+    .term   { fill: #4b5563; }
+    .removed{ fill: #b91c1c; }
+    .resolved{ fill: #15803d; }
+    .ws     { fill: #9ca3af; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="790" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TEXT-BLOCK COMPILE, THREE STEPS, AND NO OTHER ORDER</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="52" width="1040" height="34" rx="6" class="order"/>
+  <text x="540" y="73" text-anchor="middle" class="lbl body" font-weight="700">
+    ORDER: line-terminator normalisation → incidental-whitespace removal → escape translation — AND NO OTHER ORDER
+  </text>
+
+  <!-- STEP 1 -->
+  <text x="40" y="112" class="lbl h2">STEP 1 — CRLF → \n</text>
+  <rect x="40" y="120" width="300" height="470" rx="4" class="frame"/>
+  <text x="52" y="140" class="lbl tiny" font-weight="700">INPUT (as the author's editor saved it)</text>
+  <text x="52" y="158" class="lbl code">SELECT position, amount<tspan class="removed">[CR]</tspan><tspan class="term">[LF]</tspan></text>
+  <text x="52" y="174" class="lbl code">FROM ledger<tspan class="term">[LF]</tspan></text>
+  <text x="52" y="190" class="lbl code">WHERE position = 'CLIENT_CASH_</text>
+  <text x="52" y="204" class="lbl code">AVAILABLE'<tspan class="esc">\n</tspan><tspan class="term">[LF]</tspan></text>
+  <text x="52" y="220" class="lbl code">ORDER BY entry_ts<tspan class="esc">\s</tspan></text>
+
+  <line x1="52" y1="232" x2="328" y2="232" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="52" y="250" class="lbl tiny" font-weight="700">OUTPUT (after Step 1)</text>
+  <text x="52" y="268" class="lbl code">SELECT position, amount<tspan class="term">[LF]</tspan></text>
+  <text x="52" y="284" class="lbl code">FROM ledger<tspan class="term">[LF]</tspan></text>
+  <text x="52" y="300" class="lbl code">WHERE position = 'CLIENT_CASH_</text>
+  <text x="52" y="314" class="lbl code">AVAILABLE'<tspan class="esc">\n</tspan><tspan class="term">[LF]</tspan></text>
+  <text x="52" y="330" class="lbl code">ORDER BY entry_ts<tspan class="esc">\s</tspan></text>
+
+  <rect x="52" y="350" width="270" height="130" rx="6" class="panel"/>
+  <text x="64" y="370" class="lbl body" font-weight="700">CRLF [CR][LF] → [LF]</text>
+  <text x="64" y="388" class="lbl body">Only the first line's real [CR][LF] pair</text>
+  <text x="64" y="404" class="lbl body">is normalised to a single [LF].</text>
+  <text x="64" y="424" class="lbl body">The literal <tspan class="esc">\n</tspan> the author typed at the</text>
+  <text x="64" y="440" class="lbl body">end of the WHERE line is backslash</text>
+  <text x="64" y="456" class="lbl body">plus n text, not a terminator — it</text>
+  <text x="64" y="472" class="lbl body">survives Step 1 untouched.</text>
+
+  <path class="flow" d="M 340 355 H 380"/>
+
+  <!-- STEP 2 -->
+  <text x="380" y="112" class="lbl h2">STEP 2 — INCIDENTAL WHITESPACE REMOVED</text>
+  <rect x="380" y="120" width="300" height="470" rx="4" class="frame"/>
+  <text x="392" y="140" class="lbl tiny" font-weight="700">INPUT (Step 1's output, 4-space indent)</text>
+  <text x="392" y="158" class="lbl code"><tspan class="ws">····</tspan>SELECT position, amount<tspan class="term">[LF]</tspan></text>
+  <text x="392" y="174" class="lbl code"><tspan class="ws">····</tspan>FROM ledger<tspan class="term">[LF]</tspan></text>
+  <text x="392" y="190" class="lbl code"><tspan class="ws">····</tspan>WHERE position = 'CLIENT_CASH_</text>
+  <text x="392" y="204" class="lbl code">AVAILABLE'<tspan class="esc">\n</tspan><tspan class="term">[LF]</tspan></text>
+  <text x="392" y="220" class="lbl code"><tspan class="ws">····</tspan>ORDER BY entry_ts<tspan class="esc">\s</tspan></text>
+
+  <line x1="392" y1="232" x2="668" y2="232" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="392" y="250" class="lbl tiny" font-weight="700">OUTPUT (common indent stripped)</text>
+  <text x="392" y="268" class="lbl code">SELECT position, amount<tspan class="term">[LF]</tspan></text>
+  <text x="392" y="284" class="lbl code">FROM ledger<tspan class="term">[LF]</tspan></text>
+  <text x="392" y="300" class="lbl code">WHERE position = 'CLIENT_CASH_</text>
+  <text x="392" y="314" class="lbl code">AVAILABLE'<tspan class="esc">\n</tspan><tspan class="term">[LF]</tspan></text>
+  <text x="392" y="330" class="lbl code">ORDER BY entry_ts<tspan class="esc">\s</tspan></text>
+
+  <rect x="392" y="350" width="270" height="130" rx="6" class="panel"/>
+  <text x="404" y="370" class="lbl body" font-weight="700">Incidental whitespace only</text>
+  <text x="404" y="388" class="lbl body">The 4-space indent shared by every</text>
+  <text x="404" y="404" class="lbl body">line is incidental — stripped.</text>
+  <text x="404" y="424" class="lbl body">The literal <tspan class="esc">\s</tspan> at the end of the</text>
+  <text x="404" y="440" class="lbl body">ORDER BY line is escape text, not</text>
+  <text x="404" y="456" class="lbl body">real trailing whitespace — it</text>
+  <text x="404" y="472" class="lbl body">survives Step 2 untouched.</text>
+
+  <path class="flow" d="M 680 355 H 720"/>
+
+  <!-- STEP 3 -->
+  <text x="720" y="112" class="lbl h2">STEP 3 — ESCAPES TRANSLATED</text>
+  <rect x="720" y="120" width="300" height="470" rx="4" class="frame"/>
+  <text x="732" y="140" class="lbl tiny" font-weight="700">INPUT (Step 2's output)</text>
+  <text x="732" y="158" class="lbl code">SELECT position, amount<tspan class="term">[LF]</tspan></text>
+  <text x="732" y="174" class="lbl code">FROM ledger<tspan class="term">[LF]</tspan></text>
+  <text x="732" y="190" class="lbl code">WHERE position = 'CLIENT_CASH_</text>
+  <text x="732" y="204" class="lbl code">AVAILABLE'<tspan class="esc">\n</tspan><tspan class="term">[LF]</tspan></text>
+  <text x="732" y="220" class="lbl code">ORDER BY entry_ts<tspan class="esc">\s</tspan></text>
+
+  <line x1="732" y1="232" x2="1008" y2="232" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="732" y="250" class="lbl tiny" font-weight="700">OUTPUT (final String value)</text>
+  <text x="732" y="268" class="lbl code">SELECT position, amount<tspan class="term">[LF]</tspan></text>
+  <text x="732" y="284" class="lbl code">FROM ledger<tspan class="term">[LF]</tspan></text>
+  <text x="732" y="300" class="lbl code">WHERE position = 'CLIENT_CASH_</text>
+  <text x="732" y="314" class="lbl code">AVAILABLE'<tspan class="resolved">[LF]</tspan></text>
+  <text x="732" y="330" class="lbl code">ORDER BY entry_ts<tspan class="resolved">·</tspan></text>
+
+  <rect x="732" y="350" width="270" height="130" rx="6" class="panel"/>
+  <text x="744" y="370" class="lbl body" font-weight="700">Escapes translate last</text>
+  <text x="744" y="388" class="lbl body">The literal <tspan class="esc">\n</tspan> becomes a real</text>
+  <text x="744" y="404" class="lbl body">line break, shown resolved.</text>
+  <text x="744" y="424" class="lbl body">The literal <tspan class="esc">\s</tspan> becomes a real</text>
+  <text x="744" y="440" class="lbl body">trailing space and survives into</text>
+  <text x="744" y="456" class="lbl body">the final string only because it</text>
+  <text x="744" y="472" class="lbl body">was written as an escape.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1060" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="716" class="lbl removed" font-size="11">[CR]</text>
+  <text x="60" y="716" class="lbl tiny">real carriage return, removed at Step 1</text>
+  <text x="360" y="716" class="lbl term" font-size="11">[LF]</text>
+  <text x="400" y="716" class="lbl tiny">real line feed, the terminator after normalisation</text>
+
+  <text x="20" y="740" class="lbl esc" font-size="11">\n \s</text>
+  <text x="70" y="740" class="lbl tiny">literal escape text, untouched until Step 3</text>
+  <text x="400" y="740" class="lbl ws" font-size="11">····</text>
+  <text x="440" y="740" class="lbl tiny">incidental leading whitespace, stripped at Step 2</text>
+
+  <text x="20" y="764" class="lbl resolved" font-size="11">[LF] ·</text>
+  <text x="70" y="764" class="lbl tiny">real newline / real space, produced by escape translation</text>
+  <path class="flow" d="M 460 758 H 492"/>
+  <text x="500" y="764" class="lbl tiny">this step's output feeds the next step's input</text>
+</svg>

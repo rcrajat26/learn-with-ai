@@ -1,0 +1,199 @@
+<svg viewBox="0 0 1040 1750" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame sequence showing what pass-by-value actually copies across a Java call boundary, using a caller holding Reservation r and int attempt, and a callee voidStake(Reservation res, int attempt). Frame 1: the caller's stack frame and the callee's stack frame are drawn as two separate boxes; res holds a copy of the reference value and attempt holds a copy of the int value 1; two solid arrows, one from the caller's r slot and one from the callee's res slot, both land on the single heap Reservation object whose status is ACTIVE, and a highlight panel states that the reference value is copied, not the object. Frame 2: the callee executes res.status = VOIDED; the single heap object's status field changes to VOIDED, colored in the resolved-mechanism green because this is real, correct behaviour, not a bug; the caller's printout after return reads r.status = VOIDED, changed. Frame 3: the callee reassigns res to a brand-new Reservation with status REPLACED and stakeMinor 0, drawn in the weak secondary grey style since only the callee's res slot points at it, and reassigns its local attempt to 2; the caller's r still points at the original VOIDED object and the caller's attempt is still 1; the printout after return shows both unchanged, proving the reassignment never crossed back to the caller. Frame 4: static void swap(Reservation a, Reservation b) is called with the caller's first pointing at heap object R-1 and second pointing at R-2; inside swap, tmp = a; a = b; b = tmp swaps only the callee's own local a and b slots, shown as two crossing dotted arrows confined inside the callee's box between a BEFORE row (a to R-1, b to R-2) and an AFTER row (a to R-2, b to R-1); the caller's first and second arrows still point at their original R-1 and R-2 objects unchanged, and the final printout panel, colored in the degraded red style since it refutes the wrong belief that swap works, reads first = R-1, second = R-2, unswapped. Every frame carries its own printout panel showing the caller's variables after that point.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;font-weight:bold;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="mkr088" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="mkw088" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1750" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Pass-by-value: mutate, reassign, swap &#8212; what actually crosses the call boundary</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="64" class="h2">FRAME 1 &#8212; THE COPY IS MADE</text>
+  <line x1="20" y1="72" x2="1020" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="86" width="260" height="110" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="76" y="104" class="smallb">CALLER (main)</text>
+  <text x="76" y="128" class="code">Reservation r</text>
+  <text x="76" y="150" class="code">int attempt = 1</text>
+  <text x="76" y="172" class="small">(local vars in main's frame)</text>
+
+  <rect x="420" y="86" width="340" height="110" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="436" y="104" class="smallb">CALLEE: void voidStake(Reservation res, int attempt)</text>
+  <text x="436" y="128" class="code">res &#8594; same object as r</text>
+  <text x="436" y="150" class="code">attempt = 1</text>
+  <text x="436" y="172" class="small">res, attempt: COPIES, not the originals</text>
+
+  <rect x="340" y="230" width="280" height="110" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="356" y="248" class="smallb">HEAP: Reservation object</text>
+  <text x="356" y="272" class="code">status = "ACTIVE"</text>
+  <text x="356" y="294" class="code">stakeMinor = 420</text>
+
+  <rect x="660" y="230" width="340" height="110" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="676" y="250" class="smallb">THE COPY</text>
+  <text x="676" y="272" class="small">the reference value is copied,</text>
+  <text x="676" y="288" class="small">not the object &#8212; both r and res</text>
+  <text x="676" y="304" class="small">point at this one Reservation</text>
+
+  <path d="M190,196 V214 H370 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+  <path d="M560,196 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+
+  <rect x="60" y="350" width="940" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="370" class="smallb">CALLER STATE AT THIS POINT</text>
+  <text x="76" y="390" class="body">r &#8594; Reservation{status=ACTIVE, stakeMinor=420};  attempt = 1  (call in progress)</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="424" class="h2">FRAME 2 &#8212; MUTATION THROUGH THE COPY IS VISIBLE</text>
+  <line x1="20" y1="432" x2="1020" y2="432" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="446" width="260" height="90" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="76" y="464" class="smallb">CALLER (main) &#8212; unchanged so far</text>
+  <text x="76" y="488" class="code">Reservation r</text>
+  <text x="76" y="510" class="code">int attempt = 1</text>
+
+  <rect x="420" y="446" width="340" height="90" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="436" y="464" class="smallb">CALLEE: voidStake &#8212; executing</text>
+  <text x="436" y="488" class="code">res.status = "VOIDED";</text>
+  <text x="436" y="510" class="small">mutates the object THROUGH res (the copy)</text>
+
+  <rect x="340" y="560" width="280" height="90" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="356" y="578" class="smallb">HEAP: same Reservation object</text>
+  <text x="356" y="600" class="codeG">status = "VOIDED" &#8592; changed</text>
+  <text x="356" y="620" class="code">stakeMinor = 420</text>
+
+  <rect x="660" y="560" width="340" height="90" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="676" y="578" class="smallb">WHY THIS IS VISIBLE</text>
+  <text x="676" y="600" class="small">res and r are two names for the</text>
+  <text x="676" y="616" class="small">SAME object &#8212; writing through res</text>
+
+  <path d="M190,536 V548 H370 V560" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+  <path d="M560,536 V560" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+
+  <rect x="60" y="670" width="940" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="690" class="smallb">CALLER AFTER voidStake RETURNS</text>
+  <text x="76" y="710" class="body">r.status = VOIDED &#8212; changed;  attempt = 1 &#8212; unchanged</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <text x="20" y="744" class="h2">FRAME 3 &#8212; REASSIGNMENT OF THE PARAMETER IS INVISIBLE</text>
+  <line x1="20" y1="752" x2="1020" y2="752" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="766" width="260" height="100" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="76" y="784" class="smallb">CALLER (main) &#8212; unchanged</text>
+  <text x="76" y="808" class="code">Reservation r</text>
+  <text x="76" y="830" class="code">int attempt = 1</text>
+  <text x="76" y="850" class="small">still points at the original object</text>
+
+  <rect x="420" y="766" width="340" height="100" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="436" y="784" class="smallb">CALLEE: voidStake &#8212; executing</text>
+  <text x="436" y="808" class="code">res = new Reservation("REPLACED", 0);</text>
+  <text x="436" y="830" class="code">attempt = 2;</text>
+  <text x="436" y="850" class="small">res, attempt REASSIGNED &#8212; only the copy moves</text>
+
+  <rect x="340" y="890" width="280" height="90" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="356" y="908" class="smallb">HEAP: original (r still points here)</text>
+  <text x="356" y="930" class="code">status = "VOIDED"</text>
+  <text x="356" y="950" class="code">stakeMinor = 420</text>
+
+  <rect x="680" y="890" width="300" height="90" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="696" y="908" class="smallb">HEAP: new (only res points here)</text>
+  <text x="696" y="930" class="code">status = "REPLACED"</text>
+  <text x="696" y="950" class="code">stakeMinor = 0</text>
+
+  <path d="M190,866 V878 H370 V890" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+  <path d="M560,866 V878 H700 V890" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#mkw088)"/>
+
+  <rect x="60" y="1000" width="920" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="1020" class="smallb">CALLER AFTER voidStake RETURNS</text>
+  <text x="76" y="1040" class="body">r.status = VOIDED &#8212; still unchanged;  attempt = 1 &#8212; still unchanged</text>
+
+  <!-- ================= FRAME 4 ================= -->
+  <text x="20" y="1074" class="h2">FRAME 4 &#8212; swap(a, b) CANNOT SWAP THE CALLER'S REFERENCES</text>
+  <line x1="20" y1="1082" x2="1020" y2="1082" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="1096" width="260" height="110" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="76" y="1114" class="smallb">CALLER (main)</text>
+  <text x="76" y="1138" class="code">Reservation first &#8594; R-1</text>
+  <text x="76" y="1160" class="code">Reservation second &#8594; R-2</text>
+  <text x="76" y="1182" class="small">swap(first, second) called</text>
+
+  <rect x="420" y="1096" width="340" height="190" rx="6" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="436" y="1114" class="smallb">CALLEE: static void swap(Reservation a, Reservation b)</text>
+  <text x="436" y="1136" class="code">Reservation tmp = a; a = b; b = tmp;</text>
+  <text x="436" y="1150" class="small">BEFORE</text>
+  <rect x="440" y="1156" width="110" height="26" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="460" y="1174" class="small">a &#8594; R-1</text>
+  <rect x="610" y="1156" width="110" height="26" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="630" y="1174" class="small">b &#8594; R-2</text>
+  <text x="436" y="1246" class="small">AFTER</text>
+  <rect x="440" y="1250" width="110" height="26" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="460" y="1268" class="small">a &#8594; R-2</text>
+  <rect x="610" y="1250" width="110" height="26" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.4"/>
+  <text x="630" y="1268" class="small">b &#8594; R-1</text>
+
+  <path d="M665,1182 V1206 H495 V1250" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#mkw088)"/>
+  <path d="M495,1182 H580 V1250 H665" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#mkw088)"/>
+
+  <rect x="180" y="1320" width="260" height="80" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="196" y="1340" class="smallb">HEAP: R-1</text>
+  <text x="196" y="1362" class="code">stakeMinor = 420</text>
+  <text x="196" y="1380" class="small">(first still points here)</text>
+
+  <rect x="560" y="1320" width="260" height="80" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="576" y="1340" class="smallb">HEAP: R-2</text>
+  <text x="576" y="1362" class="code">stakeMinor = 315</text>
+  <text x="576" y="1380" class="small">(second still points here)</text>
+
+  <path d="M150,1206 V1295 H280 V1320" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+  <path d="M200,1206 V1305 H680 V1320" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+
+  <rect x="60" y="1410" width="940" height="50" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="76" y="1430" class="codeR">CALLER AFTER swap RETURNS &#8212; UNCHANGED</text>
+  <text x="76" y="1450" class="body">first = R-1;  second = R-2 &#8212; only the callee's local a/b were exchanged</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1490" class="h2">LEGEND</text>
+  <line x1="20" y1="1498" x2="1020" y2="1498" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="42" y="1516" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="1529" class="small">primary &#8212; the heap object at each snapshot / R-1, R-2 before the swap</text>
+
+  <rect x="42" y="1540" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="70" y="1553" class="small">highlight &#8212; the point being made at that step</text>
+
+  <rect x="42" y="1564" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="70" y="1577" class="small">resolved &#8212; mutation that IS visible: real behaviour, not a bug</text>
+
+  <rect x="42" y="1588" width="22" height="16" rx="3" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="70" y="1601" class="small">legacy/retained &#8212; a stack frame (caller's or callee's local variables)</text>
+
+  <rect x="42" y="1612" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="70" y="1625" class="small">weak/secondary &#8212; a second heap object, or slot, the caller never sees</text>
+
+  <rect x="42" y="1636" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="70" y="1649" class="small">degraded &#8212; the wrong belief being refuted: swap doesn't work</text>
+
+  <rect x="42" y="1660" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="70" y="1673" class="small">annotation panel &#8212; explanatory note / the caller's printed state</text>
+
+  <line x1="42" y1="1698" x2="68" y2="1698" stroke="#475569" stroke-width="2" marker-end="url(#mkr088)"/>
+  <text x="76" y="1702" class="small">primary flow &#8212; a reference; arrowhead lands on the object it points to</text>
+
+  <line x1="42" y1="1722" x2="68" y2="1722" stroke="#9ca3af" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#mkw088)"/>
+  <text x="76" y="1726" class="small">weak/discarded &#8212; a link invisible to, or irrelevant for, the caller</text>
+</svg>

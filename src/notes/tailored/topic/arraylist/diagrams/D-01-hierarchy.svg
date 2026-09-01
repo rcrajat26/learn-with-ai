@@ -1,0 +1,117 @@
+<svg viewBox="0 0 1040 1020" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ArrayList's full type graph in Java 21. On the interface spine, Iterable extends to Collection, Collection extends to SequencedCollection (new in Java 21), and SequencedCollection extends to List. On the class spine, AbstractCollection extends to AbstractList, which extends to ArrayList. AbstractCollection implements Collection, AbstractList implements List, and ArrayList separately also implements List directly. ArrayList additionally implements the marker interfaces RandomAccess, Cloneable, and Serializable, none of which declare methods.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 12.5px; font-weight: 700; fill: #1f2937; }
+    .pill   { font-size: 11px; font-weight: 700; fill: #78350f; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pillR  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .extends { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+    .implements { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triGreen); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1020" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">WHERE ArrayList SITS (JAVA 21)</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="130" y="60" class="lbl h2">INTERFACE SPINE</text>
+  <text x="520" y="60" class="lbl h2">CLASS SPINE</text>
+
+  <!-- interface spine -->
+  <rect x="130" y="64" width="200" height="56" rx="6" class="boxP"/>
+  <text x="230" y="88" text-anchor="middle" class="lbl node">Iterable&lt;E&gt;</text>
+  <text x="230" y="106" text-anchor="middle" class="lbl sub">iterator(), forEach</text>
+
+  <rect x="130" y="180" width="200" height="56" rx="6" class="boxP"/>
+  <text x="230" y="204" text-anchor="middle" class="lbl node">Collection&lt;E&gt;</text>
+  <text x="230" y="222" text-anchor="middle" class="lbl sub">size, add/remove, streams</text>
+
+  <rect x="130" y="296" width="200" height="56" rx="6" class="boxH"/>
+  <text x="230" y="320" text-anchor="middle" class="lbl node">SequencedCollection&lt;E&gt;</text>
+  <text x="230" y="338" text-anchor="middle" class="lbl sub">first/last, reversed()</text>
+  <rect x="302" y="288" width="24" height="18" rx="9" class="pillR"/>
+  <text x="314" y="301" text-anchor="middle" class="lbl pill">21</text>
+
+  <rect x="130" y="412" width="200" height="56" rx="6" class="boxP"/>
+  <text x="230" y="436" text-anchor="middle" class="lbl node">List&lt;E&gt;</text>
+  <text x="230" y="454" text-anchor="middle" class="lbl sub">index access, listIterator</text>
+
+  <!-- class spine -->
+  <rect x="520" y="180" width="200" height="56" rx="6" class="boxW"/>
+  <text x="620" y="204" text-anchor="middle" class="lbl node">AbstractCollection&lt;E&gt;</text>
+  <text x="620" y="222" text-anchor="middle" class="lbl sub">toString, containsAll</text>
+
+  <rect x="520" y="412" width="200" height="56" rx="6" class="boxW"/>
+  <text x="620" y="436" text-anchor="middle" class="lbl node">AbstractList&lt;E&gt;</text>
+  <text x="620" y="454" text-anchor="middle" class="lbl sub">modCount, listIterator</text>
+
+  <rect x="520" y="528" width="200" height="56" rx="6" class="boxP"/>
+  <text x="620" y="552" text-anchor="middle" class="lbl node">ArrayList&lt;E&gt;</text>
+  <text x="620" y="570" text-anchor="middle" class="lbl sub">subject of this note set</text>
+
+  <!-- extends: interface spine -->
+  <path class="extends" d="M 230 120 V 180"/>
+  <path class="extends" d="M 230 236 V 296"/>
+  <path class="extends" d="M 230 352 V 412"/>
+
+  <!-- extends: class spine -->
+  <path class="extends" d="M 620 236 V 412"/>
+  <path class="extends" d="M 620 468 V 528"/>
+
+  <!-- implements: dashed green -->
+  <path class="implements" d="M 520 208 H 330"/>
+  <path class="implements" d="M 520 440 H 330"/>
+  <path class="implements" d="M 560 528 V 490 H 230 V 468"/>
+
+  <!-- marker interfaces panel, attached to ArrayList -->
+  <path class="implements" d="M 620 584 V 605"/>
+  <rect x="440" y="605" width="570" height="105" rx="6" class="boxW"/>
+  <text x="460" y="628" class="lbl h2">MARKER INTERFACES ON ArrayList (no methods declared)</text>
+  <text x="460" y="652" class="lbl tiny">RandomAccess — marker only — signals constant-time positional access</text>
+  <text x="460" y="674" class="lbl tiny">Cloneable — marker only — enables the clone() override</text>
+  <text x="460" y="696" class="lbl tiny">java.io.Serializable — marker only — enables writeObject/readObject</text>
+
+  <!-- annotation panel -->
+  <rect x="40" y="735" width="960" height="190" rx="6" class="boxAnn"/>
+  <text x="60" y="760" class="lbl h2">WHAT EACH LAYER CONTRIBUTES</text>
+  <text x="60" y="785" class="lbl tiny">Iterable — iterator(), forEach, spliterator</text>
+  <text x="60" y="809" class="lbl tiny">Collection — size, contains, add/remove, streams</text>
+  <text x="60" y="833" class="lbl tiny">SequencedCollection — first/last access + reversed() [new in 21]</text>
+  <text x="60" y="857" class="lbl tiny">List — index access, order, listIterator, subList</text>
+  <text x="60" y="881" class="lbl tiny">AbstractCollection — toString, containsAll, toArray skeletons</text>
+  <text x="60" y="905" class="lbl tiny">AbstractList — the protected modCount field ArrayList relies on</text>
+
+  <!-- legend -->
+  <line x1="20" y1="945" x2="1020" y2="945" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="958" width="20" height="14" rx="3" class="boxP"/>
+  <text x="48" y="969" class="lbl tiny">primary — interface / subject (ArrayList)</text>
+  <rect x="300" y="958" width="20" height="14" rx="3" class="boxH"/>
+  <text x="328" y="969" class="lbl tiny">highlight — new in Java 21</text>
+  <rect x="540" y="958" width="20" height="14" rx="3" class="boxW"/>
+  <text x="568" y="969" class="lbl tiny">weak — abstract class / marker group</text>
+  <rect x="820" y="958" width="20" height="14" rx="3" class="boxAnn"/>
+  <text x="848" y="969" class="lbl tiny">annotation panel</text>
+  <path class="extends" d="M 20 984 H 60"/>
+  <text x="68" y="989" class="lbl tiny">A → B : B extends A</text>
+  <path class="implements" d="M 400 984 H 440"/>
+  <text x="448" y="989" class="lbl tiny">A → B : A implements B</text>
+</svg>

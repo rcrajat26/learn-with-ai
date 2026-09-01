@@ -1,0 +1,160 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Scoped values and structured concurrency are one mechanism. An owning thread processing an onboarding application holds a scope stack with a ScopedValue binding for RequestId. It opens a StructuredTaskScope and forks three subtasks — DocumentVerification, ScreeningService, AssessmentService — each a new virtual thread inheriting a snapshot of the scoped-value binding. Ownership is checked on fork, join, shutdown and close: only the owning thread may call them, and a call from any other thread throws StructureViolationException. On ShutdownOnFailure, shutdown interrupts the unfinished subtasks; close, in a separate arrow, joins them and releases the scope, and close always runs even when shutdown already ran.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 17px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 10.5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 5 3; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+    .bad   { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SCOPED VALUES AND STRUCTURED CONCURRENCY ARE ONE MECHANISM</text>
+  <line x1="20" y1="44" x2="1020" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Owning thread / scope stack -->
+  <text x="20" y="66" class="lbl h2">OWNING THREAD — processApplication(applicationId)</text>
+
+  <rect x="20" y="76" width="440" height="66" rx="6" class="boxP"/>
+  <text x="30" y="96" class="lbl node">Scope stack (per owning thread)</text>
+  <text x="30" y="114" class="lbl body">ScopedValue.where(REQUEST_ID, "APP-88213")</text>
+  <text x="30" y="130" class="lbl sub">.call(() -&gt; processApplication(...)) — binding pushed here</text>
+
+  <rect x="500" y="76" width="380" height="66" rx="6" class="boxH"/>
+  <text x="510" y="96" class="lbl node">try (var scope = ...) { ... }</text>
+  <text x="510" y="114" class="lbl mono">StructuredTaskScope&lt;Verdict, R&gt; scope</text>
+  <text x="510" y="130" class="lbl sub">ShutdownOnFailure policy — opened on owning thread</text>
+
+  <path class="flow" d="M 460 109 H 500"/>
+
+  <!-- fork bus -->
+  <text x="20" y="172" class="lbl h2">FORK — one virtual thread per subtask, scoped-value snapshot inherited</text>
+  <rect x="20" y="182" width="860" height="46" rx="4" class="boxA"/>
+  <text x="30" y="200" class="lbl tiny" font-weight="700">Ownership check on fork: caller must be the scope's owning thread,</text>
+  <text x="30" y="215" class="lbl tiny">else StructureViolationException — see illegal edge, bottom right</text>
+
+  <line x1="440" y1="228" x2="440" y2="252" stroke="#475569" stroke-width="2"/>
+  <line x1="150" y1="252" x2="740" y2="252" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 150 252 V 268"/>
+  <path class="flow" d="M 440 252 V 268"/>
+  <path class="flow" d="M 740 252 V 268"/>
+
+  <rect x="30" y="268" width="240" height="90" rx="6" class="boxR"/>
+  <text x="150" y="288" text-anchor="middle" class="lbl node">DocumentVerification</text>
+  <text x="150" y="306" text-anchor="middle" class="lbl body">Subtask&lt;DocumentVerdict&gt;</text>
+  <text x="150" y="323" text-anchor="middle" class="lbl sub">new virtual thread, forked</text>
+  <text x="150" y="339" text-anchor="middle" class="lbl sub">REQUEST_ID="APP-88213" inherited</text>
+
+  <rect x="320" y="268" width="240" height="90" rx="6" class="boxR"/>
+  <text x="440" y="288" text-anchor="middle" class="lbl node">ScreeningService</text>
+  <text x="440" y="306" text-anchor="middle" class="lbl body">Subtask&lt;ScreeningVerdict&gt;</text>
+  <text x="440" y="323" text-anchor="middle" class="lbl sub">new virtual thread, forked</text>
+  <text x="440" y="339" text-anchor="middle" class="lbl sub">REQUEST_ID="APP-88213" inherited</text>
+
+  <rect x="610" y="268" width="240" height="90" rx="6" class="boxR"/>
+  <text x="730" y="288" text-anchor="middle" class="lbl node">AssessmentService</text>
+  <text x="730" y="306" text-anchor="middle" class="lbl body">Subtask&lt;WealthVerdict&gt;</text>
+  <text x="730" y="323" text-anchor="middle" class="lbl sub">new virtual thread, forked</text>
+  <text x="730" y="339" text-anchor="middle" class="lbl sub">REQUEST_ID="APP-88213" inherited</text>
+
+  <!-- failure on assessment -->
+  <rect x="610" y="378" width="240" height="46" rx="4" class="boxD"/>
+  <text x="730" y="396" text-anchor="middle" class="lbl tiny" font-weight="700">AssessmentService fails</text>
+  <text x="730" y="411" text-anchor="middle" class="lbl sub">throws BonusIneligibleException</text>
+  <path class="flow" d="M 730 358 V 378"/>
+
+  <!-- straight connectors from the two still-running subtasks down to shutdown -->
+  <path class="flow" d="M 150 358 V 470"/>
+  <path class="flow" d="M 440 358 V 470"/>
+
+  <!-- shutdown() and close() boxes -->
+  <rect x="20" y="470" width="420" height="72" rx="6" class="boxD"/>
+  <text x="30" y="490" class="lbl node">shutdown()</text>
+  <text x="30" y="508" class="lbl body">interrupts DocumentVerification and</text>
+  <text x="30" y="524" class="lbl body">ScreeningService — still unfinished</text>
+  <text x="30" y="538" class="lbl sub">ownership-checked; owning thread only</text>
+
+  <rect x="460" y="470" width="420" height="72" rx="6" class="boxR"/>
+  <text x="470" y="490" class="lbl node">close()</text>
+  <text x="470" y="508" class="lbl body">joins every forked subtask (now interrupted</text>
+  <text x="470" y="524" class="lbl body">or completed), releases the scope</text>
+  <text x="470" y="538" class="lbl sub">ownership-checked; runs even if shutdown ran</text>
+
+  <!-- arrow 1 (red, dashed): failure -> shutdown, routed clear of every box -->
+  <path class="bad" d="M 850 401 H 900 V 440 H 230 V 470"/>
+  <text x="905" y="424" class="lbl sub">shutdown()</text>
+  <text x="905" y="437" class="lbl sub">interrupts</text>
+
+  <!-- arrow 2 (green, dashed): scope -> close, routed via the clear right margin -->
+  <path class="impl" d="M 880 109 H 992 V 506 H 880"/>
+  <text x="1004" y="190" class="lbl sub" transform="rotate(90 1004 190)">close() joins + releases scope</text>
+
+  <!-- ownership legend panel -->
+  <rect x="20" y="574" width="500" height="130" rx="6" class="boxA"/>
+  <text x="30" y="594" class="lbl tiny" font-weight="700">Ownership check — identical rule on all four operations</text>
+  <text x="30" y="612" class="lbl tiny">fork(): only the owning thread may add a subtask to the scope</text>
+  <text x="30" y="628" class="lbl tiny">join()/joinUntil(): only the owning thread may wait on subtasks</text>
+  <text x="30" y="644" class="lbl tiny">shutdown(): only the owning thread may cancel the scope's work</text>
+  <text x="30" y="660" class="lbl tiny">close(): only the owning thread, and only after join/shutdown,</text>
+  <text x="30" y="676" class="lbl tiny">may release it — nesting violations are the other illegal edge</text>
+  <text x="30" y="692" class="lbl sub">Any of the four called from a different thread ⇒ StructureViolationException</text>
+
+  <!-- illegal edge -->
+  <rect x="560" y="574" width="320" height="130" rx="6" class="boxD"/>
+  <text x="570" y="594" class="lbl tiny" font-weight="700">Illegal edge — non-owning thread calls fork()</text>
+  <rect x="570" y="608" width="130" height="46" rx="4" class="boxW"/>
+  <text x="635" y="626" text-anchor="middle" class="lbl sub">forked child</text>
+  <text x="635" y="640" text-anchor="middle" class="lbl sub">tries scope.fork()</text>
+  <path class="bad" d="M 700 631 H 724"/>
+  <rect x="728" y="608" width="132" height="46" rx="4" class="boxD"/>
+  <text x="794" y="624" text-anchor="middle" class="lbl tiny" font-weight="700">rejected</text>
+  <text x="794" y="637" text-anchor="middle" class="lbl mono" font-size="9px">StructureViolation</text>
+  <text x="794" y="648" text-anchor="middle" class="lbl mono" font-size="9px">Exception</text>
+  <text x="570" y="672" class="lbl tiny">Structure is single-owner: a child may spawn its own nested</text>
+  <text x="570" y="688" class="lbl tiny">scope, but may never touch its parent's scope directly.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="722" x2="1020" y2="722" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="732" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="744" class="lbl tiny">scope / binding owner</text>
+  <rect x="220" y="732" width="20" height="14" rx="3" class="boxR"/>
+  <text x="246" y="744" class="lbl tiny">forked subtask / close</text>
+  <rect x="420" y="732" width="20" height="14" rx="3" class="boxD"/>
+  <text x="446" y="744" class="lbl tiny">failure / shutdown / rejected</text>
+  <rect x="660" y="732" width="20" height="14" rx="3" class="boxA"/>
+  <text x="686" y="744" class="lbl tiny">annotation panel</text>
+  <rect x="20" y="756" width="20" height="14" rx="3" class="boxW"/>
+  <text x="46" y="768" class="lbl tiny">nested / non-owning caller</text>
+  <path class="flow" d="M 220 763 H 260"/>
+  <text x="268" y="768" class="lbl tiny">fork / lifecycle edge</text>
+  <path class="impl" d="M 460 763 H 500"/>
+  <text x="508" y="768" class="lbl tiny">close (dashed green)</text>
+  <path class="bad" d="M 700 763 H 740"/>
+  <text x="748" y="768" class="lbl tiny">shutdown / illegal (dashed red)</text>
+</svg>

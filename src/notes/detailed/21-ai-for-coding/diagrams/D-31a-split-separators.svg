@@ -1,0 +1,85 @@
+<svg viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 4: the compound command timeout 30 mvn -q test &amp;&amp; FOO=1 git commit -m x | tee out.log is split on the seven recognised separators &amp;&amp;, ||, semicolon, pipe, pipe-ampersand, ampersand and newline, producing three shell segments: timeout 30 mvn -q test, FOO=1 git commit -m x, and tee out.log.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="460" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-31a — COMPOUND SPLITTING: RECOGNISED SEPARATORS</text>
+  <line x1="20" y1="40" x2="940" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="130" y="56" class="lbl sub">raw command as typed</text>
+  <rect x="130" y="60" width="700" height="46" rx="6" class="boxW"/>
+  <text x="480" y="88" text-anchor="middle" class="lbl body">timeout 30 mvn -q test &amp;&amp; FOO=1 git commit -m "x" | tee out.log</text>
+
+  <path class="flow" d="M 480 106 V 128"/>
+
+  <rect x="110" y="128" width="740" height="94" rx="6" class="boxW"/>
+  <text x="480" y="150" text-anchor="middle" class="lbl h2">SPLIT ON RECOGNISED SEPARATORS (all seven)</text>
+
+  <rect x="141" y="164" width="76" height="26" rx="4" class="boxP"/>
+  <text x="179" y="181" text-anchor="middle" class="lbl tiny">&amp;&amp;</text>
+  <rect x="225" y="164" width="76" height="26" rx="4" class="boxP"/>
+  <text x="263" y="181" text-anchor="middle" class="lbl tiny">||</text>
+  <rect x="309" y="164" width="76" height="26" rx="4" class="boxP"/>
+  <text x="347" y="181" text-anchor="middle" class="lbl tiny">;</text>
+  <rect x="393" y="164" width="76" height="26" rx="4" class="boxP"/>
+  <text x="431" y="181" text-anchor="middle" class="lbl tiny">|</text>
+  <rect x="477" y="164" width="76" height="26" rx="4" class="boxP"/>
+  <text x="515" y="181" text-anchor="middle" class="lbl tiny">|&amp;</text>
+  <rect x="561" y="164" width="76" height="26" rx="4" class="boxP"/>
+  <text x="599" y="181" text-anchor="middle" class="lbl tiny">&amp;</text>
+  <rect x="645" y="164" width="130" height="26" rx="4" class="boxP"/>
+  <text x="710" y="181" text-anchor="middle" class="lbl tiny">newline</text>
+  <text x="480" y="216" text-anchor="middle" class="lbl sub">this command uses only &amp;&amp; and | — the other five are part of the vocabulary, unused here</text>
+
+  <path class="flow" d="M 480 222 V 244"/>
+  <path d="M 250 244 H 760" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 250 244 V 264"/>
+  <path class="flow" d="M 520 244 V 264"/>
+  <path class="flow" d="M 760 244 V 264"/>
+
+  <text x="385" y="238" text-anchor="middle" class="lbl sub">&amp;&amp;</text>
+  <text x="640" y="238" text-anchor="middle" class="lbl sub">|</text>
+
+  <text x="250" y="278" text-anchor="middle" class="lbl sub">segment 1</text>
+  <rect x="140" y="284" width="220" height="52" rx="6" class="boxP"/>
+  <text x="250" y="306" text-anchor="middle" class="lbl node">timeout 30 mvn</text>
+  <text x="250" y="322" text-anchor="middle" class="lbl body">-q test</text>
+
+  <text x="520" y="278" text-anchor="middle" class="lbl sub">segment 2</text>
+  <rect x="390" y="284" width="260" height="52" rx="6" class="boxP"/>
+  <text x="520" y="306" text-anchor="middle" class="lbl node">FOO=1 git commit</text>
+  <text x="520" y="322" text-anchor="middle" class="lbl body">-m "x"</text>
+
+  <text x="760" y="278" text-anchor="middle" class="lbl sub">segment 3</text>
+  <rect x="680" y="284" width="160" height="52" rx="6" class="boxP"/>
+  <text x="760" y="310" text-anchor="middle" class="lbl node">tee out.log</text>
+
+  <text x="480" y="368" text-anchor="middle" class="lbl sub">three segments now feed frame 2 (wrapper stripping) independently — see D-31b</text>
+
+  <line x1="20" y1="392" x2="940" y2="392" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="404" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="417" class="lbl tiny">raw input / internal step</text>
+  <rect x="260" y="404" width="22" height="16" rx="3" class="boxP"/>
+  <text x="290" y="417" class="lbl tiny">separator token, or shell segment produced by a split</text>
+  <path class="flow" d="M 660 412 H 700"/>
+  <text x="710" y="417" class="lbl tiny">A → B : B is produced from A</text>
+</svg>

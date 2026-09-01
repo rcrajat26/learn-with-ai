@@ -1,0 +1,101 @@
+<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="MyArrayList class map: fields elementData, size, modCount, the two sentinel arrays, and nested classes Itr, ListItr and SubList, each with an arrow to the java.util.ArrayList member it mirrors">
+
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="15" width="760" height="34" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="37" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">MyArrayList reimplementation → java.util.ArrayList member it mirrors</text>
+
+  <!-- Left: MyArrayList class -->
+  <rect x="30" y="65" width="300" height="470" rx="8" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <rect x="45" y="78" width="270" height="24" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="95" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">MyArrayList&lt;E&gt;</text>
+
+  <!-- fields -->
+  <rect x="45" y="112" width="270" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="130" font-family="sans-serif" font-size="13" fill="#1f2937">Object[] elementData</text>
+
+  <rect x="45" y="144" width="270" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="162" font-family="sans-serif" font-size="13" fill="#1f2937">int size</text>
+
+  <rect x="45" y="176" width="270" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="194" font-family="sans-serif" font-size="13" fill="#1f2937">int modCount</text>
+
+  <rect x="45" y="208" width="270" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="226" font-family="sans-serif" font-size="12" fill="#1f2937">EMPTY_ELEMENTDATA</text>
+
+  <rect x="45" y="240" width="270" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="258" font-family="sans-serif" font-size="11" fill="#1f2937">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</text>
+
+  <!-- nested classes -->
+  <rect x="45" y="285" width="270" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="305" font-family="sans-serif" font-size="13" fill="#1f2937">nested class Itr</text>
+
+  <rect x="45" y="325" width="270" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="345" font-family="sans-serif" font-size="13" fill="#1f2937">nested class ListItr extends Itr</text>
+
+  <rect x="45" y="365" width="270" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="385" font-family="sans-serif" font-size="13" fill="#1f2937">nested class SubList</text>
+
+  <rect x="45" y="410" width="270" height="110" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="428" font-family="sans-serif" font-size="12" fill="#1f2937">Itr.cursor, Itr.lastRet,</text>
+  <text x="55" y="446" font-family="sans-serif" font-size="12" fill="#1f2937">Itr.expectedModCount</text>
+  <text x="55" y="466" font-family="sans-serif" font-size="12" fill="#1f2937">checkForComodification()</text>
+  <text x="55" y="486" font-family="sans-serif" font-size="12" fill="#1f2937">throws ConcurrentModification-</text>
+  <text x="55" y="504" font-family="sans-serif" font-size="12" fill="#1f2937">Exception on modCount mismatch</text>
+
+  <!-- Right: java.util.ArrayList -->
+  <rect x="470" y="65" width="300" height="470" rx="8" fill="#e5e7eb" stroke="#525252" stroke-width="2"/>
+  <rect x="485" y="78" width="270" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="95" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">java.util.ArrayList&lt;E&gt;</text>
+
+  <rect x="485" y="112" width="270" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="130" font-family="sans-serif" font-size="13" fill="#1f2937">Object[] elementData</text>
+
+  <rect x="485" y="144" width="270" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="162" font-family="sans-serif" font-size="13" fill="#1f2937">int size</text>
+
+  <rect x="485" y="176" width="270" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="194" font-family="sans-serif" font-size="13" fill="#1f2937">int modCount (from AbstractList)</text>
+
+  <rect x="485" y="208" width="270" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="226" font-family="sans-serif" font-size="12" fill="#1f2937">EMPTY_ELEMENTDATA</text>
+
+  <rect x="485" y="240" width="270" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="258" font-family="sans-serif" font-size="11" fill="#1f2937">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</text>
+
+  <rect x="485" y="285" width="270" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="305" font-family="sans-serif" font-size="13" fill="#1f2937">private class Itr</text>
+
+  <rect x="485" y="325" width="270" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="345" font-family="sans-serif" font-size="13" fill="#1f2937">private class ListItr extends Itr</text>
+
+  <rect x="485" y="365" width="270" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="385" font-family="sans-serif" font-size="13" fill="#1f2937">private class SubList</text>
+
+  <rect x="485" y="410" width="270" height="110" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="428" font-family="sans-serif" font-size="12" fill="#1f2937">Itr.cursor, Itr.lastRet,</text>
+  <text x="495" y="446" font-family="sans-serif" font-size="12" fill="#1f2937">Itr.expectedModCount</text>
+  <text x="495" y="466" font-family="sans-serif" font-size="12" fill="#1f2937">AbstractList.checkForComodification()</text>
+  <text x="495" y="486" font-family="sans-serif" font-size="12" fill="#1f2937">same ConcurrentModificationException</text>
+  <text x="495" y="504" font-family="sans-serif" font-size="12" fill="#1f2937">fail-fast contract</text>
+
+  <!-- connecting arrows, one per row -->
+  <line x1="315" y1="125" x2="482" y2="125" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="157" x2="482" y2="157" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="189" x2="482" y2="189" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="221" x2="482" y2="221" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="253" x2="482" y2="253" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="300" x2="482" y2="300" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="340" x2="482" y2="340" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="380" x2="482" y2="380" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <line x1="315" y1="465" x2="482" y2="465" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <rect x="20" y="540" width="760" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="400" y="553" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Blue = backing storage, amber = sentinel empty arrays, green = nested iterator/view classes, red = fail-fast machinery</text>
+</svg>

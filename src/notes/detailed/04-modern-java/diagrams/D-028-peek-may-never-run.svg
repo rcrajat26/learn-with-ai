@@ -1,0 +1,144 @@
+<svg viewBox="0 0 1040 790" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of why peek may never run. Left lane: reservations.stream().peek(...).count() with no filter — SIZED stays set, no stateful op clears it, nothing short-circuits, so count answers from the source size directly, the sink chain is never built, and peek never runs. Right lane: the same pipeline with a filter added — filter clears SIZED, so the SIZED check fails immediately, the remaining checks are not reached, the sink chain must be traversed, and peek runs for every element. A version-trap banner notes that before Java 9, peek always ran regardless of SIZED.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #374151; }
+    .warn  { font-size: 11px; fill: #b91c1c; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 6 4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="790" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY PEEK MAY NEVER RUN — count() AND THE SIZED CHARACTERISTIC</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="62" class="lbl h2">PIPELINE WITHOUT FILTER — count() SHORT-CIRCUITS</text>
+  <text x="570" y="62" class="lbl h2">PIPELINE WITH FILTER — SIZED CLEARED</text>
+  <line x1="540" y1="55" x2="540" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===== LANE A : no filter ===== -->
+  <rect x="50" y="75" width="440" height="60" rx="6" class="boxP"/>
+  <text x="270" y="98" text-anchor="middle" class="lbl node">reservations.stream()</text>
+  <text x="270" y="116" text-anchor="middle" class="lbl body">SIZED set — size = 2,800,000</text>
+  <text x="270" y="130" text-anchor="middle" class="lbl sub">2.8M stake reservations/day (Appendix A)</text>
+
+  <path class="flow" d="M 270 135 V 155"/>
+
+  <rect x="50" y="155" width="440" height="50" rx="6" class="boxA"/>
+  <text x="270" y="176" text-anchor="middle" class="lbl body">DECISION — is SIZED still set?</text>
+  <text x="270" y="194" text-anchor="middle" class="lbl sub">yes, nothing upstream touched it</text>
+
+  <path class="flow" d="M 270 205 V 225"/>
+  <text x="330" y="219" class="lbl sub">YES</text>
+
+  <rect x="50" y="225" width="440" height="50" rx="6" class="boxA"/>
+  <text x="270" y="246" text-anchor="middle" class="lbl body">DECISION — did any stateful op clear it?</text>
+  <text x="270" y="264" text-anchor="middle" class="lbl sub">no sorted/distinct/flatMap present</text>
+
+  <path class="flow" d="M 270 275 V 295"/>
+  <text x="330" y="289" class="lbl sub">NO</text>
+
+  <rect x="50" y="295" width="440" height="50" rx="6" class="boxA"/>
+  <text x="270" y="316" text-anchor="middle" class="lbl body">DECISION — does anything short-circuit?</text>
+  <text x="270" y="334" text-anchor="middle" class="lbl sub">no limit/anyMatch present</text>
+
+  <path class="flow" d="M 270 345 V 365"/>
+  <text x="330" y="359" class="lbl sub">NO</text>
+
+  <rect x="50" y="365" width="440" height="60" rx="6" class="boxR"/>
+  <text x="270" y="388" text-anchor="middle" class="lbl body">count() answers from source size directly</text>
+  <text x="270" y="406" text-anchor="middle" class="lbl sub">sink chain is never built</text>
+
+  <path class="flow" d="M 270 425 V 445"/>
+
+  <rect x="50" y="445" width="440" height="60" rx="6" class="boxW"/>
+  <text x="270" y="468" text-anchor="middle" class="lbl body">peek(logReservation) consumer</text>
+  <text x="270" y="486" text-anchor="middle" class="lbl warn">NEVER CALLED</text>
+
+  <!-- ===== LANE B : with filter ===== -->
+  <rect x="570" y="75" width="440" height="60" rx="6" class="boxP"/>
+  <text x="790" y="98" text-anchor="middle" class="lbl node">reservations.stream()</text>
+  <text x="790" y="116" text-anchor="middle" class="lbl body">SIZED set — size = 2,800,000</text>
+  <text x="790" y="130" text-anchor="middle" class="lbl sub">2.8M stake reservations/day (Appendix A)</text>
+
+  <path class="flow" d="M 790 135 V 155"/>
+
+  <rect x="570" y="155" width="440" height="60" rx="6" class="boxH"/>
+  <text x="790" y="178" text-anchor="middle" class="lbl body">filter(r -&gt; r.amount() &gt; 0)</text>
+  <text x="790" y="196" text-anchor="middle" class="lbl sub">clears the SIZED characteristic</text>
+  <text x="790" y="210" text-anchor="middle" class="lbl sub">result size is no longer knowable up front</text>
+
+  <path class="flow" d="M 790 215 V 245"/>
+  <text x="830" y="233" class="lbl sub">SIZED cleared</text>
+
+  <rect x="570" y="245" width="440" height="50" rx="6" class="boxA"/>
+  <text x="790" y="266" text-anchor="middle" class="lbl body">DECISION — is SIZED still set?</text>
+  <text x="790" y="284" text-anchor="middle" class="lbl warn">NO</text>
+
+  <path class="flow" d="M 790 295 V 315"/>
+
+  <rect x="570" y="315" width="440" height="40" rx="6" class="boxW"/>
+  <text x="790" y="339" text-anchor="middle" class="lbl sub">DECISION — stateful-op check: not reached (Q1 already failed)</text>
+
+  <path class="flow" d="M 790 355 V 365"/>
+
+  <rect x="570" y="365" width="440" height="40" rx="6" class="boxW"/>
+  <text x="790" y="389" text-anchor="middle" class="lbl sub">DECISION — short-circuit check: not reached</text>
+
+  <path class="flow" d="M 790 405 V 435"/>
+  <text x="850" y="423" class="lbl sub">must traverse</text>
+
+  <rect x="570" y="435" width="440" height="60" rx="6" class="boxR"/>
+  <text x="790" y="458" text-anchor="middle" class="lbl body">count() must build the sink chain</text>
+  <text x="790" y="476" text-anchor="middle" class="lbl sub">and traverse every element to count it</text>
+
+  <path class="flow" d="M 790 495 V 515"/>
+
+  <rect x="570" y="515" width="440" height="60" rx="6" class="boxR"/>
+  <text x="790" y="538" text-anchor="middle" class="lbl body">peek(logReservation) consumer</text>
+  <text x="790" y="556" text-anchor="middle" class="lbl body" font-weight="700">RUNS for every element</text>
+
+  <!-- ===== VERSION TRAP BANNER ===== -->
+  <rect x="40" y="610" width="960" height="70" rx="6" class="boxH"/>
+  <rect x="940" y="625" width="40" height="30" rx="6" class="pill"/>
+  <text x="960" y="645" text-anchor="middle" class="lbl body" font-weight="700">9</text>
+  <text x="56" y="632" class="lbl warn">VERSION TRAP</text>
+  <text x="56" y="650" class="lbl tiny">Before Java 9, peek() always ran regardless of SIZED or short-circuit optimizations.</text>
+  <text x="56" y="666" class="lbl tiny">The SIZED-based sink-chain elision shown in the left lane is a Java 9+ runtime optimization.</text>
+
+  <!-- ===== LEGEND ===== -->
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="712" width="22" height="16" rx="3" class="boxP"/>
+  <text x="70" y="725" class="lbl tiny">pipeline source (SIZED characteristic)</text>
+  <rect x="340" y="712" width="22" height="16" rx="3" class="boxA"/>
+  <text x="370" y="725" class="lbl tiny">decision node (characteristics check)</text>
+  <rect x="680" y="712" width="22" height="16" rx="3" class="boxH"/>
+  <text x="710" y="725" class="lbl tiny">op that changes SIZED / version trap</text>
+
+  <rect x="40" y="736" width="22" height="16" rx="3" class="boxR"/>
+  <text x="70" y="749" class="lbl tiny">outcome: traversal required / peek runs</text>
+  <rect x="360" y="736" width="22" height="16" rx="3" class="boxW"/>
+  <text x="390" y="749" class="lbl tiny">outcome: no traversal / never called</text>
+  <path class="flow" d="M 650 744 H 690"/>
+  <text x="700" y="749" class="lbl tiny">A → B : B follows from A</text>
+</svg>

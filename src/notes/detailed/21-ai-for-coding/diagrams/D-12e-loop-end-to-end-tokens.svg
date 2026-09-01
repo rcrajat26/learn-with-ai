@@ -1,0 +1,46 @@
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 5 of 5: the total token arithmetic across the whole rename loop, summing system prompt, user turn, Grep, Read, Edit, and the final assistant message to 1830 tokens.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="900" height="380" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TASK: RENAME parse TO parseEnvelope ON ClaudeRunner — FRAME 5 OF 5: TOTAL</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="66" class="lbl h2">STEP-BY-STEP CONTRIBUTION</text>
+  <rect x="40" y="76" width="500" height="30" rx="4" class="boxP"/>
+  <text x="56" y="96" class="lbl body">system prompt + user turn = 500 + 40 = 540 tok</text>
+  <rect x="40" y="110" width="500" height="30" rx="4" class="boxP"/>
+  <text x="56" y="130" class="lbl body">Grep tool_use + tool_result = 30 + 150 = 180 tok</text>
+  <rect x="40" y="144" width="500" height="30" rx="4" class="boxP"/>
+  <text x="56" y="164" class="lbl body">Read tool_use + tool_result = 20 + 900 = 920 tok</text>
+  <rect x="40" y="178" width="500" height="30" rx="4" class="boxP"/>
+  <text x="56" y="198" class="lbl body">Edit tool_use + tool_result = 60 + 40 = 100 tok</text>
+  <rect x="40" y="212" width="500" height="30" rx="4" class="boxP"/>
+  <text x="56" y="232" class="lbl body">final assistant message = 90 tok</text>
+
+  <rect x="580" y="76" width="280" height="166" rx="6" class="boxR"/>
+  <text x="596" y="100" class="lbl node">GRAND TOTAL</text>
+  <text x="596" y="124" class="lbl body">540 + 180 + 920</text>
+  <text x="596" y="142" class="lbl body">+ 100 + 90</text>
+  <text x="596" y="166" class="lbl node" font-size="17">= 1830 tokens</text>
+  <text x="596" y="190" class="lbl sub">for one full Grep → Read → Edit → done</text>
+  <text x="596" y="206" class="lbl sub">rename loop.</text>
+
+  <line x1="20" y1="290" x2="880" y2="290" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="302" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="315" class="lbl tiny">per-step contribution</text>
+  <rect x="240" y="302" width="22" height="16" rx="3" class="boxR"/>
+  <text x="270" y="315" class="lbl tiny">grand total across all steps</text>
+</svg>

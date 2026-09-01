@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Monomorphic versus megamorphic lambda call sites, both reading a Function of LedgerEntry to Money named selector in a settlement report loop. Left: the call site always sees one implementation, LedgerEntry::amount; the inline cache stays monomorphic and the JIT inlines straight through the interface call, substituting entry.amount() at the call site. Right: twenty different lambdas, one per ledger position and report variant, are assigned to the same selector field across call sites; the inline cache overflows past bimorphic into megamorphic, inlining stops, and every call pays a full interface dispatch, an order-of-magnitude slowdown against the monomorphic path.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .dense { font-size: 12.5px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1f2937; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MONOMORPHIC VERSUS MEGAMORPHIC LAMBDA CALL SITES</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="lbl h2">MONOMORPHIC — one implementation seen at the call site</text>
+  <text x="640" y="62" class="lbl h2">MEGAMORPHIC — twenty lambdas share one field</text>
+
+  <!-- LEFT: call site -->
+  <rect x="60" y="100" width="300" height="70" rx="6" class="boxP"/>
+  <text x="210" y="122" text-anchor="middle" class="lbl node">selector</text>
+  <text x="210" y="140" text-anchor="middle" class="lbl sub">Function&lt;LedgerEntry,Money&gt;</text>
+  <text x="210" y="156" text-anchor="middle" class="lbl tiny">selector.apply(entry) in the settlement report loop</text>
+
+  <path class="flow" d="M 210 170 V 200"/>
+
+  <!-- LEFT: inline cache -->
+  <rect x="60" y="200" width="300" height="70" rx="6" class="boxR"/>
+  <text x="210" y="224" text-anchor="middle" class="lbl dense">inline cache: monomorphic</text>
+  <text x="210" y="244" text-anchor="middle" class="lbl tiny">1 receiver type seen</text>
+  <text x="210" y="260" text-anchor="middle" class="lbl tiny">Lambda$47 = LedgerEntry::amount</text>
+
+  <path class="flow" d="M 210 270 V 320"/>
+
+  <!-- LEFT: inlined code -->
+  <rect x="60" y="320" width="300" height="200" rx="6" class="boxR"/>
+  <text x="210" y="344" text-anchor="middle" class="lbl dense">JIT INLINES THROUGH THE CALL</text>
+  <text x="80" y="368" class="lbl mono">selector.apply(entry)</text>
+  <text x="80" y="386" class="lbl mono">// call site guard passes,</text>
+  <text x="80" y="402" class="lbl mono">// body substituted in:</text>
+  <text x="80" y="424" class="lbl mono">return entry.amount();</text>
+  <text x="80" y="452" class="lbl tiny">no invokeinterface at runtime</text>
+  <text x="80" y="470" class="lbl tiny">eligible for further inlining and</text>
+  <text x="80" y="486" class="lbl tiny">escape analysis around entry</text>
+  <text x="80" y="504" class="lbl tiny">fast path: single receiver type</text>
+
+  <!-- RIGHT: call site -->
+  <rect x="640" y="100" width="300" height="70" rx="6" class="boxP"/>
+  <text x="790" y="122" text-anchor="middle" class="lbl node">selector</text>
+  <text x="790" y="140" text-anchor="middle" class="lbl sub">Function&lt;LedgerEntry,Money&gt;</text>
+  <text x="790" y="156" text-anchor="middle" class="lbl tiny">same field, reassigned per report column</text>
+
+  <path class="flow" d="M 790 170 V 180"/>
+
+  <!-- RIGHT: leaf panel of 20 lambdas -->
+  <rect x="640" y="180" width="300" height="230" rx="6" class="boxW"/>
+  <text x="656" y="202" class="lbl dense">20 distinct lambda classes assigned</text>
+  <text x="656" y="222" class="lbl tiny">one per ledger position, ×2 variants</text>
+  <text x="656" y="244" class="lbl tiny">e -&gt; e.get(CLIENT_CASH_AVAILABLE)</text>
+  <text x="656" y="262" class="lbl tiny">e -&gt; e.get(CLIENT_CASH_RESERVED)</text>
+  <text x="656" y="280" class="lbl tiny">e -&gt; e.get(CLIENT_BONUS_AVAILABLE)</text>
+  <text x="656" y="298" class="lbl tiny">e -&gt; e.get(CLIENT_BONUS_RESERVED)</text>
+  <text x="656" y="316" class="lbl tiny">e -&gt; e.get(SUSPENSE)</text>
+  <text x="656" y="334" class="lbl tiny">e -&gt; e.get(PSP_RECEIVABLE)</text>
+  <text x="656" y="352" class="lbl tiny">e -&gt; e.get(BANK_SETTLEMENT)</text>
+  <text x="656" y="370" class="lbl tiny">e -&gt; e.get(HOUSE_REVENUE)</text>
+  <text x="656" y="388" class="lbl tiny">e -&gt; e.get(PROMOTIONAL_EXPENSE), FEES,</text>
+  <text x="656" y="404" class="lbl tiny">CHARGEBACK_LOSS, and 9 more columns</text>
+
+  <path class="flow" d="M 790 410 V 430"/>
+
+  <!-- RIGHT: inline cache megamorphic -->
+  <rect x="640" y="430" width="300" height="70" rx="6" class="boxDeg"/>
+  <text x="790" y="454" text-anchor="middle" class="lbl dense">inline cache: megamorphic</text>
+  <text x="790" y="474" text-anchor="middle" class="lbl tiny">&gt; 2 receiver types seen</text>
+  <text x="790" y="490" text-anchor="middle" class="lbl tiny">cache gives up past bimorphic</text>
+
+  <path class="flow" d="M 790 500 V 520"/>
+
+  <!-- RIGHT: dispatch, no inlining -->
+  <rect x="640" y="520" width="300" height="100" rx="6" class="boxDeg"/>
+  <text x="790" y="544" text-anchor="middle" class="lbl dense">NO INLINING — DISPATCH EVERY CALL</text>
+  <text x="660" y="566" class="lbl mono">selector.apply(entry)</text>
+  <text x="660" y="584" class="lbl mono">-&gt; invokeinterface, itable lookup</text>
+  <text x="660" y="602" class="lbl tiny">JIT cannot inline a megamorphic site</text>
+
+  <!-- shared annotation -->
+  <rect x="20" y="660" width="1080" height="140" rx="6" class="boxAnn"/>
+  <text x="36" y="682" class="lbl dense">Why the cache overflows</text>
+  <text x="36" y="702" class="lbl tiny">A call-site inline cache holds a small, fixed number of type-checked guards — monomorphic (1), then bimorphic (2) as a checked cascade.</text>
+  <text x="36" y="720" class="lbl tiny">A 3rd distinct implementation at the same site degrades it to megamorphic: guards are abandoned, and every call falls back to a full dispatch.</text>
+  <text x="36" y="742" class="lbl tiny">Left path inlines entry.amount() directly into the loop body. Right path pays invokeinterface plus itable lookup on all 2.8M/day stake settlements touched.</text>
+  <text x="36" y="760" class="lbl tiny">That is an order-of-magnitude slowdown against the monomorphic path (illustrative ratio; exact factor is JIT- and CPU-dependent, not measured on this run).</text>
+
+  <line x1="20" y1="825" x2="1100" y2="825" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="837" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="850" class="lbl tiny">call site field</text>
+  <rect x="180" y="837" width="22" height="16" rx="3" class="boxR"/>
+  <text x="210" y="850" class="lbl tiny">monomorphic / fast (inlined) path</text>
+  <rect x="440" y="837" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="470" y="850" class="lbl tiny">megamorphic / slow (dispatched) path</text>
+  <rect x="720" y="837" width="22" height="16" rx="3" class="boxW"/>
+  <text x="750" y="850" class="lbl tiny">grouped leaf panel</text>
+  <rect x="900" y="837" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="930" y="850" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 870 H 60"/>
+  <text x="68" y="875" class="lbl tiny">A → B : A flows into B (call, then cache, then dispatch)</text>
+</svg>

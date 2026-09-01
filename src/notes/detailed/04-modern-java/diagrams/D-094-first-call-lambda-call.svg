@@ -1,0 +1,117 @@
+<svg viewBox="0 0 1100 600" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of the first call to one lambda call site, extractAmount referencing LedgerEntry::amount over card deposits. Point 1: invokedynamic reached, unlinked. Point 2: LambdaMetafactory.metafactory bootstrap runs. Point 3: InnerClassLambdaMetafactory spins a hidden class implementing Function. Point 4: the CallSite links, its target bound to a MethodHandle on the hidden class constructor. Point 5: every subsequent call is an ordinary interface invocation, no metafactory, no allocation. A shaded band from point 1 to point 4 marks the one-off linkage cost, on the order of microseconds and paid once per call site.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .dense { font-size: 12.5px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .num   { font-size: 12px; font-weight: 700; fill: #ffffff; }
+
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .band   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .axis  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .lead  { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+
+    .cDeg  { fill: #b91c1c; stroke: #b91c1c; }
+    .cH    { fill: #b45309; stroke: #b45309; }
+    .cR    { fill: #15803d; stroke: #15803d; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1100" height="600" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE FIRST CALL TO A LAMBDA CALL SITE</text>
+  <line x1="20" y1="42" x2="1080" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">One call site: Function&lt;LedgerEntry,Money&gt; extractAmount = LedgerEntry::amount, first used inside a stream over 95,000 card deposits/day</text>
+
+  <!-- band, drawn before axis so axis sits on top -->
+  <rect x="100" y="255" width="660" height="55" rx="4" class="band"/>
+
+  <!-- axis -->
+  <path class="axis" d="M 60 280 H 1060"/>
+  <text x="1000" y="270" text-anchor="middle" class="lbl tiny">time →</text>
+
+  <!-- P1 -->
+  <circle cx="100" cy="280" r="10" class="cDeg"/>
+  <text x="100" y="284" text-anchor="middle" class="num">1</text>
+  <path class="lead" d="M 100 170 V 255"/>
+  <rect x="0" y="70" width="200" height="100" rx="6" class="boxDeg"/>
+  <text x="100" y="94" text-anchor="middle" class="lbl dense">invokedynamic reached</text>
+  <text x="100" y="116" text-anchor="middle" class="lbl sub">extractAmount(LedgerEntry)</text>
+  <text x="100" y="134" text-anchor="middle" class="lbl tiny">call site not yet linked</text>
+  <text x="100" y="150" text-anchor="middle" class="lbl tiny">holds a BootstrapMethod ref</text>
+
+  <!-- P2 -->
+  <circle cx="320" cy="280" r="10" class="cH"/>
+  <text x="320" y="284" text-anchor="middle" class="num">2</text>
+  <path class="lead" d="M 320 170 V 255"/>
+  <rect x="220" y="70" width="200" height="100" rx="6" class="boxH"/>
+  <text x="320" y="94" text-anchor="middle" class="lbl dense">bootstrap method runs</text>
+  <text x="320" y="116" text-anchor="middle" class="lbl sub">LambdaMetafactory.metafactory</text>
+  <text x="320" y="134" text-anchor="middle" class="lbl tiny">runs once for this call site</text>
+  <text x="320" y="150" text-anchor="middle" class="lbl tiny">picks the metafactory strategy</text>
+
+  <!-- P3 -->
+  <circle cx="540" cy="280" r="10" class="cH"/>
+  <text x="540" y="284" text-anchor="middle" class="num">3</text>
+  <path class="lead" d="M 540 170 V 255"/>
+  <rect x="440" y="70" width="200" height="100" rx="6" class="boxH"/>
+  <text x="540" y="94" text-anchor="middle" class="lbl dense">hidden class spun up</text>
+  <text x="540" y="116" text-anchor="middle" class="lbl sub">InnerClassLambdaMetafactory</text>
+  <text x="540" y="134" text-anchor="middle" class="lbl tiny">defines $Lambda impl class</text>
+  <text x="540" y="150" text-anchor="middle" class="lbl tiny">implements Function, hidden</text>
+
+  <!-- P4 -->
+  <circle cx="760" cy="280" r="10" class="cR"/>
+  <text x="760" y="284" text-anchor="middle" class="num">4</text>
+  <path class="lead" d="M 760 170 V 255"/>
+  <rect x="660" y="70" width="200" height="100" rx="6" class="boxR"/>
+  <text x="760" y="94" text-anchor="middle" class="lbl dense">CallSite linked</text>
+  <text x="760" y="116" text-anchor="middle" class="lbl sub">target = MethodHandle bound</text>
+  <text x="760" y="134" text-anchor="middle" class="lbl tiny">to the hidden class ctor</text>
+  <text x="760" y="150" text-anchor="middle" class="lbl tiny">linkage cached for this site</text>
+
+  <!-- band labels -->
+  <text x="430" y="270" text-anchor="middle" class="lbl dense">ONE-OFF LINKAGE COST</text>
+  <text x="430" y="300" text-anchor="middle" class="lbl sub">~1–10 µs, order of magnitude — JVM- and CPU-dependent, not a measured constant</text>
+
+  <!-- P5 -->
+  <circle cx="980" cy="280" r="10" class="cR"/>
+  <text x="980" y="284" text-anchor="middle" class="num">5</text>
+  <path class="lead" d="M 980 310 V 340"/>
+  <rect x="880" y="340" width="200" height="100" rx="6" class="boxR"/>
+  <text x="980" y="364" text-anchor="middle" class="lbl dense">steady state</text>
+  <text x="980" y="386" text-anchor="middle" class="lbl sub">ordinary interface invocation</text>
+  <text x="980" y="404" text-anchor="middle" class="lbl tiny">extractAmount.apply(entry)</text>
+  <text x="980" y="420" text-anchor="middle" class="lbl tiny">no re-linking, no allocation</text>
+
+  <!-- annotation -->
+  <rect x="30" y="460" width="1040" height="55" rx="6" class="boxAnn"/>
+  <text x="46" y="480" class="lbl dense">Paid once per call site</text>
+  <text x="46" y="500" class="lbl tiny">A loop calling extractAmount over all 95,000 card deposits pays points 1–4 on iteration 1 only; iterations 2 through 95,000 are point 5, an ordinary invokeinterface.</text>
+
+  <line x1="20" y1="535" x2="1080" y2="535" stroke="#d1d5db" stroke-width="1.5"/>
+  <circle cx="35" cy="552" r="8" class="cDeg"/>
+  <text x="52" y="556" class="lbl tiny">unlinked / not yet resolved</text>
+  <circle cx="270" cy="552" r="8" class="cH"/>
+  <text x="287" y="556" class="lbl tiny">bootstrap in progress</text>
+  <circle cx="470" cy="552" r="8" class="cR"/>
+  <text x="487" y="556" class="lbl tiny">linked / fast path</text>
+  <rect x="650" y="544" width="22" height="16" rx="3" class="band"/>
+  <text x="680" y="556" class="lbl tiny">one-off linkage cost window</text>
+  <rect x="880" y="544" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="908" y="556" class="lbl tiny">annotation panel</text>
+
+  <path class="lead" d="M 20 575 H 60"/>
+  <text x="68" y="580" class="lbl tiny">point-to-detail leader (no semantic relation)</text>
+</svg>

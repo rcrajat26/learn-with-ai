@@ -1,0 +1,55 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 4: the coder subagent launches inside an isolated per-story git worktree, so its cwd is the worktree directory, not the harness repo root.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">D-83 · FRAME 1 OF 4 — THE ISOLATED WORKTREE</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">harness repo (sdlc-harness)</text>
+  <rect x="20" y="80" width="380" height="160" rx="6" class="boxP"/>
+  <text x="210" y="108" text-anchor="middle" class="lbl node">sdlc-harness/</text>
+  <text x="210" y="132" text-anchor="middle" class="lbl body">.claude/settings.json</text>
+  <text x="210" y="154" text-anchor="middle" class="lbl sub">permissions.allow: Bash(*)</text>
+  <text x="210" y="172" text-anchor="middle" class="lbl sub">permissions.deny: destructive-command list</text>
+  <text x="210" y="196" text-anchor="middle" class="lbl body">ClaudeRunner launches coder here</text>
+
+  <path class="flow" d="M 400 160 H 460"/>
+  <text x="430" y="150" text-anchor="middle" class="lbl sub">git worktree add</text>
+
+  <text x="500" y="66" class="lbl h2">per-story worktree (isolated checkout)</text>
+  <rect x="500" y="80" width="380" height="160" rx="6" class="boxW"/>
+  <text x="690" y="108" text-anchor="middle" class="lbl node">/worktrees/story-4471/</text>
+  <text x="690" y="132" text-anchor="middle" class="lbl body">coder subagent process spawned here</text>
+  <text x="690" y="156" text-anchor="middle" class="lbl node">cwd = /worktrees/story-4471</text>
+  <text x="690" y="180" text-anchor="middle" class="lbl sub">no .claude/settings.json copied in</text>
+
+  <rect x="20" y="270" width="860" height="100" rx="6" class="boxAnn"/>
+  <text x="36" y="292" class="lbl h2" fill="#1f2937">Annotation</text>
+  <text x="36" y="312" class="lbl tiny">A per-story git worktree gives the coder a clean checkout to edit, but it is a</text>
+  <text x="36" y="330" class="lbl tiny">different directory tree from the harness repo it was cloned from — cwd now</text>
+  <text x="36" y="348" class="lbl tiny">points at /worktrees/story-4471, not at sdlc-harness/. Anything the launcher</text>
+  <text x="36" y="366" class="lbl tiny">resolves relative to cwd resolves against the worktree, not the harness repo.</text>
+</svg>

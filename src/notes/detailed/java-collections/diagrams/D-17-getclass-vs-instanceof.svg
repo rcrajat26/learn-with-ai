@@ -1,0 +1,81 @@
+<svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="getClass versus instanceof in equals: instanceof makes p.equals(cp) true but cp.equals(p) false, breaking symmetry; getClass makes both false, staying symmetric but violating Liskov substitution for ColorPoint">
+  <defs>
+    <marker id="arrow17g" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+    <marker id="arrow17r" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="34" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Point(1,2) vs ColorPoint(1,2,RED): instanceof breaks symmetry, getClass breaks Liskov</text>
+
+  <!-- divider -->
+  <line x1="400" y1="70" x2="400" y2="460" stroke="#737373" stroke-width="2"/>
+
+  <!-- LEFT: instanceof -->
+  <rect x="40" y="70" width="330" height="24" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Left: equals() uses instanceof Point</text>
+
+  <rect x="55" y="120" width="130" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="120" y="141" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">p =</text>
+  <text x="120" y="159" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Point(1,2)</text>
+
+  <rect x="220" y="120" width="150" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="141" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cp =</text>
+  <text x="295" y="159" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ColorPoint(1,2,RED)</text>
+
+  <line x1="185" y1="132" x2="220" y2="132" stroke="#525252" stroke-width="2" marker-end="url(#arrow17g)"/>
+  <rect x="150" y="180" width="120" height="24" rx="3" fill="#dcfce7"/>
+  <text x="210" y="197" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">p.equals(cp) = true</text>
+
+  <line x1="220" y1="158" x2="185" y2="158" stroke="#737373" stroke-width="2" marker-end="url(#arrow17r)"/>
+  <rect x="150" y="210" width="120" height="24" rx="3" fill="#fee2e2"/>
+  <text x="210" y="227" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">cp.equals(p) = false</text>
+
+  <rect x="55" y="250" width="315" height="50" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="212" y="270" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">symmetry broken:</text>
+  <text x="212" y="288" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">p.equals(cp) != cp.equals(p)</text>
+
+  <rect x="55" y="315" width="315" height="70" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="212" y="335" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">HashSet/HashMap lookups depend</text>
+  <text x="212" y="353" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">on which side calls equals(); results</text>
+  <text x="212" y="371" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">differ by insertion/lookup order</text>
+
+  <!-- RIGHT: getClass -->
+  <rect x="430" y="70" width="330" height="24" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="595" y="87" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Right: equals() uses getClass() == getClass()</text>
+
+  <rect x="445" y="120" width="130" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="141" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">p =</text>
+  <text x="510" y="159" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Point(1,2)</text>
+
+  <rect x="610" y="120" width="150" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="685" y="141" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cp =</text>
+  <text x="685" y="159" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ColorPoint(1,2,RED)</text>
+
+  <line x1="575" y1="132" x2="610" y2="132" stroke="#737373" stroke-width="2" marker-end="url(#arrow17r)"/>
+  <rect x="540" y="180" width="120" height="24" rx="3" fill="#fee2e2"/>
+  <text x="600" y="197" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">p.equals(cp) = false</text>
+
+  <line x1="610" y1="158" x2="575" y2="158" stroke="#737373" stroke-width="2" marker-end="url(#arrow17r)"/>
+  <rect x="540" y="210" width="120" height="24" rx="3" fill="#fee2e2"/>
+  <text x="600" y="227" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">cp.equals(p) = false</text>
+
+  <rect x="445" y="250" width="315" height="50" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="602" y="270" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">symmetric: both false,</text>
+  <text x="602" y="288" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">consistent either direction</text>
+
+  <rect x="445" y="315" width="315" height="70" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="602" y="333" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Liskov violation: a ColorPoint can</text>
+  <text x="602" y="351" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">never equal any Point, even with</text>
+  <text x="602" y="369" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">identical coordinates -- substitution fails</text>
+
+  <rect x="40" y="410" width="720" height="46" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="428" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Neither fix is free: favor composition over inheritance, or</text>
+  <text x="400" y="446" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">restrict equals() to a common non-final base with only the shared fields</text>
+</svg>

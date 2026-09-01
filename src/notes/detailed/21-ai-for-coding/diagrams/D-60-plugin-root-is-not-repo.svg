@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison: a repo-local hook resolving dirname of dollar-zero up two levels correctly reaches the repo root, but the same expression run inside an installed plugin resolves CLAUDE_PLUGIN_ROOT into the plugin's install cache directory instead of the repo, producing a broken path. The fix panel shows resolving the repo root via git rev-parse --show-toplevel and refusing with a clear error rather than inventing a third fallback.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triw); }
+    .bad   { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trib); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="trib" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">${CLAUDE_PLUGIN_ROOT} IS NOT THE REPO</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Band headers -->
+  <text x="20" y="68" class="lbl h2">LEFT: HOOK LIVES IN THE REPO — CORRECT</text>
+  <text x="580" y="68" class="lbl h2">RIGHT: HOOK LIVES IN AN INSTALLED PLUGIN — WRONG</text>
+  <line x1="560" y1="55" x2="560" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT SIDE -->
+  <rect x="20" y="90" width="500" height="60" rx="6" class="boxP"/>
+  <text x="270" y="114" text-anchor="middle" class="lbl node">.claude/hooks/check-init.sh</text>
+  <text x="270" y="134" text-anchor="middle" class="lbl sub">hook file location: &lt;repo&gt;/.claude/hooks/</text>
+
+  <path class="flow" d="M 270 150 V 172"/>
+
+  <rect x="20" y="172" width="500" height="60" rx="6" class="boxW"/>
+  <text x="270" y="196" text-anchor="middle" class="lbl dense">$0 = &lt;repo&gt;/.claude/hooks/check-init.sh</text>
+  <text x="270" y="216" text-anchor="middle" class="lbl sub">script's own invoked path</text>
+
+  <path class="flow" d="M 270 232 V 254"/>
+
+  <rect x="20" y="254" width="500" height="70" rx="6" class="boxP"/>
+  <text x="270" y="278" text-anchor="middle" class="lbl dense">dirname "$0"/../..</text>
+  <text x="270" y="298" text-anchor="middle" class="lbl sub">walk up two levels from .claude/hooks/</text>
+  <text x="270" y="314" text-anchor="middle" class="lbl sub">.claude/hooks/ → .claude/ → &lt;repo&gt;</text>
+
+  <path class="flow" d="M 270 324 V 346"/>
+
+  <rect x="20" y="346" width="500" height="60" rx="6" class="boxR"/>
+  <text x="270" y="370" text-anchor="middle" class="lbl node">&lt;repo&gt;</text>
+  <text x="270" y="390" text-anchor="middle" class="lbl sub">correct repo root — matches git rev-parse --show-toplevel</text>
+
+  <!-- RIGHT SIDE -->
+  <rect x="580" y="90" width="500" height="60" rx="6" class="boxP"/>
+  <text x="830" y="114" text-anchor="middle" class="lbl node">plugin.json hook: check-init.sh</text>
+  <text x="830" y="134" text-anchor="middle" class="lbl sub">same script, shipped inside an installed plugin</text>
+
+  <path class="flow" d="M 830 150 V 172"/>
+
+  <rect x="580" y="172" width="500" height="60" rx="6" class="boxW"/>
+  <text x="830" y="196" text-anchor="middle" class="lbl dense">$0 = ${CLAUDE_PLUGIN_ROOT}/hooks/check-init.sh</text>
+  <text x="830" y="216" text-anchor="middle" class="lbl sub">CLAUDE_PLUGIN_ROOT = plugin install/cache dir</text>
+
+  <path class="bad" d="M 830 232 V 254"/>
+
+  <rect x="580" y="254" width="500" height="70" rx="6" class="boxD"/>
+  <text x="830" y="278" text-anchor="middle" class="lbl dense">dirname "$0"/../..</text>
+  <text x="830" y="298" text-anchor="middle" class="lbl sub">same expression, but the base is the cache dir</text>
+  <text x="830" y="314" text-anchor="middle" class="lbl sub">walks up inside the cache, not the repo</text>
+
+  <path class="bad" d="M 830 324 V 346"/>
+
+  <rect x="580" y="346" width="500" height="60" rx="6" class="boxD"/>
+  <text x="830" y="368" text-anchor="middle" class="lbl node">WRONG: resolves into the cache</text>
+  <text x="830" y="386" text-anchor="middle" class="lbl sub" font-family="monospace">~/.claude/plugins/cache/acme-tools/1.4.2</text>
+
+  <!-- Fix panel -->
+  <rect x="20" y="440" width="1060" height="200" rx="6" class="boxA"/>
+  <text x="40" y="466" class="lbl h2">FIX</text>
+  <line x1="40" y1="476" x2="1060" y2="476" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="40" y="500" class="lbl body">1. Resolve the repo root explicitly, never by relative path arithmetic from $0 or ${CLAUDE_PLUGIN_ROOT}:</text>
+  <rect x="60" y="512" width="520" height="34" rx="4" class="boxR"/>
+  <text x="320" y="534" text-anchor="middle" class="lbl dense" font-family="monospace">git rev-parse --show-toplevel</text>
+
+  <text x="40" y="576" class="lbl body">2. If that command fails (not inside a git repo), refuse with a clear message —</text>
+  <text x="40" y="596" class="lbl body">do not invent a third fallback path (no more dirname walks, no env-var guessing).</text>
+
+  <rect x="620" y="500" width="420" height="120" rx="6" class="boxD"/>
+  <text x="640" y="524" class="lbl h2">NOT THIS</text>
+  <text x="640" y="546" class="lbl dense">✗ fallback: ${CLAUDE_PLUGIN_ROOT}/../../..</text>
+  <text x="640" y="566" class="lbl dense">✗ fallback: guess from $PWD</text>
+  <text x="640" y="586" class="lbl dense">✗ silently continue with a wrong root</text>
+  <text x="640" y="606" class="lbl sub">refuse instead — exit non-zero, print why</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="670" x2="1100" y2="670" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="684" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="697" class="lbl tiny">source / entry point</text>
+  <rect x="220" y="684" width="22" height="16" rx="3" class="boxW"/>
+  <text x="250" y="697" class="lbl tiny">intermediate resolved value</text>
+  <rect x="460" y="684" width="22" height="16" rx="3" class="boxR"/>
+  <text x="490" y="697" class="lbl tiny">correct result / fix</text>
+  <rect x="650" y="684" width="22" height="16" rx="3" class="boxD"/>
+  <text x="680" y="697" class="lbl tiny">wrong result / rejected approach</text>
+  <rect x="900" y="684" width="22" height="16" rx="3" class="boxA"/>
+  <text x="930" y="697" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 720 H 60"/>
+  <text x="70" y="725" class="lbl tiny">correct resolution step</text>
+  <path class="bad" d="M 300 720 H 340"/>
+  <text x="350" y="725" class="lbl tiny">resolution step that produces a wrong path</text>
+</svg>

@@ -1,0 +1,161 @@
+<svg viewBox="0 0 1220 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence for unsafe publication of a non-final Reservation. Frame 1:
+     settlement-ingest-3 runs the constructor, writing amount to BigDecimal 3.33 and status to
+     RESERVED, in program order before the reference is stored into the plain field
+     latestReservation. Frame 2: because neither field is final or volatile and there is no
+     synchronization, the compiler and the CPU are permitted to reorder the reference store ahead
+     of the two field writes it depends on. Frame 3: balance-view-2 reads latestReservation,
+     observes a non-null reference, but reservation.amount and reservation.status both print null
+     because the reordered store made the reference visible before the fields it points to were
+     written.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .2px; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .reorder { fill: none; stroke: #b91c1c; stroke-width: 2.2; stroke-dasharray: 5 3; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1220" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">UNSAFE PUBLICATION SHOWS DEFAULT VALUES &#8212; Reservation via a plain field</text>
+  <line x1="20" y1="42" x2="1200" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="56" width="380" height="26" rx="4" class="boxP"/>
+  <text x="210" y="74" text-anchor="middle" class="lbl h2">FRAME 1 &#8212; CONSTRUCTOR WRITES THE FIELDS</text>
+
+  <rect x="40" y="92" width="340" height="50" rx="6" class="boxW"/>
+  <text x="60" y="112" class="lbl body mono">settlement-ingest-3 runs</text>
+  <text x="60" y="130" class="lbl body mono">new Reservation(3.33, "RESERVED")</text>
+
+  <path class="flow" d="M 210 142 V 168"/>
+
+  <rect x="60" y="168" width="300" height="40" rx="6" class="boxW"/>
+  <text x="210" y="192" text-anchor="middle" class="lbl body">Reservation &#8212; fields being written</text>
+
+  <path class="flow" d="M 210 208 V 224"/>
+  <path class="flow" d="M 120 224 H 300"/>
+  <path class="flow" d="M 120 224 V 240"/>
+  <path class="flow" d="M 300 224 V 240"/>
+  <text x="210" y="220" text-anchor="middle" class="lbl tiny">program order: write amount, write status</text>
+
+  <rect x="50" y="240" width="140" height="50" rx="6" class="boxP"/>
+  <text x="120" y="260" text-anchor="middle" class="lbl body" font-weight="600">amount</text>
+  <text x="120" y="278" text-anchor="middle" class="lbl sub mono">BigDecimal(3.33)</text>
+
+  <rect x="230" y="240" width="140" height="50" rx="6" class="boxP"/>
+  <text x="300" y="260" text-anchor="middle" class="lbl body" font-weight="600">status</text>
+  <text x="300" y="278" text-anchor="middle" class="lbl sub mono">"RESERVED"</text>
+
+  <rect x="40" y="310" width="340" height="120" rx="6" class="boxA"/>
+  <text x="60" y="330" class="lbl body" font-weight="600">Observed (source, program order):</text>
+  <text x="60" y="348" class="lbl sub">1. write amount = BigDecimal(3.33)</text>
+  <text x="60" y="364" class="lbl sub">2. write status = "RESERVED"</text>
+  <text x="60" y="380" class="lbl sub">3. store latestReservation = this</text>
+  <text x="60" y="400" class="lbl sub">latestReservation is a plain (non-final,</text>
+  <text x="60" y="416" class="lbl sub">non-volatile) static field &#8212; no synchronization</text>
+  <text x="60" y="432" class="lbl sub">guards the publication.</text>
+
+  <!-- FRAME 2 -->
+  <rect x="420" y="56" width="380" height="26" rx="4" class="boxH"/>
+  <text x="610" y="74" text-anchor="middle" class="lbl h2">FRAME 2 &#8212; STORE REORDERED BEFORE THE WRITES</text>
+
+  <rect x="440" y="92" width="340" height="86" rx="6" class="boxP"/>
+  <text x="460" y="112" class="lbl body mono" font-weight="700">program order (source):</text>
+  <text x="460" y="130" class="lbl body mono">1  write amount</text>
+  <text x="460" y="148" class="lbl body mono">2  write status</text>
+  <text x="460" y="166" class="lbl body mono">3  store latestReservation = this</text>
+
+  <path class="reorder" d="M 610 178 V 200"/>
+  <text x="622" y="193" text-anchor="start" class="lbl tiny" fill="#b91c1c" font-weight="700">step 3 reordered ahead of 1, 2</text>
+
+  <rect x="440" y="200" width="340" height="86" rx="6" class="boxD"/>
+  <text x="460" y="220" class="lbl body mono" font-weight="700">actual order (compiler / CPU):</text>
+  <text x="460" y="238" class="lbl body mono">1&#8242;  store latestReservation = this</text>
+  <text x="460" y="256" class="lbl body mono">2&#8242;  write amount</text>
+  <text x="460" y="274" class="lbl body mono">3&#8242;  write status</text>
+
+  <rect x="440" y="310" width="340" height="120" rx="6" class="boxA"/>
+  <text x="460" y="330" class="lbl body" font-weight="600">Who is permitted to do this:</text>
+  <text x="460" y="348" class="lbl sub">amount and status are neither final nor</text>
+  <text x="460" y="364" class="lbl sub">volatile, and no synchronized block or</text>
+  <text x="460" y="380" class="lbl sub">happens-before edge ties step 3 to steps 1&#8211;2.</text>
+  <text x="460" y="396" class="lbl sub">The JLS permits both the JIT compiler and</text>
+  <text x="460" y="412" class="lbl sub">the CPU's store buffer to reorder these</text>
+  <text x="460" y="428" class="lbl sub">independent writes.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="820" y="56" width="380" height="26" rx="4" class="boxD"/>
+  <text x="1010" y="74" text-anchor="middle" class="lbl h2">FRAME 3 &#8212; READER SEES DEFAULT VALUES</text>
+
+  <rect x="840" y="92" width="340" height="50" rx="6" class="boxW"/>
+  <text x="860" y="112" class="lbl body mono">balance-view-2 reads</text>
+  <text x="860" y="130" class="lbl body mono">Reservation r = latestReservation;</text>
+
+  <path class="flow" d="M 1010 142 V 168"/>
+
+  <rect x="860" y="168" width="300" height="40" rx="6" class="boxD"/>
+  <text x="1010" y="192" text-anchor="middle" class="lbl body">r &#8212; reference visible, fields not yet written</text>
+
+  <path class="flow" d="M 1010 208 V 224"/>
+  <path class="flow" d="M 920 224 H 1100"/>
+  <path class="flow" d="M 920 224 V 240"/>
+  <path class="flow" d="M 1100 224 V 240"/>
+
+  <rect x="850" y="240" width="140" height="50" rx="6" class="boxD"/>
+  <text x="920" y="260" text-anchor="middle" class="lbl body" font-weight="600">amount</text>
+  <text x="920" y="278" text-anchor="middle" class="lbl sub mono">null</text>
+
+  <rect x="1030" y="240" width="140" height="50" rx="6" class="boxD"/>
+  <text x="1100" y="260" text-anchor="middle" class="lbl body" font-weight="600">status</text>
+  <text x="1100" y="278" text-anchor="middle" class="lbl sub mono">null</text>
+
+  <rect x="840" y="310" width="340" height="120" rx="6" class="boxA"/>
+  <text x="860" y="330" class="lbl body" font-weight="600">Printed by balance-view-2:</text>
+  <text x="860" y="350" class="lbl body mono">r != null            // true</text>
+  <text x="860" y="368" class="lbl body mono">r.amount             // null</text>
+  <text x="860" y="386" class="lbl body mono">r.status             // null</text>
+  <text x="860" y="406" class="lbl sub">a torn, partially-constructed Reservation &#8212;</text>
+  <text x="860" y="422" class="lbl sub">reachable only because it was published</text>
+  <text x="860" y="438" class="lbl sub">through a plain field.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="452" x2="1200" y2="452" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="464" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="477" class="lbl tiny">thread / actor, or object mid-construction</text>
+
+  <rect x="300" y="464" width="22" height="16" rx="3" class="boxP"/>
+  <text x="330" y="477" class="lbl tiny">field as written in program order (frame 1&#8211;2)</text>
+
+  <rect x="620" y="464" width="22" height="16" rx="3" class="boxD"/>
+  <text x="650" y="477" class="lbl tiny">reordered actual order / observed default value</text>
+
+  <rect x="960" y="464" width="22" height="16" rx="3" class="boxA"/>
+  <text x="990" y="477" class="lbl tiny">annotation</text>
+
+  <path class="flow" d="M 20 496 H 60"/>
+  <text x="68" y="501" class="lbl tiny">program order / sequential step</text>
+
+  <path class="reorder" d="M 320 496 H 360"/>
+  <text x="368" y="501" class="lbl tiny">reordering permitted by the JLS in the absence of a happens-before edge</text>
+</svg>

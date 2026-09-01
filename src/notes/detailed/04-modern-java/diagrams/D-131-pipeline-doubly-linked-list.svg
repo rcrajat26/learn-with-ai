@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1160 1040" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="AbstractPipeline chain for cardDeposits.stream().filter(...).map(...).collect(...): three stage
+     objects linked by nextStage and previousStage pointers, depth 0, 1, 2. The depth-0 head stage carries all
+     twelve AbstractPipeline fields shown with their values. Stage 1 (filter) and stage 2 (map) are StatelessOp
+     subtypes; both point sourceStage back to the depth-0 head over a shared bus. collect(toList()) is a separate
+     terminal call, not a stage object, that triggers evaluate() on stage 2.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 12.5px; }
+    .field  { font-size: 12.5px; font-family: "Courier New", monospace; }
+    .sub    { font-size: 11px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow    { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+    .prev    { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGray); }
+    .srcref  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="1040" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ABSTRACTPIPELINE CHAIN — cardDeposits.stream().filter(...).map(...).collect(...)</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Depth 0: HEAD -->
+  <rect x="140" y="80" width="780" height="230" rx="6" class="boxP"/>
+  <text x="530" y="106" text-anchor="middle" class="lbl node">STAGE 0 — HEAD (source stage), depth = 0</text>
+  <text x="530" y="124" text-anchor="middle" class="lbl sub">cardDeposits.stream()  —  no StatelessOp/StatefulOp subtype: this is the pipeline head</text>
+
+  <text x="170" y="152" class="lbl field">sourceStage        = this (self-reference)</text>
+  <text x="170" y="177" class="lbl field">previousStage      = null</text>
+  <text x="170" y="202" class="lbl field">nextStage          = filterStage</text>
+  <text x="170" y="227" class="lbl field">depth              = 0</text>
+  <text x="170" y="252" class="lbl field">combinedFlags      = sourceOrOpFlags (lazy)</text>
+  <text x="170" y="277" class="lbl field">parallel           = false</text>
+
+  <text x="600" y="152" class="lbl field">sourceOrOpFlags    = ORDERED | SIZED</text>
+  <text x="600" y="177" class="lbl field">sourceSpliterator  = null (lazy)</text>
+  <text x="600" y="202" class="lbl field">sourceSupplier     = cardDeposits::spliterator</text>
+  <text x="600" y="227" class="lbl field">linkedOrConsumed   = false</text>
+  <text x="600" y="252" class="lbl field">sourceAnyStateful  = false</text>
+  <text x="600" y="277" class="lbl field">sourceCloseAction  = null</text>
+
+  <!-- Depth 1: filter -->
+  <rect x="340" y="390" width="380" height="150" rx="6" class="boxP"/>
+  <text x="530" y="416" text-anchor="middle" class="lbl node">STAGE 1 — StatelessOp (filter), depth = 1</text>
+  <text x="530" y="434" text-anchor="middle" class="lbl sub">.filter(d -&gt; d.status() == DEP_301_CAPTURED)</text>
+  <text x="360" y="460" class="lbl field">previousStage = sourceStage</text>
+  <text x="360" y="482" class="lbl field">nextStage     = mapStage</text>
+  <text x="360" y="504" class="lbl field">sourceStage   = sourceStage (head, via bus →)</text>
+  <text x="360" y="526" class="lbl field">opFlags       = 0 (no SIZED/SORTED change)</text>
+
+  <!-- Depth 2: map -->
+  <rect x="340" y="610" width="380" height="150" rx="6" class="boxP"/>
+  <text x="530" y="636" text-anchor="middle" class="lbl node">STAGE 2 — StatelessOp (map), depth = 2</text>
+  <text x="530" y="654" text-anchor="middle" class="lbl sub">.map(LedgerEntry::amount)</text>
+  <text x="360" y="680" class="lbl field">previousStage = filterStage</text>
+  <text x="360" y="702" class="lbl field">nextStage     = null (no further stage)</text>
+  <text x="360" y="724" class="lbl field">sourceStage   = sourceStage (head, via bus →)</text>
+  <text x="360" y="746" class="lbl field">opFlags       = CLEARS SORTED (map reorders values)</text>
+
+  <!-- Terminal -->
+  <rect x="340" y="850" width="380" height="100" rx="6" class="boxR"/>
+  <text x="530" y="878" text-anchor="middle" class="lbl node">collect(toList()) — terminal call</text>
+  <text x="530" y="898" text-anchor="middle" class="lbl body">not an AbstractPipeline stage object</text>
+  <text x="530" y="918" text-anchor="middle" class="lbl sub">invokes evaluate(terminalOp) on stage 2</text>
+
+  <!-- nextStage arrows (solid slate), lane x=500 -->
+  <path class="flow" d="M 500 310 V 390"/>
+  <path class="flow" d="M 500 540 V 610"/>
+  <path class="flow" d="M 530 760 V 850"/>
+
+  <!-- previousStage arrows (dashed gray), lane x=560 -->
+  <path class="prev" d="M 560 390 V 310"/>
+  <path class="prev" d="M 560 610 V 540"/>
+
+  <!-- sourceStage bus (dotted amber): stage1 and stage2 -> head, fan-in on shared vertical bus at x=1000 -->
+  <path class="srcref" d="M 720 465 H 1000"/>
+  <path class="srcref" d="M 720 685 H 1000"/>
+  <path d="M 1000 465 V 685" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="3 3"/>
+  <path class="srcref" d="M 1000 465 H 920"/>
+
+  <!-- Legend -->
+  <line x1="20" y1="965" x2="1140" y2="965" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="980" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="993" class="lbl tiny">stage object (AbstractPipeline)</text>
+  <rect x="300" y="980" width="22" height="16" rx="3" class="boxR"/>
+  <text x="330" y="993" class="lbl tiny">terminal call (not a stage)</text>
+
+  <path class="flow" d="M 560 985 H 600"/>
+  <text x="608" y="993" class="lbl tiny">A → B : nextStage forward link</text>
+
+  <path class="prev" d="M 860 985 H 900"/>
+  <text x="908" y="993" class="lbl tiny">A → B : previousStage backward link</text>
+
+  <path class="srcref" d="M 20 1010 H 60"/>
+  <text x="68" y="1018" class="lbl tiny">A → B : sourceStage reference (every stage points at the head)</text>
+</svg>

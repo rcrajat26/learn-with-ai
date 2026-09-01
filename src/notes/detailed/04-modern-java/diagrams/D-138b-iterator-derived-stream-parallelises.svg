@@ -1,0 +1,68 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: the second and later calls to trySplit on an IteratorSpliterator double the batch size on each call, from 1024 to 2048, up to a fixed maximum. Each doubled batch is again copied out of the live iterator into its own array.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 2/3 — EACH LATER trySplit() DOUBLES THE BATCH</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="380" height="60" rx="6" class="boxR"/>
+  <text x="230" y="89" text-anchor="middle" class="lbl node">batch #1 — 1,024 elements</text>
+  <text x="230" y="107" text-anchor="middle" class="lbl sub">already split off in frame 1</text>
+
+  <path class="flow" d="M 230 126 V 158"/>
+  <text x="280" y="148" class="lbl sub">trySplit() #2</text>
+
+  <rect x="40" y="158" width="380" height="66" rx="6" class="boxH"/>
+  <text x="230" y="181" text-anchor="middle" class="lbl node code">next batch = 1,024 &#215; 2 = 2,048</text>
+  <text x="230" y="200" text-anchor="middle" class="lbl body">copied out of the still-live source iterator</text>
+  <text x="230" y="216" text-anchor="middle" class="lbl sub">size doubles on each subsequent split, capped at a max batch</text>
+
+  <path class="flow" d="M 230 224 V 256"/>
+
+  <rect x="40" y="256" width="380" height="60" rx="6" class="boxR"/>
+  <text x="230" y="279" text-anchor="middle" class="lbl node">ArraySpliterator, size 2,048</text>
+  <text x="230" y="296" text-anchor="middle" class="lbl sub">handed off to the next fork</text>
+
+  <rect x="460" y="66" width="400" height="250" rx="6" class="panel"/>
+  <text x="476" y="90" class="lbl node" font-size="13px">why doubling, not a flat 1,024</text>
+  <text x="476" y="112" class="lbl tiny">Small fixed batches would mean thousands of tiny</text>
+  <text x="476" y="128" class="lbl tiny">forks for a large LinkedList of Reservation.</text>
+  <text x="476" y="146" class="lbl tiny">Doubling amortises the per-split overhead: early</text>
+  <text x="476" y="162" class="lbl tiny">batches stay small so work-stealing balances fast;</text>
+  <text x="476" y="178" class="lbl tiny">later batches grow so the fork count stays bounded</text>
+  <text x="476" y="194" class="lbl tiny">as the remaining source shrinks.</text>
+  <text x="476" y="216" class="lbl tiny">Every batch is still copied element by element out</text>
+  <text x="476" y="232" class="lbl tiny">of the iterator — there is no way to skip ahead in</text>
+  <text x="476" y="248" class="lbl tiny">LinkedList.spliterator() or Files.lines() without</text>
+  <text x="476" y="264" class="lbl tiny">visiting every intervening element first.</text>
+
+  <line x1="20" y1="346" x2="880" y2="346" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="360" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="373" class="lbl tiny">already-split, array-backed batch</text>
+  <rect x="340" y="360" width="22" height="16" rx="3" class="boxH"/>
+  <text x="370" y="373" class="lbl tiny">batch pulled this step (doubled size)</text>
+  <path class="flow" d="M 700 368 H 740"/>
+  <text x="748" y="373" class="lbl tiny">A → B</text>
+</svg>

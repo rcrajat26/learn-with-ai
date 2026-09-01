@@ -1,0 +1,52 @@
+<svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 4: thread A CASes a stride of MIN_TRANSFER_STRIDE 16 on transferIndex and migrates those bins, leaving a ForwardingNode with hash MOVED in each drained bin of the old table">
+
+  <text x="400" y="30" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 2 of 4 — Thread A claims a stride and migrates it</text>
+
+  <rect x="230" y="46" width="340" height="26" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">CAS(transferIndex, nextIndex, nextIndex - 16)  (line 2447-2450)</text>
+
+  <rect x="60" y="90" width="300" height="230" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="112" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">table (old array)</text>
+
+  <rect x="90" y="126" width="240" height="30" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bin[i] = ForwardingNode (hash=MOVED)</text>
+
+  <rect x="90" y="162" width="240" height="30" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="182" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bin[i-1] = ForwardingNode</text>
+
+  <text x="210" y="206" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">... 16 bins in this stride ...</text>
+
+  <rect x="90" y="216" width="240" height="30" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="236" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bin[bound] = ForwardingNode</text>
+
+  <rect x="90" y="252" width="240" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="272" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bin[bound-1] (not yet claimed)</text>
+
+  <text x="90" y="304" font-family="sans-serif" font-size="13" fill="#1f2937">install via setTabAt(tab,i,fwd) line 2511</text>
+  <text x="90" y="304" opacity="0"/>
+
+  <!-- arrows to next table -->
+  <line x1="360" y1="141" x2="470" y2="126" stroke="#525252" stroke-width="2" marker-end="url(#arrow128b)"/>
+  <line x1="360" y1="177" x2="470" y2="126" stroke="#525252" stroke-width="2" marker-end="url(#arrow128b)"/>
+
+  <rect x="470" y="90" width="270" height="230" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="112" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">nextTable (new array)</text>
+  <rect x="500" y="126" width="210" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="144" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">setTabAt(nextTab, i, lowNode)</text>
+  <rect x="500" y="158" width="210" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="605" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">setTabAt(nextTab, i+n, highNode)</text>
+  <text x="500" y="204" font-family="sans-serif" font-size="13" fill="#1f2937">low/high split via (hash &amp; n)</text>
+  <text x="500" y="224" font-family="sans-serif" font-size="13" fill="#1f2937">line 2481-2513</text>
+
+  <rect x="60" y="340" width="680" height="60" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="362" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Each old bin, once fully migrated, is overwritten with a ForwardingNode</text>
+  <text x="400" y="382" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(hash field == MOVED == -1) so any thread that lands on it knows to redirect.</text>
+
+  <defs>
+    <marker id="arrow128b" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#525252"/>
+    </marker>
+  </defs>
+</svg>

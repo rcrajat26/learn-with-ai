@@ -1,0 +1,44 @@
+<svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 4: a reader thread calling get hits a ForwardingNode in the old table and follows its nextTable field into the new table, via ForwardingNode.find, without taking any lock">
+
+  <text x="400" y="30" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 3 of 4 — reader hits a ForwardingNode and follows it</text>
+
+  <rect x="60" y="60" width="260" height="150" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="82" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">table (old array)</text>
+  <rect x="90" y="96" width="200" height="30" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="190" y="116" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bin[i] = ForwardingNode</text>
+  <text x="90" y="150" font-family="sans-serif" font-size="13" fill="#1f2937">hash == MOVED (-1)</text>
+  <text x="90" y="172" font-family="sans-serif" font-size="13" fill="#1f2937">holds field: nextTable</text>
+
+  <rect x="330" y="60" width="220" height="150" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="440" y="86" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Reader: get(key)</text>
+  <text x="350" y="112" font-family="sans-serif" font-size="13" fill="#1f2937">e = tabAt(tab, i)</text>
+  <text x="350" y="132" font-family="sans-serif" font-size="13" fill="#1f2937">eh = e.hash == MOVED</text>
+  <text x="350" y="152" font-family="sans-serif" font-size="13" fill="#1f2937">e.find(h, key)  (line 942-943)</text>
+  <text x="350" y="176" font-family="sans-serif" font-size="13" fill="#1f2937">no lock acquired anywhere</text>
+
+  <line x1="320" y1="111" x2="330" y2="111" stroke="#737373" stroke-width="2" marker-end="url(#arrow128c)"/>
+
+  <line x1="440" y1="210" x2="440" y2="240" stroke="#525252" stroke-width="2" marker-end="url(#arrow128c)"/>
+  <rect x="330" y="240" width="220" height="30" rx="3" fill="#fef3c7"/>
+  <text x="440" y="260" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ForwardingNode.find(h,k) loop</text>
+
+  <rect x="580" y="60" width="160" height="150" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="660" y="82" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">nextTable</text>
+  <rect x="600" y="96" width="120" height="30" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="660" y="116" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">tabAt(nextTable, ...)</text>
+  <text x="600" y="150" font-family="sans-serif" font-size="13" fill="#1f2937">key found or</text>
+  <text x="600" y="170" font-family="sans-serif" font-size="13" fill="#1f2937">chain continues</text>
+
+  <line x1="550" y1="255" x2="640" y2="130" stroke="#737373" stroke-width="2" marker-end="url(#arrow128c)"/>
+
+  <rect x="60" y="280" width="680" height="40" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="304" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">get() takes no lock at all — it redirects through the ForwardingNode's stored nextTable reference</text>
+
+  <defs>
+    <marker id="arrow128c" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+</svg>

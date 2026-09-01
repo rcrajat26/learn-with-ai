@@ -1,0 +1,149 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame sequence showing what a context switch costs. Frame 1: reserve-stake
+     worker A is running on the CPU with its working set warm in L1 and L2 cache. Frame 2: the
+     scheduler saves A's registers and switches the stack pointer, at a direct cost on the order
+     of 1 to 10 microseconds. Frame 3: settle-stake worker B now runs on the same core but finds
+     the caches cold, and must refetch its own working set at a cache-refill penalty on the order
+     of tens of microseconds. Frame 4: A resumes and must itself refill its working set because
+     B evicted it. The counters vmstat cs and voluntary_ctxt_switches are named as how you observe
+     this happening.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxFrame { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.6; }
+    .boxP     { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH     { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR     { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxDeg   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT A CONTEXT SWITCH ACTUALLY COSTS — RESERVE-STAKE WORKER A ⇄ SETTLE-STAKE WORKER B</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- 2x2 grid of frames -->
+  <!-- Frame 1 -->
+  <rect x="20" y="60" width="490" height="300" rx="8" class="boxFrame"/>
+  <text x="36" y="84" class="lbl h2">FRAME 1 — A RUNNING, WARM CACHE</text>
+  <rect x="40" y="98" width="200" height="70" rx="6" class="boxR"/>
+  <text x="140" y="122" text-anchor="middle" class="lbl node">CPU core 3</text>
+  <text x="140" y="142" text-anchor="middle" class="lbl body">running worker A</text>
+  <text x="140" y="158" text-anchor="middle" class="lbl sub">ReserveStake(clientId, roundId)</text>
+
+  <rect x="270" y="98" width="220" height="70" rx="6" class="boxP"/>
+  <text x="380" y="120" text-anchor="middle" class="lbl node">L1 / L2 cache</text>
+  <text x="380" y="140" text-anchor="middle" class="lbl body">A's working set — warm</text>
+  <text x="380" y="156" text-anchor="middle" class="lbl sub">Reservation, StakeSplit fields hot</text>
+
+  <path class="flow" d="M 240 133 H 270"/>
+
+  <rect x="40" y="188" width="450" height="100" rx="6" class="boxAnn"/>
+  <text x="56" y="208" class="lbl tiny" font-weight="700">STATE</text>
+  <text x="56" y="228" class="lbl tiny">Worker A executes on core 3. Its recently touched data — the</text>
+  <text x="56" y="244" class="lbl tiny">Reservation it is building for a stake of 4.20 — sits in L1/L2,</text>
+  <text x="56" y="260" class="lbl tiny">a few cycles away. This is the steady state the scheduler will</text>
+  <text x="56" y="276" class="lbl tiny">shortly disrupt.</text>
+
+  <!-- Frame 2 -->
+  <rect x="530" y="60" width="490" height="300" rx="8" class="boxFrame"/>
+  <text x="546" y="84" class="lbl h2">FRAME 2 — SAVE A, SWITCH STACK POINTER</text>
+  <rect x="550" y="98" width="200" height="70" rx="6" class="boxH"/>
+  <text x="650" y="120" text-anchor="middle" class="lbl node">Scheduler</text>
+  <text x="650" y="140" text-anchor="middle" class="lbl body">saves A's registers</text>
+  <text x="650" y="156" text-anchor="middle" class="lbl sub">and PC into A's task_struct</text>
+
+  <rect x="780" y="98" width="150" height="70" rx="6" class="boxH"/>
+  <text x="855" y="120" text-anchor="middle" class="lbl node">Stack pointer</text>
+  <text x="855" y="140" text-anchor="middle" class="lbl body">switched to B</text>
+  <text x="855" y="156" text-anchor="middle" class="lbl sub">MMU / TLB reload</text>
+
+  <path class="flow" d="M 750 133 H 780"/>
+
+  <rect x="550" y="188" width="450" height="100" rx="6" class="boxAnn"/>
+  <text x="566" y="208" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 1 · COST</text>
+  <text x="566" y="228" class="lbl tiny">A's registers and program counter are saved off-CPU; the stack</text>
+  <text x="566" y="244" class="lbl tiny">pointer is repointed at worker B's stack. Direct cost of this</text>
+  <text x="566" y="260" class="lbl tiny">save-and-switch: ~1–10 µs (order of magnitude).</text>
+  <text x="566" y="276" class="lbl tiny">Observed as one tick of vmstat cs (context switches/sec).</text>
+
+  <!-- Frame 3 -->
+  <rect x="20" y="380" width="490" height="300" rx="8" class="boxFrame"/>
+  <text x="36" y="404" class="lbl h2">FRAME 3 — B RUNS, COLD CACHE</text>
+  <rect x="40" y="418" width="200" height="70" rx="6" class="boxR"/>
+  <text x="140" y="440" text-anchor="middle" class="lbl node">CPU core 3</text>
+  <text x="140" y="460" text-anchor="middle" class="lbl body">running worker B</text>
+  <text x="140" y="476" text-anchor="middle" class="lbl sub">SettleStake(roundId, outcome)</text>
+
+  <rect x="270" y="418" width="220" height="70" rx="6" class="boxDeg"/>
+  <text x="380" y="440" text-anchor="middle" class="lbl node">L1 / L2 cache</text>
+  <text x="380" y="460" text-anchor="middle" class="lbl body">cold for B</text>
+  <text x="380" y="476" text-anchor="middle" class="lbl sub">A's lines evicted; B refetches</text>
+
+  <path class="flow" d="M 240 453 H 270"/>
+
+  <rect x="40" y="508" width="450" height="100" rx="6" class="boxAnn"/>
+  <text x="56" y="528" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 2 · COST</text>
+  <text x="56" y="548" class="lbl tiny">B now owns core 3, but the cache still holds A's lines from</text>
+  <text x="56" y="564" class="lbl tiny">Frame 1. B must refetch its own PaymentRun / Position data</text>
+  <text x="56" y="580" class="lbl tiny">from lower cache levels or memory: tens of µs cache refill</text>
+  <text x="56" y="596" class="lbl tiny">(order of magnitude) — usually far larger than the direct cost.</text>
+
+  <!-- Frame 4 -->
+  <rect x="530" y="380" width="490" height="300" rx="8" class="boxFrame"/>
+  <text x="546" y="404" class="lbl h2">FRAME 4 — A RESUMES, REFILLS AGAIN</text>
+  <rect x="550" y="418" width="200" height="70" rx="6" class="boxR"/>
+  <text x="650" y="440" text-anchor="middle" class="lbl node">CPU core 3</text>
+  <text x="650" y="460" text-anchor="middle" class="lbl body">running worker A again</text>
+  <text x="650" y="476" text-anchor="middle" class="lbl sub">registers/PC restored from Frame 2</text>
+
+  <rect x="780" y="418" width="150" height="70" rx="6" class="boxDeg"/>
+  <text x="855" y="440" text-anchor="middle" class="lbl node">L1 / L2 cache</text>
+  <text x="855" y="458" text-anchor="middle" class="lbl body">cold for A</text>
+  <text x="855" y="474" text-anchor="middle" class="lbl sub">B evicted it</text>
+
+  <path class="flow" d="M 750 453 H 780"/>
+
+  <rect x="550" y="508" width="450" height="100" rx="6" class="boxAnn"/>
+  <text x="566" y="528" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 3 · COST</text>
+  <text x="566" y="548" class="lbl tiny">A's saved registers/PC are restored, but its cache lines are gone</text>
+  <text x="566" y="564" class="lbl tiny">too — evicted by B in Frame 3. A pays its own tens-of-µs refill</text>
+  <text x="566" y="580" class="lbl tiny">(order of magnitude) before resuming useful work. This is why</text>
+  <text x="566" y="596" class="lbl tiny">high context-switch rates (voluntary_ctxt_switches) hurt throughput.</text>
+
+  <!-- inter-frame arrows -->
+  <path class="flow" d="M 510 210 H 530"/>
+  <path class="flow" d="M 775 360 V 380"/>
+  <path class="flow" d="M 510 530 H 530"/>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="725" class="lbl tiny">CPU core, running thread</text>
+  <rect x="220" y="712" width="22" height="16" rx="3" class="boxP"/>
+  <text x="250" y="725" class="lbl tiny">warm cache state</text>
+  <rect x="400" y="712" width="22" height="16" rx="3" class="boxH"/>
+  <text x="430" y="725" class="lbl tiny">scheduler action — the switch itself</text>
+  <rect x="660" y="712" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="690" y="725" class="lbl tiny">cold cache — cost paid here</text>
+  <rect x="850" y="712" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="880" y="725" class="lbl tiny">annotation panel (state / cost)</text>
+
+  <path class="flow" d="M 20 746 H 60"/>
+  <text x="70" y="751" class="lbl tiny">A → B : sequence flow between frames / within-frame causation</text>
+</svg>

@@ -1,0 +1,57 @@
+<svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 5: gaps-analyzer-agent reads the topic inventory in src/topics/*.md and the diagnostic evidence under tmp/ (tmp/valuations/, tmp/papers/answers/, tmp/gaps.md, tmp/primers/, tmp/qbank/), and writes the gap register at src/knowledge/gaps.md, different paths than it read.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="280" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 4 OF 5 — STAGE: gaps-analyzer-agent</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="56" width="240" height="56" rx="4" class="boxA"/>
+  <text x="140" y="78" text-anchor="middle" class="lbl tiny">reads:</text>
+  <text x="140" y="96" text-anchor="middle" class="lbl tiny">src/topics/*.md (topic inventory)</text>
+
+  <rect x="20" y="122" width="240" height="70" rx="4" class="boxA"/>
+  <text x="140" y="140" text-anchor="middle" class="lbl tiny">reads: tmp/valuations/*.md,</text>
+  <text x="140" y="156" text-anchor="middle" class="lbl tiny">tmp/papers/answers/*.txt, tmp/gaps.md,</text>
+  <text x="140" y="172" text-anchor="middle" class="lbl tiny">tmp/primers/*.md, tmp/qbank/*.md</text>
+
+  <path class="flow" d="M 260 84 H 300 V 108 H 340"/>
+  <path class="flow" d="M 260 157 H 300 V 132 H 340"/>
+
+  <rect x="340" y="92" width="220" height="56" rx="6" class="boxP"/>
+  <text x="450" y="114" text-anchor="middle" class="lbl node">gaps-analyzer-agent</text>
+  <text x="450" y="132" text-anchor="middle" class="lbl sub">measures against topic inventory</text>
+
+  <path class="flow" d="M 560 120 H 620"/>
+
+  <rect x="620" y="92" width="240" height="56" rx="4" class="boxA"/>
+  <text x="740" y="114" text-anchor="middle" class="lbl tiny">writes:</text>
+  <text x="740" y="132" text-anchor="middle" class="lbl tiny">src/knowledge/gaps.md</text>
+
+  <line x1="20" y1="212" x2="880" y2="212" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="222" width="22" height="14" rx="3" class="boxA"/>
+  <text x="50" y="234" class="lbl tiny">read / write path</text>
+  <rect x="200" y="222" width="22" height="14" rx="3" class="boxP"/>
+  <text x="230" y="234" class="lbl tiny">stage agent</text>
+  <path class="flow" d="M 360 229 H 390"/>
+  <text x="398" y="234" class="lbl tiny">A → B : B is read/written by the stage</text>
+</svg>

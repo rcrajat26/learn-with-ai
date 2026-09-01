@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence. Frame one: the Verdict class file carries a PermittedSubclasses
+     attribute listing four constant-pool indices for DocumentVerdict, ScreeningVerdict,
+     ReviewVerdict and WealthVerdict, and no ACC_SEALED flag exists anywhere in the class file
+     format. Frame two: bytecode manipulation produces a fifth subclass, RogueVerdict, at runtime,
+     outside the permits list. Frame three: the JVM's class-loading verifier checks every direct
+     subclass against its supertype's PermittedSubclasses attribute and rejects RogueVerdict with
+     IncompatibleClassChangeError. A note states that a non-sealed subtype emits no
+     PermittedSubclasses attribute at all.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; stroke-dasharray: 4 3; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .frame { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PermittedSubclasses IS ENFORCED AT CLASS-LOAD TIME, NOT COMPILE TIME</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Frame 1 -->
+  <rect x="20" y="58" width="330" height="420" rx="6" class="frame"/>
+  <text x="36" y="80" class="lbl h2">FRAME 1 — COMPILED Verdict.class</text>
+
+  <rect x="36" y="92" width="298" height="66" rx="6" class="boxP"/>
+  <text x="185" y="114" text-anchor="middle" class="lbl node mono">sealed interface Verdict</text>
+  <text x="185" y="134" text-anchor="middle" class="lbl sub">no ACC_SEALED flag exists in the class file format</text>
+  <text x="185" y="150" text-anchor="middle" class="lbl sub">sealing is expressed only via the attribute below</text>
+
+  <path class="flow" d="M 185 158 V 178"/>
+
+  <rect x="36" y="182" width="298" height="150" rx="6" class="boxH"/>
+  <text x="185" y="204" text-anchor="middle" class="lbl body" style="font-weight:700;">PermittedSubclasses attribute</text>
+  <text x="60" y="226" class="lbl tiny mono">#22 → DocumentVerdict</text>
+  <text x="60" y="244" class="lbl tiny mono">#26 → ScreeningVerdict</text>
+  <text x="60" y="262" class="lbl tiny mono">#30 → ReviewVerdict</text>
+  <text x="60" y="280" class="lbl tiny mono">#34 → WealthVerdict</text>
+  <text x="60" y="302" class="lbl sub">four constant-pool indices, resolved</text>
+  <text x="60" y="318" class="lbl sub">by the JVM only when a subtype loads</text>
+
+  <path class="flow" d="M 185 332 V 352"/>
+
+  <rect x="36" y="356" width="298" height="110" rx="6" class="boxW"/>
+  <text x="185" y="378" text-anchor="middle" class="lbl body" style="font-weight:700;">non-sealed contrast</text>
+  <text x="60" y="400" class="lbl tiny mono">non-sealed interface OpenVerdict</text>
+  <text x="60" y="420" class="lbl tiny">emits no PermittedSubclasses</text>
+  <text x="60" y="438" class="lbl tiny">attribute at all — any subtype loads</text>
+  <text x="60" y="454" class="lbl tiny">freely, checked or not.</text>
+
+  <!-- Frame 2 -->
+  <rect x="380" y="58" width="330" height="420" rx="6" class="frame"/>
+  <text x="396" y="80" class="lbl h2">FRAME 2 — BYTECODE-MADE SUBCLASS</text>
+
+  <rect x="396" y="120" width="298" height="86" rx="6" class="boxD"/>
+  <text x="545" y="144" text-anchor="middle" class="lbl node mono">class RogueVerdict</text>
+  <text x="545" y="164" text-anchor="middle" class="lbl dense mono">implements Verdict</text>
+  <text x="545" y="184" text-anchor="middle" class="lbl sub">produced with ASM / ByteBuddy — never</text>
+  <text x="545" y="198" text-anchor="middle" class="lbl sub">appeared in Verdict's permits list</text>
+
+  <rect x="396" y="240" width="298" height="86" rx="6" class="boxW"/>
+  <text x="545" y="262" text-anchor="middle" class="lbl body" style="font-weight:700;">not caught here</text>
+  <text x="545" y="284" text-anchor="middle" class="lbl tiny">javac never sees this class — it is</text>
+  <text x="545" y="300" text-anchor="middle" class="lbl tiny">synthesized directly as a .class file,</text>
+  <text x="545" y="315" text-anchor="middle" class="lbl tiny">bypassing the compiler entirely</text>
+
+  <path class="flow" d="M 545 206 V 240"/>
+  <path class="flow" d="M 545 326 V 352"/>
+  <text x="545" y="345" text-anchor="middle" class="lbl sub mono">.classLoader.defineClass(...)</text>
+
+  <!-- Frame 3 -->
+  <rect x="740" y="58" width="360" height="420" rx="6" class="frame"/>
+  <text x="756" y="80" class="lbl h2">FRAME 3 — JVM LOAD-TIME CHECK FAILS IT</text>
+
+  <rect x="756" y="120" width="328" height="90" rx="6" class="boxP"/>
+  <text x="920" y="144" text-anchor="middle" class="lbl body" style="font-weight:700;">verifier resolves the supertype</text>
+  <text x="920" y="166" text-anchor="middle" class="lbl tiny">RogueVerdict extends Verdict; Verdict</text>
+  <text x="920" y="182" text-anchor="middle" class="lbl tiny">is sealed, so linkage must resolve its</text>
+  <text x="920" y="198" text-anchor="middle" class="lbl tiny">PermittedSubclasses attribute</text>
+
+  <path class="flow" d="M 920 210 V 230"/>
+
+  <rect x="756" y="234" width="328" height="90" rx="6" class="boxD"/>
+  <text x="920" y="258" text-anchor="middle" class="lbl body" style="font-weight:700;">RogueVerdict not listed → rejected</text>
+  <text x="920" y="280" text-anchor="middle" class="lbl dense mono">IncompatibleClassChangeError:</text>
+  <text x="920" y="298" text-anchor="middle" class="lbl dense mono">class RogueVerdict not permitted</text>
+  <text x="920" y="312" text-anchor="middle" class="lbl dense mono">to subclass sealed class Verdict</text>
+
+  <path class="flow" d="M 920 324 V 344"/>
+
+  <rect x="756" y="348" width="328" height="80" rx="6" class="boxA"/>
+  <text x="770" y="368" class="lbl tiny" style="font-weight:700;">Why compile time cannot catch this</text>
+  <text x="770" y="386" class="lbl tiny">Any tool that writes class files directly</text>
+  <text x="770" y="402" class="lbl tiny">skips javac. Only the loader's linkage</text>
+  <text x="770" y="418" class="lbl tiny">check is a trustworthy enforcement point.</text>
+
+  <!-- cross-frame arrows -->
+  <path class="flow" d="M 350 268 H 380"/>
+  <path class="flow" d="M 710 268 H 740"/>
+
+  <!-- legend -->
+  <line x1="20" y1="500" x2="1100" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="512" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="524" class="lbl tiny">class file / verifier step</text>
+  <rect x="243" y="512" width="22" height="14" rx="3" class="boxH"/>
+  <text x="273" y="524" class="lbl tiny">the sealing mechanism</text>
+  <rect x="436" y="512" width="22" height="14" rx="3" class="boxD"/>
+  <text x="466" y="524" class="lbl tiny">rogue subclass / rejection</text>
+  <rect x="659" y="512" width="22" height="14" rx="3" class="boxW"/>
+  <text x="689" y="524" class="lbl tiny">contrast / explanatory note</text>
+  <rect x="888" y="512" width="22" height="14" rx="3" class="boxA"/>
+  <text x="918" y="524" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 552 H 60"/>
+  <text x="68" y="557" class="lbl tiny">A → B : B happens after A, left to right across the three frames</text>
+</svg>

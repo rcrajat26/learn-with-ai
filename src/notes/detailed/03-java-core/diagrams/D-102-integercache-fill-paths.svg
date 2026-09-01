@@ -1,0 +1,268 @@
+<svg viewBox="0 0 1140 2110" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of the three ways java.lang.Integer.IntegerCache gets filled in JDK 21.0.7. The top half quotes the real static initialiser verbatim beside three note panels. The bottom half is one straight-line clinit flowchart with two decision points, not three independent branches. It begins at IntegerCache clinit, sets int h to 127 by default, then decision one asks whether VM.getSavedProperty of java.lang.Integer.IntegerCache.high is non-null; if yes a side box clamps h with Math.max of the parsed property and 127 then Math.min against Integer.MAX_VALUE minus 128 minus 1, which means the property can only raise high and never lower it, measured with AutoBoxCacheMax equal to 50 leaving the boundary at 127. Both branches rejoin at high equals h, where low equals minus 128 is marked static final and fixed by JLS section 5.1.7. On the trunk, unconditionally and on every path, CDS.initializeFromArchive of IntegerCache.class runs and either writes archivedCache from the CDS archive or leaves it null. Then size is computed as high minus low plus one, and decision two tests archivedCache being null or size exceeding archivedCache length. A single vertical stub fans out on a shared horizontal bus to three outcome panels: outcome a, the true branch with default high, constructing 256 new Integer objects; outcome b, the true branch after the property raised high to 1000, where the archived subgraph still initialises but size 1129 exceeds the archived length of 256 so 1129 objects are constructed anyway; and outcome c, the false branch, where the archived array is mapped with nothing constructed and zero allocation. All three outcome panels repeat that low equals minus 128 is fixed by JLS section 5.1.7.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeS{font-family:Menlo,"SF Mono",monospace;font-size:11px;fill:#1f2937;}
+      .codeSb{font-family:Menlo,"SF Mono",monospace;font-size:11px;font-weight:bold;fill:#1f2937;}
+    </style>
+    <marker id="arr102" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="2110" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Three ways IntegerCache gets filled &#8212; one &lt;clinit&gt;, two decisions, three outcomes</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= SECTION 1 ================= -->
+  <text x="20" y="66" class="h2">SECTION 1 &#8212; THE REAL STATIC INITIALISER, JDK 21.0.7 lib/src.zip</text>
+  <line x1="20" y1="74" x2="1120" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="60" y="96" class="smallb">java.lang.Integer.IntegerCache &#8212; quoted verbatim</text>
+  <rect x="60" y="106" width="480" height="774" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <g class="codeS">
+    <text x="76"  y="126">private static final class IntegerCache {</text>
+    <text x="103" y="142">static final int low = -128;</text>
+    <text x="103" y="158">static final int high;</text>
+    <text x="103" y="174">@Stable</text>
+    <text x="103" y="190">static final Integer[] cache;</text>
+    <text x="103" y="206">static Integer[] archivedCache;</text>
+    <text x="103" y="238">static {</text>
+    <text x="130" y="254">// high value may be configured by property</text>
+    <text x="130" y="270">int h = 127;</text>
+    <text x="130" y="286">String integerCacheHighPropValue =</text>
+    <text x="157" y="302">VM.getSavedProperty(</text>
+    <text x="184" y="318">"java.lang.Integer.IntegerCache.high");</text>
+    <text x="130" y="334">if (integerCacheHighPropValue != null) {</text>
+    <text x="157" y="350">try {</text>
+    <text x="184" y="366">h = Math.max(parseInt(</text>
+    <text x="238" y="382">integerCacheHighPropValue), 127);</text>
+    <text x="184" y="398">// Maximum array size is Integer.MAX_VALUE</text>
+    <text x="184" y="414">h = Math.min(h, Integer.MAX_VALUE - (-low) -1);</text>
+    <text x="157" y="430">} catch( NumberFormatException nfe) {</text>
+    <text x="184" y="446">// If the property cannot be parsed, ignore it.</text>
+    <text x="157" y="462">}</text>
+    <text x="130" y="478">}</text>
+    <text x="130" y="494">high = h;</text>
+    <text x="130" y="526">// Load IntegerCache.archivedCache from archive,</text>
+    <text x="130" y="542">// if possible</text>
+    <text x="130" y="558">CDS.initializeFromArchive(IntegerCache.class);</text>
+    <text x="130" y="574">int size = (high - low) + 1;</text>
+    <text x="130" y="606">// Use the archived cache if it exists and is</text>
+    <text x="130" y="622">// large enough</text>
+    <text x="130" y="638">if (archivedCache == null</text>
+    <text x="184" y="654">|| size &gt; archivedCache.length) {</text>
+    <text x="157" y="670">Integer[] c = new Integer[size];</text>
+    <text x="157" y="686">int j = low;</text>
+    <text x="157" y="702">for(int i = 0; i &lt; c.length; i++) {</text>
+    <text x="184" y="718">c[i] = new Integer(j++);</text>
+    <text x="157" y="734">}</text>
+    <text x="157" y="750">archivedCache = c;</text>
+    <text x="130" y="766">}</text>
+    <text x="130" y="782">cache = archivedCache;</text>
+    <text x="130" y="798">// range [-128, 127] must be interned (JLS7 5.1.7)</text>
+    <text x="130" y="814">assert IntegerCache.high &gt;= 127;</text>
+    <text x="103" y="830">}</text>
+    <text x="103" y="846">private IntegerCache() {}</text>
+    <text x="76"  y="862">}</text>
+  </g>
+
+  <!-- right column notes -->
+  <rect x="570" y="106" width="550" height="250" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="586" y="128" class="bodyb">HOW THE CONTROL FLOW ACTUALLY RUNS</text>
+  <g class="smallD">
+    <text x="586" y="150">One straight-line &lt;clinit&gt; with TWO decision points &#8212; not three</text>
+    <text x="586" y="168">independent branches. It yields THREE outcomes.</text>
+    <text x="586" y="192">1. high: default 127. Math.max(parseInt(prop), 127) means the saved</text>
+    <text x="604" y="210">property can only RAISE high, never lower it. Measured with</text>
+    <text x="604" y="228">-XX:AutoBoxCacheMax=50 the boundary stayed at 127: valueOf(127)</text>
+    <text x="604" y="246">== valueOf(127) true, 128 false &#8212; unchanged from default.</text>
+    <text x="586" y="270">2. CDS.initializeFromArchive is called UNCONDITIONALLY, after high</text>
+    <text x="604" y="288">is fixed &#8212; it sits on the trunk, never on a branch.</text>
+    <text x="586" y="312">3. The size test then picks: map the archived array (nothing built)</text>
+    <text x="604" y="330">or construct size new Integer objects in a loop.</text>
+    <text x="586" y="348">low = &#8722;128 is static final with a literal initialiser, fixed by JLS §5.1.7.</text>
+  </g>
+
+  <rect x="570" y="374" width="550" height="238" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="586" y="396" class="bodyb">MEASURED &#8212; java -Xlog:cds+heap=info -version (default -Xshare:auto)</text>
+  <g class="codeS">
+    <text x="586" y="418">[0.008s][info][cds,heap] Patching native pointers in heap region</text>
+    <text x="586" y="434">[0.009s][info][cds,heap] resolve subgraph java.lang.Integer$IntegerCache</text>
+    <text x="586" y="450">[0.009s][info][cds,heap] resolve subgraph java.lang.Long$LongCache</text>
+    <text x="586" y="466">[0.009s][info][cds,heap] resolve subgraph java.lang.Byte$ByteCache</text>
+    <text x="586" y="482">[0.009s][info][cds,heap] resolve subgraph java.lang.Short$ShortCache</text>
+    <text x="586" y="498">[0.009s][info][cds,heap] resolve subgraph java.lang.Character$CharacterCache</text>
+    <text x="586" y="514">[0.015s][info][cds,heap] init subgraph java.lang.Integer$IntegerCache</text>
+    <text x="586" y="530">[0.015s][info][cds,heap] initialize_from_archived_subgraph</text>
+    <text x="614" y="546">java.lang.Integer$IntegerCache 0x000000c800036b28 (early)</text>
+  </g>
+  <g class="smallD">
+    <text x="586" y="568">With -Xshare:off NO cds,heap lines are printed at all &#8212; the archive is</text>
+    <text x="586" y="586">not consulted and the array is constructed. No Boolean cache subgraph</text>
+    <text x="586" y="604">exists: Boolean has no cache class, only static final TRUE / FALSE.</text>
+  </g>
+
+  <rect x="570" y="624" width="550" height="264" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="586" y="646" class="bodyb">MEASURED &#8212; RAISING high, AND WHY IT IS NOT A SYSTEM PROPERTY</text>
+  <g class="smallD">
+    <text x="586" y="668">With -XX:AutoBoxCacheMax=1000, initialize_from_archived_subgraph</text>
+    <text x="586" y="686">java.lang.Integer$IntegerCache STILL fires, but size = 1129 is greater</text>
+    <text x="586" y="704">than archivedCache.length = 256, so the array is rebuilt anyway.</text>
+    <text x="586" y="722">Then Integer.valueOf(1000) == Integer.valueOf(1000) measured true.</text>
+    <text x="586" y="752">-XX:+PrintFlagsFinal line, exactly:</text>
+  </g>
+  <text x="586" y="772" class="codeS">intx AutoBoxCacheMax   = 128   {C2 product} {default}</text>
+  <g class="smallD">
+    <text x="586" y="800">-XX:AutoBoxCacheMax=1000 does NOT make the value visible to</text>
+    <text x="586" y="818">System.getProperty("java.lang.Integer.IntegerCache.high") &#8212; that</text>
+    <text x="586" y="836">returned null. It is a SAVED VM property, readable only through</text>
+    <text x="586" y="854">jdk.internal.misc.VM.getSavedProperty.</text>
+    <text x="586" y="872">Domain: retry counts and DEPOSIT_LIMITED counts on an Application.</text>
+  </g>
+
+  <!-- ================= SECTION 2 ================= -->
+  <text x="20" y="910" class="h2">SECTION 2 &#8212; THE FILL FLOWCHART</text>
+  <line x1="20" y1="918" x2="1120" y2="918" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="410" y="934" width="360" height="44" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="590" y="962" text-anchor="middle" class="code">IntegerCache.&lt;clinit&gt; begins</text>
+  <path d="M 590 978 V 998" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+
+  <rect x="410" y="998" width="360" height="44" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="590" y="1026" text-anchor="middle" class="code">int h = 127;   // default high</text>
+  <path d="M 590 1042 V 1062" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+
+  <rect x="330" y="1062" width="520" height="56" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="590" y="1084" text-anchor="middle" class="smallb">DECISION 1 &#8212; is the saved property present?</text>
+  <text x="590" y="1104" text-anchor="middle" class="codeS">VM.getSavedProperty("java.lang.Integer.IntegerCache.high") != null</text>
+
+  <!-- yes branch -->
+  <path d="M 750 1118 V 1132 H 985 V 1146" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+  <text x="762" y="1140" class="smallb">yes</text>
+
+  <rect x="850" y="1146" width="270" height="142" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="866" y="1168" class="smallb">property present &#8212; clamp h</text>
+  <text x="866" y="1188" class="codeS">h = Math.max(parseInt(prop), 127)</text>
+  <text x="866" y="1206" class="codeS">h = Math.min(h, Integer.MAX_VALUE</text>
+  <text x="894" y="1222" class="codeS">- (-low) - 1)</text>
+  <text x="866" y="1244" class="smallD">Math.max(&#8230;, 127) can only RAISE</text>
+  <text x="866" y="1262" class="smallD">high. Measured -XX:AutoBoxCacheMax</text>
+  <text x="866" y="1280" class="smallD">=50 left the boundary at 127.</text>
+
+  <!-- no branch -->
+  <path d="M 430 1118 V 1324" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+  <text x="438" y="1140" class="smallb">no</text>
+
+  <!-- clamp box rejoins the trunk -->
+  <path d="M 985 1288 V 1306 H 790 V 1324" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+
+  <rect x="330" y="1324" width="520" height="48" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="346" y="1344" class="code">high = h;</text>
+  <text x="346" y="1364" class="smallD">low = &#8722;128 &#8212; static final, fixed by JLS §5.1.7</text>
+  <path d="M 590 1372 V 1392" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+
+  <rect x="330" y="1392" width="520" height="84" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="346" y="1414" class="code">CDS.initializeFromArchive(IntegerCache.class);</text>
+  <text x="346" y="1434" class="smallb">UNCONDITIONAL &#8212; on every path, after high is fixed</text>
+  <text x="346" y="1452" class="smallD">writes archivedCache if a CDS archive holds the subgraph;</text>
+  <text x="346" y="1470" class="smallD">leaves archivedCache null otherwise. This is the trunk.</text>
+  <path d="M 590 1476 V 1496" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+
+  <rect x="330" y="1496" width="520" height="44" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="590" y="1524" text-anchor="middle" class="code">int size = (high - low) + 1;   // 256 at default high</text>
+  <path d="M 590 1540 V 1560" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+
+  <rect x="330" y="1560" width="520" height="56" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="590" y="1582" text-anchor="middle" class="smallb">DECISION 2 &#8212; the size test</text>
+  <text x="590" y="1602" text-anchor="middle" class="codeS">archivedCache == null || size &gt; archivedCache.length</text>
+
+  <!-- fan-out bus -->
+  <path d="M 590 1616 V 1648" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 229 1648 H 951" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 229 1648 V 1684" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+  <path d="M 590 1648 V 1684" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+  <path d="M 951 1648 V 1684" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+  <text x="250" y="1640" class="smallb">TRUE branch &#8212; construct: outcomes (a) and (b)</text>
+  <text x="700" y="1640" class="smallb">FALSE branch &#8212; map: outcome (c)</text>
+
+  <!-- outcome (a) -->
+  <rect x="64" y="1684" width="330" height="220" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="80" y="1706" class="smallb">OUTCOME (a) &#8212; CONSTRUCT 256 OBJECTS</text>
+  <g class="smallD">
+    <text x="80" y="1728">archive missing or too small, high = 127</text>
+    <text x="80" y="1746">e.g. -Xshare:off &#8212; no cds,heap lines at all</text>
+    <text x="80" y="1764">size = (127 &#8722; (&#8722;128)) + 1 = 256</text>
+    <text x="80" y="1782">loop: c[i] = new Integer(j++) &#215; 256</text>
+    <text x="80" y="1800">archivedCache = c;  cache = archivedCache;</text>
+    <text x="80" y="1818">256 Integer objects allocated on the heap</text>
+    <text x="80" y="1842" class="smallb">low = &#8722;128 &#8212; fixed by JLS §5.1.7</text>
+    <text x="80" y="1866">caches Application doc-verify retry counts</text>
+    <text x="80" y="1884">and DEPOSIT_LIMITED restriction counts</text>
+  </g>
+
+  <!-- outcome (b) -->
+  <rect x="425" y="1684" width="330" height="220" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="441" y="1706" class="smallb">OUTCOME (b) &#8212; high RAISED, REBUILD ANYWAY</text>
+  <g class="smallD">
+    <text x="441" y="1728">-XX:AutoBoxCacheMax=1000 raises high</text>
+    <text x="441" y="1746">h = Math.max(parseInt(prop), 127) = 1000</text>
+    <text x="441" y="1764">h = Math.min(h, Integer.MAX_VALUE &#8722; 128 &#8722; 1)</text>
+    <text x="441" y="1782">size = (1000 &#8722; (&#8722;128)) + 1 = 1129</text>
+    <text x="441" y="1800">initialize_from_archived_subgraph STILL fires</text>
+    <text x="441" y="1818">but 1129 &gt; archivedCache.length = 256</text>
+    <text x="441" y="1836">&#8594; 1129 new Integer objects constructed</text>
+    <text x="441" y="1854">measured: valueOf(1000) == valueOf(1000) true</text>
+    <text x="441" y="1872" class="smallb">low = &#8722;128 &#8212; fixed by JLS §5.1.7</text>
+    <text x="441" y="1892">FundsLedger boxing ledger position codes</text>
+  </g>
+
+  <!-- outcome (c) -->
+  <rect x="786" y="1684" width="330" height="220" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="802" y="1706" class="smallb">OUTCOME (c) &#8212; MAP THE ARCHIVE</text>
+  <g class="smallD">
+    <text x="802" y="1728">CDS archive present and large enough:</text>
+    <text x="802" y="1746">archivedCache != null and size &lt;= its length</text>
+    <text x="802" y="1764">cache = archivedCache;  nothing constructed</text>
+    <text x="802" y="1782">zero allocation &#8212; the array is mapped from</text>
+    <text x="802" y="1800">the CDS heap region 0x000000c800036b28</text>
+    <text x="802" y="1818">measured lines: resolve subgraph, init</text>
+    <text x="802" y="1836">subgraph, initialize_from_archived_subgraph</text>
+    <text x="802" y="1854">for java.lang.Integer$IntegerCache (early)</text>
+    <text x="802" y="1878" class="smallb">low = &#8722;128 &#8212; fixed by JLS §5.1.7</text>
+  </g>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1944" class="h2">LEGEND</text>
+  <line x1="20" y1="1952" x2="1120" y2="1952" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1964" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1977" class="small">trunk statement executed on every path, and outcome (a), the default fill</text>
+
+  <rect x="30" y="1990" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="2003" class="small">the two decision points, and the property clamp that can only raise high</text>
+
+  <rect x="30" y="2016" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="2029" class="small">fast path &#8212; the archived array is mapped, nothing is constructed</text>
+
+  <rect x="30" y="2042" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="58" y="2055" class="small">costly path &#8212; the archive was consulted but the array is rebuilt anyway</text>
+
+  <rect x="620" y="1964" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="648" y="1977" class="small">JDK source listing, quoted verbatim from lib/src.zip</text>
+
+  <rect x="620" y="1990" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="2003" class="small">measured annotation panel &#8212; Oracle JDK 21.0.7+8-LTS-245, macOS aarch64</text>
+
+  <line x1="620" y1="2024" x2="646" y2="2024" stroke="#475569" stroke-width="2" marker-end="url(#arr102)"/>
+  <text x="654" y="2029" class="small">primary flow : A &#8594; B, control reaches B after A; branch conditions labelled at the fork</text>
+</svg>

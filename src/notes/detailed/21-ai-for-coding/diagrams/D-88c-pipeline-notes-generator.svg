@@ -1,0 +1,51 @@
+<svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 5: notes-generator reads the prompt in src/metadata/prompts/ and writes the note set in src/notes/detailed/, a different path than it read.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="240" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 3 OF 5 — STAGE: notes-generator</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="80" width="290" height="56" rx="4" class="boxA"/>
+  <text x="165" y="102" text-anchor="middle" class="lbl tiny">reads:</text>
+  <text x="165" y="120" text-anchor="middle" class="lbl tiny">src/metadata/prompts/&lt;NN&gt;-&lt;slug&gt;-prompt.md</text>
+
+  <path class="flow" d="M 310 108 H 340"/>
+
+  <rect x="340" y="80" width="200" height="56" rx="6" class="boxP"/>
+  <text x="440" y="102" text-anchor="middle" class="lbl node">notes-generator</text>
+  <text x="440" y="120" text-anchor="middle" class="lbl sub">hard-stops with no prompt</text>
+
+  <path class="flow" d="M 540 108 H 600"/>
+
+  <rect x="600" y="80" width="280" height="56" rx="4" class="boxA"/>
+  <text x="740" y="102" text-anchor="middle" class="lbl tiny">writes:</text>
+  <text x="740" y="120" text-anchor="middle" class="lbl tiny">src/notes/detailed/&lt;topic-slug&gt;/**</text>
+
+  <line x1="20" y1="184" x2="880" y2="184" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="192" width="22" height="14" rx="3" class="boxA"/>
+  <text x="50" y="204" class="lbl tiny">read / write path</text>
+  <rect x="200" y="192" width="22" height="14" rx="3" class="boxP"/>
+  <text x="230" y="204" class="lbl tiny">stage agent</text>
+  <path class="flow" d="M 360 199 H 390"/>
+  <text x="398" y="204" class="lbl tiny">A → B : B is read/written by the stage</text>
+</svg>

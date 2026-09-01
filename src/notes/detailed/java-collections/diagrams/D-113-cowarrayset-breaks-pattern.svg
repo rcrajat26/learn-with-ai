@@ -1,0 +1,56 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before-after comparison: expected Set-over-Map shape with O(1) add versus actual CopyOnWriteArraySet shape built on CopyOnWriteArrayList with O(n) addIfAbsent">
+  <defs>
+    <marker id="arrow113" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="30" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">CopyOnWriteArraySet breaks the "Set wraps a Map" pattern</text>
+
+  <!-- LEFT PANEL: expected shape -->
+  <rect x="30" y="65" width="360" height="410" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="50" y="80" width="200" height="30" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="100" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Expected shape</text>
+
+  <rect x="60" y="130" width="300" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="155" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashSet&lt;E&gt;</text>
+  <text x="210" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">wraps a hash-bucketed Map</text>
+
+  <line x1="210" y1="200" x2="210" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow113)"/>
+
+  <rect x="60" y="235" width="300" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="260" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashMap&lt;E, Object&gt;</text>
+  <text x="210" y="280" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">add(e) = map.put(e, PRESENT)</text>
+  <text x="210" y="300" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bucket index via hash(e) &amp; (n-1)</text>
+
+  <rect x="90" y="345" width="240" height="50" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="210" y="375" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">add() cost: O(1) amortised</text>
+
+  <rect x="60" y="410" width="300" height="55" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="210" y="432" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Direct bucket lookup — no scan</text>
+  <text x="210" y="450" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">of existing elements needed</text>
+
+  <!-- RIGHT PANEL: actual shape -->
+  <rect x="410" y="65" width="360" height="410" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="430" y="80" width="200" height="30" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="530" y="100" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Actual shape</text>
+
+  <rect x="440" y="130" width="300" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="590" y="155" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">CopyOnWriteArraySet&lt;E&gt;</text>
+  <text x="590" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">wraps a COPYING array list</text>
+
+  <line x1="590" y1="200" x2="590" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow113)"/>
+
+  <rect x="440" y="235" width="300" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="590" y="256" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">CopyOnWriteArrayList&lt;E&gt;</text>
+  <text x="590" y="276" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">add(e) = addIfAbsent(e)</text>
+  <text x="590" y="296" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no hash structure at all</text>
+
+  <rect x="470" y="345" width="240" height="50" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="590" y="375" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">add() cost: O(n) every call</text>
+
+  <rect x="440" y="410" width="300" height="55" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="590" y="428" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1. linear scan of all n elements</text>
+  <text x="590" y="448" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2. then copy the whole backing array</text>
+</svg>

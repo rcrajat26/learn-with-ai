@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of the two Executors factory failure modes on settlement-ingest. Left,
+     newFixedThreadPool(8): backed by a LinkedBlockingQueue with capacity Integer.MAX_VALUE, 2147483647; because the
+     queue never reports full, step 3 of the submission algorithm — growing toward maximumPoolSize — is unreachable
+     dead code, and under the 3,400 stakes per second burst the queue of pending settlement tasks grows unbounded
+     until the heap runs out and OutOfMemoryError is thrown. Right, newCachedThreadPool: backed by a SynchronousQueue
+     of capacity zero with maximumPoolSize set to Integer.MAX_VALUE, so every task that cannot be handed off directly
+     to a waiting thread spawns a brand new OS thread; under the same burst thread creation races ahead of the OS
+     limit until unable to create native thread is thrown.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxLeg{ fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+    .dead  { fill: none; stroke: #78716c; stroke-width: 1.8; stroke-dasharray: 2 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">BOTH Executors FACTORIES FAIL, IN OPPOSITE DIRECTIONS — settlement-ingest, 3,400 stakes/sec burst</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="270" y="66" text-anchor="middle" class="lbl h2">LEFT — newFixedThreadPool(8) — QUEUE UNBOUNDED</text>
+  <text x="840" y="66" text-anchor="middle" class="lbl h2">RIGHT — newCachedThreadPool — THREADS UNBOUNDED</text>
+  <line x1="560" y1="52" x2="560" y2="760" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <rect x="60" y="86" width="420" height="60" rx="6" class="boxP"/>
+  <text x="270" y="110" text-anchor="middle" class="lbl body" font-weight="600">corePoolSize = 8, maximumPoolSize = 8</text>
+  <text x="270" y="128" text-anchor="middle" class="lbl sub">8 settlement-ingest worker threads, fixed</text>
+
+  <path class="flow" d="M 270 146 V 170"/>
+
+  <rect x="60" y="170" width="420" height="70" rx="6" class="boxLeg"/>
+  <text x="270" y="194" text-anchor="middle" class="lbl body" font-weight="600">workQueue = new LinkedBlockingQueue()</text>
+  <text x="270" y="212" text-anchor="middle" class="lbl sub">capacity = Integer.MAX_VALUE = 2,147,483,647</text>
+  <text x="270" y="228" text-anchor="middle" class="lbl sub">offer() virtually never returns false</text>
+
+  <path class="dead" d="M 270 240 V 264"/>
+
+  <rect x="60" y="264" width="420" height="56" rx="6" class="boxW"/>
+  <text x="270" y="286" text-anchor="middle" class="lbl body" font-weight="600">step 3 — grow toward maximumPoolSize</text>
+  <text x="270" y="304" text-anchor="middle" class="lbl sub">unreachable — DEAD CODE, queue never full</text>
+
+  <path class="fail" d="M 270 320 V 344"/>
+
+  <rect x="60" y="344" width="420" height="86" rx="6" class="boxD"/>
+  <text x="270" y="368" text-anchor="middle" class="lbl body" font-weight="600">queue fills with pending settlements</text>
+  <text x="270" y="386" text-anchor="middle" class="lbl sub">2.8M stake settlements/day queue up faster</text>
+  <text x="270" y="402" text-anchor="middle" class="lbl sub">than 8 threads can drain at burst rate</text>
+  <text x="270" y="418" text-anchor="middle" class="lbl sub">3,400/sec</text>
+
+  <path class="fail" d="M 270 430 V 454"/>
+
+  <rect x="60" y="454" width="420" height="60" rx="6" class="boxD"/>
+  <text x="270" y="480" text-anchor="middle" class="lbl body" font-weight="700">java.lang.OutOfMemoryError</text>
+  <text x="270" y="498" text-anchor="middle" class="lbl sub">heap exhausted holding queued Runnables</text>
+
+  <!-- annotation panel left -->
+  <rect x="60" y="534" width="420" height="150" rx="6" class="panel"/>
+  <text x="76" y="556" class="lbl body" font-weight="700">Why maximumPoolSize is dead here</text>
+  <text x="76" y="576" class="lbl tiny">Decision 3 in the submission algorithm (D-078)</text>
+  <text x="76" y="592" class="lbl tiny">only runs when workQueue.offer(task) returns</text>
+  <text x="76" y="608" class="lbl tiny">false. A LinkedBlockingQueue sized at</text>
+  <text x="76" y="624" class="lbl tiny">Integer.MAX_VALUE effectively never rejects,</text>
+  <text x="76" y="640" class="lbl tiny">so maximumPoolSize = 8 (same as core) is</text>
+  <text x="76" y="656" class="lbl tiny">never consulted — the pool cannot grow to</text>
+  <text x="76" y="672" class="lbl tiny">absorb the burst, it can only buffer it.</text>
+
+  <!-- RIGHT -->
+  <rect x="640" y="86" width="420" height="60" rx="6" class="boxP"/>
+  <text x="850" y="110" text-anchor="middle" class="lbl body" font-weight="600">corePoolSize = 0, maximumPoolSize = Integer.MAX_VALUE</text>
+  <text x="850" y="128" text-anchor="middle" class="lbl sub">threads created on demand, idle ones reused for 60s</text>
+
+  <path class="flow" d="M 850 146 V 170"/>
+
+  <rect x="640" y="170" width="420" height="70" rx="6" class="boxLeg"/>
+  <text x="850" y="194" text-anchor="middle" class="lbl body" font-weight="600">workQueue = new SynchronousQueue()</text>
+  <text x="850" y="212" text-anchor="middle" class="lbl sub">capacity = 0 — no room to hold a single task</text>
+  <text x="850" y="228" text-anchor="middle" class="lbl sub">offer() succeeds only if a thread is waiting now</text>
+
+  <path class="fail" d="M 850 240 V 264"/>
+
+  <rect x="640" y="264" width="420" height="56" rx="6" class="boxD"/>
+  <text x="850" y="286" text-anchor="middle" class="lbl body" font-weight="600">no idle thread waiting → offer() fails</text>
+  <text x="850" y="304" text-anchor="middle" class="lbl sub">step 3 fires on almost every task at burst rate</text>
+
+  <path class="fail" d="M 850 320 V 344"/>
+
+  <rect x="640" y="344" width="420" height="86" rx="6" class="boxD"/>
+  <text x="850" y="368" text-anchor="middle" class="lbl body" font-weight="600">addWorker(task, core=false) every time</text>
+  <text x="850" y="386" text-anchor="middle" class="lbl sub">one brand-new OS thread per un-handed-off</text>
+  <text x="850" y="402" text-anchor="middle" class="lbl sub">settlement task — 3,400 new threads/sec at</text>
+  <text x="850" y="418" text-anchor="middle" class="lbl sub">peak burst</text>
+
+  <path class="fail" d="M 850 430 V 454"/>
+
+  <rect x="640" y="454" width="420" height="60" rx="6" class="boxD"/>
+  <text x="850" y="480" text-anchor="middle" class="lbl body" font-weight="700">unable to create native thread</text>
+  <text x="850" y="498" text-anchor="middle" class="lbl sub">OS thread / memory-map limit exhausted</text>
+
+  <!-- annotation panel right -->
+  <rect x="640" y="534" width="420" height="150" rx="6" class="panel"/>
+  <text x="656" y="556" class="lbl body" font-weight="700">Why the queue can't absorb this</text>
+  <text x="656" y="576" class="lbl tiny">A SynchronousQueue is a zero-capacity hand-off:</text>
+  <text x="656" y="592" class="lbl tiny">put() and take() must rendezvous. It never</text>
+  <text x="656" y="608" class="lbl tiny">buffers, so it never smooths a burst — every</text>
+  <text x="656" y="624" class="lbl tiny">task that arrives without a waiting thread goes</text>
+  <text x="656" y="640" class="lbl tiny">straight to step 3, and maximumPoolSize being</text>
+  <text x="656" y="656" class="lbl tiny">Integer.MAX_VALUE means step 3 always says yes</text>
+  <text x="656" y="672" class="lbl tiny">— trading the left side's queue blow-up for a</text>
+  <text x="656" y="688" class="lbl tiny">thread blow-up instead.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="704" x2="1100" y2="704" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="718" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="731" class="lbl tiny">pool configuration</text>
+  <rect x="220" y="718" width="22" height="16" rx="3" class="boxLeg"/>
+  <text x="252" y="731" class="lbl tiny">queue configuration</text>
+  <rect x="420" y="718" width="22" height="16" rx="3" class="boxW"/>
+  <text x="452" y="731" class="lbl tiny">unreachable / dead path</text>
+  <rect x="640" y="718" width="22" height="16" rx="3" class="boxD"/>
+  <text x="672" y="731" class="lbl tiny">degraded state / thrown error</text>
+
+  <path class="flow" d="M 860 718 V 734 H 900"/>
+  <text x="908" y="731" class="lbl tiny">normal step</text>
+  <path class="dead" d="M 20 754 H 60"/>
+  <text x="68" y="759" class="lbl tiny">dead path — never taken</text>
+  <path class="fail" d="M 260 754 H 300"/>
+  <text x="308" y="759" class="lbl tiny" fill="#b91c1c">failure escalation</text>
+</svg>

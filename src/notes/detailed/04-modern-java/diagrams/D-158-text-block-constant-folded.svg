@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after: a Java text block writing the ledger reconciliation SQL compiles down
+     to a single CONSTANT_String_info in the class file's constant pool, with the final stripped
+     content and nothing of the incidental-whitespace-stripping algorithm surviving to runtime.
+     Below, a text block and an equal string literal compared with == both point at the same
+     interned constant in the string pool, with a caution that relying on == for text-block equality
+     is not a habit to build.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .mono   { font-family: "SF Mono", Consolas, monospace; font-size: 12.5px; fill: #1f2937; }
+    .monoS  { font-family: "SF Mono", Consolas, monospace; font-size: 11px; fill: #4b5563; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; fill: #4b5563; }
+    .panelh { font-size: 13px; font-weight: 700; }
+    .warnrow{ font-size: 11px; fill: #b91c1c; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .panel{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">A TEXT BLOCK IS A CONSTANT, FOLDED AT COMPILE TIME</text>
+  <line x1="20" y1="44" x2="1100" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20"  y="66" class="lbl h2">SOURCE — BEFORE</text>
+  <text x="580" y="66" class="lbl h2">CLASS FILE — AFTER (javap -v)</text>
+
+  <!-- LEFT: source text block -->
+  <rect x="20" y="80" width="520" height="220" rx="6" class="boxP"/>
+  <text x="36" y="104" class="lbl node">LedgerQueries.java</text>
+  <text x="36" y="126" class="lbl mono">String sql = """</text>
+  <text x="56" y="146" class="lbl mono">SELECT position, amount</text>
+  <text x="56" y="166" class="lbl mono">FROM LedgerEntry</text>
+  <text x="56" y="186" class="lbl mono">WHERE client_id = ?</text>
+  <text x="56" y="206" class="lbl mono">AND position = 'CLIENT_BONUS_AVAILABLE'</text>
+  <text x="36" y="226" class="lbl mono">""";</text>
+  <text x="36" y="254" class="lbl sub">incidental indentation (12 leading spaces</text>
+  <text x="36" y="270" class="lbl sub">per line) stripped by the compiler using the</text>
+  <text x="36" y="286" class="lbl sub">common-whitespace algorithm (JEP 378)</text>
+
+  <path class="flow" d="M 540 190 H 600"/>
+  <text x="570" y="176" text-anchor="middle" class="lbl tiny">compiles</text>
+
+  <!-- RIGHT: constant pool -->
+  <rect x="600" y="80" width="500" height="220" rx="6" class="boxR"/>
+  <text x="616" y="104" class="lbl node">LedgerQueries.class — constant pool</text>
+  <text x="616" y="128" class="lbl monoS">#14 = String  #15   // the SQL, already stripped</text>
+  <text x="616" y="146" class="lbl monoS">#15 = Utf8    CONSTANT_String_info</text>
+  <text x="632" y="164" class="lbl mono">SELECT position, amount</text>
+  <text x="632" y="182" class="lbl mono">FROM LedgerEntry</text>
+  <text x="632" y="200" class="lbl mono">WHERE client_id = ?</text>
+  <text x="632" y="218" class="lbl mono">AND position = 'CLIENT_BONUS_AVAILABLE'</text>
+  <text x="616" y="244" class="lbl sub">one CONSTANT_String_info — final content only.</text>
+  <text x="616" y="260" class="lbl sub">Delimiters, incidental indentation, and the stripping</text>
+  <text x="616" y="276" class="lbl sub">algorithm itself do not survive into the class file.</text>
+
+  <!-- Corridor down to comparison -->
+  <path class="flow" d="M 280 300 V 340"/>
+  <path class="flow" d="M 850 300 V 340 H 460 V 380"/>
+
+  <text x="20" y="366" class="lbl h2">BOTH FORMS RESOLVE TO ONE INTERNED CONSTANT</text>
+  <line x1="20" y1="376" x2="1100" y2="376" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- text block variable box -->
+  <rect x="60" y="400" width="300" height="90" rx="6" class="boxP"/>
+  <text x="210" y="426" text-anchor="middle" class="lbl node">sql (text block)</text>
+  <text x="210" y="448" text-anchor="middle" class="lbl body">"""..SELECT position..."""</text>
+  <text x="210" y="468" text-anchor="middle" class="lbl sub">CONSTANT_String_info #15</text>
+
+  <!-- string literal box -->
+  <rect x="760" y="400" width="300" height="90" rx="6" class="boxP"/>
+  <text x="910" y="426" text-anchor="middle" class="lbl node">sqlLiteral (String literal)</text>
+  <text x="910" y="448" text-anchor="middle" class="lbl body">"SELECT position, amount..."</text>
+  <text x="910" y="468" text-anchor="middle" class="lbl sub">same CONSTANT_String_info #15</text>
+
+  <!-- shared interned constant -->
+  <rect x="410" y="540" width="300" height="80" rx="6" class="boxH"/>
+  <text x="560" y="566" text-anchor="middle" class="lbl node">interned String pool entry</text>
+  <text x="560" y="588" text-anchor="middle" class="lbl body">one identical object</text>
+  <text x="560" y="606" text-anchor="middle" class="lbl sub">sql == sqlLiteral -&gt; true</text>
+
+  <path class="flow" d="M 210 490 V 520 H 500 V 540"/>
+  <path class="flow" d="M 910 490 V 520 H 620 V 540"/>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="650" width="1080" height="90" rx="6" class="panel"/>
+  <text x="36" y="672" class="lbl panelh">CAUTION — THIS IS NOT A HABIT TO BUILD</text>
+  <text x="36" y="694" class="lbl tiny">Equal compile-time constants intern to the same pool entry, so == happens to return true here.</text>
+  <text x="36" y="714" class="lbl warnrow">Use .equals() for text/string comparison always — == on strings is an interning accident, not a contract.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="750" x2="1100" y2="750" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="762" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="774" class="lbl tiny">source form / literal</text>
+  <rect x="220" y="762" width="22" height="16" rx="3" class="boxR"/>
+  <text x="250" y="774" class="lbl tiny">compiled constant-pool entry</text>
+  <rect x="480" y="762" width="22" height="16" rx="3" class="boxH"/>
+  <text x="510" y="774" class="lbl tiny">runtime interned instance</text>
+  <path d="M 700 770 H 730" class="flow"/>
+  <text x="740" y="774" class="lbl tiny">A &#8594; B : compiles to / resolves to</text>
+</svg>

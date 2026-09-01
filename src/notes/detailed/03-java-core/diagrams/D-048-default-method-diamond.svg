@@ -1,0 +1,143 @@
+<svg viewBox="0 0 1040 1440" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-lane diagram of default-method diamond resolution. Lane 1: ClientAction implements both Auditable and Restrictable, each declaring default String describe(); javac 21 rejects this with 'types Auditable and Restrictable are incompatible', fixed by calling Restrictable.super.describe() explicitly. Lane 2: BonusService extends AbstractAuditableService (concrete describe()) and implements Auditable (default describe()); the class method wins over the interface default with no error. Lane 3: TimestampedAuditable extends Auditable and redeclares describe(); ReviewCaseAuditor implements both, and the most specific sub-interface, TimestampedAuditable, wins with no error. A bottom annotation panel gives the verified javac 21 error for a default toString(), showing a default method may never override a public Object method.">
+  <defs>
+    <marker id="arrow048" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1440" fill="#ffffff"/>
+
+  <text x="520" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Diamond resolution for default methods</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ LANE A ============ -->
+  <text x="80" y="64" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">CASE 1 &#8212; TWO UNRELATED DEFAULTS: COMPILE ERROR</text>
+  <line x1="80" y1="72" x2="1020" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="140" y="90" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Auditable</text>
+  <text x="280" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">default String describe() {</text>
+  <text x="280" y="148" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">  return "auditable"; }</text>
+
+  <rect x="560" y="90" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="700" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Restrictable</text>
+  <text x="700" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">default String describe() {</text>
+  <text x="700" y="148" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">  return "restrictable"; }</text>
+
+  <rect x="350" y="210" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="490" y="232" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ClientAction</text>
+  <text x="490" y="250" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">implements Auditable,</text>
+  <text x="490" y="268" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c">Restrictable  &#8212; ERROR</text>
+
+  <path d="M 420 210 V 185 H 280 V 160" fill="none" stroke="#475569" stroke-width="2"
+        stroke-dasharray="6 4" marker-end="url(#arrow048)"/>
+  <path d="M 560 210 V 185 H 700 V 160" fill="none" stroke="#475569" stroke-width="2"
+        stroke-dasharray="6 4" marker-end="url(#arrow048)"/>
+
+  <rect x="140" y="300" width="410" height="110" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="160" y="322" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">COMPILE ERROR (javac 21, VERIFIED)</text>
+  <text x="160" y="344" font-family="sans-serif" font-size="11" fill="#1f2937">error: types Auditable and Restrictable are incompatible;</text>
+  <text x="160" y="362" font-family="sans-serif" font-size="11" fill="#1f2937">class ClientAction inherits unrelated defaults for</text>
+  <text x="160" y="380" font-family="sans-serif" font-size="11" fill="#1f2937">describe() from types Auditable and Restrictable</text>
+
+  <rect x="610" y="300" width="410" height="110" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="630" y="322" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FIX &#8212; explicit resolution</text>
+  <text x="630" y="344" font-family="sans-serif" font-size="11" fill="#1f2937">public String describe() {</text>
+  <text x="630" y="362" font-family="sans-serif" font-size="11" fill="#1f2937">  return Restrictable.super.describe();</text>
+  <text x="630" y="380" font-family="sans-serif" font-size="11" fill="#1f2937">}</text>
+
+  <!-- ============ LANE B ============ -->
+  <text x="80" y="450" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">CASE 2 &#8212; CLASS BEATS INTERFACE</text>
+  <line x1="80" y1="458" x2="1020" y2="458" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="140" y="476" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="498" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">AbstractAuditableService</text>
+  <text x="280" y="516" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">concrete String describe()</text>
+  <text x="280" y="534" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(inherited slot for describe())</text>
+
+  <rect x="560" y="476" width="280" height="70" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="700" y="498" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Auditable</text>
+  <text x="700" y="516" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">default String describe()</text>
+  <text x="700" y="534" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(loses to class method)</text>
+
+  <rect x="350" y="596" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="490" y="618" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BonusService</text>
+  <text x="490" y="636" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">extends AbstractAuditableService</text>
+  <text x="490" y="654" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">implements Auditable</text>
+
+  <path d="M 420 596 V 571 H 280 V 546" fill="none" stroke="#475569" stroke-width="2"
+        marker-end="url(#arrow048)"/>
+  <path d="M 560 596 V 571 H 700 V 546" fill="none" stroke="#475569" stroke-width="2"
+        stroke-dasharray="6 4" marker-end="url(#arrow048)"/>
+
+  <rect x="330" y="676" width="320" height="56" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="490" y="698" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WINNER: AbstractAuditableService.describe()</text>
+  <text x="490" y="716" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(class beats interface default &#8212; JLS 9.4.1.3)</text>
+
+  <!-- ============ LANE C ============ -->
+  <text x="80" y="772" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">CASE 3 &#8212; MOST SPECIFIC SUB-INTERFACE WINS</text>
+  <line x1="80" y1="780" x2="1020" y2="780" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="140" y="798" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="820" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Auditable</text>
+  <text x="280" y="838" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">default String describe()</text>
+  <text x="280" y="856" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(super-interface)</text>
+
+  <rect x="560" y="798" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="700" y="820" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">TimestampedAuditable</text>
+  <text x="700" y="838" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">extends Auditable</text>
+  <text x="700" y="856" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">default String describe() (overrides)</text>
+
+  <path d="M 560 833 H 420" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow048)"/>
+
+  <rect x="350" y="908" width="280" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="490" y="930" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ReviewCaseAuditor</text>
+  <text x="490" y="948" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">implements Auditable,</text>
+  <text x="490" y="966" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">TimestampedAuditable</text>
+
+  <path d="M 420 908 V 888 H 280 V 868" fill="none" stroke="#475569" stroke-width="2"
+        stroke-dasharray="6 4" marker-end="url(#arrow048)"/>
+  <path d="M 560 908 V 888 H 700 V 868" fill="none" stroke="#475569" stroke-width="2"
+        stroke-dasharray="6 4" marker-end="url(#arrow048)"/>
+
+  <rect x="330" y="988" width="320" height="56" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="490" y="1010" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WINNER: TimestampedAuditable.describe()</text>
+  <text x="490" y="1028" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(most specific sub-interface &#8212; JLS 9.4.1.3)</text>
+
+  <!-- ============ ANNOTATION PANEL ============ -->
+  <rect x="100" y="1084" width="840" height="190" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="120" y="1106" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">A DEFAULT METHOD MAY NOT OVERRIDE A PUBLIC Object METHOD</text>
+  <text x="120" y="1128" font-family="sans-serif" font-size="11" fill="#1f2937">javac 21 (VERIFIED, reproduce verbatim):</text>
+  <text x="120" y="1146" font-family="sans-serif" font-size="11" fill="#1f2937">error: default method toString in interface Verdict overrides a member of java.lang.Object</text>
+  <text x="120" y="1164" font-family="sans-serif" font-size="11" fill="#1f2937">This is why a default toString(), equals(), or hashCode() is rejected outright,</text>
+  <text x="120" y="1182" font-family="sans-serif" font-size="11" fill="#1f2937">and why the single-abstract-method count for a functional interface ignores</text>
+  <text x="120" y="1200" font-family="sans-serif" font-size="11" fill="#1f2937">Object-shaped methods entirely.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="80" y="1314" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="80" y1="1322" x2="1020" y2="1322" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="100" y1="1340" x2="140" y2="1340" stroke="#475569" stroke-width="2" marker-end="url(#arrow048)"/>
+  <text x="150" y="1345" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : B extends A (class or sub-interface)</text>
+
+  <line x1="580" y1="1340" x2="620" y2="1340" stroke="#475569" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow048)"/>
+  <text x="630" y="1345" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : A implements B</text>
+
+  <rect x="100" y="1364" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="130" y="1377" font-family="sans-serif" font-size="11" fill="#4b5563">type declaration (interface or class)</text>
+
+  <rect x="580" y="1364" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="610" y="1377" font-family="sans-serif" font-size="11" fill="#4b5563">default method that loses resolution</text>
+
+  <rect x="100" y="1388" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="130" y="1401" font-family="sans-serif" font-size="11" fill="#4b5563">winning method / fix</text>
+
+  <rect x="580" y="1388" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="610" y="1401" font-family="sans-serif" font-size="11" fill="#4b5563">compile error</text>
+</svg>

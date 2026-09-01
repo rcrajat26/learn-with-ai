@@ -1,0 +1,183 @@
+<svg viewBox="0 0 1120 1300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing BonusRules taken through class loading, linking and initialization. Frame 1: the JVM reads the BonusRules.class byte stream and creates a Class object for it in the method area. Frame 2: linking runs verification, preparation and resolution as three sub-steps; preparation sets every static field to its default (0 or null), shown in a grouped field-state panel for MAX_BONUS, COUPON_VALIDITY_DAYS, BONUS_EXPIRY_DAYS, GRANT_RATE and ELIGIBLE. Frame 3: initialization runs the synthesized clinit method, which executes the static initializers in textual order and overwrites each default with its declared value: MAX_BONUS becomes 100, COUPON_VALIDITY_DAYS becomes 14, BONUS_EXPIRY_DAYS becomes 30, GRANT_RATE becomes 0.10, and ELIGIBLE becomes populated. An annotation panel contrasts how clinit and init appear in a stack trace: clinit is the static initializer that runs once with no arguments and is never called from source, while init is the constructor that runs per instance and is invoked by the invokespecial bytecode instruction.">
+  <defs>
+    <marker id="arrow107" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow107amber" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1300" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Loading, linking and initialization &#8212; BonusRules</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ FRAME 1 : LOADING ============ -->
+  <text x="80" y="64" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 1 &#8212; LOADING</text>
+  <line x1="80" y1="72" x2="1040" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="100" y="90" width="300" height="110" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="250" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">BonusRules.class (byte stream)</text>
+  <text x="250" y="132" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">CA FE BA BE ... constant pool</text>
+  <text x="250" y="150" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">methods: &lt;clinit&gt;, &lt;init&gt;, grant(...)</text>
+  <text x="250" y="168" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">fields: MAX_BONUS, COUPON_VALIDITY_DAYS,</text>
+  <text x="250" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">BONUS_EXPIRY_DAYS, GRANT_RATE, ELIGIBLE</text>
+
+  <rect x="580" y="90" width="340" height="110" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="750" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Class&lt;BonusRules&gt; object</text>
+  <text x="750" y="132" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">method area entry created</text>
+  <text x="750" y="150" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">constant pool loaded (not yet resolved)</text>
+  <text x="750" y="168" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">static field slots reserved (no values yet)</text>
+  <text x="750" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">&lt;clinit&gt; and &lt;init&gt; methods registered</text>
+
+  <line x1="400" y1="145" x2="580" y2="145" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+  <text x="490" y="132" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">LOADING</text>
+
+  <text x="560" y="222" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">ClassLoader.defineClass reads the bytes; the JVM allocates a Class&lt;BonusRules&gt; object in the method area</text>
+
+  <!-- ============ FRAME 2 : LINKING ============ -->
+  <text x="80" y="256" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 2 &#8212; LINKING</text>
+  <line x1="80" y1="264" x2="1040" y2="264" stroke="#d1d5db" stroke-width="1"/>
+
+  <line x1="560" y1="264" x2="560" y2="278" stroke="#475569" stroke-width="2"/>
+  <line x1="235" y1="278" x2="885" y2="278" stroke="#475569" stroke-width="2"/>
+  <line x1="235" y1="278" x2="235" y2="288" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+  <line x1="560" y1="278" x2="560" y2="288" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+  <line x1="885" y1="278" x2="885" y2="288" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+
+  <rect x="100" y="288" width="270" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="235" y="308" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">VERIFICATION</text>
+  <text x="235" y="328" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">bytecode verified: structurally</text>
+  <text x="235" y="346" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">valid, type-safe, access rules</text>
+  <text x="235" y="364" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">obeyed</text>
+
+  <rect x="400" y="288" width="320" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="560" y="308" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">PREPARATION</text>
+  <text x="560" y="328" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">static fields allocated and set</text>
+  <text x="560" y="346" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">to defaults: 0 / null (JVMS 5.4.2)</text>
+  <text x="560" y="364" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">NOT the declared initializer values</text>
+
+  <rect x="750" y="288" width="270" height="90" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="885" y="308" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">RESOLUTION</text>
+  <text x="885" y="328" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">symbolic references in the</text>
+  <text x="885" y="346" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">constant pool resolved to direct</text>
+  <text x="885" y="364" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">references (may load other classes)</text>
+
+  <line x1="560" y1="378" x2="560" y2="398" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+
+  <rect x="80" y="398" width="820" height="170" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="100" y="418" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">STATIC FIELD STATE AFTER PREPARATION (DEFAULTS &#8212; NOT YET REAL)</text>
+  <line x1="100" y1="426" x2="880" y2="426" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="100" y="444" font-family="sans-serif" font-size="11" fill="#1f2937">static final int MAX_BONUS</text>
+  <rect x="770" y="430" width="100" height="20" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="820" y="444" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+
+  <text x="100" y="468" font-family="sans-serif" font-size="11" fill="#1f2937">static final int COUPON_VALIDITY_DAYS</text>
+  <rect x="770" y="454" width="100" height="20" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="820" y="468" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+
+  <text x="100" y="492" font-family="sans-serif" font-size="11" fill="#1f2937">static final int BONUS_EXPIRY_DAYS</text>
+  <rect x="770" y="478" width="100" height="20" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="820" y="492" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+
+  <text x="100" y="516" font-family="sans-serif" font-size="11" fill="#1f2937">static BigDecimal GRANT_RATE</text>
+  <rect x="770" y="502" width="100" height="20" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="820" y="516" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">null</text>
+
+  <text x="100" y="540" font-family="sans-serif" font-size="11" fill="#1f2937">static Map&lt;StatusCode, Boolean&gt; ELIGIBLE</text>
+  <rect x="770" y="526" width="100" height="20" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="820" y="540" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">null</text>
+
+  <!-- ============ FRAME 3 : INITIALIZATION ============ -->
+  <text x="80" y="596" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 3 &#8212; INITIALIZATION</text>
+  <line x1="80" y1="604" x2="1040" y2="604" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="100" y="622" width="820" height="70" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="510" y="642" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">&lt;clinit&gt; executes &#8212; static initializers run in textual order (JLS 12.4.2)</text>
+  <text x="510" y="660" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">synthesized by javac from static field initializers + static blocks, in textual order</text>
+  <text x="510" y="678" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">invoked directly by the JVM during initialization &#8212; never called by an instruction in your source</text>
+
+  <line x1="510" y1="692" x2="510" y2="712" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+
+  <rect x="80" y="712" width="820" height="230" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="100" y="732" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">STATIC FIELD STATE AFTER &lt;clinit&gt; (WRITE HIGHLIGHTED)</text>
+  <line x1="100" y1="740" x2="880" y2="740" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="100" y="772" font-family="sans-serif" font-size="11" fill="#1f2937">static final int MAX_BONUS</text>
+  <rect x="440" y="753" width="60" height="22" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="470" y="768" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+  <line x1="520" y1="768" x2="600" y2="768" stroke="#b45309" stroke-width="2" marker-end="url(#arrow107amber)"/>
+  <text x="560" y="760" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">&lt;clinit&gt; writes</text>
+  <rect x="620" y="753" width="140" height="22" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="690" y="768" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">100</text>
+
+  <text x="100" y="804" font-family="sans-serif" font-size="11" fill="#1f2937">static final int COUPON_VALIDITY_DAYS</text>
+  <rect x="440" y="785" width="60" height="22" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="470" y="800" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+  <line x1="520" y1="800" x2="600" y2="800" stroke="#b45309" stroke-width="2" marker-end="url(#arrow107amber)"/>
+  <text x="560" y="792" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">&lt;clinit&gt; writes</text>
+  <rect x="620" y="785" width="140" height="22" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="690" y="800" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">14</text>
+
+  <text x="100" y="836" font-family="sans-serif" font-size="11" fill="#1f2937">static final int BONUS_EXPIRY_DAYS</text>
+  <rect x="440" y="817" width="60" height="22" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="470" y="832" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0</text>
+  <line x1="520" y1="832" x2="600" y2="832" stroke="#b45309" stroke-width="2" marker-end="url(#arrow107amber)"/>
+  <text x="560" y="824" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">&lt;clinit&gt; writes</text>
+  <rect x="620" y="817" width="140" height="22" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="690" y="832" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">30</text>
+
+  <text x="100" y="868" font-family="sans-serif" font-size="11" fill="#1f2937">static BigDecimal GRANT_RATE</text>
+  <rect x="440" y="849" width="60" height="22" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="470" y="864" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">null</text>
+  <line x1="520" y1="864" x2="600" y2="864" stroke="#b45309" stroke-width="2" marker-end="url(#arrow107amber)"/>
+  <text x="560" y="856" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">&lt;clinit&gt; writes</text>
+  <rect x="620" y="849" width="140" height="22" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="690" y="864" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">0.10</text>
+
+  <text x="100" y="900" font-family="sans-serif" font-size="11" fill="#1f2937">static Map&lt;StatusCode, Boolean&gt; ELIGIBLE</text>
+  <rect x="440" y="881" width="60" height="22" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="470" y="896" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">null</text>
+  <line x1="520" y1="896" x2="600" y2="896" stroke="#b45309" stroke-width="2" marker-end="url(#arrow107amber)"/>
+  <text x="560" y="888" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">&lt;clinit&gt; writes</text>
+  <rect x="620" y="881" width="140" height="22" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="690" y="896" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1f2937">populated</text>
+
+  <!-- ============ ANNOTATION PANEL ============ -->
+  <rect x="80" y="970" width="960" height="170" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="100" y="992" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">&lt;clinit&gt; VERSUS &lt;init&gt; IN A STACK TRACE</text>
+  <text x="100" y="1014" font-family="sans-serif" font-size="11" fill="#1f2937">at BonusRules.&lt;clinit&gt;(BonusRules.java:12)</text>
+  <text x="100" y="1034" font-family="sans-serif" font-size="11" fill="#4b5563">&#8212; the static initializer: runs once, takes no arguments, never called from your source</text>
+  <text x="100" y="1054" font-family="sans-serif" font-size="11" fill="#1f2937">at BonusRules.&lt;init&gt;(BonusRules.java:31)</text>
+  <text x="100" y="1074" font-family="sans-serif" font-size="11" fill="#4b5563">&#8212; the constructor: runs per instance, invoked by the invokespecial bytecode instruction</text>
+  <text x="100" y="1094" font-family="sans-serif" font-size="11" fill="#1f2937">&lt;clinit&gt; is synthesized by javac from static field initializers + static blocks, in textual order</text>
+  <text x="100" y="1114" font-family="sans-serif" font-size="11" fill="#1f2937">&lt;clinit&gt; is invoked directly by the JVM during class initialization &#8212; never by an instruction in your class</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="80" y="1174" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="80" y1="1182" x2="1040" y2="1182" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="90" y="1190" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="118" y="1203" font-family="sans-serif" font-size="11" fill="#4b5563">raw bytes / default value (0, null) &#8212; not yet real</text>
+
+  <rect x="90" y="1216" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="118" y="1229" font-family="sans-serif" font-size="11" fill="#4b5563">Class&lt;BonusRules&gt; object / a linking sub-step</text>
+
+  <rect x="90" y="1242" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="118" y="1255" font-family="sans-serif" font-size="11" fill="#4b5563">&lt;clinit&gt; executing &#8212; the write in progress</text>
+
+  <rect x="610" y="1190" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="638" y="1203" font-family="sans-serif" font-size="11" fill="#4b5563">field value after &lt;clinit&gt; runs &#8212; concrete, final</text>
+
+  <rect x="610" y="1216" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="638" y="1229" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; explanatory prose</text>
+
+  <line x1="610" y1="1250" x2="632" y2="1250" stroke="#475569" stroke-width="2" marker-end="url(#arrow107)"/>
+  <text x="638" y="1255" font-family="sans-serif" font-size="11" fill="#4b5563">flow / sequence (structural edge)</text>
+</svg>

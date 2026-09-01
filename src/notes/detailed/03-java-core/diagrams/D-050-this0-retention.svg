@@ -1,0 +1,107 @@
+<svg viewBox="0 0 1120 960" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-and-after memory layout. Left: a static NotificationService.REGISTRY holds a ProfileService.ChangeListener inner-class instance; a dotted synthetic this$0 field keeps its enclosing ProfileService instance alive, which fans out to eight aggregated owner objects (Application, Account, GateSet, DocumentRequirement, ReviewCase, LimitSet, ClientRestrictions, Bonus). A red dashed boundary marks the whole subgraph as retained by one registered listener. Right: after making the listener class static, the same registry holds the listener directly with no this$0 field and no path to ProfileService, so the retained set shrinks to the listener alone. An annotation panel notes that javap -p on JDK 21.0.7 shows javac only emits this$0 when the inner class actually touches the enclosing instance.">
+  <defs>
+    <marker id="arrow050" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="960" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">this$0 keeps the whole enclosing object alive</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ HEADERS ============ -->
+  <text x="280" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">INNER (NON-STATIC) LISTENER &#8212; the leak</text>
+  <line x1="40" y1="72" x2="520" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="840" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">STATIC NESTED LISTENER &#8212; the fix</text>
+  <line x1="600" y1="72" x2="1080" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ============ LEFT COLUMN ============ -->
+  <rect x="40" y="90" width="480" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="110" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">static final List&lt;Listener&gt;</text>
+  <text x="280" y="128" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">NotificationService.REGISTRY</text>
+
+  <line x1="280" y1="140" x2="280" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#arrow050)"/>
+
+  <rect x="40" y="180" width="480" height="70" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="280" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ProfileService$ChangeListener instance</text>
+  <text x="280" y="220" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">non-static inner class of ProfileService</text>
+  <text x="280" y="238" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">registered once, never deregistered</text>
+
+  <path d="M 280 250 V 310" fill="none" stroke="#475569" stroke-width="2"
+        stroke-dasharray="3 3" marker-end="url(#arrow050)"/>
+  <text x="300" y="284" font-family="sans-serif" font-size="11" fill="#b45309">synthetic final ProfileService this$0</text>
+
+  <rect x="40" y="310" width="480" height="70" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="280" y="332" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ProfileService instance</text>
+  <text x="280" y="350" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">reached only via the listener's this$0</text>
+  <text x="280" y="368" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">retains every aggregate below</text>
+
+  <line x1="280" y1="380" x2="280" y2="420" stroke="#475569" stroke-width="2" marker-end="url(#arrow050)"/>
+
+  <rect x="40" y="420" width="480" height="184" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="60" y="442" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">RETAINED AGGREGATES (via ProfileService)</text>
+  <text x="60" y="462" font-family="sans-serif" font-size="11" fill="#1f2937">- Application</text>
+  <text x="60" y="480" font-family="sans-serif" font-size="11" fill="#1f2937">- Account</text>
+  <text x="60" y="498" font-family="sans-serif" font-size="11" fill="#1f2937">- GateSet</text>
+  <text x="60" y="516" font-family="sans-serif" font-size="11" fill="#1f2937">- DocumentRequirement</text>
+  <text x="60" y="534" font-family="sans-serif" font-size="11" fill="#1f2937">- ReviewCase</text>
+  <text x="60" y="552" font-family="sans-serif" font-size="11" fill="#1f2937">- LimitSet</text>
+  <text x="60" y="570" font-family="sans-serif" font-size="11" fill="#1f2937">- ClientRestrictions</text>
+  <text x="60" y="588" font-family="sans-serif" font-size="11" fill="#1f2937">- Bonus</text>
+
+  <rect x="20" y="70" width="520" height="560" rx="8" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="280" y="646" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">retained by one registered listener</text>
+
+  <!-- ============ RIGHT COLUMN ============ -->
+  <rect x="600" y="90" width="480" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="840" y="110" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">static final List&lt;Listener&gt;</text>
+  <text x="840" y="128" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">NotificationService.REGISTRY</text>
+
+  <line x1="840" y1="140" x2="840" y2="180" stroke="#475569" stroke-width="2" marker-end="url(#arrow050)"/>
+
+  <rect x="600" y="180" width="480" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="840" y="202" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">ProfileService.ChangeListener instance (static)</text>
+  <text x="840" y="220" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no this$0 field &#8212; javap -p confirms it is absent</text>
+  <text x="840" y="238" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no path back to any ProfileService instance</text>
+
+  <rect x="580" y="70" width="500" height="190" rx="8" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="840" y="276" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#15803d">retained set: the listener alone (tens of bytes)</text>
+
+  <text x="600" y="330" font-family="sans-serif" font-size="11" fill="#4b5563">static nested class constructor takes NO</text>
+  <text x="600" y="350" font-family="sans-serif" font-size="11" fill="#4b5563">ProfileService parameter at all &#8212; there is</text>
+  <text x="600" y="370" font-family="sans-serif" font-size="11" fill="#4b5563">nothing to hold a reference through.</text>
+  <text x="600" y="392" font-family="sans-serif" font-size="11" fill="#4b5563">ProfileService and its 8 aggregates become</text>
+  <text x="600" y="412" font-family="sans-serif" font-size="11" fill="#4b5563">collectible as soon as nothing else refers to them.</text>
+
+  <!-- ============ ANNOTATION PANEL ============ -->
+  <rect x="40" y="670" width="1040" height="170" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="60" y="692" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">javac 21 EMITS this$0 ONLY WHEN THE INNER CLASS USES THE ENCLOSING INSTANCE</text>
+  <text x="60" y="712" font-family="sans-serif" font-size="11" fill="#1f2937">VERIFIED by javap -p on JDK 21.0.7: an inner class whose method returns a constant has NO this$0</text>
+  <text x="60" y="730" font-family="sans-serif" font-size="11" fill="#1f2937">field at all, while an inner class reading an enclosing instance field has final ProfileService this$0.</text>
+  <text x="60" y="748" font-family="sans-serif" font-size="11" fill="#1f2937">Both constructors still take the outer type as their first parameter regardless.</text>
+  <text x="60" y="770" font-family="sans-serif" font-size="11" fill="#1f2937">So "every inner class holds this$0" over-states it; the accurate form is "every inner class that</text>
+  <text x="60" y="788" font-family="sans-serif" font-size="11" fill="#1f2937">touches the enclosing instance holds this$0, and the constructor signature always suggests it might."</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="40" y="864" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="40" y1="872" x2="1080" y2="872" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="60" y1="892" x2="100" y2="892" stroke="#475569" stroke-width="2" marker-end="url(#arrow050)"/>
+  <text x="110" y="897" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : A holds a strong reference to B</text>
+
+  <line x1="560" y1="892" x2="600" y2="892" stroke="#475569" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arrow050)"/>
+  <text x="610" y="897" font-family="sans-serif" font-size="11" fill="#4b5563">A -&gt; B : synthetic compiler-generated reference (this$0)</text>
+
+  <rect x="60" y="912" width="30" height="16" rx="4" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="100" y="925" font-family="sans-serif" font-size="11" fill="#4b5563">retained-set boundary &#8212; leak (whole subgraph reachable)</text>
+
+  <rect x="560" y="912" width="30" height="16" rx="4" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="600" y="925" font-family="sans-serif" font-size="11" fill="#4b5563">retained-set boundary &#8212; fixed (listener only)</text>
+</svg>

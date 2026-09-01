@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1120 960" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame step sequence showing heap pollution through generic varargs. Frame 1: a batch method takes List of Money varargs batches with no @SafeVarargs annotation; javac warns of possible heap pollution because batches is really a List array at runtime. Frame 2: that array is widened to Object array and javac separately warns about unchecked generic array creation. Frame 3: a List of String is stored into a slot declared List of Money, which array covariance permits with no compiler check. Frame 4: reading that slot back out as Money inserts a checkcast that fails at an unrelated line, producing the real exception ClassCastException: class java.lang.String cannot be cast to class Money, at Leak2.main(Leak2.java:13) — far from where the pollution was written. A closing panel lists the three conditions required for @SafeVarargs to be an honest annotation on a varargs method.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .mono  { font-family: ui-monospace, Menlo, Consolas, monospace; fill: #1f2937; font-size: 11.5px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .h3    { font-size: 12.5px; font-weight: 700; fill: #1f2937; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxF  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="960" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HEAP POLLUTION THROUGH GENERIC VARARGS — List&lt;Money&gt;... batches</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="62" class="lbl h2">FRAME 1 — NO @SafeVarargs, AND A List[] AT RUNTIME</text>
+  <rect x="20" y="75" width="520" height="110" rx="6" class="boxH"/>
+  <text x="35" y="97" class="lbl mono">static List&lt;Money&gt;[] batch(List&lt;Money&gt;... batches) {</text>
+  <text x="35" y="113" class="lbl mono">    ...</text>
+  <text x="35" y="129" class="lbl mono">}</text>
+  <text x="35" y="149" class="lbl sub">No @SafeVarargs on this signature.</text>
+  <text x="35" y="165" class="lbl sub">Runtime reality: batches is a List[] — one fresh array per call.</text>
+
+  <rect x="580" y="75" width="520" height="110" rx="6" class="boxW"/>
+  <text x="595" y="97" class="lbl h3">javac -Xlint:varargs</text>
+  <text x="595" y="117" class="lbl mono">Leak2.java:5: warning: [unchecked] Possible heap</text>
+  <text x="595" y="133" class="lbl mono">pollution from parameterized vararg type List&lt;Money&gt;</text>
+  <text x="595" y="153" class="lbl sub">A warning, not an error — compilation still succeeds.</text>
+
+  <path class="flow" d="M 540 130 H 580"/>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="205" class="lbl h2">FRAME 2 — THE ARRAY WIDENS TO Object[] AND IS WRITTEN TO</text>
+  <rect x="20" y="218" width="520" height="110" rx="6" class="boxP"/>
+  <text x="35" y="240" class="lbl mono">Object[] array = batches;</text>
+  <text x="35" y="256" class="lbl mono">array[0] = /* Frame 3 */;</text>
+  <text x="35" y="276" class="lbl sub">List[] widens to Object[] — array covariance permits this,</text>
+  <text x="35" y="292" class="lbl sub">with zero compiler check on what gets stored into array[0].</text>
+
+  <rect x="580" y="218" width="520" height="110" rx="6" class="boxW"/>
+  <text x="595" y="240" class="lbl h3">javac -Xlint:unchecked</text>
+  <text x="595" y="260" class="lbl mono">Leak2.java:12: warning: [unchecked] unchecked generic</text>
+  <text x="595" y="276" class="lbl mono">array creation for varargs parameter of type List&lt;Money&gt;[]</text>
+  <text x="595" y="296" class="lbl sub">The array's reified type is raw List, not List&lt;Money&gt;.</text>
+
+  <path class="flow" d="M 540 273 H 580"/>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="348" class="lbl h2">FRAME 3 — A List&lt;String&gt; IS STORED WHERE List&lt;Money&gt; WAS DECLARED</text>
+  <rect x="20" y="361" width="520" height="110" rx="6" class="boxH"/>
+  <text x="35" y="383" class="lbl mono">array[0] = List.of("not money");</text>
+  <text x="35" y="403" class="lbl sub">A List&lt;String&gt; is written into the slot declared List&lt;Money&gt;.</text>
+  <text x="35" y="419" class="lbl sub">Legal at compile time: List&lt;String&gt; IS-A List (erased, raw type).</text>
+  <text x="35" y="439" class="lbl sub" style="font-weight:700">This is the heap pollution — no exception yet.</text>
+
+  <rect x="580" y="361" width="520" height="110" rx="6" class="boxW"/>
+  <text x="595" y="383" class="lbl h3">HEAP STATE AFTER THE WRITE</text>
+  <text x="595" y="405" class="lbl mono">batches[0]  declared: List&lt;Money&gt;</text>
+  <text x="595" y="421" class="lbl mono">batches[0]  actually holds: List&lt;String&gt;</text>
+  <text x="595" y="443" class="lbl sub">Invisible until something reads that slot as List&lt;Money&gt;.</text>
+
+  <path class="flow" d="M 540 416 H 580"/>
+
+  <!-- FRAME 4 -->
+  <text x="20" y="491" class="lbl h2">FRAME 4 — THE ClassCastException FIRES AT AN UNRELATED READ SITE</text>
+  <rect x="20" y="504" width="520" height="140" rx="6" class="boxF"/>
+  <text x="35" y="526" class="lbl mono">Money m = result[0].get(0);</text>
+  <text x="35" y="548" class="lbl sub">get(0) returns "not money" (a String) as Object;</text>
+  <text x="35" y="564" class="lbl sub">the compiler's inserted checkcast to Money fires right here —</text>
+  <text x="35" y="580" class="lbl sub">line 13, far from the line 8 write that polluted the array.</text>
+  <text x="35" y="604" class="lbl sub" style="font-weight:700">The pollution and the failure are in different methods entirely.</text>
+
+  <rect x="580" y="504" width="520" height="140" rx="6" class="boxF"/>
+  <text x="595" y="526" class="lbl h3">REAL EXCEPTION — java Leak2</text>
+  <text x="595" y="546" class="lbl mono">Exception in thread "main"</text>
+  <text x="595" y="562" class="lbl mono">java.lang.ClassCastException: class java.lang.String</text>
+  <text x="595" y="578" class="lbl mono">cannot be cast to class Money (java.lang.String is in</text>
+  <text x="595" y="594" class="lbl mono">module java.base of loader 'bootstrap'; Money is in</text>
+  <text x="595" y="610" class="lbl mono">unnamed module of loader 'app')</text>
+  <text x="595" y="628" class="lbl mono" style="font-weight:700">    at Leak2.main(Leak2.java:13)</text>
+
+  <path class="flow" d="M 540 574 H 580"/>
+
+  <!-- ANNOTATION: SafeVarargs conditions -->
+  <rect x="20" y="664" width="1080" height="160" rx="6" class="boxA"/>
+  <text x="35" y="686" class="lbl h3">THE THREE CONDITIONS FOR @SafeVarargs TO BE HONEST</text>
+  <text x="35" y="708" class="lbl body" style="font-size:12.5px">1. The method never stores anything into the varargs array.</text>
+  <text x="35" y="728" class="lbl body" style="font-size:12.5px">2. The method never lets a reference to the varargs array escape to untrusted code.</text>
+  <text x="35" y="748" class="lbl body" style="font-size:12.5px">3. The method is static, final, or private, or is a constructor — it cannot be overridden.</text>
+  <text x="35" y="772" class="lbl sub">batch(...) above breaks (1) — array[0] = ... — and breaks (2) by returning batches itself.</text>
+  <text x="35" y="788" class="lbl sub">@SafeVarargs on this method would be a lie; the fix is to stop storing into and returning the array.</text>
+  <text x="35" y="804" class="lbl sub">A method that only reads its varargs elements (e.g. Arrays.asList-style) can honestly carry the annotation.</text>
+
+  <line x1="20" y1="850" x2="1100" y2="850" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="865" width="18" height="14" class="boxH"/>
+  <text x="46" y="877" class="lbl tiny">the risky / highlighted step</text>
+  <rect x="230" y="865" width="18" height="14" class="boxP"/>
+  <text x="256" y="877" class="lbl tiny">ordinary structural code</text>
+  <rect x="430" y="865" width="18" height="14" class="boxW"/>
+  <text x="456" y="877" class="lbl tiny">verbatim javac/heap-state panel</text>
+  <rect x="680" y="865" width="18" height="14" class="boxF"/>
+  <text x="706" y="877" class="lbl tiny">failure site / thrown exception</text>
+  <rect x="900" y="865" width="18" height="14" class="boxA"/>
+  <text x="926" y="877" class="lbl tiny">annotation</text>
+  <path class="flow" d="M 20 903 H 60"/>
+  <text x="70" y="908" class="lbl tiny">A → B : A leads to / produces B, in sequence order</text>
+</svg>

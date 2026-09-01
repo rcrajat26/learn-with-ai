@@ -1,0 +1,105 @@
+<svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two precedence stacks side by side, highest priority at top. Agents: managed
+     settings, --agents CLI JSON, .claude/agents/ as project, ~/.claude/agents/ as user, plugin
+     agents/, where project beats user. Skills: enterprise, ~/.claude/skills/ as personal,
+     .claude/skills/ as project, where personal beats project. The two subsystems order project and
+     user oppositely, annotated as two subsystems, two orders.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .capt  { font-size: 10.5px; fill: #4b5563; font-weight: 700; letter-spacing: .5px; }
+
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.8; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="1000" height="680" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AGENTS AND SKILLS ORDER OPPOSITELY</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="250" y="72" text-anchor="middle" class="lbl h2">AGENTS — highest precedence first</text>
+  <text x="750" y="72" text-anchor="middle" class="lbl h2">SKILLS — highest precedence first</text>
+
+  <text x="250" y="88" text-anchor="middle" class="lbl capt">HIGHEST PRIORITY</text>
+  <text x="750" y="88" text-anchor="middle" class="lbl capt">HIGHEST PRIORITY</text>
+
+  <!-- agent stack -->
+  <rect x="40" y="100" width="28" height="20" rx="10" class="pill"/>
+  <text x="54" y="114" text-anchor="middle" class="lbl tiny" font-weight="700">1</text>
+  <rect x="80" y="100" width="340" height="56" rx="6" class="boxW"/>
+  <text x="250" y="133" text-anchor="middle" class="lbl node">managed settings</text>
+
+  <rect x="40" y="172" width="28" height="20" rx="10" class="pill"/>
+  <text x="54" y="186" text-anchor="middle" class="lbl tiny" font-weight="700">2</text>
+  <rect x="80" y="172" width="340" height="56" rx="6" class="boxW"/>
+  <text x="250" y="205" text-anchor="middle" class="lbl node">--agents CLI JSON</text>
+
+  <rect x="40" y="244" width="28" height="20" rx="10" class="pill"/>
+  <text x="54" y="258" text-anchor="middle" class="lbl tiny" font-weight="700">3</text>
+  <rect x="80" y="244" width="340" height="56" rx="6" class="boxH"/>
+  <text x="250" y="270" text-anchor="middle" class="lbl node">.claude/agents/</text>
+  <text x="250" y="286" text-anchor="middle" class="lbl sub">(project)</text>
+
+  <rect x="40" y="316" width="28" height="20" rx="10" class="pill"/>
+  <text x="54" y="330" text-anchor="middle" class="lbl tiny" font-weight="700">4</text>
+  <rect x="80" y="316" width="340" height="56" rx="6" class="boxW"/>
+  <text x="250" y="342" text-anchor="middle" class="lbl node">~/.claude/agents/</text>
+  <text x="250" y="358" text-anchor="middle" class="lbl sub">(user)</text>
+
+  <rect x="40" y="388" width="28" height="20" rx="10" class="pill"/>
+  <text x="54" y="402" text-anchor="middle" class="lbl tiny" font-weight="700">5</text>
+  <rect x="80" y="388" width="340" height="56" rx="6" class="boxW"/>
+  <text x="250" y="421" text-anchor="middle" class="lbl node">plugin agents/</text>
+
+  <text x="250" y="458" text-anchor="middle" class="lbl capt">LOWEST PRIORITY</text>
+
+  <!-- skill stack -->
+  <rect x="540" y="100" width="28" height="20" rx="10" class="pill"/>
+  <text x="554" y="114" text-anchor="middle" class="lbl tiny" font-weight="700">1</text>
+  <rect x="580" y="100" width="340" height="56" rx="6" class="boxW"/>
+  <text x="750" y="133" text-anchor="middle" class="lbl node">enterprise</text>
+
+  <rect x="540" y="172" width="28" height="20" rx="10" class="pill"/>
+  <text x="554" y="186" text-anchor="middle" class="lbl tiny" font-weight="700">2</text>
+  <rect x="580" y="172" width="340" height="56" rx="6" class="boxH"/>
+  <text x="750" y="198" text-anchor="middle" class="lbl node">~/.claude/skills/</text>
+  <text x="750" y="214" text-anchor="middle" class="lbl sub">(personal)</text>
+
+  <rect x="540" y="244" width="28" height="20" rx="10" class="pill"/>
+  <text x="554" y="258" text-anchor="middle" class="lbl tiny" font-weight="700">3</text>
+  <rect x="580" y="244" width="340" height="56" rx="6" class="boxW"/>
+  <text x="750" y="270" text-anchor="middle" class="lbl node">.claude/skills/</text>
+  <text x="750" y="286" text-anchor="middle" class="lbl sub">(project)</text>
+
+  <text x="750" y="316" text-anchor="middle" class="lbl capt">LOWEST PRIORITY</text>
+
+  <!-- annotation -->
+  <rect x="80" y="480" width="840" height="100" rx="6" class="ann"/>
+  <text x="100" y="502" class="lbl h2">TWO SUBSYSTEMS, TWO ORDERS</text>
+  <text x="100" y="524" class="lbl tiny">agents: project (.claude/agents/, #3) beats user (~/.claude/agents/, #4)</text>
+  <text x="100" y="546" class="lbl tiny">skills: personal (~/.claude/skills/, #2) beats project (.claude/skills/, #3)</text>
+  <text x="100" y="568" class="lbl tiny" fill="#4b5563">the two subsystems rank project and user-level oppositely</text>
+
+  <!-- legend -->
+  <line x1="20" y1="600" x2="980" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="612" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="624" class="lbl tiny">other tier in the order</text>
+
+  <rect x="270" y="612" width="22" height="16" rx="3" class="boxH"/>
+  <text x="300" y="624" class="lbl tiny">wins the precedence tie for this subsystem</text>
+
+  <rect x="20" y="642" width="22" height="16" rx="9" class="pill"/>
+  <text x="50" y="654" class="lbl tiny">rank — position in the order (1 = highest)</text>
+
+  <rect x="400" y="642" width="22" height="16" rx="3" class="ann"/>
+  <text x="428" y="654" class="lbl tiny">cross-subsystem note</text>
+</svg>

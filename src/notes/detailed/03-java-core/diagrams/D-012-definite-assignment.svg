@@ -1,0 +1,120 @@
+<svg viewBox="0 0 1120 600" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Definite assignment as a dataflow analysis, shown as two side-by-side variants of a method that computes a StakeSplit's blank final Money bonusPortion from the condition if (bonusAvailable.compareTo(tenPercentOfStake) &gt;= 0). Variant A has both an if branch that assigns bonusPortion = 0.33 and an else branch that assigns bonusPortion = 0.00; every edge into the merge point is labelled assigned, and the merge resolves green as definitely assigned. Variant B has only the if branch, which assigns bonusPortion = 0.33; the false path falls through with no else and no assignment, its edge labelled not assigned, so the merge resolves red as a compile error: variable bonusPortion might not have been initialized.">
+  <defs>
+    <marker id="arrow012" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="600" fill="#ffffff"/>
+
+  <text x="560" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">Definite assignment as a dataflow analysis</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ LANE HEADERS ============ -->
+  <text x="290" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">VARIANT A &#8212; IF/ELSE, BOTH PATHS ASSIGN</text>
+  <line x1="60" y1="72" x2="520" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="830" y="64" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold"
+        fill="#1f2937">VARIANT B &#8212; IF WITH NO ELSE</text>
+  <line x1="600" y1="72" x2="1060" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ============ VARIANT A (lane center x=290) ============ -->
+  <rect x="90" y="86" width="400" height="46" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="290" y="104" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">final Money bonusPortion;</text>
+  <text x="290" y="122" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(blank &#8212; no initializer)</text>
+
+  <line x1="290" y1="132" x2="290" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+
+  <rect x="90" y="150" width="400" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="290" y="180" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">if (bonusAvailable.compareTo(tenPercentOfStake) &gt;= 0)</text>
+
+  <line x1="290" y1="200" x2="290" y2="222" stroke="#475569" stroke-width="2"/>
+  <path d="M 160 222 H 420" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="290" y1="200" x2="290" y2="222" stroke="#475569" stroke-width="2"/>
+  <line x1="160" y1="222" x2="160" y2="240" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <line x1="420" y1="222" x2="420" y2="240" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <text x="150" y="218" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">true</text>
+  <text x="430" y="218" text-anchor="start" font-family="sans-serif" font-size="11" fill="#4b5563">false</text>
+
+  <rect x="60" y="240" width="200" height="48" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="160" y="258" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">TRUE</text>
+  <text x="160" y="276" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bonusPortion = 0.33;</text>
+
+  <rect x="320" y="240" width="200" height="48" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="420" y="258" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">FALSE</text>
+  <text x="420" y="276" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bonusPortion = 0.00;</text>
+
+  <line x1="160" y1="288" x2="160" y2="310" stroke="#475569" stroke-width="2"/>
+  <line x1="420" y1="288" x2="420" y2="310" stroke="#475569" stroke-width="2"/>
+  <path d="M 160 310 H 420" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="290" y1="310" x2="290" y2="330" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <text x="150" y="306" text-anchor="end" font-family="sans-serif" font-size="11" fill="#15803d">assigned: 0.33</text>
+  <text x="430" y="306" text-anchor="start" font-family="sans-serif" font-size="11" fill="#15803d">assigned: 0.00</text>
+
+  <rect x="90" y="330" width="400" height="70" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="290" y="356" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">DEFINITELY ASSIGNED</text>
+  <text x="290" y="376" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bonusPortion is assigned on every path</text>
+  <text x="290" y="392" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(if-branch: 0.33, else-branch: 0.00)</text>
+
+  <!-- ============ VARIANT B (lane center x=830, offset +540 from A) ============ -->
+  <rect x="630" y="86" width="400" height="46" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="830" y="104" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">final Money bonusPortion;</text>
+  <text x="830" y="122" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(blank &#8212; no initializer)</text>
+
+  <line x1="830" y1="132" x2="830" y2="150" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+
+  <rect x="630" y="150" width="400" height="50" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="830" y="180" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">if (bonusAvailable.compareTo(tenPercentOfStake) &gt;= 0)</text>
+
+  <line x1="830" y1="200" x2="830" y2="222" stroke="#475569" stroke-width="2"/>
+  <path d="M 700 222 H 960" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="700" y1="222" x2="700" y2="240" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <line x1="960" y1="222" x2="960" y2="240" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <text x="690" y="218" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">true</text>
+  <text x="970" y="218" text-anchor="start" font-family="sans-serif" font-size="11" fill="#4b5563">false</text>
+
+  <rect x="600" y="240" width="200" height="48" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="700" y="258" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">TRUE</text>
+  <text x="700" y="276" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bonusPortion = 0.33;</text>
+
+  <rect x="860" y="240" width="200" height="48" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="960" y="258" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">FALSE (no else)</text>
+  <text x="960" y="276" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">control falls through</text>
+
+  <line x1="700" y1="288" x2="700" y2="310" stroke="#475569" stroke-width="2"/>
+  <line x1="960" y1="288" x2="960" y2="310" stroke="#475569" stroke-width="2"/>
+  <path d="M 700 310 H 960" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="830" y1="310" x2="830" y2="330" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <text x="690" y="306" text-anchor="end" font-family="sans-serif" font-size="11" fill="#15803d">assigned: 0.33</text>
+  <text x="970" y="306" text-anchor="start" font-family="sans-serif" font-size="11" fill="#b91c1c">not assigned</text>
+
+  <rect x="630" y="330" width="400" height="70" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="830" y="356" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">COMPILE ERROR</text>
+  <text x="830" y="376" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">variable bonusPortion might not have been initialized</text>
+  <text x="830" y="392" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">(true-branch assigns 0.33; false path never assigns)</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="430" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="20" y1="438" x2="1100" y2="438" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="450" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="463" font-family="sans-serif" font-size="11" fill="#4b5563">declaration / condition &#8212; code executed on every path</text>
+
+  <rect x="30" y="474" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="487" font-family="sans-serif" font-size="11" fill="#4b5563">branch that assigns bonusPortion; also merge state when assigned on all paths</text>
+
+  <rect x="30" y="498" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="511" font-family="sans-serif" font-size="11" fill="#4b5563">path with no assignment (no else &#8212; falls through)</text>
+
+  <rect x="30" y="522" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="58" y="535" font-family="sans-serif" font-size="11" fill="#4b5563">compile error at merge &#8212; variable may not be definitely assigned</text>
+
+  <line x1="600" y1="458" x2="622" y2="458" stroke="#475569" stroke-width="2" marker-end="url(#arrow012)"/>
+  <text x="628" y="463" font-family="sans-serif" font-size="11" fill="#4b5563">control flow (structural edge)</text>
+
+  <text x="600" y="487" font-family="sans-serif" font-size="11" fill="#4b5563">edge text (e.g. "assigned: 0.33", "not assigned") &#8212; the flow-analysis outcome on that specific path</text>
+</svg>

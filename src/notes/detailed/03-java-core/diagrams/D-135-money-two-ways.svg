@@ -1,0 +1,146 @@
+<svg viewBox="0 0 1200 960" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-and-after comparison of two Money representations for QuizStakes, measured on Oracle JDK 21.0.7 on macOS aarch64 with compressed oops on. On the left, Money as a record of BigDecimal amount and Currency currency: the record itself is 24 bytes and holds a reference to a BigDecimal of 40 bytes (12-byte header plus intVal reference 4, scale 4, precision 4, stringCache reference 4 and intCompact long 8, giving 36 aligned up to 40) and a reference to a shared interned Currency that is not charged per Money, for 64 bytes per Money; one full 3.33 stake split allocates 192 bytes counted from a pre-built stake Money — four BigDecimals at 40, three Money records at 24, and a two-element array at 24 — or 256 bytes counted from a bare long, which adds one more BigDecimal at 40 and one more Money at 24. On the right, MoneyMinor as a record of a long units field and Currency: 12-byte header plus 8-byte long plus 4-byte Currency reference is exactly 24 bytes, and one full 3.33 split allocates 72 bytes counted from a pre-built stake MoneyMinor — two MoneyMinor records at 24 plus a two-element array at 24 — or 96 bytes counted from a bare long, which adds one more MoneyMinor at 24. The ratio is 2.67 times on both bases: 192 over 72, and 256 over 96. Both sides show the same split, 3.33 into 0.33 bonus plus 3.00 cash, or 333 minor units into 33 plus 300. The right side also states the overflow bound: Long.MAX_VALUE is 9,223,372,036,854,775,807 minor units, which at scale 2 is 92,233,720,368,547,758.07 major units, roughly 9.2 times ten to the sixteenth, which is why plus still needs Math.addExact rather than a bare plus operator. All byte figures are measured under the flag minus X X colon minus DoEscapeAnalysis; under the default JIT, escape analysis scalar-replaces part of the BigDecimal path and one run measured 152 bytes against 72 bytes, because with escape analysis on the long path is 72 bytes on both bases — the extra MoneyMinor that the bare-long basis adds gets scalar-replaced. That is why each panel states the basis of the count rather than a single number.">
+  <defs>
+    <style>
+      .t   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+      .m   { font-family: Menlo, "SF Mono", monospace; fill: #1f2937; }
+      .ttl { font-size: 15px; font-weight: bold; }
+      .bnd { font-size: 13px; font-weight: bold; }
+      .nt  { font-size: 13px; font-weight: bold; }
+      .lh  { font-size: 11px; font-weight: bold; }
+      .ph  { font-size: 12.5px; font-weight: bold; }
+      .sm  { font-size: 11px; }
+      .sec { fill: #4b5563; }
+      .bp  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+      .bh  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+      .bg  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+      .bf  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+      .bw  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+      .ba  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+      .e   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#arr135); }
+      .hr  { stroke: #d1d5db; stroke-width: 1.5; }
+    </style>
+    <marker id="arr135" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="960" fill="#ffffff"/>
+
+  <text class="t ttl" x="20" y="32">Money two ways: a BigDecimal object graph against one minor-unit long</text>
+  <line class="hr" x1="20" y1="42" x2="1180" y2="42"/>
+
+  <!-- ============ LEFT: BigDecimal Money ============ -->
+  <text class="t bnd" x="40" y="70">BEFORE — Money(BigDecimal amount, Currency currency)</text>
+
+  <rect class="bp" x="170" y="90" width="300" height="70" rx="6"/>
+  <text class="t nt" x="320" y="112" text-anchor="middle">Money — record, 64 B total</text>
+  <text class="t sm" x="320" y="132" text-anchor="middle">header 12 + amount oop 4 + currency oop 4 = 20</text>
+  <text class="t sm sec" x="320" y="150" text-anchor="middle">aligned up to 24 B for the record itself</text>
+
+  <path class="e" d="M 260 160 V 185 H 175 V 210"/>
+  <path class="e" d="M 380 160 V 185 H 465 V 210"/>
+
+  <rect class="bh" x="40" y="210" width="270" height="150" rx="6"/>
+  <text class="t lh" x="52" y="232">BigDecimal.valueOf(333, 2) — 40 B</text>
+  <text class="t sm" x="52" y="250">12  object header</text>
+  <text class="t sm" x="52" y="266">+  4  intVal ref (BigInteger)</text>
+  <text class="t sm" x="52" y="282">+  4  scale</text>
+  <text class="t sm" x="52" y="298">+  4  precision</text>
+  <text class="t sm" x="52" y="314">+  4  stringCache ref</text>
+  <text class="t sm" x="52" y="330">+  8  intCompact long</text>
+  <text class="t sm sec" x="52" y="346">=  36, aligned to 40 B</text>
+
+  <rect class="bw" x="330" y="210" width="270" height="70" rx="6"/>
+  <text class="t lh" x="342" y="232">Currency — interned</text>
+  <text class="t sm" x="342" y="250">one shared instance per ISO code</text>
+  <text class="t sm sec" x="342" y="268">not charged per Money</text>
+
+  <rect class="ba" x="40" y="380" width="560" height="172" rx="6"/>
+  <text class="t ph" x="52" y="404">ONE 3.33 SPLIT — BigDecimal PATH</text>
+  <text class="t sm" x="52" y="426">stake 3.33 → bonus 0.33, cash 3.00, sum 3.33</text>
+  <text class="m sm" x="52" y="444">bonus = stake.multiply(new BigDecimal("0.10")).setScale(2, RoundingMode.DOWN)</text>
+  <text class="t sm" x="52" y="464">allocations depend on where the count starts:</text>
+  <text class="t sm" x="64" y="482">from a pre-built stake Money:  192 B  (40 + 40 + 24 + 40 + 24 + 24)</text>
+  <text class="t sm" x="64" y="502">from a bare long:  256 B  (adds one BigDecimal 40 + one Money 24)</text>
+  <text class="t sm" x="52" y="522">the scale travels with the value, so JPY (0) and BHD (3)</text>
+  <text class="t sm sec" x="52" y="540">need no call-site change</text>
+
+  <rect class="bf" x="40" y="572" width="560" height="54" rx="6"/>
+  <text class="t nt" x="320" y="596" text-anchor="middle">64 B per Money  ·  192 B or 256 B per 3.33 split, by basis</text>
+  <text class="t sm sec" x="320" y="616" text-anchor="middle">measured on Oracle JDK 21.0.7, macOS aarch64, compressed oops on</text>
+
+  <rect class="bp" x="40" y="706" width="560" height="110" rx="6"/>
+  <text class="t nt" x="52" y="730">NO OVERFLOW BOUND — BigDecimal IS ARBITRARY-PRECISION</text>
+  <text class="t sm" x="52" y="750">intCompact carries the value in a long while it fits; past that,</text>
+  <text class="t sm" x="52" y="768">intVal — a BigInteger — takes over and the object grows.</text>
+  <text class="t sm" x="52" y="786">So there is no addExact discipline to remember, and no fixed cost.</text>
+  <text class="t sm sec" x="52" y="804">That safety is what the 40 extra bytes per Money buy.</text>
+
+  <!-- ============ RIGHT: minor-unit long ============ -->
+  <text class="t bnd" x="640" y="70">AFTER — MoneyMinor(long units, Currency currency)</text>
+
+  <rect class="bg" x="745" y="90" width="310" height="70" rx="6"/>
+  <text class="t nt" x="900" y="112" text-anchor="middle">MoneyMinor — record, 24 B total</text>
+  <text class="t sm" x="900" y="132" text-anchor="middle">header 12 + units long 8 + currency oop 4 = 24</text>
+  <text class="t sm sec" x="900" y="150" text-anchor="middle">exactly 24 B — no alignment padding needed</text>
+
+  <path class="e" d="M 830 160 V 185 H 765 V 210"/>
+  <path class="e" d="M 970 160 V 185 H 1035 V 210"/>
+
+  <rect class="bg" x="640" y="210" width="250" height="90" rx="6"/>
+  <text class="t lh" x="652" y="232">long units — one primitive</text>
+  <text class="t sm" x="652" y="252">no object header, no oop, no</text>
+  <text class="t sm" x="652" y="270">indirection: the value lives</text>
+  <text class="t sm sec" x="652" y="288">inline in the record layout</text>
+
+  <rect class="bw" x="910" y="210" width="250" height="90" rx="6"/>
+  <text class="t lh" x="922" y="232">Currency — interned</text>
+  <text class="t sm" x="922" y="252">the same shared instance</text>
+  <text class="t sm" x="922" y="270">as the BigDecimal form uses</text>
+  <text class="t sm sec" x="922" y="288">not charged per MoneyMinor</text>
+
+  <rect class="ba" x="640" y="380" width="520" height="172" rx="6"/>
+  <text class="t ph" x="652" y="404">ONE 3.33 SPLIT — long PATH</text>
+  <text class="t sm" x="652" y="426">stake 333 minor units → bonus 33, cash 300, sum 333</text>
+  <text class="m sm" x="652" y="444">bonus = 333 * 10 / 100</text>
+  <text class="t sm" x="652" y="464">allocations depend on where the count starts:</text>
+  <text class="t sm" x="652" y="482">from a pre-built stake MoneyMinor:  72 B  (2 x MoneyMinor 24 + array 24)</text>
+  <text class="t sm" x="652" y="502">from a bare long:  96 B  (adds one MoneyMinor 24)</text>
+  <text class="t sm" x="652" y="522">integer division truncates toward zero — no RoundingMode argument needed</text>
+  <text class="t sm sec" x="652" y="540">cost: scale is fixed at construction, so JPY (0) and BHD (3) move onto the caller</text>
+
+  <rect class="bg" x="640" y="572" width="520" height="54" rx="6"/>
+  <text class="t nt" x="900" y="596" text-anchor="middle">24 B per MoneyMinor  ·  72 B or 96 B per 3.33 split, by basis</text>
+  <text class="t sm sec" x="900" y="616" text-anchor="middle">192 / 72 and 256 / 96 per split — 2.67x on both bases</text>
+
+  <text class="t sm sec" x="40" y="652">All byte figures are measured under -XX:-DoEscapeAnalysis. Under the default JIT, escape analysis scalar-replaces part of</text>
+  <text class="t sm sec" x="40" y="670">the BigDecimal path — one run measured 152 B against 72 B, because with escape analysis on the long path is 72 B on both</text>
+  <text class="t sm sec" x="40" y="688">bases: the extra MoneyMinor the bare-long basis adds gets scalar-replaced. Hence each panel states its basis.</text>
+
+  <rect class="bh" x="640" y="706" width="520" height="110" rx="6"/>
+  <text class="t nt" x="652" y="730">OVERFLOW BOUND OF THE long MINOR-UNIT FORM</text>
+  <text class="t sm" x="652" y="750">Long.MAX_VALUE = 9,223,372,036,854,775,807 minor units</text>
+  <text class="t sm" x="652" y="768">at scale 2 that is 92,233,720,368,547,758.07 major units</text>
+  <text class="t sm" x="652" y="786">≈ 9.2 × 10^16 — ample headroom at 19.8M ledger entries a day</text>
+  <text class="t sm sec" x="652" y="804">but plus() still needs Math.addExact, never a bare + operator</text>
+
+  <!-- ============ LEGEND ============ -->
+  <line class="hr" x1="20" y1="840" x2="1180" y2="840"/>
+
+  <rect class="bp" x="40" y="854" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="865">the BigDecimal-backed Money and what its precision buys</text>
+  <rect class="bh" x="40" y="876" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="887">the field-by-field byte arithmetic, and the long form&#39;s bound</text>
+  <rect class="bf" x="40" y="898" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="909">the costlier total — 64 B per value, 192 B or 256 B per split</text>
+
+  <rect class="bg" x="640" y="854" width="24" height="14" rx="3"/>
+  <text class="t sm" x="674" y="865">the minor-unit long form and its cheaper total</text>
+  <rect class="bw" x="640" y="876" width="24" height="14" rx="3"/>
+  <text class="t sm" x="674" y="887">shared interned Currency — not charged to either form</text>
+  <rect class="ba" x="640" y="898" width="24" height="14" rx="3"/>
+  <text class="t sm" x="674" y="909">annotation panel — the split, actually run, and its cost</text>
+  <path class="e" d="M 640 925 H 690"/>
+  <text class="t sm" x="702" y="929">record field — arrow points at the object the field holds</text>
+</svg>

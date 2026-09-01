@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1040 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The full hook event catalogue, v2.1.2xx, 33 events total, grouped into twelve category panels: session lifecycle (SessionStart, Setup, SessionEnd); prompt (UserPromptSubmit, UserPromptExpansion); tools (PreToolUse, PostToolUse, PostToolUseFailure, PostToolBatch); permissions (PermissionRequest, PermissionDenied); turn (Stop, StopFailure); subagents (SubagentStart, SubagentStop); tasks (TaskCreated, TaskCompleted, TeammateIdle); context (PreCompact, PostCompact, InstructionsLoaded, PreModelSwitch, PostModelSwitch); environment (ConfigChange, CwdChanged, DirectoryAdded, FileChanged); worktrees (WorktreeCreate, WorktreeRemove); MCP (Elicitation, ElicitationResult); UI (Notification, MessageDisplay).">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .panel { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="920" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE FULL HOOK EVENT CATALOGUE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="800" y="16" width="220" height="30" rx="15" class="pill"/>
+  <text x="910" y="37" text-anchor="middle" class="lbl tiny" style="font-weight:700">v2.1.2xx &#8226; 33 events total</text>
+
+  <!-- Grid of 12 panels, 4 columns x 3 rows -->
+  <!-- Row 1 -->
+  <rect x="20" y="60" width="240" height="130" rx="6" class="panel"/>
+  <text x="34" y="80" class="lbl h2">session lifecycle</text>
+  <text x="34" y="100" class="lbl tiny">SessionStart</text>
+  <text x="34" y="118" class="lbl tiny">Setup</text>
+  <text x="34" y="136" class="lbl tiny">SessionEnd</text>
+
+  <rect x="280" y="60" width="240" height="130" rx="6" class="panel"/>
+  <text x="294" y="80" class="lbl h2">prompt</text>
+  <text x="294" y="100" class="lbl tiny">UserPromptSubmit</text>
+  <text x="294" y="118" class="lbl tiny">UserPromptExpansion</text>
+
+  <rect x="540" y="60" width="240" height="130" rx="6" class="panel"/>
+  <text x="554" y="80" class="lbl h2">tools</text>
+  <text x="554" y="100" class="lbl tiny">PreToolUse</text>
+  <text x="554" y="118" class="lbl tiny">PostToolUse</text>
+  <text x="554" y="136" class="lbl tiny">PostToolUseFailure</text>
+  <text x="554" y="154" class="lbl tiny">PostToolBatch</text>
+
+  <rect x="800" y="60" width="220" height="130" rx="6" class="panel"/>
+  <text x="814" y="80" class="lbl h2">permissions</text>
+  <text x="814" y="100" class="lbl tiny">PermissionRequest</text>
+  <text x="814" y="118" class="lbl tiny">PermissionDenied</text>
+
+  <!-- Row 2 -->
+  <rect x="20" y="210" width="240" height="150" rx="6" class="panel"/>
+  <text x="34" y="230" class="lbl h2">turn</text>
+  <text x="34" y="250" class="lbl tiny">Stop</text>
+  <text x="34" y="268" class="lbl tiny">StopFailure</text>
+
+  <rect x="280" y="210" width="240" height="150" rx="6" class="panel"/>
+  <text x="294" y="230" class="lbl h2">subagents</text>
+  <text x="294" y="250" class="lbl tiny">SubagentStart</text>
+  <text x="294" y="268" class="lbl tiny">SubagentStop</text>
+
+  <rect x="540" y="210" width="240" height="150" rx="6" class="panel"/>
+  <text x="554" y="230" class="lbl h2">tasks</text>
+  <text x="554" y="250" class="lbl tiny">TaskCreated</text>
+  <text x="554" y="268" class="lbl tiny">TaskCompleted</text>
+  <text x="554" y="286" class="lbl tiny">TeammateIdle</text>
+
+  <rect x="800" y="210" width="220" height="150" rx="6" class="panel"/>
+  <text x="814" y="230" class="lbl h2">context</text>
+  <text x="814" y="250" class="lbl tiny">PreCompact</text>
+  <text x="814" y="268" class="lbl tiny">PostCompact</text>
+  <text x="814" y="286" class="lbl tiny">InstructionsLoaded</text>
+  <text x="814" y="304" class="lbl tiny">PreModelSwitch</text>
+  <text x="814" y="322" class="lbl tiny">PostModelSwitch</text>
+
+  <!-- Row 3 -->
+  <rect x="20" y="380" width="240" height="150" rx="6" class="panel"/>
+  <text x="34" y="400" class="lbl h2">environment</text>
+  <text x="34" y="420" class="lbl tiny">ConfigChange</text>
+  <text x="34" y="438" class="lbl tiny">CwdChanged</text>
+  <text x="34" y="456" class="lbl tiny">DirectoryAdded</text>
+  <text x="34" y="474" class="lbl tiny">FileChanged</text>
+
+  <rect x="280" y="380" width="240" height="150" rx="6" class="panel"/>
+  <text x="294" y="400" class="lbl h2">worktrees</text>
+  <text x="294" y="420" class="lbl tiny">WorktreeCreate</text>
+  <text x="294" y="438" class="lbl tiny">WorktreeRemove</text>
+
+  <rect x="540" y="380" width="240" height="150" rx="6" class="panel"/>
+  <text x="554" y="400" class="lbl h2">MCP</text>
+  <text x="554" y="420" class="lbl tiny">Elicitation</text>
+  <text x="554" y="438" class="lbl tiny">ElicitationResult</text>
+
+  <rect x="800" y="380" width="220" height="150" rx="6" class="panel"/>
+  <text x="814" y="400" class="lbl h2">UI</text>
+  <text x="814" y="420" class="lbl tiny">Notification</text>
+  <text x="814" y="438" class="lbl tiny">MessageDisplay</text>
+
+  <!-- count check panel -->
+  <rect x="20" y="560" width="1000" height="60" rx="6" class="panel"/>
+  <text x="36" y="582" class="lbl tiny" style="font-weight:700">33 named events across the 12 groups above, catalogue version v2.1.2xx</text>
+  <text x="36" y="602" class="lbl tiny">3 + 2 + 4 + 2 + 2 + 2 + 3 + 5 + 4 + 2 + 2 + 2 = 33 shown &#8212; every event accounted for at this version</text>
+
+  <!-- legend -->
+  <line x1="20" y1="636" x2="1020" y2="636" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="652" width="20" height="14" rx="2" class="panel"/>
+  <text x="46" y="663" class="lbl tiny">category group panel — one left-aligned row per event leaf</text>
+  <rect x="420" y="652" width="34" height="18" rx="9" class="pill"/>
+  <text x="460" y="664" class="lbl tiny">version / count badge</text>
+</svg>

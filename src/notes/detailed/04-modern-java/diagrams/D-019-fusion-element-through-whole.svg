@@ -1,0 +1,157 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Stream fusion. Left: the wrong mental model treats a pipeline of filter, map and collect
+     as three separate passes over the whole deposits list, materialising two intermediate lists.
+     Right: the real model. Each deposit amount — 65, 480, 65 — runs through filter, then map, then
+     the collector, completely, before the next deposit starts. Call order is 1 through 9, zig-zagging
+     down the three stages one element at a time. No intermediate list ever exists.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .num   { font-size: 12px; font-weight: 700; fill: #b45309; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STREAM FUSION — THREE PASSES (WRONG) VS ONE ELEMENT THROUGH THE WHOLE CHAIN (REAL)</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <text x="30" y="66" class="lbl h2">THREE SEPARATE PASSES OVER THE WHOLE LIST</text>
+  <text x="590" y="66" class="lbl h2">ONE ELEMENT THROUGH THE WHOLE CHAIN, FUSED</text>
+  <line x1="560" y1="52" x2="560" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= LEFT SIDE ================= -->
+  <rect x="60" y="86" width="440" height="54" rx="6" class="boxP"/>
+  <text x="280" y="108" text-anchor="middle" class="lbl node">cardDeposits: List&lt;Money&gt;</text>
+  <text x="280" y="126" text-anchor="middle" class="lbl sub">95,000 card deposits/day, avg 65</text>
+
+  <path class="flow" d="M 280 140 V 158"/>
+  <text x="360" y="153" text-anchor="middle" class="lbl sub">PASS 1</text>
+
+  <rect x="60" y="160" width="440" height="46" rx="6" class="boxP"/>
+  <text x="280" y="188" text-anchor="middle" class="lbl node">.filter(amount -&gt; amount &gt;= 50)</text>
+
+  <path class="flow" d="M 280 206 V 224"/>
+
+  <rect x="60" y="226" width="440" height="52" rx="6" class="boxD"/>
+  <text x="280" y="248" text-anchor="middle" class="lbl node">intermediate List&lt;Money&gt; #1</text>
+  <text x="280" y="266" text-anchor="middle" class="lbl sub">materialised in full — size = N1, e.g. 61,750 elements</text>
+
+  <path class="flow" d="M 280 278 V 296"/>
+  <text x="360" y="291" text-anchor="middle" class="lbl sub">PASS 2</text>
+
+  <rect x="60" y="298" width="440" height="46" rx="6" class="boxP"/>
+  <text x="280" y="326" text-anchor="middle" class="lbl node">.map(Money::toCents)</text>
+
+  <path class="flow" d="M 280 344 V 362"/>
+
+  <rect x="60" y="364" width="440" height="52" rx="6" class="boxD"/>
+  <text x="280" y="386" text-anchor="middle" class="lbl node">intermediate List&lt;Long&gt; #2</text>
+  <text x="280" y="404" text-anchor="middle" class="lbl sub">materialised again — size = N1, same 61,750 elements</text>
+
+  <path class="flow" d="M 280 416 V 434"/>
+  <text x="360" y="429" text-anchor="middle" class="lbl sub">PASS 3</text>
+
+  <rect x="60" y="436" width="440" height="46" rx="6" class="boxP"/>
+  <text x="280" y="464" text-anchor="middle" class="lbl node">.collect(Collectors.toList())</text>
+
+  <path class="flow" d="M 280 482 V 500"/>
+
+  <rect x="60" y="502" width="440" height="46" rx="6" class="boxR"/>
+  <text x="280" y="530" text-anchor="middle" class="lbl node">List&lt;Long&gt; result</text>
+
+  <rect x="60" y="566" width="440" height="72" rx="6" class="panel"/>
+  <text x="76" y="586" class="lbl tiny" font-weight="700">Why this is wrong</text>
+  <text x="76" y="604" class="lbl tiny">The whole collection is walked three separate times; two full-size</text>
+  <text x="76" y="620" class="lbl tiny">lists (#1, #2) live in memory at once between the passes.</text>
+
+  <!-- ================= RIGHT SIDE ================= -->
+  <rect x="600" y="86" width="140" height="46" rx="6" class="boxP"/>
+  <text x="670" y="108" text-anchor="middle" class="lbl node">filter</text>
+  <text x="670" y="123" text-anchor="middle" class="lbl sub">amount &gt;= 50</text>
+
+  <rect x="800" y="86" width="140" height="46" rx="6" class="boxP"/>
+  <text x="870" y="108" text-anchor="middle" class="lbl node">map</text>
+  <text x="870" y="123" text-anchor="middle" class="lbl sub">Money::toCents</text>
+
+  <rect x="1000" y="86" width="80" height="46" rx="6" class="boxR"/>
+  <text x="1040" y="108" text-anchor="middle" class="lbl node">collect</text>
+  <text x="1040" y="123" text-anchor="middle" class="lbl sub">toList()</text>
+
+  <!-- row 1: deposit 65 -->
+  <text x="608" y="196" class="lbl body" font-weight="600">deposit #1 = 65</text>
+  <circle cx="670" cy="220" r="15" class="boxH"/>
+  <text x="670" y="224" text-anchor="middle" class="num">1</text>
+  <path class="flow" d="M 670 220 H 855"/>
+  <circle cx="870" cy="220" r="15" class="boxH"/>
+  <text x="870" y="224" text-anchor="middle" class="num">2</text>
+  <path class="flow" d="M 870 220 H 1025"/>
+  <circle cx="1040" cy="220" r="15" class="boxH"/>
+  <text x="1040" y="224" text-anchor="middle" class="num">3</text>
+
+  <path class="flow" d="M 1040 235 V 260 H 655 V 285"/>
+
+  <!-- row 2: deposit 480 -->
+  <text x="608" y="326" class="lbl body" font-weight="600">deposit #2 = 480</text>
+  <circle cx="670" cy="350" r="15" class="boxH"/>
+  <text x="670" y="354" text-anchor="middle" class="num">4</text>
+  <path class="flow" d="M 670 350 H 855"/>
+  <circle cx="870" cy="350" r="15" class="boxH"/>
+  <text x="870" y="354" text-anchor="middle" class="num">5</text>
+  <path class="flow" d="M 870 350 H 1025"/>
+  <circle cx="1040" cy="350" r="15" class="boxH"/>
+  <text x="1040" y="354" text-anchor="middle" class="num">6</text>
+
+  <path class="flow" d="M 1040 365 V 390 H 655 V 415"/>
+
+  <!-- row 3: deposit 65 -->
+  <text x="608" y="456" class="lbl body" font-weight="600">deposit #3 = 65</text>
+  <circle cx="670" cy="480" r="15" class="boxH"/>
+  <text x="670" y="484" text-anchor="middle" class="num">7</text>
+  <path class="flow" d="M 670 480 H 855"/>
+  <circle cx="870" cy="480" r="15" class="boxH"/>
+  <text x="870" y="484" text-anchor="middle" class="num">8</text>
+  <path class="flow" d="M 870 480 H 1025"/>
+  <circle cx="1040" cy="480" r="15" class="boxH"/>
+  <text x="1040" y="484" text-anchor="middle" class="num">9</text>
+
+  <rect x="600" y="540" width="480" height="98" rx="6" class="panel"/>
+  <text x="616" y="560" class="lbl tiny" font-weight="700">Why this is real</text>
+  <text x="616" y="578" class="lbl tiny">Call order is 1,2,3 then 4,5,6 then 7,8,9 — deposit 65 finishes filter,</text>
+  <text x="616" y="594" class="lbl tiny">map and collect completely before deposit 480 is even read.</text>
+  <text x="616" y="610" class="lbl tiny">No intermediate List&lt;Money&gt; or List&lt;Long&gt; is ever allocated —</text>
+  <text x="616" y="626" class="lbl tiny">each element is pulled, transformed and deposited one at a time.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="714" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="727" class="lbl tiny">pipeline stage (filter / map / collect)</text>
+  <rect x="290" y="714" width="22" height="16" rx="3" class="boxD"/>
+  <text x="320" y="727" class="lbl tiny">materialised intermediate list — the anti-pattern</text>
+  <rect x="620" y="714" width="22" height="16" rx="3" class="boxR"/>
+  <text x="650" y="727" class="lbl tiny">terminal result</text>
+  <circle cx="800" cy="722" r="9" class="boxH"/>
+  <text x="818" y="727" class="lbl tiny">trace step, numbered by call order</text>
+  <path class="flow" d="M 20 748 H 60"/>
+  <text x="68" y="753" class="lbl tiny">A → B : B is produced from / executed after A</text>
+  <rect x="380" y="738" width="22" height="16" rx="3" class="panel"/>
+  <text x="410" y="751" class="lbl tiny">annotation panel</text>
+</svg>

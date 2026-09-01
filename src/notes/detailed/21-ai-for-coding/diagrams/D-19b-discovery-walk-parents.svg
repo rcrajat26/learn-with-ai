@@ -1,0 +1,68 @@
+<svg viewBox="0 0 940 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3 in the directory discovery walk. Each parent directory from /Users/dev/repo/services/payments up to the filesystem root is visited in turn, with a tick mark against CLAUDE.md where one is found at that level, since project memory walks upward through the whole chain.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="940" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 2 / 3 — EACH PARENT VISITED IN TURN</text>
+  <line x1="20" y1="42" x2="920" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="240" y="62" width="320" height="42" rx="6" class="boxR"/>
+  <text x="400" y="88" text-anchor="middle" class="lbl body">/</text>
+  <rect x="620" y="70" width="24" height="24" rx="4" class="boxR"/>
+  <text x="632" y="88" text-anchor="middle" class="lbl body" font-weight="700">✓</text>
+  <text x="660" y="88" class="lbl tiny">CLAUDE.md found here (org-wide root)</text>
+  <path class="flow" d="M 400 104 V 122"/>
+
+  <rect x="240" y="122" width="320" height="42" rx="6" class="boxP"/>
+  <text x="400" y="148" text-anchor="middle" class="lbl body">/Users/dev</text>
+  <rect x="620" y="130" width="24" height="24" rx="4" fill="#f5f5f4" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="632" y="148" text-anchor="middle" class="lbl body" font-weight="700">—</text>
+  <text x="660" y="148" class="lbl tiny">no CLAUDE.md at this level</text>
+  <path class="flow" d="M 400 164 V 182"/>
+
+  <rect x="240" y="182" width="320" height="42" rx="6" class="boxR"/>
+  <text x="400" y="208" text-anchor="middle" class="lbl body">/Users/dev/repo</text>
+  <rect x="620" y="190" width="24" height="24" rx="4" class="boxR"/>
+  <text x="632" y="208" text-anchor="middle" class="lbl body" font-weight="700">✓</text>
+  <text x="660" y="208" class="lbl tiny">CLAUDE.md found here (repo root)</text>
+  <path class="flow" d="M 400 224 V 242"/>
+
+  <rect x="240" y="242" width="320" height="42" rx="6" class="boxP"/>
+  <text x="400" y="268" text-anchor="middle" class="lbl body">/Users/dev/repo/services</text>
+  <rect x="620" y="250" width="24" height="24" rx="4" fill="#f5f5f4" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="632" y="268" text-anchor="middle" class="lbl body" font-weight="700">—</text>
+  <text x="660" y="268" class="lbl tiny">no CLAUDE.md at this level</text>
+  <path class="flow" d="M 400 284 V 302"/>
+
+  <rect x="200" y="302" width="400" height="56" rx="6" class="boxY"/>
+  <text x="400" y="326" text-anchor="middle" class="lbl node">/Users/dev/repo/services/payments</text>
+  <text x="400" y="346" text-anchor="middle" class="lbl sub">cwd — walk began here (frame 1)</text>
+  <rect x="620" y="316" width="24" height="24" rx="4" class="boxR"/>
+  <text x="632" y="334" text-anchor="middle" class="lbl body" font-weight="700">✓</text>
+  <text x="660" y="334" class="lbl tiny">CLAUDE.md found here (service-local)</text>
+
+  <line x1="20" y1="390" x2="920" y2="390" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="412" class="lbl tiny" font-weight="700">CLAUDE.md is the artefact that walks upward:</text>
+  <text x="20" y="430" class="lbl tiny">every level from cwd to the filesystem root is checked, and every CLAUDE.md found is merged.</text>
+</svg>

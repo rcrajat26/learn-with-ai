@@ -1,0 +1,116 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A decision tree for choosing between a shell script and a prompt. The root question is: do the inputs determine one correct answer. If yes, the answer is a shell script, annotated testable, no variance, no token cost. If no, the answer is a prompt, annotated judgment and synthesis. Three further branches refine the script path: if the action must always happen, use a hook; if the task has verbose input and small output, use a subagent; if the task needs human authority, use a confirmation gate with the tool denied by default. An annotation panel quotes the source of the rule: resolving paths, merging JSON and creating symlinks all have a single correct answer given the inputs. A second annotation panel states the counter-argument: the model could do it is not an argument, because cost, variance, and a script is testable where a prompt is not.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SCRIPT OR PROMPT: THE DECISION TREE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="370" y="58" width="300" height="66" rx="6" class="boxP"/>
+  <text x="520" y="84" text-anchor="middle" class="lbl node">do the inputs determine</text>
+  <text x="520" y="102" text-anchor="middle" class="lbl node">one correct answer?</text>
+
+  <!-- bus down from root -->
+  <path d="M 520 124 V 148" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 260 148 H 780" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 260 148 V 172"/>
+  <path class="flow" d="M 780 148 V 172"/>
+  <text x="270" y="142" class="lbl tiny" font-weight="700">yes</text>
+  <text x="740" y="142" class="lbl tiny" font-weight="700">no</text>
+
+  <!-- yes -> script -->
+  <rect x="150" y="172" width="220" height="58" rx="6" class="boxR"/>
+  <text x="260" y="196" text-anchor="middle" class="lbl node">shell script</text>
+  <text x="260" y="214" text-anchor="middle" class="lbl sub">deterministic transform</text>
+
+  <!-- no -> prompt -->
+  <rect x="670" y="172" width="220" height="58" rx="6" class="boxH"/>
+  <text x="780" y="196" text-anchor="middle" class="lbl node">prompt</text>
+  <text x="780" y="214" text-anchor="middle" class="lbl sub">model call</text>
+
+  <!-- script annotation directly beneath -->
+  <rect x="130" y="248" width="260" height="46" rx="6" class="boxA"/>
+  <text x="260" y="266" text-anchor="middle" class="lbl tiny" font-weight="700">testable, no variance,</text>
+  <text x="260" y="282" text-anchor="middle" class="lbl tiny" font-weight="700">no token cost</text>
+
+  <!-- prompt annotation directly beneath -->
+  <rect x="650" y="248" width="260" height="46" rx="6" class="boxA"/>
+  <text x="780" y="266" text-anchor="middle" class="lbl tiny" font-weight="700">judgment, synthesis</text>
+
+  <!-- further branches under script: must-happen -> hook, verbose-in/small-out -> subagent, needs human authority -> confirmation gate -->
+  <text x="260" y="326" text-anchor="middle" class="lbl node">further refinements once it is a script-shaped task</text>
+
+  <!-- bus for three branches -->
+  <path d="M 260 336 V 352" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 100 352 H 420" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 100 352 V 376"/>
+  <path class="flow" d="M 260 352 V 376"/>
+  <path class="flow" d="M 420 352 V 376"/>
+
+  <rect x="20" y="376" width="180" height="70" rx="6" class="boxH"/>
+  <text x="110" y="398" text-anchor="middle" class="lbl node">must-happen</text>
+  <text x="110" y="416" text-anchor="middle" class="lbl sub">every time, no drift</text>
+  <text x="110" y="432" text-anchor="middle" class="lbl sub" font-weight="700">-&gt; hook</text>
+
+  <rect x="180" y="376" width="180" height="70" rx="6" class="boxH"/>
+  <text x="270" y="398" text-anchor="middle" class="lbl node">verbose-in,</text>
+  <text x="270" y="414" text-anchor="middle" class="lbl node">small-out</text>
+  <text x="270" y="432" text-anchor="middle" class="lbl sub" font-weight="700">-&gt; subagent</text>
+
+  <rect x="340" y="376" width="200" height="70" rx="6" class="boxD"/>
+  <text x="440" y="396" text-anchor="middle" class="lbl node">needs human</text>
+  <text x="440" y="412" text-anchor="middle" class="lbl node">authority</text>
+  <text x="440" y="430" text-anchor="middle" class="lbl sub" font-weight="700">-&gt; confirmation gate</text>
+  <text x="440" y="442" text-anchor="middle" class="lbl sub">tool denied by default</text>
+
+  <!-- annotation panel: source of the rule -->
+  <rect x="60" y="480" width="460" height="110" rx="6" class="boxA"/>
+  <text x="76" y="500" class="lbl tiny" font-weight="700">Source of the rule</text>
+  <text x="76" y="520" class="lbl tiny">Resolving a path, merging two JSON</text>
+  <text x="76" y="536" class="lbl tiny">documents, and creating a symlink each</text>
+  <text x="76" y="552" class="lbl tiny">have exactly one correct answer given</text>
+  <text x="76" y="568" class="lbl tiny">their inputs &#8212; no synthesis is required.</text>
+
+  <!-- second panel: counter-argument -->
+  <rect x="540" y="480" width="440" height="110" rx="6" class="boxA"/>
+  <text x="556" y="500" class="lbl tiny" font-weight="700">The counter-argument</text>
+  <text x="556" y="520" class="lbl tiny">&quot;the model could do it&quot; is not an</text>
+  <text x="556" y="536" class="lbl tiny">argument &#8212; a script costs no tokens,</text>
+  <text x="556" y="552" class="lbl tiny">carries no run-to-run variance, and is</text>
+  <text x="556" y="568" class="lbl tiny">testable where a prompt is not.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="620" x2="1020" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="632" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="645" class="lbl tiny">decision question</text>
+  <rect x="200" y="632" width="22" height="16" rx="3" class="boxR"/>
+  <text x="230" y="645" class="lbl tiny">deterministic outcome (script)</text>
+  <rect x="440" y="632" width="22" height="16" rx="3" class="boxH"/>
+  <text x="470" y="645" class="lbl tiny">judgment outcome / refinement (prompt, hook, subagent)</text>
+  <rect x="820" y="632" width="22" height="16" rx="3" class="boxD"/>
+  <text x="850" y="645" class="lbl tiny">requires human authority</text>
+  <rect x="20" y="656" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="669" class="lbl tiny">annotation panel</text>
+</svg>

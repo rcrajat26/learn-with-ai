@@ -1,0 +1,138 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree rooted at the question what does the code need to do. The loop branch covers side effects such as writing to FundsLedger, early exit carrying several values such as a StakeSplit, index arithmetic, in-place mutation, checked exceptions, and a measured hot path such as stake settlement at 3,400 per second burst. The stream branch covers transformation chains, grouping and aggregation such as groupingBy rail over card deposits, laziness over an expensive or infinite source such as the identity vendor call, and one-line parallelism over a splittable source such as 2.8 million stake reservations.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxLoop { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxStream { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .toLoop { fill: none; stroke: #78716c; stroke-width: 1.8; stroke-linejoin: round; marker-end: url(#triL); }
+    .toStream { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triS); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#78716c"/>
+    </marker>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STREAM OR LOOP — DECIDE FROM WHAT THE CODE MUST DO</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="380" y="60" width="280" height="60" rx="6" class="boxRoot"/>
+  <text x="520" y="86" text-anchor="middle" class="lbl node">"What does the code</text>
+  <text x="520" y="104" text-anchor="middle" class="lbl node">need to do?"</text>
+
+  <!-- bus down from root -->
+  <path class="flow" d="M 520 120 V 150"/>
+  <line x1="180" y1="150" x2="860" y2="150" stroke="#475569" stroke-width="2"/>
+
+  <!-- drop to LOOP column header -->
+  <path class="toLoop" d="M 180 150 V 172"/>
+  <text x="180" y="192" text-anchor="middle" class="lbl h2">LOOP FOR —</text>
+
+  <!-- drop to STREAM column header -->
+  <path class="toStream" d="M 860 150 V 172"/>
+  <text x="860" y="192" text-anchor="middle" class="lbl h2">STREAM FOR —</text>
+
+  <!-- LOOP branch nodes, single column x=60..300 -->
+  <rect x="60" y="210" width="240" height="66" rx="6" class="boxLoop"/>
+  <text x="180" y="232" text-anchor="middle" class="lbl dense">Side effects</text>
+  <text x="180" y="250" text-anchor="middle" class="lbl sub">e.g. write each Movement</text>
+  <text x="180" y="264" text-anchor="middle" class="lbl sub">to FundsLedger as you go</text>
+
+  <rect x="60" y="292" width="240" height="66" rx="6" class="boxLoop"/>
+  <text x="180" y="314" text-anchor="middle" class="lbl dense">Early exit carrying</text>
+  <text x="180" y="332" text-anchor="middle" class="lbl sub">several values</text>
+  <text x="180" y="346" text-anchor="middle" class="lbl sub">e.g. break with a StakeSplit</text>
+
+  <rect x="60" y="374" width="240" height="66" rx="6" class="boxLoop"/>
+  <text x="180" y="396" text-anchor="middle" class="lbl dense">Index arithmetic</text>
+  <text x="180" y="414" text-anchor="middle" class="lbl sub">e.g. pairing settlement[i]</text>
+  <text x="180" y="428" text-anchor="middle" class="lbl sub">with reservation[i]</text>
+
+  <rect x="60" y="456" width="240" height="66" rx="6" class="boxLoop"/>
+  <text x="180" y="478" text-anchor="middle" class="lbl dense">In-place mutation</text>
+  <text x="180" y="496" text-anchor="middle" class="lbl sub">e.g. updating a Wallet's</text>
+  <text x="180" y="510" text-anchor="middle" class="lbl sub">four buckets on the same object</text>
+
+  <rect x="60" y="538" width="240" height="66" rx="6" class="boxLoop"/>
+  <text x="180" y="560" text-anchor="middle" class="lbl dense">Checked exceptions</text>
+  <text x="180" y="578" text-anchor="middle" class="lbl sub">e.g. InsufficientFundsException</text>
+  <text x="180" y="592" text-anchor="middle" class="lbl sub">from a per-stake reservation call</text>
+
+  <rect x="60" y="620" width="240" height="66" rx="6" class="boxLoop"/>
+  <text x="180" y="642" text-anchor="middle" class="lbl dense">A measured hot path</text>
+  <text x="180" y="660" text-anchor="middle" class="lbl sub">e.g. stake settlement at</text>
+  <text x="180" y="674" text-anchor="middle" class="lbl sub">3,400/sec burst</text>
+
+  <!-- bus for loop column -->
+  <line x1="180" y1="192" x2="180" y2="210" stroke="#78716c" stroke-width="1.8"/>
+  <line x1="180" y1="276" x2="180" y2="292" stroke="#78716c" stroke-width="1.8"/>
+  <line x1="180" y1="358" x2="180" y2="374" stroke="#78716c" stroke-width="1.8"/>
+  <line x1="180" y1="440" x2="180" y2="456" stroke="#78716c" stroke-width="1.8"/>
+  <line x1="180" y1="522" x2="180" y2="538" stroke="#78716c" stroke-width="1.8"/>
+  <line x1="180" y1="604" x2="180" y2="620" stroke="#78716c" stroke-width="1.8"/>
+
+  <!-- STREAM branch nodes, single column x=740..980 -->
+  <rect x="740" y="210" width="240" height="66" rx="6" class="boxStream"/>
+  <text x="860" y="232" text-anchor="middle" class="lbl dense">Transformation chains</text>
+  <text x="860" y="250" text-anchor="middle" class="lbl sub">e.g. filter → map → collect</text>
+  <text x="860" y="264" text-anchor="middle" class="lbl sub">over card deposits</text>
+
+  <rect x="740" y="292" width="240" height="66" rx="6" class="boxStream"/>
+  <text x="860" y="314" text-anchor="middle" class="lbl dense">Grouping and aggregation</text>
+  <text x="860" y="332" text-anchor="middle" class="lbl sub">e.g. groupingBy rail over</text>
+  <text x="860" y="346" text-anchor="middle" class="lbl sub">95,000 card deposits/day</text>
+
+  <rect x="740" y="374" width="240" height="66" rx="6" class="boxStream"/>
+  <text x="860" y="396" text-anchor="middle" class="lbl dense">Laziness over an expensive</text>
+  <text x="860" y="414" text-anchor="middle" class="lbl sub">or infinite source</text>
+  <text x="860" y="428" text-anchor="middle" class="lbl sub">e.g. the identity vendor call</text>
+
+  <rect x="740" y="456" width="240" height="66" rx="6" class="boxStream"/>
+  <text x="860" y="478" text-anchor="middle" class="lbl dense">One-line parallelism</text>
+  <text x="860" y="496" text-anchor="middle" class="lbl sub">over a splittable source</text>
+  <text x="860" y="510" text-anchor="middle" class="lbl sub">e.g. 2.8M stake reservations</text>
+
+  <!-- bus for stream column -->
+  <line x1="860" y1="192" x2="860" y2="210" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="860" y1="276" x2="860" y2="292" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="860" y1="358" x2="860" y2="374" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="860" y1="440" x2="860" y2="456" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+
+  <line x1="20" y1="720" x2="1020" y2="720" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="732" width="22" height="16" rx="3" class="boxRoot"/>
+  <text x="50" y="745" class="lbl tiny">the decision question</text>
+  <rect x="230" y="732" width="22" height="16" rx="3" class="boxLoop"/>
+  <text x="260" y="745" class="lbl tiny">reason to use a for loop</text>
+  <rect x="480" y="732" width="22" height="16" rx="3" class="boxStream"/>
+  <text x="510" y="745" class="lbl tiny">reason to use a stream</text>
+  <path class="toLoop" d="M 20 758 H 60"/>
+  <text x="68" y="763" class="lbl tiny">root → loop reason (solid grey)</text>
+  <path class="toStream" d="M 320 758 H 360"/>
+  <text x="368" y="763" class="lbl tiny">root → stream reason (dashed green)</text>
+
+  <rect x="20" y="786" width="1000" height="94" rx="6" class="boxRoot" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="36" y="808" class="lbl node">RULE OF THUMB</text>
+  <text x="36" y="828" class="lbl tiny">A loop is imperative control the reader must follow step by step — mutation, exit, index, checked exceptions, or a path</text>
+  <text x="36" y="844" class="lbl tiny">that JFR / async-profiler has flagged hot. A stream is a declarative pipeline the reader can read as "what", not "how" —</text>
+  <text x="36" y="860" class="lbl tiny">transform, group, defer, or parallelize. When both apply, prefer the loop on a measured hot path, the stream everywhere else.</text>
+</svg>

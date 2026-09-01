@@ -1,0 +1,116 @@
+<svg viewBox="0 0 1040 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree: which streams must be closed. Root question: does the source hold an OS
+     resource such as a file handle or socket. Yes branch: Files.lines, Files.walk, Files.list, Files.find,
+     and Files.newDirectoryStream all require try-with-resources, expose onClose(Runnable) to register
+     cleanup, and leak file descriptors if left unclosed. No branch: Collection.stream, Arrays.stream, and
+     IntStream.range are backed by in-memory or generated data, so closing them is a no-op.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHICH STREAMS MUST BE CLOSED</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="300" y="60" width="440" height="60" rx="8" class="boxP"/>
+  <text x="520" y="86" text-anchor="middle" class="lbl node">Does the source hold an OS resource</text>
+  <text x="520" y="104" text-anchor="middle" class="lbl node">(a file handle, a socket)?</text>
+
+  <!-- bus down then split -->
+  <path class="flow" d="M 520 120 V 150"/>
+  <line x1="220" y1="150" x2="820" y2="150" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 220 150 V 180"/>
+  <path class="flow" d="M 820 150 V 180"/>
+  <text x="188" y="172" text-anchor="middle" class="lbl tiny" font-weight="700">yes</text>
+  <text x="852" y="172" text-anchor="middle" class="lbl tiny" font-weight="700">no</text>
+
+  <!-- YES side header -->
+  <text x="60" y="200" class="lbl h2">YES — SOURCE WRAPS AN OS RESOURCE</text>
+
+  <!-- yes leaf panel -->
+  <rect x="60" y="212" width="320" height="150" rx="6" class="boxH"/>
+  <text x="76" y="234" class="lbl body" font-weight="700">Sources backed by the filesystem</text>
+  <line x1="76" y1="244" x2="364" y2="244" stroke="#b45309" stroke-width="1"/>
+  <text x="76" y="264" class="lbl tiny">Files.lines(path)</text>
+  <text x="76" y="282" class="lbl tiny">Files.walk(path)</text>
+  <text x="76" y="300" class="lbl tiny">Files.list(path)</text>
+  <text x="76" y="318" class="lbl tiny">Files.find(path, depth, matcher)</text>
+  <text x="76" y="336" class="lbl tiny">Files.newDirectoryStream(dir)</text>
+  <text x="76" y="354" class="lbl sub">each opens a real file descriptor on first use</text>
+
+  <path class="flow" d="M 220 362 V 392"/>
+
+  <rect x="60" y="394" width="320" height="52" rx="6" class="boxD"/>
+  <text x="220" y="416" text-anchor="middle" class="lbl node">try-with-resources required</text>
+  <text x="220" y="434" text-anchor="middle" class="lbl sub">try (Stream&lt;String&gt; s = Files.lines(path)) { ... }</text>
+
+  <path class="flow" d="M 220 446 V 476"/>
+
+  <rect x="60" y="478" width="320" height="52" rx="6" class="boxP"/>
+  <text x="220" y="500" text-anchor="middle" class="lbl node">stream.onClose(Runnable)</text>
+  <text x="220" y="518" text-anchor="middle" class="lbl sub">registers the cleanup hook close() actually runs</text>
+
+  <path class="flow" d="M 220 530 V 560"/>
+
+  <rect x="60" y="562" width="320" height="60" rx="6" class="boxD"/>
+  <text x="220" y="584" text-anchor="middle" class="lbl node" fill="#b91c1c">Symptom if left unclosed</text>
+  <text x="220" y="602" text-anchor="middle" class="lbl sub">file-descriptor leak — the OS handle is never released</text>
+  <text x="220" y="614" text-anchor="middle" class="lbl sub">until eventual GC finalisation, if ever</text>
+
+  <!-- NO side header -->
+  <text x="660" y="200" class="lbl h2">NO — SOURCE IS IN-MEMORY OR GENERATED</text>
+
+  <rect x="660" y="212" width="320" height="130" rx="6" class="boxH"/>
+  <text x="676" y="234" class="lbl body" font-weight="700">Sources with no external handle</text>
+  <line x1="676" y1="244" x2="964" y2="244" stroke="#b45309" stroke-width="1"/>
+  <text x="676" y="264" class="lbl tiny">Collection.stream()</text>
+  <text x="676" y="282" class="lbl tiny">Arrays.stream(array)</text>
+  <text x="676" y="300" class="lbl tiny">IntStream.range(start, end)</text>
+  <text x="676" y="320" class="lbl sub">backed by an in-memory array/list or a</text>
+  <text x="676" y="336" class="lbl sub">computed range — nothing external to release</text>
+
+  <path class="flow" d="M 820 342 V 372"/>
+
+  <rect x="660" y="374" width="320" height="56" rx="6" class="boxR"/>
+  <text x="820" y="398" text-anchor="middle" class="lbl node">close() is a no-op</text>
+  <text x="820" y="416" text-anchor="middle" class="lbl sub">try-with-resources is harmless but unnecessary</text>
+
+  <rect x="660" y="470" width="320" height="70" rx="6" class="panel"/>
+  <text x="676" y="490" class="lbl tiny" font-weight="700">Rule of thumb</text>
+  <text x="676" y="508" class="lbl tiny">If opening the source ever touches the OS —</text>
+  <text x="676" y="524" class="lbl tiny">a file, a directory, a socket — close it.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="650" x2="1020" y2="650" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="664" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="677" class="lbl tiny">decision / lifecycle step</text>
+  <rect x="230" y="664" width="22" height="16" rx="3" class="boxH"/>
+  <text x="260" y="677" class="lbl tiny">grouped leaf set — factory methods</text>
+  <rect x="530" y="664" width="22" height="16" rx="3" class="boxD"/>
+  <text x="560" y="677" class="lbl tiny">requirement / failure symptom</text>
+  <rect x="780" y="664" width="22" height="16" rx="3" class="boxR"/>
+  <text x="810" y="677" class="lbl tiny">safe / no-op outcome</text>
+  <path class="flow" d="M 20 696 H 60"/>
+  <text x="68" y="701" class="lbl tiny">A → B : B follows from A; yes/no label = branch taken</text>
+</svg>

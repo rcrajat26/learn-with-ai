@@ -1,0 +1,154 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline comparing fair and unfair ReentrantLock hand-off on the FundsLedger lock,
+     time running downward. Fair mode: settlement-ingest-3 releases the lock, the parked queue head
+     restriction-apply-1 is unparked, two context switches elapse (each order of magnitude
+     low tens of microseconds) before restriction-apply-1 actually resumes and acquires the lock to
+     run reserveStake. Unfair mode: settlement-ingest-3 releases the lock at the same moment, but the
+     newly arriving settlement-ingest-9 calls tryAcquire and wins the CAS immediately, order of
+     magnitude tens of nanoseconds with zero context switches, while restriction-apply-1 stays
+     parked; settlement-ingest-9 is already running reserveStake before fair mode has even finished
+     its second context switch. The only code difference is that fair mode's tryAcquire checks
+     hasQueuedPredecessors() before CASing state; unfair mode CASes immediately.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .conn { fill: none; stroke: #9ca3af; stroke-width: 1.4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="30" y="32" class="lbl h1">BARGING BEATS FAIRNESS ON THROUGHPUT — FundsLedger reserveStake lock</text>
+  <line x1="30" y1="42" x2="1090" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <rect x="30" y="54" width="520" height="28" rx="5" class="boxW"/>
+  <text x="290" y="73" text-anchor="middle" class="lbl h2">FAIR MODE — new ReentrantLock(true)</text>
+
+  <rect x="580" y="54" width="520" height="28" rx="5" class="boxW"/>
+  <text x="840" y="73" text-anchor="middle" class="lbl h2">UNFAIR MODE (default) — barging</text>
+
+  <!-- time axis labels -->
+  <text x="72" y="100" class="lbl tiny" font-weight="700">TIME</text>
+  <text x="622" y="100" class="lbl tiny" font-weight="700">TIME</text>
+
+  <!-- fair axis -->
+  <path class="flow" d="M 70 106 V 560"/>
+
+  <!-- fair step 1 -->
+  <circle cx="70" cy="130" r="12" class="boxW"/>
+  <text x="70" y="134" text-anchor="middle" class="lbl tiny">1</text>
+  <path class="conn" d="M 82 130 H 110"/>
+  <rect x="110" y="108" width="420" height="44" rx="6" class="boxP"/>
+  <text x="122" y="126" class="lbl body">settlement-ingest-3 calls unlock()</text>
+  <text x="122" y="144" class="lbl sub">lock becomes free</text>
+
+  <!-- fair step 2 -->
+  <circle cx="70" cy="200" r="12" class="boxW"/>
+  <text x="70" y="204" text-anchor="middle" class="lbl tiny">2</text>
+  <path class="conn" d="M 82 200 H 110"/>
+  <rect x="110" y="178" width="420" height="44" rx="6" class="boxP"/>
+  <text x="122" y="196" class="lbl body">restriction-apply-1 (queue head) unparked</text>
+  <text x="122" y="214" class="lbl sub">LockSupport.unpark(queueHead)</text>
+
+  <!-- fair step 3 -->
+  <circle cx="70" cy="270" r="12" class="boxW"/>
+  <text x="70" y="274" text-anchor="middle" class="lbl tiny">3</text>
+  <path class="conn" d="M 82 270 H 110"/>
+  <rect x="110" y="248" width="420" height="44" rx="6" class="boxW"/>
+  <text x="122" y="266" class="lbl body">context switch 1 elapses</text>
+  <text x="122" y="284" class="lbl sub">order of magnitude: low tens of microseconds</text>
+
+  <!-- fair step 4 -->
+  <circle cx="70" cy="340" r="12" class="boxW"/>
+  <text x="70" y="344" text-anchor="middle" class="lbl tiny">4</text>
+  <path class="conn" d="M 82 340 H 110"/>
+  <rect x="110" y="318" width="420" height="44" rx="6" class="boxW"/>
+  <text x="122" y="336" class="lbl body">context switch 2 elapses</text>
+  <text x="122" y="354" class="lbl sub">order of magnitude: low tens of microseconds</text>
+
+  <!-- fair step 5 -->
+  <circle cx="70" cy="410" r="12" class="boxW"/>
+  <text x="70" y="414" text-anchor="middle" class="lbl tiny">5</text>
+  <path class="conn" d="M 82 410 H 110"/>
+  <rect x="110" y="388" width="420" height="44" rx="6" class="boxP"/>
+  <text x="122" y="406" class="lbl body">restriction-apply-1 acquires lock</text>
+  <text x="122" y="424" class="lbl sub">runs ledger.reserveStake(clientId, 3.33)</text>
+
+  <!-- unfair axis -->
+  <path class="flow" d="M 620 106 V 560"/>
+
+  <!-- unfair step 1 -->
+  <circle cx="620" cy="130" r="12" class="boxW"/>
+  <text x="620" y="134" text-anchor="middle" class="lbl tiny">1</text>
+  <path class="conn" d="M 632 130 H 660"/>
+  <rect x="660" y="108" width="420" height="44" rx="6" class="boxP"/>
+  <text x="672" y="126" class="lbl body">settlement-ingest-3 calls unlock()</text>
+  <text x="672" y="144" class="lbl sub">same moment as fair mode, lock becomes free</text>
+
+  <!-- unfair step 2 (barge, highlighted) -->
+  <circle cx="620" cy="200" r="12" class="boxH"/>
+  <text x="620" y="204" text-anchor="middle" class="lbl tiny">2</text>
+  <path class="conn" d="M 632 200 H 660"/>
+  <rect x="660" y="178" width="420" height="44" rx="6" class="boxH"/>
+  <text x="672" y="196" class="lbl body">settlement-ingest-9 arrives, tryAcquire() barges</text>
+  <text x="672" y="214" class="lbl sub">wins the CAS: order of magnitude tens of nanoseconds</text>
+
+  <!-- unfair step 3 (still parked) -->
+  <circle cx="620" cy="270" r="12" class="boxW"/>
+  <text x="620" y="274" text-anchor="middle" class="lbl tiny">3</text>
+  <path class="conn" d="M 632 270 H 660"/>
+  <rect x="660" y="248" width="420" height="44" rx="6" class="boxW"/>
+  <text x="672" y="266" class="lbl body">restriction-apply-1 stays parked</text>
+  <text x="672" y="284" class="lbl sub">queue head is never unparked this round</text>
+
+  <!-- unfair step 4 (running, finished before fair's step 4) -->
+  <circle cx="620" cy="340" r="12" class="boxP"/>
+  <text x="620" y="344" text-anchor="middle" class="lbl tiny">4</text>
+  <path class="conn" d="M 632 340 H 660"/>
+  <rect x="660" y="318" width="420" height="44" rx="6" class="boxP"/>
+  <text x="672" y="336" class="lbl body">settlement-ingest-9 holds lock</text>
+  <text x="672" y="354" class="lbl sub">runs ledger.reserveStake(clientId, 3.33) already</text>
+
+  <!-- comparison annotation -->
+  <rect x="30" y="576" width="1070" height="86" rx="6" class="boxA"/>
+  <text x="44" y="596" class="lbl tiny" font-weight="700">HAND-OFF COST — ORDER OF MAGNITUDE, NOT A MEASURED CONSTANT</text>
+  <line x1="565" y1="588" x2="565" y2="650" stroke="#2563eb" stroke-width="1"/>
+  <text x="44" y="616" class="lbl tiny">Fair: ~2 context switches to hand off —</text>
+  <text x="44" y="632" class="lbl tiny">low tens of microseconds before the queue</text>
+  <text x="44" y="648" class="lbl tiny">head even resumes running.</text>
+  <text x="580" y="616" class="lbl tiny">Unfair: ~1 CAS to hand off —</text>
+  <text x="580" y="632" class="lbl tiny">tens of nanoseconds, zero context switches</text>
+  <text x="580" y="648" class="lbl tiny">when a thread is already running on a core.</text>
+
+  <!-- code-diff annotation -->
+  <rect x="30" y="672" width="1070" height="52" rx="6" class="boxA"/>
+  <text x="44" y="692" class="lbl tiny" font-weight="700">THE ENTIRE CODE DIFFERENCE</text>
+  <text x="44" y="710" class="lbl tiny">FairSync.tryAcquire() calls !hasQueuedPredecessors() before CASing state; NonfairSync.tryAcquire() CASes immediately — one guard clause.</text>
+
+  <!-- legend -->
+  <line x1="30" y1="738" x2="1090" y2="738" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="30" y="752" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="765" class="lbl tiny">thread running / holding or acquiring the lock</text>
+  <rect x="380" y="752" width="22" height="16" rx="3" class="boxW"/>
+  <text x="410" y="765" class="lbl tiny">parked, or an elapsed OS scheduling cost</text>
+  <rect x="700" y="752" width="22" height="16" rx="3" class="boxH"/>
+  <text x="730" y="765" class="lbl tiny">the barging event this diagram is about</text>
+  <rect x="990" y="752" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1020" y="765" class="lbl tiny">note</text>
+</svg>

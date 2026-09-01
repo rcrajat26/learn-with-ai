@@ -1,0 +1,70 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BitSet memory layout: long words array, bit i located via words[i shift right 6] and i and 63, worked example bit 130 to words 2 bit 2, set(1000000) growing words to index 15625 about 125 KB, and length, size, cardinality marked on the picture">
+  <defs>
+    <marker id="arrow55" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="760" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">BitSet: long[] words layout and addressing arithmetic</text>
+
+  <!-- words array -->
+  <text x="30" y="58" font-family="sans-serif" font-size="13" fill="#1f2937">words:</text>
+  <rect x="30" y="45" width="0" height="0"/>
+  <g>
+    <rect x="30" y="65" width="60" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="60" y="89" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[0]</text>
+    <rect x="90" y="65" width="60" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="120" y="89" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[1]</text>
+    <rect x="150" y="65" width="60" height="40" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="180" y="89" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">[2]</text>
+    <rect x="210" y="65" width="60" height="40" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="240" y="89" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">...</text>
+    <rect x="270" y="65" width="70" height="40" fill="#e5e7eb" stroke="#737373" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="305" y="89" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">[15625]</text>
+  </g>
+  <text x="60" y="120" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">each element = 64 bits</text>
+  <rect x="20" y="112" width="90" height="16" fill="#e5e7eb" stroke="#737373" stroke-width="1" rx="3"/>
+  <text x="65" y="124" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">64-bit word</text>
+
+  <!-- word 2 expanded into 64 bits, highlight bit 2 -->
+  <line x1="180" y1="105" x2="180" y2="140" stroke="#737373" stroke-width="2" marker-end="url(#arrow55)"/>
+  <rect x="60" y="145" width="600" height="30" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="60" y="145" width="9.375" height="30" fill="#fee2e2" stroke="#525252" stroke-width="1"/>
+  <text x="400" y="165" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">words[2] — 64 bits, bit index within word runs 0..63 left to right</text>
+  <rect x="55" y="178" width="30" height="16" fill="#fee2e2" stroke="#525252" stroke-width="1" rx="3"/>
+  <text x="70" y="190" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">bit 2</text>
+
+  <!-- addressing formula -->
+  <rect x="60" y="205" width="680" height="70" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="227" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bit i lives at: words[i &gt;&gt; 6] , bit position (i &amp; 63) within that word</text>
+  <text x="400" y="247" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">worked example: bit 130 -&gt; 130 &gt;&gt; 6 = 2, 130 &amp; 63 = 2</text>
+  <text x="400" y="265" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">so bit 130 is bit 2 of words[2]</text>
+
+  <!-- set(1_000_000) allocation -->
+  <rect x="60" y="288" width="680" height="90" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="308" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">set(1_000_000) forces immediate growth:</text>
+  <text x="400" y="326" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">1,000,000 &gt;&gt; 6 = 15,625  -&gt;  words.length becomes 15,626</text>
+  <text x="400" y="344" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">15,626 words x 8 bytes/word = 125,008 bytes ~ 125 KB</text>
+  <text x="400" y="362" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">allocated instantly for a single high bit — even if all other bits are 0</text>
+
+  <!-- length / size / cardinality markers -->
+  <rect x="60" y="392" width="220" height="95" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="170" y="412" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">length()</text>
+  <text x="170" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">= highest set bit + 1</text>
+  <text x="170" y="448" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">example: highest set bit</text>
+  <text x="170" y="464" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">is 130 -&gt; length() = 131</text>
+
+  <rect x="290" y="392" width="220" height="95" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="412" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">size()</text>
+  <text x="400" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">= words.length x 64</text>
+  <text x="400" y="448" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">example: 15,626 words</text>
+  <text x="400" y="464" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">-&gt; size() = 1,000,064</text>
+
+  <rect x="520" y="392" width="220" height="95" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="412" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cardinality()</text>
+  <text x="630" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">= population count</text>
+  <text x="630" y="448" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(number of 1-bits set)</text>
+  <text x="630" y="464" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">example: bits {2,130,1000000}</text>
+  <text x="630" y="480" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">set -&gt; cardinality() = 3</text>
+</svg>

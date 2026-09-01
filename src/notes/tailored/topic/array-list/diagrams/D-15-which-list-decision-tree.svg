@@ -1,0 +1,179 @@
+<svg viewBox="0 0 1480 740" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for choosing a java.util.List implementation, rooted at do you index
+     by position with get(i). The no branch asks whether the list is ever mutated after it is
+     built; if never, it leads to List.of, illustrated by Movement.entries, a fixed two-to-four
+     entry list built once. If it is mutated, a further question asks whether only queue
+     operations at both ends are needed; if so it leads to ArrayDeque, illustrated by the bank
+     deposit ingestion queue; if not, it leads to LinkedList, for insert and remove only through a
+     held iterator, annotated with a measured 3.2 times slower for-each and a 3,500 times slower
+     get(i) penalty. The yes branch asks whether the list is read by more than one thread; if not,
+     it leads to ArrayList, illustrated by PaymentRun.itemIds at 1,800 records with pre-sizing
+     recommended; if so, a further question asks whether writes are rare compared to reads; if so
+     it leads to CopyOnWriteArrayList for a rarely-written restriction-gate listener list; if
+     writes are also frequent it leads to Collections.synchronizedList for a dead-letter buffer
+     with concurrent reads and writes. Six leaves total.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .hdr   { font-size: 11px; font-weight: 700; fill: #4b5563; }
+    .edge  { font-size: 11px; font-weight: 700; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1480" height="740" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHICH LIST, AND WHY</text>
+  <line x1="20" y1="44" x2="1460" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl sub">Six leaves, each selected by a real QuizStakes field or flow (Appendix C.6, §15.1, Appendix A.5) — not by habit</text>
+
+  <!-- Root -->
+  <rect x="491" y="70" width="340" height="60" rx="6" class="boxP"/>
+  <text x="661" y="106" text-anchor="middle" class="lbl h2">Do you index by position — get(i)?</text>
+
+  <!-- Root fan-out -->
+  <path class="bus" d="M 661 130 V 150"/>
+  <path class="bus" d="M 307 150 H 1015"/>
+  <path class="flow" d="M 307 150 V 172"/>
+  <path class="flow" d="M 1015 150 V 172"/>
+  <text x="290" y="165" text-anchor="end" class="lbl edge">no</text>
+  <text x="1032" y="165" text-anchor="start" class="lbl edge">yes</text>
+
+  <!-- Q1a / Q1b -->
+  <rect x="157" y="172" width="300" height="56" rx="6" class="boxP"/>
+  <text x="307" y="206" text-anchor="middle" class="lbl h2">Ever mutated after it's built?</text>
+
+  <rect x="865" y="172" width="300" height="56" rx="6" class="boxP"/>
+  <text x="1015" y="206" text-anchor="middle" class="lbl h2">Read by more than one thread?</text>
+
+  <!-- Q1a fan-out: List.of (direct leaf) + Q2a -->
+  <path class="bus" d="M 307 228 V 252"/>
+  <path class="bus" d="M 130 252 H 484"/>
+  <path class="flow" d="M 130 252 V 380"/>
+  <path class="flow" d="M 484 252 V 270"/>
+  <text x="118" y="268" text-anchor="end" class="lbl edge">no</text>
+  <text x="496" y="268" text-anchor="start" class="lbl edge">yes</text>
+
+  <!-- Q1b fan-out: ArrayList (direct leaf) + Q2b -->
+  <path class="bus" d="M 1015 228 V 252"/>
+  <path class="bus" d="M 838 252 H 1192"/>
+  <path class="flow" d="M 838 252 V 380"/>
+  <path class="flow" d="M 1192 252 V 270"/>
+  <text x="826" y="268" text-anchor="end" class="lbl edge">no</text>
+  <text x="1204" y="268" text-anchor="start" class="lbl edge">yes</text>
+
+  <!-- Q2a / Q2b -->
+  <rect x="344" y="270" width="280" height="60" rx="6" class="boxP"/>
+  <text x="484" y="292" text-anchor="middle" class="lbl h2">Need queue ops (offer/poll),</text>
+  <text x="484" y="312" text-anchor="middle" class="lbl h2">not indexed access?</text>
+
+  <rect x="1052" y="270" width="280" height="60" rx="6" class="boxP"/>
+  <text x="1192" y="304" text-anchor="middle" class="lbl h2">Writes rare compared to reads?</text>
+
+  <!-- Q2a fan-out: ArrayDeque + LinkedList -->
+  <path class="bus" d="M 484 330 V 352"/>
+  <path class="bus" d="M 366 352 H 602"/>
+  <path class="flow" d="M 366 352 V 380"/>
+  <path class="flow" d="M 602 352 V 380"/>
+  <text x="354" y="368" text-anchor="end" class="lbl edge">yes</text>
+  <text x="614" y="368" text-anchor="start" class="lbl edge">no</text>
+
+  <!-- Q2b fan-out: CopyOnWriteArrayList + synchronizedList -->
+  <path class="bus" d="M 1192 330 V 352"/>
+  <path class="bus" d="M 1074 352 H 1310"/>
+  <path class="flow" d="M 1074 352 V 380"/>
+  <path class="flow" d="M 1310 352 V 380"/>
+  <text x="1062" y="368" text-anchor="end" class="lbl edge">yes</text>
+  <text x="1322" y="368" text-anchor="start" class="lbl edge">no</text>
+
+  <!-- Leaves: uniform 220x220 boxes, top y=380 -->
+
+  <!-- List.of -->
+  <rect x="20" y="380" width="220" height="220" rx="6" class="boxR"/>
+  <text x="130" y="408" text-anchor="middle" class="lbl node">List.of(...)</text>
+  <text x="130" y="434" text-anchor="middle" class="lbl hdr">SELECTED WHEN</text>
+  <text x="130" y="452" text-anchor="middle" class="lbl tiny">Movement.entries — a fixed,</text>
+  <text x="130" y="468" text-anchor="middle" class="lbl tiny">built-once list (2&#8211;4 entries)</text>
+  <text x="130" y="496" text-anchor="middle" class="lbl hdr">COST ACCEPTED</text>
+  <text x="130" y="514" text-anchor="middle" class="lbl tiny">No mutation, ever — not even</text>
+  <text x="130" y="530" text-anchor="middle" class="lbl tiny">via the iterator</text>
+
+  <!-- ArrayDeque -->
+  <rect x="256" y="380" width="220" height="220" rx="6" class="boxR"/>
+  <text x="366" y="408" text-anchor="middle" class="lbl node">ArrayDeque</text>
+  <text x="366" y="434" text-anchor="middle" class="lbl hdr">SELECTED WHEN</text>
+  <text x="366" y="452" text-anchor="middle" class="lbl tiny">Bank-deposit ingestion queue</text>
+  <text x="366" y="468" text-anchor="middle" class="lbl tiny">(&#167;15.1) — 500k-record file</text>
+  <text x="366" y="496" text-anchor="middle" class="lbl hdr">COST ACCEPTED</text>
+  <text x="366" y="514" text-anchor="middle" class="lbl tiny">No get(i); null elements</text>
+  <text x="366" y="530" text-anchor="middle" class="lbl tiny">are forbidden</text>
+
+  <!-- LinkedList -->
+  <rect x="492" y="380" width="220" height="220" rx="6" class="boxR"/>
+  <text x="602" y="408" text-anchor="middle" class="lbl node">LinkedList</text>
+  <text x="602" y="434" text-anchor="middle" class="lbl hdr">SELECTED WHEN</text>
+  <text x="602" y="452" text-anchor="middle" class="lbl tiny">Insert/remove only via a</text>
+  <text x="602" y="468" text-anchor="middle" class="lbl tiny">held iterator, e.g. a</text>
+  <text x="602" y="484" text-anchor="middle" class="lbl tiny">ReviewCase queue walk</text>
+  <text x="602" y="508" text-anchor="middle" class="lbl hdr">COST ACCEPTED</text>
+  <text x="602" y="526" text-anchor="middle" class="lbl tiny">for-each 3.2x slower;</text>
+  <text x="602" y="542" text-anchor="middle" class="lbl tiny">get(i) is 3,500x worse</text>
+
+  <!-- ArrayList -->
+  <rect x="728" y="380" width="220" height="220" rx="6" class="boxR"/>
+  <text x="838" y="408" text-anchor="middle" class="lbl node">ArrayList</text>
+  <text x="838" y="434" text-anchor="middle" class="lbl hdr">SELECTED WHEN</text>
+  <text x="838" y="452" text-anchor="middle" class="lbl tiny">Indexed access, single-</text>
+  <text x="838" y="468" text-anchor="middle" class="lbl tiny">threaded — PaymentRun.</text>
+  <text x="838" y="484" text-anchor="middle" class="lbl tiny">itemIds (1,800 records)</text>
+  <text x="838" y="508" text-anchor="middle" class="lbl hdr">COST ACCEPTED</text>
+  <text x="838" y="526" text-anchor="middle" class="lbl tiny">Pre-size when count is</text>
+  <text x="838" y="542" text-anchor="middle" class="lbl tiny">known; else grows 1.5x</text>
+
+  <!-- CopyOnWriteArrayList -->
+  <rect x="964" y="380" width="220" height="220" rx="6" class="boxR"/>
+  <text x="1074" y="408" text-anchor="middle" class="lbl node">CopyOnWriteArrayList</text>
+  <text x="1074" y="434" text-anchor="middle" class="lbl hdr">SELECTED WHEN</text>
+  <text x="1074" y="452" text-anchor="middle" class="lbl tiny">Concurrent readers, rare</text>
+  <text x="1074" y="468" text-anchor="middle" class="lbl tiny">writes — a restriction-</text>
+  <text x="1074" y="484" text-anchor="middle" class="lbl tiny">gate listener list</text>
+  <text x="1074" y="508" text-anchor="middle" class="lbl hdr">COST ACCEPTED</text>
+  <text x="1074" y="526" text-anchor="middle" class="lbl tiny">O(n) array copy on</text>
+  <text x="1074" y="542" text-anchor="middle" class="lbl tiny">every write</text>
+
+  <!-- Collections.synchronizedList -->
+  <rect x="1200" y="380" width="220" height="220" rx="6" class="boxR"/>
+  <text x="1310" y="402" text-anchor="middle" class="lbl node">Collections.</text>
+  <text x="1310" y="422" text-anchor="middle" class="lbl node">synchronizedList</text>
+  <text x="1310" y="448" text-anchor="middle" class="lbl hdr">SELECTED WHEN</text>
+  <text x="1310" y="466" text-anchor="middle" class="lbl tiny">Concurrent reads AND</text>
+  <text x="1310" y="482" text-anchor="middle" class="lbl tiny">frequent writes — a</text>
+  <text x="1310" y="498" text-anchor="middle" class="lbl tiny">dead-letter buffer</text>
+  <text x="1310" y="522" text-anchor="middle" class="lbl hdr">COST ACCEPTED</text>
+  <text x="1310" y="540" text-anchor="middle" class="lbl tiny">Whole-list lock; caller</text>
+  <text x="1310" y="556" text-anchor="middle" class="lbl tiny">must sync iteration too</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="628" x2="1460" y2="628" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="642" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="655" class="lbl tiny">decision point — one yes/no question</text>
+  <rect x="440" y="642" width="22" height="16" rx="3" class="boxR"/>
+  <text x="470" y="655" class="lbl tiny">leaf — the chosen List/Collection type, with its selecting condition and accepted cost</text>
+  <path class="flow" d="M 1080 650 H 1120"/>
+  <text x="1128" y="655" class="lbl tiny">A &#8594; B : B is reached when A's labelled answer holds</text>
+</svg>

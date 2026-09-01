@@ -1,0 +1,47 @@
+<svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4: thread B, a writer in putVal, hits a ForwardingNode and calls helpTransfer, which CASes sizeCtl to join the resize and claims the next stride instead of blocking">
+
+  <text x="400" y="30" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Frame 4 of 4 — writer Thread B helps the transfer instead of blocking</text>
+
+  <rect x="60" y="56" width="220" height="140" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="170" y="80" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Thread B: putVal</text>
+  <text x="80" y="104" font-family="sans-serif" font-size="13" fill="#1f2937">f = tabAt(tab, i)</text>
+  <text x="80" y="124" font-family="sans-serif" font-size="13" fill="#1f2937">fh = f.hash == MOVED</text>
+  <rect x="80" y="136" width="180" height="26" rx="3" fill="#fef3c7"/>
+  <text x="170" y="154" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">tab = helpTransfer(tab, f)</text>
+  <text x="80" y="182" font-family="sans-serif" font-size="13" fill="#1f2937">line 1021-1022</text>
+
+  <line x1="280" y1="126" x2="330" y2="126" stroke="#737373" stroke-width="2" marker-end="url(#arrow128d)"/>
+
+  <rect x="330" y="56" width="260" height="200" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="460" y="80" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">helpTransfer(tab, f)</text>
+  <text x="350" y="104" font-family="sans-serif" font-size="13" fill="#1f2937">nextTab = f.nextTable</text>
+  <text x="350" y="124" font-family="sans-serif" font-size="13" fill="#1f2937">sc = sizeCtl (must be &lt; 0,</text>
+  <text x="350" y="142" font-family="sans-serif" font-size="13" fill="#1f2937">  resize in progress)</text>
+  <rect x="350" y="152" width="220" height="26" rx="3" fill="#dcfce7"/>
+  <text x="460" y="170" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">CAS(SIZECTL, sc, sc+1)</text>
+  <text x="350" y="196" font-family="sans-serif" font-size="13" fill="#1f2937">on success: transfer(tab,</text>
+  <text x="350" y="214" font-family="sans-serif" font-size="13" fill="#1f2937">  nextTab) — joins as helper</text>
+  <text x="350" y="236" font-family="sans-serif" font-size="13" fill="#1f2937">line 2363-2380</text>
+
+  <line x1="590" y1="156" x2="640" y2="156" stroke="#737373" stroke-width="2" marker-end="url(#arrow128d)"/>
+
+  <rect x="640" y="56" width="120" height="200" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="700" y="80" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">transfer()</text>
+  <text x="656" y="104" font-family="sans-serif" font-size="13" fill="#1f2937">claims next</text>
+  <text x="656" y="122" font-family="sans-serif" font-size="13" fill="#1f2937">stride of 16</text>
+  <text x="656" y="140" font-family="sans-serif" font-size="13" fill="#1f2937">via CAS on</text>
+  <text x="656" y="158" font-family="sans-serif" font-size="13" fill="#1f2937">transferIndex</text>
+  <text x="656" y="182" font-family="sans-serif" font-size="13" fill="#1f2937">(line 2447)</text>
+
+  <rect x="60" y="276" width="700" height="60" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="298" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Thread B never blocks on the resize: it becomes a co-resizer, claiming its own</text>
+  <text x="410" y="318" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">MIN_TRANSFER_STRIDE-sized (16) range of bins instead of waiting for Thread A.</text>
+
+  <defs>
+    <marker id="arrow128d" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+</svg>

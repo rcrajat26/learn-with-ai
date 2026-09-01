@@ -1,0 +1,57 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3: four leaf tasks of a parallel stream over 2,800,000 stake reservations, each accumulating its own ArrayList of 700,000 Reservation results with no copying yet. This is the leaf-accumulation phase before any combine step runs.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">FRAME 1/3 — FOUR LEAVES ACCUMULATE INDEPENDENTLY</text>
+  <line x1="20" y1="40" x2="880" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="70" width="180" height="80" rx="6" class="boxR"/>
+  <text x="130" y="94" text-anchor="middle" class="lbl node">leaf 1</text>
+  <text x="130" y="114" text-anchor="middle" class="lbl body code">ArrayList, 700,000</text>
+  <text x="130" y="132" text-anchor="middle" class="lbl sub">Reservation, 0 copies yet</text>
+
+  <rect x="240" y="70" width="180" height="80" rx="6" class="boxR"/>
+  <text x="330" y="94" text-anchor="middle" class="lbl node">leaf 2</text>
+  <text x="330" y="114" text-anchor="middle" class="lbl body code">ArrayList, 700,000</text>
+  <text x="330" y="132" text-anchor="middle" class="lbl sub">Reservation, 0 copies yet</text>
+
+  <rect x="440" y="70" width="180" height="80" rx="6" class="boxR"/>
+  <text x="530" y="94" text-anchor="middle" class="lbl node">leaf 3</text>
+  <text x="530" y="114" text-anchor="middle" class="lbl body code">ArrayList, 700,000</text>
+  <text x="530" y="132" text-anchor="middle" class="lbl sub">Reservation, 0 copies yet</text>
+
+  <rect x="640" y="70" width="180" height="80" rx="6" class="boxR"/>
+  <text x="730" y="94" text-anchor="middle" class="lbl node">leaf 4</text>
+  <text x="730" y="114" text-anchor="middle" class="lbl body code">ArrayList, 700,000</text>
+  <text x="730" y="132" text-anchor="middle" class="lbl sub">Reservation, 0 copies yet</text>
+
+  <rect x="40" y="176" width="820" height="66" rx="6" class="panel"/>
+  <text x="56" y="198" class="lbl node" font-size="13px">total so far</text>
+  <text x="56" y="220" class="lbl body code">4 &#215; 700,000 = 2,800,000 elements held, 0 element-copies performed</text>
+
+  <rect x="40" y="256" width="820" height="112" rx="6" class="panel"/>
+  <text x="56" y="278" class="lbl node" font-size="13px">why per-leaf lists, not one shared list</text>
+  <text x="56" y="298" class="lbl tiny">Collectors.toList() gives each leaf task its own private ArrayList so accumulation needs no</text>
+  <text x="56" y="314" class="lbl tiny">synchronization between the four forks running concurrently. The cost of stitching those four</text>
+  <text x="56" y="330" class="lbl tiny">private lists back into one ordered result is paid entirely in the combine phase — frames 2 and 3.</text>
+  <text x="56" y="350" class="lbl tiny">Same shape applies to Collectors.joining(): each leaf builds its own private StringBuilder instead.</text>
+
+  <line x1="20" y1="376" x2="880" y2="376" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="384" width="22" height="12" rx="3" class="boxR"/>
+  <text x="50" y="394" class="lbl tiny">leaf accumulator (ArrayList / StringBuilder)</text>
+  <rect x="420" y="384" width="22" height="12" rx="3" class="panel"/>
+  <text x="450" y="394" class="lbl tiny">annotation panel</text>
+</svg>

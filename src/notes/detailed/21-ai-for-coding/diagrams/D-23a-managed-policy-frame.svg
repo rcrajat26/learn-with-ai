@@ -1,0 +1,52 @@
+<svg viewBox="0 0 1040 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 5 in the CLAUDE.md load order. The managed policy CLAUDE.md is the first block assembled, with all three operating-system paths shown: macOS /Library/Application Support/ClaudeCode/CLAUDE.md, Linux and WSL /etc/claude-code/CLAUDE.md, and Windows C colon backslash Program Files backslash ClaudeCode backslash CLAUDE.md.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .stack   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLAUDE.md LOAD ORDER — FRAME 1 OF 5</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl h2">Step 1: the managed policy path is read first, by platform</text>
+
+  <rect x="60" y="90" width="920" height="70" rx="6" class="boxRoot"/>
+  <text x="80" y="114" class="lbl body">macOS:</text>
+  <text x="150" y="114" class="lbl node">/Library/Application Support/ClaudeCode/CLAUDE.md</text>
+  <text x="80" y="136" class="lbl body">Linux / WSL:</text>
+  <text x="200" y="136" class="lbl node">/etc/claude-code/CLAUDE.md</text>
+  <text x="80" y="158" class="lbl body">Windows:</text>
+  <text x="180" y="158" class="lbl node">C:\Program Files\ClaudeCode\CLAUDE.md</text>
+
+  <path class="flow" d="M 520 160 V 200"/>
+
+  <rect x="380" y="200" width="280" height="60" rx="6" class="boxOk"/>
+  <text x="520" y="226" text-anchor="middle" class="lbl node">assembled block</text>
+  <text x="520" y="246" text-anchor="middle" class="lbl sub">managed policy CLAUDE.md (org-wide)</text>
+
+  <line x1="20" y1="300" x2="1020" y2="300" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="312" width="1000" height="88" rx="6" class="boxAnn"/>
+  <text x="36" y="332" class="lbl h2">Concatenated, not overriding</text>
+  <text x="36" y="352" class="lbl tiny">Each source below is a separate file on disk; Claude Code reads them in a fixed order and joins their contents into one prompt block.</text>
+  <text x="36" y="368" class="lbl tiny">A later file does not replace an earlier one's text — it is appended after it, so all of them are visible to the model at once.</text>
+  <text x="36" y="384" class="lbl tiny">Only one of the three OS paths above is actually present on any given machine; whichever exists is read as the managed policy layer.</text>
+</svg>

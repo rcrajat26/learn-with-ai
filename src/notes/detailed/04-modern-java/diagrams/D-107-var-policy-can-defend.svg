@@ -1,0 +1,114 @@
+<svg viewBox="0 0 1040 680" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for a defensible var policy. Root question: does the initialiser
+     already name the type? Yes leads to a panel of three safe cases: builder chains such as
+     QueryBuilder.forTable, try-with-resources such as fundsLedgerDataSource.getConnection,
+     and Map.Entry destructuring in a for loop over bonusByClient. No leads to writing the type
+     explicitly, illustrated by three failures: an opaque factory return from
+     ScreeningService.evaluate whose type is hidden, an accumulator var total = 0 that silently
+     overflows summing a large PaymentRun, and var list = new ArrayList of String that pins the
+     local's declared type to ArrayList instead of List of String.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .title { font-size: 12.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .branch{ font-size: 12.5px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="680" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A VAR POLICY YOU CAN DEFEND IN REVIEW</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Root -->
+  <rect x="310" y="60" width="420" height="64" rx="6" class="boxP"/>
+  <text x="520" y="88" text-anchor="middle" class="lbl node">Does the initialiser already</text>
+  <text x="520" y="108" text-anchor="middle" class="lbl node">name the type?</text>
+
+  <!-- bus -->
+  <path class="flow" d="M 520 124 V 150" marker-end="none"/>
+  <path d="M 230 150 H 810" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 230 150 V 170"/>
+  <path class="flow" d="M 810 150 V 170"/>
+
+  <text x="216" y="145" text-anchor="end" class="lbl branch">YES</text>
+  <text x="824" y="145" text-anchor="start" class="lbl branch">NO</text>
+
+  <!-- YES decision box -->
+  <rect x="110" y="170" width="240" height="54" rx="6" class="boxR"/>
+  <text x="230" y="203" text-anchor="middle" class="lbl node">var is fine</text>
+
+  <!-- NO decision box -->
+  <rect x="690" y="170" width="240" height="54" rx="6" class="boxH"/>
+  <text x="810" y="203" text-anchor="middle" class="lbl node">write the type</text>
+
+  <!-- arrows down to panels -->
+  <path class="flow" d="M 230 224 V 252 H 240 V 280"/>
+  <path class="flow" d="M 810 224 V 252 H 800 V 280"/>
+
+  <!-- YES panel -->
+  <rect x="20" y="280" width="440" height="250" rx="6" class="boxR"/>
+  <text x="40" y="306" class="lbl h2">VAR IS FINE — LEAF CASES</text>
+  <line x1="40" y1="316" x2="440" y2="316" stroke="#15803d" stroke-width="1"/>
+
+  <text x="40" y="340" class="lbl title">Builder chains</text>
+  <text x="40" y="356" class="lbl body">var qb = QueryBuilder.forTable("ledger_entry").build();</text>
+  <text x="40" y="372" class="lbl sub">chain's return type is obvious at each call</text>
+
+  <text x="40" y="396" class="lbl title">try-with-resources</text>
+  <text x="40" y="412" class="lbl body">var conn = fundsLedgerDataSource.getConnection();</text>
+  <text x="40" y="428" class="lbl sub">resource type is explicit at the call site</text>
+
+  <text x="40" y="452" class="lbl title">Map.Entry destructuring</text>
+  <text x="40" y="468" class="lbl body">for (var e : bonusByClient.entrySet())</text>
+  <text x="40" y="484" class="lbl sub">e is Map.Entry&lt;ClientId, Bonus&gt; — a well-known pattern</text>
+
+  <!-- NO panel -->
+  <rect x="580" y="280" width="440" height="250" rx="6" class="boxH"/>
+  <text x="600" y="306" class="lbl h2">WRITE THE TYPE — LEAF CASES</text>
+  <line x1="600" y1="316" x2="1000" y2="316" stroke="#b45309" stroke-width="1"/>
+
+  <text x="600" y="340" class="lbl title">Opaque factory return</text>
+  <text x="600" y="356" class="lbl body">var verdict = ScreeningService.evaluate(application);</text>
+  <text x="600" y="372" class="lbl sub">type hidden at call site — write ScreeningVerdict verdict</text>
+
+  <text x="600" y="396" class="lbl title">Accumulator width</text>
+  <text x="600" y="412" class="lbl body">var total = 0;</text>
+  <text x="600" y="428" class="lbl sub">overflows on a large PaymentRun — write long total = 0</text>
+
+  <text x="600" y="452" class="lbl title">Interface vs implementation</text>
+  <text x="600" y="468" class="lbl body">var list = new ArrayList&lt;String&gt;();</text>
+  <text x="600" y="484" class="lbl sub">pins the local's type to ArrayList, not List&lt;String&gt;</text>
+
+  <!-- legend -->
+  <line x1="20" y1="560" x2="1020" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="573" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="586" class="lbl tiny">root decision</text>
+
+  <rect x="220" y="573" width="22" height="16" rx="3" class="boxR"/>
+  <text x="250" y="586" class="lbl tiny">var is safe here (leaf cases and their boxes)</text>
+
+  <rect x="560" y="573" width="22" height="16" rx="3" class="boxH"/>
+  <text x="590" y="586" class="lbl tiny">write the type — foot-gun leaf cases</text>
+
+  <path class="flow" d="M 20 610 H 60"/>
+  <text x="70" y="614" class="lbl tiny">A → B : branch taken (label states the condition)</text>
+</svg>

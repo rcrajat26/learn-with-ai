@@ -1,0 +1,83 @@
+<svg viewBox="0 0 900 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="StringBuilder growth is 2 times old plus 2: capacity steps 16, 34, 70, 142, 286, 574, 1150 and beyond, via newCapacity = oldCapacity + (2 shl coder) routed through ArraysSupport.newLength; appending 1,000,000 characters costs 16 reallocations after the initial 16 and copies approximately 2.36 MB, about 2.36 times the final length">
+
+  <rect x="20" y="20" width="860" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="46" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">StringBuilder growth is 2 x old + 2</text>
+
+  <!-- step plot panel -->
+  <rect x="60" y="80" width="780" height="240" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="60" y="60" width="240" height="24" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Panel A: capacity vs growth step</text>
+
+  <polyline points="100,300 216.7,300 216.7,259.5 333.3,259.5 333.3,220.6 450,220.6 450,182.6 566.7,182.6 566.7,144.9 683.3,144.9 683.3,107.4 800,107.4 800,70"
+            fill="none" stroke="#737373" stroke-width="2"/>
+
+  <circle cx="100" cy="300" r="5" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="216.7" cy="259.5" r="5" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="333.3" cy="220.6" r="5" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="450" cy="182.6" r="5" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="566.7" cy="144.9" r="5" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="683.3" cy="107.4" r="5" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <circle cx="800" cy="70" r="5" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+
+  <g font-family="sans-serif" font-size="13" fill="#1f2937">
+    <rect x="80" y="278" width="40" height="20" rx="3" fill="#fef3c7"/>
+    <text x="100" y="293" text-anchor="middle">16</text>
+    <rect x="196" y="237" width="40" height="20" rx="3" fill="#fef3c7"/>
+    <text x="216.7" y="252" text-anchor="middle">34</text>
+    <rect x="313" y="198" width="40" height="20" rx="3" fill="#fef3c7"/>
+    <text x="333.3" y="213" text-anchor="middle">70</text>
+    <rect x="430" y="160" width="40" height="20" rx="3" fill="#fef3c7"/>
+    <text x="450" y="175" text-anchor="middle">142</text>
+    <rect x="546.7" y="122" width="40" height="20" rx="3" fill="#fef3c7"/>
+    <text x="566.7" y="137" text-anchor="middle">286</text>
+    <rect x="663.3" y="85" width="40" height="20" rx="3" fill="#fef3c7"/>
+    <text x="683.3" y="100" text-anchor="middle">574</text>
+    <rect x="775" y="46" width="50" height="20" rx="3" fill="#dcfce7"/>
+    <text x="800" y="61" text-anchor="middle">1150</text>
+  </g>
+
+  <rect x="290" y="333" width="320" height="22" rx="3" fill="#dbeafe"/>
+  <text x="450" y="349" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">growth step index (character capacity)</text>
+
+  <!-- formula note -->
+  <rect x="60" y="368" width="780" height="80" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="388" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">newCapacity = oldCapacity + (2 &lt;&lt; coder), routed through ArraysSupport.newLength</text>
+  <text x="450" y="408" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">coder = LATIN1 = 0 -&gt; 2 &lt;&lt; 0 = 2 bytes headroom per doubling in the byte domain</text>
+  <text x="450" y="428" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">char-capacity sequence follows newCapacity = 2 * oldCapacity + 2</text>
+
+  <!-- table panel -->
+  <rect x="60" y="468" width="240" height="24" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="485" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Panel B: appending 1,000,000 chars</text>
+
+  <rect x="60" y="500" width="780" height="130" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="80" y="522" font-family="sans-serif" font-size="13" fill="#1f2937">Capacity sequence (initial 16, then 16 reallocations):</text>
+
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <rect x="72" y="532" width="42" height="20" rx="3" fill="#dbeafe"/><text x="93" y="546" text-anchor="middle">16</text>
+    <rect x="118" y="532" width="42" height="20" rx="3" fill="#fef3c7"/><text x="139" y="546" text-anchor="middle">34</text>
+    <rect x="164" y="532" width="42" height="20" rx="3" fill="#fef3c7"/><text x="185" y="546" text-anchor="middle">70</text>
+    <rect x="210" y="532" width="42" height="20" rx="3" fill="#fef3c7"/><text x="231" y="546" text-anchor="middle">142</text>
+    <rect x="256" y="532" width="42" height="20" rx="3" fill="#fef3c7"/><text x="277" y="546" text-anchor="middle">286</text>
+    <rect x="302" y="532" width="42" height="20" rx="3" fill="#fef3c7"/><text x="323" y="546" text-anchor="middle">574</text>
+    <rect x="348" y="532" width="46" height="20" rx="3" fill="#fef3c7"/><text x="371" y="546" text-anchor="middle">1150</text>
+    <rect x="398" y="532" width="46" height="20" rx="3" fill="#fef3c7"/><text x="421" y="546" text-anchor="middle">2302</text>
+    <rect x="448" y="532" width="46" height="20" rx="3" fill="#fef3c7"/><text x="471" y="546" text-anchor="middle">4606</text>
+    <rect x="498" y="532" width="46" height="20" rx="3" fill="#fef3c7"/><text x="521" y="546" text-anchor="middle">9214</text>
+    <rect x="548" y="532" width="52" height="20" rx="3" fill="#fef3c7"/><text x="574" y="546" text-anchor="middle">18430</text>
+    <rect x="604" y="532" width="52" height="20" rx="3" fill="#fef3c7"/><text x="630" y="546" text-anchor="middle">36862</text>
+    <rect x="660" y="532" width="56" height="20" rx="3" fill="#fef3c7"/><text x="688" y="546" text-anchor="middle">73726</text>
+    <rect x="720" y="532" width="60" height="20" rx="3" fill="#fef3c7"/><text x="750" y="546" text-anchor="middle">147454</text>
+
+    <rect x="72" y="556" width="60" height="20" rx="3" fill="#fef3c7"/><text x="102" y="570" text-anchor="middle">294910</text>
+    <rect x="136" y="556" width="60" height="20" rx="3" fill="#fef3c7"/><text x="166" y="570" text-anchor="middle">589822</text>
+    <rect x="200" y="556" width="70" height="20" rx="3" fill="#dcfce7"/><text x="235" y="570" text-anchor="middle">1179646</text>
+    <rect x="274" y="556" width="230" height="20" rx="3" fill="#dbeafe"/><text x="389" y="570" text-anchor="middle">(1,179,646 &gt;= 1,000,000 chars needed)</text>
+  </g>
+
+  <rect x="72" y="586" width="374" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="259" y="607" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">16 reallocations after the initial 16-char buffer</text>
+
+  <rect x="454" y="586" width="374" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="641" y="607" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">approx 2.36 MB copied, approx 2.36x the final length</text>
+</svg>

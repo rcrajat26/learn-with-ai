@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison of a thread blocked in a socket read while
+     CardPayments.authorise waits on the card PSP. Left panel: what the reader expects — the
+     thread is assumed to be in state BLOCKED because it looks idle. Right panel: what an actual
+     thread dump reports for the same stack — java.lang.Thread.State: RUNNABLE, because a
+     blocking socket read parks the OS thread outside the JVM's own monitor bookkeeping; the OS
+     state is descheduled and invisible to the JVM, so the JVM reports RUNNABLE by default.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxHi  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWk  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A BLOCKING SOCKET READ REPORTS RUNNABLE — CardPayments.authorise TO THE CARD PSP</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <rect x="20" y="56" width="520" height="28" rx="4" class="boxWk"/>
+  <text x="280" y="75" text-anchor="middle" class="lbl h2">WHAT THE READER EXPECTS</text>
+  <rect x="580" y="56" width="520" height="28" rx="4" class="boxHi"/>
+  <text x="840" y="75" text-anchor="middle" class="lbl h2">WHAT THE THREAD DUMP ACTUALLY SAYS</text>
+
+  <!-- LEFT panel: assumed BLOCKED -->
+  <rect x="20" y="100" width="520" height="40" rx="6" class="boxWk"/>
+  <text x="280" y="125" text-anchor="middle" class="lbl body">"the socket has no data yet, so the thread must be BLOCKED"</text>
+
+  <rect x="20" y="156" width="520" height="240" rx="6" class="boxWk"/>
+  <text x="36" y="180" class="lbl h2">"CardPayments-authorise-7" #47</text>
+  <text x="36" y="198" class="lbl mono tiny">java.lang.Thread.State: BLOCKED (assumed)</text>
+  <text x="36" y="222" class="lbl mono tiny">at java.base/sun.nio.ch.NioSocketImpl.park</text>
+  <text x="36" y="240" class="lbl mono tiny">at java.base/sun.nio.ch.NioSocketImpl.read</text>
+  <text x="36" y="258" class="lbl mono tiny">at java.base/java.net.Socket$SocketInputStream.read</text>
+  <text x="36" y="276" class="lbl mono tiny">at java.base/java.io.BufferedInputStream.fill</text>
+  <text x="36" y="294" class="lbl mono tiny">at java.base/java.io.BufferedInputStream.read</text>
+  <text x="36" y="312" class="lbl mono tiny">at CardPayments.readAuthoriseResponse(CardPayments.java:118)</text>
+  <text x="36" y="330" class="lbl mono tiny">at CardPayments.authorise(CardPayments.java:96)</text>
+  <text x="36" y="348" class="lbl mono tiny">at PaymentService.processCardWithdrawal(PaymentService.java:63)</text>
+  <text x="36" y="372" class="lbl sub">reasoning: "it's waiting on I/O, I/O waits are BLOCKED" — wrong</text>
+
+  <rect x="20" y="410" width="520" height="150" rx="6" class="boxAnn"/>
+  <text x="34" y="432" class="lbl h2">WHY THE ASSUMPTION FAILS</text>
+  <text x="34" y="452" class="lbl tiny">BLOCKED in Thread.State means one specific thing:</text>
+  <text x="34" y="468" class="lbl tiny">contending to enter a synchronized monitor. A</text>
+  <text x="34" y="484" class="lbl tiny">socket read never contends for a Java monitor — it</text>
+  <text x="34" y="500" class="lbl tiny">is a native, OS-level system call. p50 for the card</text>
+  <text x="34" y="516" class="lbl tiny">PSP authorise is 240 ms, p99 11 s (see Appendix A);</text>
+  <text x="34" y="532" class="lbl tiny">the thread can sit here for seconds looking idle while</text>
+  <text x="34" y="548" class="lbl tiny">the JVM still calls it RUNNABLE.</text>
+
+  <!-- RIGHT panel: actual RUNNABLE -->
+  <rect x="580" y="100" width="520" height="40" rx="6" class="boxHi"/>
+  <text x="840" y="125" text-anchor="middle" class="lbl body">jstack captured mid-call — same stack, real dump</text>
+
+  <rect x="580" y="156" width="520" height="240" rx="6" class="boxHi"/>
+  <text x="596" y="180" class="lbl h2">"CardPayments-authorise-7" #47</text>
+  <text x="596" y="198" class="lbl mono tiny" font-weight="700">java.lang.Thread.State: RUNNABLE</text>
+  <text x="596" y="222" class="lbl mono tiny">at java.base/sun.nio.ch.NioSocketImpl.park</text>
+  <text x="596" y="240" class="lbl mono tiny">at java.base/sun.nio.ch.NioSocketImpl.read</text>
+  <text x="596" y="258" class="lbl mono tiny">at java.base/java.net.Socket$SocketInputStream.read</text>
+  <text x="596" y="276" class="lbl mono tiny">at java.base/java.io.BufferedInputStream.fill</text>
+  <text x="596" y="294" class="lbl mono tiny">at java.base/java.io.BufferedInputStream.read</text>
+  <text x="596" y="312" class="lbl mono tiny">at CardPayments.readAuthoriseResponse(CardPayments.java:118)</text>
+  <text x="596" y="330" class="lbl mono tiny">at CardPayments.authorise(CardPayments.java:96)</text>
+  <text x="596" y="348" class="lbl mono tiny">at PaymentService.processCardWithdrawal(PaymentService.java:63)</text>
+  <text x="596" y="372" class="lbl sub">identical stack to the left panel — only the state line differs</text>
+
+  <rect x="580" y="410" width="520" height="150" rx="6" class="boxDeg"/>
+  <text x="594" y="432" class="lbl h2">OS-LEVEL STATE, INVISIBLE TO THE JVM</text>
+  <text x="594" y="452" class="lbl tiny">The OS thread is actually descheduled, parked</text>
+  <text x="594" y="468" class="lbl tiny">inside the kernel's socket-read wait queue — but that</text>
+  <text x="594" y="484" class="lbl tiny">state lives outside the JVM's Thread.State model,</text>
+  <text x="594" y="500" class="lbl tiny">which has no "waiting on native I/O" value. HotSpot</text>
+  <text x="594" y="516" class="lbl tiny">falls back to RUNNABLE for any thread that is not</text>
+  <text x="594" y="532" class="lbl tiny">blocked on a Java monitor and not parked via</text>
+  <text x="594" y="548" class="lbl tiny">Object.wait / LockSupport.park.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="576" x2="1100" y2="576" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="588" width="22" height="14" rx="3" class="boxWk"/>
+  <text x="50" y="599" class="lbl tiny">assumed state (reader's mental model)</text>
+  <rect x="330" y="588" width="22" height="14" rx="3" class="boxHi"/>
+  <text x="360" y="599" class="lbl tiny">actual dump output</text>
+  <rect x="560" y="588" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="590" y="599" class="lbl tiny">OS-level reality behind the JVM's report</text>
+  <rect x="880" y="588" width="22" height="14" rx="3" class="boxAnn"/>
+  <text x="910" y="599" class="lbl tiny">annotation / explanation</text>
+</svg>

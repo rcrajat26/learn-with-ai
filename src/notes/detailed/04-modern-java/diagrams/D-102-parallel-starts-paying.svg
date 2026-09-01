@@ -1,0 +1,98 @@
+<svg viewBox="0 0 1000 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve chart. X axis is N, element count per parallelStream call, log scale. Y axis is wall-clock cost. Sequential cost rises steadily with N. Parallel cost starts higher than sequential at small N because of a roughly constant split/merge overhead band, then rises more slowly and crosses below the sequential curve near the heuristic N times Q approximately equal to 10,000, where Q is the average per-element work. Three QuizStakes data points are plotted: 40 deposits per second, deep in the overhead-dominated zone, never worth parallelizing; 95,000 card deposits per day, near the crossover, marginal; and 2.8 million stake reservations per day with expensive per-element work, well past the crossover, worth it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .axis    { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .curveSeq{ fill: none; stroke: #2563eb; stroke-width: 2.4; }
+    .curvePar{ fill: none; stroke: #15803d; stroke-width: 2.4; }
+    .crossln { fill: none; stroke: #9ca3af; stroke-width: 1.8; stroke-dasharray: 4 3; }
+    .leader  { fill: none; stroke: #b45309; stroke-width: 1.4; stroke-dasharray: 3 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE PARALLEL STARTS PAYING</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl dense">cost of .stream() vs .parallelStream() as N grows; Q = average per-element work; crossover heuristic N × Q ≈ 10,000</text>
+
+  <!-- Axes -->
+  <path class="axis" d="M 110 500 V 100"/>
+  <path class="axis" d="M 110 500 H 930"/>
+  <text x="34" y="310" class="lbl sub" transform="rotate(-90 34 310)">WALL-CLOCK COST</text>
+  <text x="520" y="558" text-anchor="middle" class="lbl sub">N — ELEMENT COUNT PER CALL (LOG SCALE)</text>
+
+  <!-- Overhead band -->
+  <rect x="110" y="430" width="247" height="70" class="boxW"/>
+  <text x="233" y="458" text-anchor="middle" class="lbl sub">SPLIT/MERGE OVERHEAD</text>
+  <text x="233" y="474" text-anchor="middle" class="lbl sub">roughly constant, independent of N</text>
+
+  <!-- Crossover -->
+  <path class="crossln" d="M 357 500 V 110"/>
+  <circle cx="357" cy="390" r="4" fill="#b45309" stroke="#b45309"/>
+  <text x="365" y="130" class="lbl tiny" font-weight="700">crossover ≈ N × Q ≈ 10,000</text>
+
+  <!-- Curves -->
+  <polyline class="curveSeq" points="110,500 920,140"/>
+  <text x="800" y="168" text-anchor="middle" class="lbl body" fill="#2563eb" font-weight="700">sequential</text>
+
+  <polyline class="curvePar" points="110,430 920,300"/>
+  <text x="600" y="345" text-anchor="middle" class="lbl body" fill="#15803d" font-weight="700">parallel</text>
+
+  <!-- QuizStakes points -->
+  <path class="leader" d="M 200 500 V 415.6"/>
+  <circle cx="200" cy="415.6" r="6" class="boxY"/>
+  <text x="200" y="419" text-anchor="middle" class="lbl tiny" font-weight="700">1</text>
+  <text x="200" y="517" text-anchor="middle" class="lbl tiny">N≈40</text>
+
+  <path class="leader" d="M 400 500 V 377"/>
+  <circle cx="400" cy="377" r="6" class="boxY"/>
+  <text x="400" y="380.5" text-anchor="middle" class="lbl tiny" font-weight="700">2</text>
+  <text x="400" y="517" text-anchor="middle" class="lbl tiny">N≈95k</text>
+
+  <path class="leader" d="M 800 500 V 319.3"/>
+  <circle cx="800" cy="319.3" r="6" class="boxY"/>
+  <text x="800" y="322.8" text-anchor="middle" class="lbl tiny" font-weight="700">3</text>
+  <text x="800" y="517" text-anchor="middle" class="lbl tiny">N≈2.8M</text>
+
+  <!-- Callout panel -->
+  <rect x="20" y="560" width="960" height="120" rx="6" class="panel"/>
+  <text x="40" y="582" class="lbl body" font-weight="700">QuizStakes points on this curve</text>
+  <text x="40" y="602" class="lbl tiny">① 40 deposits/sec — deep in the overhead-dominated zone — never worth parallelizing</text>
+  <text x="40" y="622" class="lbl tiny">② 95,000 card deposits/day (groupingBy scan) — sits near the crossover — marginal, benchmark it</text>
+  <text x="40" y="642" class="lbl tiny">③ 2.8M stake reservations/day with expensive per-element work — well past the crossover — worth it</text>
+  <text x="40" y="662" class="lbl tiny">Q is the average per-element work; cheap predicates never cross the heuristic no matter how large N is</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="696" x2="980" y2="696" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="712" x2="42" y2="712" stroke="#2563eb" stroke-width="2.4"/>
+  <text x="50" y="716" class="lbl tiny">sequential cost curve</text>
+
+  <line x1="220" y1="712" x2="242" y2="712" stroke="#15803d" stroke-width="2.4"/>
+  <text x="250" y="716" class="lbl tiny">parallel cost curve</text>
+
+  <rect x="420" y="704" width="22" height="16" class="boxW"/>
+  <text x="450" y="716" class="lbl tiny">split/merge overhead band</text>
+
+  <line x1="620" y1="712" x2="642" y2="712" stroke="#9ca3af" stroke-width="1.8" stroke-dasharray="4 3"/>
+  <text x="650" y="716" class="lbl tiny">crossover threshold</text>
+
+  <circle cx="830" cy="712" r="6" class="boxY"/>
+  <text x="845" y="716" class="lbl tiny">QuizStakes data point</text>
+</svg>

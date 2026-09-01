@@ -1,0 +1,64 @@
+<svg viewBox="0 0 900 490" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3. The rendered content, with both placeholders replaced by their command output, enters the conversation as a single message. A panel explains the inline bang backtick form is recognised only at line start or after whitespace, so a shell variable assignment like KEY equals bang backtick cmd backtick stays literal, and that disableSkillShellExecution turns dynamic injection off entirely.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; font-family: "SF Mono", Menlo, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="490" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 3 OF 3 — RENDERED CONTENT ENTERS AS ONE MESSAGE</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="66" width="260" height="120" rx="6" class="boxR"/>
+  <text x="170" y="90" text-anchor="middle" class="lbl node">substituted content</text>
+  <text x="170" y="112" text-anchor="middle" class="lbl dense" font-size="11">main</text>
+  <text x="170" y="132" text-anchor="middle" class="lbl dense" font-size="11">a1b2c3d fix: retry logic</text>
+  <text x="170" y="156" text-anchor="middle" class="lbl sub">(from Frame 2)</text>
+
+  <path class="flow" d="M 300 126 H 380"/>
+
+  <rect x="380" y="66" width="440" height="120" rx="6" class="boxA"/>
+  <text x="600" y="90" text-anchor="middle" class="lbl body" font-weight="600">enters conversation as ONE message</text>
+  <text x="600" y="112" text-anchor="middle" class="lbl sub">skill body + resolved output, single turn payload</text>
+  <text x="600" y="132" text-anchor="middle" class="lbl sub">no separate tool-call round trip is visible to the model —</text>
+  <text x="600" y="150" text-anchor="middle" class="lbl sub">the content simply arrives already resolved</text>
+
+  <rect x="60" y="210" width="780" height="130" rx="6" class="boxA"/>
+  <text x="80" y="232" class="lbl tiny" font-weight="700">RECOGNITION RULE — INLINE FORM</text>
+  <text x="80" y="254" class="lbl body">the inline !`cmd` form is recognised only at line start or after whitespace.</text>
+  <rect x="80" y="266" width="300" height="30" rx="4" class="boxW"/>
+  <text x="230" y="286" text-anchor="middle" class="lbl dense" font-size="11">KEY=!`cmd`</text>
+  <text x="400" y="286" class="lbl body">stays literal — no space before !`</text>
+  <text x="80" y="320" class="lbl body">the fenced ```! block has no such adjacency rule; it always executes.</text>
+
+  <rect x="60" y="356" width="780" height="70" rx="6" class="boxW"/>
+  <text x="80" y="378" class="lbl tiny" font-weight="700">disableSkillShellExecution</text>
+  <text x="80" y="398" class="lbl tiny">setting turns dynamic injection off entirely — both the inline and fenced</text>
+  <text x="80" y="414" class="lbl tiny">forms are left as literal text, never executed, when this is set.</text>
+
+  <line x1="20" y1="438" x2="880" y2="438" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="446" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="459" class="lbl tiny">resolved skill content</text>
+  <rect x="240" y="446" width="22" height="16" rx="3" class="boxA"/>
+  <text x="270" y="459" class="lbl tiny">conversation message / rule panel</text>
+  <rect x="560" y="446" width="22" height="16" rx="3" class="boxW"/>
+  <text x="590" y="459" class="lbl tiny">literal / unexecuted text or off-switch</text>
+</svg>

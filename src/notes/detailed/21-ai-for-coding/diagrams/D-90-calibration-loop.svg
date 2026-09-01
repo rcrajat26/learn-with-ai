@@ -1,0 +1,105 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The calibration loop as a cycle on one axis: sessions run, transcripts are mined for recurring friction, signals are grouped and coded against feedback-signal.yaml's failure_code vocabulary and severity_map.yaml, deduped against the filed-bugs.yaml ledger, a human confirms and files as a gate rather than a step, a prompt or script changes, then the eval suites measure whether it got better, and the cycle returns to the start. A side note covers continuation checkpoints and the progressing-versus-stalled decision.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .gate  { fill: none; stroke: #b45309; stroke-width: 2.4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE CALIBRATION LOOP — ONE CYCLE, ONE AXIS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- vertical spine, steps in order top to bottom, then loop back to top -->
+  <rect x="380" y="66" width="280" height="54" rx="6" class="boxP"/>
+  <text x="520" y="98" text-anchor="middle" class="lbl node">1. sessions run</text>
+
+  <path class="flow" d="M 520 120 V 144"/>
+  <rect x="360" y="144" width="320" height="54" rx="6" class="boxP"/>
+  <text x="520" y="176" text-anchor="middle" class="lbl node">2. transcripts mined for recurring friction</text>
+
+  <path class="flow" d="M 520 198 V 222"/>
+  <rect x="300" y="222" width="440" height="70" rx="6" class="boxA"/>
+  <text x="520" y="246" text-anchor="middle" class="lbl node">3. signals grouped and coded</text>
+  <text x="520" y="264" text-anchor="middle" class="lbl sub">against feedback-signal.yaml's failure_code vocabulary</text>
+  <text x="520" y="280" text-anchor="middle" class="lbl sub">and harness/calibration/severity_map.yaml</text>
+
+  <path class="flow" d="M 520 292 V 316"/>
+  <rect x="300" y="316" width="440" height="54" rx="6" class="boxA"/>
+  <text x="520" y="340" text-anchor="middle" class="lbl node">4. deduped against the ledger</text>
+  <text x="520" y="358" text-anchor="middle" class="lbl sub">harness/calibration/friction/filed-bugs.yaml</text>
+
+  <path class="flow" d="M 520 370 V 394"/>
+
+  <!-- gate: drawn distinctly, thicker double-line border, diamond-ish via rect rotated look kept orthogonal -->
+  <rect x="330" y="394" width="380" height="66" rx="4" class="boxY gate"/>
+  <rect x="338" y="402" width="364" height="50" rx="2" fill="none" stroke="#b45309" stroke-width="1.4"/>
+  <text x="520" y="422" text-anchor="middle" class="lbl node">GATE — a human confirms and files</text>
+  <text x="520" y="440" text-anchor="middle" class="lbl sub">not a step: nothing proceeds without this confirmation</text>
+
+  <path class="flow" d="M 520 460 V 484"/>
+  <rect x="360" y="484" width="320" height="54" rx="6" class="boxR"/>
+  <text x="520" y="516" text-anchor="middle" class="lbl node">5. a prompt or script changes</text>
+
+  <path class="flow" d="M 520 538 V 562"/>
+  <rect x="260" y="562" width="520" height="86" rx="6" class="boxR"/>
+  <text x="520" y="586" text-anchor="middle" class="lbl node">6. eval suites measure whether it got better</text>
+  <text x="520" y="606" text-anchor="middle" class="lbl sub">harness/evals/code-to-commit</text>
+  <text x="520" y="622" text-anchor="middle" class="lbl sub">harness/evals/seeded-defects</text>
+  <text x="520" y="638" text-anchor="middle" class="lbl sub">claude plugin eval</text>
+
+  <!-- loop back to step 1: route right side down and up -->
+  <path class="flow" d="M 780 605 H 900 V 93 H 660"/>
+  <text x="905" y="360" class="lbl tiny" transform="rotate(90 905 360)">back to the start</text>
+
+  <!-- side note panel on continuation checkpoints, placed left of the spine -->
+  <rect x="40" y="222" width="220" height="148" rx="6" class="boxA"/>
+  <text x="150" y="244" text-anchor="middle" class="lbl h2">side note</text>
+  <text x="55" y="264" class="lbl tiny">continuation checkpoints record</text>
+  <text x="55" y="278" class="lbl tiny">where a run left off between</text>
+  <text x="55" y="292" class="lbl tiny">sessions</text>
+  <text x="55" y="312" class="lbl tiny">progress-verifier's verdict —</text>
+  <text x="55" y="326" class="lbl tiny">progressing vs. stalled — decides</text>
+  <text x="55" y="340" class="lbl tiny">whether a checkpoint is trusted</text>
+  <text x="55" y="354" class="lbl tiny">or the loop escalates to a human</text>
+
+  <line x1="20" y1="672" x2="1020" y2="672" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="680" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="692" class="lbl tiny">mining / measurement step</text>
+  <rect x="240" y="680" width="22" height="14" rx="3" class="boxA"/>
+  <text x="270" y="692" class="lbl tiny">coding / dedup artifact</text>
+  <rect x="470" y="680" width="22" height="14" rx="3" class="boxR"/>
+  <text x="500" y="692" class="lbl tiny">change / eval step</text>
+  <rect x="670" y="680" width="22" height="14" rx="3" class="boxY"/>
+  <text x="700" y="692" class="lbl tiny">human-confirmation gate</text>
+  <path class="flow" d="M 20 712 H 50"/>
+  <text x="58" y="717" class="lbl tiny">A → B : A feeds into B, cycle repeats</text>
+
+  <rect x="60" y="736" width="920" height="126" rx="6" class="boxA"/>
+  <text x="80" y="758" class="lbl h2">arithmetic on the loop's shape</text>
+  <text x="80" y="778" class="lbl tiny">6 numbered steps + 1 gate = 7 stations on one cycle (6 + 1 = 7)</text>
+  <text x="80" y="796" class="lbl tiny">the gate sits between step 4 (dedup) and step 5 (change) — nothing after step 4 fires without it</text>
+  <text x="80" y="814" class="lbl tiny">signal path: feedback-signal.yaml (failure_code) + harness/calibration/severity_map.yaml → coded signal</text>
+  <text x="80" y="832" class="lbl tiny">dedup path: coded signal vs. harness/calibration/friction/filed-bugs.yaml → new bug or discard</text>
+  <text x="80" y="850" class="lbl tiny">verdict path: progress-verifier emits one of {progressing, stalled} per continuation checkpoint</text>
+</svg>

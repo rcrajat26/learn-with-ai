@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1040 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for a surprising Claude Code behaviour. Root: a behaviour surprised you. Seven ordered diagnostic steps to try in sequence: /context, /doctor, /permissions, /hooks, /memory, /config, and claude --debug, each labelled with what it reveals and what it cannot tell you. A terminal step, --safe-mode or --bare, answers whether the cause is your configuration or the tool itself.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+
+    .badge { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">"WHY IS IT DOING THAT?" — THE DIAGNOSTIC ORDER</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="290" y="58" width="460" height="54" rx="6" class="boxR"/>
+  <text x="520" y="90" text-anchor="middle" class="lbl node">ROOT: a behaviour surprised you</text>
+
+  <path class="flow" d="M 520 112 V 132"/>
+
+  <!-- step 1 /context -->
+  <circle cx="70" cy="164" r="16" class="badge"/>
+  <text x="70" y="169" text-anchor="middle" class="lbl tiny" font-weight="700">1</text>
+  <rect x="100" y="132" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="154" class="lbl node">/context</text>
+  <text x="300" y="154" class="lbl body">shows: what loaded — CLAUDE.md files, settings sources, MCP servers, token budget</text>
+  <text x="300" y="176" class="lbl sub">cannot show: which layer would win a settings conflict</text>
+  <path class="flow" d="M 520 196 V 216"/>
+
+  <!-- step 2 /doctor -->
+  <circle cx="70" cy="248" r="16" class="badge"/>
+  <text x="70" y="253" text-anchor="middle" class="lbl tiny" font-weight="700">2</text>
+  <rect x="100" y="216" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="238" class="lbl node">/doctor</text>
+  <text x="300" y="238" class="lbl body">shows: resolved settings and health checks across every settings layer</text>
+  <text x="300" y="260" class="lbl sub">cannot show: which hook fired for a specific event</text>
+  <path class="flow" d="M 520 280 V 300"/>
+
+  <!-- step 3 /permissions -->
+  <circle cx="70" cy="332" r="16" class="badge"/>
+  <text x="70" y="337" text-anchor="middle" class="lbl tiny" font-weight="700">3</text>
+  <rect x="100" y="300" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="322" class="lbl node">/permissions</text>
+  <text x="300" y="322" class="lbl body">shows: which rule matched an action and which settings file defines it</text>
+  <text x="300" y="344" class="lbl sub">cannot show: hook execution order</text>
+  <path class="flow" d="M 520 364 V 384"/>
+
+  <!-- step 4 /hooks -->
+  <circle cx="70" cy="416" r="16" class="badge"/>
+  <text x="70" y="421" text-anchor="middle" class="lbl tiny" font-weight="700">4</text>
+  <rect x="100" y="384" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="406" class="lbl node">/hooks</text>
+  <text x="300" y="406" class="lbl body">shows: which hook fired for an event and the source file that defines it</text>
+  <text x="300" y="428" class="lbl sub">cannot show: which CLAUDE.md contributed an instruction</text>
+  <path class="flow" d="M 520 448 V 468"/>
+
+  <!-- step 5 /memory -->
+  <circle cx="70" cy="500" r="16" class="badge"/>
+  <text x="70" y="505" text-anchor="middle" class="lbl tiny" font-weight="700">5</text>
+  <rect x="100" y="468" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="490" class="lbl node">/memory</text>
+  <text x="300" y="490" class="lbl body">shows: which instruction files (CLAUDE.md, rules/) loaded and from where</text>
+  <text x="300" y="512" class="lbl sub">cannot show: live permission or hook state</text>
+  <path class="flow" d="M 520 532 V 552"/>
+
+  <!-- step 6 /config -->
+  <circle cx="70" cy="584" r="16" class="badge"/>
+  <text x="70" y="589" text-anchor="middle" class="lbl tiny" font-weight="700">6</text>
+  <rect x="100" y="552" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="574" class="lbl node">/config</text>
+  <text x="300" y="574" class="lbl body">shows: an interactive view/editor of the active settings values</text>
+  <text x="300" y="596" class="lbl sub">cannot show: startup-time or network-level tracing</text>
+  <path class="flow" d="M 520 616 V 636"/>
+
+  <!-- step 7 claude debug flag -->
+  <circle cx="70" cy="668" r="16" class="badge"/>
+  <text x="70" y="673" text-anchor="middle" class="lbl tiny" font-weight="700">7</text>
+  <rect x="100" y="636" width="840" height="64" rx="6" class="boxP"/>
+  <text x="116" y="658" class="lbl node">claude --debug</text>
+  <text x="300" y="658" class="lbl body">shows: verbose startup and runtime tracing — tool calls, hook firing, MCP I/O</text>
+  <text x="300" y="680" class="lbl sub">cannot show: a clean answer if config itself is the problem</text>
+  <path class="flow" d="M 520 700 V 720"/>
+
+  <!-- terminal node -->
+  <rect x="220" y="720" width="600" height="80" rx="6" class="boxY"/>
+  <text x="520" y="746" text-anchor="middle" class="lbl node">TERMINAL: --safe-mode / --bare</text>
+  <text x="520" y="768" text-anchor="middle" class="lbl body">disables project config / all extra config to answer:</text>
+  <text x="520" y="788" text-anchor="middle" class="lbl body" font-weight="700">"is it my config, or is it the tool?"</text>
+
+  <line x1="20" y1="820" x2="1020" y2="820" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="832" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="845" class="lbl tiny">root — the trigger for this whole walk</text>
+  <rect x="300" y="832" width="22" height="16" rx="3" class="boxP"/>
+  <text x="330" y="845" class="lbl tiny">an ordered diagnostic command (badge = try order)</text>
+  <rect x="700" y="832" width="22" height="16" rx="3" class="boxY"/>
+  <text x="730" y="845" class="lbl tiny">terminal isolation step</text>
+  <path class="flow" d="M 20 870 H 60"/>
+  <text x="68" y="875" class="lbl tiny">A → B : try B next, in this fixed order</text>
+</svg>

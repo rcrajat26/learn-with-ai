@@ -1,0 +1,155 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison on settlement-ingest. Left: execute(runnable) runs FundsLedger.reserveStake,
+     which throws InsufficientFundsException; the exception propagates out of run(), the worker thread's
+     UncaughtExceptionHandler fires, and the stack trace prints to stderr. Right: submit(callable) runs the same
+     reserveStake call; the FutureTask catches the throwable and stores it inside the Future instead of propagating
+     it; the UncaughtExceptionHandler never fires; afterExecute is called with a null throwable; the exception is
+     visible only by calling future.get(), which rethrows it wrapped in ExecutionException; if nobody calls get(),
+     the failure is silent.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">submit() SWALLOWS THE EXCEPTION, execute() DOES NOT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <text x="270" y="66" text-anchor="middle" class="lbl h2">LEFT — execute(Runnable) — LOUD FAILURE</text>
+  <text x="840" y="66" text-anchor="middle" class="lbl h2">RIGHT — submit(Callable) — SILENT FAILURE</text>
+  <line x1="560" y1="52" x2="560" y2="740" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT COLUMN -->
+  <rect x="60" y="86" width="420" height="56" rx="6" class="boxP"/>
+  <text x="270" y="110" text-anchor="middle" class="lbl node">execute(runnable)</text>
+  <text x="270" y="128" text-anchor="middle" class="lbl sub">settlement-ingest-3, worker thread</text>
+
+  <path class="flow" d="M 270 142 V 166"/>
+
+  <rect x="60" y="166" width="420" height="56" rx="6" class="boxW"/>
+  <text x="270" y="190" text-anchor="middle" class="lbl body">FundsLedger.reserveStake(stake = 3.33)</text>
+  <text x="270" y="208" text-anchor="middle" class="lbl sub">runnable.run() body</text>
+
+  <path class="fail" d="M 270 222 V 246"/>
+
+  <rect x="60" y="246" width="420" height="56" rx="6" class="boxD"/>
+  <text x="270" y="270" text-anchor="middle" class="lbl body" font-weight="600">throws InsufficientFundsException</text>
+  <text x="270" y="288" text-anchor="middle" class="lbl sub">propagates out of run() — nothing catches it</text>
+
+  <path class="fail" d="M 270 302 V 326"/>
+
+  <rect x="60" y="326" width="420" height="56" rx="6" class="boxD"/>
+  <text x="270" y="350" text-anchor="middle" class="lbl body" font-weight="600">Thread.UncaughtExceptionHandler.uncaughtException()</text>
+  <text x="270" y="368" text-anchor="middle" class="lbl sub">fires on settlement-ingest-3</text>
+
+  <path class="fail" d="M 270 382 V 406"/>
+
+  <rect x="60" y="406" width="420" height="70" rx="6" class="boxD"/>
+  <text x="270" y="430" text-anchor="middle" class="lbl body" font-weight="600">stack trace prints to stderr</text>
+  <text x="270" y="448" text-anchor="middle" class="lbl sub">"InsufficientFundsException: stake 3.33 exceeds</text>
+  <text x="270" y="463" text-anchor="middle" class="lbl sub">stakeable balance" — visible immediately, loudly</text>
+
+  <path class="weak" d="M 270 476 V 500"/>
+  <rect x="60" y="500" width="420" height="46" rx="6" class="boxW"/>
+  <text x="270" y="528" text-anchor="middle" class="lbl sub">ThreadPoolExecutor.afterExecute(r, t) receives t = the exception</text>
+
+  <!-- annotation panel left -->
+  <rect x="60" y="566" width="420" height="150" rx="6" class="panel"/>
+  <text x="76" y="588" class="lbl body" font-weight="700">Why it is loud</text>
+  <text x="76" y="608" class="lbl tiny">Runnable.run() declares no checked exceptions and</text>
+  <text x="76" y="624" class="lbl tiny">has nowhere to stash a thrown value. The worker's</text>
+  <text x="76" y="640" class="lbl tiny">run loop (ThreadPoolExecutor.runWorker) lets the</text>
+  <text x="76" y="656" class="lbl tiny">RuntimeException escape, which triggers the per-</text>
+  <text x="76" y="672" class="lbl tiny">thread UncaughtExceptionHandler and terminates</text>
+  <text x="76" y="688" class="lbl tiny">only that one worker thread — the pool replaces it.</text>
+  <text x="76" y="704" class="lbl tiny" fill="#b91c1c" font-weight="600">Failure is impossible to miss.</text>
+
+  <!-- RIGHT COLUMN -->
+  <rect x="640" y="86" width="420" height="56" rx="6" class="boxP"/>
+  <text x="850" y="110" text-anchor="middle" class="lbl node">submit(callable)</text>
+  <text x="850" y="128" text-anchor="middle" class="lbl sub">settlement-ingest-7, worker thread</text>
+
+  <path class="flow" d="M 850 142 V 166"/>
+
+  <rect x="640" y="166" width="420" height="56" rx="6" class="boxW"/>
+  <text x="850" y="190" text-anchor="middle" class="lbl body">FundsLedger.reserveStake(stake = 3.33)</text>
+  <text x="850" y="208" text-anchor="middle" class="lbl sub">callable.call() body, wrapped in a FutureTask</text>
+
+  <path class="fail" d="M 850 222 V 246"/>
+
+  <rect x="640" y="246" width="420" height="56" rx="6" class="boxD"/>
+  <text x="850" y="270" text-anchor="middle" class="lbl body" font-weight="600">throws InsufficientFundsException</text>
+  <text x="850" y="288" text-anchor="middle" class="lbl sub">FutureTask.run() catches Throwable around call()</text>
+
+  <path class="flow" d="M 850 302 V 326"/>
+
+  <rect x="640" y="326" width="420" height="56" rx="6" class="boxR"/>
+  <text x="850" y="350" text-anchor="middle" class="lbl body" font-weight="600">setException(throwable) — stored in outcome field</text>
+  <text x="850" y="368" text-anchor="middle" class="lbl sub">no exception ever leaves FutureTask.run()</text>
+
+  <path class="weak" d="M 850 382 V 406"/>
+
+  <rect x="640" y="406" width="420" height="56" rx="6" class="boxW"/>
+  <text x="850" y="426" text-anchor="middle" class="lbl body" font-weight="600">UncaughtExceptionHandler — NEVER FIRES</text>
+  <text x="850" y="444" text-anchor="middle" class="lbl sub">afterExecute(r, t) is called with t = null</text>
+
+  <path class="weak" d="M 850 462 V 486"/>
+
+  <rect x="640" y="486" width="420" height="60" rx="6" class="boxD"/>
+  <text x="850" y="508" text-anchor="middle" class="lbl body" font-weight="600">visible only through future.get()</text>
+  <text x="850" y="526" text-anchor="middle" class="lbl sub">rethrown wrapped as ExecutionException</text>
+
+  <!-- annotation panel right -->
+  <rect x="640" y="566" width="420" height="150" rx="6" class="panel"/>
+  <text x="656" y="588" class="lbl body" font-weight="700">The "nobody calls get()" path</text>
+  <text x="656" y="608" class="lbl tiny">If the caller never invokes future.get() (or</text>
+  <text x="656" y="624" class="lbl tiny">get(timeout, unit)), the ExecutionException is</text>
+  <text x="656" y="640" class="lbl tiny">never thrown anywhere. The reserveStake failure</text>
+  <text x="656" y="656" class="lbl tiny">for the 3.33 stake is captured, logged nowhere,</text>
+  <text x="656" y="672" class="lbl tiny">and the task simply vanishes from the pool.</text>
+  <text x="656" y="692" class="lbl tiny" fill="#b91c1c" font-weight="600">Result: total silence — the failed stake reservation</text>
+  <text x="656" y="708" class="lbl tiny" fill="#b91c1c" font-weight="600">leaves no trace unless get() is called.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="732" x2="1100" y2="732" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="746" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="759" class="lbl tiny">submission call</text>
+  <rect x="180" y="746" width="22" height="16" rx="3" class="boxW"/>
+  <text x="212" y="759" class="lbl tiny">task body / neutral state</text>
+  <rect x="380" y="746" width="22" height="16" rx="3" class="boxD"/>
+  <text x="412" y="759" class="lbl tiny">exception thrown / visible failure</text>
+  <rect x="620" y="746" width="22" height="16" rx="3" class="boxR"/>
+  <text x="652" y="759" class="lbl tiny">captured into Future, no propagation</text>
+  <path class="flow" d="M 850 750 H 890"/>
+  <text x="898" y="759" class="lbl tiny">normal step</text>
+  <path class="fail" d="M 990 750 H 1030"/>
+  <text x="1038" y="759" class="lbl tiny" text-anchor="end">exception path</text>
+</svg>

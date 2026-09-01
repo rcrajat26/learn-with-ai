@@ -1,0 +1,105 @@
+<svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A stream is consumed once. Three states: unconsumed, linked with an intermediate operation
+     attached, and consumed or closed. An intermediate op like filter or map moves unconsumed to linked.
+     A terminal op like collect or forEach moves linked, or unconsumed directly, to consumed or closed.
+     From consumed or closed, calling another terminal op throws IllegalStateException: stream has
+     already been operated upon or closed. Attempting to draw a new stream from the same already-drained
+     source throws IllegalStateException: source already consumed or closed.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .err   { font-size: 11px; font-family: "SF Mono", Menlo, monospace; fill: #b91c1c; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .illeg { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A STREAM IS CONSUMED ONCE — STATE TRANSITIONS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- states -->
+  <rect x="40" y="150" width="220" height="70" rx="8" class="boxP"/>
+  <text x="150" y="178" text-anchor="middle" class="lbl node">UNCONSUMED</text>
+  <text x="150" y="198" text-anchor="middle" class="lbl sub">stakeReservations.stream()</text>
+
+  <rect x="410" y="150" width="220" height="70" rx="8" class="boxP"/>
+  <text x="520" y="178" text-anchor="middle" class="lbl node">LINKED</text>
+  <text x="520" y="198" text-anchor="middle" class="lbl sub">intermediate op attached, not yet run</text>
+
+  <rect x="780" y="150" width="220" height="70" rx="8" class="boxR"/>
+  <text x="890" y="178" text-anchor="middle" class="lbl node">CONSUMED / CLOSED</text>
+  <text x="890" y="198" text-anchor="middle" class="lbl sub">source drained, pipeline spent</text>
+
+  <!-- unconsumed -> linked -->
+  <path class="flow" d="M 260 185 H 410"/>
+  <text x="335" y="160" text-anchor="middle" class="lbl tiny">.filter(...) / .map(...)</text>
+  <text x="335" y="145" text-anchor="middle" class="lbl sub">intermediate op — returns new Stream</text>
+
+  <!-- linked -> consumed -->
+  <path class="flow" d="M 630 185 H 780"/>
+  <text x="705" y="160" text-anchor="middle" class="lbl tiny">.collect(...) / .forEach(...)</text>
+  <text x="705" y="145" text-anchor="middle" class="lbl sub">terminal op</text>
+
+  <!-- unconsumed -> consumed direct (below) -->
+  <path class="flow" d="M 150 220 V 280 H 890 V 220"/>
+  <text x="520" y="298" text-anchor="middle" class="lbl tiny">.count() / .forEach(...) called directly on UNCONSUMED — terminal op, no intermediate stage</text>
+
+  <!-- illegal edge 1: consumed -> exception A (self, second terminal op) -->
+  <path class="illeg" d="M 950 150 V 100 H 890 V 150"/>
+  <text x="880" y="90" text-anchor="middle" class="lbl tiny" fill="#b91c1c">second terminal op, e.g. .collect() again</text>
+
+  <rect x="700" y="360" width="300" height="90" rx="8" class="boxD"/>
+  <text x="850" y="384" text-anchor="middle" class="lbl node" fill="#b91c1c">IllegalStateException</text>
+  <text x="850" y="406" text-anchor="middle" class="err">"stream has already been</text>
+  <text x="850" y="422" text-anchor="middle" class="err">operated upon or closed"</text>
+
+  <path class="illeg" d="M 890 220 V 360"/>
+
+  <!-- illegal edge 2: attempt new stream from same drained source -->
+  <rect x="40" y="360" width="300" height="90" rx="8" class="boxD"/>
+  <text x="190" y="384" text-anchor="middle" class="lbl node" fill="#b91c1c">IllegalStateException</text>
+  <text x="190" y="406" text-anchor="middle" class="err">"source already consumed</text>
+  <text x="190" y="422" text-anchor="middle" class="err">or closed"</text>
+
+  <path class="illeg" d="M 780 185 V 260 H 190 V 360"/>
+  <text x="480" y="253" text-anchor="middle" class="lbl tiny" fill="#b91c1c">new stream built over the same already-drained backing source</text>
+  <text x="480" y="238" text-anchor="middle" class="lbl sub" fill="#b91c1c">(e.g. calling Files.lines(path).iterator() a second time on the same open reader)</text>
+
+  <rect x="380" y="470" width="280" height="86" rx="6" class="panel"/>
+  <text x="396" y="490" class="lbl tiny" font-weight="700">Why two different messages</text>
+  <text x="396" y="508" class="lbl tiny">"already operated upon or closed" guards the Stream</text>
+  <text x="396" y="524" class="lbl tiny">object's own state; "source already consumed" guards</text>
+  <text x="396" y="540" class="lbl tiny">the underlying Spliterator/iterator it was built over.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="570" x2="1020" y2="570" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="582" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="595" class="lbl tiny">live pipeline state</text>
+  <rect x="200" y="582" width="22" height="16" rx="3" class="boxR"/>
+  <text x="230" y="595" class="lbl tiny">terminal state — drained</text>
+  <rect x="420" y="582" width="22" height="16" rx="3" class="boxD"/>
+  <text x="450" y="595" class="lbl tiny">thrown exception</text>
+  <path class="flow" d="M 620 590 H 660"/>
+  <text x="668" y="595" class="lbl tiny">legal transition, labelled by the call that causes it</text>
+  <path class="illeg" d="M 20 606 H 60"/>
+  <text x="68" y="611" class="lbl tiny">A → B : illegal edge, throws IllegalStateException</text>
+</svg>

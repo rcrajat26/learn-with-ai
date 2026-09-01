@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 872" role="img" aria-label="Byte-by-byte field layout of a hand-written MyString beside java.lang.String on Oracle JDK 21, for the 18-character QuizStakes status name DOCUMENTS_UPLOADED. Both objects are exactly 24 bytes: a 12-byte header, a 4-byte compressed oop for the value array, a 4-byte int hash, a 1-byte boolean hashIsZero and a 1-byte coder, aligned up from 22 bytes. The value field points at the payload array. MyString's char[18] payload costs 56 bytes (16-byte array header plus 18 times 2 bytes, aligned from 52), giving a total of 80 bytes. java.lang.String's compact byte[18] payload costs 40 bytes (16-byte array header plus 18 times 1 byte, aligned from 34), giving a total of 64 bytes. The 16-byte difference is attributable entirely to the payload array, not to the object headers.">
+<defs>
+<style>
+.t { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 15px; font-weight: 700; }
+.band { font-size: 13px; font-weight: 700; }
+.bh { font-size: 13px; font-weight: 700; }
+.mono { font-family: Menlo, "SF Mono", monospace; font-size: 12.5px; fill: #1f2937; }
+.monob { font-family: Menlo, "SF Mono", monospace; font-size: 13px; font-weight: 700; fill: #1f2937; }
+.row { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.leg { font-size: 11px; fill: #4b5563; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+.hair { stroke: #d1d5db; stroke-width: 1.4; }
+.bx { stroke-width: 1.5; }
+.solid { stroke: #475569; stroke-width: 2; fill: none; }
+.dash { stroke: #15803d; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+</style>
+<marker id="arr130s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,0 10,5 0,10" fill="#475569"/></marker>
+<marker id="arr130g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><polygon points="0,0 10,5 0,10" fill="#15803d"/></marker>
+</defs>
+<rect x="0" y="0" width="1120" height="872" fill="#ffffff"/>
+
+<text class="t title" x="20" y="32">D-130 — MyString field layout vs java.lang.String, byte by byte (name = DOCUMENTS_UPLOADED, 18 chars)</text>
+<path class="hair" d="M 20 44 H 1100"/>
+
+<text class="t band" x="40" y="68">MyString — hand-written, private final char[] value</text>
+<text class="t band" x="600" y="68">java.lang.String — JDK 21, @Stable byte[] value</text>
+
+<!-- LEFT object box -->
+<rect class="bx" x="40" y="80" width="480" height="222" fill="#fef3c7" stroke="#b45309"/>
+<text class="t bh" x="52" y="100">object layout, byte by byte</text>
+<rect class="bx" x="52" y="110" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="64" y="126">object header (mark, klass)</text><text class="monob" x="496" y="126" text-anchor="end">12 B</text>
+<rect class="bx" x="52" y="136" width="456" height="24" fill="#fef3c7" stroke="#b45309"/>
+<text class="mono" x="64" y="152">char[] value  (compressed oop)</text><text class="monob" x="496" y="152" text-anchor="end">4 B</text>
+<rect class="bx" x="52" y="162" width="456" height="24" fill="#fef3c7" stroke="#b45309"/>
+<text class="mono" x="64" y="178">int hash  (cached)</text><text class="monob" x="496" y="178" text-anchor="end">4 B</text>
+<rect class="bx" x="52" y="188" width="456" height="24" fill="#fef3c7" stroke="#b45309"/>
+<text class="mono" x="64" y="204">boolean hashIsZero</text><text class="monob" x="496" y="204" text-anchor="end">1 B</text>
+<rect class="bx" x="52" y="214" width="456" height="24" fill="#fef3c7" stroke="#b45309"/>
+<text class="mono" x="64" y="230">byte coder</text><text class="monob" x="496" y="230" text-anchor="end">1 B</text>
+<rect class="bx" x="52" y="240" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="64" y="256">align 22 B up to 24 B</text><text class="monob" x="496" y="256" text-anchor="end">+2 B</text>
+<rect class="bx" x="52" y="266" width="456" height="24" fill="#dcfce7" stroke="#15803d"/>
+<text class="mono" x="64" y="282">MyString object alone</text><text class="monob" x="496" y="282" text-anchor="end">24 B</text>
+
+<!-- RIGHT object box -->
+<rect class="bx" x="600" y="80" width="480" height="222" fill="#dbeafe" stroke="#2563eb"/>
+<text class="t bh" x="612" y="100">object layout, byte by byte</text>
+<rect class="bx" x="612" y="110" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="624" y="126">object header (mark, klass)</text><text class="monob" x="1056" y="126" text-anchor="end">12 B</text>
+<rect class="bx" x="612" y="136" width="456" height="24" fill="#dbeafe" stroke="#2563eb"/>
+<text class="mono" x="624" y="152">@Stable byte[] value  (oop)</text><text class="monob" x="1056" y="152" text-anchor="end">4 B</text>
+<rect class="bx" x="612" y="162" width="456" height="24" fill="#dbeafe" stroke="#2563eb"/>
+<text class="mono" x="624" y="178">int hash  (cached)</text><text class="monob" x="1056" y="178" text-anchor="end">4 B</text>
+<rect class="bx" x="612" y="188" width="456" height="24" fill="#dbeafe" stroke="#2563eb"/>
+<text class="mono" x="624" y="204">boolean hashIsZero</text><text class="monob" x="1056" y="204" text-anchor="end">1 B</text>
+<rect class="bx" x="612" y="214" width="456" height="24" fill="#dbeafe" stroke="#2563eb"/>
+<text class="mono" x="624" y="230">byte coder  (LATIN1 = 0)</text><text class="monob" x="1056" y="230" text-anchor="end">1 B</text>
+<rect class="bx" x="612" y="240" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="624" y="256">align 22 B up to 24 B</text><text class="monob" x="1056" y="256" text-anchor="end">+2 B</text>
+<rect class="bx" x="612" y="266" width="456" height="24" fill="#dcfce7" stroke="#15803d"/>
+<text class="mono" x="624" y="282">String object alone</text><text class="monob" x="1056" y="282" text-anchor="end">24 B</text>
+
+<!-- value field points at payload -->
+<path class="dash" marker-end="url(#arr130g)" d="M 280 302 V 322"/>
+<path class="dash" marker-end="url(#arr130g)" d="M 840 302 V 322"/>
+
+<!-- LEFT payload -->
+<rect class="bx" x="40" y="322" width="480" height="144" fill="#fef3c7" stroke="#b45309"/>
+<text class="t bh" x="52" y="342">payload: char[18] - always 2 B per char</text>
+<rect class="bx" x="52" y="352" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="64" y="368">array header (mark, klass, length)</text><text class="monob" x="496" y="368" text-anchor="end">16 B</text>
+<rect class="bx" x="52" y="378" width="456" height="24" fill="#fef3c7" stroke="#b45309"/>
+<text class="mono" x="64" y="394">18 chars x 2 B  (UTF-16 units)</text><text class="monob" x="496" y="394" text-anchor="end">36 B</text>
+<rect class="bx" x="52" y="404" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="64" y="420">align 52 B up to 56 B</text><text class="monob" x="496" y="420" text-anchor="end">+4 B</text>
+<rect class="bx" x="52" y="430" width="456" height="24" fill="#dcfce7" stroke="#15803d"/>
+<text class="mono" x="64" y="446">char[18] payload total</text><text class="monob" x="496" y="446" text-anchor="end">56 B</text>
+
+<!-- RIGHT payload -->
+<rect class="bx" x="600" y="322" width="480" height="144" fill="#dbeafe" stroke="#2563eb"/>
+<text class="t bh" x="612" y="342">payload: byte[18] - 1 B per char, coder = LATIN1</text>
+<rect class="bx" x="612" y="352" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="624" y="368">array header (mark, klass, length)</text><text class="monob" x="1056" y="368" text-anchor="end">16 B</text>
+<rect class="bx" x="612" y="378" width="456" height="24" fill="#dbeafe" stroke="#2563eb"/>
+<text class="mono" x="624" y="394">18 chars x 1 B  (Latin-1, compact)</text><text class="monob" x="1056" y="394" text-anchor="end">18 B</text>
+<rect class="bx" x="612" y="404" width="456" height="24" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="mono" x="624" y="420">align 34 B up to 40 B</text><text class="monob" x="1056" y="420" text-anchor="end">+6 B</text>
+<rect class="bx" x="612" y="430" width="456" height="24" fill="#dcfce7" stroke="#15803d"/>
+<text class="mono" x="624" y="446">byte[18] payload total</text><text class="monob" x="1056" y="446" text-anchor="end">40 B</text>
+
+<path class="solid" marker-end="url(#arr130s)" d="M 280 466 V 486"/>
+<path class="solid" marker-end="url(#arr130s)" d="M 840 466 V 486"/>
+
+<!-- grand totals -->
+<rect class="bx" x="40" y="486" width="480" height="42" fill="#dcfce7" stroke="#15803d"/>
+<text class="monob" x="280" y="512" text-anchor="middle">new MyString(char[18])  =  24 B + 56 B  =  80 B</text>
+<rect class="bx" x="600" y="486" width="480" height="42" fill="#dcfce7" stroke="#15803d"/>
+<text class="monob" x="840" y="512" text-anchor="middle">new String(char[18])  =  24 B + 40 B  =  64 B</text>
+
+<path class="solid" marker-end="url(#arr130s)" d="M 280 528 V 538 H 400 V 548"/>
+<path class="solid" marker-end="url(#arr130s)" d="M 840 528 V 538 H 700 V 548"/>
+
+<!-- difference -->
+<rect class="bx" x="40" y="548" width="1040" height="52" fill="#fee2e2" stroke="#b91c1c"/>
+<text class="t bh" x="60" y="572">Difference = 80 B - 64 B = 16 B - MyString is the heavier layout</text>
+<text class="row" x="60" y="590">Attributable entirely to the payload array: char[18] 56 B vs byte[18] 40 B. Both objects are exactly 24 B, so no header cost differs.</text>
+
+<!-- annotation -->
+<rect class="bx" x="40" y="618" width="1040" height="118" fill="#eff6ff" stroke="#2563eb"/>
+<text class="t bh" x="60" y="638">Why the 16 B lands on the array and not the object</text>
+<text class="row" x="60" y="658">MyString carries the coder byte but its char[] cannot exploit it - it pays the field's cost with none of the compact-string benefit.</text>
+<text class="row" x="60" y="676">java.lang.String reaches 40 B because DOCUMENTS_UPLOADED is pure Latin-1, so compact strings store one byte per character (coder = LATIN1).</text>
+<text class="row" x="60" y="694">Both objects are 22 B of content - 12 B header + 4 B array oop + 4 B int hash + 1 B boolean hashIsZero + 1 B byte coder - aligned up to 24 B.</text>
+<text class="row" x="60" y="712">Measured: Oracle JDK 21.0.7 (21.0.7+8-LTS-245), macOS aarch64, compressed oops on. Name is the 18-char half of AA-610 DOCUMENTS_UPLOADED.</text>
+
+<path class="hair" d="M 20 760 H 1100"/>
+
+<rect class="bx" x="40" y="770" width="22" height="12" fill="#fef3c7" stroke="#b45309"/>
+<text class="leg" x="70" y="780">MyString field or payload bytes (hand-written type)</text>
+<rect class="bx" x="40" y="788" width="22" height="12" fill="#dbeafe" stroke="#2563eb"/>
+<text class="leg" x="70" y="798">java.lang.String field or payload bytes (JDK 21)</text>
+<rect class="bx" x="40" y="806" width="22" height="12" fill="#dcfce7" stroke="#15803d"/>
+<text class="leg" x="70" y="816">measured subtotal or grand total, in bytes</text>
+<rect class="bx" x="40" y="824" width="22" height="12" fill="#f3f4f6" stroke="#9ca3af"/>
+<text class="leg" x="70" y="834">object or array header, and alignment padding - not fields</text>
+
+<rect class="bx" x="560" y="770" width="22" height="12" fill="#fee2e2" stroke="#b91c1c"/>
+<text class="leg" x="590" y="780">the 16 B penalty MyString pays</text>
+<rect class="bx" x="560" y="788" width="22" height="12" fill="#eff6ff" stroke="#2563eb"/>
+<text class="leg" x="590" y="798">annotation panel</text>
+<path class="dash" marker-end="url(#arr130g)" d="M 560 812 H 604"/>
+<text class="leg" x="614" y="816">value field -&gt; payload array : the field holds a reference to that array</text>
+<path class="solid" marker-end="url(#arr130s)" d="M 560 830 H 604"/>
+<text class="leg" x="614" y="834">payload -&gt; total : the total is produced by summing object + payload</text>
+</svg>

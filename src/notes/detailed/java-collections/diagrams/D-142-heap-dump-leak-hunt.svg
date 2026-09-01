@@ -1,0 +1,83 @@
+<svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart: rising old-gen and OOM symptom leads through jcmd heap dump, MAT dominator tree, retained heap, and HashMap Node array at histogram top, then collection_fill_ratio and map_collision_ratio queries distinguish an over-allocated ArrayList from a bad hashCode, each with its own fix">
+  <defs>
+    <marker id="arrowf" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- 1. Symptom -->
+  <rect x="270" y="20" width="260" height="46" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Symptom: rising old-gen after</text>
+  <text x="400" y="58" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">full GCs, eventual OOM</text>
+  <line x1="400" y1="66" x2="400" y2="94" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- 2. jcmd -->
+  <rect x="270" y="96" width="260" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="121" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">jcmd &lt;pid&gt; GC.heap_dump</text>
+  <line x1="400" y1="136" x2="400" y2="164" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- 3. MAT -->
+  <rect x="270" y="166" width="260" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="191" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">open in Eclipse MAT</text>
+  <line x1="400" y1="206" x2="400" y2="234" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- 4. dominator tree -->
+  <rect x="250" y="236" width="300" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="261" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">dominator tree -&gt; retained heap by GC root</text>
+  <line x1="400" y1="276" x2="400" y2="304" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- 5. histogram top -->
+  <rect x="220" y="306" width="360" height="46" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="328" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">histogram top entry:</text>
+  <text x="400" y="344" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">java.util.HashMap$Node[]</text>
+  <line x1="400" y1="352" x2="400" y2="380" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- 6. OQL queries -->
+  <rect x="200" y="382" width="400" height="46" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="404" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">OQL: collection_fill_ratio /</text>
+  <text x="400" y="420" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">map_collision_ratio</text>
+
+  <!-- branch lines -->
+  <line x1="300" y1="428" x2="180" y2="470" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+  <line x1="500" y1="428" x2="620" y2="470" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- Diagnosis A: over-allocated ArrayList -->
+  <rect x="40" y="472" width="280" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="494" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">low fill ratio, low collisions:</text>
+  <text x="180" y="512" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">table over-sized for entry count</text>
+  <text x="180" y="530" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(mirrors over-allocated ArrayList)</text>
+
+  <!-- Diagnosis B: bad hashCode -->
+  <rect x="480" y="472" width="280" height="70" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="494" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">high collision ratio:</text>
+  <text x="620" y="512" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">many entries per bucket</text>
+  <text x="620" y="530" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">-&gt; bad / degenerate hashCode()</text>
+
+  <line x1="180" y1="542" x2="180" y2="570" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+  <line x1="620" y1="542" x2="620" y2="570" stroke="#737373" stroke-width="2" marker-end="url(#arrowf)"/>
+
+  <!-- Fix A -->
+  <rect x="40" y="572" width="280" height="80" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="180" y="594" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Fix: size the map up front</text>
+  <text x="180" y="612" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(new HashMap&lt;&gt;(expected/0.75))</text>
+  <text x="180" y="630" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">or trim unused caches/eviction</text>
+  <text x="180" y="646" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">policy for stale entries</text>
+
+  <!-- Fix B -->
+  <rect x="480" y="572" width="280" height="80" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="620" y="594" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Fix: repair hashCode()/equals()</text>
+  <text x="620" y="612" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">on the key type so hashes spread</text>
+  <text x="620" y="630" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">evenly across buckets; verify</text>
+  <text x="620" y="646" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">with map_collision_ratio again</text>
+
+  <!-- legend footer -->
+  <rect x="60" y="700" width="680" height="160" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="80" y="725" font-family="sans-serif" font-size="13" fill="#1f2937">Retained heap: total bytes freed if this object became unreachable</text>
+  <text x="80" y="748" font-family="sans-serif" font-size="13" fill="#1f2937">(the dominator tree's key metric for finding the true leak root).</text>
+  <text x="80" y="775" font-family="sans-serif" font-size="13" fill="#1f2937">collection_fill_ratio: entries / backing-array capacity, per collection</text>
+  <text x="80" y="798" font-family="sans-serif" font-size="13" fill="#1f2937">instance in the dump -&gt; flags over-allocated ArrayList/HashMap.</text>
+  <text x="80" y="825" font-family="sans-serif" font-size="13" fill="#1f2937">map_collision_ratio: avg bucket chain length per HashMap instance</text>
+  <text x="80" y="848" font-family="sans-serif" font-size="13" fill="#1f2937">-&gt; flags degenerate hashCode() causing O(n) lookups and node bloat.</text>
+</svg>

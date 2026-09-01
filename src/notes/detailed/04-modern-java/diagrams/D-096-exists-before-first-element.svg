@@ -1,0 +1,136 @@
+<svg viewBox="0 0 1040 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="What exists before the first card deposit moves through cardDeposits.stream().filter(minAmount).map(LedgerEntry::amount).filter(targetScale).sum(): one Head spliterator over the 95,000-entry List of LedgerEntry, three doubly-linked AbstractPipeline stage objects, three lambda instances of which the map stage's LedgerEntry::amount is a single shared non-capturing instance and the two filter stages each hold a captured local, and one terminal reduce op. Total 8 objects, approximately 304 bytes, all before element 1 has been examined. A plain for loop building the same sum allocates zero objects before its first iteration.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT EXISTS BEFORE THE FIRST CARD DEPOSIT MOVES</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">cardDeposits.stream().filter(d -&gt; d.amount().compareTo(minAmount) &gt; 0).map(LedgerEntry::amount).filter(a -&gt; a.scale() == targetScale).reduce(Money::add)</text>
+
+  <text x="20" y="86" class="lbl h2">BUILD-TIME OBJECT GRAPH — before Spliterator.tryAdvance is ever called</text>
+
+  <!-- source -->
+  <rect x="20" y="106" width="180" height="70" rx="6" class="boxP"/>
+  <text x="110" y="130" text-anchor="middle" class="lbl node">Head spliterator</text>
+  <text x="110" y="148" text-anchor="middle" class="lbl dense">List&lt;LedgerEntry&gt;</text>
+  <text x="110" y="164" text-anchor="middle" class="lbl sub">95,000 card deposits/day</text>
+
+  <!-- stage 1 -->
+  <rect x="250" y="106" width="200" height="70" rx="6" class="boxW"/>
+  <text x="350" y="126" text-anchor="middle" class="lbl node">stage1 : StatelessOp</text>
+  <text x="350" y="144" text-anchor="middle" class="lbl dense">filter(minAmount)</text>
+  <text x="350" y="160" text-anchor="middle" class="lbl sub">prev=Head, next=stage2</text>
+
+  <!-- stage 2 -->
+  <rect x="500" y="106" width="200" height="70" rx="6" class="boxW"/>
+  <text x="600" y="126" text-anchor="middle" class="lbl node">stage2 : StatelessOp</text>
+  <text x="600" y="144" text-anchor="middle" class="lbl dense">map(LedgerEntry::amount)</text>
+  <text x="600" y="160" text-anchor="middle" class="lbl sub">prev=stage1, next=stage3</text>
+
+  <!-- stage 3 -->
+  <rect x="750" y="106" width="200" height="70" rx="6" class="boxW"/>
+  <text x="850" y="126" text-anchor="middle" class="lbl node">stage3 : StatelessOp</text>
+  <text x="850" y="144" text-anchor="middle" class="lbl dense">filter(targetScale)</text>
+  <text x="850" y="160" text-anchor="middle" class="lbl sub">prev=stage2, next=null</text>
+
+  <path class="flow" d="M 200 141 H 250"/>
+  <path class="flow" d="M 450 141 H 500"/>
+  <path class="flow" d="M 700 141 H 750"/>
+  <!-- doubly linked: back edges below -->
+  <path class="weak" d="M 350 176 V 196 H 110 V 176"/>
+  <path class="weak" d="M 600 176 V 210 H 350 V 176"/>
+  <path class="weak" d="M 850 176 V 224 H 600 V 176"/>
+  <text x="520" y="240" text-anchor="middle" class="lbl sub">dashed = back-pointer (each stage also holds prev), completing the doubly linked chain</text>
+
+  <!-- lambdas row -->
+  <text x="20" y="290" class="lbl h2">LAMBDA INSTANCES — one per captured stage, one shared</text>
+
+  <rect x="250" y="306" width="200" height="86" rx="6" class="boxH"/>
+  <text x="350" y="328" text-anchor="middle" class="lbl node">lambda#1</text>
+  <text x="350" y="346" text-anchor="middle" class="lbl dense">CAPTURING</text>
+  <text x="350" y="362" text-anchor="middle" class="lbl sub">captures: minAmount (Money)</text>
+  <text x="350" y="378" text-anchor="middle" class="lbl sub">~24 bytes, new instance each build</text>
+
+  <rect x="500" y="306" width="200" height="86" rx="6" class="boxR"/>
+  <text x="600" y="328" text-anchor="middle" class="lbl node">lambda#2 (shared)</text>
+  <text x="600" y="346" text-anchor="middle" class="lbl dense">NON-CAPTURING</text>
+  <text x="600" y="362" text-anchor="middle" class="lbl sub">LedgerEntry::amount</text>
+  <text x="600" y="378" text-anchor="middle" class="lbl sub">~16 bytes, cached at call site once</text>
+
+  <rect x="750" y="306" width="200" height="86" rx="6" class="boxH"/>
+  <text x="850" y="328" text-anchor="middle" class="lbl node">lambda#3</text>
+  <text x="850" y="346" text-anchor="middle" class="lbl dense">CAPTURING</text>
+  <text x="850" y="362" text-anchor="middle" class="lbl sub">captures: targetScale (int)</text>
+  <text x="850" y="378" text-anchor="middle" class="lbl sub">~24 bytes, new instance each build</text>
+
+  <path class="flow" d="M 350 176 V 306"/>
+  <path class="flow" d="M 600 176 V 306"/>
+  <path class="flow" d="M 850 176 V 306"/>
+
+  <!-- terminal op -->
+  <rect x="500" y="424" width="200" height="70" rx="6" class="boxP"/>
+  <text x="600" y="448" text-anchor="middle" class="lbl node">terminal op</text>
+  <text x="600" y="466" text-anchor="middle" class="lbl dense">ReduceOp(Money::add)</text>
+  <text x="600" y="482" text-anchor="middle" class="lbl sub">~40 bytes, built at reduce() call</text>
+
+  <path class="flow" d="M 600 392 V 424"/>
+
+  <!-- annotation panel: totals -->
+  <rect x="20" y="530" width="500" height="150" rx="6" class="boxAnn"/>
+  <text x="36" y="552" class="lbl node">TOTAL BEFORE THE FIRST ELEMENT MOVES</text>
+  <text x="36" y="574" class="lbl tiny">1 Head spliterator .......... 1 object, ~32 bytes</text>
+  <text x="36" y="592" class="lbl tiny">3 AbstractPipeline stages ... 3 objects, ~168 bytes (56 each)</text>
+  <text x="36" y="610" class="lbl tiny">3 lambda instances .......... 3 objects, ~64 bytes (24+16+24)</text>
+  <text x="36" y="628" class="lbl tiny">1 terminal op (ReduceOp) .... 1 object, ~40 bytes</text>
+  <text x="36" y="652" class="lbl node">= 8 objects, ~304 bytes — before tryAdvance() runs once</text>
+  <text x="36" y="670" class="lbl sub">JIT escape analysis may elide some of this on a monomorphic call site</text>
+
+  <rect x="540" y="530" width="480" height="150" rx="6" class="boxAnn"/>
+  <text x="556" y="552" class="lbl node">EQUIVALENT for LOOP OVER THE SAME LIST</text>
+  <text x="556" y="578" class="lbl dense">for (LedgerEntry d : cardDeposits) {</text>
+  <text x="556" y="596" class="lbl dense">  if (d.amount().compareTo(minAmount) &gt; 0) { ... }</text>
+  <text x="556" y="614" class="lbl dense">}</text>
+  <text x="556" y="646" class="lbl node">= 0 objects, 0 bytes before iteration 1</text>
+  <text x="556" y="664" class="lbl sub">no spliterator, no pipeline stages, no lambda instances</text>
+
+  <line x1="20" y1="706" x2="1020" y2="706" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="714" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="727" class="lbl tiny">spliterator / terminal op</text>
+  <rect x="230" y="714" width="22" height="16" rx="3" class="boxW"/>
+  <text x="260" y="727" class="lbl tiny">AbstractPipeline stage</text>
+  <rect x="440" y="714" width="22" height="16" rx="3" class="boxH"/>
+  <text x="470" y="727" class="lbl tiny">capturing lambda instance</text>
+  <rect x="650" y="714" width="22" height="16" rx="3" class="boxR"/>
+  <text x="680" y="727" class="lbl tiny">shared non-capturing lambda</text>
+  <path class="flow" d="M 20 742 H 60"/>
+  <text x="68" y="747" class="lbl tiny">forward stage / build link</text>
+  <path class="weak" d="M 280 742 H 320"/>
+  <text x="328" y="747" class="lbl tiny">back-pointer completing the doubly linked stage chain</text>
+</svg>

@@ -1,0 +1,75 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: filter and map have both been called. Two new stage objects exist, each holding its own lambda or method reference, chained onto the source stage. Zero elements have moved through the pipeline — nothing has been traversed yet because collect has not been called.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .dim   { fill: #9ca3af; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">STREAM ANATOMY — FRAME 2 OF 3: STAGES CHAINED, NOTHING TRAVERSED</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="54" width="860" height="34" rx="5" class="panel"/>
+  <text x="34" y="76" class="lbl code">deposits<tspan font-weight="700">.stream().filter(d -&gt; d.amount() &gt; 65).map(Deposit::amount)</tspan><tspan class="dim">.collect(toList())</tspan></text>
+
+  <rect x="20" y="112" width="150" height="60" rx="6" class="boxP"/>
+  <text x="95" y="136" text-anchor="middle" class="lbl sub" font-weight="700">deposits</text>
+  <text x="95" y="152" text-anchor="middle" class="lbl sub">95,000 elements</text>
+
+  <path class="flow" d="M 170 142 H 200"/>
+  <rect x="200" y="112" width="150" height="60" rx="6" class="boxR"/>
+  <text x="275" y="136" text-anchor="middle" class="lbl sub" font-weight="700">source stage</text>
+  <text x="275" y="152" text-anchor="middle" class="lbl sub">holds the Spliterator</text>
+
+  <path class="flow" d="M 350 142 H 400"/>
+  <rect x="400" y="112" width="220" height="60" rx="6" class="boxH"/>
+  <text x="510" y="132" text-anchor="middle" class="lbl sub" font-weight="700">filter stage</text>
+  <text x="510" y="148" text-anchor="middle" class="lbl sub">predicate: d -&gt; d.amount() &gt; 65</text>
+  <text x="510" y="164" text-anchor="middle" class="lbl sub">new object, no traversal</text>
+
+  <path class="flow" d="M 620 142 H 660"/>
+  <rect x="660" y="112" width="220" height="60" rx="6" class="boxH"/>
+  <text x="770" y="132" text-anchor="middle" class="lbl sub" font-weight="700">map stage</text>
+  <text x="770" y="148" text-anchor="middle" class="lbl sub">mapper: Deposit::amount</text>
+  <text x="770" y="164" text-anchor="middle" class="lbl sub">new object, no traversal</text>
+
+  <rect x="220" y="200" width="460" height="44" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="450" y="228" text-anchor="middle" class="lbl body" font-weight="700" fill="#b45309">0 elements have moved</text>
+
+  <rect x="40" y="264" width="780" height="140" rx="6" class="panel"/>
+  <text x="60" y="290" class="lbl body" font-weight="700">objects that exist so far</text>
+  <text x="60" y="312" class="lbl tiny">1. CardDeposit[] deposits — 95,000 elements, untouched</text>
+  <text x="60" y="332" class="lbl tiny">2. source stage — wraps the Spliterator</text>
+  <text x="60" y="352" class="lbl tiny">3. filter stage — holds d -&gt; d.amount() &gt; 65, chained onto source</text>
+  <text x="60" y="372" class="lbl tiny">4. map stage — holds Deposit::amount, chained onto filter. collect not called.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="418" x2="880" y2="418" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="428" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="440" class="lbl tiny">the backing data</text>
+  <rect x="200" y="428" width="22" height="14" rx="3" class="boxR"/>
+  <text x="230" y="440" class="lbl tiny">a created stream stage</text>
+  <rect x="420" y="428" width="22" height="14" rx="3" class="boxH"/>
+  <text x="450" y="440" class="lbl tiny">the stage this frame adds</text>
+  <path class="flow" d="M 650 435 H 690"/>
+  <text x="698" y="440" class="lbl tiny">A → B : A is chained onto B</text>
+</svg>

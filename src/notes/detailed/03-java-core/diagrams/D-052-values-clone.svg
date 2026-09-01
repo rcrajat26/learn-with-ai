@@ -1,0 +1,159 @@
+<svg viewBox="0 0 1120 1200" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing why values() clones on every call for RestrictionType. Frame 1: the heap holds a private static final $VALUES array of 10 slots, each slot a reference to one of the 10 singleton constant objects created at class initialization. Frame 2: calling values() executes getstatic, invokevirtual clone, checkcast bytecode and returns a fresh 10-element array of 56 bytes; the fresh array's slots still reference the same 10 constant objects — only the array of references is duplicated, not the constants. Frame 3: at 2.8 million stake reservations per day this costs 156.8 megabytes per day of garbage, fixed either by caching one clone at class-init time or by using EnumSet.allOf which never clones.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .dense{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;fill:#1f2937;}
+      .sec{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12.5px;fill:#4b5563;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+    </style>
+    <marker id="arrS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="1200" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">values() clones on every call &#8212; RestrictionType</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; THE $VALUES ARRAY ON THE HEAP</text>
+  <line x1="20" y1="74" x2="1100" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="90" width="520" height="272" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="112" class="body" font-weight="bold">private static final RestrictionType[] $VALUES</text>
+  <text x="80" y="130" class="small">flags: ACC_PRIVATE, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC</text>
+  <line x1="80" y1="140" x2="560" y2="140" stroke="#2563eb" stroke-width="1"/>
+  <text x="80" y="158" class="small">10 slots &#8212; index = ordinal, value = a reference to one constant object</text>
+
+  <g class="dense">
+    <text x="80" y="180">[0]</text><text x="120" y="180">DEPOSIT_BLOCKED</text>
+    <text x="80" y="200">[1]</text><text x="120" y="200">STAKE_BLOCKED</text>
+    <text x="80" y="220">[2]</text><text x="120" y="220">WITHDRAWAL_BLOCKED</text>
+    <text x="80" y="240">[3]</text><text x="120" y="240">DEPOSIT_LIMITED</text>
+    <text x="80" y="260">[4]</text><text x="120" y="260">WITHDRAWAL_HELD</text>
+    <text x="80" y="280">[5]</text><text x="120" y="280">SOURCE_OF_FUNDS_REQUIRED</text>
+    <text x="80" y="300">[6]</text><text x="120" y="300">ALL_BLOCKED</text>
+    <text x="80" y="320">[7]</text><text x="120" y="320">SELF_EXCLUDED</text>
+    <text x="80" y="340">[8]</text><text x="120" y="340">COOLING_OFF</text>
+    <text x="80" y="356">[9]</text><text x="120" y="356">DORMANT_FROZEN</text>
+  </g>
+
+  <path d="M 580 225 H 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrS)"/>
+
+  <rect x="640" y="150" width="400" height="150" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="660" y="172" class="body" font-weight="bold">10 RestrictionType constant objects (heap)</text>
+  <text x="660" y="194" class="small">one singleton object per constant, created once during</text>
+  <text x="660" y="212" class="small">&lt;clinit&gt; (see D-107 &#8212; loading, linking, initialization)</text>
+  <text x="660" y="234" class="small">every $VALUES slot above holds a reference to one of</text>
+  <text x="660" y="252" class="small">these ten objects &#8212; the objects themselves are never</text>
+  <text x="660" y="270" class="small">duplicated by values(), only the array of references is</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="398" class="h2">FRAME 2 &#8212; values() RETURNS $VALUES.clone()</text>
+  <line x1="20" y1="406" x2="1100" y2="406" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="422" width="560" height="110" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="444" class="small" font-weight="bold">javap -c RestrictionType.values</text>
+  <text x="80" y="466" class="code">0: getstatic $VALUES:[LRestrictionType;</text>
+  <text x="80" y="486" class="code">3: invokevirtual "[LRestrictionType;".clone:()Ljava/lang/Object;</text>
+  <text x="80" y="506" class="code">6: checkcast class "[LRestrictionType;"</text>
+
+  <path d="M 340 532 V 556" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrS)"/>
+
+  <rect x="60" y="566" width="560" height="200" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="80" y="588" class="body" font-weight="bold">RESULT: a fresh 10-element array &#8212; 56 bytes</text>
+  <text x="80" y="608" class="small">16-byte array header + 10 &#215; 4-byte compressed oop = 56 bytes</text>
+  <text x="80" y="628" class="small">the 10 constants are NOT copied &#8212; only this array of references is fresh</text>
+
+  <g>
+    <rect x="80" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="128" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="176" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="224" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="272" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="320" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="368" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="416" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="464" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <rect x="512" y="648" width="46" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+    <g class="small" text-anchor="middle">
+      <text x="103" y="666">0</text><text x="151" y="666">1</text><text x="199" y="666">2</text>
+      <text x="247" y="666">3</text><text x="295" y="666">4</text><text x="343" y="666">5</text>
+      <text x="391" y="666">6</text><text x="439" y="666">7</text><text x="487" y="666">8</text>
+      <text x="535" y="666">9</text>
+    </g>
+  </g>
+  <text x="80" y="700" class="small">fresh RestrictionType[10] &#8212; new array object, same reference values inside</text>
+
+  <path d="M 320 676 V 714 H 700 V 660" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrW)"/>
+
+  <rect x="700" y="600" width="360" height="130" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="720" y="622" class="body" font-weight="bold">same 10 constant objects (frame 1, unchanged)</text>
+  <text x="720" y="644" class="small">clone() is shallow &#8212; array cells are copied,</text>
+  <text x="720" y="662" class="small">the objects they point to are not</text>
+  <text x="720" y="684" class="small">identity preserved: fresh[i] == original[i]</text>
+  <text x="720" y="706" class="small">is true for every i, always</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <text x="20" y="800" class="h2">FRAME 3 &#8212; THE COST AND THE TWO FIXES</text>
+  <line x1="20" y1="808" x2="1100" y2="808" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="824" width="520" height="200" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="80" y="848" class="body" font-weight="bold">156.8 MB/day of garbage, one array per call</text>
+  <text x="80" y="874" class="small">2.8M stake reservations/day &#215; one values() call per</text>
+  <text x="80" y="892" class="small">reservation to check for a matching RestrictionType</text>
+  <text x="80" y="920" class="small" font-weight="bold">= 2.8M &#215; 56 B</text>
+  <text x="80" y="940" class="small" font-weight="bold">= 156.8 MB/day of garbage, purely from cloning</text>
+  <text x="80" y="960" class="small">a 10-element array that never changes</text>
+
+  <rect x="620" y="824" width="440" height="200" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="640" y="846" class="h2">THE TWO FIXES</text>
+
+  <rect x="640" y="858" width="400" height="66" rx="4" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="654" y="878" class="code">VALUES = values(); // static final</text>
+  <text x="654" y="896" class="small">clone once, at class init &#8212; cache the array</text>
+  <text x="654" y="912" class="small">instead of the enum-generated method</text>
+
+  <rect x="640" y="932" width="400" height="80" rx="4" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="654" y="952" class="code">EnumSet.allOf(RestrictionType.class)</text>
+  <text x="654" y="970" class="small">reads Class.getEnumConstantsShared() &#8212;</text>
+  <text x="654" y="986" class="small">no clone at all, and a compact bit-vector set</text>
+  <text x="654" y="1002" class="small">to test membership against</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1054" class="h2">LEGEND</text>
+  <line x1="20" y1="1062" x2="1100" y2="1062" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1074" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1087" class="small">primary heap state &#8212; $VALUES array / the shared constant objects</text>
+
+  <rect x="30" y="1100" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1113" class="small">the fresh array that values() allocates on every call</text>
+
+  <rect x="30" y="1126" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="1139" class="small">bytecode listing panel &#8212; structural detail</text>
+
+  <rect x="440" y="1074" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="468" y="1087" class="small">degraded &#8212; allocation waste, garbage generated at scale</text>
+
+  <rect x="440" y="1100" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="468" y="1113" class="small">resolved &#8212; the fix, no per-call cloning</text>
+
+  <rect x="440" y="1126" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="468" y="1139" class="small">annotation panel &#8212; explanatory grouping</text>
+
+  <line x1="30" y1="1160" x2="56" y2="1160" stroke="#475569" stroke-width="2" marker-end="url(#arrS)"/>
+  <text x="64" y="1165" class="small">generates / primary flow : A &#8722;&gt; B, B is produced from A</text>
+
+  <line x1="30" y1="1182" x2="56" y2="1182" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrW)"/>
+  <text x="64" y="1187" class="small">weak reference : A &#8722;&gt; B, A holds a shallow reference to B, not a copy</text>
+</svg>

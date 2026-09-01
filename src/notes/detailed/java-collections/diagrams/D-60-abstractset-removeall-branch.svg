@@ -1,0 +1,55 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flowchart of AbstractSet.removeAll branching on size() greater than c.size(), with worked examples bigSet.removeAll(smallList) and smallSet.removeAll(bigList) showing different resulting complexities and contains implementations exercised">
+  <defs>
+    <marker id="arrow60" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="760" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractSet.removeAll(Collection c) branch decision</text>
+
+  <!-- decision diamond -->
+  <polygon points="400,45 520,100 400,155 280,100" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="95" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">this.size() &gt;</text>
+  <text x="400" y="112" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">c.size() ?</text>
+
+  <!-- left branch: true -->
+  <line x1="330" y1="130" x2="180" y2="190" stroke="#737373" stroke-width="2" marker-end="url(#arrow60)"/>
+  <rect x="130" y="192" width="40" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="150" y="205" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">true</text>
+
+  <rect x="40" y="215" width="280" height="90" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="180" y="238" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">iterate over c,</text>
+  <text x="180" y="256" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">call this.remove(element)</text>
+  <text x="180" y="274" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for each — exercises</text>
+  <text x="180" y="292" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">this (the big set)'s remove</text>
+
+  <!-- right branch: false -->
+  <line x1="470" y1="130" x2="620" y2="190" stroke="#737373" stroke-width="2" marker-end="url(#arrow60)"/>
+  <rect x="600" y="192" width="50" height="18" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="1"/>
+  <text x="625" y="205" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">false</text>
+
+  <rect x="480" y="215" width="280" height="90" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="238" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">iterate over this,</text>
+  <text x="620" y="256" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">call c.contains(element)</text>
+  <text x="620" y="274" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for each — exercises</text>
+  <text x="620" y="292" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">c (the argument)'s contains</text>
+
+  <!-- worked example 1: bigSet.removeAll(smallList) -->
+  <line x1="180" y1="305" x2="180" y2="335" stroke="#737373" stroke-width="2" marker-end="url(#arrow60)"/>
+  <rect x="40" y="338" width="280" height="115" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="180" y="358" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bigSet.removeAll(smallList)</text>
+  <text x="180" y="376" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">bigSet.size() &gt; smallList.size() -&gt; true</text>
+  <text x="180" y="394" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">iterate smallList (m items),</text>
+  <text x="180" y="412" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">call bigSet.remove — O(1) hash removal</text>
+  <text x="180" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Total: O(m) — cheap</text>
+
+  <!-- worked example 2: smallSet.removeAll(bigList) -->
+  <line x1="620" y1="305" x2="620" y2="335" stroke="#737373" stroke-width="2" marker-end="url(#arrow60)"/>
+  <rect x="480" y="338" width="280" height="115" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="620" y="358" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">smallSet.removeAll(bigList)</text>
+  <text x="620" y="376" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">smallSet.size() &gt; bigList.size() -&gt; false</text>
+  <text x="620" y="394" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">iterate smallSet (small n items),</text>
+  <text x="620" y="412" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">call bigList.contains — O(m) linear scan EACH</text>
+  <text x="620" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Total: O(n·m) — expensive if bigList is a List</text>
+</svg>

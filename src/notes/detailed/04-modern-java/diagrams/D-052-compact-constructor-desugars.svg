@@ -1,0 +1,113 @@
+<svg viewBox="0 0 1120 880" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="StakeSplit's compact constructor validates that bonusPortion plus cashPortion equals
+     the stake, normalises scale, and reassigns its parameters. The compiler desugars this into a
+     canonical constructor with the identical body plus two appended field assignments,
+     this.bonusPortion = bonusPortion and this.cashPortion = cashPortion. An error panel below shows
+     the one thing you cannot do inside a compact constructor: assign the field directly instead of
+     the parameter, which javac rejects with a compile error.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-family: "Menlo", "Consolas", monospace; font-size: 12.5px; fill: #1f2937; }
+    .codeC { font-family: "Menlo", "Consolas", monospace; font-size: 12.5px; fill: #4b5563; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="880" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE COMPACT CONSTRUCTOR DESUGARS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- section bands -->
+  <text x="20" y="66" class="lbl h2">SOURCE — COMPACT FORM</text>
+  <text x="580" y="66" class="lbl h2">DESUGARED — CANONICAL CONSTRUCTOR (BYTECODE-EQUIVALENT)</text>
+
+  <!-- left panel: compact form -->
+  <rect x="20" y="78" width="540" height="270" rx="6" class="boxP"/>
+  <text x="36" y="102" class="lbl node">record StakeSplit(Money bonusPortion, Money cashPortion)</text>
+  <text x="36" y="128" class="lbl code">compact constructor StakeSplit {</text>
+  <text x="52" y="150" class="lbl code">if (!bonusPortion.add(cashPortion)</text>
+  <text x="68" y="170" class="lbl code">.amount().equals(stake))</text>
+  <text x="68" y="190" class="lbl code">throw new LedgerImbalanceException(stake);</text>
+  <text x="52" y="212" class="lbl codeC">// normalise scale, e.g. 3.33 -&gt; 0.33 + 3.00</text>
+  <text x="52" y="234" class="lbl code">bonusPortion = bonusPortion.normalize();</text>
+  <text x="52" y="256" class="lbl code">cashPortion  = cashPortion.normalize();</text>
+  <text x="36" y="278" class="lbl code">}</text>
+  <text x="36" y="304" class="lbl sub">parameters bonusPortion, cashPortion are reassigned —</text>
+  <text x="36" y="320" class="lbl sub">no field assignment appears in this source at all</text>
+  <text x="36" y="336" class="lbl sub">field assignment is implicit; the compiler adds it</text>
+
+  <!-- arrow left -> right -->
+  <path class="flow" d="M 560 213 H 580"/>
+  <text x="570" y="55" text-anchor="middle" class="lbl sub">javac</text>
+
+  <!-- right panel: desugared canonical form -->
+  <rect x="580" y="78" width="520" height="270" rx="6" class="boxH"/>
+  <text x="596" y="102" class="lbl node">StakeSplit(Money bonusPortion, Money cashPortion) {</text>
+  <text x="612" y="124" class="lbl code">if (!bonusPortion.add(cashPortion)</text>
+  <text x="628" y="144" class="lbl code">.amount().equals(stake))</text>
+  <text x="628" y="164" class="lbl code">throw new LedgerImbalanceException(stake);</text>
+  <text x="612" y="186" class="lbl code">bonusPortion = bonusPortion.normalize();</text>
+  <text x="612" y="206" class="lbl code">cashPortion  = cashPortion.normalize();</text>
+  <text x="612" y="230" class="lbl code" font-weight="700">this.bonusPortion = bonusPortion;</text>
+  <text x="612" y="250" class="lbl code" font-weight="700">this.cashPortion  = cashPortion;</text>
+  <text x="596" y="272" class="lbl code">}</text>
+  <text x="596" y="296" class="lbl sub">same body, verbatim, plus two appended field</text>
+  <text x="596" y="312" class="lbl sub">assignments — this is what the class file actually holds</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="364" width="1080" height="70" rx="6" class="boxA"/>
+  <text x="36" y="386" class="lbl body" font-weight="700">Why this matters</text>
+  <text x="36" y="406" class="lbl tiny">The reassigned parameter values on the left flow into the field assignments the compiler appends on the right.</text>
+  <text x="36" y="422" class="lbl tiny">Validate and normalise the parameter; never touch the field yourself — see the error panel below.</text>
+
+  <!-- error panel -->
+  <text x="20" y="462" class="lbl h2">THE ONE THING YOU CANNOT DO</text>
+  <rect x="20" y="474" width="1080" height="300" rx="6" class="boxD"/>
+  <text x="36" y="498" class="lbl node">compact constructor StakeSplit — assigning the field instead of the parameter</text>
+  <text x="36" y="524" class="lbl code">compact constructor StakeSplit {</text>
+  <text x="52" y="546" class="lbl code">if (!bonusPortion.add(cashPortion).amount().equals(stake))</text>
+  <text x="68" y="566" class="lbl code">throw new LedgerImbalanceException(stake);</text>
+  <text x="52" y="588" class="lbl code" font-weight="700">this.bonusPortion = bonusPortion.normalize();</text>
+  <text x="68" y="606" class="lbl codeC">// BUG: assigns the field, not the parameter</text>
+  <text x="52" y="628" class="lbl code">cashPortion = cashPortion.normalize();</text>
+  <text x="36" y="650" class="lbl code">}</text>
+
+  <line x1="36" y1="666" x2="1084" y2="666" stroke="#b91c1c" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="36" y="686" class="lbl code" font-weight="700">error: cannot assign a value to final variable bonusPortion</text>
+  <text x="36" y="706" class="lbl code">        this.bonusPortion = bonusPortion.normalize();</text>
+  <text x="36" y="726" class="lbl code">            ^</text>
+  <text x="36" y="746" class="lbl codeC">the component field is final; inside a compact constructor you reassign the parameter instead</text>
+  <text x="36" y="762" class="lbl sub">assign the parameter (as in the two panels above) — the compiler emits the field write for you</text>
+
+  <!-- legend -->
+  <line x1="20" y1="794" x2="1100" y2="794" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="806" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="819" class="lbl tiny">compact-form source</text>
+  <rect x="220" y="806" width="22" height="16" rx="3" class="boxH"/>
+  <text x="250" y="819" class="lbl tiny">desugared canonical constructor</text>
+  <rect x="500" y="806" width="22" height="16" rx="3" class="boxA"/>
+  <text x="530" y="819" class="lbl tiny">annotation panel — explanatory prose</text>
+  <rect x="800" y="806" width="22" height="16" rx="3" class="boxD"/>
+  <text x="830" y="819" class="lbl tiny">error case — invalid field assignment</text>
+  <path class="flow" d="M 20 850 H 60"/>
+  <text x="70" y="855" class="lbl tiny">A → B : compiler transforms A into B</text>
+</svg>

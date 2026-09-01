@@ -1,0 +1,120 @@
+Section 1 — DSA & Data Structures
+Q1. Arrays vs linked lists: compare them on (a) access by index, (b) insertion in the middle, (c) memory layout. Which usually wins in practice on modern hardware, and why?
+- Arrays can be directly accessed by index O(1)while for LL we'll have to traverse through the LL to arrive at desired member O(n)
+- To insert an element in the middle we'll have to move other elements right O(n), for LL just detach and reattach the link to desired node O(1)
+- Arrays occur in sequential memory blocks while LL members can be kept non-sequentially.
+- due to bigger memory in latest hardwares lesser re-organising of array is needed hence it thrives better because of index polling.
+---------------
+Q2. What is recursion? What two things must every correct recursive function have, and what happens at runtime if one of them is missing?
+- recursion is when the function calls itself.
+- a base case and recursive case
+- the recursion keeps running and we end up getting stackoverflow
+---------------
+===============
+Section 2 — Java Core
+Q3. List, Set, Map — for each, name its defining property and one concrete situation where it's the right choice.
+- List is sequential collection - used for sequential processing of group of data - list of users
+- Set is collection with unique elements - used to keep distinct elements - set of roles
+- Map is K-V pair collection - used to maintain a key-value pair of elements - Map of BankId and Bank details
+---------------
+Q4. What are generics for? What does List<String> give you at compile time that a raw List doesn't, and what class of runtime error does it prevent?
+- Generics concept is not that cleat to me.
+- Generics are used to generalize the class to have certain kind of type and sub-types.
+- List string ensures only list types can be added a raw list would take in any object type
+- Class caste exception is prevented
+---------------
+===============
+Section 3 — Concurrency & JVM
+Q5. What does the volatile keyword guarantee, and what does it NOT guarantee? Is volatile int counter; counter++; thread-safe?
+- volatile keyword makes sure the variable is directly read from main memory
+- not sure what id doesnt guarantee
+- I guess yes its threadsafe
+---------------
+Q6. Name the states a Java thread can be in between creation and death (approximate names accepted), and what typically causes a thread to be BLOCKED vs WAITING.
+- IDLE, RUNNING, WAITING/READY, BLOCKED
+- If the resource that the thread needs is not available then the thread is moved to BLOCKED status
+---------------
+===============
+Section 4 — Spring & JPA
+Q7. @RestController vs @Controller — what's the difference, and what does @RequestBody / @ResponseBody have to do with it?
+- @RestController is combination of @Controller and @ResponseBody which returns response in JSON  format
+- While @Controller returns a view/html
+- they leverage Jackson (or similar) library to return the response in JSON format
+---------------
+Q8. What are database migrations (Flyway/Liquibase style)? Why are they preferred over letting Hibernate auto-create/update the schema (ddl-auto=update) in production?
+- they allow creation and update of database tables
+- gives more control over the creation and keeps a trackable file
+---------------
+===============
+Section 5 — SQL & Databases
+Q9. DELETE FROM t WHERE ... vs TRUNCATE TABLE t vs DROP TABLE t — what does each do, and which can be selective?
+- deletes the rows with condition
+- deletes all rows like delete without where clause
+- drop table deletes the table itself
+---------------
+Q10. [CODE] Table orders(id, customer_id, amount, created_at). Write the query: total order amount per customer in 2025, largest total first, only customers whose total exceeds 10,000.
+---------------
+Q10b. A money-transfer service crashes after debiting account A but before crediting account B — yet no money is lost when the system comes back. Separately: a report running mid-transfer never sees the debited- but-not-credited state, and a transfer confirmed to the user survives a power failure. Name the database property responsible for each of these three behaviors, and the fourth property of the same family with its meaning.
+- This is due to transactional, and Atomicity property
+- This is due to consistency
+- This is due to isolation
+- I'm not hundred percent sure, a chapter on ACID properties will be helpful
+---------------
+===============
+Section 6 — Networking & OS
+Q11. When your browser requests https://example.com, name the protocol layers/steps involved in order, from typing the URL to receiving HTML (high-level — four or five steps).
+- First DNS kicks in and com as TLD is figured out.
+- From the TLD server we figure out appropriate DNS server and using that we get A record which gives the appropriate IP address.
+- We hit the application server with that IP on 443 port over HTTPS protocol
+- The app server hits a required endpoint and gets the html file and gets rendered by client which requested the endpoint.
+---------------
+Q12. What is a firewall / security group rule? Your Spring Boot app on a cloud VM runs fine locally on the VM (curl localhost:8080 works) but isn't reachable from outside — name two likely causes.
+- A firewall is network layer guard which allows certain type of traffic only based on Port, IP range, Application etc
+- The localhost is not a public facing hence accessing localhost wont be reachable, hitting this on machine will hit the application running on that given machine
+---------------
+===============
+Section 7 — API & Web Security
+Q13. What is a bearer token? Where does it travel in an HTTP request, and why must such requests only be sent over HTTPS?
+- A bearer token is a JWT token generated using user credentials after authenticating.
+- It gets passed in Authorization header of HTTP request
+- Such requests must only be sent on https as they are secure channel and compromising JWT gives access to malicious user
+---------------
+Q14. What is CORS at a high level? Which side (browser or server) enforces it, and does it protect the server from non-browser clients like curl?
+(I'm not fully aware of the concept its best to have a chapter on this)
+- Cross-origin-resource-sharing is when a client not belonging on same application tries to access the resource say 3030 app accessing 8080.
+- Server enforces this I guess as we allow headers methods in the CORS filter.
+- cURL is allowed I guess.
+---------------
+===============
+Section 8 — Messaging & Caching
+Q15. If a producer keeps publishing while all consumers are down for an hour, what happens (a) with a queue like SQS, (b) with a plain HTTP call retried a few times? What does this tell you about why queues exist?
+- in a queue after x retries the message is moved to DLQ
+- With plain HTTP call it'll get lost.
+---------------
+Q16. What is Redis? Name two data structures it offers beyond plain key→string, and one typical use for each.
+- Redis is used for distributed caching.
+- Not aware of this
+---------------
+===============
+Section 9 — Testing & Craft
+Q17. What makes a good commit message? Write a good one for a change that fixes a bug where discounts were applied twice for gold-tier customers.
+- A detailed verbose message which highlights what changes were pushed
+- -m "Bug-fix: Gold tier customer double discount resolution"
+---------------
+Q18. What is a code review for? Give three distinct things a reviewer should look for, in priority order.
+- A code review maintains hygiene of code and keeps tech debt low and keeps the logic appropriate.
+- 1. Logical errors/deviation from feature 2. optimizations 3. code style
+---------------
+===============
+Section 10 — Cloud & DevOps
+Q19. Vertical vs horizontal scaling — define each, one limitation of each, and which one a load balancer enables.
+- Horizontal scaling is adding more instances to handle more capacity, with more instances coordination becomes a challenge would need leader election for tasks like scheduler based processing and load balancing is needed
+- Vertical scaling is increasing resources (cpu/memory) to the same instance, with bigger instance as the peak dies down the resources get wasted.
+- load balancer enables horizontal scaling
+---------------
+Q20. What is the difference between a deployment environment (dev/staging/prod) and why should staging resemble prod? Name one bug class that only shows up when they differ.
+- Dev is merely for testing; Staging is to check Acceptance criteria by business/clients; Prod is where actual end users access the application
+- As acceptance tests are done it should resemble the prod so that no scenario get missed
+- not sure
+---------------
+===============

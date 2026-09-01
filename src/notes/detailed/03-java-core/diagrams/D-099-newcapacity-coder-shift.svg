@@ -1,0 +1,92 @@
+<svg viewBox="0 0 900 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="newCapacity and the coder shift: a StringBuilder building a PaymentRun reconciliation line grows from 16 to 34 characters at LATIN1, then inflates to UTF16 when a non-Latin-1 client display name is appended, doubling bytes from 34 to 68">
+  <defs>
+    <marker id="arrow99" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="860" height="36" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="44" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">newCapacity and the coder shift</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="70" width="860" height="200" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="82" width="330" height="26" rx="3" fill="#dbeafe"/>
+  <text x="50" y="100" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 1: capacity 16 chars, LATIN1</text>
+
+  <rect x="36" y="120" width="280" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="176" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">StringBuilder sb building</text>
+  <text x="176" y="158" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">PaymentRun reconciliation line</text>
+
+  <line x1="316" y1="145" x2="420" y2="145" stroke="#737373" stroke-width="2" marker-end="url(#arrow99)"/>
+
+  <rect x="420" y="120" width="200" height="50" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="520" y="140" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">byte[16]</text>
+  <text x="520" y="158" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">coder = LATIN1 = 0</text>
+
+  <rect x="640" y="120" width="204" height="70" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="742" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">value.length &gt;&gt; coder</text>
+  <text x="742" y="158" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= 16 &gt;&gt; 0</text>
+  <text x="742" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= 16 characters</text>
+
+  <rect x="36" y="200" width="808" height="50" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="222" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">length() reports characters, not bytes: at LATIN1, one character occupies exactly one byte</text>
+  <text x="450" y="240" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">so the shift by coder (0) is a no-op here</text>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="290" width="860" height="230" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="302" width="330" height="26" rx="3" fill="#fef3c7"/>
+  <text x="50" y="320" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 2: growth routed through ArraysSupport.newLength</text>
+
+  <rect x="36" y="340" width="380" height="60" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="226" y="360" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">preferred growth = oldLength + (2 &lt;&lt; coder)</text>
+  <text x="226" y="380" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= 16 + (2 &lt;&lt; 0) = 16 + 2 = 18 bytes of growth</text>
+
+  <line x1="416" y1="370" x2="500" y2="370" stroke="#737373" stroke-width="2" marker-end="url(#arrow99)"/>
+
+  <rect x="500" y="340" width="344" height="60" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="672" y="360" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ArraysSupport.newLength(oldLength=16,</text>
+  <text x="672" y="378" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">minGrowth, prefGrowth=18) -&gt; new byte length 34</text>
+
+  <rect x="36" y="415" width="380" height="70" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="226" y="435" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">chars -&gt; bytes: &lt;&lt; coder</text>
+  <text x="226" y="453" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">34 chars &lt;&lt; 0 = 34 bytes</text>
+  <text x="226" y="471" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(LATIN1: 1 byte per char)</text>
+
+  <rect x="500" y="415" width="344" height="70" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="672" y="435" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bytes -&gt; chars: &gt;&gt; coder</text>
+  <text x="672" y="453" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">34 bytes &gt;&gt; 0 = 34 chars</text>
+  <text x="672" y="471" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">new byte[34] at LATIN1</text>
+
+  <!-- FRAME 3 -->
+  <rect x="20" y="540" width="860" height="220" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="36" y="552" width="440" height="26" rx="3" fill="#fee2e2"/>
+  <text x="50" y="570" font-family="sans-serif" font-size="13" fill="#1f2937">Frame 3: non-Latin-1 client display name forces inflate()</text>
+
+  <rect x="36" y="590" width="260" height="60" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="166" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">before: byte[34]</text>
+  <text x="166" y="630" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">coder = LATIN1 = 0, 34 bytes</text>
+
+  <line x1="296" y1="620" x2="380" y2="620" stroke="#525252" stroke-width="2" marker-end="url(#arrow99)"/>
+  <rect x="298" y="596" width="80" height="22" rx="3" fill="#fef3c7"/>
+  <text x="338" y="612" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">inflate()</text>
+
+  <rect x="380" y="590" width="260" height="60" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="510" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">after: byte[68]</text>
+  <text x="510" y="630" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">coder = UTF16 = 1, 68 bytes</text>
+
+  <rect x="656" y="590" width="188" height="60" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="750" y="610" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">value.length &gt;&gt; coder</text>
+  <text x="750" y="628" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">= 68 &gt;&gt; 1 = 34 chars</text>
+
+  <rect x="36" y="665" width="380" height="70" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="226" y="685" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">total bytes before inflate() = 34</text>
+  <text x="226" y="705" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">every character re-encoded to 2 bytes</text>
+  <text x="226" y="723" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(1 non-Latin-1 char anywhere flips the whole buffer)</text>
+
+  <rect x="500" y="665" width="344" height="70" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="672" y="685" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">total bytes after inflate() = 68</text>
+  <text x="672" y="705" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">34 characters still, at 2 bytes/char (UTF16)</text>
+  <text x="672" y="723" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">length() still returns 34</text>
+</svg>

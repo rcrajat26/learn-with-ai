@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Verdict is a sealed interface permitting exactly four subtypes: DocumentVerdict, ScreeningVerdict, ReviewVerdict, and WealthVerdict. Each permitted subtype is a final record listing its components. The interface is a sum type — a value is exactly one of the four cases; each record is a product type — a value holds all of its components at once.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .implements { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4;
+             stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A SEALED HIERARCHY — VERDICT</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root sum type -->
+  <rect x="320" y="64" width="400" height="92" rx="6" class="boxP"/>
+  <text x="520" y="90" text-anchor="middle" class="lbl node">sealed interface Verdict</text>
+  <text x="520" y="110" text-anchor="middle" class="lbl body">permits DocumentVerdict, ScreeningVerdict,</text>
+  <text x="520" y="126" text-anchor="middle" class="lbl body">ReviewVerdict, WealthVerdict</text>
+  <text x="520" y="144" text-anchor="middle" class="lbl sub">sum type — exactly one case at a time</text>
+
+  <!-- bus -->
+  <path d="M 520 156 V 190" fill="none" stroke="#15803d" stroke-width="2"/>
+  <path d="M 130 190 H 910" fill="none" stroke="#15803d" stroke-width="2"/>
+
+  <!-- four drops -->
+  <path class="implements" d="M 130 190 V 230"/>
+  <path class="implements" d="M 370 190 V 230"/>
+  <path class="implements" d="M 650 190 V 230"/>
+  <path class="implements" d="M 910 190 V 230"/>
+
+  <!-- DocumentVerdict -->
+  <rect x="30" y="230" width="200" height="150" rx="6" class="boxR"/>
+  <text x="130" y="255" text-anchor="middle" class="lbl node">final record</text>
+  <text x="130" y="273" text-anchor="middle" class="lbl node">DocumentVerdict</text>
+  <line x1="46" y1="284" x2="214" y2="284" stroke="#15803d" stroke-width="1"/>
+  <text x="46" y="302" class="lbl tiny">outcome: DocOutcome</text>
+  <text x="46" y="320" class="lbl tiny">reason: String</text>
+  <text x="46" y="338" class="lbl tiny">decidedAt: Instant</text>
+  <text x="46" y="356" class="lbl tiny">decidedBy: String</text>
+  <text x="130" y="373" text-anchor="middle" class="lbl sub">product type — all 4 fields at once</text>
+
+  <!-- ScreeningVerdict -->
+  <rect x="270" y="230" width="200" height="150" rx="6" class="boxR"/>
+  <text x="370" y="255" text-anchor="middle" class="lbl node">final record</text>
+  <text x="370" y="273" text-anchor="middle" class="lbl node">ScreeningVerdict</text>
+  <line x1="286" y1="284" x2="454" y2="284" stroke="#15803d" stroke-width="1"/>
+  <text x="286" y="302" class="lbl tiny">outcome: ScreenOutcome</text>
+  <text x="286" y="320" class="lbl tiny">reason: String</text>
+  <text x="286" y="338" class="lbl tiny">decidedAt: Instant</text>
+  <text x="286" y="356" class="lbl tiny">decidedBy: String</text>
+  <text x="370" y="373" text-anchor="middle" class="lbl sub">product type — all 4 fields at once</text>
+
+  <!-- ReviewVerdict -->
+  <rect x="550" y="230" width="200" height="150" rx="6" class="boxR"/>
+  <text x="650" y="255" text-anchor="middle" class="lbl node">final record</text>
+  <text x="650" y="273" text-anchor="middle" class="lbl node">ReviewVerdict</text>
+  <line x1="566" y1="284" x2="734" y2="284" stroke="#15803d" stroke-width="1"/>
+  <text x="566" y="302" class="lbl tiny">outcome: ReviewOutcome</text>
+  <text x="566" y="320" class="lbl tiny">reason: String</text>
+  <text x="566" y="338" class="lbl tiny">decidedAt: Instant</text>
+  <text x="566" y="356" class="lbl tiny">decidedBy: String</text>
+  <text x="650" y="373" text-anchor="middle" class="lbl sub">product type — all 4 fields at once</text>
+
+  <!-- WealthVerdict -->
+  <rect x="810" y="230" width="200" height="150" rx="6" class="boxR"/>
+  <text x="910" y="255" text-anchor="middle" class="lbl node">final record</text>
+  <text x="910" y="273" text-anchor="middle" class="lbl node">WealthVerdict</text>
+  <line x1="826" y1="284" x2="994" y2="284" stroke="#15803d" stroke-width="1"/>
+  <text x="826" y="302" class="lbl tiny">outcome: WealthOutcome</text>
+  <text x="826" y="320" class="lbl tiny">reason: String</text>
+  <text x="826" y="338" class="lbl tiny">decidedAt: Instant</text>
+  <text x="826" y="356" class="lbl tiny">decidedBy: String</text>
+  <text x="910" y="373" text-anchor="middle" class="lbl sub">product type — all 4 fields at once</text>
+
+  <!-- annotation panel -->
+  <rect x="30" y="420" width="980" height="120" rx="6" class="boxA"/>
+  <text x="46" y="444" class="lbl node" style="font-size:13px;">Why this shape (QuizStakes onboarding)</text>
+  <text x="46" y="466" class="lbl tiny">A Verdict is produced at each onboarding gate: AA-611 DOCUMENTS_VERIFIED comes from a DocumentVerdict,</text>
+  <text x="46" y="484" class="lbl tiny">AA-501 SCREENING_CLEAR from a ScreeningVerdict, AA-711 REVIEW_APPROVED from a ReviewVerdict, and</text>
+  <text x="46" y="502" class="lbl tiny">AO-141 WEALTH_ACCEPTABLE from a WealthVerdict. Sealing the interface means a switch over Verdict is</text>
+  <text x="46" y="520" class="lbl tiny">exhaustive without a default branch — the compiler proves every case in AccountActivation is handled.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="580" x2="1020" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="596" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="609" class="lbl tiny">interface (sum type) — a value is exactly one of the permitted cases</text>
+  <rect x="20" y="622" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="635" class="lbl tiny">final record (product type) — a value holds all listed components at once</text>
+  <path class="implements" d="M 20 656 H 60"/>
+  <text x="70" y="661" class="lbl tiny">A → B : B implements A (permitted subtype)</text>
+  <rect x="20" y="678" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="691" class="lbl tiny">annotation panel — domain-mapping note</text>
+</svg>

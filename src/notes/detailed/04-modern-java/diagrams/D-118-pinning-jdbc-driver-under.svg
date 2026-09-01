@@ -1,0 +1,207 @@
+<svg viewBox="0 0 1360 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A pinning JDBC driver under load, three frames. Frame 1: eight carriers, each running a
+     virtual thread that enters the FundsLedger driver's synchronized block and blocks on the network
+     socket read. Frame 2: all eight carriers are pinned, new virtual threads cannot be scheduled, and
+     the JFR jdk.VirtualThreadPinned event fires past its 20 millisecond threshold. Frame 3: a JSON
+     thread dump from jcmd pid Thread.dump_to_file -format=json shows the pinned frames and the
+     carrier mapping, while jstack on the same process shows none of it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node  { font-size: 11px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .ah    { font-size: 12px; font-weight: 700; }
+    .mono  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A PINNING JDBC DRIVER UNDER LOAD — FundsLedger DRIVER</text>
+  <line x1="20" y1="42" x2="1340" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="40" y="66" class="lbl h2">FRAME 1 — 8 CARRIERS ENTER synchronized</text>
+
+  <rect x="40" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="81" y="108" text-anchor="middle" class="lbl node">Carrier-0</text>
+  <text x="81" y="122" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="81" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="130" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="171" y="108" text-anchor="middle" class="lbl node">Carrier-1</text>
+  <text x="171" y="122" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="171" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="220" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="261" y="108" text-anchor="middle" class="lbl node">Carrier-2</text>
+  <text x="261" y="122" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="261" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="310" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="351" y="108" text-anchor="middle" class="lbl node">Carrier-3</text>
+  <text x="351" y="122" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="351" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="40" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="81" y="172" text-anchor="middle" class="lbl node">Carrier-4</text>
+  <text x="81" y="186" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="81" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="130" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="171" y="172" text-anchor="middle" class="lbl node">Carrier-5</text>
+  <text x="171" y="186" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="171" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="220" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="261" y="172" text-anchor="middle" class="lbl node">Carrier-6</text>
+  <text x="261" y="186" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="261" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="310" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="351" y="172" text-anchor="middle" class="lbl node">Carrier-7</text>
+  <text x="351" y="186" text-anchor="middle" class="lbl sub">synchronized</text>
+  <text x="351" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <path class="flow" d="M 216 208 V 232 H 216 V 250"/>
+
+  <rect x="56" y="250" width="320" height="60" rx="6" class="boxD"/>
+  <text x="216" y="272" text-anchor="middle" class="lbl body">Database: SocketInputStream.read()</text>
+  <text x="216" y="292" text-anchor="middle" class="lbl sub">network call in flight, connection held</text>
+
+  <rect x="40" y="474" width="380" height="140" rx="6" class="boxA"/>
+  <text x="56" y="496" class="lbl ah">Pinned the instant it enters</text>
+  <text x="56" y="516" class="lbl tiny">Each carrier's virtual thread is inside</text>
+  <text x="56" y="534" class="lbl tiny">FundsLedgerDriver's synchronized block —</text>
+  <text x="56" y="552" class="lbl tiny">that pins on Java 21, whether or not it</text>
+  <text x="56" y="570" class="lbl tiny">is blocked yet. Blocking on the network</text>
+  <text x="56" y="588" class="lbl tiny">socket read just stretches the pin.</text>
+
+  <!-- FRAME 2 -->
+  <text x="480" y="66" class="lbl h2">FRAME 2 — ALL 8 CARRIERS PINNED</text>
+
+  <rect x="460" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="501" y="108" text-anchor="middle" class="lbl node">Carrier-0</text>
+  <text x="501" y="122" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="501" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="550" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="591" y="108" text-anchor="middle" class="lbl node">Carrier-1</text>
+  <text x="591" y="122" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="591" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="640" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="681" y="108" text-anchor="middle" class="lbl node">Carrier-2</text>
+  <text x="681" y="122" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="681" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="730" y="90" width="82" height="54" rx="5" class="boxD"/>
+  <text x="771" y="108" text-anchor="middle" class="lbl node">Carrier-3</text>
+  <text x="771" y="122" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="771" y="136" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="460" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="501" y="172" text-anchor="middle" class="lbl node">Carrier-4</text>
+  <text x="501" y="186" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="501" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="550" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="591" y="172" text-anchor="middle" class="lbl node">Carrier-5</text>
+  <text x="591" y="186" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="591" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="640" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="681" y="172" text-anchor="middle" class="lbl node">Carrier-6</text>
+  <text x="681" y="186" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="681" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <rect x="730" y="154" width="82" height="54" rx="5" class="boxD"/>
+  <text x="771" y="172" text-anchor="middle" class="lbl node">Carrier-7</text>
+  <text x="771" y="186" text-anchor="middle" class="lbl sub">PINNED</text>
+  <text x="771" y="200" text-anchor="middle" class="lbl sub">blocked I/O</text>
+
+  <path class="flow" d="M 636 208 V 230 H 636 V 250"/>
+
+  <rect x="486" y="250" width="300" height="60" rx="6" class="boxD"/>
+  <text x="636" y="272" text-anchor="middle" class="lbl body">New virtual threads: queued</text>
+  <text x="636" y="292" text-anchor="middle" class="lbl sub">no carrier free to run them</text>
+
+  <path class="flow" d="M 636 310 V 330"/>
+
+  <rect x="486" y="330" width="300" height="64" rx="6" class="boxH"/>
+  <text x="636" y="352" text-anchor="middle" class="lbl body">jdk.VirtualThreadPinned</text>
+  <text x="636" y="372" text-anchor="middle" class="lbl sub">fired — 20 ms threshold exceeded</text>
+
+  <rect x="460" y="474" width="380" height="140" rx="6" class="boxA"/>
+  <text x="476" y="496" class="lbl ah">Scheduler starves</text>
+  <text x="476" y="516" class="lbl tiny">With all 8 carriers pinned, the</text>
+  <text x="476" y="534" class="lbl tiny">ForkJoinPool scheduler has nowhere to</text>
+  <text x="476" y="552" class="lbl tiny">run the next virtual thread. The JFR</text>
+  <text x="476" y="570" class="lbl tiny">event confirms the pin exceeded the</text>
+  <text x="476" y="588" class="lbl tiny">jdk.VirtualThreadPinned 20 ms threshold.</text>
+
+  <!-- FRAME 3 -->
+  <text x="920" y="66" class="lbl h2">FRAME 3 — THE JSON THREAD DUMP</text>
+
+  <rect x="920" y="90" width="380" height="50" rx="6" class="boxP"/>
+  <text x="936" y="120" class="lbl mono">$ jcmd &lt;pid&gt; Thread.dump_to_file -format=json</text>
+
+  <path class="flow" d="M 1110 140 V 160"/>
+
+  <rect x="920" y="160" width="380" height="230" rx="6" class="boxW"/>
+  <text x="936" y="182" class="lbl ah">dump.json (excerpt)</text>
+  <text x="936" y="202" class="lbl mono">"thread": "quiz-app-vt-4821",</text>
+  <text x="936" y="220" class="lbl mono">"carrier": "ForkJoinPool-1-worker-3",</text>
+  <text x="936" y="238" class="lbl mono">"state": "RUNNING",</text>
+  <text x="936" y="256" class="lbl mono">"stack": [</text>
+  <text x="936" y="274" class="lbl mono">  "FundsLedgerDriver.execute()",</text>
+  <text x="936" y="292" class="lbl mono">  "- locked &lt;0x7f...&gt; (a Connection)",</text>
+  <text x="936" y="310" class="lbl mono">  "SocketInputStream.socketRead0()"</text>
+  <text x="936" y="328" class="lbl mono">]</text>
+  <text x="936" y="352" class="lbl sub">"pinned": true — carrier held, not free</text>
+
+  <rect x="920" y="474" width="380" height="140" rx="6" class="boxA"/>
+  <text x="936" y="496" class="lbl ah">jstack shows none of it</text>
+  <text x="936" y="516" class="lbl tiny">jstack &lt;pid&gt; walks platform threads and</text>
+  <text x="936" y="534" class="lbl tiny">has no concept of a pinned virtual</text>
+  <text x="936" y="552" class="lbl tiny">thread riding a carrier. Only the JSON</text>
+  <text x="936" y="570" class="lbl tiny">thread dump (or the JFR event above)</text>
+  <text x="936" y="588" class="lbl tiny">exposes the carrier-to-VT pinning.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="690" x2="1340" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="704" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="717" class="lbl tiny">command issued</text>
+
+  <rect x="220" y="704" width="22" height="16" rx="3" class="boxD"/>
+  <text x="250" y="717" class="lbl tiny">pinned / blocked / queued</text>
+
+  <rect x="460" y="704" width="22" height="16" rx="3" class="boxH"/>
+  <text x="490" y="717" class="lbl tiny">JFR diagnostic event</text>
+
+  <rect x="680" y="704" width="22" height="16" rx="3" class="boxW"/>
+  <text x="710" y="717" class="lbl tiny">secondary detail — dump output</text>
+
+  <rect x="960" y="704" width="22" height="16" rx="3" class="boxA"/>
+  <text x="990" y="717" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 1150 712 H 1190"/>
+  <text x="1200" y="717" class="lbl tiny">A → B : A leads to B</text>
+</svg>

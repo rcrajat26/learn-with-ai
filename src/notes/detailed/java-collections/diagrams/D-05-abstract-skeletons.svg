@@ -1,0 +1,79 @@
+<svg viewBox="0 0 880 600" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The six abstract skeleton classes, the abstract methods each demands from a subclass, and what each gives free">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <rect x="240" y="20" width="400" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="440" y="38" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Abstract skeletons: what you must supply vs. what you get free</text>
+
+  <!-- AbstractCollection -->
+  <rect x="300" y="60" width="260" height="120" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="430" y="80" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractCollection</text>
+  <text x="430" y="98" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">must supply: iterator(), size()</text>
+  <text x="430" y="116" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">free: isEmpty, contains, toArray,</text>
+  <text x="430" y="131" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">remove(Object), addAll, clear,</text>
+  <text x="430" y="146" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">containsAll/removeAll/retainAll,</text>
+  <text x="430" y="161" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">toString</text>
+
+  <!-- AbstractList -->
+  <rect x="60" y="230" width="230" height="140" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractList</text>
+  <text x="175" y="265" text-anchor="middle" font-family="sans-serif" font-size="11" font-style="italic" fill="#1f2937">extends AbstractCollection</text>
+  <text x="175" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">must supply: get(int), size()</text>
+  <text x="175" y="302" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">free: iterator(), listIterator(),</text>
+  <text x="175" y="317" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">indexOf, lastIndexOf,</text>
+  <text x="175" y="332" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">equals, hashCode, subList</text>
+
+  <!-- AbstractSet -->
+  <rect x="325" y="230" width="230" height="140" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="440" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractSet</text>
+  <text x="440" y="265" text-anchor="middle" font-family="sans-serif" font-size="11" font-style="italic" fill="#1f2937">extends AbstractCollection</text>
+  <text x="440" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">must supply: iterator(), size()</text>
+  <text x="440" y="299" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(same abstract pair, inherited)</text>
+  <text x="440" y="320" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">free: equals/hashCode implement</text>
+  <text x="440" y="335" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">the Set contract (order-independent)</text>
+
+  <!-- AbstractQueue -->
+  <rect x="590" y="230" width="230" height="140" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="250" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractQueue</text>
+  <text x="705" y="265" text-anchor="middle" font-family="sans-serif" font-size="11" font-style="italic" fill="#1f2937">extends AbstractCollection</text>
+  <text x="705" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">must supply: offer, poll, peek</text>
+  <text x="705" y="302" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">free: add (offer or throw),</text>
+  <text x="705" y="317" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">remove (poll or throw),</text>
+  <text x="705" y="332" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">element (peek or throw)</text>
+
+  <!-- AbstractSequentialList -->
+  <rect x="60" y="430" width="230" height="140" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="450" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractSequentialList</text>
+  <text x="175" y="465" text-anchor="middle" font-family="sans-serif" font-size="11" font-style="italic" fill="#1f2937">extends AbstractList</text>
+  <text x="175" y="484" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">must supply: listIterator()</text>
+  <text x="175" y="502" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">free: get, set, add, remove —</text>
+  <text x="175" y="517" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">all implemented purely via</text>
+  <text x="175" y="532" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">the ListIterator (no get(int) needed)</text>
+
+  <!-- AbstractMap -->
+  <rect x="590" y="430" width="230" height="140" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="705" y="450" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">AbstractMap</text>
+  <text x="705" y="465" text-anchor="middle" font-family="sans-serif" font-size="11" font-style="italic" fill="#1f2937">implements Map (not a Collection)</text>
+  <text x="705" y="484" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">must supply: entrySet()</text>
+  <text x="705" y="502" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">free: get, containsKey,</text>
+  <text x="705" y="517" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">containsValue, keySet, values,</text>
+  <text x="705" y="532" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">equals, hashCode, toString</text>
+
+  <!-- arrows: AbstractCollection -> List/Set/Queue -->
+  <line x1="380" y1="180" x2="200" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="430" y1="180" x2="440" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="480" y1="180" x2="690" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- arrow: AbstractList -> AbstractSequentialList -->
+  <line x1="175" y1="370" x2="175" y2="430" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- extends label rects -->
+  <rect x="280" y="195" width="70" height="20" rx="3" fill="#fef3c7"/>
+  <text x="315" y="209" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">extends</text>
+</svg>

@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two empty ArrayList constructors produce two different sentinel arrays, both
+     zero-length Object arrays with identical byte contents but different heap addresses. new
+     ArrayList of LedgerEntry with no argument points elementData at
+     DEFAULTCAPACITY_EMPTY_ELEMENTDATA; new ArrayList of LedgerEntry with capacity zero points
+     elementData at EMPTY_ELEMENTDATA. Both boxes render as Object array length zero and are
+     byte-identical in content. The grow method is the only reader that tells them apart, and it
+     does so with a reference identity test using double equals against
+     DEFAULTCAPACITY_EMPTY_ELEMENTDATA, never by inspecting contents. The outcome: the first add
+     on the no-arg list allocates capacity ten; the first add on the capacity-zero list allocates
+     capacity one.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             stroke-linejoin: round; marker-end: url(#triGrey); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGrey" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="34" class="lbl h1">TWO EMPTY ARRAYS, ONE BIT OF STATE</text>
+  <line x1="20" y1="46" x2="1100" y2="46" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Section band headers -->
+  <text x="20" y="72" class="lbl h2">CONSTRUCTOR SIDE — two call sites</text>
+  <text x="620" y="72" class="lbl h2">HEAP SIDE — two distinct objects, identical contents</text>
+
+  <!-- Left constructor box -->
+  <rect x="20" y="88" width="300" height="86" rx="6" class="boxP"/>
+  <text x="170" y="112" text-anchor="middle" class="lbl node">new ArrayList&lt;LedgerEntry&gt;()</text>
+  <text x="170" y="132" text-anchor="middle" class="lbl sub">no-arg constructor</text>
+  <text x="170" y="150" text-anchor="middle" class="lbl sub">elementData →</text>
+  <text x="170" y="164" text-anchor="middle" class="lbl sub">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</text>
+
+  <!-- Right constructor box -->
+  <rect x="20" y="198" width="300" height="86" rx="6" class="boxP"/>
+  <text x="170" y="222" text-anchor="middle" class="lbl node">new ArrayList&lt;LedgerEntry&gt;(0)</text>
+  <text x="170" y="242" text-anchor="middle" class="lbl sub">int-capacity constructor, n == 0</text>
+  <text x="170" y="260" text-anchor="middle" class="lbl sub">elementData →</text>
+  <text x="170" y="274" text-anchor="middle" class="lbl sub">EMPTY_ELEMENTDATA</text>
+
+  <!-- arrows from constructors to heap boxes -->
+  <path class="flow" d="M 320 131 H 380 V 135 H 640"/>
+  <path class="flow" d="M 320 241 H 380 V 325 H 640"/>
+
+  <!-- Heap box 1: DEFAULTCAPACITY_EMPTY_ELEMENTDATA -->
+  <rect x="640" y="92" width="340" height="86" rx="6" class="boxY"/>
+  <text x="810" y="120" text-anchor="middle" class="lbl node">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</text>
+  <text x="810" y="142" text-anchor="middle" class="lbl body">private static final Object[] = {}</text>
+  <text x="810" y="160" text-anchor="middle" class="lbl sub">contents: Object[0] — address: 0x7a1c (example)</text>
+
+  <!-- Heap box 2: EMPTY_ELEMENTDATA -->
+  <rect x="640" y="282" width="340" height="86" rx="6" class="boxY"/>
+  <text x="810" y="310" text-anchor="middle" class="lbl node">EMPTY_ELEMENTDATA</text>
+  <text x="810" y="332" text-anchor="middle" class="lbl body">private static final Object[] = {}</text>
+  <text x="810" y="350" text-anchor="middle" class="lbl sub">contents: Object[0] — address: 0x7a4f (example)</text>
+
+  <!-- byte-identical weak link between the two heap boxes -->
+  <path class="weak" d="M 980 135 H 1030 V 325 H 980"/>
+  <text x="1038" y="234" class="lbl sub" transform="rotate(90 1038 234)" text-anchor="middle">byte-identical contents</text>
+
+  <!-- annotation: grow as the only reader -->
+  <rect x="360" y="400" width="620" height="140" rx="6" class="boxAnno"/>
+  <text x="378" y="424" class="lbl tiny" style="font-weight:700">grow(minCapacity) is the only code that tells them apart</text>
+  <text x="378" y="446" class="lbl tiny">if (oldCapacity &gt; 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)</text>
+  <text x="378" y="464" class="lbl tiny">  -&gt; grow via newLength(oldCapacity, minCapacity - oldCapacity, oldCapacity &gt;&gt; 1)</text>
+  <text x="378" y="482" class="lbl tiny">else</text>
+  <text x="378" y="500" class="lbl tiny">  -&gt; elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)]</text>
+  <text x="378" y="522" class="lbl sub">The test is reference identity ( != ), never a contents comparison. Same bytes, different reads.</text>
+
+  <!-- arrows from heap boxes into the grow annotation -->
+  <path class="flow" d="M 700 178 V 260 H 500 V 400"/>
+  <text x="520" y="252" class="lbl sub">== read by grow</text>
+  <path class="flow" d="M 810 368 V 400"/>
+  <text x="830" y="392" class="lbl sub">size read too</text>
+
+  <!-- Outcomes band -->
+  <text x="20" y="576" class="lbl h2">FIRST ADD() — the observable outcome</text>
+  <line x1="20" y1="586" x2="1100" y2="586" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="120" y="606" width="360" height="86" rx="6" class="boxR"/>
+  <text x="300" y="634" text-anchor="middle" class="lbl node">no-arg list, add(entry)</text>
+  <text x="300" y="656" text-anchor="middle" class="lbl body">else branch — sentinel still equals</text>
+  <text x="300" y="672" text-anchor="middle" class="lbl body">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</text>
+  <text x="300" y="686" text-anchor="middle" class="lbl sub" style="font-weight:700">new Object[10]</text>
+
+  <rect x="620" y="606" width="360" height="86" rx="6" class="boxR"/>
+  <text x="800" y="634" text-anchor="middle" class="lbl node">capacity-0 list, add(entry)</text>
+  <text x="800" y="656" text-anchor="middle" class="lbl body">if branch — sentinel is EMPTY_ELEMENTDATA,</text>
+  <text x="800" y="672" text-anchor="middle" class="lbl body">not the default-capacity one</text>
+  <text x="800" y="686" text-anchor="middle" class="lbl sub" style="font-weight:700">newLength(0, 1, 0) = 1</text>
+
+  <path class="flow" d="M 700 400 V 606"/>
+  <path class="flow" d="M 800 540 V 606"/>
+
+  <!-- Legend -->
+  <line x1="20" y1="726" x2="1100" y2="726" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="740" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="753" class="lbl tiny">call site (constructor)</text>
+  <rect x="230" y="740" width="22" height="16" rx="3" class="boxY"/>
+  <text x="260" y="753" class="lbl tiny">sentinel array constant</text>
+  <rect x="460" y="740" width="22" height="16" rx="3" class="boxR"/>
+  <text x="490" y="753" class="lbl tiny">outcome after grow()</text>
+  <rect x="660" y="740" width="22" height="16" rx="3" class="boxAnno"/>
+  <text x="690" y="753" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 850 748 H 890"/>
+  <text x="898" y="753" class="lbl tiny">A → B : B assigned/read from A</text>
+  <path class="weak" d="M 20 772 H 60"/>
+  <text x="68" y="777" class="lbl tiny">weak link: same contents, different identity</text>
+</svg>

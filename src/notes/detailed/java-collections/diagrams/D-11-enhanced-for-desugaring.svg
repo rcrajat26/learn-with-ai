@@ -1,0 +1,61 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Enhanced-for desugaring: for-each over a List compiles to an explicit Iterator loop with hasNext and next calls, while for-each over an array compiles to an indexed loop bounded by arr.length">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="280" y="20" width="340" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="38" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Before (source) &#8594; After (what javac emits)</text>
+
+  <!-- column headers -->
+  <rect x="30" y="60" width="380" height="24" rx="4" fill="#dbeafe"/>
+  <text x="220" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">BEFORE &#8212; source</text>
+  <rect x="490" y="60" width="380" height="24" rx="4" fill="#dcfce7"/>
+  <text x="680" y="77" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">AFTER &#8212; desugared bytecode-equivalent</text>
+
+  <!-- ============ ROW 1: List<String> ============ -->
+  <rect x="30" y="100" width="380" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="220" y="128" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for (String s : list) {</text>
+  <text x="220" y="146" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">    use(s);</text>
+  <text x="220" y="162" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">}</text>
+
+  <line x1="410" y1="135" x2="490" y2="135" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="490" y="90" width="380" height="150" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="505" y="112" font-family="sans-serif" font-size="13" fill="#1f2937">Iterator&lt;String&gt; it = list.iterator();</text>
+  <text x="505" y="132" font-family="sans-serif" font-size="13" fill="#1f2937">while (it.hasNext()) {</text>
+  <text x="520" y="152" font-family="sans-serif" font-size="13" fill="#1f2937">String s = it.next();</text>
+  <text x="520" y="172" font-family="sans-serif" font-size="13" fill="#1f2937">use(s);</text>
+  <text x="505" y="192" font-family="sans-serif" font-size="13" fill="#1f2937">}</text>
+  <rect x="505" y="200" width="230" height="20" rx="3" fill="#fef3c7"/>
+  <text x="620" y="214" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">hasNext() guards, next() advances</text>
+
+  <!-- ============ ROW 2: int[] ============ -->
+  <rect x="30" y="270" width="380" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="220" y="298" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for (int i : arr) {</text>
+  <text x="220" y="316" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">    use(i);</text>
+  <text x="220" y="332" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">}</text>
+
+  <line x1="410" y1="305" x2="490" y2="305" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="490" y="260" width="380" height="150" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="505" y="282" font-family="sans-serif" font-size="13" fill="#1f2937">int[] a = arr;</text>
+  <text x="505" y="302" font-family="sans-serif" font-size="13" fill="#1f2937">for (int idx = 0; idx &lt; a.length; idx++) {</text>
+  <text x="520" y="322" font-family="sans-serif" font-size="13" fill="#1f2937">int i = a[idx];</text>
+  <text x="520" y="342" font-family="sans-serif" font-size="13" fill="#1f2937">use(i);</text>
+  <text x="505" y="362" font-family="sans-serif" font-size="13" fill="#1f2937">}</text>
+  <rect x="505" y="370" width="270" height="20" rx="3" fill="#fef3c7"/>
+  <text x="640" y="384" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no Iterator object; bound is arr.length snapshot</text>
+
+  <!-- key difference callout -->
+  <rect x="30" y="440" width="840" height="150" rx="8" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="50" y="455" width="200" height="22" rx="4" fill="#fef3c7"/>
+  <text x="150" y="470" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Key difference</text>
+  <text x="50" y="500" font-family="sans-serif" font-size="13" fill="#1f2937">List/Iterable: one Iterator object is allocated; each step is a virtual call to hasNext()/next().</text>
+  <text x="50" y="522" font-family="sans-serif" font-size="13" fill="#1f2937">Array: no object allocated; a.length is read once into a local and the loop is a plain indexed for.</text>
+  <text x="50" y="544" font-family="sans-serif" font-size="13" fill="#1f2937">Consequence: mutating a List during a for-each throws ConcurrentModificationException via the</text>
+  <text x="50" y="566" font-family="sans-serif" font-size="13" fill="#1f2937">Iterator's modCount check; mutating array contents during for-each does not, because there is no Iterator.</text>
+</svg>

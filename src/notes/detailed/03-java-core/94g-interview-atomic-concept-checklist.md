@@ -1,0 +1,381 @@
+# 03 Java Core — The atomic concept checklist — INTERVIEW (§5.3, 5.3.8)
+
+**Target version: Java 21 LTS.** | **Part 5 of 5** | [Index](00-index.md)
+Previous: [The drills and the retention schedule](94f-interview-drills-and-retention.md)
+
+The closing section of the guide, and the one the whole thing reduces to: one flat assertion per
+distinct concept across all five parts, in subject-folder order. It is deliberately not a summary
+— every line is a claim you either can or cannot defend out loud, which is what makes it a test
+rather than a recap.
+
+How to drill it. Cover the page. Read one line, say the mechanism underneath it aloud, then move
+on. Mark every line you stall on, and read the file that owns it — the trap index in
+[`94e-interview-trap-index.md`](94e-interview-trap-index.md) will usually name the wrong belief
+you are carrying, and the eighty questions in
+[`94-interview-questions-and-drills.md`](94-interview-questions-and-drills.md) give the answer at
+speaking length. Day 3 of the schedule in
+[`94f-interview-drills-and-retention.md`](94f-interview-drills-and-retention.md) is this list, end
+to end; it takes about forty minutes cold and about fifteen once the stalls are gone.
+
+The list is flat and parsed by tooling, so it carries no nesting, no headings, no leaf numbers and
+no links.
+
+## Atomic concept checklist
+- Overload resolution is decided by javac from the static argument types, while virtual dispatch is decided by the JVM from the receiver's runtime class
+- Changing a static final constant's value requires every caller to be recompiled because javac inlines constant expressions at compile time
+- Octal literals begin with a leading zero and binary literals with 0b, so 010 is 8 and 0b0000_1011 is 11
+- A bare floating-point literal like 1.1 is a double, so assigning it to a float variable without an f suffix fails to compile
+- Underscores in numeric literals cannot appear at the start or end of a digit sequence, adjacent to a decimal point, or immediately before an L or after 0x or 0b
+- The lexical translation runs in three ordered steps: Unicode escape translation, then line-terminator translation, then tokenization
+- var, yield, record, sealed, permits, and non-sealed are contextual keywords, not reserved words, so existing code using those names as identifiers still compiles
+- Imports cost nothing at runtime and carry no ordering significance; the class file always stores fully-qualified names
+- A single-type import resolves an on-demand import collision, which otherwise fails at the point of use
+- requires transitive re-exports a module dependency to that module's own consumers, needed whenever the dependency type appears in the exporting module's own public signatures
+- exports grants compile-time and normal reflective access to a package while opens additionally grants deep reflective access, and neither implies the other
+- Illegal reflective access across module boundaries was free through Java 8, warned from 9 to 15, and is denied by default from Java 16 onward
+- sun.misc.Unsafe's memory-access methods are deprecated for removal as of JEP 471 in Java 23, with VarHandle and MemorySegment as the replacements
+- An annotation is simultaneously an interface, a class-file attribute, and for RUNTIME retention a runtime proxy object, and carries no behaviour of its own
+- An annotation's default retention is CLASS, which is invisible to reflection, so RUNTIME retention must be requested explicitly
+- javac's six-phase pipeline runs parse, enter, annotation processing, attribute, flow, desugar, and generate in that fixed order
+- The correct way to target an older release is javac --release N, never -source or -target alone, because --release also selects the matching API signature set from ct.sym
+- javac performs constant folding, boxing insertion, erasure, and definite-assignment checking, and it never performs inlining or loop optimisation beyond constant expressions
+- The class file's magic number is the fixed four bytes 0xCAFEBABE and the major version follows the formula major equals 44 plus N for release N
+- A class file compiled for a newer major version than the running JVM supports fails with UnsupportedClassVersionError, thrown by the class loader before verification begins
+- The Signature attribute is the sole carrier of pre-erasure generic information in a class file, read by javac and reflection but never consulted by the JVM verifier for dispatch
+- Java 18 switched the platform default charset to UTF-8 under JEP 400, ending a long-standing hidden host dependency
+- javap -c -p -v is the primary tool for verifying any compiled-bytecode claim, and jcmd VM.flags is the primary tool for verifying a live JVM's actual flag values
+- Every Java release from 1.0 through 25 changed exactly one thing worth remembering, from generics and erasure in 5 through nestmates in 11 to virtual threads and record patterns in 21
+- The eight primitive types have fixed bit widths except boolean, whose width the JVM leaves unspecified
+- char is the only unsigned integral primitive type, ranging 0 to 65535 with default value the null character
+- Field and array-component defaults are set automatically to each type's zero value, but local variables have no default and must be definitely assigned before any read
+- boolean is represented as a full int in bytecode arithmetic but packed to one byte per array component and per field in HotSpot's object layout
+- String.length counts UTF-16 code units, not Unicode characters, so counting actual characters requires codePointCount
+- Two's complement gives one representation of zero and one extra negative value, so negating Integer.MIN_VALUE overflows back to Integer.MIN_VALUE itself
+- Integer and long arithmetic overflows silently, wrapping modulo two to the power of n, with no exception thrown by the unchecked operators
+- The Exact family of methods, including addExact, multiplyExact, toIntExact, and since Java 15 absExact, throws ArithmeticException on overflow instead of wrapping silently
+- Integer division and remainder truncate toward zero and take the sign of the dividend, while floorDiv and floorMod round toward negative infinity and take the sign of the divisor
+- Integer.MIN_VALUE divided by negative one is the one integer division that overflows without throwing, silently returning Integer.MIN_VALUE again
+- Left shift, signed right shift, and unsigned right shift are the only three shift operators, because zero-fill and sign-fill left shifts coincide and no unsigned left shift is needed
+- The shift distance is masked to the low five bits for an int operand and the low six bits for a long operand, so shifting an int by 32 leaves it unchanged
+- A byte or short operand is promoted to int with sign extension before a shift, so a negative byte's unsigned right shift needs an explicit mask before shifting to avoid sign-extension artifacts
+- double is a one-sign, eleven-exponent, fifty-two-mantissa binary64 layout with an implicit leading one bit, giving fifty-three bits of effective precision and an exact-integer ceiling of two to the fifty-third
+- 0.1 has no finite binary expansion, so 0.1 plus 0.2 prints a value slightly above 0.3 rather than the mathematically exact result
+- Division or modulo by zero on an integer type throws ArithmeticException, but the same operations on a floating-point type produce Infinity or NaN and never throw
+- Precedence shapes only the parse tree, never the order in which side effects run, because operand evaluation is always strictly left to right
+- A method call's receiver is evaluated before its arguments, so a null receiver throws NullPointerException before any argument expression runs
+- A compound assignment like adding 300 to a byte compiles by implicitly casting the result back to byte, even though the equivalent explicit widened assignment fails to compile
+- Logical AND and OR short-circuit and may skip the right operand entirely, while bitwise AND, OR, and XOR on boolean operands always evaluate both operands
+- A widening reference cast is compile-time-only and emits no bytecode, while a narrowing reference cast emits a runtime-checked checkcast that can throw ClassCastException
+- Comparing a primitive against a wrapper with equality operators unboxes the wrapper first and throws NullPointerException if that wrapper is null, while comparing two wrappers is always identity comparison
+- The conditional operator's static type is computed from both branch expressions, not from whichever branch actually executes, so a numeric-mixed conditional can silently unbox and throw on the branch not taken
+- The plus operator performs string concatenation whenever either operand's static type is String and is left-associative, so concatenating a prefix with two separate numbers produces one joined string rather than their sum
+- Since Java 9, a string-concatenation expression compiles to a single invokedynamic call into StringConcatFactory rather than a chain of StringBuilder calls
+- JLS defines eleven conversion kinds across six legality contexts, and legality is a property of the position, not just the type pair
+- Boxing inserts a call to the wrapper's valueOf method and unboxing inserts a call to the wrapper's value accessor, and both are ordinary method calls the compiler inserts silently
+- A dangling else always binds to the nearest if that lacks one
+- while tests its condition before the body runs and may execute zero times, while do-while tests after the body and always runs at least once
+- The enhanced for loop over an Iterable desugars to one iterator call plus repeated hasNext and next plus a checkcast per element, while over an array it desugars to an index loop with arraylength hoisted once
+- The enhanced for loop's per-iteration variable is a fresh body-local copy each time, so reassigning it inside the loop body writes nothing back to the underlying collection or array
+- A classic switch accepts byte, short, char, int and their wrapper types, String, and enum constants as selectors, but never long, float, double, or boolean
+- The classic switch's selector is evaluated exactly once and unboxed if it is a wrapper type, and case labels must be distinct compile-time constants
+- javac compiles a dense switch to the array-indexed tableswitch instruction and a sparse switch to the binary-search lookupswitch instruction
+- A switch's default label may appear anywhere in the block, not only at the end, and control still falls out of it if nothing terminates the group
+- The arrow form of switch introduced in Java 14 has no fall-through at all and gives each arm its own scope
+- A switch expression must be exhaustive, covering every enum constant or every permitted sealed subtype, while an arrow-form switch statement need not be
+- An exhaustive switch on a value the compiler already proved unreachable at a later addition throws MatchException on Java 21, with a null message because the branch had been proved unreachable
+- Pattern matching in switch, added in Java 21 by JEP 441, supports type patterns, record patterns, when guards, and case null
+- A pattern subsumed by an earlier, broader pattern in the same switch is a compile-time dominance error, not merely dead code
+- assert compiles to a check against a synthetic static final boolean flag set once at class initialization, so disabled assertions cost one already-folded boolean read
+- Assertions are disabled by default, -ea enables them per classloader and package on the command line, and AssertionError extends Error so catching Exception never intercepts it
+- synchronized emits monitorenter at entry and a compiler-generated catch-any handler that releases the monitor via monitorexit on every exit path, including an exception
+- try-with-resources is a hidden finally that closes resources in the reverse of their declaration order, because a later resource may depend on an earlier one
+- When a try-with-resources close throws while the body is already propagating an exception, the close failure is suppressed onto the primary exception via addSuppressed rather than replacing it
+- while true followed by an unreachable trailing statement is a compile error, but if true followed by a return and a trailing statement is legal because the if-statement's unreachability rule exempts a constant condition
+- Six of the eight wrapper types extend Number, while Character and Boolean do not
+- All eight wrapper types are final, immutable, and annotated as value-based, so no wrapper should ever be used as a synchronization lock
+- Integer.valueOf returns a cached instance for every value from negative 128 to 127 inclusive and allocates a fresh Integer outside that range
+- The IntegerCache's lower bound is a hardcoded literal that cannot be configured by any means, while its upper bound defaults to 127 and can be raised via a flag or system property
+- JLS §5.1.7 mandates only that negative 128 to 127 be shared, so caching outside that range is a JDK implementation choice, not a language guarantee
+- Byte, Short, Long, and Character each have their own private static cache class following the same holder-class pattern as Integer's cache
+- Byte and Short cache the full range negative 128 to 127, Character caches only 0 to 127 one-sided with no negative half, and Long caches negative 128 to 127 with no configurable bound
+- Boolean has no cache class at all, exposing only two public static final constants for true and false
+- On a default JDK 21 JVM, the CDS archive builds IntegerCache's backing array natively at startup rather than a Java construction loop running it
+- Unboxing a null wrapper reference throws NullPointerException at the point the compiler inserts the value-accessor call, decided by the target type of the assignment, not by where the value came from
+- Wrapper equals never returns true across different wrapper types even when the underlying numeric values are equal, because each wrapper's equals starts with an instanceof check against its own type only
+- Comparable on a wrapper type is typed to that wrapper only, so comparing an Integer against a Long via compareTo is a compile-time error while the corresponding equals call merely compiles and returns false
+- The deprecated wrapper constructors still compile on Java 21 but are marked for removal since Java 9, and the removal warning is on by default unlike ordinary deprecation warnings
+- A freshly constructed wrapper can never equal another freshly constructed wrapper by reference, while the cached factory method returns the shared cached instance for values in range
+- parseInt returns a primitive int with no allocation, while valueOf on a String always returns a boxed wrapper by delegating internally to parseInt then valueOf on the int
+- NumberFormatException extends IllegalArgumentException, so a broad catch of IllegalArgumentException silently also catches malformed-number parse failures
+- Unsigned-arithmetic helper methods exist because Java's integral types have no separate unsigned type
+- A boxed accumulator in a tight numeric loop allocates a fresh wrapper on every iteration because wrappers are immutable, forcing unbox, operate, and rebox on every compound assignment
+- A primitive int array costs roughly one fifth the bytes of the equivalent boxed Integer list at scale, because every boxed element pays for both a reference and a separate heap object
+- Escape analysis can eliminate a non-escaping boxed allocation entirely once a hot loop has warmed to the optimizing compiler tier, but the interpreter and the first-tier compiler always allocate every box
+- Forcing a boxed value to escape, by storing it in a collection or computing its identity hash or synchronizing on it without lock elision, defeats escape analysis and reintroduces the allocation
+- The root cause of all forced boxing is type erasure, because a generic type argument must be a reference type and no JDK collection can hold a raw primitive
+- The only three primitive-specialized stream types are for int, long, and double; there is no generic primitive stream
+- A JDBC result set's integer accessor silently returns zero rather than null on a SQL NULL column, so a NULL-aware caller must check separately or use the object accessor instead
+- String stores its characters in a byte array rather than a char array since Java 9's compact strings, using one byte per character for Latin-1 content and two for UTF-16 content
+- A second boolean field was added in Java 13 to distinguish "hash not yet computed" from "hash genuinely equals zero," since both states otherwise share the same zero value
+- Multiplying by 31 in the string hash recurrence is deliberately chosen because it is odd, so low bits survive, and prime, so the mapping is well distributed
+- String equals first checks reference identity, then coder equality, then delegates to a byte-array comparison, so two strings with different coders can never be equal even if their code points match
+- String substring has copied its backing array since Java 7 update 6, whereas before that it shared the parent array via an offset and count pair that could leak an entire large string behind a tiny substring
+- String literals are interned automatically into the JVM's native string table the first time their constant-pool entry is resolved, shared across every class and class loader in one JVM
+- Constructing a String with new always allocates a fresh object header, so it is never identity-equal to the equivalent literal even though its contents are equal
+- Only javac constant-folding of a compile-time-constant concatenation, or an explicit call to intern, places a String into the intern pool; concatenation via a builder or formatting method never does
+- String deduplication is off by default and, when enabled, only collapses the backing byte array of equal-content strings that have survived a configured age threshold, never affecting reference identity
+- Turkish-locale case conversion is a real trap because uppercasing a lowercase i under that locale produces a dotted capital I rather than plain I, so locale-insensitive processing should specify a locale-neutral root explicitly
+- trim removes only characters at or below a fixed low threshold while strip uses the platform's whitespace predicate, and neither one removes the no-break space
+- String split with a positive limit of zero drops trailing empty strings from the result, while a negative limit keeps every trailing empty field
+- Building a string with plus-equals inside a loop remains quadratic in every Java version because each iteration reallocates and copies the whole accumulated buffer regardless of the underlying concat strategy
+- A string builder's default capacity is sixteen characters, and constructing one from a seed string initializes capacity to that string's length plus sixteen
+- A string builder grows by twice the old capacity plus two, not by plain doubling
+- Extending a string builder's length beyond its current character count pads the extended region with the null character, not with spaces
+- A string builder's equals method is not overridden and therefore compares identity, not content
+- Matching, replacing, and splitting on a raw regex string all compile their pattern fresh on every single call with no built-in cache, so a hot path must precompile a static pattern itself
+- A compiled pattern is immutable and safe to share across threads, while the matcher it produces is mutable and must never be shared
+- A regular-expression denial-of-service vulnerability has nested quantifiers over overlapping character classes and can run exponentially slow specifically on non-matching input
+- The platform default charset has been UTF-8 unconditionally since Java 18, ending a hidden platform-dependent default from earlier releases
+- Every Java reference type is one of exactly four kinds — class, interface, array, or type variable — and Object sits at the top of the type lattice with the null type as its universal bottom
+- Arrays implicitly implement both Cloneable and Serializable in addition to extending Object, and array subtyping is covariant, checked at every store
+- The equals contract requires reflexivity, symmetry, transitivity, and consistency, and mandates that comparing against null return false rather than throw
+- The hashCode contract only requires that equal objects hash equally; two unequal objects hashing equally is a legal collision, not a violation
+- Using instanceof rather than getClass for the type check inside equals is subtype-friendly but can break symmetry if a subtype adds comparison-relevant fields, while getClass is symmetric but breaks substitutability
+- A varargs hash-combining helper allocates a fresh array on every call, so a hand-written fold avoids that allocation
+- Object's default toString format is the class name followed by an at-sign and the hex identity hash code
+- getClass, notify, notifyAll, and all wait overloads are final on Object and cannot be overridden by any subclass, including a dynamic proxy
+- Object's clone performs a shallow, constructor-bypassing copy by default and throws an exception unless the class implements the empty Cloneable marker interface
+- A copy constructor or static copy factory is the preferred replacement for clone, because it runs the real constructor, respects final fields, and can validate invariants that clone skips entirely
+- finalize is deprecated for removal with an empty body on modern JDKs, and a dedicated flag proves nothing in the platform still depends on it
+- A phantom-reference-based cleanup mechanism, added in Java 9, can run its action once and can never resurrect the referent it was registered against
+- Assignment of a reference variable copies only the reference, never the object, so both names refer to one shared object and every mutation through either name is visible through the other
+- A shallow copy duplicates the outer shell but shares every referenced child object, so mutating a child is visible through both the original and the copy while replacing the child itself is not
+- Never subtract two values to implement a comparison method because the subtraction can overflow at the type's range boundary
+- A stable sort throws an exception when it detects an inconsistent comparator during a real sort, functioning as a genuine bug detector rather than a false positive
+- A comparison method returning zero should imply equals returning true, but a scale-sensitive numeric type can deliberately violate this
+- GC roots exposed at the language level are live stack locals, static fields of loaded classes, JNI references, and thread objects, and a memory leak in Java is always an unintended strong reference
+- A soft reference clears only under memory pressure and is guaranteed cleared before an out-of-memory error, while a weak reference clears at the very next collection cycle in which it is only weakly reachable
+- A phantom reference's get method always returns null, and unlike soft or weak references, a phantom referent is enqueued before its memory is reclaimed rather than cleared and then enqueued
+- JLS §4.12.3 recognizes eight kinds of variable, including lambda parameters, which joined the list only in Java 8
+- Definite assignment analysis tracks two independent flags and only sees through logical AND, OR, NOT, the conditional operator, and boolean constants, treating every other condition as opaque
+- Shadowing is one field hidden behind another of the same name reachable via an explicit qualifier, obscuring is a variable's simple name winning over a type's simple name at the same scope, and hiding is two distinct fields in one object selected by the qualifying expression's static type
+- var, introduced in Java 10, infers its type once at declaration from the initializer alone and is banned on fields, method parameters, constructor parameters, and return types
+- var cannot infer a type from null, a bare array initializer, no initializer at all, or a bare lambda or method reference, because each lacks a standalone type until a target type is supplied
+- Instance creation follows a five-step procedure: bind constructor arguments, recurse into a delegating constructor if present, otherwise invoke the superclass constructor, run this class's field initializers and instance blocks in textual order, then run the rest of the constructor body
+- Constructor invocations run bottom-up from subclass to superclass, but constructor bodies execute top-down from superclass to subclass
+- Calling an overridable method from a constructor dispatches virtually to the subclass override, which can observe subclass fields still at their default values because that subclass's own field initializers have provably not yet run
+- A field initializer's compiled code is copied into every constructor unless that constructor delegates to another constructor of the same class, in which case it skips the copy entirely
+- A static field initializer compiles into the class initializer method, unless the field is a constant variable, in which case it becomes a class-file attribute with no executable code at all
+- throws is enforced only at compile time, so reflectively invoked or generated code can propagate an undeclared checked exception at runtime
+- Class initialization has exactly six triggers: executing new, getstatic, putstatic, or invokestatic, the first invocation of certain method-handle kinds, certain reflective calls, a subclass's initialization, an interface implementor's initialization only if that interface declares a non-abstract non-static method, and designation as the JVM's initial startup class
+- A read of a constant variable never triggers initialization of its declaring class because the specification forbids any reference to that field from ever appearing in the compiled binary at all
+- Which class a field reference initializes is always the class that declares the field, never the subclass name written at the read's source location
+- A class labelled erroneous after a failed static initializer stays erroneous permanently, and every later touch throws an error rather than retrying the initializer
+- There is a unique initialization lock per class, whose identity is left to the JVM's discretion, so synchronizing on the class object itself has no documented interaction with it and can introduce a genuine deadlock
+- A thread recursively re-entering the initialization of a class it is already initializing releases the lock and completes normally without waiting, observing only preparation-time default field values
+- Bootstrap, platform, and application are the three class loaders on Java 9 and later, since the separate extension loader was removed in Java 9
+- Class identity is the pair of binary name and defining class loader, so the same class name loaded by two different loaders produces two unrelated, non-assignable classes
+- The final-field freeze takes effect when the constructor that wrote the field exits, either normally or abruptly, guaranteeing that a thread that can only see the object's reference after construction observes the correctly initialized final field values
+- Instance methods are resolved by the JVM from the receiver's runtime class while static methods and fields are resolved by the compiler from the qualifier's static type, and a subclass redeclaring a field creates two distinct storage slots rather than replacing one
+- An overriding method must have an identical name and post-erasure parameter list, a return type that is the same or a covariant subtype, and checked exceptions that are the same or narrower
+- Overload resolution runs in three strictly ordered phases — no boxing or varargs, then boxing and unboxing allowed, then variable arity allowed — and the first phase to yield any applicable candidate wins outright
+- Widening a primitive or reference always beats boxing, which always beats reaching for a variable-arity overload
+- A null argument against two unrelated overload candidates is a compile-time ambiguity error requiring an explicit cast, but against two related candidates the most specific type wins automatically
+- When a class method and an interface default method conflict, the class method always wins, and when two unrelated interface defaults conflict with no class method present, it is a compile error resolved only by naming the specific superinterface explicitly
+- Adding an abstract method to a previously shipped interface breaks binary compatibility for existing implementors, surfacing as an error at the call site rather than at class-load time, while adding a new default method is safe
+- default and static interface methods are implicitly public, while private and private static interface methods require a body and are never inherited
+- Interface fields are always implicitly public static final and must carry an initializer, and an interface can never declare an instance field
+- A static nested class holds no reference to any enclosing instance, while an inner class holds one whenever it is actually used
+- Local and anonymous classes can capture enclosing local variables only if those locals are effectively final, because the capture is a value copy taken once rather than a live reference to the original variable's storage
+- Non-constant static members inside an inner class became legal only in Java 16
+- A non-capturing lambda evaluates to the same instance on every occasion and allocates nothing after the call site first links, while a capturing lambda allocates a fresh instance on every evaluation, though this is a permitted optimisation rather than a guarantee
+- Java's calling convention is pass-by-value for every type, always, so for a reference-type argument the callee can mutate the shared object but can never rebind the caller's own variable
+- An enum with no constant bodies compiles to a final class extending the enum base type, and the specification implicitly declares its values and valueOf statics as ordinary, non-synthetic public API
+- A constant that supplies a per-constant body forces its class to drop the final flag and, if it overrides an abstract member, additionally gain the abstract flag, though a concrete override alone does not make the enum class abstract
+- Every enum constant with a body compiles to its own extra anonymous subclass file, and getClass on such a constant returns that subclass rather than the enum type
+- The compiler-injected enum constructor descriptor is always name and ordinal plus any source-declared parameters appended afterward
+- The generated values method allocates and returns a fresh clone of the internal constants array on every single call, so a hot path should cache the result once or use a set or map keyed on the enum instead
+- ordinal reflects zero-based declaration order and is safe only within one JVM run, because inserting a new constant renumbers every constant declared after it
+- The enum name survives reordering the declaration but not renaming a constant, so persisting an enum safely requires the string-based persistence strategy rather than the default ordinal-based one
+- Declaring a static field that references an enum's own constants before those constants are declared textually is an illegal forward reference caught at compile time, not a runtime null pointer exception
+- An enum's serialization magic methods are all ignored by specification, because deserialization instead calls a lookup by name and never constructs a fresh instance
+- Reflectively constructing an enum instance is explicitly refused, and this refusal is not an accessibility check, so forcing accessibility does nothing to defeat it
+- Adding a new enum constant is both source- and binary-compatible for existing compiled callers with a default branch, but an older deserializing consumer that encounters the new constant's name throws an error
+- An enum-backed set stores its membership as a single bitmask when the enum has sixty-four or fewer constants and switches to an array of bitmasks beyond that
+- An enum-backed map is indexed directly by ordinal, so lookups and inserts need no hashing at all and iterate in the enum's declaration order
+- Persisting an enum's identity in a database should use a dedicated immutable code field, never the ordinal and rarely the bare name, because the code field alone survives both reordering and renaming
+- A switch over an enum compiles to a synthetic per-switch-site array indexed by ordinal, which is why adding a constant is binary-compatible for an unrecompiled caller
+- A record's class file carries no dedicated record flag, because record-ness is entirely represented by the presence of an attribute listing each component's name, descriptor, and generic signature
+- A record's canonical constructor body is exactly one delegating call to the record base constructor followed by one field write per component, with no validation and no defensive copying performed automatically
+- In a compact constructor, the compiler appends the field-writing instructions after the body runs, so validation or normalisation must assign to the parameter name itself, not to an explicit field reference, which a compact constructor disallows
+- A record's generated equals, hashCode, and toString read each component as a raw field rather than through its accessor, so overriding the accessor has no effect on those three methods
+- Sealed types carry no dedicated sealed flag either, because sealedness in the class file is entirely represented by an attribute listing the permitted subtypes, enforced by the JVM at link time
+- A sealed hierarchy lets a switch over it be exhaustive with no default clause at all, and adding a new permitted subtype later becomes a compile error at every existing exhaustive switch site
+- Checked exceptions are everything under the throwable hierarchy except the error subtree and the runtime-exception subtree, which is not the same as equating checked with the general exception class
+- Catch-or-declare is enforced by the compiler only for checked exceptions and propagates its obligation through every intermediate method signature that neither catches nor declares it
+- Error and Exception are siblings, not one a subtype of the other, so catching Exception never intercepts an Error
+- getMessage returns the stored detail-message field with no computation, and getCause returns null specifically when the internal cause field still equals its own sentinel meaning "never explicitly set"
+- fillInStackTrace is synchronized and delegates to a native method, and is called by every constructor unless suppressed
+- Catch clauses are tried top to bottom and the first whose declared type is assignable from the thrown exception's runtime type runs, so placing a supertype catch before a subtype catch for a checked exception is a compile-time error
+- A multi-catch clause's caught variable takes the least upper bound type of the listed alternatives and is implicitly final, unconditionally
+- The two try-with-resources close interfaces differ only in their declared throws clause, and both were added together in Java 7
+- Resources in a try-with-resources statement close in the exact reverse of their declaration order, and every resource close runs before any hand-written catch or finally block
+- When both the try body and a resource's close throw, the body's exception becomes primary and the close failure is attached as a suppressed exception rather than replacing or discarding it
+- A finally block's own abrupt completion unconditionally discards whatever the try or catch block was already doing, with no suppression, no chaining, and no trace of the discarded exception anywhere
+- A return inside finally silently discards both an in-flight exception and any value already computed for return by the try block
+- Any catch block must rethrow, wrap and rethrow, or log the caught throwable object itself, never only its message string and never an empty block
+- Catching an interrupted-status exception must either restore the interrupt status or propagate the exception, because silently discarding it destroys a cooperative cancellation signal
+- Catching the broadest throwable type or a specific error subtype is legitimate only at a genuine top-level thread or executor boundary, paired with a re-raise
+- The design test for checked versus unchecked is whether the immediate caller can do something specific about the failure and actually will, not whether the failure is abstractly recoverable
+- Core functional-interface methods declare no throws clause, so a lambda body that throws a checked exception fails to compile inside them under the ordinary catch-or-declare rule
+- A purpose-built unchecked wrapper type is the JDK's own bridge for wrapping a checked exception as an unchecked type at an API boundary that cannot declare throws
+- Translating an exception across a layer boundary should always pass the caught lower-level exception as the new exception's cause, because dropping the cause discards the original type, stack frames, and structured data
+- The correct exception hierarchy shape is one unchecked base type per bounded context, never one root exception type for the whole application and never one leaf type per individual error code
+- A fast-throw optimisation substitutes a shared, zero-length-trace, null-message instance for a small set of hot implicit exceptions once a throw site has been compiled and is deoptimisation-cold
+- The cost advantage of a stackless exception over a normal one is depth-dependent, collapsing from a large multiple at shallow depth toward a much smaller multiple at deep call stacks, because only the capture is skipped while the shared recursion and unwind costs are paid by both
+- A plain boolean return for a hot validation check remains roughly two orders of magnitude cheaper than any exception form, stackless or not
+- Helpful null-pointer-exception messages naming the exact null expression are on by default since Java 15 and are computed lazily on the first call to getMessage
+- A null-pointer message can safely include field and method names regardless of compiler debug flags, but naming a local variable in the message requires extra debug information
+- Never place a raw exception message inside an HTTP response body, because a helpful message can leak internal class, field, method, or local variable identifiers
+- A generic class's type parameters are declared immediately after the class name, while a generic method's type parameters are declared between the modifiers and the return type
+- Only the leftmost bound of a multiply-bounded type parameter lands in the erased class-file descriptor, while every bound survives only in the class file's generic-signature attribute
+- Erasure of a parameterized type is its raw type, and erasure of a type variable is the erasure of its leftmost bound, or Object if unbounded
+- Generics are invariant while arrays are covariant, so a parameterized list of a subtype is never a parameterized list of its supertype and fails to compile, while an array of a subtype genuinely is a subtype of the array of its supertype and fails only at runtime
+- The producer-extends, consumer-super rule of thumb decides wildcard direction: use an extends wildcard for a parameter you only read from and a super wildcard for a parameter you only write into
+- A raw type erases the type of every member on that generic class, not merely the class's own type parameter, including unrelated generic methods declared on it
+- Heap pollution in a generic varargs method arises because the varargs array's real runtime component type is the erasure of the declared element type, so a covariant assignment to a wider array type compiles silently
+- A safe-varargs annotation is legal only on static, final, or private methods and on constructors, and it only asserts, never actually verifies, that the method body never stores into or lets escape a reference to its varargs array
+- A recursive bound requiring a type to compare itself accepts a leaf type that implements the comparison directly, but rejects a subtype that only inherits it from a base class, unless the bound is widened to allow inheritance
+- A type-safe heterogeneous container keyed on class tokens lets one map hold values of many distinct types safely, but two differently parameterized versions of the same generic type collide on the identical erased class key
+- A wildcard should never appear as a method's return type, because the caller receives an opaque handle it can neither name again nor write into
+- Creating a generic array directly is illegal because the array-creation instruction cannot name a type variable, but casting an object array to the generic array type compiles with only an unchecked warning and stays the wrong runtime type forever
+- Reflectively allocating an array via its actual component class is the honest way to fake a generic array, because it allocates the real runtime component type and therefore enforces the array-store check immediately on a wrong-subtype write
+- A super type token, an anonymous subclass of an abstract generic carrier read back via its generic superclass, is the mechanism behind several popular libraries' typed generic capture utilities
+- A checked dynamic cast performs a real, checked cast that throws immediately and names both classes at the point untyped data enters typed code, which is strictly safer than an unchecked cast that inserts no runtime check at that line at all
+- Two overloaded methods whose parameter lists differ only by generic type argument produce the identical erased descriptor and cannot both exist in the same class file
+- A generic class's own type parameter cannot back a static field declaration at all, because one class object per generic declaration means one static storage slot shared across every parameterisation
+- Erasure was chosen over reification specifically to preserve binary compatibility in both directions with pre-generics Java, letting old and new compiled code link against each other with no recompilation required by either side
+- A raw type's assignment from its generic counterpart is always legal with no warning, but a raw type's own writes bypass all compile-time type checking, so a wrong-typed element written through a raw handle fails only later at a typed read
+- A value that may be absent should live only in a method's return type, never in a field, a parameter, or a collection element, because the wrapper type duplicates the absence signal a missing entry already carries
+- Two overloaded methods whose parameter lists differ only by their type argument fail to compile together because both erase to the identical descriptor, which the class-file format cannot represent twice
+- Capture conversion assigns a fresh, compiler-only synthetic type variable to every occurrence of a wildcard, so two separate uses of the same wildcard-typed value are never provably the same type without an explicit capture-helper method
+- Capture conversion is fully discharged by the compiler before code generation, so no captured-type name ever appears in a class file's generic-signature attribute
+- Every array's superclass is Object and it implicitly implements Cloneable and Serializable, with length accessed via a dedicated bytecode instruction rather than a declared field
+- Creating a new array zero-fills every component to that type's default value, at a cost proportional to its length
+- Array covariance is checked per store by a dedicated bytecode instruction and throws an exception naming the rejected class, while primitive array stores have no such check at all
+- Marking an array variable final freezes only the reference, never the contents, and no immutable array type exists at any Java version
+- A view over an array is not a copy, so writes through either the view or the original array are visible through the other
+- Cloning an array copies exactly one level deep, duplicating primitive elements but sharing reference elements with the original array
+- A copy-of utility truncates or pads to the requested new length and always performs a shallow copy, while a range-copy utility zero-fills any tail beyond the source's actual length
+- Structural equality helpers compare one level of nesting only, so nested arrays compare by reference unless a deep-equality helper is used instead
+- Varargs desugars to an ordinary trailing array parameter, and the caller, not the callee, allocates that array at every call site using bare-value syntax
+- Fixed-arity overload resolution always wins over the corresponding variable-arity overload when both are applicable, because variable arity is only reached in the final resolution phase
+- A varargs method invoked with an explicit null argument and both a fixed-arity overload and a matching varargs overload present resolves to the array-typed overload, treating the argument as a null array reference
+- The soft ceiling on an array's length sits slightly below the hard index ceiling of the largest positive int value
+- javac's own constant folding of a compile-time-constant expression runs entirely before any JIT tier even sees it, so its measured cost is effectively zero rather than merely fast
+- A non-escaping allocation proven safe by escape analysis costs a fraction of a nanosecond because the optimizing compiler tier scalar-replaces it, but only once the call site has warmed to that tier
+- An empty measurement loop's own floor is roughly half a nanosecond on typical modern hardware, and any measured cost within about one nanosecond of that floor is unresolved noise rather than a genuine result
+- Exception construction cost scales roughly linearly with captured stack depth once past a small fixed floor, capped at a fixed maximum once the depth limit is reached
+- A constant handle invoked directly measures indistinguishable from a direct method call because the JIT can constant-fold it, while the identical handle stored in a mutable field cannot be folded the same way and costs measurably more
+- Real production numbers must always be measured against a warmed JIT tier and a known measurement floor, never quoted from folklore or from a cold, unwarmed first-call measurement
+- An object is behaviourally immutable only if no sequence of calls, from any caller in any thread, ever changes what any accessor subsequently reports
+- Immutability requires five separate rules together, and violating any single one reopens the object to mutation even with every field marked final
+- The correct constructor order for an immutable type is null-check the argument, then defensive-copy it, then validate the copy, because validating before copying leaves a window where the caller can still mutate the original after validation passes
+- Copy-in depth must match mutability depth, so a shallow, one-hop copy of an object whose mutability lives two hops deep is still mutable through that second hop
+- A genuine structural copy never observes the source's later writes, while a live read-only view still observes every later write to its backing source
+- No immutable array type exists in Java at any version, so achieving array immutability always requires copying in and out at every boundary
+- A record cannot declare any instance field beyond its components, so the lazy-cache pattern legal on an ordinary immutable class is inexpressible on a record
+- A plain non-volatile, non-final field written by a constructor and read by another thread without synchronization may be observed at its default value, especially on a weakly-ordered architecture, and this is a genuine data race, not just a style concern
+- An overridable method called from a constructor, including implicitly via a superclass constructor dispatching to a subclass override, is a publication race that needs no second thread at all
+- A builder object is inherently mutable during its build-up phase and must never be shared or reused as if it were the finished product
+- Static factory methods can be named descriptively, can return a cached instance, and can return a subtype or interface rather than the exact class, none of which a constructor can do
+- A telescoping-constructor design fails because two adjacent same-typed parameters can transpose silently with zero compiler warning, and many optional components require either an explosion of overloads or ambiguous sentinel values
+- Java is always pass-by-value, and reassigning a reference parameter inside a method is invisible to the caller because no bytecode instruction can reach another frame's local variables, while mutating through that same shared reference is visible everywhere
+- Composition through a private delegate field typed to an interface is safer than inheritance for reusing behaviour, because inheritance couples the subclass to the superclass's undocumented self-use pattern
+- A holder-class singleton idiom needs no volatile keyword on its field because the JVM's own per-class initialization lock supplies the required happens-before edge
+- A binary fraction with a denominator that is not a power of two has no finite binary expansion, which is exactly why simple decimal fractions like 0.1 plus 0.2 print a value slightly off from the exact decimal sum
+- Naively summing many floating-point values accumulates drifting error that grows with the count and depends on their exact order, while a compensated summation algorithm keeps that error much smaller
+- An arbitrary-precision decimal type's core identity is an unscaled integer significand times ten to the negative scale, giving an exact decimal representation with no binary rounding anywhere
+- Constructing an arbitrary-precision decimal from a double literal or variable captures that double's exact, already-imprecise binary value rather than fixing it, so money must always be constructed from a string or an integer minor-unit value
+- An arbitrary-precision decimal's equality check compares both the significand and the scale and fails fast the moment the scales differ, while its ordering comparison ignores scale entirely
+- Because equality is scale-sensitive but ordering is not, a hash-based collection of equal-value-but-different-scale decimals keeps both as distinct entries while a sorted collection of the same values collapses them to one
+- Adding two arbitrary-precision decimals rescales the smaller-scale operand up and returns a result at the larger of the two operand scales, while multiplying returns a result scaled to the sum of the two operand scales
+- Calling divide with no explicit scale or rounding mode throws an exception for any division whose exact decimal result would be non-terminating
+- The canonical rounding rule for splitting a stake between two buckets is that one portion always rounds down to the minor unit and the other portion is derived by subtraction, never rounded independently, because rounding both sides independently can manufacture or destroy a minor unit of value
+- Two rounding modes that only differ on an exact tie make any comparison between them actually measure how often the underlying operation produces a tie, not some general property of the two modes
+- An arbitrary-precision integer represents its value as a sign plus a big-endian magnitude array with no leading zero words and a single canonical representation of zero
+- Arbitrary-precision integer multiplication switches from schoolbook to a divide-and-conquer algorithm above a fixed word-count threshold and to a three-way variant above a second, higher threshold
+- A fixed-scale decimal database column and an arbitrary-precision decimal in application code express the identical idea of an exact significand with a fixed scale, while a native floating-point column for money reintroduces the same binary rounding error the decimal type exists to avoid
+- The smallest positive representable double is not the most negative representable double — the most negative one is the negation of the largest positive value
+- NaN never equals itself under a direct comparison, but the boxed wrapper's equals method returns true for two NaN instances because it compares the canonical bit pattern rather than IEEE numeric equality
+- Positive and negative zero compare equal under a direct comparison but are distinguished by both the ordering comparison and the boxed wrapper's equality
+- A strictness modifier on floating-point methods has been a complete no-op since Java 17, which restored always-strict floating-point semantics platform-wide
+- A fused multiply-add computes a product-plus-sum with a single final rounding at effectively infinite internal precision, while the equivalent plain expression rounds twice
+- Widening a float to a double is always exact, but narrowing a double to a float may lose both precision and magnitude, potentially overflowing to infinity or underflowing to zero
+- The first positive integer a float cannot represent exactly is two to the twenty-fourth plus one, because a float's significand has only twenty-four significant bits including its implicit leading bit
+- Parsing a locale-formatted number under the wrong locale can silently disagree by a factor of one hundred, because one locale's decimal separator is another locale's grouping separator, and neither one ever throws to signal the mismatch
+- A legacy decimal-format parser returns a double by default, already discarding exactness, so a money-parsing code path must explicitly request the exact decimal return type
+- A mutable date wrapper around epoch milliseconds carries no time zone and no calendar semantics, and a legacy date formatter shares a mutable internal calendar across calls, making it unsafe from more than one thread
+- A point-on-the-timeline type is the correct representation for "this event happened at this exact instant," a nanosecond-resolution value with no calendar or zone attached
+- A zoneless local date-time has no zero-argument path to a point on the timeline, because producing one requires supplying an explicit offset or zone
+- An elapsed-time amount is always exactly the length it states, while a calendar-span amount's actual elapsed length can vary across a daylight-saving transition
+- Resolving a zoned date-time against a daylight-saving gap or overlap never throws by default, silently shifting forward past a gap or picking the earlier of two valid offsets across an overlap
+- A strict resolution mode throws on both a gap and an overlap instead of silently resolving either one
+- Adding months to a date never overflows into the next month and never throws on an invalid target day, clamping silently to the last valid day of the target month, and that clamp is not remembered on a subsequent addition
+- A year divisible by one hundred is a leap year only if it is also divisible by four hundred
+- A gap in local time has zero valid offsets, an ordinary local time has exactly one, and an overlap has exactly two, while the reverse direction from an instant to an offset is always single-valued
+- A bundled time-zone rules database ships inside the JDK itself as a dated, versioned file, updated independently of the JDK's own release cadence as legislatures change daylight-saving rules
+- A modern date-time formatter is immutable and thread-safe by construction, unlike the historically unsafe legacy date and number formatters
+- A formatter built with no explicit locale silently resolves the JVM's default locale, a hidden host-environment dependency
+- Injecting a clock as a constructor dependency, rather than calling a static now method directly in domain code, is what makes time-dependent logic deterministically testable
+- An instant's actual observed timestamp resolution depends entirely on what the underlying operating system clock source can deliver, even though the field itself is declared with nanosecond capacity
+- Converting the maximum representable instant to epoch milliseconds throws on overflow rather than silently wrapping, because that conversion uses checked arithmetic
+- Truncating an instant to a coarser unit and then comparing it to the original with equals returns false, because equals compares the underlying fields exactly with no tolerance for the truncation
+- A zero-method marker interface authorizes reflective field access and makes the default serialization protocol transitive over every referenced field, not just the declared class's own fields
+- A default serial version identifier, when not declared explicitly, is derived from a hash of the class's shape, so any structural change to the class silently changes that derived identifier
+- Deserialization via the default protocol never calls the real constructor, allocating instead through a synthesized constructor and setting every field by reflection, including final fields
+- Serialization's magic hook methods must be declared with an exact access modifier to be recognized at all; any other modifier means they are silently never invoked
+- A serialization proxy pattern is the standard fix for the constructor-bypass problem, pairing a stand-in object's own resolve method with a real class that unconditionally rejects direct deserialization
+- A record's serial form uses its declared components by name and deserializes by invoking the canonical constructor, so validation performed inside a compact constructor genuinely runs on every deserialization
+- Enum constants ignore all serialization magic methods by specification, because deserializing an enum instead looks it up by name and never allocates a fresh instance at all
+- The class name embedded in a serialized stream is attacker-controlled text and is resolved into a loaded class before any version-identifier comparison ever runs, which is the structural root of deserialization gadget-chain vulnerabilities
+- A gadget chain requires no single buggy class, being instead a composition of ordinary classes already present on the classpath, chained to reach arbitrary code execution once untrusted bytes are deserialized
+- The default process-wide deserialization filter accepts everything unless a team explicitly configures a filter through one of several available scopes
+- The only durable mitigation for Java's native serialization risk is to avoid it entirely for persistence or wire formats, preferring a data format with no code-execution surface instead
+- A hash-based map implementation permits exactly one null key, while a concurrent hash-based map implementation rejects a null key outright for correctness reasons
+- Immutable factory-created collections reject a null key, value, or element immediately, unlike their mutable counterparts
+- A default-with-fallback lookup returns a stored null value if the key is present with an explicit null, substituting the fallback only when the key is genuinely absent
+- A possibly-absent value's only correct position is a method's return type, never a field, a parameter, or a collection element
+- An optional-value wrapper implements no interfaces at all, so it cannot be persisted or serialized directly
+- Evaluating a fallback expression eagerly runs it unconditionally before the call happens, even when the wrapped value is already present, while a lazy fallback defers that evaluation to only the absent case
+- Constructing an optional-value wrapper from a definitely-non-null value that turns out to be null throws immediately, while the nullable-safe factory quietly produces a genuinely empty wrapper
+- A method that logically returns a collection should never return null for "nothing found," returning an empty immutable collection instead
+- Nullability annotations do nothing on their own at runtime, being pure metadata that requires a separate static checker to enforce
+- An unhandled null-pointer failure's message follows a fixed grammar naming the exact null expression the failing operation dereferenced
+- A class object has no public constructor and is identified by the pair of its binary name and its defining class loader
+- Loading a class by name can either fully initialize it or merely load and link it, depending on which loading API and which flag is used
+- Granting compile-time and public reflective access to a package is independent from granting deep reflective access to it, and neither permission implies the other
+- Forcing accessibility always succeeds against a caller's own classes but throws against a JDK-internal member unless the owning module explicitly opens that package
+- Reflection's real cost lives almost entirely in the first, cold invocation for a given member, which pays for accessor generation once, while the warmed steady-state cost afterward is only a few times a direct call
+- A constant handle bound and invoked directly measures indistinguishable from a direct method call, while the identical handle stored in a mutable field costs measurably more
+- A dynamic proxy routes every interface method plus the universal object methods through a single supplied handler, and its generated class can never also extend a concrete class
+- Subclass-based proxies cannot intercept final, private, or static methods, and cannot intercept self-invocation from inside the proxied object's own method bodies
+- A field or method's generic-signature attribute survives erasure unconditionally, but a live instance never carries its own type argument at all
+- A plain instance field's value can be changed via reflective field access even when the field is declared final, but the identical attempt against a static final field throws instead
+- The classic reflective trick of stripping a field's own final modifier no longer has a target on current JDKs
+- A hand-rolled string-interning pool must use weak keys and weak values together, because a self-valued weak map still holds the value strongly and never evicts
+- Growing a hand-rolled string-builder-equivalent by twice the old capacity plus two exactly matches the JDK's own growth formula, and the plus-two term is what lets a zero-capacity buffer grow at all
+- A typesafe enum built from scratch needs a private constructor, public static final instances declared before any aggregate list of them, and a resolve-on-deserialize method, because deserialization otherwise allocates a fresh instance that breaks identity against the canonical constant
+- A hand-rolled enum-like state machine's lookup table must be built in a static initializer placed after the constant declarations, never inside the enum constructor itself, because the aggregate array holding all constants is still null while any one constant's own constructor is still running
+- A custom checked-to-unchecked exception-crossing adapter needs a type parameter for the checked exception type itself, specifically so that type can be inferred precisely at each call site rather than erased to a common bound
+- A four-argument throwable constructor with the writable-stack-trace flag set to false permanently disables stack capture for that instance, and overriding the fill-in-stack-trace method to return itself achieves the identical effect through a different mechanism
+- A hand-built deep-copy routine must use an identity-keyed map, not an equals-keyed one, to detect already-visited nodes and break cycles, because a half-built copy's hash code is not yet stable enough to trust
+- A self-typed generic builder needs an abstract method returning the concrete subclass type, because the static type of the receiver inside the abstract base builder is only ever the base type, never the concrete subclass
+
+---
+
+**Leaves covered:** 5.3.8 (1 leaf)
+**Leaves deferred:** none
+**Diagrams included:** none
+**Target version:** Java 21 LTS
+**Lines:** 381

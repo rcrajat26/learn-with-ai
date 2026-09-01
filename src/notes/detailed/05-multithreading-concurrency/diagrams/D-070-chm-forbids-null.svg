@@ -1,0 +1,152 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Why ConcurrentHashMap forbids null, shown before and after. Left, a nullable map:
+     get(ClientId) returns null both when the key is absent and when the key is mapped to null, so
+     the caller cannot distinguish the two; a containsKey-then-get disambiguation is shown racing
+     against a concurrent remove and giving the wrong answer, reporting present when the entry was
+     just removed. Right, ConcurrentHashMap rejects null at put with NullPointerException thrown
+     immediately, and getOrDefault(key, defaultValue) is shown as the intended API for the
+     absent-vs-mapped-to-null case, with no ambiguity and no race window.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triD); }
+    .resolv{ fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triR); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY CONCURRENTHASHMAP FORBIDS NULL</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="70" text-anchor="middle" class="lbl h2">NULLABLE MAP — ambiguous and racy</text>
+  <text x="840" y="70" text-anchor="middle" class="lbl h2">ConcurrentHashMap — null rejected outright</text>
+  <line x1="560" y1="52" x2="560" y2="760" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT SIDE -->
+  <rect x="60" y="90" width="440" height="56" rx="6" class="boxP"/>
+  <text x="280" y="112" text-anchor="middle" class="lbl node">Map&lt;ClientId, ClientRestrictions&gt;</text>
+  <text x="280" y="130" text-anchor="middle" class="lbl sub">restrictions.get(clientId) allowed to return null</text>
+
+  <path class="flow" d="M 180 146 V 168"/>
+  <path class="flow" d="M 380 146 V 168"/>
+  <rect x="80" y="168" width="200" height="56" rx="6" class="boxA"/>
+  <text x="180" y="188" text-anchor="middle" class="lbl node">key absent</text>
+  <text x="180" y="206" text-anchor="middle" class="lbl sub">get(clientId) → null</text>
+
+  <rect x="300" y="168" width="200" height="56" rx="6" class="boxA"/>
+  <text x="400" y="188" text-anchor="middle" class="lbl node">key mapped to null</text>
+  <text x="400" y="206" text-anchor="middle" class="lbl sub">get(clientId) → null</text>
+
+  <path class="fail" d="M 180 224 V 244 H 280 V 260"/>
+  <path class="fail" d="M 400 224 V 244 H 280 V 260"/>
+  <rect x="130" y="260" width="300" height="46" rx="6" class="boxD"/>
+  <text x="280" y="282" text-anchor="middle" class="lbl node">same return value, no way to tell them apart</text>
+  <text x="280" y="296" text-anchor="middle" class="lbl sub">caller cannot distinguish absent from mapped-to-null</text>
+
+  <path class="flow" d="M 280 306 V 328"/>
+  <rect x="80" y="328" width="400" height="46" rx="6" class="boxY"/>
+  <text x="280" y="350" text-anchor="middle" class="lbl node">"fix": containsKey(clientId) then get(clientId)</text>
+  <text x="280" y="364" text-anchor="middle" class="lbl sub">two separate calls — not atomic</text>
+
+  <!-- Race sequence, two lanes, downward time axis -->
+  <text x="280" y="398" text-anchor="middle" class="lbl h2">RACE: two calls, one remove in between</text>
+  <line x1="60" y1="406" x2="500" y2="406" stroke="#d1d5db" stroke-width="1"/>
+  <text x="140" y="422" text-anchor="middle" class="lbl sub">operator-review thread</text>
+  <text x="420" y="422" class="lbl sub">restriction-apply-1</text>
+  <line x1="140" y1="430" x2="140" y2="700" stroke="#9ca3af" stroke-width="1.3"/>
+  <line x1="420" y1="430" x2="420" y2="700" stroke="#9ca3af" stroke-width="1.3"/>
+
+  <rect x="80" y="440" width="120" height="40" rx="5" class="boxP"/>
+  <text x="140" y="464" text-anchor="middle" class="lbl tiny">1. containsKey → true</text>
+
+  <rect x="360" y="500" width="120" height="40" rx="5" class="boxD"/>
+  <text x="420" y="524" text-anchor="middle" class="lbl tiny">2. remove(clientId)</text>
+
+  <rect x="80" y="560" width="120" height="40" rx="5" class="boxD"/>
+  <text x="140" y="584" text-anchor="middle" class="lbl tiny">3. get → null</text>
+
+  <path class="fail" d="M 200 480 H 280 V 500 H 360"/>
+  <path class="fail" d="M 360 540 H 280 V 560 H 200"/>
+
+  <rect x="80" y="620" width="400" height="60" rx="6" class="boxD"/>
+  <text x="280" y="642" text-anchor="middle" class="lbl node">wrong answer</text>
+  <text x="280" y="658" text-anchor="middle" class="lbl sub">containsKey said present; get() then reads null after</text>
+  <text x="280" y="672" text-anchor="middle" class="lbl sub">the concurrent remove — the two calls raced</text>
+
+  <!-- RIGHT SIDE -->
+  <rect x="620" y="90" width="440" height="56" rx="6" class="boxP"/>
+  <text x="840" y="112" text-anchor="middle" class="lbl node">ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt;</text>
+  <text x="840" y="130" text-anchor="middle" class="lbl sub">2.4M registered clients</text>
+
+  <path class="fail" d="M 840 146 V 168"/>
+  <rect x="640" y="168" width="400" height="60" rx="6" class="boxD"/>
+  <text x="840" y="190" text-anchor="middle" class="lbl node">chm.put(clientId, null)</text>
+  <text x="840" y="208" text-anchor="middle" class="lbl sub">rejected immediately at put</text>
+  <text x="840" y="222" text-anchor="middle" class="lbl sub">throws NullPointerException</text>
+
+  <rect x="640" y="248" width="400" height="60" rx="6" class="boxA"/>
+  <text x="840" y="268" text-anchor="middle" class="lbl node">design intent</text>
+  <text x="840" y="286" text-anchor="middle" class="lbl sub">a null value can never exist in the map, so</text>
+  <text x="840" y="300" text-anchor="middle" class="lbl sub">get() returning null always means "absent"</text>
+
+  <path class="resolv" d="M 840 308 V 330"/>
+  <rect x="640" y="330" width="400" height="70" rx="6" class="boxR"/>
+  <text x="840" y="352" text-anchor="middle" class="lbl node">getOrDefault(clientId, NO_RESTRICTIONS)</text>
+  <text x="840" y="370" text-anchor="middle" class="lbl sub">intended API for the ambiguous case</text>
+  <text x="840" y="386" text-anchor="middle" class="lbl sub">no containsKey race window, single call, atomic read</text>
+
+  <rect x="640" y="420" width="400" height="90" rx="6" class="boxA"/>
+  <text x="660" y="442" class="lbl node">Why this matters under concurrency</text>
+  <text x="660" y="462" class="lbl tiny">A single-threaded nullable map merely tolerates ambiguity.</text>
+  <text x="660" y="478" class="lbl tiny">Under concurrent writers, the containsKey-then-get pattern is a race:</text>
+  <text x="660" y="494" class="lbl tiny">any interleaved remove/put between the two calls returns a stale answer.</text>
+
+  <rect x="640" y="530" width="400" height="60" rx="6" class="boxY"/>
+  <text x="840" y="552" text-anchor="middle" class="lbl node">rule of thumb</text>
+  <text x="840" y="570" text-anchor="middle" class="lbl sub">forbidding null trades a rare null-value case</text>
+  <text x="840" y="584" text-anchor="middle" class="lbl sub">for an entire class of atomicity bugs removed</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="720" x2="1100" y2="720" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="736" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="749" class="lbl tiny">map / interface state</text>
+  <rect x="200" y="736" width="22" height="16" rx="3" class="boxA"/>
+  <text x="230" y="749" class="lbl tiny">call result / design note</text>
+  <rect x="420" y="736" width="22" height="16" rx="3" class="boxD"/>
+  <text x="450" y="749" class="lbl tiny">ambiguous, racy, or thrown</text>
+  <rect x="640" y="736" width="22" height="16" rx="3" class="boxR"/>
+  <text x="670" y="749" class="lbl tiny">intended, safe API</text>
+  <rect x="860" y="736" width="22" height="16" rx="3" class="boxY"/>
+  <text x="890" y="749" class="lbl tiny">the two-call anti-pattern</text>
+
+  <path class="flow" d="M 20 772 H 60"/>
+  <text x="68" y="777" class="lbl tiny">A → B : normal call</text>
+  <path class="fail" d="M 300 772 H 340"/>
+  <text x="348" y="777" class="lbl tiny">A → B : leads to wrong answer / exception</text>
+  <path class="resolv" d="M 700 772 H 740"/>
+  <text x="748" y="777" class="lbl tiny">A → B : resolves to safe API</text>
+</svg>

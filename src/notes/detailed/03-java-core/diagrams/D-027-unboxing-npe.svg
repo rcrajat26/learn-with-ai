@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1140 970" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing an unboxing NullPointerException on a source line that contains no method call. The top section shows the source of FundsLedger.reservedBonus, which returns positionsByType.get(CLIENT_BONUS_RESERVED) into an int, beside the javap listing where the two instructions javac inserted, checkcast to Integer at offset 8 and invokevirtual Integer.intValue at offset 11, are highlighted. Frame 1: Map.get returns null because the client has no CLIENT_BONUS_RESERVED position. Frame 2: the compiler-inserted invokevirtual Integer.intValue is executed, an instruction the source never wrote. Frame 3: the helpful NullPointerException, Cannot invoke java.lang.Integer.intValue because the return value of java.util.Map.get(Object) is null. A side panel contrasts nullInteger double-equals 5, which unboxes and throws because one operand is a primitive under binary numeric promotion, with nullInteger double-equals otherInteger, which is a reference comparison, evaluates to false and never throws.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeb{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;font-weight:bold;fill:#1f2937;}
+    </style>
+    <marker id="arr027" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="970" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Unboxing NPE on a line with no method call &#8212; FundsLedger.reservedBonus</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ SECTION A ============ -->
+  <text x="20" y="66" class="h2">SOURCE AND COMPILED FORM</text>
+
+  <rect x="60" y="88" width="440" height="170" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="110" class="smallb">FundsLedger.java &#8212; what you wrote</text>
+  <text x="76" y="134" class="code" xml:space="preserve">static int reservedBonus(</text>
+  <text x="76" y="152" class="code" xml:space="preserve">      Map&lt;String, Integer&gt; positionsByType) {</text>
+  <text x="76" y="170" class="code" xml:space="preserve">  int reserved = positionsByType</text>
+  <text x="76" y="188" class="code" xml:space="preserve">      .get(CLIENT_BONUS_RESERVED);</text>
+  <text x="76" y="206" class="code" xml:space="preserve">  return reserved;</text>
+  <text x="76" y="224" class="code" xml:space="preserve">}</text>
+  <text x="76" y="246" class="small">no .intValue() appears anywhere in this source</text>
+
+  <rect x="520" y="88" width="560" height="170" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="536" y="110" class="smallb">javap -c FundsLedger.reservedBonus &#8212; what javac emitted</text>
+  <rect x="528" y="192" width="544" height="40" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="536" y="132" class="code" xml:space="preserve">0: aload_0</text>
+  <text x="536" y="150" class="code" xml:space="preserve">1: ldc           #26   // String CLIENT_BONUS_RESERVED</text>
+  <text x="536" y="168" class="code" xml:space="preserve">3: invokeinterface #28,  2  // InterfaceMethod Map.get:</text>
+  <text x="536" y="186" class="code" xml:space="preserve">     //   (Ljava/lang/Object;)Ljava/lang/Object;</text>
+  <text x="536" y="208" class="codeb" xml:space="preserve">8: checkcast     #8    // class java/lang/Integer</text>
+  <text x="536" y="226" class="codeb" xml:space="preserve">11: invokevirtual #13   // Method java/lang/Integer.intValue:()I</text>
+  <text x="536" y="248" class="code" xml:space="preserve">14: ireturn</text>
+
+  <path d="M 900 258 V 308" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr027)"/>
+
+  <!-- ============ FRAME 1 ============ -->
+  <text x="20" y="288" class="h2">FRAME 1 &#8212; Map.get RETURNS null</text>
+
+  <rect x="60" y="308" width="1020" height="64" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="332" class="codeb">positionsByType.get("CLIENT_BONUS_RESERVED")   &#8594;   null</text>
+  <text x="76" y="358" class="smallD">this client has no CLIENT_BONUS_RESERVED position row, so Map.get returns null &#8212; a perfectly legal Integer-typed value</text>
+
+  <path d="M 900 372 V 422" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr027)"/>
+
+  <!-- ============ FRAME 2 ============ -->
+  <text x="20" y="402" class="h2">FRAME 2 &#8212; THE COMPILER-INSERTED intValue()</text>
+
+  <rect x="60" y="422" width="1020" height="84" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="76" y="446" class="codeb">11: invokevirtual #13   // Method java/lang/Integer.intValue:()I</text>
+  <text x="76" y="470" class="smallD">javac inserted this instruction. Assignment of an Integer to an int forces unboxing (JLS &#167;5.1.8) and unboxing IS a method call.</text>
+  <text x="76" y="492" class="smallD">checkcast at offset 8 succeeds on null &#8212; casts permit null. invokevirtual intValue() on a null receiver does not.</text>
+
+  <path d="M 900 506 V 556" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr027)"/>
+
+  <!-- ============ FRAME 3 ============ -->
+  <text x="20" y="536" class="h2">FRAME 3 &#8212; THE THROW</text>
+
+  <rect x="60" y="556" width="1020" height="96" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="76" y="580" class="bodyb">java.lang.NullPointerException</text>
+  <text x="76" y="604" class="code">Cannot invoke "java.lang.Integer.intValue()" because the return value of</text>
+  <text x="76" y="622" class="code">"java.util.Map.get(Object)" is null</text>
+  <text x="76" y="644" class="smallD">helpful NullPointerException message (JEP 358), on by default since Java 15 &#8212; it names the inserted call the source never wrote</text>
+
+  <!-- ============ SIDE PANEL ============ -->
+  <text x="20" y="682" class="h2">SIDE PANEL &#8212; == WITH A null Integer: WHEN IT UNBOXES AND WHEN IT DOES NOT</text>
+
+  <rect x="60" y="696" width="500" height="140" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="76" y="720" class="bodyb">nullInteger == 5   &#8594;   THROWS</text>
+  <text x="76" y="742" class="code">Integer nullInteger = null;</text>
+  <text x="76" y="764" class="smallD">one operand is the primitive 5, so binary numeric</text>
+  <text x="76" y="782" class="smallD">promotion (JLS &#167;15.21.1) unboxes the wrapper:</text>
+  <text x="76" y="802" class="code">NullPointerException: Cannot invoke</text>
+  <text x="76" y="820" class="code">"Integer.intValue()" because "&lt;local8&gt;" is null</text>
+
+  <rect x="580" y="696" width="500" height="140" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="596" y="720" class="bodyb">nullInteger == otherInteger   &#8594;   false</text>
+  <text x="596" y="742" class="code">Integer otherInteger = 5;</text>
+  <text x="596" y="764" class="smallD">both operands are references, so == is a reference</text>
+  <text x="596" y="782" class="smallD">comparison &#8212; neither side is unboxed at all</text>
+  <text x="596" y="802" class="smallD">evaluates to false, nothing is dereferenced,</text>
+  <text x="596" y="820" class="smallD">no NullPointerException is thrown</text>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="866" class="h2">LEGEND</text>
+  <line x1="20" y1="874" x2="1120" y2="874" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="886" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="899" class="small">source and javap listings &#8212; the unchanged inputs</text>
+
+  <rect x="30" y="912" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="925" class="small">the value Map.get actually produced at runtime</text>
+
+  <rect x="30" y="938" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="951" class="small">instructions javac inserted that the source does not contain</text>
+
+  <rect x="600" y="886" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="628" y="899" class="small">the throwing path &#8212; a wrapper is unboxed on a null receiver</text>
+
+  <rect x="600" y="912" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="628" y="925" class="small">the non-throwing path &#8212; pure reference comparison</text>
+
+  <line x1="600" y1="944" x2="626" y2="944" stroke="#475569" stroke-width="2" marker-end="url(#arr027)"/>
+  <text x="634" y="949" class="small">primary flow : A &#8594; B, B is the next step executed after A</text>
+</svg>

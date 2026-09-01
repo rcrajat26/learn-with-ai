@@ -1,0 +1,122 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of int switch compilation, verified by javap -c on --release 21. Left: dense, contiguous case labels 0,1,2,3 compile to tableswitch with a direct jump table indexed by value minus low bound. Right: sparse case labels 100,5000,90000 compile to lookupswitch as sorted key-offset pairs, resolved by binary search. Beneath both, the two-stage String switch on a restriction type name: a first lookupswitch dispatches on String.hashCode, each matching bucket confirms with equals, and a second tableswitch dispatches on the resulting synthetic dense index 0,1,2 to the real case bodies.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .codeS { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; }
+    .badge { font-size: 11px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">tableswitch VERSUS lookupswitch (verified: javap -c, --release 21)</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="120" y="66" class="lbl h2">LEFT — dense labels 0..3 -&gt; tableswitch</text>
+  <text x="650" y="66" class="lbl h2">RIGHT — sparse labels 100 / 5000 / 90000 -&gt; lookupswitch</text>
+  <line x1="560" y1="76" x2="560" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: tableswitch -->
+  <rect x="60" y="88" width="440" height="40" rx="6" class="boxP"/>
+  <text x="280" y="113" text-anchor="middle" class="lbl code">case 0,1,2,3 -&gt; ... default -&gt; -1</text>
+
+  <path class="flow" d="M 280 128 V 150"/>
+  <rect x="60" y="150" width="440" height="150" rx="6" class="boxR"/>
+  <text x="80" y="172" class="lbl node code">tableswitch { // 0 to 3</text>
+  <text x="100" y="192" class="lbl code">0: -&gt; 32   (offset)</text>
+  <text x="100" y="210" class="lbl code">1: -&gt; 37</text>
+  <text x="100" y="228" class="lbl code">2: -&gt; 42</text>
+  <text x="100" y="246" class="lbl code">3: -&gt; 47</text>
+  <text x="100" y="264" class="lbl code">default: -&gt; 52</text>
+  <text x="80" y="284" class="lbl sub">jump table: direct index by (value - low), O(1)</text>
+
+  <!-- RIGHT: lookupswitch -->
+  <rect x="620" y="88" width="440" height="40" rx="6" class="boxP"/>
+  <text x="840" y="113" text-anchor="middle" class="lbl code">case 100,5000,90000 -&gt; ... default -&gt; -1</text>
+
+  <path class="flow" d="M 840 128 V 150"/>
+  <rect x="620" y="150" width="440" height="150" rx="6" class="boxWk"/>
+  <text x="640" y="172" class="lbl node code">lookupswitch { // 3 pairs</text>
+  <text x="660" y="192" class="lbl code">key    100 -&gt; 36</text>
+  <text x="660" y="210" class="lbl code">key   5000 -&gt; 41</text>
+  <text x="660" y="228" class="lbl code">key  90000 -&gt; 46</text>
+  <text x="660" y="246" class="lbl code">default    -&gt; 51</text>
+  <text x="640" y="270" class="lbl sub">key/offset pairs, sorted by key</text>
+  <text x="640" y="286" class="lbl sub">JVM binary-searches the keys, O(log n)</text>
+
+  <!-- two-stage String switch -->
+  <text x="20" y="340" class="lbl h2">BENEATH — THE TWO-STAGE STRING SWITCH, WORKED ON A RESTRICTION-TYPE NAME</text>
+  <line x1="20" y1="348" x2="1100" y2="348" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="362" width="300" height="52" rx="6" class="boxP"/>
+  <text x="190" y="384" text-anchor="middle" class="lbl code">switch (restrictionType)</text>
+  <text x="190" y="402" text-anchor="middle" class="lbl sub">restrictionType : String</text>
+
+  <path class="flow" d="M 340 388 H 400"/>
+  <rect x="400" y="362" width="300" height="90" rx="6" class="boxWk"/>
+  <text x="420" y="384" class="lbl node">STAGE 1 — hashCode dispatch</text>
+  <text x="420" y="404" class="lbl code">restrictionType.hashCode()</text>
+  <text x="420" y="422" class="lbl code">lookupswitch on hash values</text>
+  <text x="420" y="440" class="lbl sub">e.g. "STAKE_BLOCKED" -&gt; -421468697</text>
+
+  <path class="flow" d="M 700 407 H 760"/>
+  <rect x="760" y="362" width="320" height="90" rx="6" class="boxR"/>
+  <text x="780" y="384" class="lbl node">CONFIRM — equals</text>
+  <text x="780" y="404" class="lbl code">.equals("STAKE_BLOCKED")</text>
+  <text x="780" y="422" class="lbl sub">hash collision means a wrong bucket still</text>
+  <text x="780" y="438" class="lbl sub">fails equals and falls to default</text>
+
+  <path class="flow" d="M 190 414 V 470 H 190"/>
+  <path class="flow" d="M 190 452 V 500 H 400"/>
+  <rect x="400" y="472" width="300" height="80" rx="6" class="boxP"/>
+  <text x="420" y="494" class="lbl node">synthetic index</text>
+  <text x="420" y="514" class="lbl code">i = 1  // STAKE_BLOCKED's slot</text>
+  <text x="420" y="534" class="lbl sub">an int local, distinct from the string itself</text>
+
+  <path class="flow" d="M 700 512 H 760"/>
+  <rect x="760" y="472" width="320" height="80" rx="6" class="boxR"/>
+  <text x="780" y="494" class="lbl node code">STAGE 2 — tableswitch { 0..2 }</text>
+  <text x="780" y="514" class="lbl code">switch(i){0,1,2}: dense -&gt; tableswitch</text>
+  <text x="780" y="534" class="lbl sub">i=1 -&gt; case body for STAKE_BLOCKED, result 2</text>
+
+  <rect x="40" y="576" width="1040" height="72" rx="8" class="boxAnn"/>
+  <text x="56" y="598" class="lbl h2">WHY TWO STAGES — String has no ordinal</text>
+  <text x="56" y="618" class="lbl tiny">The JVM has no switch bytecode over String, so javac dispatches on the (dense-enough) hash first, confirms with equals to rule out collisions,</text>
+  <text x="56" y="634" class="lbl tiny">then re-switches on the confirmed integer index — which is always dense 0..n-1, so stage 2 is always a tableswitch, never a lookupswitch.</text>
+
+  <rect x="40" y="668" width="1040" height="74" rx="8" class="boxAnn"/>
+  <text x="56" y="688" class="lbl h2">WHEN THE COMPILER CHOOSES WHICH</text>
+  <text x="56" y="706" class="lbl tiny">javac estimates the lookupswitch table's density; a small enough label range emits tableswitch, otherwise</text>
+  <text x="56" y="722" class="lbl tiny">lookupswitch — a source-level judgment call, not a language guarantee.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="768" x2="1100" y2="768" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="782" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="795" class="lbl tiny">switch source / dispatch key</text>
+  <rect x="270" y="782" width="24" height="16" rx="3" class="boxR"/>
+  <text x="302" y="795" class="lbl tiny">tableswitch (dense, O(1) jump table)</text>
+  <rect x="590" y="782" width="24" height="16" rx="3" class="boxWk"/>
+  <text x="622" y="795" class="lbl tiny">lookupswitch (sparse, O(log n) binary search)</text>
+  <rect x="960" y="782" width="24" height="16" rx="3" class="boxAnn"/>
+  <text x="992" y="795" class="lbl tiny">note</text>
+  <path class="flow" d="M 20 815 H 64"/>
+  <text x="74" y="820" class="lbl tiny">A -&gt; B : B is the compiled/derived form of A</text>
+</svg>

@@ -1,0 +1,108 @@
+<svg viewBox="0 0 1080 650" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two frames showing that andThen and compose run Function of Money, Money applyFee and applyRounding in opposite orders, over a stake of 3.33. Frame 1: applyFee.andThen(applyRounding) runs applyFee first, giving 3.26, then applyRounding, giving a final 3.25. Frame 2: applyFee.compose(applyRounding) runs applyRounding first, giving 3.35, then applyFee, giving a different final value, 3.28. Same input, same two functions, different order, different answer.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+    .badge { font-size: 9.5px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="650" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">andThen AND compose RUN IN OPPOSITE ORDERS</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- shared function definitions -->
+  <rect x="20" y="60" width="1040" height="70" rx="6" class="boxAnn"/>
+  <text x="40" y="82" class="lbl body">applyFee : Function&lt;Money,Money&gt; = m -&gt; m.subtract(Money(0.07))  — the FEES ledger position</text>
+  <text x="40" y="102" class="lbl body">applyRounding : Function&lt;Money,Money&gt; = m -&gt; m rounded to the nearest 0.05, RoundingMode.HALF_UP</text>
+  <text x="40" y="120" class="lbl tiny">Both frames start from the same stake, 3.33, and use the same two functions.</text>
+
+  <!-- FRAME 1 -->
+  <text x="40" y="155" class="lbl h2">FRAME 1 — applyFee.andThen(applyRounding): fee first, then rounding</text>
+
+  <rect x="40" y="175" width="200" height="80" rx="6" class="boxP"/>
+  <text x="140" y="197" text-anchor="middle" class="lbl tiny">STAKE — INPUT</text>
+  <text x="140" y="221" text-anchor="middle" class="lbl node">3.33</text>
+  <text x="140" y="239" text-anchor="middle" class="lbl tiny">a QuizStakes stake</text>
+
+  <path class="flow" d="M 240 215 H 440"/>
+  <text x="340" y="205" text-anchor="middle" class="lbl tiny">applyFee</text>
+
+  <rect x="440" y="175" width="200" height="80" rx="6" class="boxP"/>
+  <text x="540" y="197" text-anchor="middle" class="lbl tiny">AFTER applyFee</text>
+  <text x="540" y="221" text-anchor="middle" class="lbl node">3.26</text>
+  <text x="540" y="239" text-anchor="middle" class="lbl tiny">3.33 − 0.07 (FEES)</text>
+
+  <path class="flow" d="M 640 215 H 840"/>
+  <text x="740" y="205" text-anchor="middle" class="lbl tiny">applyRounding</text>
+
+  <rect x="840" y="175" width="200" height="80" rx="6" class="boxH"/>
+  <rect x="1004" y="181" width="30" height="16" rx="8" class="pill"/>
+  <text x="1019" y="193" text-anchor="middle" class="lbl badge">FINAL</text>
+  <text x="940" y="197" text-anchor="middle" class="lbl tiny">AFTER applyRounding</text>
+  <text x="940" y="221" text-anchor="middle" class="lbl node">3.25</text>
+  <text x="940" y="239" text-anchor="middle" class="lbl tiny">nearest 0.05, HALF_UP</text>
+
+  <line x1="20" y1="290" x2="1060" y2="290" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 2 -->
+  <text x="40" y="320" class="lbl h2">FRAME 2 — applyFee.compose(applyRounding): rounding first, then fee</text>
+
+  <rect x="40" y="340" width="200" height="80" rx="6" class="boxP"/>
+  <text x="140" y="362" text-anchor="middle" class="lbl tiny">STAKE — INPUT</text>
+  <text x="140" y="386" text-anchor="middle" class="lbl node">3.33</text>
+  <text x="140" y="404" text-anchor="middle" class="lbl tiny">a QuizStakes stake</text>
+
+  <path class="flow" d="M 240 380 H 440"/>
+  <text x="340" y="370" text-anchor="middle" class="lbl tiny">applyRounding</text>
+
+  <rect x="440" y="340" width="200" height="80" rx="6" class="boxP"/>
+  <text x="540" y="362" text-anchor="middle" class="lbl tiny">AFTER applyRounding</text>
+  <text x="540" y="386" text-anchor="middle" class="lbl node">3.35</text>
+  <text x="540" y="404" text-anchor="middle" class="lbl tiny">nearest 0.05, HALF_UP</text>
+
+  <path class="flow" d="M 640 380 H 840"/>
+  <text x="740" y="370" text-anchor="middle" class="lbl tiny">applyFee</text>
+
+  <rect x="840" y="340" width="200" height="80" rx="6" class="boxH"/>
+  <rect x="1004" y="346" width="30" height="16" rx="8" class="pill"/>
+  <text x="1019" y="358" text-anchor="middle" class="lbl badge">FINAL</text>
+  <text x="940" y="362" text-anchor="middle" class="lbl tiny">AFTER applyFee</text>
+  <text x="940" y="386" text-anchor="middle" class="lbl node">3.28</text>
+  <text x="940" y="404" text-anchor="middle" class="lbl tiny">3.35 − 0.07 (FEES)</text>
+
+  <!-- comparison -->
+  <rect x="20" y="445" width="1040" height="100" rx="8" class="boxAnn"/>
+  <text x="40" y="468" class="lbl h2">SAME INPUT, SAME FUNCTIONS, DIFFERENT ANSWER</text>
+  <text x="40" y="488" class="lbl body">andThen runs applyFee then applyRounding on 3.33 → 3.25.</text>
+  <text x="40" y="506" class="lbl body">compose runs its argument first — applyRounding, then applyFee — on the same 3.33 → 3.28.</text>
+  <text x="40" y="527" class="lbl tiny">Function composition is not commutative: swap the order and the result changes whenever the two functions don't commute.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="575" x2="1060" y2="575" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="588" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="601" class="lbl tiny">stake or intermediate value</text>
+  <rect x="380" y="588" width="24" height="16" rx="3" class="boxH"/>
+  <text x="412" y="601" class="lbl tiny">final result of the composed call</text>
+  <rect x="800" y="588" width="24" height="16" rx="3" class="boxAnn"/>
+  <text x="832" y="601" class="lbl tiny">shared definitions / comparison</text>
+  <path class="flow" d="M 20 618 H 64"/>
+  <text x="74" y="623" class="lbl tiny">step → next, labeled with the function applied</text>
+</svg>

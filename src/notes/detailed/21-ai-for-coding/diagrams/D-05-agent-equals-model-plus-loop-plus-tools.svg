@@ -1,0 +1,95 @@
+<svg viewBox="0 0 1040 590" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="An agent is composed of three children: the model, a stateless function; the loop, which is the harness; and tools, each with a name, description, and JSON schema. The loop owns the tools, dispatching tool_use and feeding tool_result back in — the model never touches tools directly. A contrast panel notes that a chatbot is model plus loop with no tools, and that AI alone is not a definition. An annotation explains the model never invokes tools directly.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="590" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AGENT = MODEL + LOOP + TOOLS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="400" y="70" width="240" height="70" rx="6" class="boxP"/>
+  <text x="520" y="102" text-anchor="middle" class="lbl node">agent</text>
+  <text x="520" y="122" text-anchor="middle" class="lbl sub">the thing that acts</text>
+
+  <!-- contrast panel beside root -->
+  <rect x="700" y="60" width="320" height="90" rx="6" class="boxL"/>
+  <text x="720" y="82" class="lbl h2">NOT A DEFINITION</text>
+  <text x="720" y="104" class="lbl body">chatbot = model + loop, no tools</text>
+  <text x="720" y="124" class="lbl body">"AI" = not a definition</text>
+
+  <!-- bus -->
+  <path class="flow" d="M 520 140 V 170"/>
+  <path d="M 210 170 H 830" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 210 170 V 200"/>
+  <path class="flow" d="M 510 170 V 200"/>
+  <path class="flow" d="M 830 170 V 200"/>
+
+  <!-- children -->
+  <rect x="80" y="200" width="260" height="110" rx="6" class="boxP"/>
+  <text x="210" y="228" text-anchor="middle" class="lbl node">model</text>
+  <text x="210" y="248" text-anchor="middle" class="lbl sub">stateless function</text>
+  <text x="210" y="266" text-anchor="middle" class="lbl sub">tokens in -&gt; tokens out</text>
+  <text x="210" y="284" text-anchor="middle" class="lbl sub">no memory, no I/O</text>
+
+  <rect x="380" y="200" width="260" height="110" rx="6" class="boxR"/>
+  <text x="510" y="228" text-anchor="middle" class="lbl node">loop</text>
+  <text x="510" y="248" text-anchor="middle" class="lbl sub">the harness</text>
+  <text x="510" y="266" text-anchor="middle" class="lbl sub">reads tool_use, runs it,</text>
+  <text x="510" y="284" text-anchor="middle" class="lbl sub">feeds tool_result back in</text>
+
+  <rect x="680" y="200" width="300" height="110" rx="6" class="boxP"/>
+  <text x="830" y="228" text-anchor="middle" class="lbl node">tools</text>
+  <text x="830" y="248" text-anchor="middle" class="lbl sub">name</text>
+  <text x="830" y="266" text-anchor="middle" class="lbl sub">description</text>
+  <text x="830" y="284" text-anchor="middle" class="lbl sub">JSON schema</text>
+
+  <!-- loop owns tools -->
+  <path class="adapt" d="M 510 310 V 360 H 830 V 310"/>
+  <text x="670" y="378" text-anchor="middle" class="lbl tiny">loop owns tools: dispatches tool_use, receives tool_result</text>
+
+  <!-- annotation -->
+  <rect x="40" y="420" width="960" height="70" rx="6" class="boxA"/>
+  <text x="60" y="442" class="lbl h2">NOTE</text>
+  <text x="60" y="464" class="lbl body">The model never invokes tools directly. It only ever emits a tool_use block as text;</text>
+  <text x="60" y="480" class="lbl body">the loop is what actually calls the tool and hands the result back.</text>
+
+  <line x1="20" y1="510" x2="1020" y2="510" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="522" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="535" class="lbl tiny">agent / model / tools</text>
+  <rect x="220" y="522" width="22" height="16" rx="3" class="boxR"/>
+  <text x="250" y="535" class="lbl tiny">loop (the harness)</text>
+  <rect x="420" y="522" width="22" height="16" rx="3" class="boxL"/>
+  <text x="450" y="535" class="lbl tiny">contrast: not a definition</text>
+  <rect x="680" y="522" width="22" height="16" rx="3" class="boxA"/>
+  <text x="705" y="535" class="lbl tiny">annotation</text>
+
+  <path class="flow" d="M 20 552 H 60"/>
+  <text x="68" y="556" class="lbl tiny">A -&gt; B : agent is composed of B</text>
+  <path class="adapt" d="M 420 552 H 460"/>
+  <text x="468" y="556" class="lbl tiny">A -&gt; B : loop owns / dispatches to tools</text>
+</svg>

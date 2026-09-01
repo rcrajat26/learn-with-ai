@@ -1,0 +1,47 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 4: a producer thread CASes last.next to link a new node, then attempts to CAS tail forward to the new node">
+  <defs>
+    <marker id="arrow136b" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="16" width="760" height="24" rx="4" fill="#e5e7eb"/>
+  <text x="400" y="33" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">Frame 2/4 — offer(e): CAS p.next to new node (L361), then try to hop tail forward</text>
+
+  <rect x="40" y="100" width="100" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="90" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node A</text>
+
+  <rect x="200" y="100" width="100" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="250" y="130" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node B</text>
+
+  <rect x="360" y="100" width="100" height="50" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node C</text>
+  <text x="410" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">p in offer()</text>
+
+  <rect x="540" y="100" width="100" height="50" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="590" y="124" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node D</text>
+  <text x="590" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">newNode</text>
+
+  <line x1="140" y1="125" x2="200" y2="125" stroke="#737373" stroke-width="2" marker-end="url(#arrow136b)"/>
+  <line x1="300" y1="125" x2="360" y2="125" stroke="#737373" stroke-width="2" marker-end="url(#arrow136b)"/>
+  <line x1="460" y1="125" x2="540" y2="125" stroke="#525252" stroke-width="2" marker-end="url(#arrow136b)"/>
+  <rect x="465" y="95" width="130" height="20" rx="3" fill="#fef3c7"/>
+  <text x="530" y="110" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">NEXT.compareAndSet</text>
+
+  <rect x="200" y="60" width="50" height="22" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="225" y="76" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">tail (old)</text>
+  <line x1="225" y1="82" x2="250" y2="100" stroke="#525252" stroke-width="2" marker-end="url(#arrow136b)"/>
+
+  <path d="M 225 60 C 400 -10, 560 -10, 590 95" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrow136b)"/>
+  <rect x="380" y="4" width="220" height="22" rx="3" fill="#fee2e2"/>
+  <text x="490" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">TAIL.weakCompareAndSet(this, t, newNode)</text>
+
+  <rect x="60" y="190" width="680" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="210" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">offer() L365-366: if (p != t) hop two nodes at a time; failure to CAS tail is OK — another offer or helper will finish it</text>
+
+  <rect x="60" y="232" width="680" height="44" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="70" y="250" font-family="sans-serif" font-size="12" fill="#1f2937">The CAS of p.next (linking D) is the true linearization point for the enqueue (L362-364);</text>
+  <text x="70" y="266" font-family="sans-serif" font-size="12" fill="#1f2937">the tail CAS is a best-effort optimization that may legitimately be skipped</text>
+</svg>

@@ -1,0 +1,155 @@
+<svg viewBox="0 0 1200 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Byte layout of Movement.class: magic 0xCAFEBABE, versions, constant pool entries, access flags, this/super class, interfaces, fields, methods, attributes, plus the major-version table and UnsupportedClassVersionError">
+  <defs>
+    <marker id="arrow091" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="45" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Movement.class — byte layout</text>
+
+  <!-- LEFT COLUMN: main byte stack -->
+  <!-- Row 1: magic -->
+  <rect x="30" y="80" width="480" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="96" font-family="monospace" font-size="11" fill="#1f2937">0x00</text>
+  <text x="150" y="96" font-family="sans-serif" font-size="12" fill="#1f2937">magic</text>
+  <text x="490" y="96" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">4 bytes</text>
+  <text x="150" y="112" font-family="monospace" font-size="12" fill="#1f2937">0xCAFEBABE</text>
+
+  <!-- Row 2: minor_version -->
+  <rect x="30" y="124" width="480" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="140" font-family="monospace" font-size="11" fill="#1f2937">0x04</text>
+  <text x="150" y="140" font-family="sans-serif" font-size="12" fill="#1f2937">minor_version</text>
+  <text x="490" y="140" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2 bytes</text>
+  <text x="150" y="156" font-family="monospace" font-size="12" fill="#1f2937">0</text>
+
+  <!-- Row 3: major_version -->
+  <rect x="30" y="168" width="480" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="184" font-family="monospace" font-size="11" fill="#1f2937">0x06</text>
+  <text x="150" y="184" font-family="sans-serif" font-size="12" fill="#1f2937">major_version</text>
+  <text x="490" y="184" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2 bytes</text>
+  <text x="150" y="200" font-family="monospace" font-size="12" fill="#1f2937">65 (Java 21)</text>
+
+  <!-- Row 4: constant_pool_count -->
+  <rect x="30" y="212" width="480" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="228" font-family="monospace" font-size="11" fill="#1f2937">0x08</text>
+  <text x="150" y="228" font-family="sans-serif" font-size="12" fill="#1f2937">constant_pool_count</text>
+  <text x="490" y="228" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2 bytes</text>
+  <text x="150" y="244" font-family="monospace" font-size="12" fill="#1f2937">41</text>
+
+  <!-- Row 5: constant_pool[] -->
+  <rect x="30" y="256" width="480" height="40" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="272" font-family="monospace" font-size="11" fill="#1f2937">0x0A</text>
+  <text x="150" y="272" font-family="sans-serif" font-size="12" fill="#1f2937">constant_pool[]</text>
+  <text x="490" y="272" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">N bytes</text>
+  <text x="150" y="288" font-family="sans-serif" font-size="11" fill="#1f2937">variable — expanded in panel to the right</text>
+
+  <!-- Row 6: access_flags -->
+  <rect x="30" y="300" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="316" font-family="monospace" font-size="11" fill="#1f2937">0x0A+N</text>
+  <text x="150" y="316" font-family="sans-serif" font-size="12" fill="#1f2937">access_flags</text>
+  <text x="490" y="316" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2 bytes</text>
+  <text x="150" y="332" font-family="monospace" font-size="11" fill="#1f2937">0x0031 ACC_PUBLIC | ACC_FINAL | ACC_SUPER</text>
+
+  <!-- Row 7: this_class -->
+  <rect x="30" y="344" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="360" font-family="monospace" font-size="11" fill="#1f2937">+2</text>
+  <text x="150" y="360" font-family="sans-serif" font-size="12" fill="#1f2937">this_class</text>
+  <text x="490" y="360" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2 bytes</text>
+  <text x="150" y="376" font-family="monospace" font-size="11" fill="#1f2937">#2 com/quizstakes/ledger/Movement</text>
+
+  <!-- Row 8: super_class -->
+  <rect x="30" y="388" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="404" font-family="monospace" font-size="11" fill="#1f2937">+2</text>
+  <text x="150" y="404" font-family="sans-serif" font-size="12" fill="#1f2937">super_class</text>
+  <text x="490" y="404" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2 bytes</text>
+  <text x="150" y="420" font-family="monospace" font-size="11" fill="#1f2937">#4 java/lang/Object</text>
+
+  <!-- Row 9: interfaces -->
+  <rect x="30" y="432" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="448" font-family="monospace" font-size="11" fill="#1f2937">+2..</text>
+  <text x="150" y="448" font-family="sans-serif" font-size="12" fill="#1f2937">interfaces_count / interfaces[]</text>
+  <text x="490" y="448" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">2+2 bytes</text>
+  <text x="150" y="464" font-family="monospace" font-size="11" fill="#1f2937">1, #7 java/lang/Comparable</text>
+
+  <!-- Row 10: fields -->
+  <rect x="30" y="476" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="492" font-family="monospace" font-size="11" fill="#1f2937">+..</text>
+  <text x="150" y="492" font-family="sans-serif" font-size="12" fill="#1f2937">fields_count / fields[]</text>
+  <text x="150" y="508" font-family="monospace" font-size="11" fill="#1f2937">3: position, amount, entryId</text>
+
+  <!-- Row 11: methods -->
+  <rect x="30" y="520" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="536" font-family="monospace" font-size="11" fill="#1f2937">+..</text>
+  <text x="150" y="536" font-family="sans-serif" font-size="12" fill="#1f2937">methods_count / methods[]</text>
+  <text x="150" y="552" font-family="monospace" font-size="11" fill="#1f2937">5: &lt;init&gt;, compareTo, equals, hashCode, toString</text>
+
+  <!-- Row 12: attributes -->
+  <rect x="30" y="564" width="480" height="40" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="45" y="580" font-family="monospace" font-size="11" fill="#1f2937">+..</text>
+  <text x="150" y="580" font-family="sans-serif" font-size="12" fill="#1f2937">attributes_count / attributes[]</text>
+  <text x="150" y="596" font-family="monospace" font-size="11" fill="#1f2937">Signature, BootstrapMethods, SourceFile, RuntimeVisibleAnnotations</text>
+
+  <!-- arrow from constant_pool[] row to sub-panel -->
+  <line x1="510" y1="276" x2="555" y2="276" stroke="#737373" stroke-width="2" marker-end="url(#arrow091)"/>
+
+  <!-- RIGHT COLUMN TOP: constant pool sub-panel -->
+  <rect x="560" y="80" width="610" height="420" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="865" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">constant_pool[] — 8 of 41 entries shown</text>
+
+  <rect x="575" y="118" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="140" font-family="monospace" font-size="11" fill="#1f2937">#3 CONSTANT_Utf8 "CLIENT_CASH_RESERVED"</text>
+
+  <rect x="575" y="158" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="180" font-family="monospace" font-size="11" fill="#1f2937">#2 CONSTANT_Class com/quizstakes/ledger/Movement</text>
+
+  <rect x="575" y="198" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="220" font-family="monospace" font-size="11" fill="#1f2937">#9 CONSTANT_String "DEP-301 CAPTURED"</text>
+
+  <rect x="575" y="238" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="260" font-family="monospace" font-size="11" fill="#1f2937">#12 CONSTANT_Fieldref Movement.amount:Ljava/math/BigDecimal;</text>
+
+  <rect x="575" y="278" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="300" font-family="monospace" font-size="11" fill="#1f2937">#15 CONSTANT_Methodref java/math/BigDecimal.add</text>
+
+  <rect x="575" y="318" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="340" font-family="monospace" font-size="11" fill="#1f2937">#22 CONSTANT_InvokeDynamic #0:makeConcatWithConstants</text>
+
+  <rect x="575" y="358" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="380" font-family="monospace" font-size="11" fill="#1f2937">#25 CONSTANT_MethodHandle REF_invokeStatic StringConcatFactory</text>
+
+  <rect x="575" y="398" width="580" height="36" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="585" y="420" font-family="monospace" font-size="11" fill="#1f2937">#28 CONSTANT_Dynamic ObjectMethods.bootstrap</text>
+
+  <!-- RIGHT COLUMN BOTTOM: major_version table -->
+  <rect x="560" y="520" width="610" height="170" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="865" y="545" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">major_version table</text>
+
+  <rect x="575" y="558" width="270" height="28" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="710" y="577" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">52 = Java 8</text>
+
+  <rect x="575" y="590" width="270" height="28" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="710" y="609" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">55 = Java 11</text>
+
+  <rect x="575" y="622" width="270" height="28" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="710" y="641" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">61 = Java 17</text>
+
+  <rect x="575" y="654" width="270" height="28" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="710" y="673" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">65 = Java 21</text>
+
+  <rect x="860" y="654" width="290" height="28" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="1005" y="673" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">this is Movement.class</text>
+
+  <!-- error box -->
+  <rect x="560" y="710" width="610" height="180" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="865" y="734" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">A 65 class file loaded on a Java 17 JVM (max 61) throws:</text>
+  <text x="575" y="756" font-family="monospace" font-size="11" fill="#1f2937">UnsupportedClassVersionError: Movement has been</text>
+  <text x="575" y="774" font-family="monospace" font-size="11" fill="#1f2937">compiled by a more recent version of the Java</text>
+  <text x="575" y="792" font-family="monospace" font-size="11" fill="#1f2937">Runtime (class file version 65.0), this version</text>
+  <text x="575" y="810" font-family="monospace" font-size="11" fill="#1f2937">of the Java Runtime only recognizes class file</text>
+  <text x="575" y="828" font-family="monospace" font-size="11" fill="#1f2937">versions up to 61.0</text>
+
+  <!-- connector from version table 65 row to error box -->
+  <line x1="1005" y1="682" x2="1005" y2="705" stroke="#737373" stroke-width="2" marker-end="url(#arrow091)"/>
+</svg>

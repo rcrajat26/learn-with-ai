@@ -1,0 +1,139 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="EnumMap internals: keyUniverse array of enum constants, vals array indexed by ordinal with a NULL sentinel distinguishing a stored null value from an absent key, and put() writing vals[key.ordinal()] with no hashing">
+
+  <defs>
+    <marker id="arrow114" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- Title banner -->
+  <rect x="20" y="20" width="760" height="34" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">EnumMap internals: keyUniverse + vals array, no hashing</text>
+
+  <!-- Shared / uncloned note -->
+  <rect x="20" y="62" width="760" height="32" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="82" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">keyUniverse = SharedSecrets...getEnumConstantsShared(keyType) &#8212; shared, UNCLONED array</text>
+
+  <!-- keyUniverse label -->
+  <rect x="20" y="102" width="300" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="30" y="117" font-family="sans-serif" font-size="12" fill="#1f2937">keyUniverse[] (ordinal-indexed enum constants)</text>
+
+  <!-- keyUniverse cells -->
+  <!-- index 0 MON -->
+  <rect x="68" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="112" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 0</text>
+  <text x="112" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">MON</text>
+
+  <!-- index 1 TUE -->
+  <rect x="164" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="208" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 1</text>
+  <text x="208" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">TUE</text>
+
+  <!-- index 2 WED -->
+  <rect x="260" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="304" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 2</text>
+  <text x="304" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">WED</text>
+
+  <!-- index 3 THU -->
+  <rect x="356" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 3</text>
+  <text x="400" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">THU</text>
+
+  <!-- index 4 FRI -->
+  <rect x="452" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="496" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 4</text>
+  <text x="496" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">FRI</text>
+
+  <!-- index 5 SAT -->
+  <rect x="548" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="592" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 5</text>
+  <text x="592" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">SAT</text>
+
+  <!-- index 6 SUN -->
+  <rect x="644" y="114" width="88" height="50" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="688" y="130" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">ordinal 6</text>
+  <text x="688" y="150" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">SUN</text>
+
+  <!-- connecting arrows for two example puts -->
+  <line x1="208" y1="164" x2="208" y2="190" stroke="#525252" stroke-width="2" marker-end="url(#arrow114)"/>
+  <line x1="400" y1="164" x2="400" y2="190" stroke="#525252" stroke-width="2" marker-end="url(#arrow114)"/>
+
+  <!-- vals label -->
+  <rect x="20" y="172" width="360" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="30" y="187" font-family="sans-serif" font-size="12" fill="#1f2937">vals[] (Object[]; vals[i] holds value for keyUniverse[i])</text>
+
+  <!-- vals cells -->
+  <!-- index0 MON: absent -->
+  <rect x="68" y="190" width="88" height="50" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="112" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">null</text>
+  <text x="112" y="228" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no mapping</text>
+
+  <!-- index1 TUE: occupied -->
+  <rect x="164" y="190" width="88" height="50" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="208" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;Standup&quot;</text>
+  <text x="208" y="228" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">occupied</text>
+
+  <!-- index2 WED: absent -->
+  <rect x="260" y="190" width="88" height="50" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="304" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">null</text>
+  <text x="304" y="228" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no mapping</text>
+
+  <!-- index3 THU: NULL sentinel -->
+  <rect x="356" y="190" width="88" height="50" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="209" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">NULL</text>
+  <text x="400" y="226" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">sentinel = null val</text>
+
+  <!-- index4 FRI: absent -->
+  <rect x="452" y="190" width="88" height="50" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="496" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">null</text>
+  <text x="496" y="228" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no mapping</text>
+
+  <!-- index5 SAT: occupied -->
+  <rect x="548" y="190" width="88" height="50" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="592" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">&quot;Chores&quot;</text>
+  <text x="592" y="228" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">occupied</text>
+
+  <!-- index6 SUN: absent -->
+  <rect x="644" y="190" width="88" height="50" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="688" y="211" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">null</text>
+  <text x="688" y="228" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">no mapping</text>
+
+  <!-- put labels near arrows -->
+  <rect x="146" y="166" width="130" height="20" rx="3" fill="#fef3c7"/>
+  <text x="211" y="181" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">put(TUE,&quot;Standup&quot;)</text>
+
+  <rect x="335" y="166" width="132" height="20" rx="3" fill="#fef3c7"/>
+  <text x="401" y="181" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">put(THU, null)</text>
+
+  <!-- containsKey/get note -->
+  <rect x="20" y="256" width="380" height="110" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="30" y="276" font-family="sans-serif" font-size="12" fill="#1f2937">containsKey(THU) &#8594; true</text>
+  <text x="40" y="292" font-family="sans-serif" font-size="11" fill="#1f2937">(vals[3] == NULL, not the Java null)</text>
+  <text x="30" y="312" font-family="sans-serif" font-size="12" fill="#1f2937">get(THU) &#8594; null</text>
+  <text x="40" y="328" font-family="sans-serif" font-size="11" fill="#1f2937">(unmaskNull(NULL) returns null)</text>
+  <text x="30" y="348" font-family="sans-serif" font-size="12" fill="#1f2937">containsKey(MON) &#8594; false (vals[0] == null)</text>
+
+  <!-- put() code box -->
+  <rect x="420" y="256" width="360" height="110" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="432" y="276" font-family="sans-serif" font-size="12" fill="#1f2937">public V put(K key, V value) {</text>
+  <text x="444" y="294" font-family="sans-serif" font-size="12" fill="#1f2937">int index = key.ordinal();</text>
+  <text x="444" y="312" font-family="sans-serif" font-size="12" fill="#1f2937">vals[index] = maskNull(value);</text>
+  <text x="432" y="330" font-family="sans-serif" font-size="12" fill="#1f2937">}</text>
+  <text x="432" y="350" font-family="sans-serif" font-size="11" fill="#1f2937">No hashCode(), no buckets &#8212; direct index.</text>
+
+  <!-- legend -->
+  <rect x="20" y="384" width="236" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="26" y="390" width="14" height="14" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="46" y="401" font-family="sans-serif" font-size="12" fill="#1f2937">absent (vals[i] == null)</text>
+
+  <rect x="272" y="384" width="236" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="278" y="390" width="14" height="14" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="298" y="401" font-family="sans-serif" font-size="12" fill="#1f2937">occupied (real value)</text>
+
+  <rect x="524" y="384" width="236" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="530" y="390" width="14" height="14" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="550" y="401" font-family="sans-serif" font-size="12" fill="#1f2937">NULL sentinel (stored null)</text>
+
+</svg>

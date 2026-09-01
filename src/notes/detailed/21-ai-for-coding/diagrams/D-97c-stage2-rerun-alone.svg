@@ -1,0 +1,79 @@
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: stage 2 re-run alone over ClaudeRunner, again reading stage 1's output file and writing the same stage 2 output path, producing the same result, while stage 1 is untouched and does not run. A cost panel below shows only stage 2's re-run cost, and a run total that no longer includes stage 1's cost because stage 1 did not execute this time.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 3 OF 3 &#8212; STAGE 2 RE-RUN ALONE, STAGE 1 UNTOUCHED</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="72" width="220" height="50" rx="6" class="boxL"/>
+  <text x="170" y="92" text-anchor="middle" class="lbl body">stage 1</text>
+  <text x="170" y="108" text-anchor="middle" class="lbl sub">does not run this time</text>
+
+  <rect x="60" y="140" width="220" height="66" rx="6" class="boxR"/>
+  <text x="170" y="164" text-anchor="middle" class="lbl body">input path</text>
+  <text x="170" y="182" text-anchor="middle" class="lbl sub">tmp/pipeline/stage1-output.json</text>
+  <text x="170" y="198" text-anchor="middle" class="lbl sub">(already on disk, untouched)</text>
+
+  <path class="flow" d="M 280 173 H 340"/>
+  <text x="310" y="165" text-anchor="middle" class="lbl sub">reads</text>
+
+  <rect x="340" y="140" width="220" height="66" rx="6" class="boxP"/>
+  <text x="450" y="164" text-anchor="middle" class="lbl node">stage 2</text>
+  <text x="450" y="182" text-anchor="middle" class="lbl sub">re-run alone via ClaudeRunner</text>
+
+  <path class="flow" d="M 560 173 H 620"/>
+  <text x="590" y="165" text-anchor="middle" class="lbl sub">writes</text>
+
+  <rect x="620" y="140" width="220" height="66" rx="6" class="boxR"/>
+  <text x="730" y="164" text-anchor="middle" class="lbl body">output path</text>
+  <text x="730" y="182" text-anchor="middle" class="lbl sub">tmp/pipeline/stage2-output.json</text>
+  <text x="730" y="198" text-anchor="middle" class="lbl sub">(same result as Frame 2)</text>
+
+  <rect x="60" y="228" width="780" height="42" rx="6" class="panel"/>
+  <text x="80" y="254" class="lbl dense" font-weight="700">input path &#8800; output path: tmp/pipeline/stage1-output.json vs. tmp/pipeline/stage2-output.json</text>
+
+  <rect x="60" y="292" width="780" height="200" rx="6" class="panel"/>
+  <text x="80" y="316" class="lbl h2">COST PANEL &#8212; STAGE 2 RE-RUN</text>
+  <text x="80" y="342" class="lbl dense">tokens (from this run's ClaudeEnvelope.usage): input 6,340 + output 2,010 = 8,350 tokens</text>
+  <text x="80" y="362" class="lbl dense">cost (from this run's ClaudeEnvelope.total_cost_usd): $0.089</text>
+  <text x="80" y="390" class="lbl h2">RUN TOTAL, THIS INVOCATION</text>
+  <text x="80" y="412" class="lbl dense">tokens: 0 (stage 1 did not run) + 8,350 (stage 2) = 8,350 tokens</text>
+  <text x="80" y="432" class="lbl dense">cost: $0.000 (stage 1 did not run) + $0.089 (stage 2) = $0.089</text>
+  <text x="80" y="458" class="lbl sub">Because stage 2 only ever reads stage1-output.json and only ever writes stage2-output.json,</text>
+  <text x="80" y="474" class="lbl sub">this re-run is safe: it neither depends on stage 1 having just run, nor corrupts stage 1's file.</text>
+
+  <line x1="20" y1="502" x2="880" y2="502" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="522" class="lbl h2">LEGEND</text>
+  <rect x="20" y="532" width="22" height="16" rx="3" class="boxL"/>
+  <text x="50" y="545" class="lbl tiny">did not run this frame</text>
+  <rect x="240" y="532" width="22" height="16" rx="3" class="boxP"/>
+  <text x="270" y="545" class="lbl tiny">running stage</text>
+  <rect x="420" y="532" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="545" class="lbl tiny">file path</text>
+  <rect x="580" y="532" width="22" height="16" rx="3" class="panel"/>
+  <text x="610" y="545" class="lbl tiny">invariant / cost panel</text>
+</svg>

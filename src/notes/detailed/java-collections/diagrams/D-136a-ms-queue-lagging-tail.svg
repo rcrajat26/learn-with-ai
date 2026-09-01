@@ -1,0 +1,51 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame A: ConcurrentLinkedQueue head and tail pointers with tail lagging one node behind the true last node">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-family="sans-serif" font-size="16"
+        fill="#1f2937" font-weight="bold">Frame A — tail is a lagging hint</text>
+
+  <!-- chain of 4 nodes -->
+  <rect x="60" y="110" width="70" height="40" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="95" y="134" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A</text>
+  <line x1="130" y1="130" x2="180" y2="130" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="185" y="110" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="220" y="134" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">B</text>
+  <line x1="255" y1="130" x2="305" y2="130" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="310" y="110" width="70" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="345" y="134" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">C</text>
+  <line x1="380" y1="130" x2="430" y2="130" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="435" y="110" width="70" height="40" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="470" y="134" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">D (true last)</text>
+
+  <!-- head pointer -->
+  <rect x="70" y="55" width="60" height="26" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="100" y="73" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">head</text>
+  <line x1="100" y1="81" x2="95" y2="108" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- tail pointer (lagging, points to C not D) -->
+  <rect x="300" y="55" width="60" height="26" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="330" y="73" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">tail</text>
+  <line x1="330" y1="81" x2="345" y2="108" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <text x="345" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Node&lt;E&gt; tail — line 239</text>
+  <text x="95" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Node&lt;E&gt; head — line 225</text>
+
+  <rect x="60" y="195" width="445" height="55" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="282" y="213" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">tail is a HINT, not a guarantee: it is only guaranteed to be</text>
+  <text x="282" y="229" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">reachable from head — the true last node (D) can be one hop further</text>
+  <text x="282" y="245" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">(slack threshold of two; advanced at most every other operation)</text>
+
+  <rect x="540" y="55" width="215" height="70" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="647" y="75" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Invariant (comment near line 152):</text>
+  <text x="647" y="91" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">"the last node is always reachable</text>
+  <text x="647" y="107" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">from tail via succ()" — not O(1) always</text>
+</svg>

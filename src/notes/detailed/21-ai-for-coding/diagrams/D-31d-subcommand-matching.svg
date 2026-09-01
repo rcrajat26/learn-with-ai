@@ -1,0 +1,73 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4: the three shell segments timeout 30 mvn -q test, FOO=1 git commit -m x, and tee out.log are matched against the rule set independently, each producing its own allow, ask, or deny verdict; the compound command is only allowed if every segment is. When the user answers yes and don't ask again, up to five separate rules can be saved in one go, one per segment.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="520" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-31d — EACH SUBCOMMAND MATCHED INDEPENDENTLY</text>
+  <line x1="20" y1="40" x2="980" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="60" width="240" height="44" rx="6" class="boxP"/>
+  <text x="180" y="87" text-anchor="middle" class="lbl node">timeout 30 mvn -q test</text>
+
+  <rect x="380" y="60" width="260" height="44" rx="6" class="boxP"/>
+  <text x="510" y="87" text-anchor="middle" class="lbl node">FOO=1 git commit -m "x"</text>
+
+  <rect x="720" y="60" width="220" height="44" rx="6" class="boxP"/>
+  <text x="830" y="87" text-anchor="middle" class="lbl node">tee out.log</text>
+
+  <path class="flow" d="M 180 104 V 140"/>
+  <path class="flow" d="M 510 104 V 140"/>
+  <path class="flow" d="M 830 104 V 140"/>
+
+  <rect x="60" y="140" width="240" height="40" rx="6" class="boxR"/>
+  <text x="180" y="165" text-anchor="middle" class="lbl body">ALLOW (mvn -q test)</text>
+
+  <rect x="380" y="140" width="260" height="40" rx="6" class="boxH"/>
+  <text x="510" y="165" text-anchor="middle" class="lbl body">ASK (git commit)</text>
+
+  <rect x="720" y="140" width="220" height="40" rx="6" class="boxD"/>
+  <text x="830" y="165" text-anchor="middle" class="lbl body">DENY (tee out.log)</text>
+
+  <text x="500" y="204" text-anchor="middle" class="lbl sub">the compound command's overall verdict is the strictest of the three: deny wins over ask, ask wins over allow</text>
+
+  <rect x="120" y="228" width="760" height="132" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.3"/>
+  <text x="140" y="252" class="lbl h2">"YES, AND DON'T ASK AGAIN"</text>
+  <text x="140" y="274" class="lbl body">Answering yes on an ASK verdict can save a rule so the same shape is auto-allowed next time.</text>
+  <text x="140" y="292" class="lbl body">Because each segment was matched independently, one confirmation on a multi-segment</text>
+  <text x="140" y="310" class="lbl body">compound command can save one rule per segment in a single step — up to 5 separate rules</text>
+  <text x="140" y="328" class="lbl body">saved at once, not one shared rule for the whole command line.</text>
+  <text x="140" y="350" class="lbl sub">example: confirming this 3-segment command could save 3 of the up-to-5 rule slots in one answer</text>
+
+  <line x1="20" y1="392" x2="980" y2="392" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="402" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="415" class="lbl tiny">shell segment fed into matching</text>
+  <rect x="290" y="402" width="22" height="16" rx="3" class="boxR"/>
+  <text x="320" y="415" class="lbl tiny">allow verdict</text>
+  <rect x="450" y="402" width="22" height="16" rx="3" class="boxH"/>
+  <text x="480" y="415" class="lbl tiny">ask verdict</text>
+  <rect x="600" y="402" width="22" height="16" rx="3" class="boxD"/>
+  <text x="630" y="415" class="lbl tiny">deny verdict</text>
+  <path class="flow" d="M 760 410 H 800"/>
+  <text x="810" y="415" class="lbl tiny">A → B : verdict for A</text>
+</svg>

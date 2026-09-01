@@ -1,0 +1,154 @@
+<svg viewBox="0 0 1220 880" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The Throwable hierarchy. Throwable has two children, Error and Exception. Error's five subclasses (OutOfMemoryError, StackOverflowError, NoClassDefFoundError, LinkageError, AssertionError) are grouped in one panel, all unchecked. Exception has three children: a panel of checked types that sit directly under Exception (ClassNotFoundException, CloneNotSupportedException), a panel of checked I/O and concurrency types (IOException, SQLException, InterruptedException, TimeoutException), and RuntimeException. RuntimeException has two grouped children panels: the JDK unchecked exceptions (NullPointerException, IllegalArgumentException with NumberFormatException nested under it, IllegalStateException, ClassCastException, IndexOutOfBoundsException, ArithmeticException, UnsupportedOperationException, ConcurrentModificationException, ArrayStoreException), and the QuizStakes domain unchecked exceptions (InsufficientFundsException, RestrictedActionException, IllegalTransitionException, LedgerImbalanceException, BonusIneligibleException), all extending RuntimeException directly. An annotation panel states the actual JLS 11.1.1 rule: checked equals everything under Throwable except the Error subtree and the RuntimeException subtree, which is why ClassNotFoundException and CloneNotSupportedException are checked despite sitting directly under Exception.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .ann{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+    </style>
+    <marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1220" height="880" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">The Throwable hierarchy &#8212; checked vs unchecked, JLS 11.1.1</text>
+  <line x1="20" y1="42" x2="1200" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ ROOT ============ -->
+  <rect x="530" y="60" width="160" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="610" y="85" text-anchor="middle" class="bodyb">Throwable</text>
+
+  <path d="M 610 100 V 118" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="200" y1="118" x2="700" y2="118" stroke="#475569" stroke-width="2"/>
+  <path d="M 200 118 V 140" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <path d="M 700 118 V 140" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <!-- ============ Error / Exception ============ -->
+  <rect x="120" y="140" width="160" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="165" text-anchor="middle" class="bodyb">Error</text>
+
+  <rect x="610" y="140" width="180" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="700" y="165" text-anchor="middle" class="bodyb">Exception</text>
+
+  <!-- Error -> Error panel (single child, straight edge) -->
+  <path d="M 200 180 V 210" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <!-- Exception fan to 3 children -->
+  <path d="M 700 180 V 200" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="420" y1="200" x2="1030" y2="200" stroke="#475569" stroke-width="2"/>
+  <path d="M 420 200 V 220" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <path d="M 700 200 V 220" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <path d="M 1030 200 V 220" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <!-- Error panel -->
+  <rect x="40" y="210" width="320" height="170" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="60" y="232" class="smallb">ERROR &#8212; JVM / environment fatal</text>
+  <g class="smallD">
+    <text x="60" y="254">OutOfMemoryError</text>
+    <text x="60" y="276">StackOverflowError</text>
+    <text x="60" y="298">NoClassDefFoundError</text>
+    <text x="60" y="320">LinkageError</text>
+    <text x="60" y="342">AssertionError</text>
+  </g>
+
+  <!-- Panel 1: checked, direct under Exception -->
+  <rect x="290" y="220" width="260" height="90" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="310" y="242" class="smallb">CHECKED &#8212; direct under Exception</text>
+  <g class="smallD">
+    <text x="310" y="264">ClassNotFoundException</text>
+    <text x="310" y="286">CloneNotSupportedException</text>
+  </g>
+
+  <!-- RuntimeException -->
+  <rect x="620" y="220" width="160" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="700" y="245" text-anchor="middle" class="bodyb">RuntimeException</text>
+
+  <!-- Panel 2: checked I/O & concurrency -->
+  <rect x="900" y="220" width="260" height="120" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="920" y="242" class="smallb">CHECKED &#8212; I/O &amp; concurrency</text>
+  <g class="smallD">
+    <text x="920" y="262">IOException</text>
+    <text x="920" y="282">SQLException</text>
+    <text x="920" y="302">InterruptedException</text>
+    <text x="920" y="322">TimeoutException</text>
+  </g>
+
+  <!-- RuntimeException fan to 2 children -->
+  <path d="M 700 260 V 350" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="520" y1="350" x2="900" y2="350" stroke="#475569" stroke-width="2"/>
+  <path d="M 520 350 V 370" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <path d="M 900 350 V 370" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+
+  <!-- JDK unchecked panel -->
+  <rect x="280" y="370" width="480" height="260" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="300" y="392" class="smallb">UNCHECKED &#8212; JDK RuntimeException subclasses</text>
+  <g class="smallD">
+    <text x="300" y="414">NullPointerException</text>
+    <text x="300" y="436">IllegalArgumentException</text>
+    <text x="330" y="456">&#8627; NumberFormatException</text>
+    <text x="520" y="456" class="small">(extends IllegalArgumentException)</text>
+    <text x="300" y="478">IllegalStateException</text>
+    <text x="300" y="500">ClassCastException</text>
+    <text x="300" y="522">IndexOutOfBoundsException</text>
+    <text x="300" y="544">ArithmeticException</text>
+    <text x="300" y="566">UnsupportedOperationException</text>
+    <text x="300" y="588">ConcurrentModificationException</text>
+    <text x="300" y="610">ArrayStoreException</text>
+  </g>
+
+  <!-- QuizStakes panel (highlight = the point) -->
+  <rect x="760" y="370" width="280" height="190" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="780" y="392" class="smallb" fill="#b45309">QUIZSTAKES (unchecked)</text>
+  <text x="780" y="408" class="small">extends RuntimeException directly</text>
+  <g class="smallD">
+    <text x="780" y="428">InsufficientFundsException</text>
+    <text x="780" y="450">RestrictedActionException</text>
+    <text x="780" y="472">IllegalTransitionException</text>
+    <text x="780" y="494">LedgerImbalanceException</text>
+    <text x="780" y="516">BonusIneligibleException</text>
+  </g>
+
+  <!-- Annotation panel: the actual JLS rule -->
+  <rect x="40" y="400" width="220" height="240" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="422" class="smallb" fill="#2563eb">THE RULE &#8212; JLS &#167;11.1.1</text>
+  <g class="ann">
+    <text x="58" y="444">Checked = everything under</text>
+    <text x="58" y="460">Throwable EXCEPT the Error</text>
+    <text x="58" y="476">subtree and the</text>
+    <text x="58" y="492">RuntimeException subtree.</text>
+    <text x="58" y="508">NOT: checked=Exception,</text>
+    <text x="58" y="524">unchecked=RuntimeException.</text>
+    <text x="58" y="540">ClassNotFoundException and</text>
+    <text x="58" y="556">CloneNotSupportedException</text>
+    <text x="58" y="572">sit directly under Exception</text>
+    <text x="58" y="588">yet are CHECKED (see panel</text>
+    <text x="58" y="604">"CHECKED &#8212; direct under</text>
+    <text x="58" y="620">Exception" above).</text>
+  </g>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="680" class="h2">LEGEND</text>
+  <line x1="20" y1="688" x2="1200" y2="688" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="704" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="717" class="small">primary &#8212; the four spine types: Throwable, Error, Exception, RuntimeException</text>
+
+  <rect x="30" y="730" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="743" class="small">grouped family panel &#8212; concrete leaf subclasses sharing one parent</text>
+
+  <line x1="30" y1="762" x2="56" y2="762" stroke="#475569" stroke-width="2" marker-end="url(#arrE)"/>
+  <text x="64" y="767" class="small">A &#8594; B : B extends A (all edges in this diagram are extends)</text>
+
+  <rect x="640" y="704" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="668" y="717" class="small">highlight &#8212; the point: QuizStakes domain exceptions on the unchecked branch</text>
+
+  <rect x="640" y="730" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="668" y="743" class="small">annotation &#8212; the actual checked/unchecked rule, JLS &#167;11.1.1</text>
+</svg>

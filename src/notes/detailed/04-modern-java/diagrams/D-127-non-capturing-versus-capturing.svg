@@ -1,0 +1,142 @@
+<svg viewBox="0 0 1120 830" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of lambda linkage. Left: a non-capturing lambda over Reservation reads r.amount(); its spun hidden class holds one instance in a static field, the indy bootstrap returns a ConstantCallSite, and one allocation happens for the JVM's lifetime. Right: a capturing lambda closes over a PaymentRun's threshold; its spun class has one field per captured value plus a constructor, and the call site allocates a fresh instance on every evaluation. Both sides are measured across 2.8M stake reservations per day.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2   { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node { font-size: 14px; font-weight: 600; }
+    .body { font-size: 12.5px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapter { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="830" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">NON-CAPTURING VERSUS CAPTURING LAMBDA AT LINK TIME</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT band -->
+  <text x="30" y="66" class="lbl h2">LEFT — NON-CAPTURING: r -&gt; r.amount()</text>
+  <line x1="20" y1="74" x2="548" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="30" y="90" width="500" height="54" rx="6" class="boxP"/>
+  <text x="280" y="112" text-anchor="middle" class="lbl node">Function&lt;Reservation, BigDecimal&gt; f1</text>
+  <text x="280" y="132" text-anchor="middle" class="lbl body mono">r -&gt; r.amount()   (no fields captured)</text>
+
+  <path class="flow" d="M 280 144 V 168"/>
+  <text x="380" y="162" text-anchor="middle" class="lbl sub">invokedynamic bootstrap</text>
+
+  <rect x="30" y="172" width="500" height="70" rx="6" class="boxH"/>
+  <text x="280" y="194" text-anchor="middle" class="lbl node">LambdaMetafactory.metafactory</text>
+  <text x="280" y="212" text-anchor="middle" class="lbl body">spins hidden class R$$Lambda/0x…</text>
+  <text x="280" y="230" text-anchor="middle" class="lbl sub">implementation = REF_invokeVirtual Reservation.amount()</text>
+
+  <path class="flow" d="M 280 242 V 266"/>
+
+  <rect x="30" y="270" width="500" height="76" rx="6" class="boxR"/>
+  <text x="280" y="292" text-anchor="middle" class="lbl node">hidden class R$$Lambda</text>
+  <text x="280" y="310" text-anchor="middle" class="lbl body">static final R$$Lambda INSTANCE</text>
+  <text x="280" y="328" text-anchor="middle" class="lbl sub">one shared instance, no constructor parameters</text>
+  <text x="280" y="342" text-anchor="middle" class="lbl sub">no per-call-site fields — nothing to capture</text>
+
+  <path class="flow" d="M 280 346 V 370"/>
+
+  <rect x="30" y="374" width="500" height="70" rx="6" class="boxR"/>
+  <text x="280" y="396" text-anchor="middle" class="lbl node">ConstantCallSite</text>
+  <text x="280" y="414" text-anchor="middle" class="lbl body">linked once, target never changes</text>
+  <text x="280" y="432" text-anchor="middle" class="lbl sub">every invokedynamic at this site reuses the same target</text>
+
+  <path class="flow" d="M 280 444 V 468"/>
+
+  <rect x="30" y="472" width="500" height="80" rx="6" class="boxA"/>
+  <text x="46" y="494" class="lbl tiny" font-weight="700">ALLOCATION COST</text>
+  <text x="46" y="512" class="lbl tiny">1 allocation total for the JVM's lifetime</text>
+  <text x="46" y="528" class="lbl tiny">— the single static INSTANCE, built once at link time</text>
+  <text x="46" y="544" class="lbl tiny mono">over 2.8M stake reservations/day: still 1 object</text>
+
+  <!-- divider -->
+  <line x1="560" y1="52" x2="560" y2="756" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- RIGHT band -->
+  <text x="574" y="66" class="lbl h2">RIGHT — CAPTURING: threshold -&gt; run.total().compareTo(threshold)</text>
+  <line x1="562" y1="74" x2="1100" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="574" y="90" width="516" height="54" rx="6" class="boxP"/>
+  <text x="832" y="112" text-anchor="middle" class="lbl node">Predicate&lt;PaymentRun&gt; f2</text>
+  <text x="832" y="132" text-anchor="middle" class="lbl body mono">run -&gt; run.total().compareTo(threshold) &gt; 0</text>
+
+  <path class="flow" d="M 832 144 V 168"/>
+  <text x="932" y="162" text-anchor="middle" class="lbl sub">invokedynamic bootstrap</text>
+
+  <rect x="574" y="172" width="516" height="70" rx="6" class="boxH"/>
+  <text x="832" y="194" text-anchor="middle" class="lbl node">LambdaMetafactory.metafactory</text>
+  <text x="832" y="212" text-anchor="middle" class="lbl body">spins hidden class R$$Lambda/0x…</text>
+  <text x="832" y="230" text-anchor="middle" class="lbl sub">implementation reads captured local: threshold</text>
+
+  <path class="flow" d="M 832 242 V 266"/>
+
+  <rect x="574" y="270" width="516" height="76" rx="6" class="boxD"/>
+  <text x="832" y="292" text-anchor="middle" class="lbl node">hidden class R$$Lambda</text>
+  <text x="832" y="310" text-anchor="middle" class="lbl body">private final BigDecimal threshold;</text>
+  <text x="832" y="328" text-anchor="middle" class="lbl sub">R$$Lambda(BigDecimal threshold) { this.threshold = threshold; }</text>
+  <text x="832" y="342" text-anchor="middle" class="lbl sub">one field per captured value, plus a constructor</text>
+
+  <path class="flow" d="M 832 346 V 370"/>
+
+  <rect x="574" y="374" width="516" height="70" rx="6" class="boxD"/>
+  <text x="832" y="396" text-anchor="middle" class="lbl node">CallSite, target fixed — instance is not</text>
+  <text x="832" y="414" text-anchor="middle" class="lbl body">factory re-invoked, new R$$Lambda(threshold) each time</text>
+  <text x="832" y="432" text-anchor="middle" class="lbl sub">the linkage is cached; the object it produces is not</text>
+
+  <path class="flow" d="M 832 444 V 468"/>
+
+  <rect x="574" y="472" width="516" height="80" rx="6" class="boxA"/>
+  <text x="590" y="494" class="lbl tiny" font-weight="700">ALLOCATION COST</text>
+  <text x="590" y="512" class="lbl tiny">1 allocation per evaluation of the enclosing expression</text>
+  <text x="590" y="528" class="lbl tiny">— a fresh R$$Lambda(threshold) instance every time</text>
+  <text x="590" y="544" class="lbl tiny mono">over 2.8M stake reservations/day: up to 2.8M allocations</text>
+
+  <!-- annotation panel across bottom -->
+  <rect x="30" y="574" width="1060" height="166" rx="6" class="boxA"/>
+  <text x="46" y="596" class="lbl tiny" font-weight="700">WHY THIS MATTERS FOR ReserveStake HOT PATH</text>
+  <text x="46" y="616" class="lbl tiny">A non-capturing lambda over a stateless predicate on Reservation is linked once via LambdaMetafactory and reused as</text>
+  <text x="46" y="634" class="lbl tiny">a ConstantCallSite for the process lifetime — equivalent in allocation cost to a static final field reference.</text>
+  <text x="46" y="654" class="lbl tiny">A capturing lambda that closes over a per-call value (threshold, a PaymentRun instance, a loop variable) allocates a</text>
+  <text x="46" y="672" class="lbl tiny">new instance of the spun class on every evaluation — at 2.8M reservations/day and 1,200/sec peak, this is 1,200</text>
+  <text x="46" y="690" class="lbl tiny">allocations/sec of otherwise avoidable garbage if the lambda sits inside ReserveStake's stake-splitting hot path.</text>
+  <text x="46" y="710" class="lbl tiny" font-style="italic">Fix: leave non-capturing lambdas alone — the JVM already caches them. For a capturing lambda in a hot loop,</text>
+  <text x="46" y="728" class="lbl tiny" font-style="italic">copy the needed value out to a plain field once instead of re-closing over it on every call.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="756" x2="1100" y2="756" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="768" width="20" height="14" rx="3" class="boxP"/>
+  <text x="46" y="780" class="lbl tiny">call-site expression</text>
+  <rect x="230" y="768" width="20" height="14" rx="3" class="boxH"/>
+  <text x="256" y="780" class="lbl tiny">metafactory / linkage step</text>
+  <rect x="470" y="768" width="20" height="14" rx="3" class="boxR"/>
+  <text x="496" y="780" class="lbl tiny">non-capturing: cheap, one-time</text>
+  <rect x="720" y="768" width="20" height="14" rx="3" class="boxD"/>
+  <text x="746" y="780" class="lbl tiny">capturing: per-evaluation allocation</text>
+  <rect x="990" y="768" width="20" height="14" rx="3" class="boxA"/>
+  <text x="1016" y="780" class="lbl tiny">annotation</text>
+  <path class="flow" d="M 20 800 H 60"/>
+  <text x="68" y="805" class="lbl tiny">A → B : B produced from / follows A at link time</text>
+</svg>

@@ -1,0 +1,170 @@
+<svg viewBox="0 0 1120 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="notify() can wake the wrong thread: three panels on a bounded StakeQueue of
+     capacity 1 whose wait set holds two producers, stake-intake-2 and stake-intake-3, and two
+     consumers, settlement-worker-1 and settlement-worker-2. Left: stake-intake-1 enqueues a
+     3.33 stake and calls notify(); it wakes producer stake-intake-2, whose own not-full check
+     is still false, so it just re-waits, while the two consumers that could actually dequeue
+     the stake are never notified — the stake sits unconsumed, STALLED. Right: stake-intake-1
+     calls notifyAll() instead; all four waiters move to the entry set and re-check their own
+     predicate: both producers find not-full still false and re-wait, settlement-worker-1
+     finds not-empty true and dequeues the stake, and settlement-worker-2 finds the queue
+     empty again and re-waits — safe, at the cost of three wasted re-acquisitions out of four.
+     Bottom: a third design uses a ReentrantLock with two separate Condition objects, notFull
+     and notEmpty, so each predicate gets its own wait set; stake-intake-1 calls
+     notEmpty.signal(), which wakes only settlement-worker-1 from the notEmpty condition and
+     never touches the notFull condition where stake-intake-2 and stake-intake-3 sleep
+     undisturbed — the signal is precise.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13.5px; font-weight: 700; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-size: 11.5px; font-family: "Courier New", monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .outer { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri475); }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="920" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">notify() CAN WAKE THE WRONG THREAD</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="560" y1="54" x2="560" y2="465" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <!-- LEFT: notify -->
+  <text x="30" y="62" class="lbl h2">notify() — CAN STALL THE CONSUMER SIDE</text>
+
+  <rect x="60" y="80" width="460" height="55" rx="6" class="boxP"/>
+  <text x="290" y="100" text-anchor="middle" class="lbl body" font-weight="600">StakeQueue capacity 1 — [ 3.33 stake ] size 0/1 to 1/1</text>
+  <text x="290" y="118" text-anchor="middle" class="lbl sub">stake-intake-1 enqueues the stake, calls notify()</text>
+
+  <path class="flow" d="M 290 135 V 155"/>
+
+  <rect x="60" y="155" width="460" height="230" rx="8" class="outer"/>
+  <text x="75" y="176" class="lbl h2">WAIT SET (shared — mixes producers and consumers)</text>
+
+  <rect x="80" y="190" width="420" height="46" rx="6" class="boxD"/>
+  <text x="290" y="208" text-anchor="middle" class="lbl body" font-weight="600">stake-intake-2 (producer)</text>
+  <text x="290" y="224" text-anchor="middle" class="lbl sub">WOKEN — not-full still false: wasted wakeup, re-waits</text>
+
+  <rect x="80" y="244" width="420" height="40" rx="6" class="boxW"/>
+  <text x="290" y="260" text-anchor="middle" class="lbl body">stake-intake-3 (producer)</text>
+  <text x="290" y="276" text-anchor="middle" class="lbl sub">still asleep — not notified</text>
+
+  <rect x="80" y="292" width="420" height="40" rx="6" class="boxW"/>
+  <text x="290" y="308" text-anchor="middle" class="lbl body">settlement-worker-1 (consumer)</text>
+  <text x="290" y="324" text-anchor="middle" class="lbl sub">still asleep — never notified</text>
+
+  <rect x="80" y="340" width="420" height="40" rx="6" class="boxW"/>
+  <text x="290" y="356" text-anchor="middle" class="lbl body">settlement-worker-2 (consumer)</text>
+  <text x="290" y="372" text-anchor="middle" class="lbl sub">still asleep — never notified</text>
+
+  <rect x="60" y="400" width="460" height="65" rx="8" class="boxD"/>
+  <text x="290" y="422" text-anchor="middle" class="lbl node" font-weight="700">STALLED</text>
+  <text x="290" y="440" text-anchor="middle" class="lbl sub">the 3.33 stake sits unconsumed — no consumer was ever notified,</text>
+  <text x="290" y="455" text-anchor="middle" class="lbl sub">and the woken producer had nothing useful to do.</text>
+
+  <!-- RIGHT: notifyAll -->
+  <text x="590" y="62" class="lbl h2">notifyAll() — SAFE, BUT WAKES EVERYONE</text>
+
+  <rect x="620" y="80" width="460" height="55" rx="6" class="boxP"/>
+  <text x="850" y="100" text-anchor="middle" class="lbl body" font-weight="600">StakeQueue capacity 1 — [ 3.33 stake ] size 0/1 to 1/1</text>
+  <text x="850" y="118" text-anchor="middle" class="lbl sub">stake-intake-1 enqueues the stake, calls notifyAll()</text>
+
+  <path class="flow" d="M 850 135 V 155"/>
+
+  <rect x="620" y="155" width="460" height="230" rx="8" class="outer"/>
+  <text x="635" y="176" class="lbl h2">ENTRY SET (all four re-check their own predicate)</text>
+
+  <rect x="640" y="190" width="420" height="40" rx="6" class="boxW"/>
+  <text x="850" y="206" text-anchor="middle" class="lbl body">stake-intake-2 (producer)</text>
+  <text x="850" y="222" text-anchor="middle" class="lbl sub">not-full: false — re-waits</text>
+
+  <rect x="640" y="238" width="420" height="40" rx="6" class="boxW"/>
+  <text x="850" y="254" text-anchor="middle" class="lbl body">stake-intake-3 (producer)</text>
+  <text x="850" y="270" text-anchor="middle" class="lbl sub">not-full: false — re-waits</text>
+
+  <rect x="640" y="286" width="420" height="42" rx="6" class="boxR"/>
+  <text x="850" y="303" text-anchor="middle" class="lbl body" font-weight="600">settlement-worker-1 (consumer)</text>
+  <text x="850" y="320" text-anchor="middle" class="lbl sub">not-empty: true — dequeues the 3.33 stake</text>
+
+  <rect x="640" y="336" width="420" height="40" rx="6" class="boxW"/>
+  <text x="850" y="352" text-anchor="middle" class="lbl body">settlement-worker-2 (consumer)</text>
+  <text x="850" y="368" text-anchor="middle" class="lbl sub">not-empty: false (worker-1 took it) — re-waits</text>
+
+  <rect x="620" y="400" width="460" height="65" rx="8" class="boxH"/>
+  <text x="850" y="422" text-anchor="middle" class="lbl node" font-weight="700">COST: A THUNDERING HERD</text>
+  <text x="850" y="440" text-anchor="middle" class="lbl sub">4 threads woken, 1 makes progress, 3 wasted monitor re-acquisitions —</text>
+  <text x="850" y="455" text-anchor="middle" class="lbl sub">paid on every single notifyAll() call.</text>
+
+  <!-- PANEL 3: two Conditions -->
+  <line x1="20" y1="485" x2="1100" y2="485" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="507" class="lbl h2">TWO CONDITIONS — EACH PREDICATE GETS ITS OWN WAIT SET</text>
+
+  <rect x="60" y="520" width="1000" height="50" rx="6" class="boxP"/>
+  <text x="560" y="542" text-anchor="middle" class="lbl body" font-weight="600">ReentrantLock guarding StakeQueue capacity 1 — two Conditions: notFull, notEmpty</text>
+  <text x="560" y="560" text-anchor="middle" class="lbl sub">stake-intake-1 enqueues the 3.33 stake, then calls notEmpty.signal()</text>
+
+  <path class="flow" d="M 810 570 V 580 H 810 V 590"/>
+
+  <rect x="100" y="590" width="420" height="120" rx="8" class="outer"/>
+  <text x="115" y="611" class="lbl h2">notFull.await() — untouched</text>
+
+  <rect x="120" y="624" width="380" height="36" rx="6" class="boxW"/>
+  <text x="310" y="647" text-anchor="middle" class="lbl body">stake-intake-2 (producer)</text>
+
+  <rect x="120" y="666" width="380" height="36" rx="6" class="boxW"/>
+  <text x="310" y="689" text-anchor="middle" class="lbl body">stake-intake-3 (producer)</text>
+
+  <rect x="600" y="590" width="420" height="120" rx="8" class="outer"/>
+  <text x="615" y="611" class="lbl h2">notEmpty.await() — one waiter signalled</text>
+
+  <rect x="620" y="624" width="380" height="36" rx="6" class="boxR"/>
+  <text x="810" y="647" text-anchor="middle" class="lbl body" font-weight="600">settlement-worker-1 — signalled, dequeues</text>
+
+  <rect x="620" y="666" width="380" height="36" rx="6" class="boxW"/>
+  <text x="810" y="689" text-anchor="middle" class="lbl body">settlement-worker-2 — still waiting</text>
+
+  <rect x="60" y="725" width="1000" height="70" rx="8" class="boxA"/>
+  <text x="75" y="747" class="lbl tiny" font-weight="700">THE SIGNAL IS PRECISE</text>
+  <text x="75" y="766" class="lbl sub">notEmpty.signal() only ever reaches threads awaiting notEmpty. It never touches notFull's</text>
+  <text x="75" y="783" class="lbl sub">wait set, so stake-intake-2 and stake-intake-3 stay asleep undisturbed — no wasted wakeup.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="825" x2="1100" y2="825" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="838" width="22" height="16" rx="3" class="boxP"/>
+  <text x="60" y="851" class="lbl tiny">queue / lock state</text>
+
+  <rect x="220" y="838" width="22" height="16" rx="3" class="boxW"/>
+  <text x="250" y="851" class="lbl tiny">asleep, or correctly re-waits</text>
+
+  <rect x="470" y="838" width="22" height="16" rx="3" class="boxD"/>
+  <text x="500" y="851" class="lbl tiny">wrongly woken / stalled outcome</text>
+
+  <rect x="720" y="838" width="22" height="16" rx="3" class="boxR"/>
+  <text x="750" y="851" class="lbl tiny">correctly woken, makes progress</text>
+
+  <rect x="960" y="838" width="22" height="16" rx="3" class="boxH"/>
+  <text x="990" y="851" class="lbl tiny">cost</text>
+
+  <rect x="30" y="862" width="22" height="16" rx="3" class="boxA"/>
+  <text x="60" y="875" class="lbl tiny">explanatory note</text>
+
+  <path class="flow" d="M 220 870 H 252"/>
+  <text x="260" y="875" class="lbl tiny">A → B : notify()/notifyAll()/signal() wakes thread(s) B</text>
+</svg>

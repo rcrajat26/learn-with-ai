@@ -1,0 +1,162 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Scoped-value bindings versus a ThreadLocal map. Left: ThreadLocal keeps one map per
+     thread; forking a child thread copies the entry via InheritableThreadLocal into a separate map;
+     a finally-block remove() is a manual obligation, and skipping it leaks the stale ClientId into
+     whichever pooled thread runs next. Right: ScopedValue binds an immutable linked snapshot that is
+     shared structurally, not copied, with forked StructuredTaskScope subtasks; the binding is unbound
+     automatically when run() returns because it is tied to stack unwinding; and a nested where(...)
+     shadows the outer binding without mutating it, restoring the outer value when the nested run()
+     returns.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .ah    { font-size: 12px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .copy  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+             stroke-linejoin: round; marker-end: url(#triAmber); }
+    .share { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4;
+             stroke-linejoin: round; marker-end: url(#triGreen); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SCOPED-VALUE BINDINGS VERSUS A ThreadLocal MAP</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: ThreadLocal -->
+  <text x="20" y="66" class="lbl h2">THREADLOCAL — PaymentService REQUEST CONTEXT</text>
+
+  <rect x="20" y="100" width="480" height="70" rx="6" class="boxP"/>
+  <text x="260" y="126" text-anchor="middle" class="lbl node">Thread-A (pooled worker)</text>
+  <text x="260" y="146" text-anchor="middle" class="lbl body">ThreadLocal map (this thread's own map)</text>
+  <text x="260" y="164" text-anchor="middle" class="lbl sub">REQUEST_CONTEXT → ClientId=CL-88213</text>
+
+  <path class="copy" d="M 260 170 V 210"/>
+  <text x="270" y="195" class="lbl tiny">copies at fork</text>
+
+  <rect x="20" y="210" width="480" height="80" rx="6" class="boxP"/>
+  <text x="260" y="236" text-anchor="middle" class="lbl node">Thread-A-child (forked worker)</text>
+  <text x="260" y="256" text-anchor="middle" class="lbl body">InheritableThreadLocal COPY (separate map)</text>
+  <text x="260" y="276" text-anchor="middle" class="lbl sub">REQUEST_CONTEXT → ClientId=CL-88213</text>
+
+  <path class="flow" d="M 260 290 V 330"/>
+
+  <rect x="20" y="330" width="480" height="60" rx="6" class="boxH"/>
+  <text x="260" y="352" text-anchor="middle" class="lbl body">finally { REQUEST_CONTEXT.remove(); }</text>
+  <text x="260" y="372" text-anchor="middle" class="lbl sub">manual obligation — easy to skip</text>
+
+  <path class="flow" d="M 260 390 V 430"/>
+
+  <rect x="20" y="430" width="480" height="70" rx="6" class="boxD"/>
+  <text x="260" y="452" text-anchor="middle" class="lbl node">LEAK if remove() skipped</text>
+  <text x="260" y="472" text-anchor="middle" class="lbl body">Thread-A returned to pool, map intact</text>
+  <text x="260" y="490" text-anchor="middle" class="lbl sub">next request reads stale ClientId=CL-88213</text>
+
+  <rect x="20" y="530" width="480" height="120" rx="6" class="boxA"/>
+  <text x="36" y="550" class="lbl ah">One map per thread</text>
+  <text x="36" y="570" class="lbl tiny">ThreadLocal state lives on the Thread object</text>
+  <text x="36" y="588" class="lbl tiny">itself. Pooled threads outlive any single</text>
+  <text x="36" y="606" class="lbl tiny">request, so a skipped remove() leaks</text>
+  <text x="36" y="624" class="lbl tiny">CL-88213's context into whoever runs next.</text>
+
+  <!-- RIGHT: ScopedValue -->
+  <text x="600" y="66" class="lbl h2">SCOPEDVALUE — PaymentService REQUEST CONTEXT</text>
+
+  <rect x="600" y="100" width="480" height="60" rx="6" class="boxP"/>
+  <text x="840" y="126" text-anchor="middle" class="lbl node">ScopedValue&lt;ClientId&gt; REQUEST_CLIENT</text>
+  <text x="840" y="146" text-anchor="middle" class="lbl sub">static final field, PaymentService</text>
+
+  <path class="flow" d="M 840 160 V 190"/>
+
+  <rect x="600" y="190" width="480" height="70" rx="6" class="boxH"/>
+  <text x="840" y="214" text-anchor="middle" class="lbl node">ScopedValue.where(REQUEST_CLIENT, CL-88213)</text>
+  <text x="840" y="234" text-anchor="middle" class="lbl body">.run(() -&gt; { ... })</text>
+  <text x="840" y="252" text-anchor="middle" class="lbl sub">immutable linked binding snapshot</text>
+
+  <path class="share" d="M 840 260 V 282 H 715 V 300"/>
+  <path class="share" d="M 840 282 H 965 V 300"/>
+  <text x="850" y="278" class="lbl tiny">shares (no copy)</text>
+
+  <rect x="600" y="300" width="230" height="60" rx="6" class="boxR"/>
+  <text x="715" y="322" text-anchor="middle" class="lbl body">Subtask: IdentityVendorTask</text>
+  <text x="715" y="342" text-anchor="middle" class="lbl sub">reads REQUEST_CLIENT = CL-88213</text>
+
+  <rect x="850" y="300" width="230" height="60" rx="6" class="boxR"/>
+  <text x="965" y="322" text-anchor="middle" class="lbl body">Subtask: WatchlistProviderTask</text>
+  <text x="965" y="342" text-anchor="middle" class="lbl sub">reads REQUEST_CLIENT = CL-88213</text>
+
+  <path class="flow" d="M 715 360 V 380 H 840"/>
+  <path class="flow" d="M 965 360 V 380 H 840 V 400"/>
+
+  <rect x="600" y="400" width="480" height="70" rx="6" class="boxR"/>
+  <text x="840" y="424" text-anchor="middle" class="lbl node">run() returns</text>
+  <text x="840" y="444" text-anchor="middle" class="lbl body">binding automatically unbound</text>
+  <text x="840" y="462" text-anchor="middle" class="lbl sub">stack unwinds — no remove() call exists</text>
+
+  <path class="share" d="M 1075 260 H 1090 V 540 H 1080"/>
+
+  <rect x="600" y="500" width="480" height="80" rx="6" class="boxH"/>
+  <text x="840" y="524" text-anchor="middle" class="lbl node">nested: where(REQUEST_CLIENT, CL-99001).run(...)</text>
+  <text x="840" y="544" text-anchor="middle" class="lbl body">shadows the outer binding, does not mutate it</text>
+  <text x="840" y="564" text-anchor="middle" class="lbl sub">outer CL-88213 binding restored when nested run() returns</text>
+
+  <rect x="600" y="610" width="480" height="110" rx="6" class="boxA"/>
+  <text x="616" y="628" class="lbl ah">Structural sharing, automatic cleanup</text>
+  <text x="616" y="646" class="lbl tiny">No thread-local map, no remove() call. The binding</text>
+  <text x="616" y="664" class="lbl tiny">snapshot is shared by reference across forked subtasks</text>
+  <text x="616" y="682" class="lbl tiny">and popped automatically when run() returns — even on</text>
+  <text x="616" y="700" class="lbl tiny">an exception, because it's tied to stack unwinding.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="750" x2="1100" y2="750" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="764" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="777" class="lbl tiny">subject type / thread / declaration</text>
+
+  <rect x="300" y="764" width="22" height="16" rx="3" class="boxH"/>
+  <text x="330" y="777" class="lbl tiny">version-new API / manual obligation</text>
+
+  <rect x="580" y="764" width="22" height="16" rx="3" class="boxR"/>
+  <text x="610" y="777" class="lbl tiny">resolved / success path</text>
+
+  <rect x="860" y="764" width="22" height="16" rx="3" class="boxD"/>
+  <text x="890" y="777" class="lbl tiny">degraded — leak</text>
+
+  <rect x="20" y="792" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="805" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 300 800 H 340"/>
+  <text x="348" y="805" class="lbl tiny">A → B : A then B</text>
+
+  <path class="copy" d="M 580 800 H 620"/>
+  <text x="628" y="805" class="lbl tiny">A → B : A copies into B</text>
+
+  <path class="share" d="M 860 800 H 900"/>
+  <text x="908" y="805" class="lbl tiny">A → B : shares structurally</text>
+</svg>

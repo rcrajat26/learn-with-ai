@@ -1,0 +1,131 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The subagent context boundary drawn as two window boxes, parent session on the
+     left and subagent on the right, separated by a hard boundary line. Six items cross inward from
+     parent to subagent: the task string, its own system prompt and environment, the full
+     CLAUDE.md hierarchy except Explore or Plan, a git-status snapshot taken at parent session
+     start, preloaded skills, and the sibling roster. One item crosses outward from subagent back to
+     parent: one final message. Five items are blocked at the boundary and never cross, drawn in a
+     degraded style inside the parent box: conversation history, the main output style, auto memory,
+     previously read files, and previously invoked skills.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .degl  { font-size: 11px; fill: #b91c1c; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .blocked { fill: none; stroke: #b91c1c; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .boundary { stroke: #78716c; stroke-width: 3; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE SUBAGENT CONTEXT BOUNDARY</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="240" y="72" text-anchor="middle" class="lbl h2">PARENT SESSION</text>
+  <text x="880" y="72" text-anchor="middle" class="lbl h2">SUBAGENT</text>
+
+  <rect x="40" y="80" width="400" height="610" rx="8" class="boxP"/>
+  <rect x="680" y="80" width="400" height="610" rx="8" class="boxR"/>
+
+  <line x1="560" y1="80" x2="560" y2="126" class="boundary"/>
+  <line x1="560" y1="154" x2="560" y2="181" class="boundary"/>
+  <line x1="560" y1="209" x2="560" y2="222" class="boundary"/>
+  <line x1="560" y1="264" x2="560" y2="277" class="boundary"/>
+  <line x1="560" y1="319" x2="560" y2="346" class="boundary"/>
+  <line x1="560" y1="374" x2="560" y2="401" class="boundary"/>
+  <line x1="560" y1="429" x2="560" y2="456" class="boundary"/>
+  <line x1="560" y1="484" x2="560" y2="690" class="boundary"/>
+  <text x="560" y="64" text-anchor="middle" class="lbl tiny" font-weight="700">HARD BOUNDARY</text>
+
+  <!-- inward arrow 1: task string -->
+  <text x="560" y="142" text-anchor="middle" class="lbl sub">the task string</text>
+  <path class="flow" d="M 440 150 H 680"/>
+
+  <!-- inward arrow 2: system prompt and environment -->
+  <text x="560" y="197" text-anchor="middle" class="lbl sub">its own system prompt and environment</text>
+  <path class="flow" d="M 440 205 H 680"/>
+
+  <!-- inward arrow 3: CLAUDE.md hierarchy -->
+  <text x="560" y="238" text-anchor="middle" class="lbl sub">the full CLAUDE.md hierarchy</text>
+  <text x="560" y="252" text-anchor="middle" class="lbl sub">(except Explore/Plan)</text>
+  <path class="flow" d="M 440 260 H 680"/>
+
+  <!-- inward arrow 4: git-status snapshot -->
+  <text x="560" y="293" text-anchor="middle" class="lbl sub">a git-status snapshot taken</text>
+  <text x="560" y="307" text-anchor="middle" class="lbl sub">at parent session start</text>
+  <path class="flow" d="M 440 315 H 680"/>
+
+  <!-- inward arrow 5: preloaded skills -->
+  <text x="560" y="362" text-anchor="middle" class="lbl sub">preloaded skills</text>
+  <path class="flow" d="M 440 370 H 680"/>
+
+  <!-- inward arrow 6: sibling roster -->
+  <text x="560" y="417" text-anchor="middle" class="lbl sub">the sibling roster</text>
+  <path class="flow" d="M 440 425 H 680"/>
+
+  <!-- outward arrow: one final message -->
+  <text x="560" y="472" text-anchor="middle" class="lbl sub" font-weight="700">one final message</text>
+  <path class="flow" d="M 680 480 H 440"/>
+
+  <!-- blocked items, inside the parent box, degraded style, never cross -->
+  <rect x="60" y="496" width="200" height="26" rx="4" class="boxD"/>
+  <text x="160" y="513" text-anchor="middle" class="degl">conversation history</text>
+  <path class="blocked" d="M 260 509 H 520"/>
+  <path d="M 513 503 L 527 515 M 513 515 L 527 503" stroke="#b91c1c" stroke-width="2"/>
+
+  <rect x="60" y="534" width="200" height="26" rx="4" class="boxD"/>
+  <text x="160" y="551" text-anchor="middle" class="degl">the main output style</text>
+  <path class="blocked" d="M 260 547 H 520"/>
+  <path d="M 513 541 L 527 553 M 513 553 L 527 541" stroke="#b91c1c" stroke-width="2"/>
+
+  <rect x="60" y="572" width="200" height="26" rx="4" class="boxD"/>
+  <text x="160" y="589" text-anchor="middle" class="degl">auto memory</text>
+  <path class="blocked" d="M 260 585 H 520"/>
+  <path d="M 513 579 L 527 591 M 513 591 L 527 579" stroke="#b91c1c" stroke-width="2"/>
+
+  <rect x="60" y="610" width="200" height="26" rx="4" class="boxD"/>
+  <text x="160" y="627" text-anchor="middle" class="degl">previously read files</text>
+  <path class="blocked" d="M 260 623 H 520"/>
+  <path d="M 513 617 L 527 629 M 513 629 L 527 617" stroke="#b91c1c" stroke-width="2"/>
+
+  <rect x="60" y="648" width="200" height="26" rx="4" class="boxD"/>
+  <text x="160" y="665" text-anchor="middle" class="degl">previously invoked skills</text>
+  <path class="blocked" d="M 260 661 H 520"/>
+  <path d="M 513 655 L 527 667 M 513 667 L 527 655" stroke="#b91c1c" stroke-width="2"/>
+
+  <!-- legend -->
+  <line x1="20" y1="712" x2="1100" y2="712" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="724" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="736" class="lbl tiny">parent session window</text>
+
+  <rect x="280" y="724" width="22" height="16" rx="3" class="boxR"/>
+  <text x="310" y="736" class="lbl tiny">subagent window</text>
+
+  <line x1="540" y1="732" x2="580" y2="732" class="boundary"/>
+  <text x="590" y="736" class="lbl tiny">hard boundary — no implicit sharing</text>
+
+  <path class="flow" d="M 20 762 H 60"/>
+  <text x="70" y="766" class="lbl tiny">crosses the boundary (inward or outward)</text>
+
+  <path class="blocked" d="M 500 758 H 536"/>
+  <path d="M 532 752 L 544 764 M 532 764 L 544 752" stroke="#b91c1c" stroke-width="2"/>
+  <text x="554" y="766" class="lbl tiny">blocked at the boundary — stays in the parent</text>
+</svg>

@@ -1,0 +1,84 @@
+<svg viewBox="0 0 1040 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout diagram, two rows drawn to scale. Row one: LedgerEntry array of 10 references, 12-byte object header plus 4-byte length plus 10 times 4-byte compressed references equals 56 bytes, already 8-byte aligned. Row two: long array of 10 primitives, 12-byte header plus 4-byte length plus 10 times 8-byte longs equals 96 bytes, already 8-byte aligned. An annotation panel states the JDK 21 defaults assumed: compressed oops on for heaps under 32 gigabytes, and ObjectAlignmentInBytes of 8.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .body  { font-size: 13px; }
+    .tiny  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .bold  { font-weight: 700; }
+    .segHeader { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .segLen    { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .segData   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .leader { fill: none; stroke: #9ca3af; stroke-width: 1.3; stroke-dasharray: 4 3; }
+  </style>
+  <rect x="0" y="0" width="1040" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AN ARRAY IN MEMORY (JDK 21, COMPRESSED OOPS)</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROW 1: LedgerEntry[10] -->
+  <text x="20" y="66" class="lbl h2">LedgerEntry[] batch = new LedgerEntry[10]  &#8212; REFERENCE ARRAY</text>
+
+  <rect x="60" y="80" width="96" height="60" class="segHeader"/>
+  <rect x="156" y="80" width="32" height="60" class="segLen"/>
+  <rect x="188" y="80" width="320" height="60" class="segData"/>
+
+  <path class="leader" d="M 108 140 V 150"/>
+  <path class="leader" d="M 172 140 V 150"/>
+  <path class="leader" d="M 348 140 V 150"/>
+
+  <text x="108" y="165" text-anchor="middle" class="lbl tiny bold">12B</text>
+  <text x="108" y="179" text-anchor="middle" class="lbl sub">header</text>
+  <text x="172" y="165" text-anchor="middle" class="lbl tiny bold">4B</text>
+  <text x="172" y="179" text-anchor="middle" class="lbl sub">length</text>
+  <text x="348" y="165" text-anchor="middle" class="lbl tiny bold">40B</text>
+  <text x="348" y="179" text-anchor="middle" class="lbl sub">10 &#215; 4B compressed refs</text>
+
+  <text x="60" y="210" class="lbl body bold">12 + 4 + (10 &#215; 4) = 56 bytes &#8212; already 8-aligned, no padding</text>
+
+  <!-- ROW 2: long[10] -->
+  <text x="20" y="250" class="lbl h2">long[] amounts = new long[10]  &#8212; PRIMITIVE ARRAY</text>
+
+  <rect x="60" y="264" width="96" height="60" class="segHeader"/>
+  <rect x="156" y="264" width="32" height="60" class="segLen"/>
+  <rect x="188" y="264" width="640" height="60" class="segData"/>
+
+  <path class="leader" d="M 108 324 V 334"/>
+  <path class="leader" d="M 172 324 V 334"/>
+  <path class="leader" d="M 508 324 V 334"/>
+
+  <text x="108" y="349" text-anchor="middle" class="lbl tiny bold">12B</text>
+  <text x="108" y="363" text-anchor="middle" class="lbl sub">header</text>
+  <text x="172" y="349" text-anchor="middle" class="lbl tiny bold">4B</text>
+  <text x="172" y="363" text-anchor="middle" class="lbl sub">length</text>
+  <text x="508" y="349" text-anchor="middle" class="lbl tiny bold">80B</text>
+  <text x="508" y="363" text-anchor="middle" class="lbl sub">10 &#215; 8B long primitives</text>
+
+  <text x="60" y="394" class="lbl body bold">12 + 4 + (10 &#215; 8) = 96 bytes &#8212; already 8-aligned, no padding</text>
+
+  <rect x="60" y="420" width="920" height="80" rx="4" class="panel"/>
+  <text x="80" y="444" class="lbl tiny bold">ASSUMPTIONS</text>
+  <text x="80" y="465" class="lbl tiny">JDK 21 default: compressed oops ON (heap &lt; 32 GB) &#8594; references are 4 bytes.</text>
+  <text x="80" y="483" class="lbl tiny">ObjectAlignmentInBytes = 8 &#8212; both totals (56, 96) already land on an 8-byte boundary.</text>
+
+  <line x1="20" y1="530" x2="1020" y2="530" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="552" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="566" width="20" height="14" class="segHeader"/>
+  <text x="46" y="577" class="lbl tiny">object header (mark word + klass pointer)</text>
+
+  <rect x="330" y="566" width="20" height="14" class="segLen"/>
+  <text x="356" y="577" class="lbl tiny">array length field</text>
+
+  <rect x="540" y="566" width="20" height="14" class="segData"/>
+  <text x="566" y="577" class="lbl tiny">element payload (refs or primitives)</text>
+
+  <rect x="20" y="596" width="20" height="14" class="panel"/>
+  <text x="46" y="607" class="lbl tiny">assumption / explanatory panel</text>
+
+  <path class="leader" d="M 330 603 H 380"/>
+  <text x="390" y="607" class="lbl tiny">leader &#8212; label points to the segment above it</text>
+</svg>

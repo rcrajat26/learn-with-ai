@@ -1,0 +1,92 @@
+<svg viewBox="0 0 1040 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3: a session timeline from turn 1 to turn 40 showing six skills invoked at different turns, each labelled with its token size: code-review at turn 6 sized 8,200 tokens, dataviz at turn 11 sized 6,700 tokens, update-config at turn 17 sized 5,400 tokens, security-review at turn 22 sized 9,100 tokens, workflow-authoring at turn 28 sized 7,300 tokens, and claude-api at turn 33 sized 5,900 tokens. An annotation notes the context window keeps filling and compaction has not yet triggered.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .stub  { fill: none; stroke: #475569; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="460" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-73a — SIX SKILLS INVOKED ACROSS THE SESSION (FRAME 1 OF 3)</text>
+  <line x1="20" y1="40" x2="1020" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- axis -->
+  <line class="axis" x1="80" y1="300" x2="970" y2="300" marker-end="url(#tri)"/>
+  <text x="80" y="320" text-anchor="middle" class="lbl sub">turn 1</text>
+  <text x="940" y="320" text-anchor="middle" class="lbl sub">turn 40</text>
+  <text x="322" y="285" text-anchor="middle" class="lbl body">session turn number</text>
+
+  <!-- ticks -->
+  <line class="axis" x1="212" y1="295" x2="212" y2="305"/>
+  <line class="axis" x1="322" y1="295" x2="322" y2="305"/>
+  <line class="axis" x1="454" y1="295" x2="454" y2="305"/>
+  <line class="axis" x1="564" y1="295" x2="564" y2="305"/>
+  <line class="axis" x1="696" y1="295" x2="696" y2="305"/>
+  <line class="axis" x1="806" y1="295" x2="806" y2="305"/>
+
+  <!-- above-axis boxes: code-review, update-config, workflow-authoring -->
+  <path class="stub" d="M 212 220 V 300"/>
+  <rect x="137" y="150" width="150" height="70" rx="6" class="boxP"/>
+  <text x="212" y="172" text-anchor="middle" class="lbl node">code-review</text>
+  <text x="212" y="190" text-anchor="middle" class="lbl sub">turn 6</text>
+  <text x="212" y="208" text-anchor="middle" class="lbl body">8,200 tokens</text>
+
+  <path class="stub" d="M 454 220 V 300"/>
+  <rect x="379" y="150" width="150" height="70" rx="6" class="boxP"/>
+  <text x="454" y="172" text-anchor="middle" class="lbl node">update-config</text>
+  <text x="454" y="190" text-anchor="middle" class="lbl sub">turn 17</text>
+  <text x="454" y="208" text-anchor="middle" class="lbl body">5,400 tokens</text>
+
+  <path class="stub" d="M 696 220 V 300"/>
+  <rect x="621" y="150" width="150" height="70" rx="6" class="boxP"/>
+  <text x="696" y="172" text-anchor="middle" class="lbl node">workflow-authoring</text>
+  <text x="696" y="190" text-anchor="middle" class="lbl sub">turn 28</text>
+  <text x="696" y="208" text-anchor="middle" class="lbl body">7,300 tokens</text>
+
+  <!-- below-axis boxes: dataviz, security-review, claude-api -->
+  <path class="stub" d="M 322 300 V 340"/>
+  <rect x="247" y="340" width="150" height="70" rx="6" class="boxP"/>
+  <text x="322" y="362" text-anchor="middle" class="lbl node">dataviz</text>
+  <text x="322" y="380" text-anchor="middle" class="lbl sub">turn 11</text>
+  <text x="322" y="398" text-anchor="middle" class="lbl body">6,700 tokens</text>
+
+  <path class="stub" d="M 564 300 V 340"/>
+  <rect x="489" y="340" width="150" height="70" rx="6" class="boxP"/>
+  <text x="564" y="362" text-anchor="middle" class="lbl node">security-review</text>
+  <text x="564" y="380" text-anchor="middle" class="lbl sub">turn 22</text>
+  <text x="564" y="398" text-anchor="middle" class="lbl body">9,100 tokens</text>
+
+  <path class="stub" d="M 806 300 V 340"/>
+  <rect x="731" y="340" width="150" height="70" rx="6" class="boxP"/>
+  <text x="806" y="362" text-anchor="middle" class="lbl node">claude-api</text>
+  <text x="806" y="380" text-anchor="middle" class="lbl sub">turn 33</text>
+  <text x="806" y="398" text-anchor="middle" class="lbl body">5,900 tokens</text>
+
+  <!-- annotation -->
+  <rect x="20" y="60" width="360" height="70" rx="6" class="boxAnn"/>
+  <text x="36" y="82" class="lbl h2">Not yet compacted</text>
+  <text x="36" y="102" class="lbl tiny">The context window keeps filling as each</text>
+  <text x="36" y="118" class="lbl tiny">skill is invoked. No compaction yet — see frame 2.</text>
+
+  <line x1="20" y1="424" x2="1020" y2="424" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="434" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="447" class="lbl tiny">a skill invocation, labelled with turn number and token size</text>
+  <rect x="480" y="434" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="510" y="447" class="lbl tiny">annotation panel</text>
+</svg>

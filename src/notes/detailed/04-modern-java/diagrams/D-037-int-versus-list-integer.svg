@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout comparing int[] stakeMinorUnits with 2,800,000 elements against the
+     boxed List of Integer equivalent. Top: a single contiguous array, 16-byte object header plus
+     2,800,000 four-byte ints, totalling 11.2 MB. Bottom: an ArrayList object of 24 bytes holding a
+     16-byte header array of 2,800,000 four-byte references (11.2 MB), each reference pointing to a
+     separate 16-byte Integer object, 2,800,000 of them totalling 44.8 MB. Grand total for the boxed
+     form is 56.024 MB versus 11.2 MB, roughly a 5x ratio.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">int[] VERSUS List&lt;Integer&gt; FOR 2,800,000 STAKE AMOUNTS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="30" y="66" class="lbl h2">PRIMITIVE — int[] stakeMinorUnits = new int[2_800_000]</text>
+
+  <rect x="60" y="80" width="120" height="60" rx="6" class="boxP"/>
+  <text x="120" y="106" text-anchor="middle" class="lbl node">header</text>
+  <text x="120" y="124" text-anchor="middle" class="lbl sub">16 bytes</text>
+
+  <rect x="180" y="80" width="780" height="60" rx="6" class="boxR"/>
+  <text x="570" y="106" text-anchor="middle" class="lbl node">2,800,000 &#215; 4-byte int, contiguous</text>
+  <text x="570" y="124" text-anchor="middle" class="lbl sub">stakeMinorUnits[0..2_799_999] — no per-slot object</text>
+
+  <rect x="60" y="152" width="900" height="34" rx="6" class="panel"/>
+  <text x="76" y="174" class="lbl body" font-weight="700">total = 16 B + 2,800,000 &#215; 4 B = 11,200,016 B &#8776; 11.2 MB</text>
+
+  <line x1="20" y1="206" x2="1020" y2="206" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="30" y="230" class="lbl h2">BOXED — List&lt;Integer&gt; equivalent</text>
+
+  <rect x="60" y="246" width="130" height="56" rx="6" class="boxP"/>
+  <text x="125" y="270" text-anchor="middle" class="lbl node">ArrayList</text>
+  <text x="125" y="288" text-anchor="middle" class="lbl sub">object, 24 bytes</text>
+
+  <path class="flow" d="M 190 274 H 240"/>
+
+  <rect x="240" y="246" width="150" height="56" rx="6" class="boxP"/>
+  <text x="315" y="270" text-anchor="middle" class="lbl node">backing Object[]</text>
+  <text x="315" y="288" text-anchor="middle" class="lbl sub">header, 16 bytes</text>
+
+  <path class="flow" d="M 390 274 H 440"/>
+
+  <rect x="440" y="246" width="520" height="56" rx="6" class="boxW"/>
+  <text x="700" y="270" text-anchor="middle" class="lbl node">2,800,000 &#215; 4-byte references</text>
+  <text x="700" y="288" text-anchor="middle" class="lbl sub">11.2 MB of pointers — one per slot</text>
+
+  <!-- fan-out bus from reference array to Integer objects -->
+  <path class="flow" d="M 700 302 V 320"/>
+  <path class="flow" d="M 460 320 H 940" marker-end="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 500 320 V 336"/>
+  <path class="flow" d="M 700 320 V 336"/>
+  <path class="flow" d="M 900 320 V 336"/>
+
+  <rect x="420" y="338" width="160" height="60" rx="6" class="boxD"/>
+  <text x="500" y="362" text-anchor="middle" class="lbl node">Integer #0</text>
+  <text x="500" y="380" text-anchor="middle" class="lbl sub">16-byte object</text>
+
+  <rect x="620" y="338" width="160" height="60" rx="6" class="boxD"/>
+  <text x="700" y="362" text-anchor="middle" class="lbl node">Integer #1</text>
+  <text x="700" y="380" text-anchor="middle" class="lbl sub">16-byte object</text>
+
+  <rect x="820" y="338" width="160" height="60" rx="6" class="boxD"/>
+  <text x="900" y="362" text-anchor="middle" class="lbl node">Integer #2,799,999</text>
+  <text x="900" y="380" text-anchor="middle" class="lbl sub">16-byte object</text>
+
+  <rect x="60" y="416" width="920" height="34" rx="6" class="panel"/>
+  <text x="76" y="438" class="lbl body" font-weight="700">2,800,000 &#215; 16 B Integer objects = 44,800,000 B &#8776; 44.8 MB</text>
+
+  <rect x="60" y="460" width="920" height="70" rx="6" class="panel"/>
+  <text x="76" y="480" class="lbl tiny" font-weight="700">Boxed total</text>
+  <text x="76" y="498" class="lbl tiny">24 B + 16 B + 11,200,000 B + 44,800,000 B = 56,024,040 B &#8776; 56.02 MB</text>
+  <text x="76" y="516" class="lbl tiny">56.02 MB / 11.2 MB &#8776; 5.0&#215; the primitive int[] footprint</text>
+
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="725" class="lbl tiny">array header / list scaffolding</text>
+  <rect x="260" y="712" width="22" height="16" rx="3" class="boxR"/>
+  <text x="290" y="725" class="lbl tiny">contiguous primitive payload</text>
+  <rect x="510" y="712" width="22" height="16" rx="3" class="boxW"/>
+  <text x="540" y="725" class="lbl tiny">reference array payload</text>
+  <rect x="720" y="712" width="22" height="16" rx="3" class="boxD"/>
+  <text x="750" y="725" class="lbl tiny">separately allocated boxed Integer</text>
+  <path class="flow" d="M 20 748 H 60"/>
+  <text x="68" y="753" class="lbl tiny">A &#8594; B : B is the memory A points to / contains</text>
+</svg>

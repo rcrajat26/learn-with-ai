@@ -1,0 +1,160 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Pinning on Java 21 versus JEP 491 in Java 24 for a virtual thread that blocks inside
+     a synchronized block in a tracing library while calling the card PSP authorise. Left, Java 21:
+     Continuation.yield fails inside the monitor, the carrier is held for the whole 240 millisecond
+     to 11 second call, other virtual threads queue behind it, and at parallelism 1 the app stalls;
+     the jdk.tracePinnedThreads=full flag prints the offending stack. Right, Java 24 under JEP 491:
+     the monitor is owned by the virtual thread object itself, monitor-blocked becomes a valid yield
+     point, and the carrier is freed. A version-trap banner notes the flag is removed in 24 and that
+     native, JNI and foreign-function frames still pin in both versions.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill   { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+    .deg  { fill: none; stroke: #b91c1c; stroke-width: 2; marker-end: url(#triD); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PINNING — synchronized IN A TRACING LIBRARY AROUND THE CARD PSP AUTHORISE CALL</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">JAVA 21 — PINS</text>
+  <rect x="180" y="56" width="24" height="14" rx="3" class="pill"/>
+  <text x="192" y="66" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+  <text x="580" y="66" class="lbl h2">JAVA 24 — JEP 491</text>
+  <rect x="800" y="56" width="24" height="14" rx="3" class="pill"/>
+  <text x="812" y="66" text-anchor="middle" class="lbl tiny" font-weight="700">24</text>
+  <line x1="560" y1="56" x2="560" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: Java 21 -->
+  <rect x="40" y="86" width="220" height="80" rx="6" class="boxP"/>
+  <text x="150" y="110" text-anchor="middle" class="lbl body">gateway-http-7</text>
+  <text x="150" y="130" text-anchor="middle" class="lbl sub">synchronized(traceLock) {</text>
+  <text x="150" y="148" text-anchor="middle" class="lbl sub">authorise(...) }</text>
+
+  <path class="deg" d="M 150 166 V 190"/>
+  <text x="175" y="182" class="lbl tiny">fails</text>
+
+  <rect x="40" y="190" width="220" height="90" rx="6" class="boxDeg"/>
+  <text x="150" y="214" text-anchor="middle" class="lbl body" font-weight="700">Continuation.yield fails</text>
+  <text x="150" y="234" text-anchor="middle" class="lbl sub">monitor ownership is tied</text>
+  <text x="150" y="250" text-anchor="middle" class="lbl sub">to the OS thread, not the VT</text>
+  <text x="150" y="266" text-anchor="middle" class="lbl sub">carrier cannot be released</text>
+
+  <path class="deg" d="M 150 280 V 304"/>
+
+  <rect x="40" y="304" width="220" height="80" rx="6" class="boxDeg"/>
+  <text x="150" y="328" text-anchor="middle" class="lbl body">carrier-worker-3 held</text>
+  <text x="150" y="348" text-anchor="middle" class="lbl sub">for the whole 240 ms p50 /</text>
+  <text x="150" y="364" text-anchor="middle" class="lbl sub">11 s p99 PSP call</text>
+
+  <path class="deg" d="M 150 384 V 408"/>
+
+  <rect x="40" y="408" width="220" height="90" rx="6" class="boxDeg"/>
+  <text x="150" y="432" text-anchor="middle" class="lbl body" font-weight="700">other VTs queue behind it</text>
+  <text x="150" y="452" text-anchor="middle" class="lbl sub">at parallelism = 1, the</text>
+  <text x="150" y="468" text-anchor="middle" class="lbl sub">whole app stalls on one</text>
+  <text x="150" y="484" text-anchor="middle" class="lbl sub">pinned tracing call</text>
+
+  <rect x="290" y="86" width="270" height="200" rx="6" class="boxAnn"/>
+  <text x="310" y="110" class="lbl h2">-Djdk.tracePinnedThreads=full</text>
+  <text x="310" y="132" class="lbl tiny" font-family="monospace">Thread[#31,gateway-http-7]</text>
+  <text x="310" y="150" class="lbl tiny" font-family="monospace">  java.base/...Object.wait0</text>
+  <text x="310" y="168" class="lbl tiny" font-family="monospace">  TracingInterceptor.trace</text>
+  <text x="310" y="186" class="lbl tiny" font-family="monospace">  &lt;== monitors:1</text>
+  <text x="310" y="204" class="lbl tiny" font-family="monospace">  CardPaymentsClient.authorise</text>
+  <text x="310" y="228" class="lbl sub">prints the pinned stack, one</text>
+  <text x="310" y="244" class="lbl sub">frame per method, monitor</text>
+  <text x="310" y="260" class="lbl sub">count on the pinning frame</text>
+
+  <!-- RIGHT: Java 24 -->
+  <rect x="600" y="86" width="220" height="80" rx="6" class="boxP"/>
+  <text x="710" y="110" text-anchor="middle" class="lbl body">gateway-http-7</text>
+  <text x="710" y="130" text-anchor="middle" class="lbl sub">synchronized(traceLock) {</text>
+  <text x="710" y="148" text-anchor="middle" class="lbl sub">authorise(...) }</text>
+
+  <path class="flow" d="M 710 166 V 190"/>
+  <text x="735" y="182" class="lbl tiny">yields</text>
+
+  <rect x="600" y="190" width="220" height="90" rx="6" class="boxR"/>
+  <text x="710" y="214" text-anchor="middle" class="lbl body" font-weight="700">monitor owned by the VT</text>
+  <text x="710" y="234" text-anchor="middle" class="lbl sub">monitor object, not the</text>
+  <text x="710" y="250" text-anchor="middle" class="lbl sub">carrier's OS thread</text>
+  <text x="710" y="266" text-anchor="middle" class="lbl sub">ownership survives unmount</text>
+
+  <path class="flow" d="M 710 280 V 304"/>
+
+  <rect x="600" y="304" width="220" height="80" rx="6" class="boxR"/>
+  <text x="710" y="328" text-anchor="middle" class="lbl body">monitor-blocked = yield point</text>
+  <text x="710" y="348" text-anchor="middle" class="lbl sub">waiting on the monitor is</text>
+  <text x="710" y="364" text-anchor="middle" class="lbl sub">now a valid freeze point</text>
+
+  <path class="flow" d="M 710 384 V 408"/>
+
+  <rect x="600" y="408" width="220" height="90" rx="6" class="boxR"/>
+  <text x="710" y="432" text-anchor="middle" class="lbl body" font-weight="700">carrier-worker-3 freed</text>
+  <text x="710" y="452" text-anchor="middle" class="lbl sub">picks up other runnable VTs</text>
+  <text x="710" y="468" text-anchor="middle" class="lbl sub">while gateway-http-7 waits</text>
+  <text x="710" y="484" text-anchor="middle" class="lbl sub">on the PSP response</text>
+
+  <rect x="850" y="86" width="220" height="150" rx="6" class="boxAnn"/>
+  <text x="870" y="110" class="lbl h2">RESULT</text>
+  <text x="870" y="134" class="lbl tiny">55 000 concurrent</text>
+  <text x="870" y="150" class="lbl tiny">gateway-http sessions stay</text>
+  <text x="870" y="166" class="lbl tiny">time-sliced across a small</text>
+  <text x="870" y="182" class="lbl tiny">carrier pool even when a</text>
+  <text x="870" y="198" class="lbl tiny">tracing library still uses</text>
+  <text x="870" y="214" class="lbl tiny">synchronized internally</text>
+
+  <!-- version trap banner -->
+  <rect x="40" y="520" width="1040" height="120" rx="6" class="boxDeg"/>
+  <text x="60" y="544" class="lbl h2" fill="#b91c1c">VERSION TRAP</text>
+  <text x="60" y="568" class="lbl body" font-weight="700">-Djdk.tracePinnedThreads is REMOVED in Java 24, not just changed in behaviour</text>
+  <text x="60" y="590" class="lbl tiny">Do not carry the Java 21 diagnostic flag forward into a Java 24+ runbook — it will fail to start the JVM.</text>
+  <text x="60" y="610" class="lbl tiny" font-weight="700">Native, JNI, and Foreign Function &amp; Memory (FFM) frames still pin the carrier on BOTH Java 21 and Java 24 —</text>
+  <text x="60" y="628" class="lbl tiny">JEP 491 only removes the synchronized-monitor cause, not the native-frame cause.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="660" x2="1100" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="672" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="685" class="lbl tiny">the subject virtual thread</text>
+  <rect x="260" y="672" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="290" y="685" class="lbl tiny">degraded — pinned / failure path</text>
+  <rect x="540" y="672" width="22" height="16" rx="3" class="boxR"/>
+  <text x="570" y="685" class="lbl tiny">resolved — fast / success path</text>
+  <rect x="780" y="672" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="810" y="685" class="lbl tiny">annotation panel</text>
+
+  <path class="deg" d="M 20 706 H 60"/>
+  <text x="70" y="711" class="lbl tiny">A → B : A causes failure/degradation in B (Java 21)</text>
+  <path class="flow" d="M 500 706 H 540"/>
+  <text x="550" y="711" class="lbl tiny">A → B : A leads to success/release in B (Java 24)</text>
+</svg>

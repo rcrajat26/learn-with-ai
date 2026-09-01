@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of isolation arithmetic. Left, inline: a 150000-token exploration lands in the main transcript, then every one of the next ten turns re-sends it, so the running total is written as a sum of ten copies of 150000 tokens equalling 1,500,000 tokens. Right, isolated: the same 150000-token exploration is burned inside a subagent which returns 200 words, so the parent transcript only grows by 200 words across all ten turns, while the subagent itself cost two times 150000 tokens, stated honestly as 300000 tokens. The net comparison resolves to a single number: isolation is roughly five times cheaper over ten turns.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bad   { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trib); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trib" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ISOLATION ARITHMETIC</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Band headers -->
+  <text x="20" y="66" class="lbl h2">LEFT: INLINE — EXPLORATION STAYS IN THE MAIN TRANSCRIPT</text>
+  <text x="580" y="66" class="lbl h2">RIGHT: ISOLATED — EXPLORATION RUNS IN A SUBAGENT</text>
+  <line x1="560" y1="55" x2="560" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <rect x="20" y="86" width="500" height="56" rx="6" class="boxH"/>
+  <text x="270" y="112" text-anchor="middle" class="lbl node">150,000-token exploration</text>
+  <text x="270" y="130" text-anchor="middle" class="lbl sub">runs directly in the main transcript</text>
+
+  <path class="bad" d="M 270 142 V 164"/>
+
+  <rect x="20" y="164" width="500" height="56" rx="6" class="boxD"/>
+  <text x="270" y="188" text-anchor="middle" class="lbl node">main transcript now holds 150,000 tok</text>
+  <text x="270" y="206" text-anchor="middle" class="lbl sub">it is not removed after this turn</text>
+
+  <path class="bad" d="M 270 220 V 242"/>
+
+  <rect x="20" y="242" width="500" height="64" rx="6" class="boxD"/>
+  <text x="270" y="266" text-anchor="middle" class="lbl node">every subsequent turn re-sends it</text>
+  <text x="270" y="286" text-anchor="middle" class="lbl sub">the 150,000 tok is resubmitted whole, turn after turn</text>
+  <text x="270" y="300" text-anchor="middle" class="lbl sub">for the next 10 turns</text>
+
+  <path class="bad" d="M 270 306 V 328"/>
+
+  <rect x="20" y="328" width="500" height="110" rx="6" class="boxD"/>
+  <text x="270" y="352" text-anchor="middle" class="lbl h2">RUNNING TOTAL, NEXT 10 TURNS</text>
+  <text x="270" y="378" text-anchor="middle" class="lbl dense" font-family="monospace">150,000 + 150,000 + 150,000 + 150,000 + 150,000</text>
+  <text x="270" y="398" text-anchor="middle" class="lbl dense" font-family="monospace">+ 150,000 + 150,000 + 150,000 + 150,000 + 150,000</text>
+  <text x="270" y="424" text-anchor="middle" class="lbl node" font-family="monospace">= 1,500,000 tok</text>
+
+  <!-- RIGHT -->
+  <rect x="580" y="86" width="500" height="56" rx="6" class="boxH"/>
+  <text x="830" y="112" text-anchor="middle" class="lbl node">150,000-token exploration</text>
+  <text x="830" y="130" text-anchor="middle" class="lbl sub">runs inside a subagent, not the main transcript</text>
+
+  <path class="flow" d="M 830 142 V 164"/>
+
+  <rect x="580" y="164" width="500" height="56" rx="6" class="boxP"/>
+  <text x="830" y="188" text-anchor="middle" class="lbl node">subagent burns 150,000 tok internally</text>
+  <text x="830" y="206" text-anchor="middle" class="lbl sub">isolated from the parent's context window</text>
+
+  <path class="flow" d="M 830 220 V 242"/>
+
+  <rect x="580" y="242" width="500" height="56" rx="6" class="boxR"/>
+  <text x="830" y="266" text-anchor="middle" class="lbl node">returns 200 words to the parent</text>
+  <text x="830" y="284" text-anchor="middle" class="lbl sub">only the summary crosses back into the transcript</text>
+
+  <path class="flow" d="M 830 298 V 320"/>
+
+  <rect x="580" y="320" width="500" height="56" rx="6" class="boxR"/>
+  <text x="830" y="344" text-anchor="middle" class="lbl node">parent transcript grows by 200 words only</text>
+  <text x="830" y="362" text-anchor="middle" class="lbl sub">across all 10 subsequent turns — not re-sent</text>
+
+  <path class="flow" d="M 830 376 V 398"/>
+
+  <rect x="580" y="398" width="500" height="56" rx="6" class="boxA"/>
+  <text x="830" y="422" text-anchor="middle" class="lbl node">honest subagent cost: 2× — 150,000 × 2</text>
+  <text x="830" y="440" text-anchor="middle" class="lbl dense" font-family="monospace">= 300,000 tok (stated, not hidden)</text>
+
+  <!-- Net comparison panel spanning both sides -->
+  <rect x="20" y="470" width="1060" height="130" rx="6" class="boxA"/>
+  <text x="40" y="494" class="lbl h2">NET COMPARISON</text>
+  <line x1="40" y1="504" x2="1080" y2="504" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="528" class="lbl dense" font-family="monospace">inline over 10 turns: 1,500,000 tok</text>
+  <text x="40" y="548" class="lbl dense" font-family="monospace">isolated total: 300,000 tok (subagent) + 200 words returned</text>
+  <text x="40" y="576" class="lbl node" font-family="monospace">1,500,000 ÷ 300,000 = 5× cheaper isolated, even after paying the subagent's own 2× cost honestly</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="630" x2="1100" y2="630" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="644" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="657" class="lbl tiny">the 150,000-token exploration (subject of the diagram)</text>
+  <rect x="380" y="644" width="22" height="16" rx="3" class="boxD"/>
+  <text x="410" y="657" class="lbl tiny">cost that accumulates in the main transcript</text>
+  <rect x="700" y="644" width="22" height="16" rx="3" class="boxP"/>
+  <text x="730" y="657" class="lbl tiny">work done inside the subagent</text>
+  <rect x="20" y="674" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="687" class="lbl tiny">what actually crosses back to the parent</text>
+  <rect x="380" y="674" width="22" height="16" rx="3" class="boxA"/>
+  <text x="410" y="687" class="lbl tiny">annotation panel / arithmetic</text>
+
+  <path class="bad" d="M 700 682 H 740"/>
+  <text x="750" y="687" class="lbl tiny">resubmission that inflates the running total</text>
+</svg>

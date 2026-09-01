@@ -1,0 +1,149 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Hierarchy of the finished .claude tree for a Spring Boot service: CLAUDE.md under 100 lines at the repo root, then .claude/rules/java-conventions.md scoped by a paths glob, .claude/skills/mvn-test-runner/SKILL.md, .claude/settings.json, and .claude/settings.local.json. Each node is annotated with what moved into it and why. A context delta panel shows token usage before and after the split, and the settings.local.json override that wins is marked.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE FINISHED .claude TREE — SPRING BOOT SERVICE (&#167; 4.1)</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="410" y="60" width="200" height="50" rx="6" class="boxP"/>
+  <text x="510" y="90" text-anchor="middle" class="lbl body mono" font-weight="700">repo root</text>
+
+  <!-- bus: root -> CLAUDE.md (col A, center 140) and .claude/ (center 630) -->
+  <path class="flow" d="M 510 110 V 128"/>
+  <line x1="140" y1="128" x2="630" y2="128" stroke="#475569" stroke-width="2"/>
+
+  <!-- CLAUDE.md, column A: x 30-250 -->
+  <path class="flow" d="M 140 128 V 150"/>
+  <rect x="30" y="150" width="220" height="56" rx="6" class="boxH"/>
+  <text x="140" y="174" text-anchor="middle" class="lbl body mono" font-weight="700">CLAUDE.md</text>
+  <text x="140" y="192" text-anchor="middle" class="lbl sub">under 100 lines</text>
+
+  <rect x="30" y="222" width="220" height="118" rx="6" class="boxA"/>
+  <text x="44" y="242" class="lbl tiny" font-weight="700">what moved here / why</text>
+  <text x="44" y="260" class="lbl tiny">architecture overview,</text>
+  <text x="44" y="276" class="lbl tiny">build commands, module map —</text>
+  <text x="44" y="292" class="lbl tiny">always loaded every turn, so</text>
+  <text x="44" y="308" class="lbl tiny">only the durable orientation</text>
+  <text x="44" y="324" class="lbl tiny">stays here</text>
+
+  <!-- .claude/, column center 630 -->
+  <path class="flow" d="M 630 128 V 150"/>
+  <rect x="530" y="150" width="200" height="56" rx="6" class="boxP"/>
+  <text x="630" y="174" text-anchor="middle" class="lbl body mono" font-weight="700">.claude/</text>
+  <text x="630" y="192" text-anchor="middle" class="lbl sub">directory of scoped config</text>
+
+  <!-- bus: .claude/ -> rules (col B center 370), skills (col C center 610), settings.json (col D center 880) -->
+  <path class="flow" d="M 630 206 V 230"/>
+  <line x1="370" y1="230" x2="880" y2="230" stroke="#475569" stroke-width="2"/>
+
+  <!-- rules/java-conventions.md, column B: x 260-480 -->
+  <path class="flow" d="M 370 230 V 252"/>
+  <rect x="260" y="252" width="220" height="72" rx="6" class="boxR"/>
+  <text x="370" y="274" text-anchor="middle" class="lbl body mono" font-weight="700">rules/java-conventions.md</text>
+  <text x="370" y="292" text-anchor="middle" class="lbl sub mono">paths: "src/main/java/**/*.java"</text>
+  <text x="370" y="310" text-anchor="middle" class="lbl sub">loaded only on matching edits</text>
+
+  <rect x="260" y="338" width="220" height="118" rx="6" class="boxA"/>
+  <text x="274" y="358" class="lbl tiny" font-weight="700">what moved here / why</text>
+  <text x="274" y="376" class="lbl tiny">Java style rules (naming,</text>
+  <text x="274" y="392" class="lbl tiny">exceptions, record usage)</text>
+  <text x="274" y="408" class="lbl tiny">that only matter when a .java</text>
+  <text x="274" y="424" class="lbl tiny">file is touched — scoped by</text>
+  <text x="274" y="440" class="lbl tiny">the paths glob, not always-on</text>
+
+  <!-- skills/mvn-test-runner, column C: x 500-720 -->
+  <path class="flow" d="M 610 230 V 252"/>
+  <rect x="500" y="252" width="220" height="72" rx="6" class="boxR"/>
+  <text x="610" y="274" text-anchor="middle" class="lbl body mono" font-weight="700">skills/mvn-test-runner/</text>
+  <text x="610" y="292" text-anchor="middle" class="lbl sub mono">SKILL.md</text>
+  <text x="610" y="310" text-anchor="middle" class="lbl sub">loaded on demand, not by default</text>
+
+  <rect x="500" y="338" width="220" height="118" rx="6" class="boxA"/>
+  <text x="514" y="358" class="lbl tiny" font-weight="700">what moved here / why</text>
+  <text x="514" y="376" class="lbl tiny">the multi-step "run the right</text>
+  <text x="514" y="392" class="lbl tiny">Maven module's tests and</text>
+  <text x="514" y="408" class="lbl tiny">interpret Surefire output"</text>
+  <text x="514" y="424" class="lbl tiny">workflow — packaged so it only</text>
+  <text x="514" y="440" class="lbl tiny">costs tokens when invoked</text>
+
+  <!-- settings.json / settings.local.json, column D: x 740-1000 -->
+  <path class="flow" d="M 880 230 V 252"/>
+  <rect x="770" y="252" width="200" height="72" rx="6" class="boxP"/>
+  <text x="870" y="274" text-anchor="middle" class="lbl body mono" font-weight="700">settings.json</text>
+  <text x="870" y="292" text-anchor="middle" class="lbl sub">shared, checked in</text>
+  <text x="870" y="310" text-anchor="middle" class="lbl sub">team hooks + perms</text>
+
+  <path class="flow" d="M 870 324 V 346"/>
+  <rect x="770" y="346" width="200" height="72" rx="6" class="boxW"/>
+  <text x="870" y="368" text-anchor="middle" class="lbl body mono" font-weight="700">settings.local.json</text>
+  <text x="870" y="386" text-anchor="middle" class="lbl sub">personal, gitignored</text>
+  <text x="870" y="404" text-anchor="middle" class="lbl sub">per-dev overrides</text>
+
+  <rect x="740" y="432" width="260" height="118" rx="6" class="boxA"/>
+  <text x="754" y="452" class="lbl tiny" font-weight="700">what moved here / why</text>
+  <text x="754" y="470" class="lbl tiny">team-wide permissions and</text>
+  <text x="754" y="486" class="lbl tiny">hooks stay in settings.json;</text>
+  <text x="754" y="502" class="lbl tiny">one developer's local override</text>
+  <text x="754" y="518" class="lbl tiny">moved to settings.local.json so</text>
+  <text x="754" y="534" class="lbl tiny">it never lands in a commit</text>
+
+  <!-- /context delta panel -->
+  <line x1="20" y1="576" x2="1020" y2="576" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="600" class="lbl h2">/context DELTA (&#167; 4.1.2)</text>
+
+  <rect x="20" y="612" width="480" height="110" rx="6" class="boxA"/>
+  <text x="36" y="634" class="lbl tiny" font-weight="700">before — monolithic CLAUDE.md</text>
+  <text x="36" y="654" class="lbl tiny mono">CLAUDE.md alone: 14,200 tokens, always loaded</text>
+  <text x="36" y="674" class="lbl tiny">(rules, skill steps, and settings all inlined</text>
+  <text x="36" y="690" class="lbl tiny">into one file the model reads every turn)</text>
+  <text x="36" y="710" class="lbl tiny" font-weight="700">baseline cost = 14,200 tokens every session</text>
+
+  <rect x="530" y="612" width="490" height="110" rx="6" class="boxA"/>
+  <text x="546" y="634" class="lbl tiny" font-weight="700">after — split tree</text>
+  <text x="546" y="654" class="lbl tiny mono">CLAUDE.md: 2,100 tokens (always loaded)</text>
+  <text x="546" y="670" class="lbl tiny mono">+ java-conventions.md: 1,300 tokens (on Java edits)</text>
+  <text x="546" y="686" class="lbl tiny mono">+ mvn-test-runner SKILL.md: 900 tokens (on demand)</text>
+  <text x="546" y="708" class="lbl tiny" font-weight="700">baseline cost = 2,100 tokens — 12,100 saved by default</text>
+
+  <!-- winning override -->
+  <rect x="20" y="738" width="1000" height="80" rx="6" class="boxH"/>
+  <text x="36" y="760" class="lbl tiny" font-weight="700">the one key settings.local.json override — the winner</text>
+  <text x="36" y="780" class="lbl tiny mono">permissions.allow: ["Bash(mvn -pl core test:*)"] — overrides the team's narrower</text>
+  <text x="36" y="798" class="lbl tiny">settings.json entry so this developer's local Maven module runs without a prompt</text>
+
+  <!-- legend -->
+  <line x1="20" y1="838" x2="1020" y2="838" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="850" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="863" class="lbl tiny">directory / always-loaded config</text>
+  <rect x="270" y="850" width="22" height="16" rx="3" class="boxR"/>
+  <text x="300" y="863" class="lbl tiny">scoped, loaded on demand</text>
+  <rect x="500" y="850" width="22" height="16" rx="3" class="boxW"/>
+  <text x="530" y="863" class="lbl tiny">personal / gitignored config</text>
+  <rect x="720" y="850" width="22" height="16" rx="3" class="boxH"/>
+  <text x="750" y="863" class="lbl tiny">root file / winning override</text>
+  <rect x="920" y="850" width="22" height="16" rx="3" class="boxA"/>
+  <text x="950" y="863" class="lbl tiny">annotation</text>
+</svg>

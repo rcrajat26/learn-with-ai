@@ -1,0 +1,190 @@
+<svg viewBox="0 0 1080 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="CompletableFuture method map: one root type CompletableFuture of T branches on a
+     shared bus into four method families. Transformation holds thenApply, thenAccept, thenRun and
+     thenCompose, each arity 1 or 0, all since Java 8. Combination holds thenCombine,
+     thenAcceptBoth, runAfterBoth, applyToEither, acceptEither and runAfterEither, each with three
+     overloads — sync, Async, and Async with an Executor — eighteen methods in total, since Java 8.
+     Exception holds exceptionally and handle and whenComplete since Java 8, plus
+     exceptionallyCompose which arrived in Java 12. Completion, drawn in the resolved-green style
+     because it mutates the future in place rather than returning a new stage, holds complete,
+     completeExceptionally, obtrudeValue and obtrudeException, all since Java 8.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .pillTxt{ font-size: 10.5px; font-weight: 700; text-anchor: middle; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .pill  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .div   { stroke: #d1d5db; stroke-width: 1; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE COMPLETABLEFUTURE&lt;T&gt; METHOD MAP — FOUR FAMILIES</text>
+  <line x1="20" y1="42" x2="1060" y2="42" class="rule"/>
+
+  <!-- root -->
+  <rect x="430" y="60" width="200" height="42" rx="6" class="boxP"/>
+  <text x="530" y="86" text-anchor="middle" class="lbl node">CompletableFuture&lt;T&gt;</text>
+
+  <!-- annotation: arity convention -->
+  <rect x="800" y="55" width="220" height="60" rx="6" class="ann"/>
+  <text x="812" y="70" class="lbl tiny" font-weight="700">ARITY</text>
+  <text x="812" y="83" class="lbl sub">count of functional-interface</text>
+  <text x="812" y="95" class="lbl sub">params, excluding a trailing</text>
+  <text x="812" y="107" class="lbl sub">Executor overload</text>
+
+  <!-- bus: root fans out to 4 panel tops, one drop per family -->
+  <path class="flow" d="M 530 102 V 126 H 150 V 150"/>
+  <path class="flow" d="M 530 102 V 126 H 410 V 150"/>
+  <path class="flow" d="M 530 102 V 126 H 670 V 150"/>
+  <path class="flow" d="M 530 102 V 126 H 910 V 150"/>
+
+  <!-- Panel 1: TRANSFORMATION -->
+  <rect x="40" y="150" width="220" height="162" rx="6" class="boxP"/>
+  <text x="52" y="168" class="lbl h2">TRANSFORMATION</text>
+  <line x1="48" y1="176" x2="252" y2="176" class="div"/>
+
+  <text x="52" y="190" class="lbl node">thenApply</text>
+  <rect x="226" y="177" width="24" height="14" rx="3" class="pill"/>
+  <text x="238" y="187" class="lbl pillTxt">8</text>
+  <text x="52" y="204" class="lbl sub">Function&lt;T,U&gt; · arity 1</text>
+
+  <text x="52" y="224" class="lbl node">thenAccept</text>
+  <rect x="226" y="211" width="24" height="14" rx="3" class="pill"/>
+  <text x="238" y="221" class="lbl pillTxt">8</text>
+  <text x="52" y="238" class="lbl sub">Consumer&lt;T&gt; · arity 1</text>
+
+  <text x="52" y="258" class="lbl node">thenRun</text>
+  <rect x="226" y="245" width="24" height="14" rx="3" class="pill"/>
+  <text x="238" y="255" class="lbl pillTxt">8</text>
+  <text x="52" y="272" class="lbl sub">Runnable · arity 0</text>
+
+  <text x="52" y="292" class="lbl node">thenCompose</text>
+  <rect x="226" y="279" width="24" height="14" rx="3" class="pill"/>
+  <text x="238" y="289" class="lbl pillTxt">8</text>
+  <text x="52" y="306" class="lbl sub">Function&lt;T,CS&lt;U&gt;&gt; · arity 1, flattens</text>
+
+  <!-- Panel 2: COMBINATION -->
+  <rect x="280" y="150" width="260" height="264" rx="6" class="boxP"/>
+  <text x="292" y="168" class="lbl h2">COMBINATION</text>
+  <line x1="288" y1="176" x2="532" y2="176" class="div"/>
+
+  <text x="292" y="190" class="lbl node">thenCombine</text>
+  <rect x="506" y="177" width="24" height="14" rx="3" class="pill"/>
+  <text x="518" y="187" class="lbl pillTxt">8</text>
+  <text x="292" y="204" class="lbl sub">BiFunction&lt;T,U,V&gt; · arity 2</text>
+
+  <text x="292" y="224" class="lbl node">thenAcceptBoth</text>
+  <rect x="506" y="211" width="24" height="14" rx="3" class="pill"/>
+  <text x="518" y="221" class="lbl pillTxt">8</text>
+  <text x="292" y="238" class="lbl sub">BiConsumer&lt;T,U&gt; · arity 2</text>
+
+  <text x="292" y="258" class="lbl node">runAfterBoth</text>
+  <rect x="506" y="245" width="24" height="14" rx="3" class="pill"/>
+  <text x="518" y="255" class="lbl pillTxt">8</text>
+  <text x="292" y="272" class="lbl sub">Runnable · arity 0</text>
+
+  <text x="292" y="292" class="lbl node">applyToEither</text>
+  <rect x="506" y="279" width="24" height="14" rx="3" class="pill"/>
+  <text x="518" y="289" class="lbl pillTxt">8</text>
+  <text x="292" y="306" class="lbl sub">Function&lt;T,U&gt; · arity 1</text>
+
+  <text x="292" y="326" class="lbl node">acceptEither</text>
+  <rect x="506" y="313" width="24" height="14" rx="3" class="pill"/>
+  <text x="518" y="323" class="lbl pillTxt">8</text>
+  <text x="292" y="340" class="lbl sub">Consumer&lt;T&gt; · arity 1</text>
+
+  <text x="292" y="360" class="lbl node">runAfterEither</text>
+  <rect x="506" y="347" width="24" height="14" rx="3" class="pill"/>
+  <text x="518" y="357" class="lbl pillTxt">8</text>
+  <text x="292" y="374" class="lbl sub">Runnable · arity 0</text>
+
+  <line x1="288" y1="384" x2="532" y2="384" class="div"/>
+  <text x="292" y="398" class="lbl sub">sync / Async() / Async(Executor)</text>
+  <text x="292" y="412" class="lbl tiny" font-weight="700">×3 each → 18 methods total</text>
+
+  <!-- Panel 3: EXCEPTION -->
+  <rect x="560" y="150" width="220" height="162" rx="6" class="boxP"/>
+  <text x="572" y="168" class="lbl h2">EXCEPTION</text>
+  <line x1="568" y1="176" x2="772" y2="176" class="div"/>
+
+  <text x="572" y="190" class="lbl node">exceptionally</text>
+  <rect x="746" y="177" width="24" height="14" rx="3" class="pill"/>
+  <text x="758" y="187" class="lbl pillTxt">8</text>
+  <text x="572" y="204" class="lbl sub">Function&lt;Thr,T&gt; · arity 1</text>
+
+  <text x="572" y="224" class="lbl node">exceptionallyCompose</text>
+  <rect x="746" y="211" width="24" height="14" rx="3" class="pill"/>
+  <text x="758" y="221" class="lbl pillTxt">12</text>
+  <text x="572" y="238" class="lbl sub">Thr → CS&lt;T&gt; · arity 1</text>
+
+  <text x="572" y="258" class="lbl node">handle</text>
+  <rect x="746" y="245" width="24" height="14" rx="3" class="pill"/>
+  <text x="758" y="255" class="lbl pillTxt">8</text>
+  <text x="572" y="272" class="lbl sub">BiFunction&lt;T,Thr,U&gt; · arity 2</text>
+
+  <text x="572" y="292" class="lbl node">whenComplete</text>
+  <rect x="746" y="279" width="24" height="14" rx="3" class="pill"/>
+  <text x="758" y="289" class="lbl pillTxt">8</text>
+  <text x="572" y="306" class="lbl sub">BiConsumer&lt;T,Thr&gt; · arity 2</text>
+
+  <!-- Panel 4: COMPLETION (mutates in place, not chaining) -->
+  <rect x="800" y="150" width="220" height="162" rx="6" class="boxR"/>
+  <text x="812" y="168" class="lbl h2">COMPLETION</text>
+  <line x1="808" y1="176" x2="1012" y2="176" class="div"/>
+
+  <text x="812" y="190" class="lbl node">complete</text>
+  <rect x="986" y="177" width="24" height="14" rx="3" class="pill"/>
+  <text x="998" y="187" class="lbl pillTxt">8</text>
+  <text x="812" y="204" class="lbl sub">T value · arity 1 · → boolean</text>
+
+  <text x="812" y="224" class="lbl node">completeExceptionally</text>
+  <rect x="986" y="211" width="24" height="14" rx="3" class="pill"/>
+  <text x="998" y="221" class="lbl pillTxt">8</text>
+  <text x="812" y="238" class="lbl sub">Throwable · arity 1 · → boolean</text>
+
+  <text x="812" y="258" class="lbl node">obtrudeValue</text>
+  <rect x="986" y="245" width="24" height="14" rx="3" class="pill"/>
+  <text x="998" y="255" class="lbl pillTxt">8</text>
+  <text x="812" y="272" class="lbl sub">T value · arity 1 · unsafe</text>
+
+  <text x="812" y="292" class="lbl node">obtrudeException</text>
+  <rect x="986" y="279" width="24" height="14" rx="3" class="pill"/>
+  <text x="998" y="289" class="lbl pillTxt">8</text>
+  <text x="812" y="306" class="lbl sub">Throwable · arity 1 · unsafe</text>
+
+  <!-- legend -->
+  <line x1="20" y1="440" x2="1060" y2="440" class="rule"/>
+
+  <rect x="40" y="463" width="20" height="14" rx="3" class="boxP"/>
+  <text x="68" y="474" class="lbl tiny">chaining — returns a new dependent stage</text>
+
+  <rect x="380" y="463" width="20" height="14" rx="3" class="boxR"/>
+  <text x="408" y="474" class="lbl tiny">completion — mutates this future in place</text>
+
+  <rect x="720" y="463" width="20" height="14" rx="3" class="pill"/>
+  <text x="748" y="474" class="lbl tiny">release pill: version the method arrived in</text>
+
+  <path class="flow" d="M 40 505 H 90"/>
+  <text x="100" y="510" class="lbl tiny">branches from CompletableFuture&lt;T&gt;</text>
+
+  <rect x="380" y="497" width="20" height="14" rx="3" class="ann"/>
+  <text x="408" y="508" class="lbl tiny">annotation: arity convention (excludes trailing Executor)</text>
+</svg>

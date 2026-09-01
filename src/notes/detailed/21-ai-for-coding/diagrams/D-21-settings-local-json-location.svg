@@ -1,0 +1,143 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for where Claude Code writes settings.local.json. Root question: the tool needs to write a local settings file. Six branches from one bus: inside a git repository resolves to the repository root, not the directory you started Claude Code in; outside any repository resolves to the start directory; when the discovered repository root equals HOME, HOME is excluded as an exception and the start directory is used instead; inside a git worktree the file goes to the main checkout's root, not the worktree's own directory; on Windows the same root resolution applies with backslash path separators; when the repository root is owned by a different user than the current process, it is not trusted and the start directory is used instead.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOk   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxLeg  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxBad  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE settings.local.json LANDS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Root -->
+  <rect x="370" y="56" width="300" height="56" rx="6" class="boxRoot"/>
+  <text x="520" y="79" text-anchor="middle" class="lbl node">the tool needs to write</text>
+  <text x="520" y="98" text-anchor="middle" class="lbl body">a local settings file</text>
+
+  <path class="flow" d="M 520 112 V 130"/>
+  <line x1="99" y1="130" x2="919" y2="130" stroke="#475569" stroke-width="2"/>
+
+  <!-- lane centers: 99, 263, 427, 591, 755, 919 ; lane width 158 -->
+
+  <!-- Branch 1: inside git repo -->
+  <path class="flow" d="M 99 130 V 170"/>
+  <rect x="20" y="170" width="158" height="56" rx="6" class="boxWeak"/>
+  <text x="99" y="194" text-anchor="middle" class="lbl tiny">inside a git repo?</text>
+  <text x="99" y="212" text-anchor="middle" class="lbl sub">walk up for .git</text>
+  <path class="flow" d="M 99 226 V 260"/>
+  <rect x="20" y="260" width="158" height="120" rx="6" class="boxOk"/>
+  <text x="99" y="282" text-anchor="middle" class="lbl node">repository root</text>
+  <text x="99" y="300" text-anchor="middle" class="lbl sub">NOT the dir you</text>
+  <text x="99" y="314" text-anchor="middle" class="lbl sub">started Claude in</text>
+  <text x="99" y="336" text-anchor="middle" class="lbl sub">&lt;repo-root&gt;/.claude/</text>
+  <text x="99" y="350" text-anchor="middle" class="lbl sub">settings.local.json</text>
+
+  <!-- Branch 2: outside repo -->
+  <path class="flow" d="M 263 130 V 170"/>
+  <rect x="184" y="170" width="158" height="56" rx="6" class="boxWeak"/>
+  <text x="263" y="194" text-anchor="middle" class="lbl tiny">outside any repo?</text>
+  <text x="263" y="212" text-anchor="middle" class="lbl sub">no .git found</text>
+  <path class="flow" d="M 263 226 V 260"/>
+  <rect x="184" y="260" width="158" height="120" rx="6" class="boxOk"/>
+  <text x="263" y="282" text-anchor="middle" class="lbl node">start directory</text>
+  <text x="263" y="300" text-anchor="middle" class="lbl sub">where you ran</text>
+  <text x="263" y="314" text-anchor="middle" class="lbl sub">claude</text>
+  <text x="263" y="336" text-anchor="middle" class="lbl sub">./.claude/</text>
+  <text x="263" y="350" text-anchor="middle" class="lbl sub">settings.local.json</text>
+
+  <!-- Branch 3: repo root is HOME -->
+  <path class="flow" d="M 427 130 V 170"/>
+  <rect x="348" y="170" width="158" height="56" rx="6" class="boxWeak"/>
+  <text x="427" y="194" text-anchor="middle" class="lbl tiny">repo root = $HOME?</text>
+  <text x="427" y="212" text-anchor="middle" class="lbl sub">the HOME exception</text>
+  <path class="flow" d="M 427 226 V 260"/>
+  <rect x="348" y="260" width="158" height="120" rx="6" class="boxBad"/>
+  <text x="427" y="282" text-anchor="middle" class="lbl node">$HOME excluded</text>
+  <text x="427" y="300" text-anchor="middle" class="lbl sub">falls back to</text>
+  <text x="427" y="314" text-anchor="middle" class="lbl sub">start directory</text>
+  <text x="427" y="336" text-anchor="middle" class="lbl sub">./.claude/</text>
+  <text x="427" y="350" text-anchor="middle" class="lbl sub">settings.local.json</text>
+
+  <!-- Branch 4: worktree -->
+  <path class="flow" d="M 591 130 V 170"/>
+  <rect x="512" y="170" width="158" height="56" rx="6" class="boxWeak"/>
+  <text x="591" y="194" text-anchor="middle" class="lbl tiny">inside a worktree?</text>
+  <text x="591" y="212" text-anchor="middle" class="lbl sub">linked worktree</text>
+  <path class="flow" d="M 591 226 V 260"/>
+  <rect x="512" y="260" width="158" height="120" rx="6" class="boxOk"/>
+  <text x="591" y="282" text-anchor="middle" class="lbl node">main checkout's</text>
+  <text x="591" y="298" text-anchor="middle" class="lbl node">root</text>
+  <text x="591" y="318" text-anchor="middle" class="lbl sub">NOT the worktree's</text>
+  <text x="591" y="332" text-anchor="middle" class="lbl sub">own directory</text>
+  <text x="591" y="350" text-anchor="middle" class="lbl sub">&lt;main-repo-root&gt;/.claude/</text>
+
+  <!-- Branch 5: Windows -->
+  <path class="flow" d="M 755 130 V 170"/>
+  <rect x="676" y="170" width="158" height="56" rx="6" class="boxWeak"/>
+  <text x="755" y="194" text-anchor="middle" class="lbl tiny">platform = Windows?</text>
+  <text x="755" y="212" text-anchor="middle" class="lbl sub">same resolution</text>
+  <path class="flow" d="M 755 226 V 260"/>
+  <rect x="676" y="260" width="158" height="120" rx="6" class="boxLeg"/>
+  <text x="755" y="282" text-anchor="middle" class="lbl node">same root, path</text>
+  <text x="755" y="298" text-anchor="middle" class="lbl node">separators differ</text>
+  <text x="755" y="336" text-anchor="middle" class="lbl sub">&lt;repo-root&gt;\.claude\</text>
+  <text x="755" y="350" text-anchor="middle" class="lbl sub">settings.local.json</text>
+
+  <!-- Branch 6: foreign ownership -->
+  <path class="flow" d="M 919 130 V 170"/>
+  <rect x="840" y="170" width="158" height="56" rx="6" class="boxWeak"/>
+  <text x="919" y="188" text-anchor="middle" class="lbl tiny">root owned by a</text>
+  <text x="919" y="204" text-anchor="middle" class="lbl tiny">different user?</text>
+  <path class="flow" d="M 919 226 V 260"/>
+  <rect x="840" y="260" width="158" height="120" rx="6" class="boxBad"/>
+  <text x="919" y="282" text-anchor="middle" class="lbl node">root not trusted</text>
+  <text x="919" y="300" text-anchor="middle" class="lbl sub">falls back to</text>
+  <text x="919" y="314" text-anchor="middle" class="lbl sub">start directory</text>
+  <text x="919" y="336" text-anchor="middle" class="lbl sub">./.claude/</text>
+  <text x="919" y="350" text-anchor="middle" class="lbl sub">settings.local.json</text>
+
+  <line x1="20" y1="410" x2="1020" y2="410" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Legend -->
+  <rect x="20" y="422" width="22" height="16" rx="3" class="boxWeak"/>
+  <text x="50" y="435" class="lbl tiny">decision point (branch test)</text>
+
+  <rect x="290" y="422" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="320" y="435" class="lbl tiny">resolved: repo-scoped root wins</text>
+
+  <rect x="600" y="422" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="630" y="435" class="lbl tiny">excluded / not trusted: falls back to start dir</text>
+
+  <rect x="20" y="448" width="22" height="16" rx="3" class="boxLeg"/>
+  <text x="50" y="461" class="lbl tiny">platform-specific path shape, same resolution rule</text>
+
+  <!-- Annotation panel -->
+  <rect x="20" y="480" width="1000" height="130" rx="6" class="boxAnn"/>
+  <text x="36" y="502" class="lbl h2">Why the repo root, not cwd</text>
+  <text x="36" y="522" class="lbl tiny">Claude Code discovers the git repository root by walking up from the start directory looking for a .git directory or file (a worktree pointer</text>
+  <text x="36" y="538" class="lbl tiny">file counts). The local settings file always lands at that discovered root's .claude/settings.local.json — launching from a subdirectory still</text>
+  <text x="36" y="554" class="lbl tiny">writes to the top, and launching inside a worktree still writes to the main checkout's .claude/, so every worktree of one repo shares the same</text>
+  <text x="36" y="570" class="lbl tiny">local settings file. settings.local.json is the untracked, per-developer layer — meant to be gitignored — which is why it must live in one</text>
+  <text x="36" y="586" class="lbl tiny">predictable place per repo rather than following wherever you happened to cd before running claude.</text>
+</svg>

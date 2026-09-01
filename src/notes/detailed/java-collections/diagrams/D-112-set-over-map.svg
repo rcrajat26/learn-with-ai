@@ -1,0 +1,73 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HashSet implemented as a HashMap with every value pointing at one shared PRESENT object, plus the three sibling Set-over-Map delegations">
+  <defs>
+    <marker id="arrow112" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="10" width="760" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="400" y="27" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">java.util.*Set is a thin adapter over the matching *Map</text>
+
+  <!-- main HashSet/HashMap panel -->
+  <rect x="20" y="50" width="420" height="290" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="72" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashSet&lt;E&gt;</text>
+
+  <rect x="40" y="90" width="380" height="26" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="107" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">private transient HashMap&lt;E,Object&gt; map</text>
+
+  <!-- map rows: key -> shared PRESENT -->
+  <g stroke="#737373" stroke-width="2">
+    <rect x="60" y="140" width="120" height="28" rx="3" fill="#dbeafe"/>
+    <rect x="60" y="176" width="120" height="28" rx="3" fill="#dbeafe"/>
+    <rect x="60" y="212" width="120" height="28" rx="3" fill="#dbeafe"/>
+  </g>
+  <g font-family="sans-serif" font-size="13" fill="#1f2937" text-anchor="middle">
+    <text x="120" y="158">key: "a"</text>
+    <text x="120" y="194">key: "b"</text>
+    <text x="120" y="230">key: "c"</text>
+  </g>
+
+  <!-- shared PRESENT object -->
+  <rect x="300" y="176" width="110" height="36" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="355" y="199" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">PRESENT</text>
+
+  <line x1="180" y1="154" x2="298" y2="185" stroke="#737373" stroke-width="2" marker-end="url(#arrow112)"/>
+  <line x1="180" y1="190" x2="298" y2="192" stroke="#737373" stroke-width="2" marker-end="url(#arrow112)"/>
+  <line x1="180" y1="226" x2="298" y2="199" stroke="#737373" stroke-width="2" marker-end="url(#arrow112)"/>
+
+  <rect x="60" y="250" width="350" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="235" y="264" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">one static final Object PRESENT shared by every element</text>
+
+  <rect x="40" y="280" width="380" height="26" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="297" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">add(e)  ⇒  map.put(e, PRESENT) == null</text>
+
+  <rect x="40" y="310" width="380" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="230" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">put returns the old value; null means e was newly added</text>
+
+  <!-- side panels: three sibling Set-over-Map delegations -->
+  <rect x="460" y="50" width="320" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="72" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">TreeSet&lt;E&gt;</text>
+  <line x1="560" y1="88" x2="680" y2="88" stroke="#737373" stroke-width="2" marker-end="url(#arrow112)"/>
+  <rect x="560" y="94" width="120" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="620" y="108" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">TreeMap&lt;E,Object&gt;</text>
+
+  <rect x="460" y="130" width="320" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="152" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">LinkedHashSet&lt;E&gt;</text>
+  <line x1="560" y1="168" x2="680" y2="168" stroke="#737373" stroke-width="2" marker-end="url(#arrow112)"/>
+  <rect x="555" y="174" width="130" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="620" y="188" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">LinkedHashMap&lt;E,Object&gt;</text>
+  <rect x="460" y="202" width="320" height="16" rx="3" fill="#fef3c7"/>
+  <text x="620" y="214" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">built via the package-private dummy-boolean constructor</text>
+
+  <rect x="460" y="230" width="320" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="620" y="252" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ConcurrentSkipListSet&lt;E&gt;</text>
+  <line x1="560" y1="268" x2="680" y2="268" stroke="#737373" stroke-width="2" marker-end="url(#arrow112)"/>
+  <rect x="540" y="274" width="160" height="20" rx="3" fill="#e5e7eb"/>
+  <text x="620" y="288" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">ConcurrentSkipListMap&lt;E,Object&gt;</text>
+
+  <rect x="20" y="350" width="760" height="30" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="370" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Every *Set in java.util is a values-are-ignored view over its matching *Map — no independent hashing/ordering logic is reimplemented</text>
+
+  <rect x="20" y="390" width="760" height="30" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="410" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Cost: each element pays for a full Map.Entry (or Node) even though the value is always the same shared constant</text>
+</svg>

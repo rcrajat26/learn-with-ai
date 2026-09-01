@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="this in a lambda versus an anonymous class, both registering a Runnable from inside BonusService. Left, the anonymous class: this resolves to the new BonusService dollar 1 instance, and that instance carries a synthetic this-dollar-0 field arrow pointing back to the enclosing BonusService instance. Right, the lambda: this resolves straight through to the BonusService instance itself, with no intervening object and no this-dollar-0 field; the lambda body compiles to a synthetic method named lambda-dollar-register-dollar-0.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">this IN A LAMBDA VERSUS AN ANONYMOUS CLASS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- CODE PANEL -->
+  <rect x="20" y="54" width="1080" height="110" rx="6" class="panel"/>
+  <text x="40" y="76" class="lbl body" font-weight="700">REGISTERING THE CALLBACK FROM INSIDE BonusService.register()</text>
+  <text x="40" y="96" class="lbl tiny">register(new Runnable() {</text>
+  <text x="40" y="112" class="lbl tiny">  public void run() {</text>
+  <text x="40" y="128" class="lbl tiny">    this.applyBonus(...);  // this = ?</text>
+  <text x="40" y="144" class="lbl tiny">  }});</text>
+
+  <text x="580" y="96" class="lbl tiny">register(() -&gt; {</text>
+  <text x="580" y="112" class="lbl tiny">  this.applyBonus(...);  // this = ?</text>
+  <text x="580" y="128" class="lbl tiny">});</text>
+
+  <!-- BAND HEADERS -->
+  <text x="20" y="192" class="lbl h2">ANONYMOUS CLASS — generated name BonusService$1</text>
+  <text x="580" y="192" class="lbl h2">LAMBDA — synthetic method lambda$register$0</text>
+  <line x1="20" y1="200" x2="1100" y2="200" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="560" y1="210" x2="560" y2="540" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: enclosing instance -->
+  <rect x="60" y="230" width="440" height="70" rx="6" class="boxP"/>
+  <text x="280" y="260" text-anchor="middle" class="lbl node">BonusService instance</text>
+  <text x="280" y="282" text-anchor="middle" class="lbl body">the enclosing object</text>
+
+  <!-- LEFT: this marker -->
+  <text x="130" y="392" class="lbl tiny" font-weight="600">this</text>
+  <path class="flow" d="M 150 400 V 420"/>
+
+  <!-- LEFT: this$0 arrow (up, different exit x) -->
+  <text x="440" y="392" class="lbl tiny" font-weight="600">this$0</text>
+  <path class="flow" d="M 410 420 V 300"/>
+
+  <!-- LEFT: anonymous instance -->
+  <rect x="60" y="420" width="440" height="110" rx="6" class="boxW"/>
+  <text x="280" y="452" text-anchor="middle" class="lbl node">BonusService$1</text>
+  <text x="280" y="474" text-anchor="middle" class="lbl body">anonymous Runnable instance</text>
+  <text x="280" y="492" text-anchor="middle" class="lbl sub">generated name: BonusService$1</text>
+  <text x="280" y="508" text-anchor="middle" class="lbl sub">holds field this$0 (synthetic, real field)</text>
+
+  <!-- RIGHT: enclosing instance -->
+  <rect x="620" y="230" width="440" height="70" rx="6" class="boxP"/>
+  <text x="840" y="260" text-anchor="middle" class="lbl node">BonusService instance</text>
+  <text x="840" y="282" text-anchor="middle" class="lbl body">the enclosing object</text>
+
+  <!-- RIGHT: this arrow straight through to enclosing instance -->
+  <text x="730" y="392" class="lbl tiny" font-weight="600">this</text>
+  <path class="flow" d="M 710 420 V 300"/>
+
+  <!-- RIGHT: lambda object -->
+  <rect x="620" y="420" width="440" height="110" rx="6" class="boxH"/>
+  <text x="840" y="452" text-anchor="middle" class="lbl node">lambda (implements Runnable)</text>
+  <text x="840" y="474" text-anchor="middle" class="lbl body">no separate identity for this</text>
+  <text x="840" y="492" text-anchor="middle" class="lbl sub">synthetic method: lambda$register$0</text>
+  <text x="840" y="508" text-anchor="middle" class="lbl sub">no this$0 field — no extra object</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="566" x2="1100" y2="566" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="580" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="593" class="lbl tiny">enclosing instance (BonusService)</text>
+  <rect x="330" y="580" width="22" height="16" rx="3" class="boxW"/>
+  <text x="360" y="593" class="lbl tiny">anonymous-class instance</text>
+  <rect x="600" y="580" width="22" height="16" rx="3" class="boxH"/>
+  <text x="630" y="593" class="lbl tiny">lambda instance</text>
+  <rect x="820" y="580" width="22" height="16" rx="3" class="panel"/>
+  <text x="850" y="593" class="lbl tiny">annotation / code panel</text>
+  <path class="flow" d="M 20 616 H 60"/>
+  <text x="68" y="621" class="lbl tiny">A → B : this / this$0 resolves to B</text>
+</svg>

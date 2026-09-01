@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for routing a task to a model as a cost decision. Root question: what is this task. Exploration and search routes to haiku with low or medium effort. Implementation routes to sonnet with medium effort. Architecture and gnarly debugging routes to opus with high or xhigh or max effort. An escalation path runs haiku to sonnet to opus. A side panel shows fastMode and slash-fast as faster output on the same opus model, not a downgrade. A failure panel shows routing everything to haiku producing a wrong result that cost more than the saving.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+
+    .boxRoot { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH    { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxS    { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxO    { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxFail { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .esc   { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MODEL ROUTING AS A COST DECISION</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Root -->
+  <rect x="420" y="60" width="200" height="56" rx="6" class="boxRoot"/>
+  <text x="520" y="84" text-anchor="middle" class="lbl node">what is this task?</text>
+  <text x="520" y="104" text-anchor="middle" class="lbl sub">root question</text>
+
+  <!-- bus -->
+  <path class="flow" d="M 520 116 V 140"/>
+  <path d="M 170 140 H 870" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 170 140 V 168"/>
+  <path class="flow" d="M 520 140 V 168"/>
+  <path class="flow" d="M 870 140 V 168"/>
+
+  <!-- Branch 1: haiku -->
+  <rect x="60" y="168" width="220" height="60" rx="6" class="boxH"/>
+  <text x="170" y="192" text-anchor="middle" class="lbl body">exploration and search</text>
+  <text x="170" y="210" text-anchor="middle" class="lbl sub">read-only, locate, grep</text>
+
+  <path class="flow" d="M 170 228 V 254"/>
+  <rect x="60" y="254" width="220" height="64" rx="6" class="boxH"/>
+  <text x="170" y="276" text-anchor="middle" class="lbl node">haiku</text>
+  <text x="170" y="296" text-anchor="middle" class="lbl sub">effort: low | medium</text>
+  <text x="170" y="310" text-anchor="middle" class="lbl sub">terminal</text>
+
+  <!-- Branch 2: sonnet -->
+  <rect x="410" y="168" width="220" height="60" rx="6" class="boxS"/>
+  <text x="520" y="192" text-anchor="middle" class="lbl body">implementation</text>
+  <text x="520" y="210" text-anchor="middle" class="lbl sub">write, edit, refactor, test</text>
+
+  <path class="flow" d="M 520 228 V 254"/>
+  <rect x="410" y="254" width="220" height="64" rx="6" class="boxS"/>
+  <text x="520" y="276" text-anchor="middle" class="lbl node">sonnet</text>
+  <text x="520" y="296" text-anchor="middle" class="lbl sub">effort: medium</text>
+  <text x="520" y="310" text-anchor="middle" class="lbl sub">terminal</text>
+
+  <!-- Branch 3: opus -->
+  <rect x="760" y="168" width="220" height="60" rx="6" class="boxO"/>
+  <text x="870" y="188" text-anchor="middle" class="lbl body">architecture and</text>
+  <text x="870" y="204" text-anchor="middle" class="lbl body">gnarly debugging</text>
+
+  <path class="flow" d="M 870 228 V 254"/>
+  <rect x="760" y="254" width="220" height="64" rx="6" class="boxO"/>
+  <text x="870" y="276" text-anchor="middle" class="lbl node">opus</text>
+  <text x="870" y="296" text-anchor="middle" class="lbl sub">effort: high | xhigh | max</text>
+  <text x="870" y="310" text-anchor="middle" class="lbl sub">terminal</text>
+
+  <!-- escalation path -->
+  <path class="esc" d="M 280 286 H 410"/>
+  <path class="esc" d="M 630 286 H 760"/>
+  <text x="345" y="278" text-anchor="middle" class="lbl tiny">escalate</text>
+  <text x="695" y="278" text-anchor="middle" class="lbl tiny">escalate</text>
+  <text x="520" y="345" text-anchor="middle" class="lbl sub">escalation path: haiku &#8594; sonnet &#8594; opus (dotted, amber)</text>
+
+  <!-- fastMode panel -->
+  <rect x="60" y="400" width="440" height="120" rx="6" class="panel"/>
+  <text x="80" y="424" class="lbl h2">FASTMODE / /fast</text>
+  <text x="80" y="450" class="lbl body">Same model: claude-opus-5</text>
+  <text x="80" y="470" class="lbl body">Effect: faster output, NOT a cheaper model</text>
+  <text x="80" y="490" class="lbl sub">fastMode / /fast is not a downgrade path —</text>
+  <text x="80" y="505" class="lbl sub">it trades latency, not model quality.</text>
+
+  <!-- failure panel -->
+  <rect x="540" y="400" width="440" height="150" rx="6" class="boxFail"/>
+  <text x="560" y="424" class="lbl h2">FAILURE: ROUTE EVERYTHING TO HAIKU</text>
+  <text x="560" y="448" class="lbl dense">Task: refactor a race condition in a</text>
+  <text x="560" y="465" class="lbl dense">connection pool. Routed to haiku for savings.</text>
+  <text x="560" y="486" class="lbl dense">Result: haiku misses the lock ordering bug,</text>
+  <text x="560" y="503" class="lbl dense">ships a patch that deadlocks in prod.</text>
+  <text x="560" y="524" class="lbl body" font-weight="700">Cost of re-run + incident &gt; saved tokens</text>
+
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="720" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="732" width="22" height="16" rx="3" class="boxRoot"/>
+  <text x="50" y="745" class="lbl tiny">root question</text>
+
+  <rect x="180" y="732" width="22" height="16" rx="3" class="boxH"/>
+  <text x="210" y="745" class="lbl tiny">haiku branch</text>
+
+  <rect x="330" y="732" width="22" height="16" rx="3" class="boxS"/>
+  <text x="360" y="745" class="lbl tiny">sonnet branch</text>
+
+  <rect x="480" y="732" width="22" height="16" rx="3" class="boxO"/>
+  <text x="510" y="745" class="lbl tiny">opus branch</text>
+
+  <rect x="630" y="732" width="22" height="16" rx="3" class="panel"/>
+  <text x="660" y="745" class="lbl tiny">annotation panel</text>
+
+  <rect x="800" y="732" width="22" height="16" rx="3" class="boxFail"/>
+  <text x="830" y="745" class="lbl tiny">failure outcome</text>
+
+  <path class="flow" d="M 20 762 H 44"/>
+  <text x="80" y="769" class="lbl tiny">flow</text>
+
+  <path class="esc" d="M 180 762 H 204"/>
+  <text x="250" y="769" class="lbl tiny">escalation path (haiku &#8594; sonnet &#8594; opus)</text>
+</svg>

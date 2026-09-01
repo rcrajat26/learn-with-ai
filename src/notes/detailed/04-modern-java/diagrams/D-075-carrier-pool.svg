@@ -1,0 +1,131 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout of the default virtual thread scheduler. A FIFO queue of runnable virtual
+     threads feeds a ForkJoinPool created with asyncMode true, labelled FIFO. Parallelism defaults to
+     availableProcessors and is controlled by jdk.virtualThreadScheduler.parallelism. maxPoolSize defaults
+     to Integer.max(parallelism, 256), a floor not a flat default, controlled by
+     jdk.virtualThreadScheduler.maxPoolSize. A side panel contrasts this FIFO queue with the LIFO
+     work-stealing deques parallel streams use on the common pool.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Consolas, monospace; font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnno { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE CARRIER POOL — DEFAULT VIRTUAL THREAD SCHEDULER</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="30" y="66" class="lbl h2">QUEUE — RUNNABLE VIRTUAL THREADS (FIFO)</text>
+  <rect x="30" y="78" width="560" height="70" rx="6" class="boxW"/>
+  <rect x="42" y="94" width="80" height="38" rx="4" class="boxR"/>
+  <text x="82" y="117" text-anchor="middle" class="lbl tiny">vthread</text>
+  <rect x="132" y="94" width="80" height="38" rx="4" class="boxR"/>
+  <text x="172" y="117" text-anchor="middle" class="lbl tiny">vthread</text>
+  <rect x="222" y="94" width="80" height="38" rx="4" class="boxR"/>
+  <text x="262" y="117" text-anchor="middle" class="lbl tiny">vthread</text>
+  <rect x="312" y="94" width="80" height="38" rx="4" class="boxR"/>
+  <text x="352" y="117" text-anchor="middle" class="lbl tiny">vthread</text>
+  <text x="480" y="106" class="lbl sub">head dequeued</text>
+  <text x="480" y="120" class="lbl sub">first (FIFO)</text>
+
+  <path class="flow" d="M 310 148 V 175"/>
+
+  <rect x="30" y="180" width="700" height="230" rx="6" class="boxP"/>
+  <text x="50" y="206" class="lbl node">jdk.internal.vm.DefaultVirtualThreadScheduler</text>
+  <text x="50" y="224" class="lbl body">backed by a java.util.concurrent.ForkJoinPool</text>
+  <rect x="50" y="236" width="200" height="26" rx="4" class="boxH"/>
+  <text x="150" y="253" text-anchor="middle" class="lbl tiny">asyncMode = true</text>
+  <text x="260" y="253" class="lbl sub">JDK source comment: // FIFO</text>
+
+  <rect x="50" y="272" width="300" height="60" rx="6" class="boxH"/>
+  <text x="200" y="292" text-anchor="middle" class="lbl node">parallelism</text>
+  <text x="200" y="308" text-anchor="middle" class="lbl body">= availableProcessors()</text>
+  <text x="200" y="322" text-anchor="middle" class="lbl sub" font-family="SF Mono, Consolas, monospace">jdk.virtualThreadScheduler.parallelism</text>
+
+  <rect x="380" y="272" width="330" height="60" rx="6" class="boxH"/>
+  <text x="545" y="292" text-anchor="middle" class="lbl node">maxPoolSize</text>
+  <text x="545" y="308" text-anchor="middle" class="lbl body">= Integer.max(parallelism, 256)</text>
+  <text x="545" y="322" text-anchor="middle" class="lbl sub" font-family="SF Mono, Consolas, monospace">jdk.virtualThreadScheduler.maxPoolSize</text>
+
+  <rect x="50" y="348" width="660" height="46" rx="4" class="boxAnno"/>
+  <text x="60" y="364" class="lbl tiny" font-weight="700">256 is a floor, not a flat default</text>
+  <text x="60" y="380" class="lbl tiny">minRunnable defaults to max(parallelism / 2, 1) — governs when a spare carrier is spun up</text>
+
+  <path class="flow" d="M 310 410 V 440 H 160 V 460"/>
+  <path class="flow" d="M 310 410 V 440 H 300 V 460"/>
+  <path class="flow" d="M 310 410 V 440 H 440 V 460"/>
+  <path class="flow" d="M 310 410 V 440 H 580 V 460"/>
+
+  <rect x="80" y="464" width="150" height="70" rx="6" class="boxP"/>
+  <text x="155" y="490" text-anchor="middle" class="lbl node">carrier-1</text>
+  <text x="155" y="508" text-anchor="middle" class="lbl sub">platform thread</text>
+  <rect x="240" y="464" width="150" height="70" rx="6" class="boxP"/>
+  <text x="315" y="490" text-anchor="middle" class="lbl node">carrier-2</text>
+  <text x="315" y="508" text-anchor="middle" class="lbl sub">platform thread</text>
+  <rect x="400" y="464" width="150" height="70" rx="6" class="boxP"/>
+  <text x="475" y="490" text-anchor="middle" class="lbl node">carrier-3</text>
+  <text x="475" y="508" text-anchor="middle" class="lbl sub">platform thread</text>
+  <rect x="560" y="464" width="150" height="70" rx="6" class="boxW"/>
+  <text x="635" y="490" text-anchor="middle" class="lbl node">carrier-N</text>
+  <text x="635" y="508" text-anchor="middle" class="lbl sub">up to maxPoolSize</text>
+
+  <!-- side panel contrasting LIFO -->
+  <rect x="730" y="180" width="290" height="400" rx="6" class="boxAnno"/>
+  <text x="745" y="204" class="lbl h2">CONTRAST — PARALLEL STREAMS</text>
+  <text x="745" y="228" class="lbl tiny" font-weight="700">Same commonPool, different order</text>
+  <text x="745" y="248" class="lbl tiny">Parallel streams also use a</text>
+  <text x="745" y="264" class="lbl tiny">ForkJoinPool (commonPool), but each</text>
+  <text x="745" y="280" class="lbl tiny">worker owns a LIFO work-stealing</text>
+  <text x="745" y="296" class="lbl tiny">deque: a worker pushes/pops its own</text>
+  <text x="745" y="312" class="lbl tiny">tasks LIFO for cache locality, and</text>
+  <text x="745" y="328" class="lbl tiny">idle workers steal from the FAR end</text>
+  <text x="745" y="344" class="lbl tiny">(FIFO) of another worker's deque.</text>
+  <text x="745" y="368" class="lbl tiny" font-weight="700">Why the vthread scheduler differs</text>
+  <text x="745" y="388" class="lbl tiny">asyncMode = true forces every</text>
+  <text x="745" y="404" class="lbl tiny">worker's own deque to FIFO too —</text>
+  <text x="745" y="420" class="lbl tiny">fairness for many short-lived</text>
+  <text x="745" y="436" class="lbl tiny">independent tasks (requests)</text>
+  <text x="745" y="452" class="lbl tiny">matters more than cache locality</text>
+  <text x="745" y="468" class="lbl tiny">for one recursive computation.</text>
+  <rect x="745" y="486" width="260" height="76" rx="4" class="boxW"/>
+  <text x="755" y="504" class="lbl tiny" font-weight="700">commonPool() width</text>
+  <text x="755" y="522" class="lbl tiny">parallelism =</text>
+  <text x="755" y="538" class="lbl tiny">availableProcessors() - 1</text>
+  <text x="755" y="554" class="lbl tiny">submitter participates too</text>
+
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="720" class="lbl tiny" font-weight="700">LEGEND</text>
+  <rect x="20" y="732" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="745" class="lbl tiny">scheduler / carrier (platform thread)</text>
+  <rect x="290" y="732" width="22" height="16" rx="3" class="boxH"/>
+  <text x="320" y="745" class="lbl tiny">tunable / config constant</text>
+  <rect x="500" y="732" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="745" class="lbl tiny">runnable virtual thread</text>
+  <rect x="700" y="732" width="22" height="16" rx="3" class="boxAnno"/>
+  <text x="730" y="745" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 850 740 H 890"/>
+  <text x="898" y="745" class="lbl tiny">A → B : A feeds/produces B</text>
+</svg>

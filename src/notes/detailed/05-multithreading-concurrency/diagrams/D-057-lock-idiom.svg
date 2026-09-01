@@ -1,0 +1,145 @@
+<svg viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels on the Lock idiom guarding FundsLedger.reserveStake. Frame 1, correct:
+     lock.lock() called as a standalone statement outside the try block, then try with
+     ledger.reserveStake inside and finally calling lock.unlock; if lock() itself throws, the try
+     block and its finally are never entered, so unlock is never called on a lock this thread never
+     held. Frame 2, wrong placement: lock.lock() moved to be the first statement inside the try
+     block; if lock() throws, the finally still runs and calls lock.unlock() on an unacquired lock,
+     which throws IllegalMonitorStateException, often masking the original exception. Frame 3, no
+     finally at all: lock.lock(), then reserveStake() which throws, then an unlock() call that is
+     never reached, leaving the lock permanently held so settlement-ingest-3 and restriction-apply-1
+     park on lock.lock() forever and the service is permanently wedged.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxG { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxR { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.4; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="760" fill="#ffffff"/>
+
+  <text x="30" y="32" class="lbl h1">THE LOCK IDIOM — ONE PLACEMENT THAT MATTERS (FundsLedger.reserveStake)</text>
+  <line x1="30" y1="42" x2="1170" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== PANEL 1 : CORRECT ===================== -->
+  <rect x="30" y="54" width="360" height="32" rx="6" class="boxG"/>
+  <text x="210" y="75" text-anchor="middle" class="lbl body" font-weight="700">FRAME 1 — lock() OUTSIDE try (correct)</text>
+
+  <rect x="30" y="92" width="360" height="260" rx="6" class="boxW"/>
+  <rect x="42" y="104" width="336" height="24" rx="4" class="boxH"/>
+  <text x="52" y="120" class="lbl code">lock.lock();</text>
+  <text x="52" y="150" class="lbl code">try {</text>
+  <text x="70" y="176" class="lbl code">ledger.reserveStake(clientId, 3.33);</text>
+  <text x="52" y="202" class="lbl code">} finally {</text>
+  <text x="70" y="228" class="lbl code">lock.unlock();</text>
+  <text x="52" y="254" class="lbl code">}</text>
+  <text x="52" y="284" class="lbl sub">acquisition sits BEFORE the try —</text>
+  <text x="52" y="298" class="lbl sub">it is not protected by this finally</text>
+  <text x="52" y="312" class="lbl sub">at all.</text>
+
+  <path class="flow" d="M 370 128 V 358"/>
+  <rect x="30" y="362" width="360" height="80" rx="6" class="boxA"/>
+  <text x="42" y="380" class="lbl tiny" font-weight="700">WHY IT'S SAFE</text>
+  <text x="42" y="398" class="lbl tiny">If lock() itself throws, control never</text>
+  <text x="42" y="413" class="lbl tiny">reaches the try, so finally never runs —</text>
+  <text x="42" y="428" class="lbl tiny">unlock() is never called on this thread.</text>
+
+  <rect x="30" y="452" width="360" height="60" rx="6" class="boxG"/>
+  <text x="42" y="472" class="lbl tiny" font-weight="700">RESULT</text>
+  <text x="42" y="490" class="lbl tiny">No unbalanced unlock() — lock and</text>
+  <text x="42" y="504" class="lbl tiny">unlock stay paired every time.</text>
+
+  <!-- ===================== PANEL 2 : WRONG PLACEMENT ===================== -->
+  <rect x="420" y="54" width="360" height="32" rx="6" class="boxR"/>
+  <text x="600" y="75" text-anchor="middle" class="lbl body" font-weight="700">FRAME 2 — lock() INSIDE try (wrong)</text>
+
+  <rect x="420" y="92" width="360" height="260" rx="6" class="boxW"/>
+  <text x="442" y="120" class="lbl code">try {</text>
+  <rect x="432" y="130" width="336" height="24" rx="4" class="boxH"/>
+  <text x="460" y="146" class="lbl code">lock.lock();</text>
+  <text x="460" y="172" class="lbl code">ledger.reserveStake(clientId, 3.33);</text>
+  <text x="442" y="198" class="lbl code">} finally {</text>
+  <rect x="432" y="208" width="336" height="24" rx="4" class="boxH"/>
+  <text x="460" y="224" class="lbl code">lock.unlock();</text>
+  <text x="442" y="250" class="lbl code">}</text>
+  <text x="442" y="280" class="lbl sub">the failed-acquisition path: lock()</text>
+  <text x="442" y="294" class="lbl sub">throws (e.g. lockInterruptibly),</text>
+  <text x="442" y="308" class="lbl sub">finally still executes.</text>
+
+  <path class="flow" d="M 760 220 V 358"/>
+  <rect x="420" y="362" width="360" height="80" rx="6" class="boxA"/>
+  <text x="432" y="380" class="lbl tiny" font-weight="700">WHY IT FAILS</text>
+  <text x="432" y="398" class="lbl tiny">lock() is the first statement INSIDE try.</text>
+  <text x="432" y="413" class="lbl tiny">If it throws before acquiring, finally</text>
+  <text x="432" y="428" class="lbl tiny">still runs and calls unlock() anyway.</text>
+
+  <rect x="420" y="452" width="360" height="60" rx="6" class="boxR"/>
+  <text x="432" y="472" class="lbl tiny" font-weight="700">RESULT</text>
+  <text x="432" y="490" class="lbl tiny">IllegalMonitorStateException thrown</text>
+  <text x="432" y="504" class="lbl tiny">from unlock() — masks the real cause.</text>
+
+  <!-- ===================== PANEL 3 : NO FINALLY ===================== -->
+  <rect x="810" y="54" width="360" height="32" rx="6" class="boxR"/>
+  <text x="990" y="75" text-anchor="middle" class="lbl body" font-weight="700">FRAME 3 — no finally at all</text>
+
+  <rect x="810" y="92" width="360" height="260" rx="6" class="boxW"/>
+  <text x="832" y="120" class="lbl code">lock.lock();</text>
+  <text x="832" y="150" class="lbl code">ledger.reserveStake(clientId, 3.33);</text>
+  <text x="850" y="164" class="lbl sub">// throws InsufficientFundsException</text>
+  <rect x="822" y="180" width="336" height="24" rx="4" class="boxR"/>
+  <text x="832" y="196" class="lbl code">lock.unlock();</text>
+  <text x="850" y="212" class="lbl sub">// never reached</text>
+
+  <text x="832" y="284" class="lbl sub">no try/finally guards the release —</text>
+  <text x="832" y="298" class="lbl sub">any exception between lock() and</text>
+  <text x="832" y="312" class="lbl sub">unlock() leaks the held lock.</text>
+
+  <path class="flow" d="M 1150 196 V 358"/>
+  <rect x="810" y="362" width="360" height="80" rx="6" class="boxA"/>
+  <text x="822" y="380" class="lbl tiny" font-weight="700">WHY IT FAILS</text>
+  <text x="822" y="398" class="lbl tiny">reserveStake() throws mid-critical-</text>
+  <text x="822" y="413" class="lbl tiny">section; execution jumps out of the</text>
+  <text x="822" y="428" class="lbl tiny">method, skipping unlock() entirely.</text>
+
+  <rect x="810" y="452" width="360" height="60" rx="6" class="boxR"/>
+  <text x="822" y="472" class="lbl tiny" font-weight="700">RESULT — PERMANENTLY WEDGED</text>
+  <text x="822" y="490" class="lbl tiny">FundsLedger's lock never releases;</text>
+  <text x="822" y="504" class="lbl tiny">settlement-ingest-3, restriction-apply-1 park forever.</text>
+
+  <!-- ===================== LEGEND ===================== -->
+  <line x1="30" y1="536" x2="1170" y2="536" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="550" width="22" height="16" rx="3" class="boxW"/>
+  <text x="60" y="563" class="lbl tiny">code block</text>
+
+  <rect x="180" y="550" width="22" height="16" rx="3" class="boxH"/>
+  <text x="210" y="563" class="lbl tiny">the one placement that matters (lock() / unlock() call site)</text>
+
+  <rect x="560" y="550" width="22" height="16" rx="3" class="boxA"/>
+  <text x="590" y="563" class="lbl tiny">explanation of why the ordering matters</text>
+
+  <rect x="870" y="550" width="22" height="16" rx="3" class="boxG"/>
+  <text x="900" y="563" class="lbl tiny">correct / safe outcome</text>
+
+  <rect x="1020" y="550" width="22" height="16" rx="3" class="boxR"/>
+  <text x="1050" y="563" class="lbl tiny">failure outcome</text>
+
+  <path class="flow" d="M 30 588 H 70"/>
+  <text x="80" y="593" class="lbl tiny">A → B : highlighted code leads to the stated outcome</text>
+</svg>

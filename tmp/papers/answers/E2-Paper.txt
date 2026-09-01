@@ -1,0 +1,101 @@
+Section 1 — DSA & Data Structures
+Q1. What is the time complexity of this snippet, and why?
+
+for (int i = 0; i < n; i++)
+    for (int j = 0; j < n; j++)
+        sum += a[i] + a[j];
+Follow-up: and if the inner loop started at j = i?
+- for every outer loop inner loop runs n time each hence O(n2)
+- when j=i it becomes triangular from square so time complexity is O(n2)
+--------------
+Q2. [CODE — 10 min] Write a method boolean isPalindrome(String s) that ignores case and non-alphanumeric characters ("A man, a plan, a canal: Panama" → true).
+--------------
+==============
+Section 2 — Java Core
+Q3. Checked vs unchecked exceptions: what's the compiler-level difference, and name one standard example of each.
+- Checked exception is known at compile time hence compiler is aware that an exception can occur, like FileNotFoundException if the given file was not present in the folder
+- Unchecked exception occur at runtime so compiler isnt aware of it like IndexOutOfBoundException if we try access an element not in the given array
+--------------
+Q4. Interface vs abstract class — two differences, and one situation where you must use an abstract class.
+- Interface is pure contract definition, while abstract class can have default methods, constructor and member variables.
+- For high level blueprints we'd use Interface, while for partial implementations we'd use abstract classes
+==============
+Section 3 — Concurrency & JVM
+Q5. Why use a thread pool (ExecutorService) instead of creating a new Thread() per task? Give two reasons.
+- Not aware of this
+--------------
+Q6. What does the synchronized keyword guarantee when two threads call the same synchronized method of one object?
+- One object gets the lock and can only update that value, once that has updated value and released lock then only next thread can acquire lock and modify the value.
+--------------
+==============
+Section 4 — Spring & JPA
+Q7. What does Spring Boot add on top of the Spring Framework? Name two concrete things a "starter" dependency gives you.
+- It gives autoconfiguration based on the POM skeleton to avoid extra boilerplate code.
+- Starter web gives tomcat instance web annotations with which a controller service classes etc can be annotated and used on the go.
+--------------
+Q8. What makes a class a JPA entity? What is @Id for, and what does @GeneratedValue change?
+- Annotating a class with @Entity marker and providing a @Id to member variable to mark it as primary-key makes a class JPA Entity.
+- @Id is used to mark the member variable (or group) as primary key.
+- @GeneratedValue allows a the sequence to get auto-generated for primary key and we dont have to manually assign a value to PK.
+--------------
+==============
+Section 5 — SQL & Databases
+Q9. [CODE] Table employees(id, name, dept, salary). Write the query: names and salaries of employees in dept 'SALES' earning above 50000, highest salary first.
+select * from employees where dept='SALES' and salary>50000 order by salary desc;
+--------------
+Q10. [CODE] Same table. Write the query: each dept with its employee count, only for depts having more than 10 employees.
+- I'm bad at group by and having but will try to answer
+- select count(*) cnt from employees group by dept having cnt>10;
+--------------
+==============
+Section 6 — Networking & OS
+Q11. What do the status-code classes 2xx, 3xx, 4xx, 5xx each mean? Whose "fault" is a 4xx vs a 5xx?
+- 2xx is success code, created, got response etc
+- 3xx is redirect code, moved to new location, permanently moved etc
+- 4xx is client side error code, such as requested resource not found, not having privilege (not authorized), not authenticated
+- 5xx is server side error code, such as gateway timeout
+- 4xx is clients fault while 5xx is server's fault.
+--------------
+Q12. What is an IP address and what is a port? Why does a machine with one IP need ports at all?
+- IP address is a internet address assigned to server, if public it'll be unique making server discoverable on internet, port is an open (or closed) connection on which the client connects.
+- IP is machine level and Port is application level a web application connects on one port 80, while same machine can be accessed via SSH on port 22. thus enabling a single machine to serve multiple applications
+--------------
+==============
+Section 7 — API & Web Security
+Q13. GET vs POST: two differences beyond "GET reads, POST writes" (think: caching, body, idempotency, URL visibility).
+- GET used for reads can be cached, body is generally not used, is idempotent
+- POST used for writes has no significant difference off caching, body is generally needed to share the data which needs to be stored, is non-idempotent.
+--------------
+Q14. Why must passwords never be stored in plain text — and why is encrypting them (reversibly) also wrong? What's done instead (name the concept; naming an algorithm is a bonus)?
+- Storing a password in plain text or reversible encryption exposes sensitive customer data to malicious attacks.
+- We can encrypt them using private-public key combination which is more secure, usage of Deify helman algos can help.
+--------------
+==============
+Section 8 — Messaging & Caching
+Q15. What does TTL mean on a cache entry? What happens on a read after the TTL expires, and why is that usually acceptable?
+- TTL is a amount of time we set for a cached entry to be valid, once TTL has expired a cache hits the original source (db) to get the latest value. A cached value can occasionally get updated to a new value hence its acceptable to hit the source occasionally however the TTL value must be optimally set as a very small value cam burden the DB defeating the purpose of cache, a very high value can pose risk of stale value getting delivered.
+--------------
+Q16. Synchronous vs asynchronous processing: the user uploads a video that needs transcoding. Which fits, and what does the API respond with?
+- When a user uploads a video its big time-consuming job, an async processing is suited here by responding with 'request accepted for processing' and return with 'created' once task is done.
+--------------
+==============
+Section 9 — Testing & Craft
+Q17. In git: commit vs push, and fetch vs pull — one sentence each.
+- commit moves the code to local branch, while push moves the code to remote branch.
+- fetch updates the code without merging, while pull either merges or rebases the code depending on the param (I'm not entirely sure on this)
+--------------
+Q18. What is a merge conflict, when does git raise one, and what are the manual steps to resolve it?
+- When multiple commits have code changes on same section of a file a merge needs user intervention and a merge conflict is raised for the same.
+- we can accept their ours or both eventually to make the code latest and correct.
+--------------
+==============
+Section 10 — Cloud & DevOps
+Q19. Why configure a service through environment variables instead of hardcoding values in the source or a committed file? Give two reasons.
+(I'm not much aware of this)
+- A service configured through env vars gives flexibility for quick alteration
+--------------
+Q20. What is a load balancer? Name two things it enables beyond "spreading traffic."
+(I'm not much aware of this)
+- an LB is a first server that gets hit and spreads the traffic to enrolled servers using a certain mechanism defined
+--------------
+==============

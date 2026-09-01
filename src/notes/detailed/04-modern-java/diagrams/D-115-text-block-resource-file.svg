@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for choosing text block, resource file, or constant for a payload, rooted
+     at the question: what is the payload? Branch one: a SQL or JSON fixture, such as the ledger query
+     text or an AA-610 DOCUMENTS_UPLOADED webhook body, goes in a text block, embedded and version-tracked
+     with the code that uses it. Branch two: a payload another tool must lint, format, or diff, such as the
+     PaymentRun payout schema, goes in a resource file on the classpath, with a note that trailing-newline
+     discipline matters on this leaf because a file-comparison diff flags a missing final newline as a
+     change. Branch three: a short single-line value, such as the bonus cap of 100, is a plain constant,
+     no text block or file needed. Branch four: a regex loses the text-block argument because a backslash
+     inside a text block still escapes exactly as in a normal string literal, so every backslash must be
+     doubled either way; the example shown is the status-code pattern caret A-Z open-brace 2 close-brace
+     hyphen backslash-backslash-d open-brace 3 close-brace dollar, matching AO-099, written identically in
+     a text block and in a normal string.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 16px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 11.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1f2937; }
+    .q     { font-size: 14px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#trir); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="trir" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TEXT BLOCK, RESOURCE FILE, OR CONSTANT — WHAT IS THE PAYLOAD?</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT -->
+  <rect x="413" y="64" width="214" height="50" rx="6" class="boxP"/>
+  <text x="520" y="86" text-anchor="middle" class="lbl q">WHAT IS THE PAYLOAD?</text>
+  <text x="520" y="104" text-anchor="middle" class="lbl sub">root decision</text>
+
+  <!-- bus -->
+  <path class="flow" d="M 520 114 V 134"/>
+  <line x1="135" y1="134" x2="890" y2="134" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 135 134 V 158"/>
+  <path class="flow" d="M 385 134 V 158"/>
+  <path class="flow" d="M 630 134 V 158"/>
+  <path class="flow" d="M 890 134 V 158"/>
+
+  <!-- LEAF 1: TEXT BLOCK (SQL/JSON) -->
+  <rect x="20" y="160" width="230" height="196" rx="6" class="boxR"/>
+  <text x="36" y="182" class="lbl node">TEXT BLOCK</text>
+  <text x="36" y="198" class="lbl sub">SQL or JSON fixture</text>
+  <line x1="36" y1="208" x2="234" y2="208" stroke="#9ca3af" stroke-width="1"/>
+  <text x="36" y="226" class="lbl code">"""</text>
+  <text x="36" y="242" class="lbl code">SELECT * FROM ledger_entry</text>
+  <text x="36" y="258" class="lbl code">WHERE client_id = ?</text>
+  <text x="36" y="274" class="lbl code">"""</text>
+  <text x="36" y="296" class="lbl sub">also fits: AA-610 webhook body</text>
+  <text x="36" y="310" class="lbl sub">used only in one integration test</text>
+  <text x="36" y="330" class="lbl sub">embedded with the code, tracked</text>
+  <text x="36" y="344" class="lbl sub">no separate file to keep in sync</text>
+
+  <!-- LEAF 2: RESOURCE FILE -->
+  <rect x="270" y="160" width="230" height="196" rx="6" class="boxH"/>
+  <text x="286" y="182" class="lbl node">RESOURCE FILE</text>
+  <text x="286" y="198" class="lbl sub">must be lint / format / diff-ed</text>
+  <line x1="286" y1="208" x2="484" y2="208" stroke="#9ca3af" stroke-width="1"/>
+  <text x="286" y="226" class="lbl code">resources/schema/</text>
+  <text x="286" y="242" class="lbl code">payment-run.json</text>
+  <text x="286" y="262" class="lbl sub">PaymentRun payout schema, JSON</text>
+  <text x="286" y="276" class="lbl sub">a linter and diff tool both need</text>
+  <text x="286" y="290" class="lbl sub">it as a file, not inline text</text>
+  <text x="286" y="312" class="lbl sub" font-weight="700">file-comparison leaf:</text>
+  <text x="286" y="326" class="lbl sub">trailing-newline discipline —</text>
+  <text x="286" y="340" class="lbl sub">missing final newline = a diff</text>
+
+  <!-- LEAF 3: CONSTANT -->
+  <rect x="520" y="160" width="220" height="196" rx="6" class="boxW"/>
+  <text x="536" y="182" class="lbl node">CONSTANT</text>
+  <text x="536" y="198" class="lbl sub">short, single-line value</text>
+  <line x1="536" y1="208" x2="724" y2="208" stroke="#9ca3af" stroke-width="1"/>
+  <text x="536" y="230" class="lbl code">static final Money</text>
+  <text x="536" y="246" class="lbl code">BONUS_CAP =</text>
+  <text x="536" y="262" class="lbl code">Money.of("100", GBP);</text>
+  <text x="536" y="286" class="lbl sub">one line, no internal structure</text>
+  <text x="536" y="300" class="lbl sub">to preserve — a text block or</text>
+  <text x="536" y="314" class="lbl sub">file adds only unneeded ceremony</text>
+
+  <!-- LEAF 4: REGEX -->
+  <rect x="760" y="160" width="260" height="196" rx="6" class="boxD"/>
+  <text x="776" y="182" class="lbl node" fill="#b91c1c">REGEX — text block LOSES</text>
+  <text x="776" y="198" class="lbl sub">backslash still escapes inside one</text>
+  <line x1="776" y1="208" x2="1004" y2="208" stroke="#9ca3af" stroke-width="1"/>
+  <text x="776" y="226" class="lbl code">Pattern.compile(</text>
+  <text x="776" y="242" class="lbl code">  "^[A-Z]{2}-\\d{3}$")</text>
+  <text x="776" y="260" class="lbl sub">matches AO-099 — identical text</text>
+  <text x="776" y="274" class="lbl sub">whether written as a text block or</text>
+  <text x="776" y="288" class="lbl sub">a normal "..." string; \\d still</text>
+  <text x="776" y="302" class="lbl sub">needs its doubled backslash either way</text>
+  <text x="776" y="322" class="lbl sub" font-weight="700">so use the plain string literal —</text>
+  <text x="776" y="336" class="lbl sub">a text block buys nothing for regex</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="384" width="1000" height="86" rx="6" class="panel"/>
+  <text x="36" y="406" class="lbl tiny" font-weight="700">Why the regex branch is the trap</text>
+  <text x="36" y="424" class="lbl tiny">Text blocks remove the need to escape embedded double quotes and change how leading whitespace is stripped, but they do not change how a</text>
+  <text x="36" y="440" class="lbl tiny">backslash is interpreted — \d inside a text block is still an illegal escape, exactly as in "...". Every backslash a regex needs must still be</text>
+  <text x="36" y="456" class="lbl tiny">doubled to \\d, so a text block gives a regex no readability win at all; the only real fix for that is Pattern.compile with a plain string.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="494" x2="1020" y2="494" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="508" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="521" class="lbl tiny">root question</text>
+  <rect x="150" y="508" width="22" height="16" rx="3" class="boxR"/>
+  <text x="180" y="521" class="lbl tiny">text block — right choice</text>
+  <rect x="360" y="508" width="22" height="16" rx="3" class="boxH"/>
+  <text x="390" y="521" class="lbl tiny">resource file — right choice</text>
+  <rect x="580" y="508" width="22" height="16" rx="3" class="boxW"/>
+  <text x="610" y="521" class="lbl tiny">plain constant — right choice</text>
+  <rect x="780" y="508" width="22" height="16" rx="3" class="boxD"/>
+  <text x="810" y="521" class="lbl tiny">text block is the wrong choice here</text>
+  <path class="flow" d="M 20 546 H 60"/>
+  <text x="68" y="551" class="lbl tiny">A → B : B is the branch taken from decision A</text>
+</svg>

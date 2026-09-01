@@ -1,0 +1,92 @@
+<svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 4: the verification gate reports success over the unchecked file, and the fix inserts a text-ness assertion as a first stage before any grep-based gate runs; an annotation panel lists four sibling verification laws.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 4 OF 4 — THE CHECKER THAT SWITCHED ITSELF OFF</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">BEFORE — GATE CERTIFIES OVER AN UNCHECKED FILE</text>
+
+  <rect x="20" y="80" width="220" height="60" rx="6" class="boxD"/>
+  <text x="130" y="105" text-anchor="middle" class="lbl body mono">order.java: data</text>
+  <text x="130" y="123" text-anchor="middle" class="lbl sub">never inspected as text</text>
+
+  <path class="flow" d="M 240 110 H 300"/>
+
+  <rect x="300" y="80" width="230" height="60" rx="6" class="boxR"/>
+  <text x="415" y="105" text-anchor="middle" class="lbl body mono">verification gate</text>
+  <text x="415" y="123" text-anchor="middle" class="lbl sub">grep checks: 0 mismatches</text>
+
+  <path class="flow" d="M 530 110 H 590"/>
+
+  <rect x="590" y="80" width="220" height="60" rx="6" class="boxR"/>
+  <text x="700" y="105" text-anchor="middle" class="lbl body" font-weight="700">STATUS: SUCCESS</text>
+  <text x="700" y="123" text-anchor="middle" class="lbl sub">reported over an unchecked file</text>
+
+  <line x1="20" y1="168" x2="1020" y2="168" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="192" class="lbl h2">THE FIX — TEXT-NESS ASSERTED AS FIRST STAGE</text>
+
+  <rect x="20" y="206" width="220" height="60" rx="6" class="boxD"/>
+  <text x="130" y="231" text-anchor="middle" class="lbl body mono">order.java: data</text>
+  <text x="130" y="249" text-anchor="middle" class="lbl sub">candidate artifact</text>
+
+  <path class="flow" d="M 240 236 H 300"/>
+
+  <rect x="300" y="196" width="250" height="80" rx="6" class="boxA"/>
+  <text x="425" y="220" text-anchor="middle" class="lbl body mono" font-weight="700">stage 0: assert text-ness</text>
+  <text x="425" y="238" text-anchor="middle" class="lbl sub mono">file --mime-encoding</text>
+  <text x="425" y="254" text-anchor="middle" class="lbl sub">binary → fail loud, not skip</text>
+
+  <path class="flow" d="M 550 236 H 610"/>
+
+  <rect x="610" y="206" width="200" height="60" rx="6" class="boxD"/>
+  <text x="710" y="231" text-anchor="middle" class="lbl body" font-weight="700">STATUS: FAIL</text>
+  <text x="710" y="249" text-anchor="middle" class="lbl sub">gate never runs on non-text</text>
+
+  <path class="flow" d="M 425 276 V 300" opacity="0"/>
+
+  <line x1="20" y1="300" x2="1020" y2="300" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="318" width="1000" height="250" rx="6" class="boxA"/>
+  <text x="40" y="344" class="lbl node">FOUR SIBLING VERIFICATION LAWS</text>
+
+  <text x="40" y="372" class="lbl tiny" font-weight="700">1. Certify from final state, never from a pre-write computation.</text>
+  <text x="40" y="390" class="lbl sub">a gate that trusts what it planned to write, not what landed on disk, certifies nothing.</text>
+
+  <text x="40" y="420" class="lbl tiny" font-weight="700">2. Pin the harness beside the digest.</text>
+  <text x="40" y="438" class="lbl sub">a checksum with no recorded tool version is unverifiable the day the tool's behaviour changes.</text>
+
+  <text x="40" y="468" class="lbl tiny" font-weight="700">3. Never let a status row point at a missing path.</text>
+  <text x="40" y="486" class="lbl sub">a green row citing a file that is not there is worse than no row at all.</text>
+
+  <text x="40" y="516" class="lbl tiny" font-weight="700">4. A closed lane is not a verified lane.</text>
+  <text x="40" y="534" class="lbl sub">"nothing left to check" and "everything checked" are different claims — this frame is why.</text>
+
+  <line x1="20" y1="580" x2="1020" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="592" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="605" class="lbl tiny">defect / failing state</text>
+  <rect x="200" y="592" width="22" height="16" rx="3" class="boxR"/>
+  <text x="230" y="605" class="lbl tiny">gate stage, before-fix</text>
+  <rect x="400" y="592" width="22" height="16" rx="3" class="boxA"/>
+  <text x="430" y="605" class="lbl tiny">new stage / annotation panel</text>
+</svg>

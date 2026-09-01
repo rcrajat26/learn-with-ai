@@ -1,0 +1,197 @@
+<svg viewBox="0 0 1140 1230" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison showing escape analysis erasing an Integer box, measured on Oracle JDK 21.0.7 on macOS aarch64. The left half is the non-escaping case: stakeTotalMinorUnits boxes a cash and a bonus stake amount in minor units, adds them and returns; C2 proves neither box escapes, so both are scalar-replaced and the two int values live in named register slots with no surrounding object, no 12-byte header, no int value field, and both Integer.valueOf and intValue folded away. Measured allocation is zero bytes over five million calls, and zero bytes at the QuizStakes scale of 2.8 million stake reservations per day; with escape analysis disabled the same code allocates 160,000,000 bytes, 32 bytes per iteration, which is two 16-byte Integer objects. The right half is the escaping case: stakeTotalAudited stores the same box into a static List of Integer named AUDIT on the ledger audit path, so the reference outlives the method and cannot be scalar-replaced. One 16-byte Integer is allocated per iteration, drawn as an object with an 8-byte mark word, a 4-byte compressed class word and a 4-byte int value, a total of 16 bytes already a multiple of 8 so no padding. Measured 80,000,000 bytes over five million iterations, 16 bytes per iteration, unchanged whether escape analysis is on or off; at 2.8 million stake reservations per day that is 2,800,000 times 16 equals 44,800,000 bytes, or 42.72 mebibytes of boxing per day on the audit path. Two annotation panels below give the full measured allocation table and the C2 flag values, plus a second measurement in which a Long accumulator over a one-million-element int array allocated 24,000,000 bytes, 24 bytes per iteration.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .bodyb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .codeS{font-family:Menlo,"SF Mono",monospace;font-size:11px;fill:#1f2937;}
+    </style>
+    <marker id="arr103" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="1230" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">Escape analysis erases a box &#8212; the same Integer, unpublished vs. published to the audit path</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="60"  y="66" class="h2">BEFORE / LEFT &#8212; NO ESCAPE: THE BOX IS SCALAR-REPLACED</text>
+  <text x="580" y="66" class="h2">AFTER / RIGHT &#8212; ESCAPES INTO AUDIT: ONE 16-BYTE OBJECT PER ITERATION</text>
+
+  <!-- ============ BAND 1 : SOURCE ============ -->
+  <rect x="60" y="78" width="500" height="176" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="76" y="100" class="smallb">FundsLedger.stakeTotalMinorUnits &#8212; box never published</text>
+  <g class="codeS">
+    <text x="76"  y="122">static int stakeTotalMinorUnits(int cashMinorUnits,</text>
+    <text x="287" y="138">int bonusMinorUnits) {</text>
+    <text x="103" y="162">Integer cash = cashMinorUnits;</text>
+    <text x="330" y="162">// Integer.valueOf</text>
+    <text x="103" y="178">Integer bonus = bonusMinorUnits;</text>
+    <text x="330" y="178">// Integer.valueOf</text>
+    <text x="103" y="194">return cash + bonus;</text>
+    <text x="330" y="194">// both intValue()</text>
+    <text x="76"  y="210">}</text>
+    <text x="76"  y="234">// driven 5,000,000 times, values outside &#8722;128..127</text>
+  </g>
+
+  <rect x="580" y="78" width="540" height="176" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="596" y="100" class="smallb">FundsLedger.stakeTotalAudited &#8212; box published to the ledger audit list</text>
+  <g class="codeS">
+    <text x="596" y="122">static final List&lt;Integer&gt; AUDIT = new ArrayList&lt;&gt;();</text>
+    <text x="596" y="146">static int stakeTotalAudited(int cashMinorUnits,</text>
+    <text x="794" y="162">int bonusMinorUnits) {</text>
+    <text x="623" y="178">Integer cash = cashMinorUnits;</text>
+    <text x="623" y="194">AUDIT.add(cash);</text>
+    <text x="790" y="194">// ESCAPES &#8212; reference published</text>
+    <text x="623" y="210">if (AUDIT.size() &gt; 8) { AUDIT.clear(); }</text>
+    <text x="623" y="226">return cash + bonusMinorUnits;</text>
+    <text x="596" y="242">}</text>
+  </g>
+
+  <path d="M 310 254 V 274" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+  <path d="M 850 254 V 274" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+
+  <!-- ============ BAND 2 : C2 VERDICT ============ -->
+  <rect x="60" y="274" width="500" height="68" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <text x="76" y="296" class="smallb">C2 verdict: NO ESCAPE</text>
+  <text x="76" y="316" class="smallD">both references die inside the method &#8594; EliminateAllocations fires</text>
+  <text x="76" y="334" class="smallD">neither box is ever reachable from outside the compiled frame</text>
+
+  <rect x="580" y="274" width="540" height="68" rx="5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="596" y="296" class="smallb">C2 verdict: GLOBAL ESCAPE</text>
+  <text x="596" y="316" class="smallD">the reference is stored into a static, GC-reachable collection on the</text>
+  <text x="596" y="334" class="smallD">ledger's audit path &#8212; no scalar replacement is possible</text>
+
+  <path d="M 310 342 V 362" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+  <path d="M 850 342 V 362" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+
+  <!-- ============ BAND 3 : REPRESENTATION ============ -->
+  <rect x="60" y="362" width="500" height="240" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="76" y="384" class="smallb">SCALAR-REPLACED FORM &#8212; FIELDS LIVE IN REGISTERS, NO OBJECT</text>
+
+  <rect x="90" y="398" width="200" height="44" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="106" y="417" class="codeS">r19 : cashMinorUnits</text>
+  <text x="106" y="433" class="small">plain int, 4 bytes, in a register</text>
+
+  <rect x="310" y="398" width="200" height="44" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="326" y="417" class="codeS">r20 : bonusMinorUnits</text>
+  <text x="326" y="433" class="small">plain int, 4 bytes, in a register</text>
+
+  <g class="smallD">
+    <text x="76" y="468">Integer.valueOf(&#8230;) folded away &#8212; no invokestatic emitted</text>
+    <text x="76" y="486">intValue() folded away &#8212; no invokevirtual emitted</text>
+    <text x="76" y="504">no 12-byte header, no int value field, no heap object at all</text>
+    <text x="76" y="522">the add executes directly on the two int registers</text>
+    <text x="76" y="540">heap objects created per call: NONE</text>
+    <text x="76" y="564">the box existed only in the bytecode; C2 deleted it before codegen</text>
+    <text x="76" y="582">(-XX:+DoEscapeAnalysis and -XX:+EliminateAllocations, both default true)</text>
+  </g>
+
+  <rect x="580" y="362" width="540" height="240" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="596" y="384" class="smallb">ONE Integer PER ITERATION, KEPT LIVE BY AUDIT</text>
+
+  <rect x="600" y="423" width="180" height="44" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="616" y="442" class="codeS">AUDIT : List&lt;Integer&gt;</text>
+  <text x="616" y="458" class="small">static, GC-reachable root</text>
+
+  <path d="M 780 445 H 830" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+
+  <rect x="830" y="386" width="270" height="124" rx="5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="846" y="408" class="smallb">Integer instance on the heap</text>
+  <text x="846" y="426" class="smallD">mark word .................. 8 bytes</text>
+  <text x="846" y="442" class="smallD">class word (compressed) .... 4 bytes</text>
+  <text x="846" y="458" class="smallD">int value .................. 4 bytes</text>
+  <text x="846" y="480" class="smallb">= 16 bytes, a multiple of 8 already</text>
+  <text x="846" y="498" class="smallD">so no padding is inserted</text>
+
+  <g class="smallD">
+    <text x="596" y="534">escape analysis cannot scalar-replace a box stored into a live collection &#8212;</text>
+    <text x="596" y="552">the reference outlives the method, so the object must exist on the heap</text>
+    <text x="596" y="570">measured 16.0 bytes per iteration with -XX:+DoEscapeAnalysis AND with it off</text>
+    <text x="596" y="588">values are well outside &#8722;128..127, so IntegerCache never supplies the box</text>
+  </g>
+
+  <path d="M 310 602 V 622" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+  <path d="M 850 602 V 622" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+
+  <!-- ============ BAND 4 : ALLOCATION ============ -->
+  <rect x="60" y="622" width="500" height="140" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.8"/>
+  <text x="76" y="644" class="smallb">ALLOCATION &#8212; THE NON-ESCAPING PATH</text>
+  <g class="smallD">
+    <text x="76" y="666">-XX:+DoEscapeAnalysis (default): 0 bytes total,</text>
+    <text x="76" y="684">0.0 bytes per iteration over 5,000,000 calls</text>
+    <text x="76" y="708" class="smallb">at 2.8M stake reservations/day: 0 bytes</text>
+    <text x="76" y="732">-XX:-DoEscapeAnalysis: 160,000,000 bytes = 32.0/iter</text>
+    <text x="76" y="750">= 2 &#215; 16 bytes &#8212; an independent measure of Integer's size</text>
+  </g>
+
+  <rect x="580" y="622" width="540" height="140" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="596" y="644" class="smallb">ALLOCATION &#8212; THE ESCAPING PATH</text>
+  <g class="smallD">
+    <text x="596" y="666">5,000,000 iterations &#215; 1 box = 80,000,000 bytes measured</text>
+    <text x="596" y="684">80,000,000 / 5,000,000 = 16.0 bytes per iteration</text>
+    <text x="596" y="702">at QuizStakes scale, 2.8M stake reservations per day:</text>
+    <text x="596" y="726" class="smallb">2,800,000 &#215; 16 = 44,800,000 bytes = 42.72 MiB per day</text>
+    <text x="596" y="750">unchanged by -XX:-DoEscapeAnalysis: still 80,000,000 bytes</text>
+  </g>
+
+  <!-- ============ ANNOTATION PANELS ============ -->
+  <line x1="20" y1="786" x2="1120" y2="786" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="800" width="1060" height="116" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="822" class="bodyb">MEASURED &#8212; ThreadMXBean.getThreadAllocatedBytes after warming to C2, 5,000,000 calls each</text>
+  <g class="smallb">
+    <text x="76"  y="846">Run</text>
+    <text x="420" y="846">Non-escaping (2 boxes/iteration)</text>
+    <text x="790" y="846">Escaping (1 box/iteration)</text>
+  </g>
+  <line x1="76" y1="854" x2="1104" y2="854" stroke="#2563eb" stroke-width="1"/>
+  <g class="smallD">
+    <text x="76"  y="874">default (-XX:+DoEscapeAnalysis)</text>
+    <text x="420" y="874">0 bytes, 0.0 per iteration</text>
+    <text x="790" y="874">80,000,000 bytes, 16.0 per iteration</text>
+    <text x="76"  y="898">-XX:-DoEscapeAnalysis</text>
+    <text x="420" y="898">160,000,000 bytes, 32.0 per iteration</text>
+    <text x="790" y="898">80,000,000 bytes, 16.0 per iteration</text>
+  </g>
+
+  <rect x="60" y="932" width="1060" height="124" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="76" y="954" class="bodyb">FLAGS, PLATFORM, AND A SECOND MEASUREMENT</text>
+  <g class="smallD">
+    <text x="76" y="976">Oracle JDK 21.0.7 (21.0.7+8-LTS-245), macOS aarch64, UseCompressedOops on, ObjectAlignmentInBytes = 8</text>
+    <text x="76" y="998">bool DoEscapeAnalysis = true {C2 product} {default}          bool EliminateAllocations = true {C2 product} {default}</text>
+    <text x="76" y="1022">Long sum = 0L; for (int v : stakeMinorUnits) sum += v;  over a 1,000,000-element int[] allocated a measured 24,000,000 bytes</text>
+    <text x="76" y="1040">= 24 bytes per iteration, one Long per +=, because the accumulator box is reassigned inside the loop; Long is 24 bytes (12-byte header + 4 padding + 8-byte long)</text>
+  </g>
+
+  <!-- ============ LEGEND ============ -->
+  <text x="20" y="1090" class="h2">LEGEND</text>
+  <line x1="20" y1="1098" x2="1120" y2="1098" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1110" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="1123" class="small">Java source under measurement</text>
+
+  <rect x="30" y="1136" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1149" class="small">the C2 escape-analysis verdict that lets the allocation be eliminated</text>
+
+  <rect x="30" y="1162" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="1175" class="small">fast path &#8212; the scalar-replaced form and its zero-byte allocation result</text>
+
+  <rect x="30" y="1188" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1201" class="small">the holder of the int value: a machine register on the left, the AUDIT list on the right</text>
+
+  <rect x="620" y="1110" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="648" y="1123" class="small">costly path &#8212; the escaping box, the 16-byte heap object, and its allocation total</text>
+
+  <rect x="620" y="1136" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="648" y="1149" class="small">measured annotation panel</text>
+
+  <line x1="620" y1="1170" x2="646" y2="1170" stroke="#475569" stroke-width="2" marker-end="url(#arr103)"/>
+  <text x="654" y="1175" class="small">primary flow / refers to : A &#8594; B, B is what A compiles to, or A holds a reference to B</text>
+</svg>

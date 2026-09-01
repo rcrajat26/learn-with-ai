@@ -1,0 +1,122 @@
+<svg viewBox="0 0 1040 870" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree of four gates in series that a new settle-stake worker thread must
+     pass at creation: ulimit -u, proc sys kernel threads-max, pid_max, and the container's
+     pids.max. Failing any one of the four gates ends at the same terminal box:
+     OutOfMemoryError unable to create native thread. A separate, visually distinct box shows
+     heap exhaustion as a different cause with a different message, OutOfMemoryError Java heap
+     space, reached by a different path that has nothing to do with thread creation.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="870" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE THE THREAD LIMIT COMES FROM — CREATING A NEW SETTLE-STAKE WORKER</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- start -->
+  <rect x="380" y="58" width="240" height="50" rx="6" class="boxP"/>
+  <text x="500" y="88" text-anchor="middle" class="lbl node">new Thread(...).start()</text>
+
+  <!-- Gate 1 -->
+  <path class="flow" d="M 500 108 V 128"/>
+  <rect x="360" y="128" width="280" height="60" rx="6" class="boxP"/>
+  <text x="500" y="152" text-anchor="middle" class="lbl node">Gate 1 — ulimit -u</text>
+  <text x="500" y="172" text-anchor="middle" class="lbl sub">per-user max processes/threads (RLIMIT_NPROC)</text>
+  <path class="flow" d="M 500 188 V 208"/>
+  <text x="514" y="203" class="lbl tiny">pass</text>
+  <path class="flow" d="M 640 148 H 766 V 700"/>
+  <text x="648" y="142" class="lbl tiny">fail</text>
+
+  <!-- Gate 2 -->
+  <rect x="340" y="208" width="320" height="60" rx="6" class="boxP"/>
+  <text x="500" y="232" text-anchor="middle" class="lbl node">Gate 2 — /proc/sys/kernel/threads-max</text>
+  <text x="500" y="252" text-anchor="middle" class="lbl sub">system-wide cap on kernel threads</text>
+  <path class="flow" d="M 500 268 V 288"/>
+  <text x="514" y="283" class="lbl tiny">pass</text>
+  <path class="flow" d="M 660 228 H 744 V 700"/>
+  <text x="668" y="222" class="lbl tiny">fail</text>
+
+  <!-- Gate 3 -->
+  <rect x="360" y="288" width="280" height="60" rx="6" class="boxP"/>
+  <text x="500" y="312" text-anchor="middle" class="lbl node">Gate 3 — pid_max</text>
+  <text x="500" y="332" text-anchor="middle" class="lbl sub">max PID value, shared by processes and threads</text>
+  <path class="flow" d="M 500 348 V 368"/>
+  <text x="514" y="363" class="lbl tiny">pass</text>
+  <path class="flow" d="M 640 308 H 722 V 700"/>
+  <text x="648" y="302" class="lbl tiny">fail</text>
+
+  <!-- Gate 4 -->
+  <rect x="340" y="368" width="320" height="60" rx="6" class="boxP"/>
+  <text x="500" y="392" text-anchor="middle" class="lbl node">Gate 4 — container pids.max</text>
+  <text x="500" y="412" text-anchor="middle" class="lbl sub">cgroup limit on tasks inside this container</text>
+  <path class="flow" d="M 500 428 V 448"/>
+  <text x="514" y="443" class="lbl tiny">pass</text>
+  <path class="flow" d="M 660 388 H 700 V 700"/>
+  <text x="668" y="382" class="lbl tiny">fail</text>
+
+  <!-- success terminal -->
+  <rect x="380" y="448" width="240" height="60" rx="6" class="boxR"/>
+  <text x="500" y="474" text-anchor="middle" class="lbl node">Thread created</text>
+  <text x="500" y="492" text-anchor="middle" class="lbl sub">OS thread + JavaThread + Thread object live</text>
+
+  <!-- shared failure terminal for all four gates -->
+  <rect x="330" y="700" width="470" height="82" rx="6" class="boxDeg"/>
+  <text x="565" y="726" text-anchor="middle" class="lbl node">OutOfMemoryError</text>
+  <text x="565" y="748" text-anchor="middle" class="lbl body">unable to create native thread</text>
+  <text x="565" y="768" text-anchor="middle" class="lbl sub">same terminal for gates 1–4 — the OS/cgroup refused, not the JVM heap</text>
+
+  <!-- distinct heap exhaustion path, separate cause -->
+  <rect x="820" y="128" width="200" height="60" rx="6" class="boxAnn"/>
+  <text x="920" y="152" text-anchor="middle" class="lbl node">Heap allocation</text>
+  <text x="920" y="172" text-anchor="middle" class="lbl sub">e.g. new LedgerEntry[..] too large</text>
+
+  <path class="flow" d="M 920 188 V 636"/>
+  <rect x="820" y="636" width="200" height="94" rx="6" class="boxDeg"/>
+  <text x="920" y="660" text-anchor="middle" class="lbl node">OutOfMemoryError</text>
+  <text x="920" y="680" text-anchor="middle" class="lbl body">Java heap space</text>
+  <text x="920" y="698" text-anchor="middle" class="lbl sub">a different cause —</text>
+  <text x="920" y="714" text-anchor="middle" class="lbl sub">nothing to do with thread creation</text>
+
+  <!-- annotation -->
+  <rect x="20" y="580" width="290" height="200" rx="6" class="boxAnn"/>
+  <text x="34" y="602" class="lbl h2">DON'T CONFUSE THE TWO</text>
+  <text x="34" y="624" class="lbl tiny">"unable to create native thread" means the</text>
+  <text x="34" y="640" class="lbl tiny">OS/cgroup refused a new thread — raise a</text>
+  <text x="34" y="656" class="lbl tiny">ulimit, threads-max, pid_max, or pids.max,</text>
+  <text x="34" y="672" class="lbl tiny">or reduce thread count (e.g. virtual threads).</text>
+  <text x="34" y="696" class="lbl tiny">"Java heap space" means the object graph on</text>
+  <text x="34" y="712" class="lbl tiny">the heap is too large for -Xmx — raising a</text>
+  <text x="34" y="728" class="lbl tiny">thread limit does nothing for this cause.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="800" x2="1020" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="810" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="821" class="lbl tiny">gate check</text>
+  <rect x="150" y="810" width="22" height="14" rx="3" class="boxR"/>
+  <text x="180" y="821" class="lbl tiny">success terminal</text>
+  <rect x="310" y="810" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="340" y="821" class="lbl tiny">failure terminal (thrown exception)</text>
+  <rect x="560" y="810" width="22" height="14" rx="3" class="boxAnn"/>
+  <text x="590" y="821" class="lbl tiny">annotation / distinct alternate cause</text>
+  <path class="flow" d="M 20 846 H 60"/>
+  <text x="68" y="850" class="lbl tiny">A → B : flow, labelled pass/fail where the direction is not obvious</text>
+</svg>

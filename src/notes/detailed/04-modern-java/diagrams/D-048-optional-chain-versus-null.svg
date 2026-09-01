@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after: the Optional chain versus the null check. Left, before: four levels of
+     nested null checks navigating Client to Account to Wallet to Money — if (client != null), then if
+     (client.account() != null), then if (account.wallet() != null), then if (wallet.withdrawable() != null),
+     each closing with its own brace. Right, after: findClient(id).map(Client::account).map(Account::wallet)
+     .map(Wallet::withdrawable).orElse(Money.ZERO), one straight chain with no null checks. Below both, the
+     anti-pattern: if (opt.isPresent()) opt.get(), marked as the left-hand version plus one allocation for
+     the Optional wrapper.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE OPTIONAL CHAIN VERSUS THE NULL CHECK</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="60" class="lbl h2">NULL-CHECK NAVIGATION — BEFORE</text>
+  <text x="580" y="60" class="lbl h2">OPTIONAL CHAIN — AFTER</text>
+  <line x1="560" y1="52" x2="560" y2="670" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: nested null checks, four levels -->
+  <rect x="20" y="90" width="500" height="460" rx="6" class="boxW"/>
+  <text x="34" y="112" class="lbl body">if (client != null) {</text>
+
+  <rect x="50" y="130" width="440" height="390" rx="6" class="boxW"/>
+  <text x="64" y="152" class="lbl body">if (client.account() != null) {</text>
+
+  <rect x="80" y="170" width="380" height="320" rx="6" class="boxW"/>
+  <text x="94" y="192" class="lbl body">if (account.wallet() != null) {</text>
+
+  <rect x="110" y="210" width="320" height="250" rx="6" class="boxW"/>
+  <text x="122" y="232" class="lbl body">if (wallet.withdrawable() != null) {</text>
+
+  <text x="122" y="284" class="lbl node">return wallet.withdrawable();</text>
+  <text x="122" y="304" class="lbl sub">every failed check falls through</text>
+  <text x="122" y="318" class="lbl sub">to a return of Money.ZERO</text>
+
+  <text x="418" y="432" text-anchor="end" class="lbl sub">}</text>
+  <text x="448" y="472" text-anchor="end" class="lbl sub">}</text>
+  <text x="478" y="502" text-anchor="end" class="lbl sub">}</text>
+  <text x="508" y="532" text-anchor="end" class="lbl sub">}</text>
+
+  <!-- RIGHT: Optional chain, one spine -->
+  <rect x="580" y="90" width="460" height="60" rx="6" class="boxP"/>
+  <text x="810" y="114" text-anchor="middle" class="lbl node">findClient(id)</text>
+  <text x="810" y="132" text-anchor="middle" class="lbl sub">Optional&lt;Client&gt;</text>
+
+  <path class="flow" d="M 810 150 V 172"/>
+
+  <rect x="580" y="174" width="460" height="60" rx="6" class="boxP"/>
+  <text x="810" y="198" text-anchor="middle" class="lbl node">.map(Client::account)</text>
+  <text x="810" y="216" text-anchor="middle" class="lbl sub">Optional&lt;Account&gt;</text>
+
+  <path class="flow" d="M 810 234 V 256"/>
+
+  <rect x="580" y="258" width="460" height="60" rx="6" class="boxP"/>
+  <text x="810" y="282" text-anchor="middle" class="lbl node">.map(Account::wallet)</text>
+  <text x="810" y="300" text-anchor="middle" class="lbl sub">Optional&lt;Wallet&gt;</text>
+
+  <path class="flow" d="M 810 318 V 340"/>
+
+  <rect x="580" y="342" width="460" height="60" rx="6" class="boxP"/>
+  <text x="810" y="366" text-anchor="middle" class="lbl node">.map(Wallet::withdrawable)</text>
+  <text x="810" y="384" text-anchor="middle" class="lbl sub">Optional&lt;Money&gt;</text>
+
+  <path class="flow" d="M 810 402 V 424"/>
+
+  <rect x="580" y="426" width="460" height="60" rx="6" class="boxR"/>
+  <text x="810" y="450" text-anchor="middle" class="lbl node">.orElse(Money.ZERO)</text>
+  <text x="810" y="468" text-anchor="middle" class="lbl sub">Money — never null, zero null checks written</text>
+
+  <!-- anti-pattern panel, full width -->
+  <rect x="20" y="590" width="1080" height="86" rx="6" class="boxD"/>
+  <text x="36" y="612" class="lbl h2" fill="#b91c1c">ANTI-PATTERN — DO NOT WRITE THIS</text>
+  <text x="36" y="636" class="lbl body">if (opt.isPresent()) opt.get(); else Money.ZERO;</text>
+  <text x="36" y="656" class="lbl sub">the left-hand version, plus one extra allocation for the Optional wrapper itself</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="714" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="727" class="lbl tiny">nested null-check level</text>
+  <rect x="230" y="714" width="22" height="16" rx="3" class="boxP"/>
+  <text x="260" y="727" class="lbl tiny">Optional chain step</text>
+  <rect x="440" y="714" width="22" height="16" rx="3" class="boxR"/>
+  <text x="470" y="727" class="lbl tiny">resolved final value</text>
+  <rect x="650" y="714" width="22" height="16" rx="3" class="boxD"/>
+  <text x="680" y="727" class="lbl tiny">anti-pattern</text>
+  <path class="flow" d="M 850 722 H 890"/>
+  <text x="898" y="727" class="lbl tiny">A → B : B follows from A in the chain</text>
+</svg>

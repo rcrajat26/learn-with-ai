@@ -1,0 +1,87 @@
+<svg viewBox="0 0 1040 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Comparator-invocation cost of cardDeposits.stream().sorted(byAmount).findFirst() against cardDeposits.stream().min(byAmount), plotted for N from 10 to 2.8 million. The sort-then-take-first path grows as N log N; the min path grows as N. At N equal to 95,000, one day of card deposits, sort makes approximately 1,567,500 comparator invocations and min makes 94,999. Both return the identical LedgerEntry — the smallest by amount.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+    .curveSort { fill: none; stroke: #b45309; stroke-width: 2.4; }
+    .curveMin  { fill: none; stroke: #15803d; stroke-width: 2.4; }
+    .mark  { fill: #1f2937; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">sorted().findFirst() VERSUS min(comparator) — COMPARATOR INVOCATIONS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">cardDeposits.stream().sorted(byAmount).findFirst()  vs  cardDeposits.stream().min(byAmount) — over N card deposits, N from 10 to 2,800,000</text>
+
+  <!-- plot area: x 90..980, y 100..520, log-log style axes drawn as straight for readability -->
+  <line x1="90" y1="520" x2="980" y2="520" class="axis" marker-end="url(#tri)"/>
+  <line x1="90" y1="520" x2="90" y2="100" class="axis" marker-end="url(#tri)"/>
+  <text x="980" y="545" text-anchor="end" class="lbl tiny">N (card/stake volume, log scale)</text>
+  <text x="60" y="95" text-anchor="middle" class="lbl tiny">comparator</text>
+  <text x="60" y="108" text-anchor="middle" class="lbl tiny">invocations</text>
+
+  <!-- gridlines for N ticks: 10, 1e3, 95k, 1e5, 1e6, 2.8e6 mapped log-scale across 90..980 -->
+  <line x1="90"  y1="100" x2="90"  y2="520" class="grid"/>
+  <line x1="270" y1="100" x2="270" y2="520" class="grid"/>
+  <line x1="450" y1="100" x2="450" y2="520" class="grid"/>
+  <line x1="640" y1="100" x2="640" y2="520" class="grid"/>
+  <line x1="820" y1="100" x2="820" y2="520" class="grid"/>
+  <line x1="960" y1="100" x2="960" y2="520" class="grid"/>
+
+  <text x="90"  y="536" text-anchor="middle" class="lbl tiny">10</text>
+  <text x="270" y="536" text-anchor="middle" class="lbl tiny">1,000</text>
+  <text x="450" y="536" text-anchor="middle" class="lbl tiny">100,000</text>
+  <text x="640" y="536" text-anchor="middle" class="lbl tiny">1,000,000</text>
+  <text x="820" y="536" text-anchor="middle" class="lbl tiny">2,000,000</text>
+  <text x="960" y="536" text-anchor="middle" class="lbl tiny">2,800,000</text>
+
+  <!-- min curve: O(n) — roughly linear in this log-x/linear-shape sketch, drawn as smooth monotone rise via polyline -->
+  <polyline class="curveMin" points="90,515 270,470 450,410 640,320 820,220 960,130"/>
+
+  <!-- sort curve: O(n log n) — steeper -->
+  <polyline class="curveSort" points="90,512 270,440 450,320 640,190 820,120 960,100"/>
+
+  <!-- N = 95,000 vertical marker -->
+  <line x1="410" y1="100" x2="410" y2="520" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="410" y="90" text-anchor="middle" class="lbl tiny">N = 95,000 (one day of card deposits)</text>
+
+  <circle cx="410" cy="342" r="4" class="mark"/>
+  <text x="420" y="335" class="lbl tiny">sort: ~1,567,500 comparisons (95,000 · log2 95,000)</text>
+
+  <circle cx="410" cy="435" r="4" class="mark"/>
+  <text x="420" y="452" class="lbl tiny">min: 94,999 comparisons (N − 1)</text>
+
+  <!-- curve end labels -->
+  <text x="965" y="95" text-anchor="end" class="lbl tiny" fill="#b45309">O(n log n) — sort then take first</text>
+  <text x="965" y="145" text-anchor="end" class="lbl tiny" fill="#15803d">O(n) — min(comparator)</text>
+
+  <rect x="620" y="430" width="360" height="80" rx="6" class="boxAnn"/>
+  <text x="636" y="452" class="lbl node">IDENTICAL RESULT</text>
+  <text x="636" y="470" class="lbl tiny">Both expressions return the same LedgerEntry —</text>
+  <text x="636" y="486" class="lbl tiny">the card deposit with the smallest amount() —</text>
+  <text x="636" y="502" class="lbl tiny">min() reaches it in one linear pass, sorted() does not need to.</text>
+
+  <line x1="20" y1="580" x2="1020" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="600" x2="60" y2="600" class="curveSort"/>
+  <text x="68" y="605" class="lbl tiny">sort-then-findFirst() : O(n log n) comparator calls</text>
+  <line x1="420" y1="600" x2="460" y2="600" class="curveMin"/>
+  <text x="468" y="605" class="lbl tiny">min(comparator) : O(n) comparator calls</text>
+  <line x1="20" y1="626" x2="60" y2="626" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="68" y="631" class="lbl tiny">N = 95,000 measurement point (one day of card deposits)</text>
+</svg>

@@ -1,0 +1,187 @@
+<svg viewBox="0 0 1040 1240" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame, top-to-bottom time sequence of ConcurrentHashMap computeIfAbsent running
+     under the bin lock for ClientId to ClientRestrictions. Frame 1: restriction-apply-1 locks the bin
+     head (synchronized on the first node) and installs a ReservationNode with hash RESERVED equal to
+     minus 3 as a placeholder. Frame 2: the mapping function runs while that lock is still held; it
+     makes a blocking call to the identity vendor with p50 900 milliseconds, and settlement-ingest-3,
+     a second thread hashing to the same bin, stalls waiting for the lock for the whole call. Frame 3:
+     two failure shapes from calling computeIfAbsent recursively from inside the mapping function — the
+     same key throws IllegalStateException Recursive update, and a different key that hashes into the
+     same bin deadlocks against the held lock. A note states that on a plain HashMap before Java 9 the
+     same reentrant-mutation pattern corrupted the table instead of throwing.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .frameNum { font-size: 15px; font-weight: 700; fill: #2563eb; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triD); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1240" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COMPUTEIFABSENT RUNS UNDER THE BIN LOCK</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt; — time runs downward, frame 1 → 2 → 3</text>
+
+  <!-- Downward time axis -->
+  <text x="1000" y="76" text-anchor="middle" class="lbl sub">time</text>
+  <line x1="1000" y1="80" x2="1000" y2="1130" stroke="#475569" stroke-width="1.6"/>
+  <path d="M 994 1124 L 1000 1136 L 1006 1124 Z" fill="#475569"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="95" class="lbl frameNum">FRAME 1</text>
+  <text x="120" y="95" class="lbl h2">bin locked, ReservationNode installed</text>
+  <rect x="20" y="105" width="960" height="180" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="50" y="125" width="220" height="50" rx="6" class="boxP"/>
+  <text x="160" y="148" text-anchor="middle" class="lbl node">restriction-apply-1</text>
+  <text x="160" y="164" text-anchor="middle" class="lbl sub">computeIfAbsent(clientId, fn)</text>
+
+  <path class="flow" d="M 270 150 H 340"/>
+  <text x="305" y="142" text-anchor="middle" class="lbl sub">1</text>
+
+  <rect x="340" y="125" width="220" height="50" rx="6" class="boxY"/>
+  <text x="450" y="148" text-anchor="middle" class="lbl node">bin[h] head node</text>
+  <text x="450" y="164" text-anchor="middle" class="lbl sub">synchronized(head) acquired</text>
+
+  <path class="flow" d="M 560 150 H 630"/>
+  <text x="595" y="142" text-anchor="middle" class="lbl sub">2</text>
+
+  <rect x="630" y="125" width="300" height="50" rx="6" class="boxY"/>
+  <text x="780" y="148" text-anchor="middle" class="lbl node">ReservationNode installed</text>
+  <text x="780" y="164" text-anchor="middle" class="lbl sub">hash = RESERVED = -3 (placeholder)</text>
+
+  <rect x="50" y="200" width="880" height="65" rx="6" class="boxA"/>
+  <text x="70" y="222" class="lbl node">why the placeholder</text>
+  <text x="70" y="240" class="lbl tiny">The bin head is locked for the whole call; ReservationNode marks "a computation is in flight for this key"</text>
+  <text x="70" y="254" class="lbl tiny">so a second lookup on the same key inside this bin sees hash -3 instead of a torn/half-built entry.</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="315" class="lbl frameNum">FRAME 2</text>
+  <text x="120" y="315" class="lbl h2">mapping function runs while the lock is held</text>
+  <rect x="20" y="325" width="960" height="330" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <text x="220" y="352" text-anchor="middle" class="lbl sub">restriction-apply-1 (holds bin[h] lock)</text>
+  <text x="760" y="352" text-anchor="middle" class="lbl sub">settlement-ingest-3 (hashes to same bin h)</text>
+  <line x1="220" y1="360" x2="220" y2="630" stroke="#9ca3af" stroke-width="1.3"/>
+  <line x1="760" y1="360" x2="760" y2="630" stroke="#9ca3af" stroke-width="1.3"/>
+
+  <rect x="90" y="372" width="260" height="46" rx="6" class="boxP"/>
+  <text x="220" y="400" text-anchor="middle" class="lbl tiny">3. fn.apply(clientId) begins</text>
+
+  <path class="fail" d="M 220 418 V 440"/>
+  <rect x="70" y="440" width="300" height="60" rx="6" class="boxD"/>
+  <text x="220" y="460" text-anchor="middle" class="lbl node">4. blocking call to identity vendor</text>
+  <text x="220" y="478" text-anchor="middle" class="lbl sub">p50 900 ms, executed under bin[h] lock</text>
+  <text x="220" y="492" text-anchor="middle" class="lbl sub">lock is not released while this waits</text>
+
+  <rect x="630" y="500" width="260" height="60" rx="6" class="boxW"/>
+  <text x="760" y="522" text-anchor="middle" class="lbl node">5. put(otherClientId, ...) on bin h</text>
+  <text x="760" y="538" text-anchor="middle" class="lbl sub">blocks on synchronized(head)</text>
+  <text x="760" y="552" text-anchor="middle" class="lbl sub">stalled for the full 900 ms call</text>
+
+  <path class="weak" d="M 370 470 H 500 V 530 H 630"/>
+  <text x="500" y="514" text-anchor="middle" class="lbl sub">same bin, contends on the held lock</text>
+
+  <path class="flow" d="M 220 500 V 522"/>
+  <rect x="90" y="522" width="260" height="46" rx="6" class="boxR"/>
+  <text x="220" y="550" text-anchor="middle" class="lbl tiny">6. vendor responds, fn returns value</text>
+
+  <path class="flow" d="M 220 568 V 590"/>
+  <rect x="90" y="590" width="260" height="40" rx="6" class="boxP"/>
+  <text x="220" y="614" text-anchor="middle" class="lbl tiny">7. ReservationNode replaced, lock released</text>
+
+  <rect x="400" y="590" width="530" height="50" rx="6" class="boxA"/>
+  <text x="420" y="608" class="lbl node">every writer to bin h pays the 900 ms</text>
+  <text x="420" y="626" class="lbl tiny">not just readers of clientId — any key that hashes into the same bin</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <text x="20" y="690" class="lbl frameNum">FRAME 3</text>
+  <text x="120" y="690" class="lbl h2">recursion inside the mapping function</text>
+  <rect x="20" y="700" width="960" height="440" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <text x="240" y="726" text-anchor="middle" class="lbl h2">SAME KEY — recursive call detected</text>
+  <text x="760" y="726" text-anchor="middle" class="lbl h2">DIFFERENT KEY, SAME BIN — deadlock</text>
+  <line x1="510" y1="710" x2="510" y2="1130" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="90" y="742" width="300" height="50" rx="6" class="boxP"/>
+  <text x="240" y="765" text-anchor="middle" class="lbl tiny">8. fn(clientId) running, bin[h] locked</text>
+  <text x="240" y="781" text-anchor="middle" class="lbl sub">ReservationNode still installed</text>
+
+  <path class="fail" d="M 240 792 V 814"/>
+  <rect x="90" y="814" width="300" height="74" rx="6" class="boxD"/>
+  <text x="240" y="834" text-anchor="middle" class="lbl tiny">9. fn calls chm.computeIfAbsent(clientId)</text>
+  <text x="240" y="850" text-anchor="middle" class="lbl sub">same key, re-enters the bin's mapping path</text>
+  <text x="240" y="864" text-anchor="middle" class="lbl sub" fill="#b91c1c">IllegalStateException: Recursive update</text>
+
+  <rect x="610" y="742" width="300" height="50" rx="6" class="boxP"/>
+  <text x="760" y="765" text-anchor="middle" class="lbl tiny">10. fn(clientId) running, bin[h] locked</text>
+  <text x="760" y="781" text-anchor="middle" class="lbl sub">ReservationNode still installed</text>
+
+  <path class="fail" d="M 760 792 V 814"/>
+  <rect x="610" y="814" width="300" height="74" rx="6" class="boxD"/>
+  <text x="760" y="834" text-anchor="middle" class="lbl tiny">11. fn calls computeIfAbsent(otherClientId)</text>
+  <text x="760" y="850" text-anchor="middle" class="lbl sub">otherClientId also hashes to bin h</text>
+  <text x="760" y="864" text-anchor="middle" class="lbl sub" fill="#b91c1c">blocks on synchronized(head), same thread</text>
+
+  <path class="fail" d="M 760 888 V 910"/>
+  <rect x="610" y="910" width="300" height="50" rx="6" class="boxD"/>
+  <text x="760" y="932" text-anchor="middle" class="lbl node">12. deadlock</text>
+  <text x="760" y="948" text-anchor="middle" class="lbl sub">thread waits on a lock it already holds</text>
+
+  <rect x="60" y="966" width="920" height="60" rx="6" class="boxA"/>
+  <text x="80" y="988" class="lbl node">the shared cause</text>
+  <text x="80" y="1006" class="lbl tiny">Both failures come from the same rule: the mapping function must not touch the same ConcurrentHashMap</text>
+  <text x="80" y="1020" class="lbl tiny">while bin[h] is held — not the same key, and not any key that happens to collide into the same bin.</text>
+
+  <rect x="60" y="1040" width="920" height="80" rx="6" class="boxW"/>
+  <text x="80" y="1062" class="lbl node">pre-Java 9 note</text>
+  <text x="80" y="1082" class="lbl tiny">On a plain HashMap, the same reentrant-mutation pattern from inside a computeIfAbsent-style call did not</text>
+  <text x="80" y="1098" class="lbl tiny">throw at all — it silently corrupted the bin's linked list, producing lost entries or an infinite loop on get().</text>
+  <text x="80" y="1114" class="lbl tiny">ConcurrentHashMap's explicit recursion check exists precisely to fail loud instead of corrupting the table.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="1150" x2="1020" y2="1150" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="1166" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="1179" class="lbl tiny">thread / lock-holder state</text>
+  <rect x="230" y="1166" width="22" height="16" rx="3" class="boxY"/>
+  <text x="260" y="1179" class="lbl tiny">bin-lock event</text>
+  <rect x="400" y="1166" width="22" height="16" rx="3" class="boxD"/>
+  <text x="430" y="1179" class="lbl tiny">blocking call, exception, or deadlock</text>
+  <rect x="660" y="1166" width="22" height="16" rx="3" class="boxR"/>
+  <text x="690" y="1179" class="lbl tiny">successful completion</text>
+  <rect x="850" y="1166" width="22" height="16" rx="3" class="boxW"/>
+  <text x="880" y="1179" class="lbl tiny">contending / legacy</text>
+
+  <path class="flow" d="M 20 1204 H 60"/>
+  <text x="68" y="1209" class="lbl tiny">A → B : sequential step</text>
+  <path class="fail" d="M 260 1204 H 300"/>
+  <text x="308" y="1209" class="lbl tiny">A → B : leads to failure</text>
+  <path class="weak" d="M 500 1204 H 540"/>
+  <text x="548" y="1209" class="lbl tiny">A → B : contention across threads</text>
+</svg>

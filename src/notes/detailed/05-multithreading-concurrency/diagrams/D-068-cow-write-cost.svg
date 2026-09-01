@@ -1,0 +1,114 @@
+<svg viewBox="0 0 1040 745" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve of CopyOnWriteArrayList writes versus reads as appends grow. The write
+     series rises as a parabola: each add copies the entire backing array, so total bytes copied
+     across n appends is order n squared. For 2.8 million stake appends per day the arithmetic shown
+     is the sum of array sizes 1 plus 2 plus up to 2.8 million, roughly 3.92 times 10 to the 12
+     element copies, which is the disaster case. The read series is a flat, low, lock-free line
+     because reads iterate a fixed snapshot array with no locking regardless of write volume. A
+     callout marks the low-write end of the axis, a few writes per minute, as the sweet spot fit for
+     the NotificationService listener registry, where CopyOnWriteArrayList is the right choice.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .axis  { font-size: 11px; fill: #4b5563; }
+
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .curveW { fill: none; stroke: #b91c1c; stroke-width: 2.5; }
+    .curveR { fill: none; stroke: #15803d; stroke-width: 2.5; }
+    .axisLn { stroke: #475569; stroke-width: 1.6; }
+    .grid   { stroke: #d1d5db; stroke-width: 1; }
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="745" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COPY-ON-WRITE COSTS O(n) PER WRITE — O(n²) OVER A LOOP OF ADD</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">CopyOnWriteArrayList&lt;StakeReservation&gt; — total array-element copies vs. number of appends</text>
+
+  <!-- Chart area -->
+  <!-- axes -->
+  <line x1="100" y1="440" x2="960" y2="440" class="axisLn"/>
+  <line x1="100" y1="440" x2="100" y2="100" class="axisLn"/>
+  <text x="530" y="472" text-anchor="middle" class="lbl axis">appends so far (n) — 0 to 2.8M stake reservations/day</text>
+  <text x="40" y="270" text-anchor="middle" class="lbl axis" transform="rotate(-90 40 270)">total element copies</text>
+
+  <!-- gridlines -->
+  <line x1="100" y1="340" x2="960" y2="340" class="grid"/>
+  <line x1="100" y1="240" x2="960" y2="240" class="grid"/>
+  <line x1="100" y1="140" x2="960" y2="140" class="grid"/>
+
+  <!-- x tick labels -->
+  <text x="100" y="458" text-anchor="middle" class="lbl sub">0</text>
+  <text x="315" y="458" text-anchor="middle" class="lbl sub">700K</text>
+  <text x="530" y="458" text-anchor="middle" class="lbl sub">1.4M</text>
+  <text x="745" y="458" text-anchor="middle" class="lbl sub">2.1M</text>
+  <text x="960" y="458" text-anchor="middle" class="lbl sub">2.8M</text>
+
+  <!-- write curve: parabola from (100,440) to (960,110) -->
+  <path class="curveW" d="M 100 440
+    C 400 435, 700 380, 850 260
+    S 940 150, 960 110"/>
+  <text x="740" y="150" class="lbl node" fill="#b91c1c">write cost — O(n²) total</text>
+  <text x="740" y="168" class="lbl sub" fill="#b91c1c">each add() copies the full array</text>
+
+  <!-- read curve: flat near bottom -->
+  <text x="740" y="400" class="lbl node" fill="#15803d">read cost — flat, lock-free</text>
+  <text x="740" y="416" class="lbl sub" fill="#15803d">iterates fixed snapshot array, no lock</text>
+  <line x1="100" y1="432" x2="960" y2="430" class="curveR"/>
+
+  <!-- sweet spot callout at low-write end -->
+  <rect x="110" y="330" width="240" height="70" rx="6" class="boxY"/>
+  <text x="230" y="352" text-anchor="middle" class="lbl node">NotificationService</text>
+  <text x="230" y="370" text-anchor="middle" class="lbl sub">listener registry: few writes/minute</text>
+  <text x="230" y="386" text-anchor="middle" class="lbl sub">this is the low-write sweet spot for COW</text>
+  <path class="flow" d="M 150 400 V 415"/>
+
+  <!-- disaster marker at high-write end -->
+  <rect x="760" y="90" width="200" height="40" rx="6" class="boxD"/>
+  <text x="860" y="115" text-anchor="middle" class="lbl node">disaster: high-write loop</text>
+  <path class="flow" d="M 900 130 V 155"/>
+
+  <!-- arithmetic panel -->
+  <rect x="20" y="500" width="480" height="130" rx="6" class="boxD"/>
+  <text x="40" y="522" class="lbl node">Arithmetic for 2.8M stake appends/day</text>
+  <text x="40" y="542" class="lbl tiny">Each add() at size k copies k elements: total = 1 + 2 + ... + 2,800,000</text>
+  <text x="40" y="560" class="lbl tiny">= 2,800,000 × 2,800,001 / 2</text>
+  <text x="40" y="578" class="lbl tiny">≈ 3.92 × 10¹² element copies in one day</text>
+  <text x="40" y="598" class="lbl tiny">against 2,800,000 logical elements actually stored — O(n²) growth confirmed</text>
+  <text x="40" y="616" class="lbl tiny">this is why StakeReservation logging must never use CopyOnWriteArrayList</text>
+
+  <!-- annotation panel -->
+  <rect x="520" y="500" width="500" height="130" rx="6" class="boxA"/>
+  <text x="540" y="522" class="lbl node">Read side, same workload</text>
+  <text x="540" y="542" class="lbl tiny">A read at any n iterates the array captured at that moment: O(n) once,</text>
+  <text x="540" y="560" class="lbl tiny">no CAS, no lock, no retry — cost is flat per read regardless of write rate.</text>
+  <text x="540" y="580" class="lbl tiny">The asymmetry is the whole trade-off: COW is correct for read-heavy,</text>
+  <text x="540" y="598" class="lbl tiny">write-rare structures (listener lists), wrong for write-heavy logs</text>
+  <text x="540" y="616" class="lbl tiny">(a per-stake reservation feed at 1,200 reservations/sec).</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="656" x2="1020" y2="656" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="676" x2="50" y2="676" class="curveW"/>
+  <text x="58" y="680" class="lbl tiny">write cost curve — O(n²) over a loop of add()</text>
+  <line x1="420" y1="676" x2="450" y2="676" class="curveR"/>
+  <text x="458" y="680" class="lbl tiny">read cost curve — flat, lock-free iteration</text>
+  <rect x="20" y="696" width="22" height="16" rx="3" class="boxY"/>
+  <text x="50" y="709" class="lbl tiny">good-fit workload: listener registry</text>
+  <rect x="340" y="696" width="22" height="16" rx="3" class="boxD"/>
+  <text x="370" y="709" class="lbl tiny">disaster region: high-write loop</text>
+</svg>

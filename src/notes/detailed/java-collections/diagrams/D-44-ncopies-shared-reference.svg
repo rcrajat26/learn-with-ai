@@ -1,0 +1,71 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Collections.nCopies is n references to one object: a CopiesList view holds fields n and element and stays about 24 bytes regardless of n, while materializing it into a new ArrayList allocates 1,000,000 reference slots (about 4 MB) that all still point at the single shared heap object">
+  <defs>
+    <marker id="arrow44" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <!-- the one heap object -->
+  <rect x="330" y="30" width="140" height="60" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="55" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">heap object</text>
+  <text x="400" y="75" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">"x"</text>
+
+  <!-- CopiesList view, left -->
+  <rect x="60" y="160" width="260" height="120" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="182" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Collections.nCopies(n, x)</text>
+  <text x="190" y="200" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">CopiesList (lazy view)</text>
+
+  <rect x="80" y="210" width="100" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="130" y="228" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">n = 1,000,000</text>
+
+  <rect x="190" y="210" width="120" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="250" y="228" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">element = ref</text>
+
+  <rect x="100" y="250" width="180" height="22" rx="3" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="266" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">total size &#8776; 24 bytes</text>
+
+  <!-- arrow from element field to the single heap object -->
+  <path d="M 250 210 C 260 150, 320 100, 370 92" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow44)"/>
+
+  <!-- materialized ArrayList, right -->
+  <rect x="470" y="160" width="290" height="290" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="615" y="182" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">new ArrayList&lt;&gt;(nCopies(1_000_000, x))</text>
+  <text x="615" y="200" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">materialized backing array</text>
+
+  <!-- ref slots, show first few, ellipsis, last -->
+  <g font-family="sans-serif" font-size="11" fill="#1f2937">
+    <rect x="495" y="215" width="90" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="231" text-anchor="middle">[0] ref</text>
+    <rect x="595" y="215" width="90" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="640" y="231" text-anchor="middle">[1] ref</text>
+
+    <rect x="495" y="245" width="90" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="261" text-anchor="middle">[2] ref</text>
+    <rect x="595" y="245" width="90" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="640" y="261" text-anchor="middle">[3] ref</text>
+
+    <rect x="495" y="275" width="190" height="20" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="590" y="290" text-anchor="middle">... 999,994 more slots ...</text>
+
+    <rect x="495" y="305" width="90" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="540" y="321" text-anchor="middle">[999998] ref</text>
+    <rect x="595" y="305" width="90" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="640" y="321" text-anchor="middle">[999999] ref</text>
+  </g>
+
+  <rect x="500" y="340" width="240" height="26" rx="3" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="620" y="358" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">1,000,000 &#215; 4 bytes &#8776; 4 MB of refs</text>
+
+  <rect x="500" y="375" width="240" height="26" rx="3" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="620" y="393" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">all slots &#8594; the ONE shared object</text>
+
+  <!-- arrows from a couple ref slots to the shared heap object -->
+  <path d="M 540 215 C 480 150, 430 100, 380 92" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow44)"/>
+  <path d="M 540 305 C 460 200, 400 110, 375 95" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow44)"/>
+
+  <!-- bottom contrast label -->
+  <rect x="60" y="450" width="700" height="30" rx="3" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="470" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">view: ~24 bytes regardless of n  vs.  materialized copy: ~4 MB of references, one shared object</text>
+</svg>

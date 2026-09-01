@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Platform thread versus virtual thread for the gateway-http worker handling card PSP
+     authorise calls. Left: a platform thread pairs a java.lang.Thread heap object with a roughly
+     1 megabyte reserved OS stack that lives outside the heap. Right: a virtual thread pairs a
+     VirtualThread heap object with a Continuation and a growable heap StackChunk of a few hundred
+     bytes to a few kilobytes, and mounts onto a carrier that is itself an ordinary platform thread.
+     A cost panel compares 55000 peak concurrent sessions costed both ways, and shows 1 million
+     virtual threads times 2 kilobytes equals 2 gigabytes.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PLATFORM THREAD VS VIRTUAL THREAD — gateway-http-7 CALLING THE CARD PSP</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="66" class="lbl h2">PLATFORM THREAD</text>
+  <text x="580" y="66" class="lbl h2">VIRTUAL THREAD</text>
+  <line x1="560" y1="56" x2="560" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: platform thread -->
+  <rect x="40" y="86" width="220" height="150" rx="6" class="boxP"/>
+  <text x="150" y="112" text-anchor="middle" class="lbl node">Thread object</text>
+  <text x="150" y="132" text-anchor="middle" class="lbl body">gateway-http-7</text>
+  <text x="150" y="152" text-anchor="middle" class="lbl sub">~1 KB, lives on the heap</text>
+  <text x="150" y="170" text-anchor="middle" class="lbl sub">1 : 1 with an OS thread</text>
+  <text x="150" y="188" text-anchor="middle" class="lbl sub">state, priority, interrupt flag</text>
+  <text x="150" y="206" text-anchor="middle" class="lbl sub">GC-managed like any object</text>
+
+  <path class="flow" d="M 150 236 V 260"/>
+  <text x="180" y="252" class="lbl tiny">owns</text>
+
+  <rect x="60" y="260" width="180" height="220" rx="6" class="boxH"/>
+  <text x="150" y="286" text-anchor="middle" class="lbl node">OS thread</text>
+  <text x="150" y="306" text-anchor="middle" class="lbl body">reserved stack</text>
+  <rect x="76" y="320" width="148" height="140" rx="4" class="boxW"/>
+  <text x="150" y="342" text-anchor="middle" class="lbl dense">~1 MB reserved</text>
+  <text x="150" y="360" text-anchor="middle" class="lbl sub">outside the heap</text>
+  <text x="150" y="378" text-anchor="middle" class="lbl sub">fixed size, committed</text>
+  <text x="150" y="394" text-anchor="middle" class="lbl sub">page-by-page</text>
+  <text x="150" y="412" text-anchor="middle" class="lbl sub">held for the whole PSP</text>
+  <text x="150" y="428" text-anchor="middle" class="lbl sub">authorise call, 240 ms p50</text>
+  <text x="150" y="444" text-anchor="middle" class="lbl sub">scheduled by the OS kernel</text>
+
+  <rect x="40" y="500" width="220" height="60" rx="6" class="boxAnn"/>
+  <text x="150" y="522" text-anchor="middle" class="lbl dense" font-weight="700">55 000 sessions</text>
+  <text x="150" y="540" text-anchor="middle" class="lbl tiny">55 000 × ~1 MB ≈ 55 GB reserved</text>
+
+  <!-- RIGHT: virtual thread -->
+  <rect x="600" y="86" width="220" height="130" rx="6" class="boxH"/>
+  <text x="710" y="112" text-anchor="middle" class="lbl node">VirtualThread</text>
+  <text x="710" y="132" text-anchor="middle" class="lbl body">heap object</text>
+  <text x="710" y="152" text-anchor="middle" class="lbl sub">java.lang.VirtualThread</text>
+  <text x="710" y="170" text-anchor="middle" class="lbl sub">state, interrupt flag,</text>
+  <text x="710" y="188" text-anchor="middle" class="lbl sub">scheduler reference</text>
+
+  <path class="flow" d="M 710 216 V 236"/>
+  <text x="758" y="230" class="lbl tiny">wraps</text>
+
+  <rect x="600" y="236" width="220" height="70" rx="6" class="boxP"/>
+  <text x="710" y="260" text-anchor="middle" class="lbl node">Continuation</text>
+  <text x="710" y="280" text-anchor="middle" class="lbl sub">freeze/thaw of Java frames</text>
+  <text x="710" y="296" text-anchor="middle" class="lbl sub">not an OS-level mechanism</text>
+
+  <path class="flow" d="M 710 306 V 326"/>
+  <text x="770" y="320" class="lbl tiny">backed by</text>
+
+  <rect x="600" y="326" width="220" height="130" rx="6" class="boxR"/>
+  <text x="710" y="350" text-anchor="middle" class="lbl node">StackChunk</text>
+  <text x="710" y="370" text-anchor="middle" class="lbl body">growable, on the heap</text>
+  <text x="710" y="390" text-anchor="middle" class="lbl sub">few hundred bytes to a few KB</text>
+  <text x="710" y="408" text-anchor="middle" class="lbl sub">grows only as deep as the</text>
+  <text x="710" y="424" text-anchor="middle" class="lbl sub">actual call stack requires</text>
+  <text x="710" y="442" text-anchor="middle" class="lbl sub">GC-relocatable, unlike an OS stack</text>
+
+  <path class="weak" d="M 710 456 V 480 H 950 V 500"/>
+  <text x="850" y="472" class="lbl tiny">mounted on</text>
+
+  <rect x="850" y="500" width="220" height="80" rx="6" class="boxW"/>
+  <text x="960" y="524" text-anchor="middle" class="lbl node">Carrier</text>
+  <text x="960" y="544" text-anchor="middle" class="lbl body">an ordinary platform thread</text>
+  <text x="960" y="562" text-anchor="middle" class="lbl sub">runs the VT while mounted</text>
+
+  <rect x="600" y="500" width="220" height="80" rx="6" class="boxAnn"/>
+  <text x="710" y="522" text-anchor="middle" class="lbl dense" font-weight="700">55 000 sessions</text>
+  <text x="710" y="542" text-anchor="middle" class="lbl tiny">55 000 × ~a few KB ≈ tens of MB</text>
+  <text x="710" y="560" text-anchor="middle" class="lbl tiny">not 55 GB — the same load</text>
+
+  <!-- bottom arithmetic panel -->
+  <rect x="40" y="600" width="1040" height="90" rx="6" class="boxAnn"/>
+  <text x="56" y="624" class="lbl h2">THE ARITHMETIC THAT MOTIVATES VIRTUAL THREADS</text>
+  <text x="56" y="648" class="lbl body" font-weight="700">1 000 000 virtual threads × 2 KB ≈ 2 GB</text>
+  <text x="56" y="668" class="lbl tiny">Same math on platform threads at ~1 MB each would need ~1 TB of reserved stack — not viable per PSP call.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="712" x2="1100" y2="712" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="724" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="737" class="lbl tiny">managed heap object — subject</text>
+  <rect x="260" y="724" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="737" class="lbl tiny">the thing the diagram is about</text>
+  <rect x="500" y="724" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="737" class="lbl tiny">concrete, resolved, on-heap</text>
+  <rect x="700" y="724" width="22" height="16" rx="3" class="boxW"/>
+  <text x="730" y="737" class="lbl tiny">nested / secondary detail</text>
+  <rect x="900" y="724" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="930" y="737" class="lbl tiny">annotation panel — arithmetic</text>
+
+  <path class="flow" d="M 20 758 H 60"/>
+  <text x="70" y="763" class="lbl tiny">A → B : B is owned/wrapped by A</text>
+  <path class="weak" d="M 420 758 H 460"/>
+  <text x="470" y="763" class="lbl tiny">A → B : A currently mounted on B</text>
+</svg>

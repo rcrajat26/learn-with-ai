@@ -1,0 +1,44 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3. Given List of upper-bounded Money amounts and var first equals
+     amounts.get(0), the standalone type of the initialiser amounts dot get open paren 0 close
+     paren is a fresh capture variable CAP hash 1, whose upper bound is Money. CAP hash 1 has no
+     source-level name.">
+  <style>
+    .lbl  { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1   { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node { font-size: 15px; font-weight: 600; }
+    .body { font-size: 13px; }
+    .sub  { font-size: 10.5px; fill: #4b5563; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.3; }
+  </style>
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">D-147a — FRAME 1 OF 3 — STANDALONE TYPE OF THE INITIALISER</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="750" y="20" width="30" height="20" rx="4" class="pill"/>
+  <text x="765" y="35" text-anchor="middle" class="lbl tiny" font-weight="700">21</text>
+
+  <rect x="60" y="60" width="780" height="44" rx="6" class="boxA"/>
+  <text x="80" y="88" class="lbl body mono">List&lt;? extends Money&gt; amounts;  var first = amounts.get(0);</text>
+
+  <rect x="300" y="150" width="300" height="110" rx="6" class="boxW"/>
+  <text x="450" y="180" text-anchor="middle" class="lbl node mono">CAP#1</text>
+  <text x="450" y="204" text-anchor="middle" class="lbl sub">standalone type of amounts.get(0)</text>
+  <text x="450" y="222" text-anchor="middle" class="lbl sub">fresh capture variable</text>
+  <text x="450" y="240" text-anchor="middle" class="lbl sub">upper bound: Money</text>
+
+  <rect x="80" y="300" width="740" height="70" rx="6" class="boxA"/>
+  <text x="100" y="322" class="lbl body" font-weight="700">CAP#1 is not denotable</text>
+  <text x="100" y="342" class="lbl tiny">a wildcard capture has no source-level name — you cannot write "CAP#1 x = ..." in a .java file.</text>
+  <text x="100" y="358" class="lbl tiny">it exists only inside the compiler's type inference for this one expression.</text>
+
+  <line x1="20" y1="384" x2="880" y2="384" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="386" width="20" height="12" rx="3" class="boxW"/>
+  <text x="46" y="396" class="lbl tiny">weak / inferred, non-denotable type</text>
+  <rect x="300" y="386" width="20" height="12" rx="3" class="boxA"/>
+  <text x="326" y="396" class="lbl tiny">annotation panel / source line</text>
+</svg>

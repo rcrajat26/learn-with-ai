@@ -1,0 +1,65 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory layout comparison: int array of 1,000,000 elements uses 16-byte header plus 4 MB contiguous data totalling 4.0 MB, versus ArrayList of Integer using 24-byte list header, 16-byte backing array header, 4 MB of 4-byte references, and 1,000,000 scattered 16-byte Integer objects totalling about 20 MB, a 5x ratio">
+
+  <text x="400" y="35" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">int[] vs List&lt;Integer&gt;: memory for 1,000,000 numbers</text>
+
+  <!-- Top: int[] -->
+  <text x="60" y="65" font-family="sans-serif" font-size="13" fill="#1f2937">int[1_000_000]</text>
+  <rect x="60" y="75" width="60" height="40" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="90" y="98" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">16-byte</text>
+  <text x="90" y="110" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">header</text>
+
+  <rect x="120" y="75" width="620" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="430" y="99" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4 MB contiguous int data (4 bytes x 1,000,000, packed in one block)</text>
+
+  <rect x="600" y="122" width="140" height="26" rx="3" fill="#dcfce7"/>
+  <text x="670" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Total: 4.0 MB</text>
+
+  <!-- divider -->
+  <line x1="40" y1="175" x2="760" y2="175" stroke="#737373" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Bottom: ArrayList<Integer> -->
+  <text x="60" y="205" font-family="sans-serif" font-size="13" fill="#1f2937">ArrayList&lt;Integer&gt;(1_000_000)</text>
+
+  <rect x="60" y="215" width="70" height="36" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="95" y="236" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">24-byte</text>
+  <text x="95" y="248" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">list obj</text>
+
+  <rect x="140" y="215" width="70" height="36" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="236" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">16-byte</text>
+  <text x="175" y="248" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">arr header</text>
+
+  <rect x="220" y="215" width="520" height="36" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="480" y="238" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">4 MB of 4-byte object references (one per element, contiguous)</text>
+
+  <!-- scattered Integer objects -->
+  <text x="60" y="285" font-family="sans-serif" font-size="13" fill="#1f2937">Each reference points to its own 16-byte Integer object, scattered on the heap:</text>
+
+  <g>
+    <rect x="70" y="300" width="55" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="97" y="321" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Integer</text>
+
+    <rect x="180" y="330" width="55" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="207" y="351" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Integer</text>
+
+    <rect x="300" y="305" width="55" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="327" y="326" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Integer</text>
+
+    <rect x="420" y="335" width="55" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="447" y="356" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Integer</text>
+
+    <rect x="540" y="300" width="55" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="567" y="321" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Integer</text>
+
+    <rect x="650" y="330" width="55" height="34" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+    <text x="677" y="351" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">Integer</text>
+  </g>
+
+  <text x="400" y="390" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1,000,000 x 16-byte Integer objects, scattered non-contiguously = ~16 MB</text>
+
+  <rect x="560" y="405" width="180" height="26" rx="3" fill="#fee2e2"/>
+  <text x="650" y="423" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Total: ~20 MB</text>
+
+  <rect x="240" y="450" width="320" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="472" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">~20 MB / 4.0 MB is approximately a 5x ratio</text>
+</svg>

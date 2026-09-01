@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1160 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Fail-fast and the case it misses. Both lanes iterate the same list [AO-100, AO-400, AA-700] with a for-each. Case A removes the last element AA-700: hasNext compares cursor 3 to size 2, which is still true, so next() runs, calls checkForComodification, sees modCount 1 does not equal expectedModCount 0, and throws ConcurrentModificationException. Case B removes the second-to-last element AO-400: hasNext compares cursor 2 to size 2, which is now false, so the loop exits before next() is called again, no exception is thrown, and AA-700 is silently never visited. The mechanism panel explains that hasNext never checks modCount, only next, remove and forEach do, so fail-fast is best-effort, not a guarantee.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .capt  { font-size: 12px; fill: #4b5563; text-anchor: middle; }
+    .row   { font-size: 11px; }
+    .rowR  { font-size: 10.5px; fill: #4b5563; }
+    .final { font-size: 11px; font-weight: 700; }
+    .panelHdr { font-size: 12px; font-weight: 700; fill: #1e3a8a; }
+    .panelRow { font-size: 11px; fill: #1f2937; }
+    .legend { font-size: 11px; fill: #1f2937; }
+
+    .lanePanel { fill: #ffffff; stroke: #9ca3af; stroke-width: 1.6; }
+    .failRow   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .okRow     { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel     { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .div       { stroke: #d1d5db; stroke-width: 1; }
+  </style>
+
+  <rect x="0" y="0" width="1160" height="660" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FAIL-FAST — AND THE CASE IT MISSES</text>
+  <line x1="20" y1="44" x2="1140" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="580" y="56" class="lbl capt">list = [AO-100, AO-400, AA-700]  ·  both lanes run a for-each over it</text>
+
+  <text x="20" y="72" class="lbl h2">CASE A — REMOVE THE LAST ELEMENT &#183; THROWS</text>
+  <text x="600" y="72" class="lbl h2">CASE B — REMOVE THE SECOND-TO-LAST &#183; SILENTLY SUCCEEDS</text>
+
+  <!-- LEFT LANE -->
+  <rect x="20" y="86" width="520" height="360" rx="6" class="lanePanel"/>
+  <line class="div" x1="20" y1="128" x2="540" y2="128"/>
+  <line class="div" x1="20" y1="158" x2="540" y2="158"/>
+  <line class="div" x1="20" y1="188" x2="540" y2="188"/>
+  <line class="div" x1="20" y1="218" x2="540" y2="218"/>
+  <line class="div" x1="20" y1="248" x2="540" y2="248"/>
+  <line class="div" x1="20" y1="278" x2="540" y2="278"/>
+  <line class="div" x1="20" y1="308" x2="540" y2="308"/>
+  <line class="div" x1="20" y1="338" x2="540" y2="338"/>
+  <line class="div" x1="20" y1="368" x2="540" y2="368"/>
+  <line class="div" x1="20" y1="398" x2="540" y2="398"/>
+
+  <text x="40" y="113" class="lbl row">start</text>
+  <text x="520" y="113" text-anchor="end" class="lbl rowR">cursor 0 &#183; size 3 &#183; modCount 0 &#183; expected 0</text>
+
+  <text x="40" y="143" class="lbl row">hasNext(): 0 != 3 &#8594; true</text>
+
+  <text x="40" y="173" class="lbl row">next() &#8594; returns AO-100</text>
+  <text x="520" y="173" text-anchor="end" class="lbl rowR">cursor 1</text>
+
+  <text x="40" y="203" class="lbl row">hasNext(): 1 != 3 &#8594; true</text>
+
+  <text x="40" y="233" class="lbl row">next() &#8594; returns AO-400</text>
+  <text x="520" y="233" text-anchor="end" class="lbl rowR">cursor 2</text>
+
+  <text x="40" y="263" class="lbl row">hasNext(): 2 != 3 &#8594; true</text>
+
+  <text x="40" y="293" class="lbl row">next() &#8594; returns AA-700</text>
+  <text x="520" y="293" text-anchor="end" class="lbl rowR">cursor 3</text>
+
+  <text x="40" y="323" class="lbl row">list.remove("AA-700")</text>
+  <text x="520" y="323" text-anchor="end" class="lbl rowR">size 2 &#183; modCount 1</text>
+
+  <text x="40" y="353" class="lbl row">hasNext(): 3 != 2 &#8594; true</text>
+  <text x="520" y="353" text-anchor="end" class="lbl rowR">&#8594; next() IS called</text>
+
+  <text x="40" y="383" class="lbl row">next() &#8594; checkForComodification(): 1 != 0</text>
+
+  <rect x="20" y="398" width="520" height="48" class="failRow"/>
+  <text x="40" y="426" class="lbl final">ConcurrentModificationException</text>
+
+  <!-- RIGHT LANE -->
+  <rect x="600" y="86" width="520" height="270" rx="6" class="lanePanel"/>
+  <line class="div" x1="600" y1="128" x2="1120" y2="128"/>
+  <line class="div" x1="600" y1="158" x2="1120" y2="158"/>
+  <line class="div" x1="600" y1="188" x2="1120" y2="188"/>
+  <line class="div" x1="600" y1="218" x2="1120" y2="218"/>
+  <line class="div" x1="600" y1="248" x2="1120" y2="248"/>
+  <line class="div" x1="600" y1="278" x2="1120" y2="278"/>
+  <line class="div" x1="600" y1="308" x2="1120" y2="308"/>
+
+  <text x="620" y="113" class="lbl row">start</text>
+  <text x="1100" y="113" text-anchor="end" class="lbl rowR">cursor 0 &#183; size 3 &#183; modCount 0 &#183; expected 0</text>
+
+  <text x="620" y="143" class="lbl row">hasNext(): 0 != 3 &#8594; true</text>
+
+  <text x="620" y="173" class="lbl row">next() &#8594; returns AO-100</text>
+  <text x="1100" y="173" text-anchor="end" class="lbl rowR">cursor 1</text>
+
+  <text x="620" y="203" class="lbl row">hasNext(): 1 != 3 &#8594; true</text>
+
+  <text x="620" y="233" class="lbl row">next() &#8594; returns AO-400</text>
+  <text x="1100" y="233" text-anchor="end" class="lbl rowR">cursor 2</text>
+
+  <text x="620" y="263" class="lbl row">list.remove("AO-400")</text>
+  <text x="1100" y="263" text-anchor="end" class="lbl rowR">size 2 &#183; modCount 1</text>
+
+  <text x="620" y="293" class="lbl row">hasNext(): 2 != 2 &#8594; FALSE</text>
+  <text x="1100" y="293" text-anchor="end" class="lbl rowR">&#8594; loop exits, next() never called</text>
+
+  <rect x="600" y="308" width="520" height="48" class="okRow"/>
+  <text x="620" y="330" class="lbl final">No exception &#8212; loop ended one element early.</text>
+  <text x="620" y="345" class="lbl final">AA-700 was never visited.</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="476" width="1120" height="130" rx="6" class="panel"/>
+  <text x="40" y="498" class="lbl panelHdr">THE MECHANISM</text>
+  <text x="40" y="520" class="lbl panelRow">hasNext() is `cursor != size` &#8212; it does NOT check modCount.</text>
+  <text x="40" y="540" class="lbl panelRow">Only next(), remove() and forEach() call checkForComodification().</text>
+  <text x="40" y="560" class="lbl panelRow">So fail-fast is best-effort by contract, not a guarantee.</text>
+  <text x="40" y="580" class="lbl panelRow">Iterator.remove() is the legal way &#8212; it resyncs expectedModCount = modCount.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="620" x2="1140" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="30" y="630" width="22" height="16" rx="3" class="lanePanel"/>
+  <text x="58" y="642" class="lbl legend">step lane (one panel, rows = steps)</text>
+  <rect x="330" y="630" width="22" height="16" rx="3" class="failRow"/>
+  <text x="358" y="642" class="lbl legend">thrown exception</text>
+  <rect x="560" y="630" width="22" height="16" rx="3" class="okRow"/>
+  <text x="588" y="642" class="lbl legend">silent success (no exception)</text>
+  <rect x="870" y="630" width="22" height="16" rx="3" class="panel"/>
+  <text x="898" y="642" class="lbl legend">callout panel</text>
+</svg>

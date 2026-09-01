@@ -1,0 +1,218 @@
+<svg viewBox="0 0 1000 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Insert and remove shift the tail. Top band: add(2, GEO_BLK) into a capacity-8 list of size 5 shifts the tail slots 2 through 4 right by one via System.arraycopy(es, 2, es, 3, 3), then writes the new element into slot 2, growing size to 6. Bottom band: remove(1) from the same list shifts the tail slots 2 through 4 left by one via System.arraycopy(es, 2, es, 1, 3), then explicitly nulls the vacated final slot so the reference can be reclaimed, shrinking size to 4. An annotation panel explains why insert and remove cost is asymmetric depending on index.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .idx   { font-size: 10.5px; fill: #4b5563; text-anchor: middle; }
+    .val   { font-size: 12.5px; font-weight: 600; text-anchor: middle; }
+    .capt  { font-size: 11px; font-weight: 700; fill: #4b5563; }
+    .body  { font-size: 11px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .panelHdr { font-size: 12px; font-weight: 700; fill: #1e3a8a; }
+    .panelRow { font-size: 11px; fill: #1f2937; }
+    .legend { font-size: 11px; fill: #1f2937; }
+
+    .boxOcc   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxEmpty { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxHi    { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel    { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .tick  { fill: none; stroke: #475569; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">INSERT AND REMOVE SHIFT THE TAIL</text>
+  <line x1="20" y1="44" x2="980" y2="44" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- TOP BAND -->
+  <text x="20" y="64" class="lbl h2">TOP — add(2, GEO_BLK) &#183; capacity 8, size 5</text>
+
+  <!-- before row -->
+  <text x="20" y="114" class="lbl capt">BEFORE</text>
+  <g>
+    <text x="145" y="78" class="lbl idx">0</text>
+    <rect x="100" y="86" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="145" y="114" class="lbl val">STAKE_BLK</text>
+
+    <text x="243" y="78" class="lbl idx">1</text>
+    <rect x="198" y="86" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="243" y="114" class="lbl val">DEP_BLK</text>
+
+    <text x="341" y="78" class="lbl idx">2</text>
+    <rect x="296" y="86" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="341" y="114" class="lbl val">CASH_BLK</text>
+
+    <text x="439" y="78" class="lbl idx">3</text>
+    <rect x="394" y="86" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="439" y="114" class="lbl val">LOGIN_BLK</text>
+
+    <text x="537" y="78" class="lbl idx">4</text>
+    <rect x="492" y="86" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="537" y="114" class="lbl val">BONUS_BLK</text>
+
+    <text x="635" y="78" class="lbl idx">5</text>
+    <rect x="590" y="86" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="733" y="78" class="lbl idx">6</text>
+    <rect x="688" y="86" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="831" y="78" class="lbl idx">7</text>
+    <rect x="786" y="86" width="90" height="46" rx="5" class="boxEmpty"/>
+  </g>
+  <text x="888" y="114" class="lbl capt">size 5</text>
+
+  <!-- shift bracket + arrow: tail 2-4 -> 3-5 -->
+  <path class="tick" d="M 296 132 V 142 H 582 V 132"/>
+  <path class="flow" d="M 439 142 V 190 H 537 V 210"/>
+  <text x="450" y="158" class="lbl body">System.arraycopy(es, 2, es, 3, 3)</text>
+  <text x="450" y="174" class="lbl sub">copies 3 refs &#183; O(n - index)</text>
+
+  <!-- after row -->
+  <text x="20" y="238" class="lbl capt">AFTER</text>
+  <g>
+    <text x="145" y="202" class="lbl idx">0</text>
+    <rect x="100" y="210" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="145" y="238" class="lbl val">STAKE_BLK</text>
+
+    <text x="243" y="202" class="lbl idx">1</text>
+    <rect x="198" y="210" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="243" y="238" class="lbl val">DEP_BLK</text>
+
+    <text x="341" y="202" class="lbl idx">2</text>
+    <rect x="296" y="210" width="90" height="46" rx="5" class="boxHi"/>
+    <text x="341" y="238" class="lbl val">GEO_BLK</text>
+
+    <text x="439" y="202" class="lbl idx">3</text>
+    <rect x="394" y="210" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="439" y="238" class="lbl val">CASH_BLK</text>
+
+    <text x="537" y="202" class="lbl idx">4</text>
+    <rect x="492" y="210" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="537" y="238" class="lbl val">LOGIN_BLK</text>
+
+    <text x="635" y="202" class="lbl idx">5</text>
+    <rect x="590" y="210" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="635" y="238" class="lbl val">BONUS_BLK</text>
+
+    <text x="733" y="202" class="lbl idx">6</text>
+    <rect x="688" y="210" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="831" y="202" class="lbl idx">7</text>
+    <rect x="786" y="210" width="90" height="46" rx="5" class="boxEmpty"/>
+  </g>
+  <text x="888" y="238" class="lbl capt">size 6</text>
+
+  <line x1="20" y1="276" x2="980" y2="276" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BOTTOM BAND -->
+  <text x="20" y="296" class="lbl h2">BOTTOM — remove(1) &#183; same list, size 5</text>
+
+  <!-- before row -->
+  <text x="20" y="346" class="lbl capt">BEFORE</text>
+  <g>
+    <text x="145" y="310" class="lbl idx">0</text>
+    <rect x="100" y="318" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="145" y="346" class="lbl val">STAKE_BLK</text>
+
+    <text x="243" y="310" class="lbl idx">1</text>
+    <rect x="198" y="318" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="243" y="346" class="lbl val">DEP_BLK</text>
+
+    <text x="341" y="310" class="lbl idx">2</text>
+    <rect x="296" y="318" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="341" y="346" class="lbl val">CASH_BLK</text>
+
+    <text x="439" y="310" class="lbl idx">3</text>
+    <rect x="394" y="318" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="439" y="346" class="lbl val">LOGIN_BLK</text>
+
+    <text x="537" y="310" class="lbl idx">4</text>
+    <rect x="492" y="318" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="537" y="346" class="lbl val">BONUS_BLK</text>
+
+    <text x="635" y="310" class="lbl idx">5</text>
+    <rect x="590" y="318" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="733" y="310" class="lbl idx">6</text>
+    <rect x="688" y="318" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="831" y="310" class="lbl idx">7</text>
+    <rect x="786" y="318" width="90" height="46" rx="5" class="boxEmpty"/>
+  </g>
+  <text x="888" y="346" class="lbl capt">size 5</text>
+
+  <!-- shift bracket + arrow: tail 2-4 -> 1-3 -->
+  <path class="tick" d="M 296 364 V 374 H 582 V 364"/>
+  <path class="flow" d="M 439 374 V 398 H 341 V 442"/>
+  <text x="450" y="390" class="lbl body">System.arraycopy(es, 2, es, 1, 3)</text>
+  <text x="450" y="406" class="lbl sub">fastRemove &#183; skips the bounds check</text>
+
+  <!-- after row -->
+  <text x="20" y="470" class="lbl capt">AFTER</text>
+  <g>
+    <text x="145" y="434" class="lbl idx">0</text>
+    <rect x="100" y="442" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="145" y="470" class="lbl val">STAKE_BLK</text>
+
+    <text x="243" y="434" class="lbl idx">1</text>
+    <rect x="198" y="442" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="243" y="470" class="lbl val">CASH_BLK</text>
+
+    <text x="341" y="434" class="lbl idx">2</text>
+    <rect x="296" y="442" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="341" y="470" class="lbl val">LOGIN_BLK</text>
+
+    <text x="439" y="434" class="lbl idx">3</text>
+    <rect x="394" y="442" width="90" height="46" rx="5" class="boxOcc"/>
+    <text x="439" y="470" class="lbl val">BONUS_BLK</text>
+
+    <text x="537" y="434" class="lbl idx">4</text>
+    <rect x="492" y="442" width="90" height="46" rx="5" class="boxHi"/>
+    <text x="537" y="470" class="lbl val">null</text>
+
+    <text x="635" y="434" class="lbl idx">5</text>
+    <rect x="590" y="442" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="733" y="434" class="lbl idx">6</text>
+    <rect x="688" y="442" width="90" height="46" rx="5" class="boxEmpty"/>
+
+    <text x="831" y="434" class="lbl idx">7</text>
+    <rect x="786" y="442" width="90" height="46" rx="5" class="boxEmpty"/>
+  </g>
+  <text x="888" y="470" class="lbl capt">size 4</text>
+
+  <path class="flow" d="M 537 508 V 490"/>
+  <text x="537" y="522" text-anchor="middle" class="lbl sub">es[--size] = null</text>
+  <text x="537" y="536" text-anchor="middle" class="lbl sub">drops the reference so GC can reclaim</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="548" width="960" height="130" rx="6" class="panel"/>
+  <text x="40" y="570" class="lbl panelHdr">WHY THE COST IS ASYMMETRIC</text>
+  <text x="40" y="592" class="lbl panelRow">add at the end &#183; amortised O(1) &#183; no shift</text>
+  <text x="40" y="612" class="lbl panelRow">add / remove at index i &#183; O(n - i) &#183; one arraycopy</text>
+  <text x="40" y="632" class="lbl panelRow">add / remove at index 0 &#183; O(n) &#183; shifts everything</text>
+  <text x="40" y="652" class="lbl panelRow">System.arraycopy is an intrinsic - a vectorised block move, not a Java loop</text>
+
+  <!-- legend -->
+  <line x1="20" y1="694" x2="980" y2="694" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="30" y="706" width="22" height="16" rx="3" class="boxOcc"/>
+  <text x="58" y="718" class="lbl legend">occupied slot</text>
+  <rect x="170" y="706" width="22" height="16" rx="3" class="boxEmpty"/>
+  <text x="198" y="718" class="lbl legend">empty / null slot</text>
+  <rect x="340" y="706" width="22" height="16" rx="3" class="boxHi"/>
+  <text x="368" y="718" class="lbl legend">new / vacated-to-null slot</text>
+  <rect x="560" y="706" width="22" height="16" rx="3" class="panel"/>
+  <text x="588" y="718" class="lbl legend">callout panel</text>
+  <path class="flow" d="M 700 714 H 740"/>
+  <text x="750" y="718" class="lbl legend">A &#8594; B : tail shifts from A to B</text>
+</svg>

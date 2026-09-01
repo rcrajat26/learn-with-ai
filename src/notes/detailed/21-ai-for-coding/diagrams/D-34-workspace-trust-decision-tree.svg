@@ -1,0 +1,113 @@
+<svg viewBox="0 0 1040 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for workspace trust: when a project's committed settings want to grant permissions.allow or additionalDirectories, the trust dialog gates it; permissions.deny and permissions.ask are never gated because they only restrict. A terminal node shows that a claude -p or SDK session never shows the trust dialog and counts as accepted. A keying panel covers how trust is scoped: git repo root inside a repo, with nested repos excluded, start directory when outside a repo, and session-only trust inside $HOME. A second panel shows that an untracked local settings file applies immediately, while a tracked file or a symlinked .claude directory waits for the next trust decision.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="940" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-34 — WORKSPACE TRUST: WHAT IT GATES, AND HOW IT IS KEYED</text>
+  <line x1="20" y1="40" x2="1020" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="300" y="56" width="440" height="56" rx="6" class="boxP"/>
+  <text x="520" y="80" text-anchor="middle" class="lbl node">a project's committed settings</text>
+  <text x="520" y="98" text-anchor="middle" class="lbl body">want to grant something</text>
+
+  <path class="flow" d="M 420 112 V 122 H 250 V 164"/>
+  <path class="flow" d="M 620 112 V 122 H 790 V 164"/>
+
+  <text x="235" y="132" text-anchor="end" class="lbl sub">grants permissions.allow or</text>
+  <text x="235" y="145" text-anchor="end" class="lbl sub">additionalDirectories</text>
+  <text x="805" y="132" text-anchor="start" class="lbl sub">only permissions.deny</text>
+  <text x="805" y="145" text-anchor="start" class="lbl sub">or permissions.ask</text>
+
+  <rect x="100" y="164" width="300" height="56" rx="6" class="boxH"/>
+  <text x="250" y="188" text-anchor="middle" class="lbl node">GATED on the trust dialog</text>
+  <text x="250" y="206" text-anchor="middle" class="lbl sub">must be explicitly trusted before it takes effect</text>
+
+  <rect x="640" y="164" width="300" height="56" rx="6" class="boxR"/>
+  <text x="790" y="188" text-anchor="middle" class="lbl node">NOT gated</text>
+  <text x="790" y="206" text-anchor="middle" class="lbl sub">deny / ask only restrict — nothing to approve</text>
+
+  <path class="flow" d="M 250 220 V 250"/>
+  <rect x="70" y="250" width="360" height="66" rx="6" class="boxH"/>
+  <text x="250" y="272" text-anchor="middle" class="lbl node">TERMINAL NODE: claude -p / SDK session</text>
+  <text x="250" y="291" text-anchor="middle" class="lbl body">the trust dialog is never shown —</text>
+  <text x="250" y="307" text-anchor="middle" class="lbl body">the session counts as ACCEPTED</text>
+
+  <line x1="20" y1="340" x2="1020" y2="340" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="362" class="lbl h2">HOW TRUST IS KEYED</text>
+
+  <rect x="60" y="376" width="280" height="96" rx="6" class="boxW"/>
+  <text x="200" y="400" text-anchor="middle" class="lbl node">inside a git repo</text>
+  <text x="200" y="420" text-anchor="middle" class="lbl body">keyed to the repo root</text>
+  <text x="200" y="440" text-anchor="middle" class="lbl sub">nested repos inside it are</text>
+  <text x="200" y="454" text-anchor="middle" class="lbl sub">excluded — trusted separately</text>
+
+  <rect x="380" y="376" width="280" height="96" rx="6" class="boxW"/>
+  <text x="520" y="400" text-anchor="middle" class="lbl node">outside any git repo</text>
+  <text x="520" y="420" text-anchor="middle" class="lbl body">keyed to the start directory</text>
+  <text x="520" y="440" text-anchor="middle" class="lbl sub">the directory Claude Code</text>
+  <text x="520" y="454" text-anchor="middle" class="lbl sub">was launched from</text>
+
+  <rect x="700" y="376" width="280" height="96" rx="6" class="boxW"/>
+  <text x="840" y="400" text-anchor="middle" class="lbl node">inside $HOME</text>
+  <text x="840" y="420" text-anchor="middle" class="lbl body">trust is session-only</text>
+  <text x="840" y="440" text-anchor="middle" class="lbl sub">never persisted for the</text>
+  <text x="840" y="454" text-anchor="middle" class="lbl sub">home directory itself</text>
+
+  <line x1="20" y1="498" x2="1020" y2="498" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="520" class="lbl h2">WHEN A CHANGE TO THE SETTINGS FILE TAKES EFFECT</text>
+
+  <rect x="60" y="536" width="440" height="66" rx="6" class="boxR"/>
+  <text x="280" y="560" text-anchor="middle" class="lbl node">untracked local settings file</text>
+  <text x="280" y="580" text-anchor="middle" class="lbl body">e.g. .claude/settings.local.json — applies immediately</text>
+
+  <rect x="540" y="536" width="440" height="66" rx="6" class="boxH"/>
+  <text x="760" y="560" text-anchor="middle" class="lbl node">tracked file, or a symlinked .claude</text>
+  <text x="760" y="580" text-anchor="middle" class="lbl body">waits for the next trust decision</text>
+
+  <rect x="100" y="624" width="840" height="118" rx="6" class="panel"/>
+  <text x="120" y="648" class="lbl h2">WHY THE DISTINCTION EXISTS</text>
+  <text x="120" y="670" class="lbl body">A file no one else can see or review (untracked, local-only) cannot smuggle a grant into a</text>
+  <text x="120" y="688" class="lbl body">teammate's session, so it is safe to honour right away. A file that ships with the repo — or a</text>
+  <text x="120" y="706" class="lbl body">.claude directory that is really a symlink elsewhere — could carry a grant an attacker committed,</text>
+  <text x="120" y="724" class="lbl body">so it only takes effect after the user re-confirms trust for that directory.</text>
+
+  <line x1="20" y1="766" x2="1020" y2="766" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="778" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="791" class="lbl tiny">the request under evaluation</text>
+  <rect x="270" y="778" width="22" height="16" rx="3" class="boxH"/>
+  <text x="300" y="791" class="lbl tiny">gated / waiting outcome</text>
+  <rect x="500" y="778" width="22" height="16" rx="3" class="boxR"/>
+  <text x="530" y="791" class="lbl tiny">not gated / applies immediately</text>
+  <rect x="800" y="778" width="22" height="16" rx="3" class="boxW"/>
+  <text x="830" y="791" class="lbl tiny">keying scope</text>
+  <rect x="20" y="802" width="22" height="16" rx="3" class="panel"/>
+  <text x="50" y="815" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 270 810 H 310"/>
+  <text x="320" y="815" class="lbl tiny">A → B : branch condition leads to B</text>
+</svg>

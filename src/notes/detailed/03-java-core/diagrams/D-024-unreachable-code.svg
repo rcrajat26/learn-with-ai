@@ -1,0 +1,71 @@
+<svg viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Comparing two QuizStakes snippets: a while (true) reservation-expiry drain loop followed by auditLedger() fails to compile with 'error: unreachable statement' because JLS 14.21 proves the loop never completes normally, while an if (true) { return; } followed by the same auditLedger() call compiles cleanly because the JLS deliberately does not fold if conditions the same way, which is what lets a static final boolean DEBUG flag be used for conditional compilation.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="620" fill="#ffffff"/>
+
+  <text x="560" y="28" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">unreachable code: while (true) is a compile error, if (true) is not</text>
+
+  <!-- Left panel: while(true) -->
+  <rect x="40" y="60" width="480" height="290" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+  <text x="60" y="85" font-family="sans-serif" font-size="13" fill="#1f2937">while (true) — reservation-expiry drain loop</text>
+
+  <rect x="60" y="100" width="440" height="80" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="80" y="125" font-family="monospace" font-size="12" fill="#1f2937">while (true) {</text>
+  <text x="80" y="142" font-family="monospace" font-size="12" fill="#1f2937">    expireNextReservation();</text>
+  <text x="80" y="159" font-family="monospace" font-size="12" fill="#1f2937">}</text>
+
+  <path d="M 280 180 V 200" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="60" y="200" width="440" height="60" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="80" y="222" font-family="monospace" font-size="12" fill="#1f2937">auditLedger();</text>
+  <text x="80" y="240" font-family="sans-serif" font-size="11" fill="#4b5563">unreachable statement (loop never exits)</text>
+
+  <rect x="60" y="275" width="440" height="60" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="280" y="298" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">error: unreachable statement</text>
+  <text x="280" y="316" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">javac refuses to compile</text>
+
+  <!-- Right panel: if(true) -->
+  <rect x="600" y="60" width="480" height="290" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+  <text x="620" y="85" font-family="sans-serif" font-size="13" fill="#1f2937">if (true) { return; } — same shape, different rule</text>
+
+  <rect x="620" y="100" width="440" height="80" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="640" y="125" font-family="monospace" font-size="12" fill="#1f2937">if (true) {</text>
+  <text x="640" y="142" font-family="monospace" font-size="12" fill="#1f2937">    return;</text>
+  <text x="640" y="159" font-family="monospace" font-size="12" fill="#1f2937">}</text>
+
+  <path d="M 840 180 V 200" fill="none" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="620" y="200" width="440" height="60" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="640" y="222" font-family="monospace" font-size="12" fill="#1f2937">auditLedger();</text>
+  <text x="640" y="240" font-family="sans-serif" font-size="11" fill="#4b5563">dead code — reachability check skipped for if</text>
+
+  <rect x="620" y="275" width="440" height="60" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="840" y="298" text-anchor="middle" font-family="monospace" font-size="12" fill="#1f2937">compiles with no error</text>
+  <text x="840" y="316" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">auditLedger() is dead but accepted</text>
+
+  <!-- Shared annotation -->
+  <rect x="40" y="380" width="1040" height="160" rx="6" fill="#eff6ff" stroke="#737373" stroke-width="1.6"/>
+  <text x="60" y="405" font-family="sans-serif" font-size="13" fill="#1f2937">why the asymmetry: JLS 14.21 definite unreachability</text>
+  <text x="60" y="428" font-family="sans-serif" font-size="12" fill="#4b5563">JLS 14.21 gives while (true) with no break an exact structural rule: it never completes normally, so any</text>
+  <text x="60" y="448" font-family="sans-serif" font-size="12" fill="#4b5563">statement textually after it is provably unreachable, and javac rejects it as a compile error.</text>
+  <text x="60" y="470" font-family="sans-serif" font-size="12" fill="#4b5563">if (true) { ... } is deliberately NOT given the same treatment — the compiler does not fold the condition</text>
+  <text x="60" y="490" font-family="sans-serif" font-size="12" fill="#4b5563">for reachability, so code after it stays reachable and compiles even though it can never run.</text>
+  <text x="60" y="512" font-family="sans-serif" font-size="12" fill="#4b5563">This is intentional: it lets static final boolean DEBUG = false; if (DEBUG) { ... } act as conditional</text>
+  <text x="60" y="532" font-family="sans-serif" font-size="12" fill="#4b5563">compilation — dead debug code that never breaks the build.</text>
+
+  <!-- Legend -->
+  <line x1="40" y1="565" x2="1080" y2="565" stroke="#d1d5db" stroke-width="1"/>
+  <rect x="50" y="573" width="14" height="14" fill="#dbeafe" stroke="#737373" stroke-width="1.6"/>
+  <text x="70" y="585" font-family="sans-serif" font-size="11" fill="#4b5563">source statement</text>
+  <rect x="240" y="573" width="14" height="14" fill="#fee2e2" stroke="#737373" stroke-width="1.6"/>
+  <text x="260" y="585" font-family="sans-serif" font-size="11" fill="#4b5563">unreachable / compile error</text>
+  <rect x="500" y="573" width="14" height="14" fill="#fef3c7" stroke="#737373" stroke-width="1.6"/>
+  <text x="520" y="585" font-family="sans-serif" font-size="11" fill="#4b5563">dead code but accepted (subject)</text>
+  <rect x="800" y="573" width="14" height="14" fill="#dcfce7" stroke="#737373" stroke-width="1.6"/>
+  <text x="820" y="585" font-family="sans-serif" font-size="11" fill="#4b5563">compiles cleanly</text>
+</svg>

@@ -1,0 +1,52 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 4: running the file command against the generated file classifies it as data, not text, because of the embedded NUL byte.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 2 OF 4 — THE CHECKER THAT SWITCHED ITSELF OFF</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="150" width="230" height="70" rx="6" class="boxD"/>
+  <text x="175" y="178" text-anchor="middle" class="lbl node">generated file</text>
+  <text x="175" y="198" text-anchor="middle" class="lbl sub">contains one NUL byte</text>
+
+  <path class="flow" d="M 290 185 H 360"/>
+
+  <rect x="360" y="140" width="180" height="90" rx="6" class="boxW"/>
+  <text x="450" y="168" text-anchor="middle" class="lbl node mono">file(1)</text>
+  <text x="450" y="186" text-anchor="middle" class="lbl sub mono">$ file order.java</text>
+  <text x="450" y="202" text-anchor="middle" class="lbl sub">sniffs bytes for a MIME class</text>
+  <text x="450" y="218" text-anchor="middle" class="lbl sub">the extension is not consulted</text>
+
+  <path class="flow" d="M 540 185 H 610"/>
+
+  <rect x="610" y="150" width="230" height="70" rx="6" class="boxD"/>
+  <text x="725" y="178" text-anchor="middle" class="lbl node mono">order.java: data</text>
+  <text x="725" y="198" text-anchor="middle" class="lbl sub">not classified as ASCII / UTF-8 text</text>
+
+  <text x="360" y="270" class="lbl tiny">a NUL byte anywhere in the stream is enough for `file` to call the whole</text>
+  <text x="360" y="286" class="lbl tiny">artifact binary "data" — the .java extension is not consulted</text>
+
+  <line x1="20" y1="330" x2="880" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="342" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="355" class="lbl tiny">artifact carrying the defect / its wrong classification</text>
+  <rect x="360" y="342" width="22" height="16" rx="3" class="boxW"/>
+  <text x="390" y="355" class="lbl tiny">the inspection tool itself</text>
+</svg>

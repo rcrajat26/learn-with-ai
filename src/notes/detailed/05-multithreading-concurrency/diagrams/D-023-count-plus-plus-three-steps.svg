@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="count++ is three logical steps: getfield reads the field, iconst_1 pushes constant
+     1, iadd adds them, putfield writes the result back. A stake-reservation counter starts at 41.
+     Two threads, settlement-ingest-3 and restriction-apply-1, each run count++ concurrently.
+     Frame 1: both threads execute getfield and read 41. Frame 2: both compute iadd giving 42 in
+     their own local value, still unwritten. Frame 3: both execute putfield and write 42; the
+     second write silently overwrites the first, so the final field value is 42 instead of the
+     correct 43. This is the lost update.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .lane  { stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">count++ IS THREE LOGICAL STEPS — THE LOST UPDATE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- bytecode strip -->
+  <rect x="20" y="56" width="1000" height="60" rx="6" class="boxLg"/>
+  <text x="40" y="76" class="lbl tinyB">count++ COMPILES TO FOUR BYTECODE OPS</text>
+  <text x="60" y="100" class="lbl body">getfield count</text>
+  <path class="flow" d="M 190 93 H 220"/>
+  <text x="230" y="100" class="lbl body">iconst_1</text>
+  <path class="flow" d="M 320 93 H 350"/>
+  <text x="360" y="100" class="lbl body">iadd</text>
+  <path class="flow" d="M 420 93 H 450"/>
+  <text x="460" y="100" class="lbl body">putfield count</text>
+  <text x="700" y="100" class="lbl sub">— each op is a separate, independently interleavable step</text>
+
+  <!-- setup panel -->
+  <rect x="20" y="130" width="1000" height="46" rx="6" class="boxA"/>
+  <text x="40" y="158" class="lbl body">stakeReservationCount starts at 41 · two threads both run count++ concurrently, no synchronization</text>
+
+  <!-- lanes -->
+  <text x="300" y="200" text-anchor="middle" class="lbl h2">settlement-ingest-3</text>
+  <text x="740" y="200" text-anchor="middle" class="lbl h2">restriction-apply-1</text>
+  <line x1="300" y1="210" x2="300" y2="820" class="lane"/>
+  <line x1="740" y1="210" x2="740" y2="820" class="lane"/>
+  <text x="70" y="215" class="lbl tinyB">TIME</text>
+  <path class="flow" d="M 70 220 V 800"/>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="230" width="1000" height="150" rx="6" class="boxP" fill-opacity="1"/>
+  <text x="40" y="252" class="lbl tinyB">FRAME 1 — both threads read the field</text>
+  <rect x="220" y="266" width="160" height="60" rx="6" class="boxP"/>
+  <text x="300" y="288" text-anchor="middle" class="lbl body">1. getfield count</text>
+  <text x="300" y="308" text-anchor="middle" class="lbl sub">reads 41 into local</text>
+  <rect x="660" y="266" width="160" height="60" rx="6" class="boxP"/>
+  <text x="740" y="288" text-anchor="middle" class="lbl body">1. getfield count</text>
+  <text x="740" y="308" text-anchor="middle" class="lbl sub">reads 41 into local</text>
+  <rect x="360" y="340" width="320" height="34" rx="6" class="boxLg"/>
+  <text x="520" y="362" text-anchor="middle" class="lbl sub">field count still = 41 · both locals hold 41</text>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="390" width="1000" height="150" rx="6" class="boxP"/>
+  <text x="40" y="412" class="lbl tinyB">FRAME 2 — both threads compute iadd, unwritten</text>
+  <rect x="220" y="426" width="160" height="60" rx="6" class="boxP"/>
+  <text x="300" y="448" text-anchor="middle" class="lbl body">2. iconst_1 + iadd</text>
+  <text x="300" y="468" text-anchor="middle" class="lbl sub">local = 41 + 1 = 42</text>
+  <rect x="660" y="426" width="160" height="60" rx="6" class="boxP"/>
+  <text x="740" y="448" text-anchor="middle" class="lbl body">2. iconst_1 + iadd</text>
+  <text x="740" y="468" text-anchor="middle" class="lbl sub">local = 41 + 1 = 42</text>
+  <rect x="360" y="500" width="320" height="34" rx="6" class="boxLg"/>
+  <text x="520" y="522" text-anchor="middle" class="lbl sub">field count still = 41 · neither has written yet</text>
+
+  <!-- FRAME 3 -->
+  <rect x="20" y="550" width="1000" height="150" rx="6" class="boxD"/>
+  <text x="40" y="572" class="lbl tinyB">FRAME 3 — both write back, second overwrites first</text>
+  <rect x="220" y="586" width="160" height="60" rx="6" class="boxD"/>
+  <text x="300" y="608" text-anchor="middle" class="lbl body">3. putfield count</text>
+  <text x="300" y="628" text-anchor="middle" class="lbl sub">writes 42</text>
+  <rect x="660" y="586" width="160" height="60" rx="6" class="boxD"/>
+  <text x="740" y="608" text-anchor="middle" class="lbl body">3. putfield count</text>
+  <text x="740" y="628" text-anchor="middle" class="lbl sub">writes 42 (again)</text>
+  <path class="flow" d="M 300 646 V 660 H 740 V 660"/>
+  <rect x="360" y="660" width="320" height="34" rx="6" class="boxD"/>
+  <text x="520" y="682" text-anchor="middle" class="lbl sub">field count = 42 — LOST UPDATE</text>
+
+  <!-- result panel -->
+  <rect x="160" y="716" width="720" height="70" rx="6" class="boxA"/>
+  <text x="180" y="738" class="lbl tinyB">RESULT</text>
+  <text x="520" y="758" text-anchor="middle" class="lbl body">final stakeReservationCount = 42, not the correct 43 —</text>
+  <text x="520" y="776" text-anchor="middle" class="lbl body">one increment vanished because neither thread's read saw the other's write</text>
+
+  <line x1="20" y1="808" x2="1020" y2="808" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="822" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="834" class="lbl tiny">step of count++ (read or compute)</text>
+  <rect x="330" y="822" width="22" height="16" rx="3" class="boxD"/>
+  <text x="360" y="834" class="lbl tiny">write step that produces the lost update</text>
+  <rect x="700" y="822" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="730" y="834" class="lbl tiny">field count's value at that point in time</text>
+  <path class="flow" d="M 20 852 H 60"/>
+  <text x="70" y="856" class="lbl tiny">A → B : A happens, then B happens next on the time axis</text>
+</svg>

@@ -1,0 +1,156 @@
+<svg viewBox="0 0 1140 1240" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence explaining the synthetic $SwitchMap that javac generates for a switch over RestrictionType. Frame 1: RestrictionRouter$1 holds a static int array mapping each constant's ordinal to a dense case index, built once in clinit with each store guarded by an individually swallowed NoSuchFieldError. Frame 2: the switch site reads ordinal, uses it to index into $SwitchMap to get the dense index, then feeds that dense index to a tableswitch, because tableswitch needs contiguous keys that raw ordinals do not provide once only some constants have cases. Frame 3: if the enum is recompiled with reordered and added constants but the switch site is not, old dense indices still route by name for existing constants while new constants silently fall to default, and an exhaustive switch expression with no default throws MatchException on JDK 21 or IncompatibleClassChangeError on JDK 17 instead of failing at compile time.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .pill{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+    </style>
+    <marker id="arrS3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="1240" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">$SwitchMap and why it exists &#8212; RestrictionRouter over RestrictionType</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <text x="20" y="66" class="h2">FRAME 1 &#8212; THE SYNTHETIC HOLDER CLASS</text>
+  <line x1="20" y1="74" x2="1120" y2="74" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="90" width="1060" height="40" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="115" class="body" font-weight="bold">class RestrictionRouter$1  flags: (0x1020) ACC_SUPER, ACC_SYNTHETIC</text>
+
+  <rect x="60" y="146" width="520" height="300" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="80" y="168" class="code" font-weight="bold">static final int[] $SwitchMap$RestrictionType</text>
+  <text x="80" y="186" class="small">index = ordinal &#8212; value = dense case index (0 = no case, falls to default)</text>
+  <line x1="80" y1="196" x2="560" y2="196" stroke="#2563eb" stroke-width="1"/>
+  <g class="smallD">
+    <text x="80" y="216">[0]</text><text x="112" y="216">DEPOSIT_BLOCKED</text><text x="480" y="216">&#8594; 0</text>
+    <text x="80" y="238">[1]</text><text x="112" y="238">STAKE_BLOCKED</text><text x="480" y="238">&#8594; 2</text>
+    <text x="80" y="260">[2]</text><text x="112" y="260">WITHDRAWAL_BLOCKED</text><text x="480" y="260">&#8594; 0</text>
+    <text x="80" y="282">[3]</text><text x="112" y="282">DEPOSIT_LIMITED</text><text x="480" y="282">&#8594; 0</text>
+    <text x="80" y="304">[4]</text><text x="112" y="304">WITHDRAWAL_HELD</text><text x="480" y="304">&#8594; 0</text>
+    <text x="80" y="326">[5]</text><text x="112" y="326">SOURCE_OF_FUNDS_REQUIRED</text><text x="480" y="326">&#8594; 0</text>
+    <text x="80" y="348">[6]</text><text x="112" y="348">ALL_BLOCKED</text><text x="480" y="348">&#8594; 3</text>
+    <text x="80" y="370">[7]</text><text x="112" y="370">SELF_EXCLUDED</text><text x="480" y="370">&#8594; 1</text>
+    <text x="80" y="392">[8]</text><text x="112" y="392">COOLING_OFF</text><text x="480" y="392">&#8594; 0</text>
+    <text x="80" y="414">[9]</text><text x="112" y="414">DORMANT_FROZEN</text><text x="480" y="414">&#8594; 0</text>
+  </g>
+  <text x="80" y="434" class="small">only SELF_EXCLUDED&#8594;1, STAKE_BLOCKED&#8594;2, ALL_BLOCKED&#8594;3 have switch cases</text>
+
+  <rect x="600" y="146" width="520" height="300" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="620" y="168" class="body" font-weight="bold">&lt;clinit&gt; pattern &#8212; one representative store, repeated per case</text>
+  <g class="code">
+    <text x="620" y="190">getstatic $SwitchMap$RestrictionType:[I</text>
+    <text x="620" y="208">getstatic RestrictionType.SELF_EXCLUDED:LRestrictionType;</text>
+    <text x="620" y="226">invokevirtual ordinal:()I</text>
+    <text x="620" y="244">iconst_1</text>
+    <text x="620" y="262">iastore</text>
+  </g>
+  <line x1="620" y1="274" x2="1100" y2="274" stroke="#9ca3af" stroke-width="1"/>
+  <text x="620" y="294" class="smallb">Exception table: from 9 to 20 target 23 type java/lang/NoSuchFieldError</text>
+  <text x="620" y="316" class="small">each of the 10 stores above is individually wrapped in its own</text>
+  <text x="620" y="334" class="small">swallowed NoSuchFieldError catch &#8212; tolerates the enum being</text>
+  <text x="620" y="352" class="small">recompiled elsewhere with constants added, removed or renamed</text>
+  <text x="620" y="374" class="small">without $SwitchMap$RestrictionType itself being regenerated</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <text x="20" y="484" class="h2">FRAME 2 &#8212; THE SWITCH SITE, RestrictionRouter.route</text>
+  <line x1="20" y1="492" x2="1120" y2="492" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="508" width="540" height="190" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="80" y="530" class="small" font-weight="bold">javap -c RestrictionRouter.route</text>
+  <g class="code">
+    <text x="80" y="552">0: getstatic RestrictionRouter$1.</text>
+    <text x="96" y="568">$SwitchMap$RestrictionType:[I</text>
+    <text x="80" y="588">3: aload_0</text>
+    <text x="80" y="606">4: invokevirtual RestrictionType.ordinal:()I</text>
+    <text x="80" y="624">7: iaload</text>
+    <text x="80" y="642">8: tableswitch {</text>
+    <text x="96" y="658">1: 36   2: 39   3: 42   default: 45</text>
+    <text x="80" y="674">}</text>
+  </g>
+
+  <rect x="640" y="508" width="440" height="60" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="860" y="542" text-anchor="middle" class="body">ordinal() &#8212; raw constant position</text>
+  <path d="M 860 568 V 588" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrS3)"/>
+
+  <rect x="640" y="588" width="440" height="60" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="860" y="622" text-anchor="middle" class="body">index into $SwitchMap$RestrictionType</text>
+  <path d="M 860 648 V 668" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrS3)"/>
+
+  <rect x="640" y="668" width="440" height="60" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="860" y="702" text-anchor="middle" class="body">dense case index (0, 1, 2, 3, ...)</text>
+  <path d="M 860 728 V 748" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrS3)"/>
+
+  <rect x="640" y="748" width="440" height="60" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="860" y="782" text-anchor="middle" class="body">tableswitch on the dense index</text>
+
+  <rect x="60" y="718" width="540" height="90" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="80" y="740" class="smallb" fill="#b45309">why the indirection exists</text>
+  <text x="80" y="760" class="small">tableswitch needs dense, contiguous keys (0, 1, 2, ...); raw ordinals</text>
+  <text x="80" y="778" class="small">are not dense once a switch only handles a subset of the constants &#8212;</text>
+  <text x="80" y="796" class="small">$SwitchMap$RestrictionType supplies the compaction ordinal can't</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <text x="20" y="840" class="h2">FRAME 3 &#8212; BINARY COMPATIBILITY, MEASURED</text>
+  <line x1="20" y1="848" x2="1120" y2="848" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="60" y="864" width="520" height="200" rx="6" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="80" y="886" class="body" font-weight="bold">enum recompiled, switch site left stale</text>
+  <text x="80" y="908" class="small">RestrictionType recompiled: constants reordered, WAGERING_HELD</text>
+  <text x="80" y="926" class="small">appended &#8212; RestrictionRouter itself is NOT recompiled</text>
+  <text x="80" y="950" class="small">ALL_BLOCKED is now ordinal 0 (was 6): the &lt;clinit&gt; guard rebuilds</text>
+  <text x="80" y="968" class="small">$SwitchMap by NAME, so it still routes to "ALL_BLOCKED" correctly</text>
+  <text x="80" y="994" class="small">WAGERING_HELD (new, no case) has no $SwitchMap entry &#8212; value</text>
+  <text x="80" y="1012" class="small">defaults to 0 and silently falls through to the default case</text>
+
+  <rect x="600" y="864" width="520" height="200" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="620" y="886" class="body" font-weight="bold">exhaustive switch EXPRESSION, no default</text>
+  <text x="620" y="908" class="small">fails at RUNTIME instead of at compile time when a constant is</text>
+  <text x="620" y="926" class="small">unhandled after a stale recompile:</text>
+
+  <rect x="620" y="940" width="34" height="20" rx="9" fill="#fbbf24" stroke="#b45309" stroke-width="1.6"/>
+  <text x="637" y="954" text-anchor="middle" class="pill">21</text>
+  <text x="664" y="954" class="code">java.lang.MatchException: null</text>
+
+  <rect x="620" y="972" width="34" height="20" rx="9" fill="#fbbf24" stroke="#b45309" stroke-width="1.6"/>
+  <text x="637" y="986" text-anchor="middle" class="pill">17</text>
+  <text x="664" y="986" class="code">IncompatibleClassChangeError: null</text>
+
+  <text x="620" y="1020" class="small">both replace what used to be a compile-time exhaustiveness error</text>
+  <text x="620" y="1038" class="small">with a production runtime failure on the very next stale build</text>
+
+  <!-- ================= LEGEND ================= -->
+  <text x="20" y="1094" class="h2">LEGEND</text>
+  <line x1="20" y1="1102" x2="1120" y2="1102" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1114" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1127" class="small">primary &#8212; $SwitchMap data and the ordinal-to-index-to-tableswitch flow</text>
+
+  <rect x="30" y="1140" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="1153" class="small">highlight &#8212; the tableswitch step and why the indirection is needed</text>
+
+  <rect x="30" y="1166" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="1179" class="small">synthetic &#8212; the $SwitchMap$RestrictionType holder class and its &lt;clinit&gt;</text>
+
+  <rect x="30" y="1192" width="22" height="16" rx="3" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="58" y="1205" class="small">resolved &#8212; behavior that stays correct despite a stale recompile</text>
+
+  <rect x="620" y="1114" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="648" y="1127" class="small">degraded &#8212; a compile-time safety net turned into a runtime crash</text>
+
+  <rect x="620" y="1140" width="20" height="14" rx="7" fill="#fbbf24" stroke="#b45309" stroke-width="1.6"/>
+  <text x="648" y="1152" class="small">version pill &#8212; JDK release the measured behavior applies to</text>
+
+  <line x1="620" y1="1170" x2="646" y2="1170" stroke="#475569" stroke-width="2" marker-end="url(#arrS3)"/>
+  <text x="654" y="1175" class="small">generates / primary flow : A &#8722;&gt; B, B is derived from A during evaluation</text>
+</svg>

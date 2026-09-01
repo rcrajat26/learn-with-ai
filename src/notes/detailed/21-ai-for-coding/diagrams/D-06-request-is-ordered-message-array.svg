@@ -1,0 +1,74 @@
+<svg viewBox="0 0 1040 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A request is the literal JSON array messages containing four ordered elements: index 0 with role system, index 1 with role user, index 2 with role assistant, and index 3 with role user, each holding real message content, connected in sequential order.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A REQUEST IS AN ORDERED LIST OF MESSAGES</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="58" width="960" height="46" rx="6" class="boxA"/>
+  <text x="60" y="86" class="lbl body">messages = [ {"role":"system"}, {"role":"user"}, {"role":"assistant"}, {"role":"user"} ]</text>
+
+  <text x="150" y="128" text-anchor="middle" class="lbl sub">[0]</text>
+  <text x="390" y="128" text-anchor="middle" class="lbl sub">[1]</text>
+  <text x="630" y="128" text-anchor="middle" class="lbl sub">[2]</text>
+  <text x="870" y="128" text-anchor="middle" class="lbl sub">[3]</text>
+
+  <rect x="40" y="140" width="220" height="120" rx="6" class="boxH"/>
+  <text x="150" y="164" text-anchor="middle" class="lbl node">system</text>
+  <text x="150" y="188" text-anchor="middle" class="lbl tiny">"You are Claude Code,</text>
+  <text x="150" y="204" text-anchor="middle" class="lbl tiny">operating in sdlc-harness."</text>
+
+  <rect x="280" y="140" width="220" height="120" rx="6" class="boxP"/>
+  <text x="390" y="164" text-anchor="middle" class="lbl node">user</text>
+  <text x="390" y="188" text-anchor="middle" class="lbl tiny">"Why did check-init.sh</text>
+  <text x="390" y="204" text-anchor="middle" class="lbl tiny">fail?"</text>
+
+  <rect x="520" y="140" width="220" height="120" rx="6" class="boxR"/>
+  <text x="630" y="164" text-anchor="middle" class="lbl node">assistant</text>
+  <text x="630" y="188" text-anchor="middle" class="lbl tiny">"permissions.deny</text>
+  <text x="630" y="204" text-anchor="middle" class="lbl tiny">blocked check-init.sh."</text>
+
+  <rect x="760" y="140" width="220" height="120" rx="6" class="boxP"/>
+  <text x="870" y="164" text-anchor="middle" class="lbl node">user</text>
+  <text x="870" y="188" text-anchor="middle" class="lbl tiny">"Fix settings.local.json</text>
+  <text x="870" y="204" text-anchor="middle" class="lbl tiny">to allow it."</text>
+
+  <path class="flow" d="M 260 200 H 280"/>
+  <path class="flow" d="M 500 200 H 520"/>
+  <path class="flow" d="M 740 200 H 760"/>
+
+  <line x1="20" y1="300" x2="1020" y2="300" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="312" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="325" class="lbl tiny">role: system</text>
+  <rect x="220" y="312" width="22" height="16" rx="3" class="boxP"/>
+  <text x="250" y="325" class="lbl tiny">role: user</text>
+  <rect x="420" y="312" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="325" class="lbl tiny">role: assistant</text>
+  <rect x="620" y="312" width="22" height="16" rx="3" class="boxA"/>
+  <text x="650" y="325" class="lbl tiny">the literal JSON array</text>
+
+  <path class="flow" d="M 20 345 H 60"/>
+  <text x="68" y="349" class="lbl tiny">index i -&gt; index i+1 : array order (sent in this sequence)</text>
+</svg>

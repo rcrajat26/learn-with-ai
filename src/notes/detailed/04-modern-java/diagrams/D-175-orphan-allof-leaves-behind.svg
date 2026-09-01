@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of a deliberate failure in AssessmentService's fan-out to the identity vendor and the watchlist provider. Left, StructuredTaskScope.ShutdownOnFailure: the identity subtask fails at 200 milliseconds, scope.shutdown interrupts the sibling watchlist subtask, and the thread count returns to its baseline of N. Right, CompletableFuture.allOf with the same two calls: identityF fails at 200 milliseconds, allOf completes exceptionally and join returns to the caller, but watchlistF is never cancelled — it keeps running, shows as RUNNABLE in the jstack thread dump, and still holds its socket connection to the watchlist provider, so the thread count stays at N plus 1, an orphan.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+    .code-bg { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triF); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE ORPHAN THAT allOf LEAVES BEHIND</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">AssessmentService fans out to the identity vendor (900ms p50) and the watchlist provider (1.4s p50, 25s p99); the identity call fails deliberately at 200ms</text>
+
+  <!-- LEFT: ShutdownOnFailure -->
+  <text x="20" y="90" class="lbl h2">LEFT — StructuredTaskScope.ShutdownOnFailure</text>
+  <line x1="20" y1="98" x2="540" y2="98" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="110" width="520" height="118" rx="6" class="code-bg"/>
+  <text x="34" y="130" class="lbl code">try (var scope = new ShutdownOnFailure()) {</text>
+  <text x="46" y="148" class="lbl code">Subtask&lt;Verdict&gt; identity  =</text>
+  <text x="58" y="164" class="lbl code">scope.fork(() -&gt; identityVendor.verify(app));</text>
+  <text x="46" y="182" class="lbl code">Subtask&lt;Verdict&gt; watchlist =</text>
+  <text x="58" y="198" class="lbl code">scope.fork(() -&gt; screeningService.check(app));</text>
+  <text x="46" y="216" class="lbl code">scope.join(); scope.throwIfFailed();</text>
+
+  <!-- timeline left -->
+  <line x1="60" y1="252" x2="500" y2="252" stroke="#475569" stroke-width="1.5"/>
+  <text x="60" y="246" class="lbl sub">t=0</text>
+  <text x="220" y="246" class="lbl sub">t=200ms</text>
+  <text x="470" y="246" class="lbl sub">t≈200ms+ε</text>
+
+  <rect x="60" y="262" width="160" height="30" rx="4" class="boxP"/>
+  <text x="140" y="282" text-anchor="middle" class="lbl tiny">identity subtask — RUNNING</text>
+  <rect x="220" y="262" width="24" height="30" rx="4" class="boxD"/>
+  <text x="232" y="282" text-anchor="middle" class="lbl tiny">✗</text>
+
+  <rect x="60" y="300" width="380" height="30" rx="4" class="boxP"/>
+  <text x="250" y="320" text-anchor="middle" class="lbl tiny">watchlist subtask — RUNNING toward 1.4s / 25s p99</text>
+  <path class="fail" d="M 244 277 V 315 H 440"/>
+  <rect x="440" y="300" width="60" height="30" rx="4" class="boxD"/>
+  <text x="470" y="320" text-anchor="middle" class="lbl tiny">INTR</text>
+
+  <rect x="20" y="344" width="520" height="90" rx="6" class="boxR"/>
+  <text x="280" y="366" text-anchor="middle" class="lbl node">scope.shutdown() interrupts the sibling</text>
+  <text x="280" y="386" text-anchor="middle" class="lbl dense">watchlist.interrupt() fires — thread exits at the next</text>
+  <text x="280" y="404" text-anchor="middle" class="lbl dense">interruption point, socket to ScreeningService closes</text>
+  <text x="280" y="422" text-anchor="middle" class="lbl node">thread count: baseline N → N+2 (forked) → back to N</text>
+
+  <rect x="20" y="450" width="520" height="66" rx="6" class="boxAnn"/>
+  <text x="36" y="468" class="lbl node">try-with-resources close()</text>
+  <text x="36" y="486" class="lbl tiny">re-checks the owning-thread invariant, confirms every</text>
+  <text x="36" y="502" class="lbl tiny">fork has terminated before the block exits</text>
+
+  <!-- RIGHT: allOf -->
+  <text x="580" y="90" class="lbl h2">RIGHT — CompletableFuture.allOf</text>
+  <line x1="580" y1="98" x2="1100" y2="98" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="580" y="110" width="520" height="118" rx="6" class="code-bg"/>
+  <text x="594" y="130" class="lbl code">CompletableFuture&lt;Verdict&gt; identityF =</text>
+  <text x="606" y="146" class="lbl code">CompletableFuture.supplyAsync(</text>
+  <text x="618" y="162" class="lbl code">() -&gt; identityVendor.verify(app));</text>
+  <text x="594" y="180" class="lbl code">CompletableFuture&lt;Verdict&gt; watchlistF =</text>
+  <text x="606" y="196" class="lbl code">CompletableFuture.supplyAsync(</text>
+  <text x="618" y="212" class="lbl code">() -&gt; screeningService.check(app));</text>
+
+  <line x1="620" y1="252" x2="1060" y2="252" stroke="#475569" stroke-width="1.5"/>
+  <text x="620" y="246" class="lbl sub">t=0</text>
+  <text x="780" y="246" class="lbl sub">t=200ms</text>
+  <text x="920" y="246" class="lbl sub">method returns here</text>
+
+  <rect x="620" y="262" width="160" height="30" rx="4" class="boxP"/>
+  <text x="700" y="282" text-anchor="middle" class="lbl tiny">identityF — RUNNING</text>
+  <rect x="780" y="262" width="24" height="30" rx="4" class="boxD"/>
+  <text x="792" y="282" text-anchor="middle" class="lbl tiny">✗</text>
+
+  <rect x="620" y="300" width="440" height="30" rx="4" class="boxH"/>
+  <text x="840" y="320" text-anchor="middle" class="lbl tiny">watchlistF — STILL RUNNING, not cancelled by allOf</text>
+
+  <path class="fail" d="M 804 277 H 900 V 262"/>
+  <text x="906" y="272" class="lbl sub">allOf(...).join()</text>
+  <text x="906" y="284" class="lbl sub">throws here</text>
+
+  <rect x="580" y="344" width="520" height="90" rx="6" class="boxD"/>
+  <text x="840" y="366" text-anchor="middle" class="lbl node">watchlistF still running after the method returns</text>
+  <text x="840" y="386" text-anchor="middle" class="lbl dense">jstack thread dump shows it RUNNABLE inside</text>
+  <text x="840" y="404" text-anchor="middle" class="lbl dense">ScreeningService.check — socket read, not yet interrupted</text>
+  <text x="840" y="422" text-anchor="middle" class="lbl node">thread count: baseline N → N+2 (submitted) → N+1, an orphan</text>
+
+  <rect x="580" y="450" width="520" height="66" rx="6" class="boxAnn"/>
+  <text x="596" y="468" class="lbl node">why allOf cannot help here</text>
+  <text x="596" y="486" class="lbl tiny">allOf composes completion, not cancellation — no</text>
+  <text x="596" y="502" class="lbl tiny">CompletableFuture it wraps is ever interrupted by a sibling's failure</text>
+
+  <rect x="20" y="524" width="1080" height="70" rx="6" class="boxAnn"/>
+  <text x="36" y="546" class="lbl node">THE POINT</text>
+  <text x="36" y="566" class="lbl tiny">ShutdownOnFailure ties subtask lifetime to scope lifetime: a sibling failure interrupts every other fork before the block can exit. allOf ties nothing —</text>
+  <text x="36" y="582" class="lbl tiny">a failed leg unblocks the caller immediately while every other leg runs to its own completion, still holding whatever it was holding.</text>
+
+  <line x1="20" y1="616" x2="1100" y2="616" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="628" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="641" class="lbl tiny">running fork / future</text>
+  <rect x="220" y="628" width="22" height="16" rx="3" class="boxD"/>
+  <text x="250" y="641" class="lbl tiny">failed leg / interrupted, back to baseline</text>
+  <rect x="520" y="628" width="22" height="16" rx="3" class="boxH"/>
+  <text x="550" y="641" class="lbl tiny">orphaned, still holding its connection</text>
+  <rect x="800" y="628" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="830" y="641" class="lbl tiny">annotation / explanation panel</text>
+  <path class="fail" d="M 20 662 H 60"/>
+  <text x="68" y="667" class="lbl tiny">failure / interrupt signal</text>
+  <path class="flow" d="M 280 662 H 320"/>
+  <text x="328" y="667" class="lbl tiny">normal control flow</text>
+
+  <rect x="20" y="690" width="1080" height="90" rx="6" class="boxW"/>
+  <text x="36" y="712" class="lbl node">JAVA 21 PREVIEW SHAPE — API drawn from the JEP 453 text, not run</text>
+  <text x="36" y="732" class="lbl tiny">StructuredTaskScope's Java 21 shape (public constructors, Subtask, ShutdownOnFailure/ShutdownOnSuccess) is a preview feature and needs</text>
+  <text x="36" y="750" class="lbl tiny">--enable-preview under --release 21; it does not compile as shown on this machine's JDK 25, where the API moved to static open() factories</text>
+  <text x="36" y="768" class="lbl tiny">and a composable Joiner (JEP 505). The code above is the JEP 453 shape stated in the packet, drawn, not compiled.</text>
+</svg>

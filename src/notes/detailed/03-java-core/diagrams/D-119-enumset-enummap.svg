@@ -1,0 +1,161 @@
+<svg viewBox="0 0 1160 1220" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Side-by-side memory layout of EnumSet as a bit vector versus EnumMap as an ordinal-indexed array, both over RestrictionType and GateType. Left: RegularEnumSet packs membership into a single 64-bit long, one bit per ordinal; add is one shift-and-OR, union of two sets is one OR instruction with no iteration, size is Long.bitCount, and sets over more than 64 constants switch to JumboEnumSet backed by a long array. Right: EnumMap stores values in an Object array indexed by key ordinal, shares one keyUniverse array across every map instance for the same enum type, uses a private NULL sentinel object to distinguish a key explicitly mapped to null from a key never inserted, and always allocates one slot per declared constant regardless of how many entries are actually present.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallD{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#1f2937;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codes{font-family:Menlo,"SF Mono",monospace;font-size:11px;fill:#1f2937;}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="1220" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">EnumSet as a bit vector, EnumMap as an array</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="h2">ENUMSET &#8212; java.util.RegularEnumSet</text>
+  <line x1="20" y1="72" x2="560" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="600" y="64" class="h2">ENUMMAP &#8212; java.util.EnumMap</text>
+  <line x1="600" y1="72" x2="1140" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- ===== LEFT: elements word ===== -->
+  <rect x="20" y="90" width="540" height="360" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="112" class="code" font-weight="bold">private long elements = 0L;</text>
+  <text x="40" y="130" class="small">64-bit word &#8212; bit index = ordinal, 1 = present in the set</text>
+  <line x1="40" y1="140" x2="540" y2="140" stroke="#2563eb" stroke-width="1"/>
+  <g class="smallD">
+    <text x="40" y="160">bit 0</text><text x="90" y="160">DEPOSIT_BLOCKED</text>
+    <text x="40" y="180">bit 1</text><text x="90" y="180">STAKE_BLOCKED</text>
+    <text x="40" y="200">bit 2</text><text x="90" y="200">WITHDRAWAL_BLOCKED</text>
+    <text x="40" y="220">bit 3</text><text x="90" y="220">DEPOSIT_LIMITED</text>
+    <text x="40" y="240">bit 4</text><text x="90" y="240">WITHDRAWAL_HELD</text>
+    <text x="40" y="260">bit 5</text><text x="90" y="260">SOURCE_OF_FUNDS_REQUIRED</text>
+    <text x="40" y="280">bit 6</text><text x="90" y="280">ALL_BLOCKED</text>
+    <text x="40" y="300">bit 7</text><text x="90" y="300">SELF_EXCLUDED</text>
+    <text x="40" y="320">bit 8</text><text x="90" y="320">COOLING_OFF</text>
+    <text x="40" y="340">bit 9</text><text x="90" y="340">DORMANT_FROZEN</text>
+  </g>
+  <rect x="40" y="356" width="500" height="34" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="290" y="378" text-anchor="middle" class="small">bits 10&#8211;63: unused, masked off (54 bits, RestrictionType has 10 constants)</text>
+
+  <!-- ===== LEFT: add ===== -->
+  <rect x="20" y="470" width="540" height="180" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="40" y="492" class="code" font-weight="bold">elements |= (1L &lt;&lt; ((Enum&lt;?&gt;)e).ordinal());</text>
+  <text x="40" y="510" class="small">add(SELF_EXCLUDED) &#8212; ordinal() == 7, so bit 7 sets (bits 9..0 shown; 63..10 are 0)</text>
+  <line x1="40" y1="520" x2="540" y2="520" stroke="#b45309" stroke-width="1"/>
+  <text x="40" y="544" class="codes">before  0000000010</text>
+  <text x="220" y="544" class="small">(STAKE_BLOCKED already set)</text>
+  <text x="40" y="568" class="codes">mask    0010000000</text>
+  <text x="220" y="568" class="small">1L &lt;&lt; 7</text>
+  <text x="40" y="592" class="codes" font-weight="bold">after   0010000010</text>
+  <text x="220" y="592" class="small">before | mask</text>
+  <text x="40" y="622" class="small">bit positions read left&#8594;right as 9,8,7,6,5,4,3,2,1,0</text>
+
+  <!-- ===== LEFT: union ===== -->
+  <rect x="20" y="670" width="540" height="170" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="692" class="body" font-weight="bold">addAll(RegularEnumSet) &#8212; one OR, no iteration</text>
+  <line x1="40" y1="702" x2="540" y2="702" stroke="#2563eb" stroke-width="1"/>
+  <text x="40" y="724" class="codes">A       0010000010</text>
+  <text x="220" y="724" class="small">{STAKE_BLOCKED, SELF_EXCLUDED}</text>
+  <text x="40" y="748" class="codes">B       0101000000</text>
+  <text x="220" y="748" class="small">{ALL_BLOCKED, COOLING_OFF}</text>
+  <text x="40" y="772" class="codes" font-weight="bold">A | B   0111000010</text>
+  <text x="220" y="772" class="small">the union &#8212; one instruction</text>
+  <text x="40" y="800" class="small">this.elements |= other.elements; &#8212; the whole set is one long, so union,</text>
+  <text x="40" y="818" class="small">intersection and difference are each a single bitwise instruction</text>
+
+  <!-- ===== LEFT: split rule + size ===== -->
+  <rect x="20" y="860" width="540" height="150" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="882" class="code">universe.length &lt;= 64 &#8594; RegularEnumSet</text>
+  <text x="40" y="902" class="code">universe.length &gt;  64 &#8594; JumboEnumSet (long[])</text>
+  <line x1="40" y1="912" x2="540" y2="912" stroke="#2563eb" stroke-width="1"/>
+  <text x="40" y="932" class="small">measured: 64 constants &#8594; java.util.RegularEnumSet</text>
+  <text x="40" y="950" class="small">65 constants &#8594; java.util.JumboEnumSet</text>
+  <text x="40" y="978" class="code" font-weight="bold">size() == Long.bitCount(elements)</text>
+  <text x="300" y="978" class="small">&#8212; O(1), one instruction</text>
+
+  <!-- ===== RIGHT: EnumMap structure ===== -->
+  <rect x="600" y="90" width="540" height="260" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="620" y="112" class="body" font-weight="bold">EnumMap&lt;GateType, Verdict&gt;</text>
+  <text x="620" y="130" class="small">private transient Object[] vals &#8212; ordinal-indexed</text>
+  <line x1="620" y1="140" x2="1120" y2="140" stroke="#2563eb" stroke-width="1"/>
+
+  <rect x="620" y="152" width="160" height="44" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="700" y="170" text-anchor="middle" class="smallb">[0]</text>
+  <text x="700" y="186" text-anchor="middle" class="small">AGE_ELIGIBILITY</text>
+
+  <rect x="790" y="152" width="160" height="44" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="870" y="170" text-anchor="middle" class="smallb">[1]</text>
+  <text x="870" y="186" text-anchor="middle" class="small">JURISDICTION</text>
+
+  <rect x="960" y="152" width="160" height="44" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="1040" y="170" text-anchor="middle" class="smallb">[2]</text>
+  <text x="1040" y="186" text-anchor="middle" class="small">SCREENING</text>
+
+  <rect x="620" y="212" width="500" height="118" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="634" y="234" class="code" font-weight="bold">private transient K[] keyUniverse</text>
+  <text x="634" y="254" class="small">Class.getEnumConstantsShared() &#8212; SHARED across every</text>
+  <text x="634" y="272" class="small">EnumMap&lt;GateType, ?&gt; instance in the JVM, never copied</text>
+  <text x="634" y="290" class="small">per map &#8212; one array backs all maps over this key type</text>
+  <text x="634" y="316" class="small">array length == GateType.values().length, fixed for the enum's lifetime</text>
+
+  <!-- ===== RIGHT: put/get ===== -->
+  <rect x="600" y="370" width="540" height="110" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="620" y="396" class="code">put:  vals[key.ordinal()] = maskNull(value);</text>
+  <text x="620" y="420" class="code">get:  return unmaskNull(vals[key.ordinal()]);</text>
+  <text x="620" y="448" class="small">ordinal() indexes directly &#8212; no hashing, no bucket, no collision chain</text>
+
+  <!-- ===== RIGHT: NULL sentinel ===== -->
+  <rect x="600" y="500" width="540" height="170" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="620" y="522" class="code" font-weight="bold">private static final Object NULL = new Object(){...};</text>
+  <text x="620" y="540" class="small">distinguishes "mapped to null" from "never inserted"</text>
+  <line x1="620" y1="550" x2="1120" y2="550" stroke="#b45309" stroke-width="1"/>
+
+  <rect x="620" y="562" width="240" height="44" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="740" y="580" text-anchor="middle" class="smallb">vals[JURISDICTION] = NULL</text>
+  <text x="740" y="596" text-anchor="middle" class="small">put(JURISDICTION, null) was called</text>
+
+  <rect x="880" y="562" width="240" height="44" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="1000" y="580" text-anchor="middle" class="smallb">vals[SCREENING] = null</text>
+  <text x="1000" y="596" text-anchor="middle" class="small">SCREENING was never put at all</text>
+
+  <text x="620" y="638" class="small">get returns unmaskNull(vals[i]): NULL &#8594; null; a real null slot &#8594; "absent"</text>
+  <text x="620" y="656" class="small">via containsKey, which checks the slot rather than the unmasked value</text>
+
+  <!-- ===== RIGHT: memory arithmetic annotation ===== -->
+  <rect x="600" y="700" width="540" height="270" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="620" y="722" class="h2">THE MEMORY ARITHMETIC</text>
+  <line x1="620" y1="732" x2="1120" y2="732" stroke="#2563eb" stroke-width="1"/>
+
+  <text x="620" y="756" class="smallD">RegularEnumSet: 12 B header + 8 B long + 4 B elementType + 4 B universe</text>
+  <text x="620" y="774" class="smallD">= 28 B &#8594; 32 B aligned, for any occupancy up to 64 constants</text>
+
+  <text x="620" y="802" class="smallD">EnumMap vals: 4 bytes per DECLARED constant regardless of occupancy</text>
+  <text x="620" y="820" class="smallD">&#8212; a 1-entry map over a 10-constant enum still allocates 10 slots</text>
+
+  <text x="620" y="848" class="smallD">HashMap equivalent: one Node per entry, 32 B each, plus the table</text>
+  <text x="620" y="866" class="small">RegularEnumSet's cost is flat in universe size; a HashMap-backed set</text>
+  <text x="620" y="884" class="small">or map grows with entry count instead &#8212; the two scale oppositely</text>
+
+  <!-- ===== LEGEND ===== -->
+  <text x="20" y="1024" class="h2">LEGEND</text>
+  <line x1="20" y1="1032" x2="1140" y2="1032" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="1044" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="58" y="1057" class="small">primary &#8212; the bit-vector word / the ordinal-indexed value array</text>
+
+  <rect x="470" y="1044" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="498" y="1057" class="small">highlight &#8212; the operation or sentinel the diagram is about</text>
+
+  <rect x="30" y="1070" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="58" y="1083" class="small">weak &#8212; unused bit span / shared, uncopied array / an empty slot</text>
+
+  <rect x="470" y="1070" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="498" y="1083" class="small">annotation panel &#8212; measured facts, not a node or an edge</text>
+</svg>

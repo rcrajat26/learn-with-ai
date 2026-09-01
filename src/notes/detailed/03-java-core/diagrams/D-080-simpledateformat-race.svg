@@ -1,0 +1,136 @@
+<svg viewBox="0 0 1140 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The SimpleDateFormat race, measured on Oracle JDK 21.0.7. Top lane: one shared static SimpleDateFormat instance holds a single mutable internal Calendar field; at the QuizStakes 3,400-per-second settlement burst, eight threads formatting distinct Movement.postedAt instants all call format on the same instance, so one thread's calendar.setTime(date) write interleaves with another thread's read while building its output string. Measured with 8 threads times 50,000 formats each, 400,000 total, each thread formatting its own distinct Date: 504 distinct wrong output strings and zero exceptions — the failure is silent, with no ConcurrentModificationException or IllegalStateException, just wrong dates written into LedgerEntry rows. Real captured wrong results include settlement-worker-0 wanted 2026-03-20 15:16:40.000 got 2026-03-02 15:16:40.000, settlement-worker-1 wanted 2026-04-26 15:16:40.000 got 2026-03-02 15:16:40.000, settlement-worker-2 wanted 2026-06-02 15:16:40.000 got 2026-03-02 15:16:40.000, and settlement-worker-3 wanted 2026-07-09 15:16:40.000 got 2026-03-02 15:16:40.000. Bottom lane: the same load using an immutable DateTimeFormatter built once by DateTimeFormatterBuilder and thereafter read-only, shared safely by eight threads with 8 times 50,000 formats of distinct Instants using DateTimeFormatter.ofPattern with Europe/London zone, producing 0 distinct wrong results and 0 exceptions. An annotation panel adds a second measured fact: a shared DecimalFormat is also not thread-safe, and with setParseBigDecimal true, 8 threads times 200,000 parses of &quot;4.20&quot; and &quot;1,234,567.89&quot; produced 8,693 distinct wrong results plus 78 NumberFormatException: No digits found, including &quot;4.20&quot; parsed as 1.2327894 and &quot;1,234,567.89&quot; parsed as 4.34456786E+12, 2.03456789E+14, and 4204567.89289 — a 4.20 stake and a 1,234,567.89 withdrawal both corrupted by concurrent mutable parser state.">
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr080" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="1200" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">The SimpleDateFormat race &#8212; shared mutable state vs. immutable DateTimeFormatter</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- TOP LANE -->
+  <text x="20" y="62" class="h2">TOP LANE &#8212; ONE SHARED SimpleDateFormat, EIGHT THREADS, 3,400/sec BURST</text>
+  <line x1="20" y1="70" x2="1120" y2="70" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- 8 thread boxes -->
+  <rect x="20" y="82" width="1080" height="40" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="30" y="106" class="smallb">8 threads, distinct Instants:</text>
+  <g>
+    <rect x="360" y="88" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="402" y="107" text-anchor="middle" class="small">worker-0</text>
+    <rect x="452" y="88" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="494" y="107" text-anchor="middle" class="small">worker-1</text>
+    <rect x="544" y="88" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="586" y="107" text-anchor="middle" class="small">worker-2</text>
+    <rect x="636" y="88" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="678" y="107" text-anchor="middle" class="small">worker-3</text>
+    <rect x="728" y="88" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="770" y="107" text-anchor="middle" class="small">&#8230;</text>
+    <rect x="820" y="88" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="862" y="107" text-anchor="middle" class="small">worker-7</text>
+  </g>
+
+  <!-- fan into shared instance -->
+  <path d="M 402 116 V 140 H 560 V 156" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 494 116 V 134 H 560" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 586 116 V 140 H 560" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 678 116 V 146 H 560" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 770 116 V 140 H 560" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 862 116 V 134 H 560" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr080)"/>
+
+  <rect x="380" y="156" width="360" height="110" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="560" y="178" text-anchor="middle" class="smallb">static SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")</text>
+  <text x="560" y="196" text-anchor="middle" class="small">(one shared instance, all 8 threads call format() on it)</text>
+  <rect x="420" y="208" width="280" height="42" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="560" y="226" text-anchor="middle" class="codeR">Calendar calendar (mutable field)</text>
+  <text x="560" y="242" text-anchor="middle" class="small">setTime() by A, read mid-format by B</text>
+
+  <line x1="560" y1="266" x2="560" y2="290" stroke="#b91c1c" stroke-width="2" marker-end="url(#arr080)"/>
+
+  <rect x="20" y="290" width="1080" height="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="560" y="315" text-anchor="middle" class="smallb" fill="#b91c1c">RESULT: 504 distinct wrong output strings across 400,000 formats (8 &#215; 50,000) &#8212; and ZERO exceptions</text>
+
+  <rect x="20" y="340" width="1080" height="130" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="40" y="362" class="smallb">Real captured wrong results (silent &#8212; no ConcurrentModificationException, no IllegalStateException):</text>
+  <text x="40" y="384" class="codeR">settlement-worker-0 wanted 2026-03-20 15:16:40.000  got 2026-03-02 15:16:40.000</text>
+  <text x="40" y="404" class="codeR">settlement-worker-1 wanted 2026-04-26 15:16:40.000  got 2026-03-02 15:16:40.000</text>
+  <text x="40" y="424" class="codeR">settlement-worker-2 wanted 2026-06-02 15:16:40.000  got 2026-03-02 15:16:40.000</text>
+  <text x="40" y="444" class="codeR">settlement-worker-3 wanted 2026-07-09 15:16:40.000  got 2026-03-02 15:16:40.000</text>
+  <text x="40" y="462" class="small">Wrong dates land in LedgerEntry rows and are found only by reconciliation, if ever.</text>
+
+  <!-- BOTTOM LANE -->
+  <text x="20" y="504" class="h2">BOTTOM LANE &#8212; THE SAME LOAD WITH DateTimeFormatter</text>
+  <line x1="20" y1="512" x2="1120" y2="512" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="524" width="1080" height="40" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="30" y="548" class="smallb">8 threads, 8 &#215; 50,000 formats, each thread its own Instant:</text>
+  <g>
+    <rect x="500" y="530" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="542" y="549" text-anchor="middle" class="small">worker-0</text>
+    <rect x="592" y="530" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="634" y="549" text-anchor="middle" class="small">&#8230;</text>
+    <rect x="684" y="530" width="84" height="28" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="726" y="549" text-anchor="middle" class="small">worker-7</text>
+  </g>
+
+  <path d="M 542 558 V 582 H 560 V 598" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 634 558 V 576 H 560" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 726 558 V 582 H 560" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arr080)"/>
+
+  <rect x="380" y="598" width="360" height="90" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="560" y="620" text-anchor="middle" class="smallb">DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")</text>
+  <text x="560" y="638" text-anchor="middle" class="small">.withZone(ZoneId.of("Europe/London"))</text>
+  <text x="560" y="658" text-anchor="middle" class="codeG">immutable printer/parser tree, built once</text>
+  <text x="560" y="676" text-anchor="middle" class="small">no mutable field &#8212; safe to share across all 8 threads</text>
+
+  <line x1="560" y1="688" x2="560" y2="712" stroke="#15803d" stroke-width="2" marker-end="url(#arr080)"/>
+
+  <rect x="20" y="712" width="1080" height="40" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="560" y="737" text-anchor="middle" class="smallb" fill="#15803d">RESULT: 0 distinct wrong results, 0 exceptions, across the identical 400,000-format load</text>
+
+  <!-- ANNOTATION: DecimalFormat -->
+  <rect x="20" y="774" width="1100" height="330" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="40" y="798" class="h2">ANNOTATION &#8212; DecimalFormat IS ALSO NOT THREAD-SAFE, AND ITS parse CORRUPTS MONEY</text>
+  <text x="40" y="822" class="body">Measured: one shared DecimalFormat("#,##0.00") with setParseBigDecimal(true), 8 threads &#215; 200,000 parses,</text>
+  <text x="40" y="840" class="body">half parsing the QuizStakes average stake "4.20" and half parsing the average withdrawal "1,234,567.89".</text>
+
+  <rect x="40" y="856" width="1060" height="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="570" y="881" text-anchor="middle" class="smallb" fill="#b91c1c">RESULT: 8,693 distinct wrong results, plus 78 NumberFormatException: No digits found</text>
+
+  <rect x="40" y="908" width="1060" height="150" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="60" y="930" class="smallb">Real captured examples (input parsed &#8594; wrong BigDecimal result):</text>
+  <text x="60" y="952" class="codeR">in "4.20"          -&gt;  1.2327894</text>
+  <text x="60" y="972" class="codeR">in "1,234,567.89"  -&gt;  4.34456786E+12</text>
+  <text x="60" y="992" class="codeR">in "1,234,567.89"  -&gt;  2.03456789E+14</text>
+  <text x="60" y="1012" class="codeR">in "1,234,567.89"  -&gt;  4204567.89289</text>
+  <text x="60" y="1036" class="body">A 4.20 stake parsed as 1.2327894; a 1,234,567.89 withdrawal parsed as 4.34 trillion &#8212; both silent.</text>
+
+  <!-- LEGEND -->
+  <line x1="20" y1="1122" x2="1120" y2="1122" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="1140" width="16" height="16" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="44" y="1152" class="small">Primary &#8212; a formatting/parsing thread</text>
+  <rect x="300" y="1140" width="16" height="16" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6"/>
+  <text x="324" y="1152" class="small">Legacy &#8212; SimpleDateFormat / Calendar</text>
+  <rect x="600" y="1140" width="16" height="16" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="624" y="1152" class="small">Degraded &#8212; shared-mutable state / wrong result</text>
+  <rect x="960" y="1140" width="16" height="16" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="984" y="1152" class="small">Resolved &#8212; immutable, correct</text>
+  <rect x="20" y="1166" width="16" height="16" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="44" y="1178" class="small">Neutral &#8212; supporting fact panel</text>
+  <rect x="300" y="1166" width="16" height="16" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="324" y="1178" class="small">Annotation &#8212; DecimalFormat panel</text>
+  <line x1="600" y1="1174" x2="636" y2="1174" stroke="#475569" stroke-width="2" marker-end="url(#arr080)"/>
+  <text x="642" y="1178" class="small">Calls into the shared formatter</text>
+</svg>

@@ -1,0 +1,111 @@
+<svg viewBox="0 0 1120 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Work stealing over a fork-join deque folding 19.8 million LedgerEntry rows for
+     HOUSE_REVENUE reconciliation. The owner thread settlement-ingest-3 pushes and pops at top —
+     LIFO, freshest task, hottest cache. The thief thread settlement-ingest-7 polls at base — FIFO,
+     biggest remaining chunk, least contention. When only one sub-fold task remains, top and base
+     point at the same slot, and that single slot is highlighted as the only place a compare-and-swap
+     is unavoidable; everywhere else pop and poll never collide.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .hdr   { font-size: 11px; font-weight: 700; }
+
+    .boxP     { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .degraded { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .annot    { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .own   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triOwn); }
+    .steal { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triSteal); }
+  </style>
+  <defs>
+    <marker id="triOwn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triSteal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WORK STEALING: LIFO LOCAL, FIFO STEAL</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="68" class="lbl h2">STEADY STATE — MANY QUEUED SUB-FOLDS OVER 19.8M LedgerEntry ROWS (HOUSE_REVENUE)</text>
+
+  <rect x="40" y="100" width="300" height="90" rx="6" class="annot"/>
+  <text x="190" y="118" text-anchor="middle" class="lbl hdr">settlement-ingest-7 — THIEF</text>
+  <text x="190" y="136" text-anchor="middle" class="lbl tiny">poll() at base — FIFO</text>
+  <text x="190" y="152" text-anchor="middle" class="lbl tiny">biggest remaining chunk</text>
+  <text x="190" y="168" text-anchor="middle" class="lbl tiny">least contention</text>
+
+  <rect x="790" y="100" width="290" height="90" rx="6" class="annot"/>
+  <text x="935" y="118" text-anchor="middle" class="lbl hdr">settlement-ingest-3 — OWNER</text>
+  <text x="935" y="136" text-anchor="middle" class="lbl tiny">push/pop at top — LIFO</text>
+  <text x="935" y="152" text-anchor="middle" class="lbl tiny">freshest task, hottest cache</text>
+
+  <path class="steal" d="M 190 190 V 200 H 165 V 210"/>
+  <path class="own"   d="M 935 190 V 200 H 845 V 210"/>
+
+  <rect x="90" y="210" width="150" height="80" rx="6" class="boxP"/>
+  <text x="165" y="240" text-anchor="middle" class="lbl node">rows 0–7.9M</text>
+  <text x="165" y="262" text-anchor="middle" class="lbl body">fold subtask</text>
+  <text x="165" y="278" text-anchor="middle" class="lbl sub">(base)</text>
+
+  <rect x="260" y="210" width="150" height="80" rx="6" class="boxP"/>
+  <text x="335" y="240" text-anchor="middle" class="lbl node">rows 7.9M–11.9M</text>
+  <text x="335" y="262" text-anchor="middle" class="lbl body">fold subtask</text>
+
+  <rect x="430" y="210" width="150" height="80" rx="6" class="boxP"/>
+  <text x="505" y="240" text-anchor="middle" class="lbl node">rows 11.9M–15.9M</text>
+  <text x="505" y="262" text-anchor="middle" class="lbl body">fold subtask</text>
+
+  <rect x="600" y="210" width="150" height="80" rx="6" class="boxP"/>
+  <text x="675" y="240" text-anchor="middle" class="lbl node">rows 15.9M–19.7M</text>
+  <text x="675" y="262" text-anchor="middle" class="lbl body">fold subtask</text>
+
+  <rect x="770" y="210" width="150" height="80" rx="6" class="boxP"/>
+  <text x="845" y="240" text-anchor="middle" class="lbl node">rows 19.7M–19.8M</text>
+  <text x="845" y="262" text-anchor="middle" class="lbl body">fold subtask</text>
+  <text x="845" y="278" text-anchor="middle" class="lbl sub">(top)</text>
+
+  <line x1="20" y1="330" x2="1100" y2="330" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="358" class="lbl h2">SINGLE TASK LEFT — top == base, CAS UNAVOIDABLE</text>
+
+  <rect x="470" y="380" width="180" height="80" rx="6" class="degraded"/>
+  <text x="560" y="410" text-anchor="middle" class="lbl node">rows 19.7M–19.8M</text>
+  <text x="560" y="432" text-anchor="middle" class="lbl body">last fold subtask</text>
+  <text x="560" y="448" text-anchor="middle" class="lbl sub">top == base</text>
+
+  <text x="220" y="396" text-anchor="middle" class="lbl body">settlement-ingest-7</text>
+  <text x="220" y="412" text-anchor="middle" class="lbl sub">poll(base) — FIFO</text>
+  <path class="steal" d="M 300 420 H 470"/>
+
+  <text x="900" y="396" text-anchor="middle" class="lbl body">settlement-ingest-3</text>
+  <text x="900" y="412" text-anchor="middle" class="lbl sub">pop(top) — LIFO</text>
+  <path class="own" d="M 800 420 H 650"/>
+
+  <rect x="310" y="490" width="500" height="70" rx="6" class="annot"/>
+  <text x="560" y="508" text-anchor="middle" class="lbl hdr">WHY CAS ONLY HERE</text>
+  <text x="560" y="526" text-anchor="middle" class="lbl tiny">CAS required here — the only slot both top and base can target</text>
+  <text x="560" y="544" text-anchor="middle" class="lbl tiny">Everywhere else, top and base never collide; pop/poll proceed lock-free</text>
+
+  <line x1="20" y1="580" x2="1100" y2="580" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="600" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="613" class="lbl tiny">queued fold subtask (deque slot)</text>
+  <rect x="20" y="624" width="22" height="16" rx="3" class="degraded"/>
+  <text x="50" y="637" class="lbl tiny">single remaining subtask — top == base (CAS unavoidable)</text>
+  <rect x="20" y="648" width="22" height="16" rx="3" class="annot"/>
+  <text x="50" y="661" class="lbl tiny">owner / thief role panel</text>
+
+  <path class="own" d="M 480 608 H 520"/>
+  <text x="528" y="613" class="lbl tiny">owner: pop/push at top (LIFO) — freshest task, hottest cache</text>
+  <path class="steal" d="M 480 632 H 520"/>
+  <text x="528" y="637" class="lbl tiny">thief: poll at base (FIFO) — biggest remaining chunk, least contention</text>
+</svg>

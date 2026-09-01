@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1200 1050" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Why ArrayList append is amortised O(1). A step chart plots backing-array capacity against the number of elements added, from 0 to 120. Capacity holds flat at 10, then jumps to 15, 22, 33, 49, 73, and 109 at each grow. Each jump is a copy of the whole array so far, costing 10, 15, 22, 33, 49, then 73 element moves respectively. A computation panel shows the copies performed reaching capacity 109 sum to 202, the growth factor is 1.5, and the total copy work is bounded by about 3 times n, which is what amortised O(1) means. A second panel shows the escape hatch: presizing the ArrayList with an initial capacity turns growth copies into zero, at the cost of one add() call occasionally being O(n) when it triggers grow().">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; }
+    .axis  { font-size: 12px; fill: #4b5563; }
+    .axisB { font-size: 12.5px; font-weight: 600; fill: #1f2937; }
+
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .curve { fill: none; stroke: #2563eb; stroke-width: 2.5; stroke-linejoin: round; }
+    .axisL { stroke: #475569; stroke-width: 1.6; }
+    .tick  { stroke: #b45309; stroke-width: 2; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="1050" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY APPEND IS AMORTISED O(1)</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- axes -->
+  <line x1="100" y1="100" x2="100" y2="700" class="axisL"/>
+  <line x1="100" y1="700" x2="900" y2="700" class="axisL"/>
+
+  <!-- x ticks -->
+  <g class="axis">
+    <line x1="100" y1="700" x2="100" y2="706" class="grid"/>
+    <text x="100" y="722" text-anchor="middle">0</text>
+    <line x1="233" y1="700" x2="233" y2="706" class="grid"/>
+    <text x="233" y="722" text-anchor="middle">20</text>
+    <line x1="367" y1="700" x2="367" y2="706" class="grid"/>
+    <text x="367" y="722" text-anchor="middle">40</text>
+    <line x1="500" y1="700" x2="500" y2="706" class="grid"/>
+    <text x="500" y="722" text-anchor="middle">60</text>
+    <line x1="633" y1="700" x2="633" y2="706" class="grid"/>
+    <text x="633" y="722" text-anchor="middle">80</text>
+    <line x1="767" y1="700" x2="767" y2="706" class="grid"/>
+    <text x="767" y="722" text-anchor="middle">100</text>
+    <line x1="900" y1="700" x2="900" y2="706" class="grid"/>
+    <text x="900" y="722" text-anchor="middle">120</text>
+  </g>
+  <text x="500" y="748" text-anchor="middle" class="lbl axisB">ELEMENTS ADDED (count of add() calls)</text>
+
+  <!-- y ticks: capacities -->
+  <g class="axis">
+    <line x1="94" y1="650" x2="100" y2="650" class="grid"/>
+    <text x="88" y="654" text-anchor="end">10</text>
+    <line x1="94" y1="625" x2="100" y2="625" class="grid"/>
+    <text x="88" y="629" text-anchor="end">15</text>
+    <line x1="94" y1="590" x2="100" y2="590" class="grid"/>
+    <text x="88" y="594" text-anchor="end">22</text>
+    <line x1="94" y1="535" x2="100" y2="535" class="grid"/>
+    <text x="88" y="539" text-anchor="end">33</text>
+    <line x1="94" y1="455" x2="100" y2="455" class="grid"/>
+    <text x="88" y="459" text-anchor="end">49</text>
+    <line x1="94" y1="335" x2="100" y2="335" class="grid"/>
+    <text x="88" y="339" text-anchor="end">73</text>
+    <line x1="94" y1="155" x2="100" y2="155" class="grid"/>
+    <text x="88" y="159" text-anchor="end">109</text>
+  </g>
+  <text x="40" y="400" text-anchor="middle" class="lbl axisB" transform="rotate(-90 40 400)">CAPACITY (backing array length)</text>
+
+  <!-- step curve -->
+  <path class="curve" d="M 100 650 H 167 V 625 H 200 V 590 H 247 V 535 H 320 V 455 H 427 V 335 H 587 V 155 H 900"/>
+
+  <!-- riser copy-cost ticks, staggered leader lines into clear space above -->
+  <line x1="160" y1="637" x2="174" y2="637" class="tick"/>
+  <path class="grid" d="M 167 622 V 480" stroke="#9ca3af"/>
+  <text x="175" y="476" class="lbl tiny">copy 10</text>
+
+  <line x1="193" y1="607" x2="207" y2="607" class="tick"/>
+  <path class="grid" d="M 200 585 V 400" stroke="#9ca3af"/>
+  <text x="208" y="396" class="lbl tiny">copy 15</text>
+
+  <line x1="240" y1="562" x2="254" y2="562" class="tick"/>
+  <path class="grid" d="M 247 530 V 320" stroke="#9ca3af"/>
+  <text x="255" y="316" class="lbl tiny">copy 22</text>
+
+  <line x1="313" y1="495" x2="327" y2="495" class="tick"/>
+  <text x="333" y="499" class="lbl tiny">copy 33</text>
+
+  <line x1="420" y1="395" x2="434" y2="395" class="tick"/>
+  <text x="440" y="399" class="lbl tiny">copy 49</text>
+
+  <line x1="580" y1="245" x2="594" y2="245" class="tick"/>
+  <text x="600" y="249" class="lbl tiny">copy 73</text>
+
+  <!-- flat-run O(1) highlight on the capacity-49 run -->
+  <line x1="427" y1="455" x2="587" y2="455" stroke="#15803d" stroke-width="3"/>
+  <text x="460" y="440" class="lbl tiny">flat run — O(1) amortised adds</text>
+
+  <!-- computation panels -->
+  <rect x="100" y="770" width="520" height="190" rx="6" class="boxAnn"/>
+  <text x="120" y="796" class="lbl h2">THE TOTAL WORK IS LINEAR</text>
+  <line x1="120" y1="806" x2="600" y2="806" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="120" y="830" class="lbl tiny">Copies performed reaching capacity 109: 10 + 15 + 22 + 33 + 49 + 73 = 202</text>
+  <text x="120" y="854" class="lbl tiny">Elements appended to get there: 109</text>
+  <text x="120" y="878" class="lbl tiny">Copy work per append: 202 / 109 = about 1.85 moves</text>
+  <text x="120" y="902" class="lbl tiny">Growth factor g = 1.5 . total copy work tends to n x g/(g-1) = 3n</text>
+  <text x="120" y="926" class="lbl tiny">Bounded by a constant, so append is amortised O(1) - not worst-case O(1).</text>
+
+  <rect x="660" y="770" width="500" height="160" rx="6" class="boxAnn"/>
+  <text x="680" y="796" class="lbl h2">THE ESCAPE HATCH</text>
+  <line x1="680" y1="806" x2="1140" y2="806" stroke="#d1d5db" stroke-width="1.2"/>
+  <text x="680" y="830" class="lbl tiny">One individual add() is O(n) - the one that triggers grow().</text>
+  <text x="680" y="854" class="lbl tiny">Latency-sensitive path? presize with new ArrayList&lt;&gt;(n) or</text>
+  <text x="680" y="874" class="lbl tiny">ensureCapacity(n).</text>
+  <text x="680" y="898" class="lbl tiny">Presizing turns N growth copies into zero.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="990" x2="1180" y2="990" stroke="#d1d5db" stroke-width="1.5"/>
+  <path class="curve" d="M 20 1006 H 60"/>
+  <text x="68" y="1010" class="lbl tiny">capacity as elements are appended (orthogonal step)</text>
+  <line x1="400" y1="1000" x2="414" y2="1000" class="tick"/>
+  <text x="420" y="1004" class="lbl tiny">growth point — copy cost of that grow()</text>
+  <line x1="760" y1="1004" x2="800" y2="1004" stroke="#15803d" stroke-width="3"/>
+  <text x="808" y="1008" class="lbl tiny">flat run — O(1) amortised adds</text>
+  <rect x="1015" y="998" width="20" height="14" rx="3" class="boxAnn"/>
+  <text x="1043" y="1009" class="lbl tiny">annotation panel</text>
+</svg>

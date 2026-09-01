@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of compiling BalanceView.java, which calls List.of, for a Java 8 target. Left: javac -source 8 -target 8 compiles clean, but the class then throws NoSuchMethodError for List.of when run on an actual Java 8 JVM, because -source/-target does not restrict which API a modern compiler can link against. Right: javac --release 8 fails at compile time, naming List.of as not available at release 8, because --release links against a stored API signature file for that release. The verdict panel recommends --release for the build.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .code  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+    .badge { font-size: 11px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxWk { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">--release RESTRICTS THE API; -source / -target DO NOT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- badges -->
+  <rect x="185" y="50" width="210" height="22" rx="11" class="boxD"/>
+  <text x="290" y="65" text-anchor="middle" class="lbl badge">AVOID FOR RELEASE BUILDS</text>
+  <rect x="760" y="50" width="140" height="22" rx="11" class="boxR"/>
+  <text x="830" y="65" text-anchor="middle" class="lbl badge">USE THIS</text>
+
+  <text x="90" y="92" class="lbl h2">LEFT — -source / -target (does not restrict the API)</text>
+  <text x="630" y="92" class="lbl h2">RIGHT — --release (restricts the API)</text>
+  <line x1="560" y1="102" x2="560" y2="526" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT column -->
+  <rect x="90" y="104" width="400" height="80" rx="6" class="boxP"/>
+  <text x="290" y="126" text-anchor="middle" class="lbl node">BalanceView.java</text>
+  <text x="290" y="146" text-anchor="middle" class="lbl code">List.of(DEP-301, BDP-210, ...)</text>
+  <text x="290" y="164" text-anchor="middle" class="lbl sub">same source, compiled two ways</text>
+
+  <path class="flow" d="M 290 184 V 214"/>
+  <rect x="90" y="214" width="400" height="70" rx="6" class="boxR"/>
+  <text x="290" y="236" text-anchor="middle" class="lbl node code">javac -source 8 -target 8</text>
+  <text x="290" y="257" text-anchor="middle" class="lbl body">COMPILES CLEAN — no error, no warning</text>
+  <text x="290" y="274" text-anchor="middle" class="lbl sub">links against the JDK 21 bootclasspath, not Java 8's</text>
+
+  <path class="flow" d="M 290 284 V 324"/>
+  <rect x="90" y="324" width="400" height="60" rx="6" class="boxP"/>
+  <text x="290" y="347" text-anchor="middle" class="lbl node">run on a real Java 8 JVM</text>
+  <text x="290" y="366" text-anchor="middle" class="lbl sub">the bytecode from step 2, executed on the target runtime</text>
+
+  <path class="flow" d="M 290 384 V 424"/>
+  <rect x="90" y="424" width="400" height="100" rx="6" class="boxD"/>
+  <text x="290" y="446" text-anchor="middle" class="lbl node">NoSuchMethodError — at runtime</text>
+  <text x="110" y="468" class="lbl code">java.util.List.of</text>
+  <text x="110" y="484" class="lbl code">(Ljava/lang/Object;)Ljava/util/List;</text>
+  <text x="290" y="508" text-anchor="middle" class="lbl sub">List.of does not exist on the Java 8 standard library</text>
+
+  <!-- RIGHT column -->
+  <rect x="630" y="104" width="400" height="80" rx="6" class="boxP"/>
+  <text x="830" y="126" text-anchor="middle" class="lbl node">BalanceView.java</text>
+  <text x="830" y="146" text-anchor="middle" class="lbl code">List.of(DEP-301, BDP-210, ...)</text>
+  <text x="830" y="164" text-anchor="middle" class="lbl sub">same source, compiled two ways</text>
+
+  <path class="flow" d="M 830 184 V 214"/>
+  <rect x="630" y="214" width="400" height="140" rx="6" class="boxD"/>
+  <text x="830" y="236" text-anchor="middle" class="lbl node code">javac --release 8</text>
+  <text x="650" y="262" class="lbl code">error: cannot find symbol</text>
+  <text x="650" y="280" class="lbl code">symbol:   method of(Object[])</text>
+  <text x="650" y="298" class="lbl code">location: interface List</text>
+  <text x="650" y="316" class="lbl body">List.of is not available with --release 8</text>
+  <text x="650" y="336" class="lbl sub">1 error — the build fails before packaging</text>
+
+  <path class="flow" d="M 830 354 V 374"/>
+  <rect x="630" y="374" width="400" height="60" rx="6" class="boxWk"/>
+  <text x="830" y="397" text-anchor="middle" class="lbl node">build stops here</text>
+  <text x="830" y="416" text-anchor="middle" class="lbl sub">never reaches a JVM — the mistake never ships</text>
+
+  <!-- verdict -->
+  <rect x="90" y="574" width="940" height="110" rx="8" class="boxAnn"/>
+  <text x="110" y="598" class="lbl h2">VERDICT — USE --release, NOT -source / -target</text>
+  <text x="110" y="618" class="lbl body">-source / -target compile against whatever JDK runs javac (here, a modern JDK) — List.of resolves fine, and the</text>
+  <text x="110" y="636" class="lbl body">mismatch only surfaces at runtime, on the older Java 8 JVM, as NoSuchMethodError.</text>
+  <text x="110" y="656" class="lbl body">--release 8 compiles against a stored API signature file for that exact release, so the same mistake is</text>
+  <text x="110" y="674" class="lbl body">caught at compile time — before it ever reaches production.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="715" width="24" height="16" rx="3" class="boxP"/>
+  <text x="52" y="728" class="lbl tiny">source under test</text>
+  <rect x="220" y="715" width="24" height="16" rx="3" class="boxR"/>
+  <text x="252" y="728" class="lbl tiny">succeeds</text>
+  <rect x="380" y="715" width="24" height="16" rx="3" class="boxD"/>
+  <text x="412" y="728" class="lbl tiny">fails — compile-time (right) or runtime (left)</text>
+  <rect x="720" y="715" width="24" height="16" rx="3" class="boxWk"/>
+  <text x="752" y="728" class="lbl tiny">dead end — build never reaches a JVM</text>
+  <rect x="1000" y="715" width="24" height="16" rx="3" class="boxAnn"/>
+  <text x="1032" y="728" class="lbl tiny">verdict</text>
+  <path class="flow" d="M 20 745 H 64"/>
+  <text x="74" y="750" class="lbl tiny">step → next step in the same build</text>
+</svg>

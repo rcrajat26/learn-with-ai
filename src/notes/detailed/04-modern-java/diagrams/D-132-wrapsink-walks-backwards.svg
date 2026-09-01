@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1680 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="wrapSink walks the pipeline backwards, four frames. Frame 1: the terminal op's sink (a
+     CollectorSink accumulating into an ArrayList) is created first. Frame 2: the map stage's opWrapSink
+     wraps that terminal sink inside a mapSink. Frame 3: the filter stage wraps the map sink inside a
+     filterSink, producing three nested sinks. Frame 4: copyInto calls begin, then forEachRemaining, then
+     end on the outermost filterSink, and one deposit element accepts through all three layers from
+     outermost to innermost; copyIntoWithCancel is the same cascade but checks cancellationRequested()
+     after every element.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .code  { font-size: 11px; font-family: "Courier New", monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1680" height="660" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WRAPSINK WALKS BACKWARDS — deposits.stream().filter(...).map(...).collect(toList())</text>
+  <line x1="20" y1="42" x2="1660" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- column dividers -->
+  <line x1="420" y1="55" x2="420" y2="560" stroke="#d1d5db" stroke-width="1.2"/>
+  <line x1="840" y1="55" x2="840" y2="560" stroke="#d1d5db" stroke-width="1.2"/>
+  <line x1="1260" y1="55" x2="1260" y2="560" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <!-- frame headers -->
+  <text x="215" y="70" text-anchor="middle" class="lbl h2">FRAME 1 — TERMINAL SINK CREATED</text>
+  <text x="625" y="70" text-anchor="middle" class="lbl h2">FRAME 2 — map STAGE WRAPS IT</text>
+  <text x="1035" y="70" text-anchor="middle" class="lbl h2">FRAME 3 — filter STAGE WRAPS THAT</text>
+  <text x="1455" y="70" text-anchor="middle" class="lbl h2">FRAME 4 — copyInto DRIVES THE CHAIN</text>
+
+  <!-- inter-frame flow -->
+  <path class="flow" d="M 385 88 H 415"/>
+  <text x="400" y="82" text-anchor="middle" class="lbl tiny">opWrapSink()</text>
+  <path class="flow" d="M 805 88 H 835"/>
+  <text x="820" y="82" text-anchor="middle" class="lbl tiny">opWrapSink()</text>
+  <path class="flow" d="M 1225 88 H 1255"/>
+  <text x="1240" y="82" text-anchor="middle" class="lbl tiny">copyInto()</text>
+
+  <!-- FRAME 1: only terminalSink -->
+  <rect x="135" y="295" width="160" height="70" rx="6" class="boxR"/>
+  <text x="215" y="322" text-anchor="middle" class="lbl node">terminalSink</text>
+  <text x="215" y="340" text-anchor="middle" class="lbl code">CollectorSink</text>
+  <text x="215" y="354" text-anchor="middle" class="lbl sub">accumulator = ArrayList::new</text>
+
+  <!-- FRAME 2: mapSink wraps terminalSink -->
+  <rect x="505" y="255" width="240" height="150" rx="6" class="boxW"/>
+  <text x="625" y="273" text-anchor="middle" class="lbl node">mapSink</text>
+  <rect x="545" y="330" width="160" height="60" rx="6" class="boxR"/>
+  <text x="625" y="354" text-anchor="middle" class="lbl node">terminalSink</text>
+  <text x="625" y="370" text-anchor="middle" class="lbl code">downstream</text>
+  <text x="625" y="290" text-anchor="middle" class="lbl sub">accept(t) → downstream.accept(mapper.apply(t))</text>
+
+  <!-- FRAME 3: filterSink wraps mapSink wraps terminalSink -->
+  <rect x="875" y="215" width="320" height="230" rx="6" class="boxP"/>
+  <text x="1035" y="234" text-anchor="middle" class="lbl node">filterSink</text>
+  <text x="1035" y="251" text-anchor="middle" class="lbl sub">accept(t) → if (predicate.test(t)) downstream.accept(t)</text>
+  <rect x="915" y="270" width="240" height="150" rx="6" class="boxW"/>
+  <text x="1035" y="288" text-anchor="middle" class="lbl node">mapSink</text>
+  <rect x="955" y="345" width="160" height="60" rx="6" class="boxR"/>
+  <text x="1035" y="369" text-anchor="middle" class="lbl node">terminalSink</text>
+  <text x="1035" y="385" text-anchor="middle" class="lbl code">downstream</text>
+
+  <!-- FRAME 4: same nesting + call cascade + element token -->
+  <rect x="1295" y="215" width="320" height="230" rx="6" class="boxP"/>
+  <text x="1455" y="234" text-anchor="middle" class="lbl node">filterSink (outermost)</text>
+  <rect x="1335" y="270" width="240" height="150" rx="6" class="boxW"/>
+  <text x="1455" y="288" text-anchor="middle" class="lbl node">mapSink</text>
+  <rect x="1375" y="345" width="160" height="60" rx="6" class="boxR"/>
+  <text x="1455" y="369" text-anchor="middle" class="lbl node">terminalSink</text>
+  <text x="1455" y="385" text-anchor="middle" class="lbl code">downstream</text>
+
+  <!-- element token traveling through -->
+  <rect x="1395" y="150" width="120" height="34" rx="5" class="boxA"/>
+  <text x="1455" y="171" text-anchor="middle" class="lbl tiny">DEP-301 CAPTURED, 65</text>
+  <path class="flow" d="M 1455 184 V 213"/>
+  <text x="1520" y="212" class="lbl tiny">accept()</text>
+  <path class="flow" d="M 1455 236 V 268"/>
+  <text x="1520" y="257" class="lbl tiny">accept()</text>
+  <path class="flow" d="M 1455 291 V 343"/>
+  <text x="1520" y="302" class="lbl tiny">accept()</text>
+
+  <!-- cascade note -->
+  <rect x="1295" y="465" width="320" height="105" rx="6" class="boxA"/>
+  <text x="1305" y="482" class="lbl tiny" style="font-weight:700">copyInto(wrappedSink, spliterator)</text>
+  <text x="1305" y="497" class="lbl tiny">begin(size) and end() invoked on filterSink,</text>
+  <text x="1305" y="511" class="lbl tiny">cascading downstream to mapSink then terminalSink.</text>
+  <text x="1305" y="530" class="lbl tiny">copyIntoWithCancel: same cascade, checks</text>
+  <text x="1305" y="544" class="lbl tiny">sink.cancellationRequested() after each element.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="575" x2="1660" y2="575" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="590" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="603" class="lbl tiny">filterSink (outermost wrapping sink)</text>
+  <rect x="330" y="590" width="22" height="16" rx="3" class="boxW"/>
+  <text x="360" y="603" class="lbl tiny">mapSink (intermediate wrapping sink)</text>
+  <rect x="640" y="590" width="22" height="16" rx="3" class="boxR"/>
+  <text x="670" y="603" class="lbl tiny">terminalSink (innermost, does the real work)</text>
+  <path class="flow" d="M 960 598 H 1000"/>
+  <text x="1008" y="603" class="lbl tiny">A → B : accept() cascades outer to inner</text>
+
+  <rect x="20" y="615" width="700" height="34" rx="5" class="boxA"/>
+  <text x="30" y="628" class="lbl tiny" style="font-weight:700">Sink&lt;T&gt; — four methods (java.util.stream.Sink):</text>
+  <text x="30" y="642" class="lbl code">begin(long size) · accept(T t) [+ int/long/double overloads] · end() · cancellationRequested() : boolean</text>
+</svg>

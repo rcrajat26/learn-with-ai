@@ -1,0 +1,420 @@
+<svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ConcurrentHashMap spread function and the reserved sign bit: h XOR h unsigned-shift-right 16, masked with HASH_BITS 0x7fffffff which clears bit 31, worked through a concrete 32-bit example, alongside the three reserved negative hashes MOVED -1, TREEBIN -2 and RESERVED -3">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">spread() and the Reserved Sign Bit</text>
+
+  <rect x="20" y="60" width="760" height="24" rx="4" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="76" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">static int spread(int h) { return (h ^ (h &gt;&gt;&gt; 16)) &amp; HASH_BITS; } — :696-698 · HASH_BITS = 0x7fffffff — :594</text>
+
+  <rect x="20" y="92" width="760" height="22" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="107" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Worked example: h = 0x8A3C5F17</text>
+
+  <rect x="60" y="118" width="94" height="14" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="107" y="128" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">bits 31-24</text>
+  <rect x="218" y="118" width="94" height="14" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="265" y="128" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">bits 23-16</text>
+  <rect x="376" y="118" width="94" height="14" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="423" y="128" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">bits 15-8</text>
+  <rect x="534" y="118" width="94" height="14" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="581" y="128" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">bits 7-0</text>
+
+  <text x="30" y="141" font-family="sans-serif" font-size="12" fill="#1f2937">h</text>
+    <rect x="90" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="99" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="109" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="118" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="128" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="137" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="147" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="156" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="166" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="185" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="194" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="204" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="213" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="223" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="232" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="248" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="257" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="267" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="276" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="286" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="305" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="314" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="324" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="333" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="343" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="352" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="362" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="371" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="381" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="406" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="415" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="425" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="434" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="444" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="453" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="463" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="472" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="482" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="491" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="501" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="520" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="529" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="539" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="548" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="564" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="573" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="583" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="592" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="602" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="611" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="621" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="640" y="124" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="649" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="659" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="668" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="678" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="687" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="697" y="124" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="706" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+
+  <text x="30" y="185" font-family="sans-serif" font-size="11" fill="#1f2937">h&gt;&gt;&gt;16</text>
+    <rect x="90" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="99" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="109" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="118" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="128" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="137" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="147" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="156" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="166" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="185" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="194" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="204" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="213" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="223" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="232" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="248" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="257" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="267" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="276" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="286" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="305" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="314" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="324" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="333" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="343" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="352" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="362" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="371" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="381" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="406" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="415" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="425" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="434" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="444" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="453" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="463" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="472" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="482" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="491" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="501" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="520" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="529" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="539" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="548" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="564" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="573" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="583" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="592" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="602" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="611" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="621" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="640" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="649" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="659" y="168" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="668" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="678" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="687" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="697" y="168" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="706" y="186" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+
+  <text x="30" y="229" font-family="sans-serif" font-size="11" fill="#1f2937">XOR</text>
+    <rect x="90" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="99" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="109" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="118" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="128" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="137" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="147" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="156" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="166" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="185" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="194" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="204" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="213" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="223" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="232" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="248" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="257" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="267" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="276" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="286" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="305" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="314" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="324" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="333" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="343" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="352" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="362" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="371" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="381" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="406" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="415" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="425" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="434" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="444" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="453" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="463" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="472" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="482" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="491" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="501" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="520" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="529" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="539" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="548" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="564" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="573" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="583" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="592" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="602" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="611" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="621" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="640" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="649" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="659" y="212" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="668" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="678" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="687" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="697" y="212" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="706" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+
+  <text x="30" y="273" font-family="sans-serif" font-size="11" fill="#1f2937">&amp;MASK</text>
+    <rect x="90" y="256" width="18" height="26" rx="2" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="99" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="109" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="118" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="128" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="137" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="147" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="156" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="166" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="185" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="194" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="204" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="213" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="223" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="232" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="248" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="257" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="267" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="276" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="286" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="305" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="314" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="324" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="333" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="343" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="352" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="362" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="371" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="381" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="406" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="415" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="425" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="434" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="444" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="453" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="463" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="472" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="482" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="491" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="501" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="520" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="529" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="539" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="548" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="564" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="573" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="583" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="592" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="602" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="611" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="621" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="640" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="649" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="659" y="256" width="18" height="26" rx="2" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="668" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="678" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="687" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="697" y="256" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="706" y="274" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+
+  <text x="26" y="323" font-family="sans-serif" font-size="11" fill="#1f2937">HASH</text>
+  <text x="26" y="333" font-family="sans-serif" font-size="11" fill="#1f2937">BITS</text>
+    <rect x="90" y="306" width="18" height="26" rx="2" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="99" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <rect x="109" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="118" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="128" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="137" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="147" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="156" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="166" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="175" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="185" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="194" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="204" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="213" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="223" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="232" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="248" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="257" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="267" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="276" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="286" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="295" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="305" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="314" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="324" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="333" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="343" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="352" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="362" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="371" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="381" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="390" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="406" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="415" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="425" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="434" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="444" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="453" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="463" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="472" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="482" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="491" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="501" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="510" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="520" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="529" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="539" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="548" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="564" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="573" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="583" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="592" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="602" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="611" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="621" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="630" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="640" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="649" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="659" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="668" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="678" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="687" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+  <rect x="697" y="306" width="18" height="26" rx="2" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="706" y="324" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">1</text>
+
+  <rect x="90" y="336" width="18" height="14" rx="2" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="99" y="346" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">31</text>
+  <line x1="99" y1="282" x2="99" y2="336" stroke="#525252" stroke-width="2" stroke-dasharray="3,2"/>
+
+  <rect x="560" y="118" width="220" height="60" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="136" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bit 31 (sign bit)</text>
+  <text x="670" y="152" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">XOR leaves it 1, but</text>
+  <text x="670" y="167" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">&amp; HASH_BITS forces it to 0</text>
+
+  <rect x="40" y="356" width="720" height="26" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="373" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Result: h=0x8A3C5F17 → h&gt;&gt;&gt;16=0x00008A3C → XOR=0x8A3CD52B → spread(h)=0x0A3CD52B</text>
+
+  <rect x="40" y="388" width="720" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="405" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Reserved negative hashes (top bit set — never produced by spread)</text>
+
+  <rect x="40" y="414" width="150" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="431" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">constant</text>
+  <rect x="190" y="414" width="70" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="431" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">value</text>
+  <rect x="260" y="414" width="140" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="330" y="431" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">hex (32-bit)</text>
+  <rect x="400" y="414" width="200" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="500" y="431" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">node type</text>
+  <rect x="600" y="414" width="160" height="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="431" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">source line</text>
+
+  <rect x="40" y="440" width="150" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="457" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">MOVED</text>
+  <rect x="190" y="440" width="70" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="457" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">-1</text>
+  <rect x="260" y="440" width="140" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="330" y="457" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">0xFFFFFFFF</text>
+  <rect x="400" y="440" width="200" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="500" y="457" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">ForwardingNode</text>
+  <rect x="600" y="440" width="160" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="457" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">:591</text>
+
+  <rect x="40" y="466" width="150" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="483" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">TREEBIN</text>
+  <rect x="190" y="466" width="70" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="483" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">-2</text>
+  <rect x="260" y="466" width="140" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="330" y="483" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">0xFFFFFFFE</text>
+  <rect x="400" y="466" width="200" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="500" y="483" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">TreeBin (root of tree bin)</text>
+  <rect x="600" y="466" width="160" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="483" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">:592</text>
+
+  <rect x="40" y="492" width="150" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="115" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">RESERVED</text>
+  <rect x="190" y="492" width="70" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="225" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">-3</text>
+  <rect x="260" y="492" width="140" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="330" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">0xFFFFFFFD</text>
+  <rect x="400" y="492" width="200" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="500" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">transient reservation marker</text>
+  <rect x="600" y="492" width="160" height="26" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="680" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">:593</text>
+
+  <rect x="40" y="522" width="720" height="20" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="536" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">spread() always clears bit 31, so ordinary hashes are &gt;= 0 — these three constants use bit 31 for special node types</text>
+</svg>

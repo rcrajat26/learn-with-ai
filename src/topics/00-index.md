@@ -1,0 +1,65 @@
+# Topic Guides — Index
+
+Twenty-one mechanism-level guides for backend Java interview prep (3–4 YOE, FAANG/senior-tier bar).
+Each guide explains *how the thing actually works*, not just how to use it, and ends with an
+`## Atomic concept checklist` you can self-quiz against.
+
+## How to use these
+
+1. Read a guide top to bottom once. Do not skim the **Trap:** markers — they are the exact places
+   diagnostic papers showed knowledge breaking down (volatile mistaken for atomicity, Integer cache,
+   HashMap constants, Spring proxy self-invocation).
+2. Re-read only the atomic concept checklist before an interview. If you cannot state the mechanism
+   in one sentence, go back to that section.
+3. Guides cross-reference each other. Concurrency mechanics live in 05 even when collections (02)
+   or Spring (07) touch them.
+
+## The twenty-one guides
+
+| # | File | Scope in one line |
+|---|---|---|
+| 01 | `01-dsa-fundamentals.md` | Big-O incl. amortized, arrays/strings, hashing, two pointers & sliding window, stacks/monotonic stacks, queues/deques, linked lists, trees/BST, BFS/DFS, heaps, binary search variants, recursion, and intros to DP, greedy, graphs, tries, union-find — plus the signals that tell you which pattern a problem wants. |
+| 02 | `02-java-collections.md` | The full `Collection`/`Map` hierarchy and the internals underneath it: ArrayList/LinkedList/ArrayDeque growth, HashMap buckets and treeification, LinkedHashMap as an LRU, TreeMap red-black navigation, PriorityQueue sift mechanics, the equals/hashCode contract, fail-fast iterators, and Comparator fluency. |
+| 03 | `03-java-core.md` | The language substrate: primitives vs wrappers and the Integer cache, String pool and immutability, `==` vs `equals`, static/final semantics, exceptions and try-with-resources, generics erasure and PECS, interfaces vs abstract classes, enums, immutability design, BigDecimal for money, the java.time model, and pass-by-value-of-reference. |
+| 04 | `04-modern-java.md` | Java 8 through 21: lambdas and functional interfaces, the Stream pipeline and collectors, Optional discipline, `var`, records, sealed types with pattern-matching switch, text blocks, switch expressions, virtual threads and pinning, and structured concurrency. |
+| 05 | `05-multithreading-concurrency.md` | Threads and the memory model: races, `synchronized`'s two guarantees, what `volatile` does and does not do, happens-before, CAS and atomics, deadlock, ThreadPoolExecutor's queueing order, CompletableFuture, BlockingQueue backpressure, ThreadLocal leaks, safe publication, and ConcurrentHashMap's compound-action rules. |
+| 06 | `06-jvm-internals.md` | Runtime memory areas and which error each throws, generational GC and G1, the OOM taxonomy, classloading (CNFE vs NoClassDefFoundError), JIT warmup, and the diagnostic toolkit — jstack/jcmd/jmap/jstat, thread-dump and heap-dump workflows, container memory flags, JMH. |
+| 07 | `07-spring-core.md` | The container: bean lifecycle, dependency injection styles, scopes, the proxy model and why self-invocation silently skips `@Transactional`/`@Cacheable`, AOP, configuration and profiles, Spring Boot auto-configuration and conditionals. |
+| 08 | `08-spring-data-jpa.md` | Persistence context and entity states, dirty checking, lazy loading and `LazyInitializationException`, the N+1 problem and its fixes, fetch strategies, transaction propagation and isolation in practice, locking, ID generation, and repository query derivation. |
+| 09 | `09-sql-databases.md` | Relational modelling and normalization, joins, indexes (B-tree, composite, covering) and why an index goes unused, query plans, ACID and isolation-level anomalies, MVCC, locking and deadlocks, transactions, and when NoSQL earns its place. |
+| 10 | `10-networking.md` | TCP/IP and the handshake, TLS, HTTP/1.1 vs 2 vs 3, DNS, load balancing, connection pooling and keep-alive, timeouts and retries, latency budgets, and the failure modes each layer produces. |
+| 11 | `11-operating-systems-linux.md` | Processes, threads and scheduling, virtual memory and paging, file descriptors, signals, the OOM killer, and the working command set — top/htop, ps, lsof, netstat/ss, strace, dmesg, journalctl — for diagnosing a sick box. |
+| 12 | `12-api-design.md` | REST resource modelling, HTTP verbs and status codes, idempotency, versioning, pagination, error contracts, HATEOAS in practice, gRPC and GraphQL trade-offs, rate limiting, and backward-compatible evolution. |
+| 13 | `13-web-security.md` | AuthN vs AuthZ, sessions vs JWT, OAuth 2.x and OIDC flows, password storage, the OWASP Top 10 with concrete Java exploits and fixes, CORS, CSRF, XSS, SQL injection, secrets management, and TLS configuration. |
+| 14 | `14-messaging-queues.md` | Queues vs logs, Kafka mechanics (partitions, offsets, consumer groups, rebalancing), delivery semantics and exactly-once, ordering guarantees, idempotent consumers, dead-letter queues, RabbitMQ contrasts, and outbox/saga patterns. |
+| 15 | `15-caching.md` | Cache-aside vs read/write-through vs write-behind, eviction policies, TTL and staleness, Redis data structures and persistence, distributed cache invalidation, stampede and thundering-herd prevention, and Spring Cache abstraction. |
+| 16 | `16-testing.md` | The test pyramid, JUnit 5 mechanics, Mockito (stubbing vs verification, argument captors, common misuse), Spring Boot test slices, Testcontainers, contract testing, flaky-test causes, mutation testing, and what coverage does and does not tell you. |
+| 17 | `17-git-craft.md` | The object model, branching strategies, merge vs rebase, interactive rebase, cherry-pick, reflog recovery, bisect, hooks, conflict resolution, and reviewable commit hygiene. |
+| 18 | `18-cloud-aws.md` | Core AWS primitives (EC2, S3, RDS, DynamoDB, SQS/SNS, Lambda), IAM roles and policies, VPC and subnets, ALB/NLB, autoscaling, availability zones and regional failure, cost drivers, and infrastructure as code. |
+| 19 | `19-docker-kubernetes.md` | Images, layers and caching, Dockerfile discipline for JVM apps, container resource limits, Kubernetes objects (Pod, Deployment, Service, Ingress, ConfigMap, Secret), probes, rolling updates, HPA, and debugging a CrashLoopBackOff. |
+| 20 | `20-observability-operations.md` | The three pillars (metrics, logs, traces), structured logging, Micrometer and Prometheus, distributed tracing and context propagation, SLI/SLO/error budgets, alerting that does not page falsely, incident response, and postmortems. |
+| 21 | `21-ai-for-coding.md` | Claude Code as an engineered system: the agent loop and the context window as a budget, `.claude/` anatomy and settings precedence, the five channels that supply context (system prompt, CLAUDE.md, slash commands, skills, tool results), subagents as context isolation, hooks as the deterministic escape hatch, headless `claude -p` with turn/time/dollar ceilings, plugins and marketplaces, and the deterministic-vs-agentic decision rule. Worked against a real multi-agent SDLC harness. |
+
+## Reading order suggestions
+
+- **Language depth first (most common interview weight):** 03 → 02 → 04 → 05 → 06.
+- **Backend system design track:** 09 → 10 → 12 → 14 → 15 → 18 → 19 → 20.
+- **Framework track:** 07 → 08 → 16.
+- **Algorithms are orthogonal:** run 01 in parallel with everything else, daily.
+- **Tooling / craft track:** 17 → 21. Read 21 once early — it changes how you use the tool you are
+  studying with, and its cost/verification arguments compound over the whole 28 weeks.
+
+## Format contract every guide follows
+
+- 250–450 lines.
+- One mechanism explanation per concept — what the runtime/library actually does, with the numbers
+  (load factor 0.75, treeify threshold 8, Integer cache −128..127) stated explicitly.
+- **Trap:** markers on the specific misconceptions that fail candidates.
+- A closing `## Atomic concept checklist` of one-line assertions.
+
+## Atomic concept checklist
+
+- [ ] I know which of the 21 guides owns each topic, so I do not hunt for concurrency in the collections guide.
+- [ ] I know the guides are mechanism-first: the answer to "how does it work" is the deliverable, not "how do I call it".
+- [ ] I treat every **Trap:** marker as a known past failure, not trivia.
+- [ ] I use the atomic concept checklists as the pre-interview review layer, not the full text.

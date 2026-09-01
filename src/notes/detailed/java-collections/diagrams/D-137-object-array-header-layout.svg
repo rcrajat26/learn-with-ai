@@ -1,0 +1,60 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Object header is 12 bytes (8-byte mark word plus 4-byte compressed class pointer), array header adds a 4-byte length; Integer totals 16 bytes, Long totals 24 bytes with 4 bytes of alignment padding; UseCompactObjectHeaders shrinks the header to 8 bytes">
+  <rect x="20" y="20" width="760" height="34" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="43" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HotSpot object/array header layout (default: compressed oops on)</text>
+
+  <!-- Object header row -->
+  <text x="30" y="80" font-family="sans-serif" font-size="13" fill="#1f2937">Plain object header (12 B):</text>
+  <g transform="translate(30,90)">
+    <rect x="0" y="0" width="160" height="34" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="80" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">mark word (8 B)</text>
+    <rect x="160" y="0" width="80" height="34" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="200" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">klass (4 B)</text>
+  </g>
+  <text x="330" y="112" font-family="sans-serif" font-size="13" fill="#1f2937">= 12 B total (compressed class pointer)</text>
+
+  <!-- Array header row -->
+  <text x="30" y="150" font-family="sans-serif" font-size="13" fill="#1f2937">Array header (16 B):</text>
+  <g transform="translate(30,160)">
+    <rect x="0" y="0" width="160" height="34" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="80" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">mark word (8 B)</text>
+    <rect x="160" y="0" width="80" height="34" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="200" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">klass (4 B)</text>
+    <rect x="240" y="0" width="80" height="34" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+    <text x="280" y="21" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">length (4 B)</text>
+  </g>
+  <text x="410" y="182" font-family="sans-serif" font-size="13" fill="#1f2937">= 16 B total, then element data</text>
+
+  <!-- Integer layout -->
+  <text x="30" y="230" font-family="sans-serif" font-size="13" fill="#1f2937">Integer instance = 16 B:</text>
+  <g transform="translate(30,240)">
+    <rect x="0" y="0" width="160" height="30" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="80" y="20" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">mark (8 B)</text>
+    <rect x="160" y="0" width="80" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="200" y="20" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">klass (4 B)</text>
+    <rect x="240" y="0" width="80" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="280" y="20" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">int value (4 B)</text>
+  </g>
+  <text x="330" y="262" font-family="sans-serif" font-size="13" fill="#1f2937">= 12 + 4 = 16 B, no padding needed</text>
+
+  <!-- Long layout -->
+  <text x="30" y="310" font-family="sans-serif" font-size="13" fill="#1f2937">Long instance = 24 B:</text>
+  <g transform="translate(30,320)">
+    <rect x="0" y="0" width="160" height="30" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+    <text x="80" y="20" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">mark (8 B)</text>
+    <rect x="160" y="0" width="80" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="200" y="20" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">klass (4 B)</text>
+    <rect x="240" y="0" width="40" height="30" fill="#e5e7eb" stroke="#737373" stroke-width="2" stroke-dasharray="3,2"/>
+    <text x="260" y="20" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">pad 4B</text>
+    <rect x="280" y="0" width="120" height="30" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="340" y="20" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">long value (8 B)</text>
+  </g>
+  <text x="410" y="342" font-family="sans-serif" font-size="13" fill="#1f2937">= 12 + 4 pad + 8 = 24 B (8-byte field alignment)</text>
+
+  <!-- compact headers note -->
+  <rect x="30" y="390" width="740" height="90" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="50" y="415" font-family="sans-serif" font-size="13" fill="#1f2937">-XX:+UseCompactObjectHeaders (JEP 450, experimental):</text>
+  <text x="50" y="435" font-family="sans-serif" font-size="13" fill="#1f2937">- mark word + class pointer fold into a single 8-byte header slot</text>
+  <text x="50" y="453" font-family="sans-serif" font-size="13" fill="#1f2937">- header 12 B -&gt; 8 B; Integer 16 B -&gt; 12 B; Long 24 B -&gt; 16 B</text>
+  <text x="50" y="471" font-family="sans-serif" font-size="13" fill="#1f2937">- every size figure in this note shifts down by 4 B when it is enabled</text>
+</svg>

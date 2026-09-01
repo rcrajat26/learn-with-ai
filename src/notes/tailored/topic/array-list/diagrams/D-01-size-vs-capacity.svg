@@ -1,0 +1,116 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A Movement's elementData array has length 10 but holds only 4 LedgerEntry
+     references, at indexes 0 through 3. Indexes 4 through 9 hold null. size = 4 counts the
+     occupied slots; elementData.length = 10 is the backing array's capacity. Index 4,
+     elementData[size], is called out as the first unused slot. An annotation panel explains
+     that capacity is not a field of List and has no accessor; only size() is part of the
+     List contract.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .dim   { fill: none; stroke: #4b5563; stroke-width: 1.4; }
+    .callout { fill: none; stroke: #9ca3af; stroke-width: 1.4; stroke-dasharray: 4 3; }
+  </style>
+
+  <rect x="0" y="0" width="900" height="500" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SIZE IS NOT CAPACITY</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- length bracket over all 10 slots -->
+  <text x="426" y="66" text-anchor="middle" class="lbl body">elementData.length = 10 (capacity)</text>
+  <path class="dim" d="M 40 88 V 80 H 812 V 88"/>
+
+  <!-- index labels -->
+  <text x="75"  y="104" text-anchor="middle" class="lbl sub">0</text>
+  <text x="153" y="104" text-anchor="middle" class="lbl sub">1</text>
+  <text x="231" y="104" text-anchor="middle" class="lbl sub">2</text>
+  <text x="309" y="104" text-anchor="middle" class="lbl sub">3</text>
+  <text x="387" y="104" text-anchor="middle" class="lbl sub">4</text>
+  <text x="465" y="104" text-anchor="middle" class="lbl sub">5</text>
+  <text x="543" y="104" text-anchor="middle" class="lbl sub">6</text>
+  <text x="621" y="104" text-anchor="middle" class="lbl sub">7</text>
+  <text x="699" y="104" text-anchor="middle" class="lbl sub">8</text>
+  <text x="777" y="104" text-anchor="middle" class="lbl sub">9</text>
+
+  <!-- 10 slots, boxW=70 gap=8 step=78 starting x=40, y=110 h=64 -->
+  <!-- slot 0 -->
+  <rect x="40" y="110" width="70" height="64" rx="5" class="boxP"/>
+  <text x="75" y="138" text-anchor="middle" class="lbl node">LE</text>
+  <text x="75" y="156" text-anchor="middle" class="lbl sub">ref</text>
+  <!-- slot 1 -->
+  <rect x="118" y="110" width="70" height="64" rx="5" class="boxP"/>
+  <text x="153" y="138" text-anchor="middle" class="lbl node">LE</text>
+  <text x="153" y="156" text-anchor="middle" class="lbl sub">ref</text>
+  <!-- slot 2 -->
+  <rect x="196" y="110" width="70" height="64" rx="5" class="boxP"/>
+  <text x="231" y="138" text-anchor="middle" class="lbl node">LE</text>
+  <text x="231" y="156" text-anchor="middle" class="lbl sub">ref</text>
+  <!-- slot 3 -->
+  <rect x="274" y="110" width="70" height="64" rx="5" class="boxP"/>
+  <text x="309" y="138" text-anchor="middle" class="lbl node">LE</text>
+  <text x="309" y="156" text-anchor="middle" class="lbl sub">ref</text>
+  <!-- slot 4: elementData[size] - highlighted -->
+  <rect x="352" y="110" width="70" height="64" rx="5" class="boxH"/>
+  <text x="387" y="138" text-anchor="middle" class="lbl node">null</text>
+  <text x="387" y="156" text-anchor="middle" class="lbl sub">[size]</text>
+  <!-- slot 5 -->
+  <rect x="430" y="110" width="70" height="64" rx="5" class="boxW"/>
+  <text x="465" y="146" text-anchor="middle" class="lbl body">null</text>
+  <!-- slot 6 -->
+  <rect x="508" y="110" width="70" height="64" rx="5" class="boxW"/>
+  <text x="543" y="146" text-anchor="middle" class="lbl body">null</text>
+  <!-- slot 7 -->
+  <rect x="586" y="110" width="70" height="64" rx="5" class="boxW"/>
+  <text x="621" y="146" text-anchor="middle" class="lbl body">null</text>
+  <!-- slot 8 -->
+  <rect x="664" y="110" width="70" height="64" rx="5" class="boxW"/>
+  <text x="699" y="146" text-anchor="middle" class="lbl body">null</text>
+  <!-- slot 9 -->
+  <rect x="742" y="110" width="70" height="64" rx="5" class="boxW"/>
+  <text x="777" y="146" text-anchor="middle" class="lbl body">null</text>
+
+  <!-- size bracket under slots 0-3 -->
+  <path class="dim" d="M 40 182 V 190 H 304 V 182"/>
+  <text x="172" y="208" text-anchor="middle" class="lbl body">size = 4 (occupied slots)</text>
+
+  <!-- callout from highlighted slot to annotation panel -->
+  <path class="callout" d="M 387 174 V 220 H 172 V 246"/>
+
+  <!-- annotation panel -->
+  <rect x="40" y="250" width="772" height="104" rx="6" class="boxA"/>
+  <text x="56" y="272" class="lbl body" font-weight="700">CAPACITY IS NOT PART OF THE LIST CONTRACT</text>
+  <text x="56" y="292" class="lbl tiny">elementData.length is ArrayList's private backing-array capacity. List declares no such field and no accessor for it.</text>
+  <text x="56" y="310" class="lbl tiny">ArrayList exposes only size(). Capacity is observable only via reflection or by timing when grow() fires.</text>
+  <text x="56" y="328" class="lbl tiny">elementData[size] (index 4 above) is always the first unused slot: null whenever size &lt; elementData.length.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="380" x2="880" y2="380" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="396" width="22" height="16" rx="3" class="boxP"/>
+  <text x="52" y="409" class="lbl tiny">LE ref — occupied slot, index 0..size-1 (a LedgerEntry from Movement.entries)</text>
+
+  <rect x="480" y="396" width="22" height="16" rx="3" class="boxW"/>
+  <text x="512" y="409" class="lbl tiny">null — unused slot, index size..length-1</text>
+
+  <rect x="20" y="422" width="22" height="16" rx="3" class="boxH"/>
+  <text x="52" y="435" class="lbl tiny">elementData[size] — first unused slot (highlighted)</text>
+
+  <rect x="480" y="422" width="22" height="16" rx="3" class="boxA"/>
+  <text x="512" y="435" class="lbl tiny">annotation panel — facts not shown as nodes/edges</text>
+
+  <path class="dim" d="M 20 460 H 42"/>
+  <text x="52" y="465" class="lbl tiny">dimension bracket — size vs. capacity extent</text>
+  <path class="callout" d="M 480 460 H 502"/>
+  <text x="512" y="465" class="lbl tiny">callout — points to the annotation panel</text>
+</svg>

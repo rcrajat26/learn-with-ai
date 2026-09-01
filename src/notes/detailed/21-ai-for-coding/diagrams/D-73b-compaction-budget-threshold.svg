@@ -1,0 +1,48 @@
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: the context window bar, 200,000 tokens wide, is 75% full at 150,000 tokens used. A dashed threshold line marks where the auto-compact threshold is reached. An arithmetic panel states 150,000 divided by 200,000 equals 75%, the fraction of the context window consumed, and that crossing it triggers compaction.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .thresh  { stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 6 4; }
+  </style>
+
+  <rect x="0" y="0" width="1000" height="360" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-73b — THE THRESHOLD IS REACHED (FRAME 2 OF 3)</text>
+  <line x1="20" y1="40" x2="980" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- bar -->
+  <rect x="80" y="140" width="800" height="60" rx="4" class="boxWeak"/>
+  <rect x="80" y="140" width="600" height="60" rx="4" class="boxHi"/>
+  <line class="thresh" x1="680" y1="120" x2="680" y2="220"/>
+
+  <text x="80" y="130" class="lbl sub">0</text>
+  <text x="680" y="120" text-anchor="middle" class="lbl body" dy="-6">150,000 tokens used — threshold</text>
+  <text x="880" y="130" text-anchor="middle" class="lbl sub">200,000 tokens (window size)</text>
+
+  <text x="380" y="176" text-anchor="middle" class="lbl body">context consumed so far</text>
+  <text x="780" y="176" text-anchor="middle" class="lbl sub">remaining capacity</text>
+
+  <!-- arithmetic -->
+  <rect x="220" y="240" width="560" height="90" rx="6" class="boxAnn"/>
+  <text x="500" y="266" text-anchor="middle" class="lbl h2">150,000 &#247; 200,000 = 0.75 = 75% of context window used</text>
+  <text x="500" y="288" text-anchor="middle" class="lbl tiny">context used &#247; window size = percentage of window consumed</text>
+  <text x="500" y="306" text-anchor="middle" class="lbl tiny">crossing 75% triggers auto-compaction — see frame 3</text>
+
+  <line x1="20" y1="336" x2="980" y2="336" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="342" width="22" height="14" rx="3" class="boxHi"/>
+  <text x="50" y="354" class="lbl tiny">tokens consumed</text>
+  <rect x="220" y="342" width="22" height="14" rx="3" class="boxWeak"/>
+  <text x="250" y="354" class="lbl tiny">remaining window</text>
+  <line x1="460" y1="349" x2="460" y2="349" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+  <line x1="440" y1="349" x2="480" y2="349" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="490" y="354" class="lbl tiny">75% auto-compact threshold</text>
+</svg>

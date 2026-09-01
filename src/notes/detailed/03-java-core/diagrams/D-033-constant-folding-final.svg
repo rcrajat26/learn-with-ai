@@ -1,0 +1,62 @@
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Constant folding depends on final: with final String prefix, prefix + &quot;801&quot; == &quot;AA-801&quot; folds at compile time to true; without final, the same expression uses invokedynamic makeConcatWithConstants at runtime and == is false">
+
+  <rect x="20" y="20" width="860" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="450" y="46" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Constant folding depends on final</text>
+
+  <!-- LEFT PANEL -->
+  <rect x="30" y="80" width="400" height="460" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="45" y="95" width="370" height="28" rx="4" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="114" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">final field -&gt; folded at compile time</text>
+
+  <rect x="45" y="135" width="370" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="158" font-family="sans-serif" font-size="13" fill="#1f2937">final String prefix = "AA-";</text>
+  <text x="55" y="178" font-family="sans-serif" font-size="13" fill="#1f2937">prefix + "801" == "AA-801"</text>
+  <text x="55" y="198" font-family="sans-serif" font-size="13" fill="#1f2937">-&gt; true</text>
+
+  <rect x="45" y="215" width="370" height="60" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="235" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">constant pool</text>
+  <text x="230" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">#2 = String "AA-801" (folded literal)</text>
+
+  <rect x="45" y="285" width="370" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="303" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">javap -c</text>
+
+  <rect x="45" y="317" width="370" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="55" y="340" font-family="sans-serif" font-size="13" fill="#1f2937">0: ldc #2 // String AA-801</text>
+  <text x="55" y="362" font-family="sans-serif" font-size="13" fill="#1f2937">2: astore_1</text>
+  <text x="55" y="384" font-family="sans-serif" font-size="13" fill="#1f2937">(no runtime concat, no invokedynamic)</text>
+
+  <rect x="45" y="420" width="370" height="90" rx="6" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="230" y="443" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">result</text>
+  <text x="230" y="465" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">both sides resolve to the SAME</text>
+  <text x="230" y="485" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">interned literal "AA-801"</text>
+  <text x="230" y="500" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">== is true</text>
+
+  <!-- RIGHT PANEL -->
+  <rect x="470" y="80" width="400" height="460" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="485" y="95" width="370" height="28" rx="4" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="114" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">non-final field -&gt; runtime concat</text>
+
+  <rect x="485" y="135" width="370" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="158" font-family="sans-serif" font-size="13" fill="#1f2937">String prefix = "AA-"; // no final</text>
+  <text x="495" y="178" font-family="sans-serif" font-size="13" fill="#1f2937">prefix + "801" == "AA-801"</text>
+  <text x="495" y="198" font-family="sans-serif" font-size="13" fill="#1f2937">-&gt; false</text>
+
+  <rect x="485" y="215" width="370" height="60" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="235" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no folding possible</text>
+  <text x="670" y="257" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">prefix is a variable, not a constant</text>
+
+  <rect x="485" y="285" width="370" height="26" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="670" y="303" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">javap -c</text>
+
+  <rect x="485" y="317" width="370" height="90" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="495" y="340" font-family="sans-serif" font-size="13" fill="#1f2937">1: aload_1</text>
+  <text x="495" y="362" font-family="sans-serif" font-size="13" fill="#1f2937">2: ldc #3 // String 801</text>
+  <text x="495" y="384" font-family="sans-serif" font-size="13" fill="#1f2937">4: invokedynamic #7, 0 // makeConcatWithConstants</text>
+
+  <rect x="485" y="420" width="370" height="90" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="670" y="443" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">result</text>
+  <text x="670" y="465" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a fresh heap String is built at</text>
+  <text x="670" y="485" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">runtime, not the pooled literal</text>
+  <text x="670" y="500" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1f2937">== is false (use .equals)</text>
+</svg>

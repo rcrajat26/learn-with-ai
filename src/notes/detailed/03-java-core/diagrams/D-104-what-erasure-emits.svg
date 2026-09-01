@@ -1,0 +1,114 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after diagram: source class Repository of T extends LedgerEntry with method T find(Id) erases to class-file method LedgerEntry find(java.util.UUID). Right side shows real javap output: the erased descriptor, an internal checkcast to the bound LedgerEntry, and the method Signature attribute (Ljava/util/UUID;)TT; plus the class-level Signature attribute &lt;T::LLedgerEntry;&gt;Ljava/lang/Object; which reflection reads to recover &lt;T extends LedgerEntry&gt;. A second section shows the call site: Caller.lookup assigns the erased result to CashEntry, and javap shows the compiler-inserted checkcast #13 to class CashEntry that was never written in source.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .mono  { font-family: ui-monospace, Menlo, Consolas, monospace; fill: #1f2937; font-size: 11.5px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .h3    { font-size: 12.5px; font-weight: 700; fill: #1f2937; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT ERASURE EMITS — Repository&lt;T extends LedgerEntry&gt;</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="60" class="lbl h2">SOURCE — WHAT YOU WROTE</text>
+  <text x="600" y="60" class="lbl h2">CLASS FILE — WHAT javac EMITTED</text>
+
+  <!-- LEFT: source box -->
+  <rect x="20" y="70" width="500" height="150" rx="6" class="boxP"/>
+  <text x="35" y="93" class="lbl mono">interface LedgerEntry {</text>
+  <text x="35" y="110" class="lbl mono">    java.util.UUID id();</text>
+  <text x="35" y="127" class="lbl mono">}</text>
+  <text x="35" y="144" class="lbl mono">class Repository&lt;T extends LedgerEntry&gt; {</text>
+  <text x="35" y="161" class="lbl mono">    T find(java.util.UUID id) { ... }   // Id = UUID</text>
+  <text x="35" y="178" class="lbl mono">}</text>
+  <text x="35" y="200" class="lbl sub">T's only compile-time trace: the bound &lt;T extends LedgerEntry&gt;.</text>
+
+  <!-- RIGHT: emitted signature box -->
+  <rect x="600" y="70" width="500" height="85" rx="6" class="boxH"/>
+  <text x="615" y="92" class="lbl h3">T find(Id) ERASES TO:</text>
+  <text x="615" y="114" class="lbl mono" style="font-size:13px">LedgerEntry find(java.util.UUID)</text>
+  <text x="615" y="134" class="lbl sub">T is replaced everywhere by its bound, LedgerEntry.</text>
+
+  <path class="flow" d="M 520 145 H 600"/>
+
+  <!-- javap panel for Repository.find -->
+  <rect x="600" y="170" width="500" height="150" rx="6" class="boxW"/>
+  <text x="615" y="192" class="lbl h3">javap -p -v Repository.class — method find</text>
+  <text x="615" y="212" class="lbl mono">T find(java.util.UUID);</text>
+  <text x="615" y="228" class="lbl mono">  descriptor: (Ljava/util/UUID;)LLedgerEntry;</text>
+  <text x="615" y="244" class="lbl mono">  flags: (0x0000)</text>
+  <text x="615" y="260" class="lbl mono">  Code:</text>
+  <text x="615" y="276" class="lbl mono">    10: checkcast #22 // class LedgerEntry</text>
+  <text x="615" y="292" class="lbl mono">  Signature: #38 // (Ljava/util/UUID;)TT;</text>
+
+  <path class="flow" d="M 850 155 V 170"/>
+
+  <!-- class-level Signature attribute -->
+  <rect x="600" y="340" width="500" height="100" rx="6" class="boxH"/>
+  <text x="615" y="362" class="lbl h3">CLASS-LEVEL Signature ATTRIBUTE — KEPT FOR REFLECTION</text>
+  <text x="615" y="382" class="lbl mono">Signature: #42 // &lt;T::LLedgerEntry;&gt;Ljava/lang/Object;</text>
+  <text x="615" y="400" class="lbl sub">Reflection (getGenericSuperclass, TypeVariable.getBounds) reads this and</text>
+  <text x="615" y="414" class="lbl sub">recovers &lt;T extends LedgerEntry&gt;; the JVM itself never looks at it again.</text>
+
+  <path class="flow" d="M 850 320 V 340"/>
+
+  <!-- annotation panel: why -->
+  <rect x="20" y="250" width="500" height="110" rx="6" class="boxA"/>
+  <text x="35" y="272" class="lbl h3">WHY THIS HAPPENS</text>
+  <text x="35" y="292" class="lbl sub">Generics are compile-time only — one class file stores one erased shape.</text>
+  <text x="35" y="308" class="lbl sub">T's bound (LedgerEntry) becomes the erased return/param type.</text>
+  <text x="35" y="324" class="lbl sub">javac inserts checkcast wherever code narrows the erased type back down,</text>
+  <text x="35" y="340" class="lbl sub">both inside generic methods and at every caller that assigns the result.</text>
+
+  <!-- CALL SITE section -->
+  <text x="20" y="470" class="lbl h2">CALL SITE — Caller.lookup(...): THE checkcast YOU DIDN'T WRITE</text>
+
+  <rect x="20" y="485" width="500" height="130" rx="6" class="boxP"/>
+  <text x="35" y="508" class="lbl mono">class Caller {</text>
+  <text x="35" y="525" class="lbl mono">  CashEntry lookup(Repository&lt;CashEntry&gt; repo,</text>
+  <text x="35" y="542" class="lbl mono">                   java.util.UUID id) {</text>
+  <text x="35" y="559" class="lbl mono">    return repo.find(id);</text>
+  <text x="35" y="576" class="lbl mono">  }</text>
+  <text x="35" y="593" class="lbl mono">}</text>
+
+  <rect x="600" y="485" width="500" height="200" rx="6" class="boxW"/>
+  <text x="615" y="507" class="lbl h3">javap -p -v Caller.class — lookup(...)</text>
+  <text x="615" y="527" class="lbl mono">CashEntry lookup(Repository&lt;CashEntry&gt;, UUID);</text>
+  <text x="615" y="543" class="lbl mono">  descriptor: (LRepository;Ljava/util/UUID;)LCashEntry;</text>
+  <text x="615" y="559" class="lbl mono">  Code:</text>
+  <text x="615" y="575" class="lbl mono">    2: invokevirtual #7 // Method</text>
+  <text x="615" y="591" class="lbl mono">       Repository.find:(Ljava/util/UUID;)LLedgerEntry;</text>
+  <text x="615" y="607" class="lbl mono">    5: checkcast #13 // class CashEntry</text>
+  <text x="615" y="623" class="lbl mono">    8: areturn</text>
+  <text x="615" y="639" class="lbl mono">  Signature: #22 //</text>
+  <text x="615" y="655" class="lbl mono">    (LRepository&lt;LCashEntry;&gt;;Ljava/util/UUID;)LCashEntry;</text>
+
+  <path class="flow" d="M 520 550 H 600"/>
+
+  <line x1="20" y1="715" x2="1100" y2="715" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="730" width="18" height="14" class="boxP"/>
+  <text x="46" y="742" class="lbl tiny" style="font-size:11px">source you wrote</text>
+  <rect x="220" y="730" width="18" height="14" class="boxH"/>
+  <text x="246" y="742" class="lbl tiny" style="font-size:11px">erased/emitted shape, highlighted (synthetic to the reader)</text>
+  <rect x="620" y="730" width="18" height="14" class="boxW"/>
+  <text x="646" y="742" class="lbl tiny" style="font-size:11px">verbatim javap -p -v output panel</text>
+  <rect x="900" y="730" width="18" height="14" class="boxA"/>
+  <text x="926" y="742" class="lbl tiny" style="font-size:11px">explanatory annotation</text>
+  <path class="flow" d="M 20 762 H 60"/>
+  <text x="70" y="767" class="lbl tiny" style="font-size:11px">A → B : A compiles to / erases to B</text>
+</svg>

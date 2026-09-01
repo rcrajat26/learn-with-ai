@@ -1,0 +1,91 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 2 of 3: the dispatched agents run concurrently, each writing only its own output path, and each returns to the parent a short status and findings plus that path rather than a data payload in the message body.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 2 OF 3 — AGENTS RUN CONCURRENTLY, EACH WRITES ONLY ITS OWN PATH</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="70" y="70" width="160" height="66" rx="6" class="boxR"/>
+  <text x="150" y="94" text-anchor="middle" class="lbl node">task 1 (running)</text>
+  <text x="150" y="112" text-anchor="middle" class="lbl sub">writes only:</text>
+  <text x="150" y="126" text-anchor="middle" class="lbl sub">tmp/fanout/task-1.json</text>
+
+  <rect x="270" y="70" width="160" height="66" rx="6" class="boxR"/>
+  <text x="350" y="94" text-anchor="middle" class="lbl node">task 2 (running)</text>
+  <text x="350" y="112" text-anchor="middle" class="lbl sub">writes only:</text>
+  <text x="350" y="126" text-anchor="middle" class="lbl sub">tmp/fanout/task-2.json</text>
+
+  <rect x="470" y="70" width="160" height="66" rx="6" class="boxR"/>
+  <text x="550" y="94" text-anchor="middle" class="lbl node">task 3 (running)</text>
+  <text x="550" y="112" text-anchor="middle" class="lbl sub">writes only:</text>
+  <text x="550" y="126" text-anchor="middle" class="lbl sub">tmp/fanout/task-3.json</text>
+
+  <rect x="670" y="70" width="160" height="66" rx="6" class="boxR"/>
+  <text x="750" y="94" text-anchor="middle" class="lbl node">task N (running)</text>
+  <text x="750" y="112" text-anchor="middle" class="lbl sub">writes only:</text>
+  <text x="750" y="126" text-anchor="middle" class="lbl sub">tmp/fanout/task-N.json</text>
+
+  <path class="flow" d="M 150 136 V 158"/>
+  <path class="flow" d="M 350 136 V 158"/>
+  <path class="flow" d="M 550 136 V 158"/>
+  <path class="flow" d="M 750 136 V 158"/>
+
+  <rect x="70" y="158" width="160" height="34" rx="4" class="boxA"/>
+  <text x="150" y="179" text-anchor="middle" class="lbl tiny">tmp/fanout/task-1.json</text>
+
+  <rect x="270" y="158" width="160" height="34" rx="4" class="boxA"/>
+  <text x="350" y="179" text-anchor="middle" class="lbl tiny">tmp/fanout/task-2.json</text>
+
+  <rect x="470" y="158" width="160" height="34" rx="4" class="boxA"/>
+  <text x="550" y="179" text-anchor="middle" class="lbl tiny">tmp/fanout/task-3.json</text>
+
+  <rect x="670" y="158" width="160" height="34" rx="4" class="boxA"/>
+  <text x="750" y="179" text-anchor="middle" class="lbl tiny">tmp/fanout/task-N.json</text>
+
+  <path class="weak" d="M 150 158 V 250 H 450"/>
+  <path class="weak" d="M 350 158 V 236 H 450"/>
+  <path class="weak" d="M 550 158 V 236 H 450"/>
+  <path class="weak" d="M 750 158 V 250 H 450"/>
+
+  <rect x="290" y="256" width="320" height="86" rx="6" class="boxP"/>
+  <text x="450" y="278" text-anchor="middle" class="lbl node">parent (mailbox)</text>
+  <text x="450" y="298" text-anchor="middle" class="lbl sub">receives per task:</text>
+  <text x="450" y="314" text-anchor="middle" class="lbl sub">status + a few findings + path</text>
+  <text x="450" y="330" text-anchor="middle" class="lbl sub">never the full data payload in the message body</text>
+
+  <line x1="20" y1="360" x2="880" y2="360" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="368" width="22" height="14" rx="3" class="boxR"/>
+  <text x="50" y="380" class="lbl tiny">running task</text>
+  <path class="flow" d="M 180 375 H 210"/>
+  <text x="218" y="380" class="lbl tiny">A → B : A writes its own path B</text>
+  <path class="weak" d="M 470 375 H 500"/>
+  <text x="508" y="380" class="lbl tiny">A → B : status + findings + path, not payload</text>
+</svg>

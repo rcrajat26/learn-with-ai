@@ -1,0 +1,108 @@
+<svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ConcurrentHashMap size() computed via striped counters: baseCount plus a CounterCell array padded to separate cache lines, summed by sumCount() as an estimate">
+  <defs>
+    <marker id="arrow130" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="35" text-anchor="middle" font-family="sans-serif" font-size="15"
+        fill="#1f2937" font-weight="bold">size() via striped counters (ConcurrentHashMap)</text>
+
+  <!-- baseCount field -->
+  <rect x="40" y="55" width="300" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="80" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">private transient volatile long baseCount</text>
+  <text x="40" y="108" font-family="sans-serif" font-size="11" fill="#1f2937">(:790) — fast path when there is no contention</text>
+
+  <rect x="460" y="55" width="300" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="610" y="80" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">volatile CounterCell[] counterCells</text>
+  <text x="460" y="108" font-family="sans-serif" font-size="11" fill="#1f2937">(:815) — grown when CAS on baseCount fails</text>
+
+  <!-- Threads -->
+  <g>
+    <rect x="40" y="130" width="150" height="30" rx="5" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="115" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Thread A</text>
+
+    <rect x="220" y="130" width="150" height="30" rx="5" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="295" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Thread B</text>
+
+    <rect x="440" y="130" width="150" height="30" rx="5" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="515" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Thread C</text>
+
+    <rect x="610" y="130" width="150" height="30" rx="5" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="685" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Thread D</text>
+  </g>
+
+  <!-- Cache-line bands (4 x 64-byte) -->
+  <text x="40" y="195" font-family="sans-serif" font-size="13" fill="#1f2937">CounterCell[4] — each cell isolated on its own 64-byte cache line:</text>
+
+  <!-- Cell 0 -->
+  <g>
+    <line x1="115" y1="160" x2="115" y2="215" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+    <rect x="40" y="215" width="170" height="90" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="125" y="232" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cache line 0 (64 bytes)</text>
+    <rect x="50" y="240" width="150" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="125" y="256" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">long value (8 bytes)</text>
+    <rect x="50" y="270" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="125" y="286" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">padding (56 bytes)</text>
+  </g>
+
+  <!-- Cell 1 -->
+  <g>
+    <line x1="295" y1="160" x2="295" y2="215" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+    <rect x="220" y="215" width="170" height="90" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="305" y="232" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cache line 1 (64 bytes)</text>
+    <rect x="230" y="240" width="150" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="305" y="256" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">long value (8 bytes)</text>
+    <rect x="230" y="270" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="305" y="286" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">padding (56 bytes)</text>
+  </g>
+
+  <!-- Cell 2 -->
+  <g>
+    <line x1="515" y1="160" x2="515" y2="215" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+    <rect x="440" y="215" width="170" height="90" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="525" y="232" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cache line 2 (64 bytes)</text>
+    <rect x="450" y="240" width="150" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="525" y="256" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">long value (8 bytes)</text>
+    <rect x="450" y="270" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="525" y="286" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">padding (56 bytes)</text>
+  </g>
+
+  <!-- Cell 3 -->
+  <g>
+    <line x1="685" y1="160" x2="685" y2="215" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+    <rect x="610" y="215" width="170" height="90" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="695" y="232" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">cache line 3 (64 bytes)</text>
+    <rect x="620" y="240" width="150" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="695" y="256" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">long value (8 bytes)</text>
+    <rect x="620" y="270" width="150" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+    <text x="695" y="286" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">padding (56 bytes)</text>
+  </g>
+
+  <!-- Contended annotation -->
+  <rect x="180" y="325" width="440" height="52" rx="5" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="345" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">@jdk.internal.vm.annotation.Contended static final class CounterCell</text>
+  <text x="400" y="364" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(:2565) — forces each cell onto its own cache line, so a CounterCell[4] costs 4 cache lines</text>
+
+  <!-- sumCount -->
+  <rect x="180" y="400" width="440" height="70" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="422" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">final long sumCount()  (:2570)</text>
+  <text x="400" y="440" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">sum = baseCount; for each non-null cell in counterCells: sum += cell.value</text>
+  <text x="400" y="457" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">reads baseCount and every cell with no lock held</text>
+
+  <line x1="115" y1="305" x2="380" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+  <line x1="685" y1="305" x2="420" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+  <line x1="190" y1="95" x2="330" y2="400" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+
+  <!-- estimate warning -->
+  <rect x="200" y="490" width="400" height="36" rx="5" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="400" y="513" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the sum is an estimate — cells can change mid-sum</text>
+  <line x1="400" y1="470" x2="400" y2="490" stroke="#737373" stroke-width="2" marker-end="url(#arrow130)"/>
+
+  <!-- mappingCount vs size -->
+  <rect x="80" y="545" width="640" height="55" rx="5" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="566" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">mappingCount() returns the raw long from sumCount() (:2174-2175)</text>
+  <text x="400" y="584" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">size() clamps that long into an int (Integer.MAX_VALUE if it overflows)</text>
+</svg>

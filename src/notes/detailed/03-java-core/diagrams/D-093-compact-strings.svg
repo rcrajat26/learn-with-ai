@@ -1,0 +1,100 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Compact strings: DOCUMENTS_VERIFIED, 18 characters, stored as Java 8 char array at 56 bytes padded, versus Java 9+ byte array with LATIN1 coder at 40 bytes padded, versus a non-Latin-1 name forcing UTF16 coder and doubled bytes.">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="34" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#1f2937">Compact strings: one byte per Latin-1 character</text>
+
+  <rect x="240" y="46" width="420" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="450" y="63" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">status name &quot;DOCUMENTS_VERIFIED&quot; — 18 characters</text>
+
+  <!-- Panel 1: Java 8 char[] -->
+  <rect x="20" y="86" width="270" height="230" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="98" width="180" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="124" y="115" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Java 8: char[]</text>
+
+  <rect x="40" y="132" width="230" height="40" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="155" y="157" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2 bytes / char × 18 chars</text>
+
+  <rect x="40" y="180" width="230" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="155" y="198" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">payload = 18 × 2 = 36 bytes</text>
+
+  <rect x="40" y="212" width="230" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="155" y="230" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">+ 16-byte array header = 52</text>
+
+  <rect x="40" y="244" width="230" height="30" rx="4" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="155" y="264" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">padded to 56 bytes total</text>
+
+  <rect x="40" y="284" width="230" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="155" y="301" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">no coder field pre-Java 9</text>
+
+  <!-- Panel 2: Java 9+ byte[] Latin1 -->
+  <rect x="310" y="86" width="280" height="230" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="324" y="98" width="230" height="24" rx="3" fill="#dcfce7"/>
+  <text x="439" y="115" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Java 9+: byte[] + coder</text>
+
+  <rect x="330" y="132" width="250" height="40" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="455" y="157" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">1 byte / char × 18 chars</text>
+
+  <rect x="330" y="180" width="250" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="455" y="198" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">payload = 18 × 1 = 18 bytes</text>
+
+  <rect x="330" y="212" width="250" height="26" rx="4" fill="#e5e7eb"/>
+  <text x="455" y="230" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">+ 16-byte array header = 34</text>
+
+  <rect x="330" y="244" width="250" height="30" rx="4" fill="#dcfce7" stroke="#525252" stroke-width="2"/>
+  <text x="455" y="264" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">padded to 40 bytes total</text>
+
+  <rect x="330" y="284" width="250" height="24" rx="3" fill="#fef3c7"/>
+  <text x="455" y="301" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">coder = LATIN1 = 0</text>
+
+  <!-- COMPACT_STRINGS flag + StringLatin1 -->
+  <rect x="610" y="96" width="270" height="60" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="745" y="118" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">COMPACT_STRINGS = true</text>
+  <text x="745" y="138" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(JVM flag, default on since JDK 9)</text>
+
+  <rect x="610" y="166" width="270" height="50" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="745" y="196" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">delegate: StringLatin1</text>
+
+  <line x1="745" y1="216" x2="745" y2="230" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <rect x="610" y="232" width="270" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="745" y="254" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">handles char-at, equals,</text>
+  <text x="745" y="272" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">hashCode for LATIN1 strings</text>
+
+  <!-- Panel 3: non-Latin-1 forces UTF16 -->
+  <rect x="20" y="336" width="860" height="260" rx="8" fill="none" stroke="#737373" stroke-width="2"/>
+  <rect x="34" y="348" width="360" height="24" rx="3" fill="#fee2e2"/>
+  <text x="214" y="365" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1f2937">Panel 3: non-Latin-1 client name forces UTF16</text>
+
+  <rect x="40" y="384" width="260" height="50" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="170" y="406" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">client name &quot;Зоя&quot;</text>
+  <text x="170" y="424" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(Cyrillic, 3 chars)</text>
+
+  <line x1="300" y1="409" x2="380" y2="409" stroke="#737373" stroke-width="2" marker-end="url(#arrow2)"/>
+  <rect x="302" y="384" width="76" height="20" rx="3" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="340" y="398" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">coder scan</text>
+
+  <rect x="390" y="384" width="260" height="50" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="520" y="406" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">coder = UTF16 = 1</text>
+  <text x="520" y="424" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">delegate: StringUTF16</text>
+
+  <rect x="670" y="384" width="180" height="50" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="760" y="406" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2 bytes / char</text>
+  <text x="760" y="424" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(same as pre-JDK9)</text>
+
+  <rect x="40" y="450" width="380" height="60" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="230" y="472" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">If all-Latin-1 &quot;Зоя&quot;-length name (3 chars):</text>
+  <text x="230" y="490" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">LATIN1 payload = 3 × 1 = 3 bytes</text>
+
+  <rect x="450" y="450" width="380" height="60" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="640" y="472" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Actual UTF16 payload = 3 × 2 = 6 bytes</text>
+  <text x="640" y="490" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">byte count doubles: 3 → 6</text>
+
+  <rect x="40" y="524" width="790" height="50" rx="6" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="435" y="546" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A single non-Latin-1 code point anywhere in the String forces the WHOLE string to UTF16</text>
+  <text x="435" y="564" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">coder — compact strings is all-or-nothing per String instance, not per character</text>
+</svg>

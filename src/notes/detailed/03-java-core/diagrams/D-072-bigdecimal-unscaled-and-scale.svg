@@ -1,0 +1,98 @@
+<svg viewBox="0 0 1080 850" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Memory-layout diagram showing that a BigDecimal is an unscaled integer plus a scale, value equals unscaledValue times 10 to the power of negative scale. Three compact domain values are shown, measured on JDK 21.0.7: new BigDecimal(&quot;3.33&quot;) the stake has intCompact 333, intVal null, scale 2, precision 3; new BigDecimal(&quot;0.33&quot;) the bonus portion has intCompact 33, intVal null, scale 2, precision 2; new BigDecimal(&quot;100&quot;) the bonus cap has intCompact 100, intVal null, scale 0, precision 3. A fourth contrasting inflated box shows new BigDecimal(new BigInteger(&quot;12345678901234567890123&quot;), 2) with intCompact equal to the sentinel INFLATED which is Long.MIN_VALUE, intVal holding the full BigInteger, and scale 2. An annotation panel gives two measured surprises: new BigDecimal(BigInteger,int) does not force INFLATED because it calls compactValFor, but it never nulls intVal so the object permanently retains an attached BigInteger, 104 bytes versus 40 bytes for the compact form; and the compact form holds unscaled significands up to 18 decimal digits from the String constructor, with a 19-digit string forcing INFLATED.">
+
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr072" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="850" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">BigDecimal is an unscaled integer plus a scale</text>
+  <line x1="20" y1="42" x2="1060" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="h2">THREE COMPACT BigDecimal VALUES (measured, JDK 21.0.7)</text>
+  <line x1="20" y1="72" x2="1060" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- Box 1: stake 3.33 -->
+  <rect x="40" y="90" width="320" height="210" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="200" y="112" text-anchor="middle" class="smallb">new BigDecimal("3.33")  &#8212; the stake</text>
+  <rect x="56" y="126" width="288" height="50" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="200" y="146" text-anchor="middle" class="code">intCompact = 333&#8194;&#8194;scale = 2</text>
+  <text x="200" y="166" text-anchor="middle" class="small">unscaled &#215; 10^&#8722;scale = 333 &#215; 10&#8722;2</text>
+  <text x="56" y="196" class="small">intVal = null</text>
+  <text x="56" y="216" class="small">precision field = 3</text>
+  <text x="56" y="242" class="body">value = 3.33</text>
+
+  <!-- Box 2: bonus portion 0.33 -->
+  <rect x="380" y="90" width="320" height="210" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="540" y="112" text-anchor="middle" class="smallb">new BigDecimal("0.33") &#8212; bonus portion</text>
+  <rect x="396" y="126" width="288" height="50" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="540" y="146" text-anchor="middle" class="code">intCompact = 33&#8194;&#8194;scale = 2</text>
+  <text x="540" y="166" text-anchor="middle" class="small">unscaled &#215; 10^&#8722;scale = 33 &#215; 10&#8722;2</text>
+  <text x="396" y="196" class="small">intVal = null</text>
+  <text x="396" y="216" class="small">precision field = 2</text>
+  <text x="396" y="242" class="body">value = 0.33</text>
+
+  <!-- Box 3: bonus cap 100 -->
+  <rect x="720" y="90" width="320" height="210" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="880" y="112" text-anchor="middle" class="smallb">new BigDecimal("100") &#8212; bonus cap</text>
+  <rect x="736" y="126" width="288" height="50" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="880" y="146" text-anchor="middle" class="code">intCompact = 100&#8194;&#8194;scale = 0</text>
+  <text x="880" y="166" text-anchor="middle" class="small">unscaled &#215; 10^&#8722;scale = 100 &#215; 10^0</text>
+  <text x="736" y="196" class="small">intVal = null</text>
+  <text x="736" y="216" class="small">precision field = 3</text>
+  <text x="736" y="242" class="body">value = 100</text>
+
+  <!-- General rule -->
+  <rect x="40" y="320" width="1000" height="50" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="540" y="350" text-anchor="middle" class="h2">GENERAL RULE:&#8194;value = unscaledValue &#215; 10^(&#8722;scale)</text>
+
+  <!-- Inflated contrasting box -->
+  <rect x="40" y="390" width="1000" height="140" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="52" y="412" class="smallb">new BigDecimal(new BigInteger("12345678901234567890123"), 2) &#8212; the inflated case</text>
+  <text x="52" y="434" class="code">value = 123456789012345678901.23</text>
+  <text x="52" y="456" class="code">intCompact = INFLATED (Long.MIN_VALUE = -9223372036854775808)</text>
+  <text x="52" y="478" class="code">intVal = 12345678901234567890123&#8194;&#8194;&#8194;&#8194;scale = 2</text>
+  <text x="52" y="505" class="body">INFLATED = Long.MIN_VALUE &#8212; sentinel meaning "the significand is only in intVal"</text>
+
+  <!-- Annotation panel -->
+  <rect x="40" y="550" width="1000" height="190" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="52" y="572" class="smallb">ANNOTATION &#8212; two measured surprises on JDK 21.0.7:</text>
+
+  <text x="52" y="596" class="smallb">1) new BigDecimal(BigInteger, int) does NOT force INFLATED:</text>
+  <text x="52" y="616" class="body">It calls compactValFor(intVal), so new BigDecimal(BigInteger.valueOf(333), 2) has intCompact = 333.</text>
+  <text x="52" y="636" class="body">It never nulls out intVal though, so the object permanently carries an attached BigInteger</text>
+  <text x="52" y="656" class="small">(measured 104 bytes retained versus 40 bytes for the compact form).</text>
+
+  <text x="52" y="682" class="smallb">2) The compact form holds unscaled significands up to 18 decimal digits from the String constructor:</text>
+  <text x="52" y="702" class="code">new BigDecimal("999999999999999999") &#8594; intCompact=999999999999999999, intVal=null (18 digits)</text>
+  <text x="52" y="722" class="code">new BigDecimal("9999999999999999999") &#8594; intCompact=INFLATED, intVal=9999999999999999999 (19 digits)</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="760" x2="1060" y2="760" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="772" width="18" height="14" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="784" class="small">compact BigDecimal value (domain example)</text>
+
+  <rect x="340" y="772" width="18" height="14" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="366" y="784" class="small">unscaled value / scale &#8212; the point</text>
+
+  <rect x="600" y="772" width="18" height="14" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="626" y="784" class="small">inflated case (BigInteger significand)</text>
+
+  <rect x="860" y="772" width="18" height="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="886" y="784" class="small">annotation panel</text>
+
+</svg>

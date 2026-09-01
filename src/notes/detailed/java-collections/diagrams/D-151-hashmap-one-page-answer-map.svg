@@ -1,0 +1,93 @@
+<svg viewBox="0 0 800 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The HashMap one-page answer map: eight numbered boxes walked in order — table of bins sized a power of two, hash spreading with h xor h shifted right 16, index by n minus 1 and hash, a bin as a chain, treeify on the ninth node when capacity is at least 64, a red-black tree bin at O(log n) only for Comparable keys, resize doubling at 0.75 load with the lo hi split decided by hash and oldCap, the six constants 16, 0.75, 8, 6, 64 and 1 shifted left 30, and the Java 7 head-insertion resize cycle.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="760" height="34" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="42" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">HashMap in 90 seconds — say boxes 1 to 8 in this order</text>
+
+  <rect x="20" y="74" width="230" height="86" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="135" y="98" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">1. table</text>
+  <text x="135" y="120" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node[] tab, length a power of 2</text>
+  <text x="135" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">allocated on the first put</text>
+
+  <line x1="250" y1="117" x2="300" y2="117" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="300" y="74" width="200" height="86" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="98" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">2. hash()</text>
+  <text x="400" y="120" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">h ^ (h &gt;&gt;&gt; 16)</text>
+  <text x="400" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">one xor, one shift; null key = 0</text>
+
+  <line x1="500" y1="117" x2="550" y2="117" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="550" y="74" width="230" height="86" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="665" y="98" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">3. index</text>
+  <text x="665" y="120" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(n - 1) &amp; hash</text>
+  <text x="665" y="140" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">a mask, not a modulo</text>
+
+  <line x1="665" y1="160" x2="665" y2="200" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="135" y1="200" x2="135" y2="160" stroke="#737373" stroke-width="2"/>
+  <line x1="135" y1="200" x2="665" y2="200" stroke="#737373" stroke-width="2"/>
+  <rect x="330" y="186" width="140" height="24" rx="3" fill="#e5e7eb"/>
+  <text x="400" y="203" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">bin = tab[index]</text>
+
+  <rect x="20" y="220" width="230" height="92" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="135" y="244" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">4. bin: a chain</text>
+  <text x="135" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Node.next, tail-appended</text>
+  <text x="135" y="286" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">hash == then key == then</text>
+  <text x="135" y="304" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">key.equals; ~61% of bins hold 1</text>
+
+  <line x1="250" y1="266" x2="300" y2="266" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="300" y="220" width="200" height="92" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="244" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">5. treeifyBin</text>
+  <text x="400" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">binCount &gt;= 8 - 1, so the</text>
+  <text x="400" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">9th node — and only if</text>
+  <text x="400" y="302" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">tab.length &gt;= 64, else resize</text>
+
+  <line x1="500" y1="266" x2="550" y2="266" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="550" y="220" width="230" height="92" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="665" y="244" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">6. red-black tree bin</text>
+  <text x="665" y="266" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">O(log n) — ONLY if the keys</text>
+  <text x="665" y="284" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">are Comparable; else find()</text>
+  <text x="665" y="302" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">searches both subtrees</text>
+
+  <line x1="135" y1="312" x2="135" y2="356" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="150" y="322" width="196" height="24" rx="3" fill="#fef3c7"/>
+  <text x="248" y="339" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">++size &gt; threshold</text>
+
+  <rect x="20" y="356" width="370" height="104" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="380" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">7. resize(): double the table</text>
+  <text x="205" y="402" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">threshold = 0.75 x capacity; no hashCode() runs,</text>
+  <text x="205" y="420" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">because Node.hash is final and cached</text>
+  <text x="205" y="440" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">cost O(capacity); the table never shrinks</text>
+
+  <line x1="390" y1="408" x2="440" y2="408" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="440" y="356" width="340" height="104" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="610" y="380" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">the lo/hi split — one bit decides</text>
+  <text x="610" y="402" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">(e.hash &amp; oldCap) == 0 ? stay at j : move to j + oldCap</text>
+  <text x="610" y="420" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">2n - 1 is (n - 1) plus one bit of value n</text>
+  <text x="610" y="440" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">order within a bin survives; iteration order does not</text>
+
+  <rect x="20" y="484" width="370" height="132" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="205" y="508" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">the six constants</text>
+  <text x="205" y="530" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">DEFAULT_INITIAL_CAPACITY = 1 &lt;&lt; 4 = 16</text>
+  <text x="205" y="548" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">DEFAULT_LOAD_FACTOR = 0.75f</text>
+  <text x="205" y="566" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">TREEIFY_THRESHOLD = 8</text>
+  <text x="205" y="584" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">UNTREEIFY_THRESHOLD = 6 (split only)</text>
+  <text x="205" y="602" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">MIN_TREEIFY_CAPACITY = 64; MAXIMUM_CAPACITY = 1 &lt;&lt; 30</text>
+
+  <rect x="440" y="484" width="340" height="132" rx="6" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="610" y="508" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">8. the Java 7 loop (version trap)</text>
+  <text x="610" y="530" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Java 7 resize inserted at the HEAD, reversing</text>
+  <text x="610" y="548" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">each bin; two racing resizes could close a cycle</text>
+  <text x="610" y="566" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">A.next = B and B.next = A, so get() spun forever</text>
+  <text x="610" y="586" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Java 8+ tail-appends into fresh lo/hi lists:</text>
+  <text x="610" y="604" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">that cycle is gone, the corruption is not</text>
+</svg>

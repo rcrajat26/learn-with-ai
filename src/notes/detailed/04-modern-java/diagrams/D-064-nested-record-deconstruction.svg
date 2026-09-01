@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Tree diagram of the nested record pattern case Movement(LedgerEntry(Position from, Money amount), LedgerEntry(Position to, Money _)) matched against a Movement between two LedgerEntry legs. The root is the Movement pattern, which fans out on a bus to two LedgerEntry child patterns, labelled from-leg and to-leg. Each LedgerEntry child fans out to its own bound variables at depth three: from-leg binds Position from and Money amount, to-leg binds Position to and discards Money with the underscore pattern. Each edge is labelled with the record accessor called to obtain that component, in declaration order: Movement.from(), Movement.to(), LedgerEntry.position(), LedgerEntry.amount(). Depth three is marked as the readability limit, the point past which nested deconstruction patterns become hard to read at a glance.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .code  { font-size: 12.5px; font-family: "SF Mono", Menlo, Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .stem  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">NESTED RECORD DECONSTRUCTION — Movement(LedgerEntry(Position, Money), LedgerEntry(Position, Money))</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl code">case Movement(LedgerEntry(Position from, Money amount), LedgerEntry(Position to, Money _)) -&gt;</text>
+
+  <!-- Level 1: root -->
+  <rect x="420" y="84" width="200" height="56" rx="6" class="boxP"/>
+  <text x="520" y="108" text-anchor="middle" class="lbl node">Movement</text>
+  <text x="520" y="126" text-anchor="middle" class="lbl sub">depth 1 — the outer record pattern</text>
+
+  <!-- bus stub down from root -->
+  <path class="stem" d="M 520 140 V 166"/>
+  <!-- horizontal bus -->
+  <path class="stem" d="M 220 166 H 820"/>
+  <!-- drops to two LedgerEntry children -->
+  <path class="flow" d="M 220 166 V 194"/>
+  <path class="flow" d="M 820 166 V 194"/>
+
+  <text x="300" y="160" text-anchor="middle" class="lbl tiny">Movement.from()</text>
+  <text x="760" y="160" text-anchor="middle" class="lbl tiny">Movement.to()</text>
+
+  <!-- Level 2: two LedgerEntry -->
+  <rect x="120" y="194" width="200" height="56" rx="6" class="boxG"/>
+  <text x="220" y="218" text-anchor="middle" class="lbl node">LedgerEntry</text>
+  <text x="220" y="236" text-anchor="middle" class="lbl sub">from-leg (source position)</text>
+
+  <rect x="720" y="194" width="200" height="56" rx="6" class="boxG"/>
+  <text x="820" y="218" text-anchor="middle" class="lbl node">LedgerEntry</text>
+  <text x="820" y="236" text-anchor="middle" class="lbl sub">to-leg (destination position)</text>
+
+  <!-- Level 3: left branch, from-leg bus -->
+  <path class="stem" d="M 220 250 V 276"/>
+  <path class="stem" d="M 120 276 H 320"/>
+  <path class="flow" d="M 120 276 V 304"/>
+  <path class="flow" d="M 320 276 V 304"/>
+  <text x="124" y="270" class="lbl tiny">.position()</text>
+  <text x="316" y="270" text-anchor="end" class="lbl tiny">.amount()</text>
+
+  <rect x="20" y="304" width="200" height="56" rx="6" class="boxW"/>
+  <text x="120" y="328" text-anchor="middle" class="lbl node">Position from</text>
+  <text x="120" y="346" text-anchor="middle" class="lbl sub">depth 3 — bound variable</text>
+
+  <rect x="220" y="304" width="200" height="56" rx="6" class="boxW"/>
+  <text x="320" y="328" text-anchor="middle" class="lbl node">Money amount</text>
+  <text x="320" y="346" text-anchor="middle" class="lbl sub">depth 3 — bound variable</text>
+
+  <!-- Level 3: right branch, to-leg bus -->
+  <path class="stem" d="M 820 250 V 276"/>
+  <path class="stem" d="M 720 276 H 920"/>
+  <path class="flow" d="M 720 276 V 304"/>
+  <path class="flow" d="M 920 276 V 304"/>
+  <text x="724" y="270" class="lbl tiny">.position()</text>
+  <text x="916" y="270" text-anchor="end" class="lbl tiny">.amount()</text>
+
+  <rect x="620" y="304" width="200" height="56" rx="6" class="boxW"/>
+  <text x="720" y="328" text-anchor="middle" class="lbl node">Position to</text>
+  <text x="720" y="346" text-anchor="middle" class="lbl sub">depth 3 — bound variable</text>
+
+  <rect x="820" y="304" width="200" height="56" rx="6" class="boxH"/>
+  <text x="920" y="328" text-anchor="middle" class="lbl node">Money _</text>
+  <text x="920" y="346" text-anchor="middle" class="lbl sub">discarded — the _ pattern</text>
+
+  <!-- depth marker -->
+  <line x1="20" y1="380" x2="1020" y2="380" stroke="#d1d5db" stroke-width="1" stroke-dasharray="2 4"/>
+  <rect x="420" y="392" width="200" height="34" rx="4" class="panel"/>
+  <text x="520" y="414" text-anchor="middle" class="lbl tiny" font-weight="700">depth 3 — the readability limit</text>
+
+  <!-- Annotation panels (max 2) -->
+  <rect x="20" y="446" width="500" height="120" rx="6" class="panel"/>
+  <text x="36" y="468" class="lbl body" font-weight="700">Accessor calls, in declaration order</text>
+  <text x="36" y="490" class="lbl tiny">1. Movement.from()  → LedgerEntry (from-leg)</text>
+  <text x="36" y="508" class="lbl tiny">2. LedgerEntry.position() → Position from</text>
+  <text x="36" y="526" class="lbl tiny">3. LedgerEntry.amount()  → Money amount</text>
+  <text x="36" y="548" class="lbl tiny">Movement.to() and its two accessors mirror this on the right branch.</text>
+
+  <rect x="540" y="446" width="480" height="120" rx="6" class="panel"/>
+  <text x="556" y="468" class="lbl body" font-weight="700">Why depth 3 is the limit called out</text>
+  <text x="556" y="490" class="lbl tiny">Each nesting level compiles to one more chained instanceof-and-accessor</text>
+  <text x="556" y="508" class="lbl tiny">test. Three levels — Movement, LedgerEntry, component — is the deepest</text>
+  <text x="556" y="526" class="lbl tiny">this pattern can go before a reader has to trace six accessor calls to</text>
+  <text x="556" y="544" class="lbl tiny">find one bound name; a fourth level is where style guides say: flatten it.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="586" x2="1020" y2="586" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="598" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="611" class="lbl tiny">outer record pattern (depth 1)</text>
+
+  <rect x="260" y="598" width="22" height="16" rx="3" class="boxG"/>
+  <text x="290" y="611" class="lbl tiny">nested record pattern (depth 2)</text>
+
+  <rect x="540" y="598" width="22" height="16" rx="3" class="boxW"/>
+  <text x="570" y="611" class="lbl tiny">bound variable (depth 3)</text>
+
+  <rect x="760" y="598" width="22" height="16" rx="3" class="boxH"/>
+  <text x="790" y="611" class="lbl tiny">discarded component (_ pattern)</text>
+
+  <path class="flow" d="M 20 634 H 60"/>
+  <text x="68" y="639" class="lbl tiny">A → B : B is obtained by calling the labelled accessor on A</text>
+</svg>

@@ -1,0 +1,164 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four ways Account state escapes. Panel 1: getRestrictions() returns the internal
+     List of Restriction directly, so operator-review's local list aliases Account's private field
+     and can clear() it; fix is to return List.copyOf(restrictions). Panel 2: Account.activeLimits
+     is a public field, so PaymentService writes to it directly with no invariant check; fix is a
+     private field with a defensive copy accessor. Panel 3: Account passes its live restrictions
+     list to an alien ComplianceListener.onRegistered callback during construction, and the
+     listener stores the reference and mutates it later; fix is passing an unmodifiable snapshot.
+     Panel 4: Account's constructor calls ClientRegistry.register(this) before construction
+     finishes, so the registry holds a reference to a partially constructed Account visible to
+     other threads before fields are set; fix is a static factory that registers only after the
+     constructor returns.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             stroke-linejoin: round; marker-end: url(#triW); }
+    .fix   { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4;
+             stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE FOUR WAYS Account STATE ESCAPES</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- column headers -->
+  <text x="150" y="66" text-anchor="middle" class="lbl h2">1 · RETURN THE FIELD</text>
+  <text x="410" y="66" text-anchor="middle" class="lbl h2">2 · PUBLIC FIELD</text>
+  <text x="670" y="66" text-anchor="middle" class="lbl h2">3 · ALIEN LISTENER</text>
+  <text x="930" y="66" text-anchor="middle" class="lbl h2">4 · this ESCAPES CTOR</text>
+
+  <!-- Panel 1 -->
+  <rect x="30" y="80" width="240" height="80" rx="6" class="boxP"/>
+  <text x="150" y="102" text-anchor="middle" class="lbl node">Account</text>
+  <text x="150" y="122" text-anchor="middle" class="lbl sub">private List&lt;Restriction&gt;</text>
+  <text x="150" y="140" text-anchor="middle" class="lbl sub">restrictions</text>
+  <text x="150" y="156" text-anchor="middle" class="lbl sub">getRestrictions() { return restrictions; }</text>
+
+  <path class="flow" d="M 150 160 V 190"/>
+  <text x="164" y="178" text-anchor="start" class="lbl tiny">returns live ref</text>
+
+  <rect x="30" y="190" width="240" height="66" rx="6" class="boxD"/>
+  <text x="150" y="212" text-anchor="middle" class="lbl node">operator-review</text>
+  <text x="150" y="232" text-anchor="middle" class="lbl sub">List&lt;Restriction&gt; local =</text>
+  <text x="150" y="248" text-anchor="middle" class="lbl sub">acct.getRestrictions(); local.clear();</text>
+
+  <rect x="30" y="270" width="240" height="60" rx="6" class="boxA"/>
+  <text x="40" y="290" class="lbl tinyB">FIX</text>
+  <text x="150" y="310" text-anchor="middle" class="lbl sub">return List.copyOf(restrictions)</text>
+  <text x="150" y="324" text-anchor="middle" class="lbl sub">— defensive, unmodifiable snapshot</text>
+
+  <!-- Panel 2 -->
+  <rect x="290" y="80" width="240" height="80" rx="6" class="boxP"/>
+  <text x="410" y="102" text-anchor="middle" class="lbl node">Account</text>
+  <text x="410" y="122" text-anchor="middle" class="lbl sub">public LimitSet activeLimits;</text>
+  <text x="410" y="140" text-anchor="middle" class="lbl sub">no accessor, no guard —</text>
+  <text x="410" y="156" text-anchor="middle" class="lbl sub">field is directly reachable</text>
+
+  <path class="flow" d="M 410 160 V 190"/>
+  <text x="424" y="178" text-anchor="start" class="lbl tiny">writes field</text>
+
+  <rect x="290" y="190" width="240" height="66" rx="6" class="boxD"/>
+  <text x="410" y="212" text-anchor="middle" class="lbl node">PaymentService</text>
+  <text x="410" y="232" text-anchor="middle" class="lbl sub">acct.activeLimits =</text>
+  <text x="410" y="248" text-anchor="middle" class="lbl sub">new LimitSet(...); // no check</text>
+
+  <rect x="290" y="270" width="240" height="60" rx="6" class="boxA"/>
+  <text x="300" y="290" class="lbl tinyB">FIX</text>
+  <text x="410" y="310" text-anchor="middle" class="lbl sub">private field + setLimits(LimitSet)</text>
+  <text x="410" y="324" text-anchor="middle" class="lbl sub">that copies and validates</text>
+
+  <!-- Panel 3 -->
+  <rect x="550" y="80" width="240" height="80" rx="6" class="boxP"/>
+  <text x="670" y="102" text-anchor="middle" class="lbl node">Account</text>
+  <text x="670" y="122" text-anchor="middle" class="lbl sub">ctor calls</text>
+  <text x="670" y="140" text-anchor="middle" class="lbl sub">listener.onRegistered(</text>
+  <text x="670" y="156" text-anchor="middle" class="lbl sub">restrictions)</text>
+
+  <path class="flow" d="M 670 160 V 190"/>
+  <text x="684" y="178" text-anchor="start" class="lbl tiny">passes live ref</text>
+
+  <rect x="550" y="190" width="240" height="66" rx="6" class="boxD"/>
+  <text x="670" y="212" text-anchor="middle" class="lbl node">ComplianceListener</text>
+  <text x="670" y="232" text-anchor="middle" class="lbl sub">stores the reference,</text>
+  <text x="670" y="248" text-anchor="middle" class="lbl sub">mutates it on another thread</text>
+
+  <rect x="550" y="270" width="240" height="60" rx="6" class="boxA"/>
+  <text x="560" y="290" class="lbl tinyB">FIX</text>
+  <text x="670" y="310" text-anchor="middle" class="lbl sub">pass List.copyOf(restrictions)</text>
+  <text x="670" y="324" text-anchor="middle" class="lbl sub">— an immutable snapshot, not the field</text>
+
+  <!-- Panel 4 -->
+  <rect x="810" y="80" width="260" height="80" rx="6" class="boxP"/>
+  <text x="940" y="102" text-anchor="middle" class="lbl node">Account(...) {</text>
+  <text x="940" y="122" text-anchor="middle" class="lbl sub">this.restrictions = ...;</text>
+  <text x="940" y="140" text-anchor="middle" class="lbl sub">ClientRegistry.register(this);</text>
+  <text x="940" y="156" text-anchor="middle" class="lbl sub">this.status = ACTIVE; }</text>
+
+  <path class="flow" d="M 940 160 V 190"/>
+  <text x="954" y="178" text-anchor="start" class="lbl tiny">this escapes early</text>
+
+  <rect x="810" y="190" width="260" height="66" rx="6" class="boxD"/>
+  <text x="940" y="212" text-anchor="middle" class="lbl node">ClientRegistry</text>
+  <text x="940" y="232" text-anchor="middle" class="lbl sub">holds ref to Account before</text>
+  <text x="940" y="248" text-anchor="middle" class="lbl sub">status field is even set</text>
+
+  <rect x="810" y="270" width="260" height="60" rx="6" class="boxA"/>
+  <text x="820" y="290" class="lbl tinyB">FIX</text>
+  <text x="940" y="310" text-anchor="middle" class="lbl sub">static factory: build fully, THEN</text>
+  <text x="940" y="324" text-anchor="middle" class="lbl sub">ClientRegistry.register(acct)</text>
+
+  <!-- divider between panel groups -->
+  <line x1="20" y1="350" x2="1100" y2="350" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="160" y="368" width="800" height="80" rx="6" class="boxA"/>
+  <text x="180" y="390" class="lbl tinyB">WHY ALL FOUR ARE THE SAME BUG</text>
+  <text x="560" y="412" text-anchor="middle" class="lbl body">an external reference now aliases Account's internal state — a mutation through</text>
+  <text x="560" y="430" text-anchor="middle" class="lbl body">that reference is visible inside Account without going through Account's own methods,</text>
+  <text x="560" y="446" text-anchor="middle" class="lbl body">so any invariant Account tries to hold can be silently broken from outside</text>
+
+  <line x1="20" y1="480" x2="1100" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="502" class="lbl tinyB">LEGEND</text>
+
+  <rect x="20" y="516" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="528" class="lbl tiny">Account — the aggregate whose state escapes</text>
+
+  <rect x="360" y="516" width="22" height="16" rx="3" class="boxD"/>
+  <text x="390" y="528" class="lbl tiny">external holder now aliasing internal state</text>
+
+  <rect x="700" y="516" width="22" height="16" rx="3" class="boxA"/>
+  <text x="730" y="528" class="lbl tiny">defensive fix</text>
+
+  <path class="flow" d="M 20 546 H 60"/>
+  <text x="70" y="550" class="lbl tiny">A → B : A hands B a live, mutable reference (the escape)</text>
+
+  <path class="fix" d="M 550 546 H 590"/>
+  <text x="600" y="550" class="lbl tiny">A → B : A hands B a defensive copy (the fix)</text>
+</svg>

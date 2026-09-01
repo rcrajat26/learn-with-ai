@@ -1,0 +1,85 @@
+<svg viewBox="0 0 940 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-panel step sequence comparing new HashMap(100), the manually corrected capacity, and HashMap.newHashMap(100), for n=100 entries at load factor 0.75">
+  <defs>
+    <marker id="arrow99" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <text x="470" y="30" text-anchor="middle" font-family="sans-serif" font-size="19" fill="#1f2937">Sizing a HashMap for n = 100 entries (load factor 0.75)</text>
+
+  <!-- PANEL 1 -->
+  <rect x="30" y="50" width="880" height="230" rx="6" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <text x="470" y="76" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Panel 1 &#8212; new HashMap&lt;&gt;(100), the naive call</text>
+
+  <rect x="55" y="86" width="500" height="20" rx="3" fill="#fee2e2"/>
+  <text x="60" y="101" font-family="sans-serif" font-size="12" fill="#1f2937">threshold = tableSizeFor(100) = 128 (table NOT allocated yet &#8212; threshold holds the pending capacity)</text>
+
+  <rect x="55" y="110" width="700" height="20" rx="3" fill="#fee2e2"/>
+  <text x="60" y="125" font-family="sans-serif" font-size="12" fill="#1f2937">on first put(): resize() allocates new Node[128] and sets threshold = (int)(128 * 0.75f) = 96</text>
+
+  <!-- bar: capacity 128, x100-800 width700 -->
+  <rect x="100" y="150" width="700" height="40" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="100" y="150" width="525" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <rect x="617" y="150" width="16" height="40" fill="#fee2e2" stroke="#525252" stroke-width="2"/>
+  <line x1="625" y1="140" x2="625" y2="200" stroke="#fef3c7" stroke-width="4"/>
+  <text x="100" y="205" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <text x="800" y="205" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">128 slots (tableSizeFor(100))</text>
+  <rect x="560" y="212" width="130" height="18" rx="3" fill="#fef3c7"/>
+  <text x="625" y="225" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">threshold = 96</text>
+
+  <rect x="60" y="240" width="820" height="30" rx="4" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+  <text x="470" y="260" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">resize at the 97th entry &#8212; the map you sized for 100 rehashes before it holds 100</text>
+
+  <!-- PANEL 2 -->
+  <rect x="30" y="300" width="880" height="240" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="326" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Panel 2 &#8212; new HashMap&lt;&gt;((int)(100 / 0.75f) + 1), the manual fix</text>
+
+  <rect x="55" y="336" width="820" height="20" rx="3" fill="#dcfce7"/>
+  <text x="60" y="351" font-family="sans-serif" font-size="12" fill="#1f2937">100 / 0.75f = 133.33&#8230;  (int)133.33 = 133  133 + 1 = 134</text>
+
+  <rect x="55" y="360" width="820" height="20" rx="3" fill="#dcfce7"/>
+  <text x="60" y="375" font-family="sans-serif" font-size="12" fill="#1f2937">tableSizeFor(134) = 256   threshold = (int)(256 * 0.75f) = 192</text>
+
+  <!-- bar: capacity 256, entries 100 -> fraction 100/256=0.3906, threshold 192/256=0.75 same x as panel1 (625) -->
+  <rect x="100" y="400" width="700" height="40" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="100" y="400" width="273" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <line x1="625" y1="390" x2="625" y2="450" stroke="#fef3c7" stroke-width="4"/>
+  <text x="100" y="455" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <text x="800" y="455" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">256 slots (tableSizeFor(134))</text>
+  <rect x="560" y="462" width="180" height="18" rx="3" fill="#fef3c7"/>
+  <text x="650" y="475" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">threshold = 192 (not reached)</text>
+  <rect x="180" y="405" width="90" height="16" rx="3" fill="#dcfce7"/>
+  <text x="225" y="417" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">100 entries</text>
+
+  <rect x="60" y="490" width="820" height="36" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="512" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">no resize &#8212; but 256 slots to hold 100, so you paid 2.5&#215; the array</text>
+
+  <!-- PANEL 3 -->
+  <rect x="30" y="550" width="880" height="240" rx="6" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="576" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Panel 3 &#8212; HashMap.newHashMap(100), Java 19+</text>
+
+  <rect x="55" y="586" width="820" height="20" rx="3" fill="#dcfce7"/>
+  <text x="60" y="601" font-family="sans-serif" font-size="12" fill="#1f2937">calculateHashMapCapacity(100) = (int) Math.ceil(100 / (double) 0.75f) = 134</text>
+
+  <rect x="55" y="610" width="820" height="20" rx="3" fill="#dcfce7"/>
+  <text x="60" y="625" font-family="sans-serif" font-size="12" fill="#1f2937">new HashMap&lt;&gt;(134) &#8594; tableSizeFor(134) = 256, threshold = 192</text>
+
+  <rect x="100" y="650" width="700" height="40" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="100" y="650" width="273" height="40" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <line x1="625" y1="640" x2="625" y2="700" stroke="#fef3c7" stroke-width="4"/>
+  <text x="100" y="705" font-family="sans-serif" font-size="11" fill="#1f2937">0</text>
+  <text x="800" y="705" text-anchor="end" font-family="sans-serif" font-size="11" fill="#1f2937">256 slots (tableSizeFor(134))</text>
+  <rect x="560" y="712" width="130" height="18" rx="3" fill="#fef3c7"/>
+  <text x="625" y="725" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">threshold = 192</text>
+
+  <rect x="60" y="740" width="820" height="46" rx="4" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="759" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">the same answer, computed for you &#8212; HashMap.newHashMap, LinkedHashMap.newLinkedHashMap,</text>
+  <text x="470" y="776" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">HashSet.newHashSet, LinkedHashSet.newLinkedHashSet, all @since 19</text>
+
+  <!-- closing note -->
+  <rect x="60" y="800" width="820" height="70" rx="4" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="825" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">Panel 2 and panel 3 land on the identical capacity (256 slots, threshold 192).</text>
+  <text x="470" y="845" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">The factory exists so you stop having to remember the "+ 1".</text>
+</svg>

@@ -1,0 +1,172 @@
+<svg viewBox="0 0 1040 750" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two worked shapes of sum of products. Top: the sealed interface Verdict with
+     components outcome, reason, decidedAt, decidedBy is the sum of four record cases —
+     DocumentVerdict, ScreeningVerdict, ReviewVerdict, WealthVerdict — each a product expanding
+     into its own fields, the last field distinct per case: vendor, hit, operator, and
+     incomeEstimate respectively. Bottom: the account lifecycle as a sealed interface
+     AccountState of five record cases — PendingVerification, Active, Dormant, Closing, Closed —
+     with labelled transitions: AA-801 ACTIVATED from PendingVerification to Active, 90 day
+     inactivity from Active to Dormant, re-engagement back from Dormant to Active, closure
+     requested from Active or from Dormant into Closing, and funds settled from Closing to
+     Closed.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .title { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4;
+             marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="750" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SUM OF PRODUCTS — TWO WORKED SHAPES</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- SECTION 1: Verdict -->
+  <text x="20" y="62" class="lbl h2">SUM — Verdict sealed interface / PRODUCT — each case's fields</text>
+  <line x1="20" y1="68" x2="1020" y2="68" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="370" y="80" width="300" height="54" rx="6" class="boxP"/>
+  <text x="520" y="102" text-anchor="middle" class="lbl node">Verdict</text>
+  <text x="520" y="120" text-anchor="middle" class="lbl sub">sealed interface (outcome, reason, decidedAt, decidedBy)</text>
+
+  <path class="flow" d="M 520 134 V 147" marker-end="none"/>
+  <path d="M 160 147 H 880" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <path class="impl" d="M 160 147 V 160"/>
+  <path class="impl" d="M 400 147 V 160"/>
+  <path class="impl" d="M 640 147 V 160"/>
+  <path class="impl" d="M 880 147 V 160"/>
+
+  <rect x="50" y="160" width="220" height="130" rx="6" class="boxR"/>
+  <text x="160" y="180" text-anchor="middle" class="lbl title">DocumentVerdict</text>
+  <text x="66" y="198" class="lbl body" font-size="11.5">outcome: Outcome</text>
+  <text x="66" y="214" class="lbl body" font-size="11.5">reason: String</text>
+  <text x="66" y="230" class="lbl body" font-size="11.5">decidedAt: Instant</text>
+  <text x="66" y="246" class="lbl body" font-size="11.5">decidedBy: String</text>
+  <text x="66" y="262" class="lbl body" font-size="11.5">vendor: VendorRef</text>
+
+  <rect x="290" y="160" width="220" height="130" rx="6" class="boxR"/>
+  <text x="400" y="180" text-anchor="middle" class="lbl title">ScreeningVerdict</text>
+  <text x="306" y="198" class="lbl body" font-size="11.5">outcome: Outcome</text>
+  <text x="306" y="214" class="lbl body" font-size="11.5">reason: String</text>
+  <text x="306" y="230" class="lbl body" font-size="11.5">decidedAt: Instant</text>
+  <text x="306" y="246" class="lbl body" font-size="11.5">decidedBy: String</text>
+  <text x="306" y="262" class="lbl body" font-size="11.5">hit: WatchlistHit</text>
+
+  <rect x="530" y="160" width="220" height="130" rx="6" class="boxR"/>
+  <text x="640" y="180" text-anchor="middle" class="lbl title">ReviewVerdict</text>
+  <text x="546" y="198" class="lbl body" font-size="11.5">outcome: Outcome</text>
+  <text x="546" y="214" class="lbl body" font-size="11.5">reason: String</text>
+  <text x="546" y="230" class="lbl body" font-size="11.5">decidedAt: Instant</text>
+  <text x="546" y="246" class="lbl body" font-size="11.5">decidedBy: String</text>
+  <text x="546" y="262" class="lbl body" font-size="11.5">operator: OperatorId</text>
+
+  <rect x="770" y="160" width="220" height="130" rx="6" class="boxR"/>
+  <text x="880" y="180" text-anchor="middle" class="lbl title">WealthVerdict</text>
+  <text x="786" y="198" class="lbl body" font-size="11.5">outcome: Outcome</text>
+  <text x="786" y="214" class="lbl body" font-size="11.5">reason: String</text>
+  <text x="786" y="230" class="lbl body" font-size="11.5">decidedAt: Instant</text>
+  <text x="786" y="246" class="lbl body" font-size="11.5">decidedBy: String</text>
+  <text x="786" y="262" class="lbl body" font-size="11.5">incomeEstimate: Money</text>
+
+  <rect x="40" y="305" width="960" height="55" rx="6" class="boxA"/>
+  <text x="56" y="325" class="lbl title">Sum vs product</text>
+  <text x="56" y="343" class="lbl sub">sum: a Verdict is exactly one of these four cases. product: each case bundles all its own fields together — a DocumentVerdict always carries all five, never a subset.</text>
+
+  <!-- SECTION 2: AccountState -->
+  <text x="20" y="380" class="lbl h2">SUM — AccountState sealed interface / transitions between record cases</text>
+  <line x1="20" y1="388" x2="1020" y2="388" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="390" y="400" width="260" height="50" rx="6" class="boxP"/>
+  <text x="520" y="422" text-anchor="middle" class="lbl node">AccountState</text>
+  <text x="520" y="440" text-anchor="middle" class="lbl sub">sealed interface</text>
+
+  <path class="flow" d="M 520 450 V 462" marker-end="none"/>
+  <path d="M 120 462 H 920" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <path class="impl" d="M 120 462 V 500"/>
+  <path class="impl" d="M 320 462 V 500"/>
+  <path class="impl" d="M 520 462 V 500"/>
+  <path class="impl" d="M 720 462 V 500"/>
+  <path class="impl" d="M 920 462 V 500"/>
+
+  <rect x="40" y="500" width="160" height="60" rx="6" class="boxR"/>
+  <text x="120" y="524" text-anchor="middle" class="lbl title">PendingVerification</text>
+  <text x="120" y="542" text-anchor="middle" class="lbl sub">record</text>
+
+  <rect x="240" y="500" width="160" height="60" rx="6" class="boxR"/>
+  <text x="320" y="524" text-anchor="middle" class="lbl title">Active</text>
+  <text x="320" y="542" text-anchor="middle" class="lbl sub">record</text>
+
+  <rect x="440" y="500" width="160" height="60" rx="6" class="boxR"/>
+  <text x="520" y="524" text-anchor="middle" class="lbl title">Dormant</text>
+  <text x="520" y="542" text-anchor="middle" class="lbl sub">record</text>
+
+  <rect x="640" y="500" width="160" height="60" rx="6" class="boxR"/>
+  <text x="720" y="524" text-anchor="middle" class="lbl title">Closing</text>
+  <text x="720" y="542" text-anchor="middle" class="lbl sub">record</text>
+
+  <rect x="840" y="500" width="160" height="60" rx="6" class="boxR"/>
+  <text x="920" y="524" text-anchor="middle" class="lbl title">Closed</text>
+  <text x="920" y="542" text-anchor="middle" class="lbl sub">record, terminal</text>
+
+  <!-- adjacent forward transitions -->
+  <path class="flow" d="M 200 530 H 240"/>
+  <text x="220" y="484" text-anchor="middle" class="lbl tiny">AA-801</text>
+
+  <path class="flow" d="M 400 530 H 440"/>
+  <text x="420" y="484" text-anchor="middle" class="lbl tiny">90d idle</text>
+
+  <path class="flow" d="M 600 530 H 640"/>
+  <text x="620" y="484" text-anchor="middle" class="lbl tiny">closure</text>
+
+  <path class="flow" d="M 800 530 H 840"/>
+  <text x="820" y="484" text-anchor="middle" class="lbl tiny">settled</text>
+
+  <!-- back edge Dormant -> Active -->
+  <path class="flow" d="M 500 560 V 590 H 300 V 560"/>
+  <text x="400" y="602" text-anchor="middle" class="lbl tiny">re-engagement</text>
+
+  <!-- long edge Active -> Closing -->
+  <path class="flow" d="M 340 560 V 615 H 680 V 560"/>
+  <text x="510" y="629" text-anchor="middle" class="lbl tiny">closure requested (from Active)</text>
+
+  <!-- legend -->
+  <line x1="20" y1="655" x2="1020" y2="655" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="668" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="681" class="lbl tiny">sealed interface (the sum)</text>
+
+  <rect x="270" y="668" width="22" height="16" rx="3" class="boxR"/>
+  <text x="300" y="681" class="lbl tiny">record case (a product of fields)</text>
+
+  <rect x="580" y="668" width="22" height="16" rx="3" class="boxA"/>
+  <text x="610" y="681" class="lbl tiny">annotation panel</text>
+
+  <path class="impl" d="M 20 700 H 60"/>
+  <text x="70" y="704" class="lbl tiny">A → B : B implements/is a permitted case of A</text>
+
+  <path class="flow" d="M 480 700 H 520"/>
+  <text x="530" y="704" class="lbl tiny">A → B : state transition, label = trigger</text>
+</svg>

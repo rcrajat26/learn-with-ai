@@ -1,0 +1,100 @@
+<svg viewBox="0 0 1040 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 3 of 3: after compaction, a summary block replaces the transcript, and the most recent invocation of each skill is re-attached newest first, capped at 5,000 tokens per skill, stopping once the combined total reaches the 25,000-token budget. In newest-first order: claude-api, workflow-authoring, security-review, and update-config are kept at 5,000 tokens each for a running total of 20,000. The next skill would add another 5,000 and hit the 25,000 cap, so dataviz and code-review, the two oldest invocations, are evicted.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 12.5px; font-weight: 600; }
+    .body  { font-size: 12px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxOk  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; stroke-dasharray: 5 3; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .wall  { stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 6 4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="460" fill="#ffffff"/>
+
+  <text x="20" y="30" class="lbl h1">D-73c — SUMMARY, THEN RE-ATTACHMENT NEWEST-FIRST (FRAME 3 OF 3)</text>
+  <line x1="20" y1="40" x2="1020" y2="40" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="340" y="56" width="360" height="54" rx="6" class="boxOk"/>
+  <text x="520" y="78" text-anchor="middle" class="lbl h2">SUMMARY BLOCK</text>
+  <text x="520" y="96" text-anchor="middle" class="lbl sub">condensed replacement for the full transcript — always kept</text>
+
+  <path class="flow" d="M 520 110 V 132"/>
+  <text x="520" y="150" text-anchor="middle" class="lbl h2">RE-ATTACHMENT QUEUE — NEWEST INVOCATION OF EACH SKILL, NEWEST FIRST</text>
+
+  <!-- kept boxes -->
+  <rect x="40" y="180" width="150" height="90" rx="6" class="boxOk"/>
+  <text x="115" y="200" text-anchor="middle" class="lbl node">claude-api</text>
+  <text x="115" y="216" text-anchor="middle" class="lbl sub">turn 33, orig 5,900</text>
+  <text x="115" y="234" text-anchor="middle" class="lbl body">capped 5,000 tok</text>
+  <text x="115" y="252" text-anchor="middle" class="lbl sub">running total 5,000</text>
+
+  <path class="flow" d="M 190 225 H 200"/>
+  <rect x="200" y="180" width="150" height="90" rx="6" class="boxOk"/>
+  <text x="275" y="200" text-anchor="middle" class="lbl node">workflow-authoring</text>
+  <text x="275" y="216" text-anchor="middle" class="lbl sub">turn 28, orig 7,300</text>
+  <text x="275" y="234" text-anchor="middle" class="lbl body">capped 5,000 tok</text>
+  <text x="275" y="252" text-anchor="middle" class="lbl sub">running total 10,000</text>
+
+  <path class="flow" d="M 350 225 H 360"/>
+  <rect x="360" y="180" width="150" height="90" rx="6" class="boxOk"/>
+  <text x="435" y="200" text-anchor="middle" class="lbl node">security-review</text>
+  <text x="435" y="216" text-anchor="middle" class="lbl sub">turn 22, orig 9,100</text>
+  <text x="435" y="234" text-anchor="middle" class="lbl body">capped 5,000 tok</text>
+  <text x="435" y="252" text-anchor="middle" class="lbl sub">running total 15,000</text>
+
+  <path class="flow" d="M 510 225 H 520"/>
+  <rect x="520" y="180" width="150" height="90" rx="6" class="boxOk"/>
+  <text x="595" y="200" text-anchor="middle" class="lbl node">update-config</text>
+  <text x="595" y="216" text-anchor="middle" class="lbl sub">turn 17, orig 5,400</text>
+  <text x="595" y="234" text-anchor="middle" class="lbl body">capped 5,000 tok</text>
+  <text x="595" y="252" text-anchor="middle" class="lbl sub">running total 20,000</text>
+
+  <!-- wall -->
+  <line class="wall" x1="700" y1="164" x2="700" y2="286"/>
+  <text x="695" y="205" text-anchor="middle" class="lbl tiny">25,000</text>
+  <text x="695" y="218" text-anchor="middle" class="lbl tiny">combined</text>
+  <text x="695" y="231" text-anchor="middle" class="lbl tiny">cap</text>
+
+  <!-- evicted boxes -->
+  <path class="flow" d="M 670 225 H 700" stroke-dasharray="4 3"/>
+  <rect x="720" y="180" width="150" height="90" rx="6" class="boxBad"/>
+  <text x="795" y="200" text-anchor="middle" class="lbl node">dataviz</text>
+  <text x="795" y="216" text-anchor="middle" class="lbl sub">turn 11, orig 6,700</text>
+  <text x="795" y="234" text-anchor="middle" class="lbl body">would add 5,000</text>
+  <text x="795" y="252" text-anchor="middle" class="lbl sub">20,000+5,000=25,000 — evicted</text>
+
+  <rect x="880" y="180" width="150" height="90" rx="6" class="boxBad"/>
+  <text x="955" y="200" text-anchor="middle" class="lbl node">code-review</text>
+  <text x="955" y="216" text-anchor="middle" class="lbl sub">turn 6, orig 8,200</text>
+  <text x="955" y="234" text-anchor="middle" class="lbl body">oldest invocation</text>
+  <text x="955" y="252" text-anchor="middle" class="lbl sub">never reached — evicted</text>
+
+  <!-- arithmetic panel -->
+  <rect x="40" y="300" width="960" height="110" rx="6" class="boxAnn"/>
+  <text x="56" y="324" class="lbl h2">Budget arithmetic</text>
+  <text x="56" y="346" class="lbl tiny">Per-skill cap: 5,000 tokens for the most recent invocation of that skill. Combined cap across all skills: 25,000 tokens.</text>
+  <text x="56" y="366" class="lbl tiny">5,000 + 5,000 + 5,000 + 5,000 = 20,000 tokens kept (claude-api, workflow-authoring, security-review, update-config).</text>
+  <text x="56" y="386" class="lbl tiny">The next skill's 5,000 would make 20,000 + 5,000 = 25,000 — the combined cap is reached, so dataviz and code-review,</text>
+  <text x="56" y="402" class="lbl tiny">the two oldest invocations, are evicted rather than partially attached.</text>
+
+  <line x1="20" y1="424" x2="1020" y2="424" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="434" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="50" y="447" class="lbl tiny">re-attached, within budget</text>
+  <rect x="270" y="434" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="300" y="447" class="lbl tiny">evicted, does not fit budget</text>
+  <line x1="540" y1="442" x2="580" y2="442" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="590" y="447" class="lbl tiny">A → B : processed in newest-first order</text>
+</svg>

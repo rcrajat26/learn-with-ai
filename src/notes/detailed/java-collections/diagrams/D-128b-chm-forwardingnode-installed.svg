@@ -1,0 +1,59 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame B: thread A migrates a stride of 16 bins, each drained bin gets a ForwardingNode with hash MOVED = -1 carrying nextTable">
+  <rect x="240" y="24" width="320" height="32" rx="6" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="400" y="46" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">Cooperative resize: ForwardingNode (frame B of 4)</text>
+
+  <rect x="40" y="70" width="180" height="30" rx="6" fill="#dbeafe" stroke="#525252" stroke-width="2"/>
+  <text x="130" y="90" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Thread A: CAS stride=16</text>
+
+  <text x="150" y="120" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">table</text>
+  <g font-family="sans-serif" font-size="12" fill="#1f2937">
+    <rect x="80" y="130" width="140" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="150" y="150" text-anchor="middle">bin 31: ForwardingNode</text>
+    <rect x="80" y="163" width="140" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="150" y="183" text-anchor="middle">bin 30: ForwardingNode</text>
+    <rect x="80" y="196" width="140" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="150" y="216" text-anchor="middle">... 16 bins done ...</text>
+    <rect x="80" y="229" width="140" height="30" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+    <text x="150" y="249" text-anchor="middle">bin 16: ForwardingNode</text>
+    <rect x="80" y="262" width="140" height="30" fill="#fef3c7" stroke="#525252" stroke-width="2"/>
+    <text x="150" y="282" text-anchor="middle">bin 15: currently draining</text>
+    <rect x="80" y="295" width="140" height="30" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+    <text x="150" y="315" text-anchor="middle">bins 14..0: untouched</text>
+  </g>
+
+  <!-- ForwardingNode detail box -->
+  <rect x="280" y="130" width="260" height="140" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="152" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">ForwardingNode (:2231)</text>
+  <text x="410" y="174" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">hash = MOVED = -1  (:591)</text>
+  <text x="410" y="196" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">nextTable → (reference)</text>
+  <text x="410" y="222" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">installed via:</text>
+  <text x="410" y="240" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">setTabAt(tab, i, fwd)  :2513, :2548</text>
+  <text x="410" y="258" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">casTabAt(tab, i, null, fwd)  :2479 (empty bin)</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+  <line x1="220" y1="180" x2="276" y2="200" stroke="#737373" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- nextTable -->
+  <text x="670" y="120" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">nextTable</text>
+  <rect x="590" y="130" width="160" height="270" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <rect x="590" y="130" width="160" height="120" fill="#dcfce7" stroke="#737373" stroke-width="1.5"/>
+  <text x="670" y="192" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">bins 16..31, 32..47</text>
+  <text x="670" y="210" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">(migrated data)</text>
+  <rect x="590" y="250" width="160" height="150" fill="#e5e7eb" stroke="#737373" stroke-width="1.5"/>
+  <text x="670" y="328" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">remaining bins</text>
+  <text x="670" y="346" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">not yet populated</text>
+
+  <line x1="410" y1="270" x2="600" y2="200" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- legend -->
+  <rect x="40" y="420" width="16" height="16" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="64" y="433" font-family="sans-serif" font-size="13" fill="#1f2937">amber = migrating bin</text>
+  <rect x="260" y="420" width="16" height="16" fill="#dcfce7" stroke="#737373" stroke-width="2"/>
+  <text x="284" y="433" font-family="sans-serif" font-size="13" fill="#1f2937">green = done (holds ForwardingNode)</text>
+</svg>

@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1160 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three-frame sequence for StakeSplit. Frame 1: normal construction via new StakeSplit(0.33, 3.00) runs the compact constructor, which checks bonusPortion plus cashPortion equals stake, producing a valid StakeSplit with invariant holding. Frame 2: a forged ObjectInputStream with bonusPortion 0.34 and cashPortion 3.00 is deserialized through readObject, which bypasses the compact constructor entirely (shown greyed out and labelled never called), producing a StakeSplit whose parts sum to 3.34 against a 3.33 stake, creating money. Frame 3: the same forged bytes deserialize through readObject into a StakeSplitProxy, which calls readResolve to route through the live compact constructor, which enforces the check and throws InvalidObjectException because the split does not sum to the stake. An annotation panel reports measured JDK 21.0.7 behavior: a classic Serializable class accepts the forged stream with no exception, while a record with equivalent components throws InvalidObjectException caused by IllegalArgumentException, because records deserialize through the canonical constructor and ordinary classes do not.">
+  <defs>
+    <marker id="arrow085flow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow085bypass" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#b91c1c"/>
+    </marker>
+    <marker id="arrow085resolve" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="800" fill="#ffffff"/>
+
+  <text x="20" y="26" font-family="sans-serif" font-size="15" font-weight="bold" fill="#1f2937">readObject is a constructor that skips your validation</text>
+  <line x1="0" y1="42" x2="1160" y2="42" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- Frame 1 border -->
+  <rect x="10" y="50" width="370" height="410" fill="none" stroke="#d1d5db" stroke-width="1.6" rx="4"/>
+  <text x="20" y="68" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 1 — normal construction</text>
+
+  <!-- Frame 2 border -->
+  <rect x="390" y="50" width="370" height="410" fill="none" stroke="#d1d5db" stroke-width="1.6" rx="4"/>
+  <text x="400" y="68" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 2 — readObject bypass</text>
+
+  <!-- Frame 3 border -->
+  <rect x="770" y="50" width="380" height="410" fill="none" stroke="#d1d5db" stroke-width="1.6" rx="4"/>
+  <text x="780" y="68" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">FRAME 3 — serialization proxy fixes it</text>
+
+  <!-- ===== Frame 1 ===== -->
+  <rect x="25" y="85" width="340" height="50" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6" rx="4"/>
+  <text x="195" y="106" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">new StakeSplit(0.33, 3.00)</text>
+  <text x="195" y="124" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">stake = 3.33</text>
+
+  <path d="M195 135 V155" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow085flow)"/>
+
+  <rect x="25" y="155" width="340" height="70" fill="#fef3c7" stroke="#b45309" stroke-width="1.6" rx="4"/>
+  <text x="195" y="180" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">compact constructor</text>
+  <text x="195" y="200" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">bonusPortion + cashPortion == stake</text>
+
+  <path d="M195 225 V250" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow085flow)"/>
+
+  <rect x="25" y="250" width="340" height="70" fill="#dcfce7" stroke="#15803d" stroke-width="1.6" rx="4"/>
+  <text x="195" y="275" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">StakeSplit[bonus=0.33, cash=3.00]</text>
+  <text x="195" y="295" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">invariant holds</text>
+
+  <!-- ===== Frame 2 ===== -->
+  <rect x="405" y="85" width="340" height="80" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6" rx="4"/>
+  <text x="575" y="106" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">forged ObjectInputStream bytes</text>
+  <text x="575" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">bonusPortion = 0.34</text>
+  <text x="575" y="143" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">cashPortion = 3.00</text>
+
+  <path d="M575 165 V180 H755 V340 H575 V350" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow085bypass)"/>
+  <text x="655" y="174" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#b91c1c">readObject</text>
+
+  <rect x="405" y="195" width="340" height="60" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6" rx="4"/>
+  <text x="575" y="219" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">compact constructor</text>
+  <text x="575" y="239" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">never called</text>
+
+  <rect x="405" y="350" width="340" height="90" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6" rx="4"/>
+  <text x="575" y="372" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">StakeSplit[bonus=0.34, cash=3.00]</text>
+  <text x="575" y="392" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">0.34 + 3.00 = 3.34 against a 3.33 stake —</text>
+  <text x="575" y="410" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">money created</text>
+
+  <!-- ===== Frame 3 ===== -->
+  <rect x="785" y="85" width="350" height="80" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6" rx="4"/>
+  <text x="960" y="106" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">forged ObjectInputStream bytes</text>
+  <text x="960" y="125" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">bonusPortion = 0.34</text>
+  <text x="960" y="143" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">cashPortion = 3.00</text>
+
+  <path d="M960 165 V195" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow085flow)"/>
+  <text x="1000" y="183" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">readObject</text>
+
+  <rect x="785" y="195" width="350" height="60" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6" rx="4"/>
+  <text x="960" y="219" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">StakeSplitProxy</text>
+  <text x="960" y="239" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">private static final nested class</text>
+
+  <path d="M960 255 V285" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#arrow085resolve)"/>
+  <text x="1010" y="273" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#15803d">readResolve()</text>
+
+  <rect x="785" y="285" width="350" height="60" fill="#fef3c7" stroke="#b45309" stroke-width="1.6" rx="4"/>
+  <text x="960" y="309" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">compact constructor</text>
+  <text x="960" y="329" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">runs — check enforced</text>
+
+  <path d="M960 345 V375" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow085flow)"/>
+
+  <rect x="785" y="375" width="350" height="70" fill="#fee2e2" stroke="#b91c1c" stroke-width="2" rx="4"/>
+  <text x="960" y="399" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">InvalidObjectException</text>
+  <text x="960" y="418" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">split does not sum to stake: 0.34 + 3.00 != 3.33</text>
+
+  <!-- Annotation panel -->
+  <rect x="10" y="480" width="1140" height="140" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6" rx="4"/>
+  <text x="30" y="505" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">Measured on Oracle JDK 21.0.7</text>
+  <text x="30" y="528" font-family="sans-serif" font-size="11" fill="#1f2937">classic Serializable class, forged stream: Split2[34+300=333] — no exception</text>
+  <text x="30" y="548" font-family="sans-serif" font-size="11" fill="#1f2937">record with the same components: java.io.InvalidObjectException</text>
+  <text x="30" y="568" font-family="sans-serif" font-size="11" fill="#1f2937">   cause: java.lang.IllegalArgumentException: split 34+300 != 333</text>
+  <text x="30" y="588" font-family="sans-serif" font-size="11" fill="#1f2937">records deserialize through the canonical constructor; ordinary classes do not</text>
+
+  <!-- Legend -->
+  <line x1="0" y1="640" x2="1160" y2="640" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="20" y="658" width="14" height="14" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6" rx="2"/>
+  <text x="40" y="669" font-family="sans-serif" font-size="11" fill="#1f2937">input value / proxy class</text>
+
+  <rect x="300" y="658" width="14" height="14" fill="#fef3c7" stroke="#b45309" stroke-width="1.6" rx="2"/>
+  <text x="320" y="669" font-family="sans-serif" font-size="11" fill="#1f2937">compact constructor check</text>
+
+  <rect x="580" y="658" width="14" height="14" fill="#dcfce7" stroke="#15803d" stroke-width="1.6" rx="2"/>
+  <text x="600" y="669" font-family="sans-serif" font-size="11" fill="#1f2937">invariant holds</text>
+
+  <rect x="850" y="658" width="14" height="14" fill="#f5f5f4" stroke="#78716c" stroke-width="1.6" rx="2"/>
+  <text x="870" y="669" font-family="sans-serif" font-size="11" fill="#1f2937">skipped in deserialization</text>
+
+  <rect x="20" y="693" width="14" height="14" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6" rx="2"/>
+  <text x="40" y="704" font-family="sans-serif" font-size="11" fill="#1f2937">forged byte stream</text>
+
+  <rect x="300" y="693" width="14" height="14" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6" rx="2"/>
+  <text x="320" y="704" font-family="sans-serif" font-size="11" fill="#1f2937">broken invariant / exception</text>
+
+  <rect x="580" y="693" width="14" height="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6" rx="2"/>
+  <text x="600" y="704" font-family="sans-serif" font-size="11" fill="#1f2937">measured behavior panel</text>
+
+  <line x1="20" y1="732" x2="50" y2="732" stroke="#475569" stroke-width="2" marker-end="url(#arrow085flow)"/>
+  <text x="60" y="736" font-family="sans-serif" font-size="11" fill="#1f2937">normal call flow</text>
+
+  <line x1="300" y1="732" x2="330" y2="732" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow085bypass)"/>
+  <text x="340" y="736" font-family="sans-serif" font-size="11" fill="#1f2937">readObject bypass path</text>
+
+  <line x1="580" y1="732" x2="610" y2="732" stroke="#15803d" stroke-width="2" marker-end="url(#arrow085resolve)"/>
+  <text x="620" y="736" font-family="sans-serif" font-size="11" fill="#1f2937">readResolve delegation</text>
+</svg>

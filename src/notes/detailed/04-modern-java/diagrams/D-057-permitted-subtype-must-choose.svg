@@ -1,0 +1,124 @@
+<svg viewBox="0 0 1120 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree: every type named in a sealed interface's permits clause must declare exactly one of three modifiers. final closes the hierarchy at that type. sealed reopens it with its own permits list, still closed. non-sealed reopens it to any subtype. Omitting all three modifiers is a compile error, quoted. An anonymous or local class cannot be named in permits because it has no canonical name. A grandchild that does not directly extend the sealed type is also rejected.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxE  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             stroke-linejoin: round; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">EVERY PERMITTED SUBTYPE MUST CHOOSE ONE OF THREE MODIFIERS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="380" y="62" width="280" height="70" rx="6" class="boxP"/>
+  <text x="520" y="90" text-anchor="middle" class="lbl node">permitted subtype</text>
+  <text x="520" y="110" text-anchor="middle" class="lbl body">e.g. ScreeningVerdict</text>
+  <text x="520" y="124" text-anchor="middle" class="lbl sub">must pick exactly one modifier</text>
+
+  <!-- bus -->
+  <path d="M 520 132 V 160" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 100 160 H 940" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <path class="flow" d="M 100 160 V 196"/>
+  <path class="flow" d="M 380 160 V 196"/>
+  <path class="flow" d="M 660 160 V 196"/>
+  <path class="flow" d="M 940 160 V 196"/>
+
+  <!-- final branch -->
+  <rect x="10" y="196" width="180" height="86" rx="6" class="boxR"/>
+  <text x="100" y="222" text-anchor="middle" class="lbl node">final</text>
+  <text x="100" y="242" text-anchor="middle" class="lbl tiny">closed here</text>
+  <text x="100" y="260" text-anchor="middle" class="lbl tiny">no further subtypes</text>
+  <text x="100" y="276" text-anchor="middle" class="lbl tiny">of ScreeningVerdict</text>
+
+  <!-- sealed branch -->
+  <rect x="290" y="196" width="180" height="98" rx="6" class="boxR"/>
+  <text x="380" y="222" text-anchor="middle" class="lbl node">sealed</text>
+  <text x="380" y="242" text-anchor="middle" class="lbl tiny">closed, with its</text>
+  <text x="380" y="258" text-anchor="middle" class="lbl tiny">own permits list</text>
+  <text x="380" y="274" text-anchor="middle" class="lbl sub">e.g. permits AutoScreening-</text>
+  <text x="380" y="286" text-anchor="middle" class="lbl sub">Verdict</text>
+
+  <!-- non-sealed branch -->
+  <rect x="570" y="196" width="180" height="86" rx="6" class="boxW"/>
+  <text x="660" y="222" text-anchor="middle" class="lbl node">non-sealed</text>
+  <text x="660" y="242" text-anchor="middle" class="lbl tiny">reopened —</text>
+  <text x="660" y="258" text-anchor="middle" class="lbl tiny">any class may</text>
+  <text x="660" y="274" text-anchor="middle" class="lbl tiny">extend it freely</text>
+
+  <!-- no modifier -> error -->
+  <rect x="850" y="196" width="180" height="70" rx="6" class="boxW"/>
+  <text x="940" y="222" text-anchor="middle" class="lbl node">no modifier</text>
+  <text x="940" y="242" text-anchor="middle" class="lbl tiny">missing final /</text>
+  <text x="940" y="258" text-anchor="middle" class="lbl tiny">sealed / non-sealed</text>
+
+  <path class="flow" d="M 940 266 V 300"/>
+  <rect x="790" y="300" width="300" height="130" rx="6" class="boxE"/>
+  <text x="940" y="322" text-anchor="middle" class="lbl node">compile error</text>
+  <text x="940" y="342" text-anchor="middle" class="lbl tiny">"class ScreeningVerdict is a</text>
+  <text x="940" y="358" text-anchor="middle" class="lbl tiny">permitted subclass of sealed</text>
+  <text x="940" y="374" text-anchor="middle" class="lbl tiny">interface Verdict: it must be</text>
+  <text x="940" y="390" text-anchor="middle" class="lbl tiny">sealed, non-sealed, or final"</text>
+
+  <!-- two further error leaves, off the sealed/non-sealed corridor -->
+  <path class="weak" d="M 380 294 V 420 H 220 V 460"/>
+  <rect x="60" y="460" width="320" height="86" rx="6" class="boxE"/>
+  <text x="220" y="484" text-anchor="middle" class="lbl node">anonymous / local class</text>
+  <text x="220" y="504" text-anchor="middle" class="lbl tiny">"anonymous class ... is not</text>
+  <text x="220" y="520" text-anchor="middle" class="lbl tiny">allowed here" — has no canonical</text>
+  <text x="220" y="536" text-anchor="middle" class="lbl tiny">name to write in a permits clause</text>
+
+  <path class="weak" d="M 660 282 V 420 H 780 V 460"/>
+  <rect x="620" y="460" width="320" height="86" rx="6" class="boxE"/>
+  <text x="780" y="484" text-anchor="middle" class="lbl node">indirect grandchild</text>
+  <text x="780" y="504" text-anchor="middle" class="lbl tiny">"class DeepVerdict does not</text>
+  <text x="780" y="520" text-anchor="middle" class="lbl tiny">directly extend the sealed class" —</text>
+  <text x="780" y="536" text-anchor="middle" class="lbl tiny">must directly extend/implement Verdict</text>
+
+  <!-- annotation panel -->
+  <rect x="30" y="578" width="980" height="110" rx="6" class="boxA-fallback" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="46" y="602" class="lbl node" style="font-size:13px;">Rule of thumb</text>
+  <text x="46" y="624" class="lbl tiny">Sealing is transitive control, not a one-time list: `sealed` on a permitted subtype does not inherit the</text>
+  <text x="46" y="642" class="lbl tiny">parent's permits — it declares its own. `non-sealed` is a deliberate escape hatch: AutoScreeningVerdict</text>
+  <text x="46" y="660" class="lbl tiny">could be marked non-sealed to let a test double or a plugin module extend it, at the cost of exhaustiveness.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="718" x2="1100" y2="718" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="734" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="747" class="lbl tiny">decision node — the subtype being classified</text>
+  <rect x="20" y="760" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="773" class="lbl tiny">legal, closed outcome (final / sealed)</text>
+  <rect x="20" y="786" width="22" height="16" rx="3" class="boxW"/>
+  <text x="50" y="799" class="lbl tiny">legal but reopened, or an intermediate state en route to an error leaf</text>
+  <rect x="20" y="812" width="22" height="16" rx="3" class="boxE"/>
+  <text x="50" y="825" class="lbl tiny">compile error leaf</text>
+  <path class="flow" d="M 480 764 H 520"/>
+  <text x="530" y="769" class="lbl tiny">A → B : B follows from choosing A</text>
+  <path class="weak" d="M 480 790 H 520"/>
+  <text x="530" y="795" class="lbl tiny">weak/secondary routing to a further error leaf</text>
+</svg>

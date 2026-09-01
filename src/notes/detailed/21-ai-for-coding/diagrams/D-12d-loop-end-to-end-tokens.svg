@@ -1,0 +1,51 @@
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 4 of 5: done. The model emits a final assistant message with no further tool_use, reporting the rename is complete, growing the transcript to a cumulative 1830 tokens.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="380" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TASK: RENAME parse TO parseEnvelope ON ClaudeRunner — FRAME 4 OF 5: DONE</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="66" class="lbl node">transcript</text>
+  <rect x="40" y="76" width="360" height="24" rx="4" class="boxP"/>
+  <text x="220" y="92" text-anchor="middle" class="lbl sub">prior 8 messages — 1740 tok</text>
+  <rect x="40" y="104" width="360" height="46" rx="4" class="boxR"/>
+  <text x="220" y="124" text-anchor="middle" class="lbl body">assistant: "Renamed parse to</text>
+  <text x="220" y="140" text-anchor="middle" class="lbl body">parseEnvelope in ClaudeRunner.java." — 90 tok</text>
+
+  <path class="flow" d="M 400 127 H 460"/>
+
+  <rect x="460" y="100" width="400" height="110" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="476" y="124" class="lbl node">cumulative after this step</text>
+  <text x="476" y="148" class="lbl body">1740 + 90 = 1830 tokens</text>
+  <text x="476" y="170" class="lbl sub">No further tool_use block — the loop</text>
+  <text x="476" y="186" class="lbl sub">stops here and control returns to the user.</text>
+
+  <line x1="20" y1="290" x2="880" y2="290" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="302" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="315" class="lbl tiny">existing message</text>
+  <rect x="220" y="302" width="22" height="16" rx="3" class="boxR"/>
+  <text x="250" y="315" class="lbl tiny">final assistant message (this step)</text>
+  <path class="flow" d="M 480 310 H 520"/>
+  <text x="528" y="315" class="lbl tiny">A → B : B computed from A</text>
+</svg>

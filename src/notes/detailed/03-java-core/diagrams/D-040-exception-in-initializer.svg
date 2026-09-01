@@ -1,0 +1,164 @@
+<svg viewBox="0 0 1580 1050" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-era timeline of three calls to BonusRules.grantFor(...). Band A, JDK 18 and later including 21, 17.0.15, 11.0.27 and 25.0.1, backported to 17.0.7, 11.0.19 and 8u341: call 1 throws ExceptionInInitializerError with the real NumberFormatException cause for the bad coupon validity property fourteen; calls 2 and 3 now also carry a cause, because JDK-8048190 made HotSpot reconstruct a NoClassDefFoundError caused by ExceptionInInitializerError with an in thread main marker, drawn in amber since the cause is present though second-hand. Band B, before JDK 18, still the commonly-taught form: call 1 is identical, but calls 2 and 3 throw NoClassDefFoundError with no Caused by line at all, drawn in red as undiagnosable. A class-state ribbon shows BonusRules moving through unlinked, being-initialized, erroneous, erroneous, erroneous in both eras unchanged. An annotation panel explains what changed in JDK 18: the erroneous state itself is unchanged and permanent, HotSpot now records the initialization error so later NoClassDefFoundErrors can reconstruct a cause, and the in thread main marker names the first thread to touch the class, which is often not the thread reporting the failure.">
+  <defs>
+    <marker id="arrow040" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1580" height="1050" fill="#ffffff"/>
+
+  <text x="790" y="32" text-anchor="middle" font-family="sans-serif" font-size="15"
+        font-weight="bold" fill="#1f2937">ExceptionInInitializerError, then (since JDK 18) a reconstructed echo</text>
+  <line x1="20" y1="42" x2="1560" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ BAND A ============ -->
+  <text x="20" y="64" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BAND A &#8212; JAVA 18+ (INCLUDING 21, AND BACKPORTED TO 17.0.7 / 11.0.19 / 8u341) &#8212; THE CAUSE IS RECONSTRUCTED</text>
+  <line x1="20" y1="72" x2="1560" y2="72" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- spine -->
+  <line x1="100" y1="100" x2="1460" y2="100" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <text x="1460" y="90" text-anchor="end" font-family="sans-serif" font-size="11" fill="#4b5563">time</text>
+
+  <!-- station stubs -->
+  <line x1="260" y1="100" x2="260" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="780" y1="100" x2="780" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="1300" y1="100" x2="1300" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+
+  <!-- header boxes -->
+  <rect x="110" y="130" width="300" height="40" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="260" y="155" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CALL 1: BonusRules.grantFor(...)</text>
+
+  <rect x="630" y="130" width="300" height="40" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="780" y="155" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CALL 2: BonusRules.grantFor(...)</text>
+
+  <rect x="1150" y="130" width="300" height="40" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="1300" y="155" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CALL 3: BonusRules.grantFor(...)</text>
+
+  <!-- header -> panel connectors -->
+  <line x1="260" y1="170" x2="260" y2="190" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="780" y1="170" x2="780" y2="190" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="1300" y1="170" x2="1300" y2="190" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+
+  <!-- PANEL 1: call 1, the live diagnosable one -->
+  <rect x="20" y="190" width="480" height="150" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="32" y="210" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">STACK TRACE (property: quizstakes.bonus.couponValidityDays = "fourteen")</text>
+  <text x="32" y="228" font-family="sans-serif" font-size="11" fill="#1f2937">java.lang.ExceptionInInitializerError</text>
+  <text x="32" y="246" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusService.grant(BonusService.java:41)</text>
+  <text x="32" y="264" font-family="sans-serif" font-size="11" fill="#1f2937">Caused by: java.lang.NumberFormatException: For input string: "fourteen"</text>
+  <text x="32" y="282" font-family="sans-serif" font-size="11" fill="#1f2937">  at java.lang.Integer.parseInt(Integer.java:652)</text>
+  <text x="32" y="300" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusRules.&lt;clinit&gt;(BonusRules.java:12)</text>
+  <text x="32" y="322" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">real cause visible here &#8212; live exception, first thread</text>
+
+  <!-- PANEL 2: call 2, reconstructed cause (JDK 18+) -->
+  <rect x="540" y="190" width="480" height="150" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="552" y="210" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">STACK TRACE (JDK-8048190: cause reconstructed)</text>
+  <text x="552" y="228" font-family="sans-serif" font-size="11" fill="#1f2937">java.lang.NoClassDefFoundError: Could not initialize class BonusRules</text>
+  <text x="552" y="246" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusService.grant(BonusService.java:41)</text>
+  <text x="552" y="264" font-family="sans-serif" font-size="11" fill="#1f2937">Caused by: java.lang.ExceptionInInitializerError:</text>
+  <text x="552" y="282" font-family="sans-serif" font-size="11" fill="#1f2937">    Exception java.lang.NumberFormatException:</text>
+  <text x="552" y="300" font-family="sans-serif" font-size="11" fill="#1f2937">    For input string: "fourteen" [in thread "main"]</text>
+  <text x="552" y="322" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">reconstructed from _initialization_error_table</text>
+
+  <!-- PANEL 3: call 3, reconstructed cause (JDK 18+) -->
+  <rect x="1060" y="190" width="480" height="150" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="1072" y="210" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">STACK TRACE (JDK-8048190: cause reconstructed)</text>
+  <text x="1072" y="228" font-family="sans-serif" font-size="11" fill="#1f2937">java.lang.NoClassDefFoundError: Could not initialize class BonusRules</text>
+  <text x="1072" y="246" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusService.grant(BonusService.java:41)</text>
+  <text x="1072" y="264" font-family="sans-serif" font-size="11" fill="#1f2937">Caused by: java.lang.ExceptionInInitializerError:</text>
+  <text x="1072" y="282" font-family="sans-serif" font-size="11" fill="#1f2937">    Exception java.lang.NumberFormatException:</text>
+  <text x="1072" y="300" font-family="sans-serif" font-size="11" fill="#1f2937">    For input string: "fourteen" [in thread "main"]</text>
+  <text x="1072" y="322" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">reconstructed from _initialization_error_table</text>
+
+  <!-- sub-label shared by calls 2 and 3 -->
+  <text x="1040" y="358" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">not the live exception &#8212; reconstructed second-hand, still diagnosable</text>
+
+  <!-- CLASS STATE RIBBON (applies to both eras) -->
+  <text x="790" y="392" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">CLASS STATE OF BonusRules OVER TIME</text>
+
+  <rect x="20" y="400" width="304" height="40" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="172" y="425" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">unlinked</text>
+
+  <rect x="324" y="400" width="304" height="40" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="476" y="425" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">being-initialized</text>
+
+  <rect x="628" y="400" width="304" height="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="780" y="425" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">erroneous</text>
+
+  <rect x="932" y="400" width="304" height="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="1084" y="425" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">erroneous</text>
+
+  <rect x="1236" y="400" width="304" height="40" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="1388" y="425" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1f2937">erroneous</text>
+
+  <text x="790" y="458" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">the erroneous state is identical in both bands &#8212; only the reporting of the cause changed</text>
+
+  <!-- ============ BAND B ============ -->
+  <text x="20" y="490" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">BAND B &#8212; BEFORE JDK 18 &#8212; THE CAUSE WAS GONE FOREVER (STILL THE COMMONLY-TAUGHT FORM)</text>
+  <line x1="20" y1="498" x2="1560" y2="498" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- compact mini-spine -->
+  <line x1="310" y1="520" x2="1270" y2="520" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="535" y1="520" x2="535" y2="540" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="1035" y1="520" x2="1035" y2="540" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+
+  <rect x="385" y="540" width="300" height="30" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="535" y="560" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CALL 1 (unchanged)</text>
+
+  <rect x="800" y="540" width="470" height="30" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="1035" y="560" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">CALLS 2 &amp; 3 (pre-JDK 18)</text>
+
+  <line x1="535" y1="570" x2="535" y2="585" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <line x1="1035" y1="570" x2="1035" y2="585" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+
+  <!-- PANEL B1: call 1, identical -->
+  <rect x="310" y="585" width="450" height="130" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="322" y="605" font-family="sans-serif" font-size="11" fill="#1f2937">java.lang.ExceptionInInitializerError</text>
+  <text x="322" y="621" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusService.grant(BonusService.java:41)</text>
+  <text x="322" y="637" font-family="sans-serif" font-size="11" fill="#1f2937">Caused by: java.lang.NumberFormatException:</text>
+  <text x="322" y="653" font-family="sans-serif" font-size="11" fill="#1f2937">  For input string: "fourteen"</text>
+  <text x="322" y="669" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusRules.&lt;clinit&gt;(BonusRules.java:12)</text>
+  <text x="322" y="691" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309">real cause visible here &#8212; and only here</text>
+
+  <!-- PANEL B-23: calls 2 and 3, no cause at all -->
+  <rect x="800" y="585" width="470" height="90" rx="6" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="812" y="605" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1f2937">STACK TRACE (no Caused by:)</text>
+  <text x="812" y="623" font-family="sans-serif" font-size="11" fill="#1f2937">java.lang.NoClassDefFoundError: Could not initialize class BonusRules</text>
+  <text x="812" y="639" font-family="sans-serif" font-size="11" fill="#1f2937">  at BonusService.grant(BonusService.java:41)</text>
+  <text x="812" y="659" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">no Caused by: line &#8212; the root cause was visible exactly once</text>
+
+  <!-- ANNOTATION PANEL -->
+  <rect x="290" y="775" width="1000" height="140" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="310" y="797" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">WHAT CHANGED IN JDK 18</text>
+  <text x="310" y="819" font-family="sans-serif" font-size="11" fill="#1f2937">The erroneous class state itself is unchanged and permanent, in every JDK version.</text>
+  <text x="310" y="839" font-family="sans-serif" font-size="11" fill="#1f2937">JDK-8048190 made HotSpot record the initialization error, so a later NoClassDefFoundError</text>
+  <text x="310" y="859" font-family="sans-serif" font-size="11" fill="#1f2937">can reconstruct a cause instead of throwing it bare, via InstanceKlass::add_initialization_error.</text>
+  <text x="310" y="879" font-family="sans-serif" font-size="11" fill="#1f2937">The [in thread "main"] marker names the first thread to touch the class &#8212; often not the</text>
+  <text x="310" y="897" font-family="sans-serif" font-size="11" fill="#1f2937">thread that later reports the failure.</text>
+
+  <!-- LEGEND -->
+  <text x="20" y="950" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1f2937">LEGEND</text>
+  <line x1="20" y1="958" x2="1560" y2="958" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="30" y="972" width="22" height="16" rx="3" fill="#fef3c7" stroke="#b45309" stroke-width="1.6"/>
+  <text x="58" y="985" font-family="sans-serif" font-size="11" fill="#4b5563">Band A (JDK 18+) &#8212; cause present, live or reconstructed</text>
+
+  <rect x="430" y="972" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="458" y="985" font-family="sans-serif" font-size="11" fill="#4b5563">Band B (pre-JDK 18) calls 2, 3 &#8212; no cause at all</text>
+
+  <rect x="830" y="972" width="22" height="16" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="858" y="985" font-family="sans-serif" font-size="11" fill="#4b5563">class state: being-initialized</text>
+
+  <rect x="1140" y="972" width="22" height="16" rx="3" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.6"/>
+  <text x="1168" y="985" font-family="sans-serif" font-size="11" fill="#4b5563">class state: unlinked</text>
+
+  <rect x="30" y="996" width="22" height="16" rx="3" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="58" y="1009" font-family="sans-serif" font-size="11" fill="#4b5563">class state: erroneous (identical in both bands)</text>
+
+  <rect x="430" y="996" width="22" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="458" y="1009" font-family="sans-serif" font-size="11" fill="#4b5563">annotation panel &#8212; what changed in JDK 18</text>
+
+  <line x1="830" y1="1004" x2="852" y2="1004" stroke="#475569" stroke-width="2" marker-end="url(#arrow040)"/>
+  <text x="858" y="1009" font-family="sans-serif" font-size="11" fill="#4b5563">timeline / causal order (structural)</text>
+</svg>

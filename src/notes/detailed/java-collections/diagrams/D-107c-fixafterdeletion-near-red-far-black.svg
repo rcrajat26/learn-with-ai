@@ -1,0 +1,78 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="fixAfterDeletion case 3: black sibling whose near child is red and far child is black gets rotated at the sibling to set up the terminating case">
+  <defs>
+    <marker id="arrow107c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#737373"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="20" width="600" height="30" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="320" y="40" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#1f2937">fixAfterDeletion — Case C: sib's far child black, near child red (rotate sib)</text>
+
+  <rect x="20" y="60" width="150" height="24" rx="3" fill="#e5e7eb" stroke="#525252" stroke-width="3"/>
+  <text x="95" y="76" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">double outline = double-black x</text>
+  <rect x="180" y="60" width="110" height="24" rx="3" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="235" y="76" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">= RED node</text>
+  <rect x="300" y="60" width="120" height="24" rx="3" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="360" y="76" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">= BLACK node</text>
+  <rect x="440" y="60" width="180" height="26" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="530" y="78" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">not terminating: falls into case D</text>
+
+  <rect x="40" y="100" width="240" height="26" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="160" y="118" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">BEFORE</text>
+  <rect x="360" y="100" width="240" height="26" rx="6" fill="#dbeafe" stroke="#737373" stroke-width="2"/>
+  <text x="480" y="118" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">AFTER rotateRight(sib)</text>
+
+  <!-- BEFORE: parent -> x(dbl black, left), sib(black, right); sib's near(left) child red, far(right) child black -->
+  <line x1="150" y1="170" x2="90" y2="250" stroke="#737373" stroke-width="2"/>
+  <line x1="150" y1="170" x2="220" y2="250" stroke="#737373" stroke-width="2"/>
+  <line x1="220" y1="250" x2="190" y2="330" stroke="#737373" stroke-width="2"/>
+  <line x1="220" y1="250" x2="260" y2="330" stroke="#737373" stroke-width="2"/>
+
+  <circle cx="150" cy="170" r="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="150" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">parent</text>
+
+  <circle cx="90" cy="250" r="30" fill="none" stroke="#525252" stroke-width="3"/>
+  <circle cx="90" cy="250" r="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="90" y="255" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">x</text>
+
+  <circle cx="220" cy="250" r="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="220" y="248" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">sib</text>
+  <text x="220" y="262" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">black</text>
+
+  <circle cx="190" cy="330" r="22" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="190" y="328" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">near</text>
+  <text x="190" y="342" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">red</text>
+
+  <circle cx="260" cy="330" r="22" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="260" y="328" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">far</text>
+  <text x="260" y="342" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">black</text>
+
+  <!-- AFTER: rotateRight(sib): near child takes sib's place (black), sib becomes near's right child (red), far child stays right child of new sib -->
+  <line x1="470" y1="170" x2="410" y2="250" stroke="#737373" stroke-width="2"/>
+  <line x1="470" y1="170" x2="540" y2="250" stroke="#737373" stroke-width="2"/>
+  <line x1="540" y1="250" x2="580" y2="330" stroke="#737373" stroke-width="2"/>
+
+  <circle cx="470" cy="170" r="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="470" y="175" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">parent</text>
+
+  <circle cx="410" cy="250" r="30" fill="none" stroke="#525252" stroke-width="3"/>
+  <circle cx="410" cy="250" r="24" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="410" y="255" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">x</text>
+
+  <circle cx="540" cy="250" r="26" fill="#e5e7eb" stroke="#737373" stroke-width="2"/>
+  <text x="540" y="245" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">new sib</text>
+  <text x="540" y="259" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">(black)</text>
+
+  <circle cx="580" cy="330" r="22" fill="#fee2e2" stroke="#737373" stroke-width="2"/>
+  <text x="580" y="326" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">old sib</text>
+  <text x="580" y="340" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">red, far child</text>
+
+  <line x1="284" y1="250" x2="356" y2="250" stroke="#737373" stroke-width="2" marker-end="url(#arrow107c)"/>
+  <rect x="270" y="220" width="100" height="24" rx="3" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="320" y="236" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#1f2937">rotate + recolor</text>
+
+  <rect x="40" y="410" width="560" height="90" rx="6" fill="#fef3c7" stroke="#737373" stroke-width="2"/>
+  <text x="320" y="435" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Sib is black; sib's near child (same side as x) is red, sib's far child is black.</text>
+  <text x="320" y="455" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">Recolor near child black, sib red, then rotateRight(sib). This produces a new sibling</text>
+  <text x="320" y="475" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#1f2937">for x whose far child is now red — exactly the shape case D (below) requires to terminate.</text>
+</svg>

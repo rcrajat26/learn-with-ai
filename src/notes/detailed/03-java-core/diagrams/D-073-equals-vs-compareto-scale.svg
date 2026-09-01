@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1140 710" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before/after diagram comparing BigDecimal equals and compareTo on two objects measured on JDK 21.0.7: new BigDecimal(&quot;2.0&quot;) with intCompact 20, scale 1, hashCode 621, and new BigDecimal(&quot;2.00&quot;) with intCompact 200, scale 2, hashCode 6202. Left half: equals treats scale as part of identity, so equals returns false, the hashCodes differ, a HashSet built from both objects has size 2 holding [2.00, 2.0], and hashSet.contains(new BigDecimal(&quot;2&quot;)) returns false; the JDK 21 source returns false at the scale check before comparing significands. Right half: compareTo ignores scale, returns 0, and a TreeSet built from both objects collapses to size 1 holding [2.0]. An annotation panel below states this divergence breaks assertEquals in tests and makes BigDecimal a hazardous HashMap key, so code should use compareTo(...) == 0 or a fixed scale everywhere.">
+
+  <defs>
+    <style>
+      .h1{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;font-weight:bold;fill:#1f2937;}
+      .h2{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;fill:#1f2937;}
+      .body{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px;fill:#1f2937;}
+      .small{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:#4b5563;}
+      .smallb{font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;font-weight:bold;fill:#1f2937;}
+      .code{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#1f2937;}
+      .codeR{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#b91c1c;}
+      .codeG{font-family:Menlo,"SF Mono",monospace;font-size:12.5px;fill:#15803d;}
+    </style>
+    <marker id="arr073" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1140" height="710" fill="#ffffff"/>
+
+  <text x="20" y="32" class="h1">equals sees scale; compareTo does not</text>
+  <line x1="20" y1="42" x2="1120" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="h2">TWO BigDecimal OBJECTS (measured, JDK 21.0.7)</text>
+  <line x1="20" y1="70" x2="1120" y2="70" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="82" width="500" height="84" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="290" y="102" text-anchor="middle" class="smallb">new BigDecimal("2.0")</text>
+  <text x="290" y="124" text-anchor="middle" class="code">intCompact = 20&#8194;&#8194;intVal = null</text>
+  <text x="290" y="146" text-anchor="middle" class="code">scale = 1&#8194;&#8194;hashCode() = 621</text>
+
+  <rect x="600" y="82" width="500" height="84" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="850" y="102" text-anchor="middle" class="smallb">new BigDecimal("2.00")</text>
+  <text x="850" y="124" text-anchor="middle" class="code">intCompact = 200&#8194;&#8194;intVal = null</text>
+  <text x="850" y="146" text-anchor="middle" class="code">scale = 2&#8194;&#8194;hashCode() = 6202</text>
+
+  <!-- column headers -->
+  <text x="40" y="192" class="h2">equals &#8212; SCALE IS PART OF IDENTITY</text>
+  <line x1="40" y1="200" x2="540" y2="200" stroke="#d1d5db" stroke-width="1"/>
+
+  <text x="600" y="192" class="h2">compareTo &#8212; SCALE IS IGNORED</text>
+  <line x1="600" y1="200" x2="1100" y2="200" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- Left column -->
+  <text x="40" y="230" class="code">new BigDecimal("2.0").equals(new BigDecimal("2.00")) &#8594; false</text>
+  <text x="40" y="256" class="code">hashCode(): 621 vs 6202 &#8212; they differ</text>
+  <text x="40" y="284" class="body">so the same bonus amount is stored twice in a HashSet:</text>
+  <text x="40" y="308" class="code">new HashSet&lt;&gt;(List.of(2.0, 2.00)) &#8594; size() == 2</text>
+  <text x="40" y="332" class="code">hashSet.contains(new BigDecimal("2")) &#8594; false</text>
+  <text x="40" y="358" class="small">JDK 21 source: equals returns false at</text>
+  <text x="40" y="376" class="code">if (scale != xDec.scale) return false;</text>
+  <text x="40" y="396" class="small">before it ever looks at the significand; hashCode ends:</text>
+  <text x="40" y="412" class="code">return 31 * (...) + scale;</text>
+
+  <rect x="40" y="434" width="500" height="50" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="290" y="464" text-anchor="middle" class="codeR">HashSet [2.00, 2.0]&#8194;&#8194;size() == 2</text>
+
+  <!-- Right column -->
+  <text x="600" y="230" class="code">new BigDecimal("2.0").compareTo(new BigDecimal("2.00")) &#8594; 0</text>
+  <text x="600" y="284" class="body">numerically-equal values collapse into one TreeSet entry:</text>
+  <text x="600" y="308" class="code">new TreeSet&lt;&gt;(List.of(2.0, 2.00)) &#8594; size() == 1</text>
+
+  <rect x="600" y="434" width="500" height="50" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="850" y="464" text-anchor="middle" class="codeG">TreeSet [2.0]&#8194;&#8194;size() == 1</text>
+
+  <!-- Annotation panel -->
+  <rect x="40" y="506" width="1060" height="112" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="52" y="528" class="smallb">WHY THIS MATTERS</text>
+  <text x="52" y="550" class="body">This divergence breaks assertEquals(new BigDecimal("2.00"), actual) in a test, and it makes</text>
+  <text x="52" y="572" class="body">BigDecimal a hazardous HashMap key &#8212; two numerically-equal keys land in different buckets.</text>
+  <text x="52" y="596" class="body">Use compareTo(...) == 0 for numeric equality, or normalize to a fixed scale, everywhere.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="638" x2="1120" y2="638" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="40" y="650" width="18" height="14" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="662" class="small">BigDecimal object &#8212; measured fields</text>
+
+  <rect x="360" y="650" width="18" height="14" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="386" y="662" class="small">HashSet punchline &#8212; scale breaks identity</text>
+
+  <rect x="720" y="650" width="18" height="14" fill="#dcfce7" stroke="#15803d" stroke-width="1.6"/>
+  <text x="746" y="662" class="small">TreeSet punchline &#8212; compareTo ignores scale</text>
+
+  <rect x="40" y="674" width="18" height="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="66" y="686" class="small">annotation panel</text>
+
+</svg>

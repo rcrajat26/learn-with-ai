@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1120 1180" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame step sequence. Frame 1: CashEntryStore extends AbstractStore of CashEntry overriding save(CashEntry); javac also emits a synthetic bridge void save(LedgerEntry) with flags ACC_BRIDGE, ACC_SYNTHETIC, whose body does checkcast to CashEntry then invokevirtual to save(CashEntry) — the bridge delegates to the real method. Frame 2: code holding CashEntryStore through a raw AbstractStore reference calls save with a BonusEntry; the compiler emits an unchecked warning but no cast appears in source, and the raw-typed call resolves to the bridge. Frame 3: the bridge's checkcast to CashEntry fails against the BonusEntry argument and throws ClassCastException; the real stack trace shows the bridge frame at CashEntryStore.save(CashEntryStore.java:1) above Main.main, even though no cast exists anywhere in the source code.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .mono  { font-family: ui-monospace, Menlo, Consolas, monospace; fill: #1f2937; font-size: 11.5px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .h3    { font-size: 12.5px; font-weight: 700; fill: #1f2937; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxF  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bridge{ fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1120" height="1180" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY A BRIDGE METHOD EXISTS, AND HOW IT THROWS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="62" class="lbl h2">FRAME 1 — THE BRIDGE javac SYNTHESIZES</text>
+
+  <rect x="20" y="75" width="520" height="145" rx="6" class="boxP"/>
+  <text x="35" y="97" class="lbl mono">abstract class AbstractStore&lt;E extends LedgerEntry&gt; {</text>
+  <text x="35" y="114" class="lbl mono">    abstract void save(E entry);</text>
+  <text x="35" y="131" class="lbl mono">}</text>
+  <text x="35" y="148" class="lbl mono">class CashEntryStore extends AbstractStore&lt;CashEntry&gt; {</text>
+  <text x="35" y="165" class="lbl mono">    @Override void save(CashEntry entry) { }</text>
+  <text x="35" y="182" class="lbl mono">}</text>
+  <text x="35" y="202" class="lbl sub">You wrote exactly one save method. javac writes a second.</text>
+
+  <rect x="580" y="75" width="520" height="55" rx="6" class="boxP"/>
+  <text x="595" y="95" class="lbl h3">void save(CashEntry entry)</text>
+  <text x="595" y="113" class="lbl sub">the method you wrote — the "real" save</text>
+
+  <rect x="580" y="140" width="520" height="55" rx="6" class="boxH"/>
+  <text x="595" y="160" class="lbl h3">void save(LedgerEntry entry)</text>
+  <text x="595" y="178" class="lbl sub">SYNTHETIC BRIDGE — javac adds this, you never see the source</text>
+
+  <path class="flow" d="M 540 100 H 580"/>
+  <path class="bridge" d="M 840 130 V 140"/>
+
+  <rect x="20" y="235" width="1080" height="240" rx="6" class="boxW"/>
+  <text x="35" y="257" class="lbl h3">javap -p -v CashEntryStore.class</text>
+  <text x="35" y="277" class="lbl mono">void save(CashEntry);</text>
+  <text x="35" y="293" class="lbl mono">  descriptor: (LCashEntry;)V</text>
+  <text x="35" y="309" class="lbl mono">  flags: (0x0000)</text>
+  <text x="35" y="333" class="lbl mono" style="font-weight:700">void save(LedgerEntry);</text>
+  <text x="35" y="349" class="lbl mono">  descriptor: (LLedgerEntry;)V</text>
+  <text x="35" y="365" class="lbl mono" style="font-weight:700">  flags: (0x1040) ACC_BRIDGE, ACC_SYNTHETIC</text>
+  <text x="35" y="381" class="lbl mono">  Code:</text>
+  <text x="35" y="397" class="lbl mono">    0: aload_0</text>
+  <text x="35" y="413" class="lbl mono">    1: aload_1</text>
+  <text x="35" y="429" class="lbl mono">    2: checkcast #7 // class CashEntry</text>
+  <text x="35" y="445" class="lbl mono">    5: invokevirtual #9 // Method save:(LCashEntry;)V</text>
+  <text x="35" y="461" class="lbl mono">    8: return</text>
+
+  <path class="flow" d="M 840 195 V 235"/>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="495" class="lbl h2">FRAME 2 — RAW TYPE SENDS A BonusEntry THROUGH THE BRIDGE</text>
+
+  <rect x="20" y="508" width="520" height="110" rx="6" class="boxP"/>
+  <text x="35" y="530" class="lbl mono">AbstractStore raw = new CashEntryStore();</text>
+  <text x="35" y="547" class="lbl mono">raw.save(new BonusEntry(id, amount));</text>
+  <text x="35" y="573" class="lbl sub">javac: "unchecked call to save(E)" — a warning, not an error.</text>
+  <text x="35" y="589" class="lbl sub">No cast appears anywhere in this source file.</text>
+
+  <rect x="580" y="508" width="520" height="70" rx="6" class="boxH"/>
+  <text x="595" y="530" class="lbl h3">resolves to: void save(LedgerEntry entry)</text>
+  <text x="595" y="548" class="lbl sub">raw type erases the compiler's static check on the argument;</text>
+  <text x="595" y="564" class="lbl sub">the call binds to the bridge, which accepts any LedgerEntry.</text>
+
+  <path class="flow" d="M 540 555 H 580"/>
+
+  <rect x="20" y="633" width="1080" height="80" rx="6" class="boxA"/>
+  <text x="35" y="655" class="lbl h3">WHAT THE COMPILER DID NOT CATCH</text>
+  <text x="35" y="675" class="lbl sub">The static type of raw is the raw AbstractStore — no type argument, so the compiler cannot verify</text>
+  <text x="35" y="691" class="lbl sub">that a BonusEntry is a valid E. It defers that check to the bridge's runtime checkcast, and warns you.</text>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="733" class="lbl h2">FRAME 3 — THE checkcast INSIDE THE BRIDGE THROWS</text>
+
+  <rect x="20" y="746" width="520" height="140" rx="6" class="boxH"/>
+  <text x="35" y="768" class="lbl h3">bridge body — void save(LedgerEntry entry)</text>
+  <text x="35" y="788" class="lbl mono">0: aload_0</text>
+  <text x="35" y="804" class="lbl mono">1: aload_1</text>
+  <text x="35" y="820" class="lbl mono" style="font-weight:700">2: checkcast #7  // class CashEntry  &lt;-- THROWS HERE</text>
+  <text x="35" y="836" class="lbl mono">5: invokevirtual #9 // save(CashEntry)</text>
+  <text x="35" y="852" class="lbl mono">8: return</text>
+  <text x="35" y="872" class="lbl sub">The argument is a BonusEntry; the checkcast to CashEntry fails.</text>
+
+  <rect x="580" y="746" width="520" height="220" rx="6" class="boxF"/>
+  <text x="595" y="768" class="lbl h3">REAL STACK TRACE — java Main</text>
+  <text x="595" y="788" class="lbl mono">Exception in thread "main"</text>
+  <text x="595" y="804" class="lbl mono">  java.lang.ClassCastException: class BonusEntry</text>
+  <text x="595" y="820" class="lbl mono">  cannot be cast to class CashEntry (BonusEntry and</text>
+  <text x="595" y="836" class="lbl mono">  CashEntry are in unnamed module of loader 'app')</text>
+  <text x="595" y="856" class="lbl mono" style="font-weight:700">    at CashEntryStore.save(CashEntryStore.java:1)</text>
+  <text x="595" y="872" class="lbl sub">        ^ the synthetic bridge frame, not save(CashEntry)</text>
+  <text x="595" y="892" class="lbl mono">    at Main.main(Main.java:7)</text>
+
+  <path class="flow" d="M 540 816 H 580"/>
+
+  <rect x="20" y="981" width="1080" height="80" rx="6" class="boxA"/>
+  <text x="35" y="1003" class="lbl h3">NO CAST EXISTS IN EITHER SOURCE FILE</text>
+  <text x="35" y="1023" class="lbl sub">CashEntryStore.java and Main.java contain zero (CashEntry) casts. The checkcast, and the</text>
+  <text x="35" y="1039" class="lbl sub">ClassCastException it throws, are entirely compiler-generated inside the synthetic bridge frame.</text>
+
+  <line x1="20" y1="1081" x2="1100" y2="1081" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="1096" width="18" height="14" class="boxP"/>
+  <text x="46" y="1108" class="lbl tiny">source you wrote</text>
+  <rect x="220" y="1096" width="18" height="14" class="boxH"/>
+  <text x="246" y="1108" class="lbl tiny">synthetic / bridge — highlighted</text>
+  <rect x="470" y="1096" width="18" height="14" class="boxW"/>
+  <text x="496" y="1108" class="lbl tiny">verbatim javap output panel</text>
+  <rect x="720" y="1096" width="18" height="14" class="boxF"/>
+  <text x="746" y="1108" class="lbl tiny">thrown exception</text>
+  <rect x="900" y="1096" width="18" height="14" class="boxA"/>
+  <text x="926" y="1108" class="lbl tiny">annotation</text>
+  <path class="flow" d="M 20 1130 H 60"/>
+  <text x="70" y="1135" class="lbl tiny">A → B : A calls / compiles to / throws B</text>
+  <path class="bridge" d="M 320 1130 H 360"/>
+  <text x="370" y="1135" class="lbl tiny">A → B : bridge A delegates to real method B (not inheritance)</text>
+</svg>

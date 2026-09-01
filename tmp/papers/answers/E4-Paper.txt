@@ -1,0 +1,119 @@
+Section 1 — DSA & Data Structures
+Q1. How does an ArrayList grow when it runs out of capacity? Why is new ArrayList<>(10_000) sometimes worth writing?
+- When AL reaches its capacity a new AL with double capacity is created and all the elements are copied to new AL
+- When we upfront know we might have more array elements pre-set AL of 10k capacity is worth creating.
+-----------------
+Q2. [CODE — 10 min] Write a method Map<Character, Integer> charFrequencies(String s) returning how often each character appears in s. Then state its time and space complexity.
+-----------------
+Section 2 — Java Core
+Q3. What does static mean on (a) a field and (b) a method? Why can't a static method access instance fields directly?
+- a static member is class level member
+- a> a static variable is single copy shared across instances
+- b> a static method doesnt need an instance to be invoked, it cant access member variables only static variables can be accessed
+-----------------
+Q4. Predict the output and explain:
+
+List<String> names = List.of("anna", "bob", "ANNA", "cara");
+long n = names.stream()
+    .map(String::toLowerCase)
+    .filter(s -> s.startsWith("a"))
+    .distinct()
+    .count();
+System.out.println(n);
+- toLower converts all the elements to lower case including ANNA
+- filter removes bob, cara hence anna and anna (lowercased) remains
+- finally distinct gives unique element, and finally count will be 1.
+-----------------
+Section 3 — Concurrency & JVM
+Q5. Two ways to define work for a thread: implementing Runnable vs extending Thread — which is preferred and why? What's the difference between calling start() and calling run() directly?
+- Runnable is preferred, as its interface and allows the class to inherit from another class if needed
+- Have forgotten the basics, but i guess directly calling run would run the function in the same thread instead of spawning a new thread
+-----------------
+Q6. What is garbage collection? Which objects are eligible? Does System.gc() guarantee a collection?
+- GC is a process where the dangling objects are cleared off the memory.
+- Objects which are not referenced by other objects or in static memory by a member reference are considered for GCing.
+- No calling System.gc() doesnt guarantee a GC. It gives a hint to JVM that its time to run a GC.
+-----------------
+Section 4 — Spring & JPA
+Q7. What is the difference between application.properties / application.yml and Spring profiles (application-prod.yml)? When does the profile-specific file win?
+- application.properties is more verbose where we repeatedly define each property with all the prefixes.
+- application.yml is more concise and only declares the properties in YAML formal.
+- Spring profile is environment specific property file and wins over default if the given profile is active. in a "prod" profile properties defined in application-prod.yml wins over application.yml
+-----------------
+Q8. In JPA, what do LAZY and EAGER fetching mean? Which associations default to which (name one of each)?
+- When a JPA entity has another associated entity it can be fetched directly in the same flow its EAGER fetching
+- If the associated entity is fetched only when needed (when get method is called for that resource) its called LAZY fetching
+- Not aware of which association maps to what
+-----------------
+Section 5 — SQL & Databases
+Q9. Predict the results: (a) SELECT * FROM users WHERE middle_name = NULL; (b) SELECT * FROM users WHERE middle_name IS NULL; Why do they differ?
+- a> throws error
+- b> gives values where middle name is NULL
+- NULL is not a value in DB world its absence of value hence cant be checked with equality operation.
+-----------------
+Q10. ACID: name the four properties and give a one-line meaning of each.
+(Not fully aware of this)
+- Atomicity - each data must be atomic, independent of others?
+- Consistency - each query must result in consistent output every time
+- I?
+- D?
+-----------------
+Section 6 — Networking & OS
+Q11. What is localhost / 127.0.0.1? Your app "works on localhost" but a teammate can't reach http://localhost:8080 from their machine — why is that expected?
+- The localhost is local network of the machine on which various apps on the same machine can access an application on open port.
+- As the localhost belongs to individual machine, no one else can access it from another machine
+-----------------
+Q12. What does SSH give you? What are the two common ways to authenticate an SSH session, and which is preferred for automation?
+- SSH gives remote access to a given host from another host
+- Not sure on the auth part
+-----------------
+=================
+Section 7 — API & Web Security
+Q13. For GET /users/42/orders?status=SHIPPED&page=2, identify the path parameter and the query parameters. When does data belong in the path vs the query string vs the request body?
+- path param userID - 43, query param - status,page
+- When we are accessing a resource based on its primary identification is being address we use path param
+- When we are filtering a resource based on other member values we lean on query param
+- When we are creating a resource we pass the details that are associated with that resource in the request body
+-----------------
+Q14. What is SQL injection? Show a one-line vulnerable Java example (string-built query) and the safe version.
+- SQL injection is where a malicious value is injected by user to gain data.
+- Not aware of the exact details but when a filter is being used user can pass a sub-query to where clause and gain data which he was not supposed.
+-----------------
+Q14b. A colleague proposes securing stored user passwords by encrypting them with an RSA public/private key pair, "so even the DB admin can't read them." Explain what's wrong with this design, what the correct approach is, and name the property the correct approach has that ANY encryption scheme lacks.
+- If the key gets compromised the data can be still at risk
+- Hashed value can be stored which is consistent and next time we'll verify only the same generated hash and match the hash value
+- The hashing is one way any other can be decrypted
+-----------------
+=================
+Section 8 — Messaging & Caching
+Q15. What is a dead letter queue (DLQ)? Describe the path a message takes to end up there, and why a DLQ needs monitoring.
+- A message which couldnt get sent will be forwarded to DLQ
+- If a message is not delivered it could lead the state of application in undesired state for given user(s), hence we must check and replay the messages in DLW after ascertaining why it was not delivered
+-----------------
+Q16. In-process cache (e.g., a HashMap/Caffeine inside your service) vs external cache (e.g., Redis): one advantage of each. What goes wrong with in-process caches when you run 4 instances of the service?
+- In process cache is fast unlike external cache which needs to be fetched from external system.
+- External cache is big and dedicated for caching work hence delivers greater flexibility
+- When multiple instances of the same service are running and maintaining a cache which gets updated (not just read) then inconsistency can arise as each instance maintains its own version of cache
+-----------------
+=================
+Section 9 — Testing & Craft
+Q17. assertEquals(expected, actual) — why does argument order matter in practice? And why is a test with no assertions still "passing" a problem?
+- (Not exactly sure) usually we first pass the expected value first as convention so that we know what should be expected upfront and then the failing value.
+- A test case must always have an assertion to check if the function is behaving as expected, if no assertions are there then test will always pass giving a wrong impression
+-----------------
+Q18. What is Continuous Integration? Name three checks a typical CI pipeline runs on every pull request.
+- CI is flow where we deploy the change as soon as the code is merged into master.
+- acceptance/integration tests, validations, performance test (not entirely sure)
+-----------------
+=================
+Section 10 — Cloud & DevOps
+Q19. Where do application logs go in a containerized/cloud setup, and why is writing them to a local file on the container a bad idea?
+- Not exactly sure but in AWS we log to cloudwatch
+- I guess if container gets descoped all the logs will be gone along with it hence we dont keep the logs in local file
+- Probably we'll use logstash in regular container?
+-----------------
+Q20. What is a health-check endpoint (e.g., /health)? Name two systems that call it and what each does with the answer.
+- healthcheck endpoint gives overall health of the server or container and the springboot application
+- Not sure on the second part
+-----------------
+=================

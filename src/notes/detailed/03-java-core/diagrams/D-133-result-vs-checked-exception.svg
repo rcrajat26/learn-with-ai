@@ -1,0 +1,182 @@
+<svg viewBox="0 0 1280 892" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two-lane flowchart contrasting two models of the same QuizStakes reserveStake operation. The left lane is the checked-exception model: reserveStake(ClientId, Money) throws InsufficientFundsException is called from inside reservations.stream().map(...), and because java.util.function.Function.apply declares no throws clause the call does not compile; that blocked point fans out on a bus to four workarounds — wrap and rethrow as a RuntimeException, sneaky-throw via an unchecked generic cast, a custom CheckedFunction of T, R and E extends Exception plus an unchecked() adapter, and turning the checked condition into a Result value. The right lane is the Result model on a straight centre spine: reserveStake returns Result of StakeSplit and InsufficientFunds, the same stream pipeline compiles unchanged, then map transforms the success arm, flatMap chains applyRestrictions which returns Result of StakeSplit and RestrictedAction, and fold collapses both arms into one value — a LedgerEntry posted to the FundsLedger, or an InsufficientFunds rendered to the client. Two annotation panels explain why the Function boundary blocks the checked throw and why Result composes.">
+  <defs>
+    <style>
+      .t   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+      .m   { font-family: Menlo, "SF Mono", monospace; fill: #1f2937; }
+      .ttl { font-size: 15px; font-weight: bold; }
+      .bnd { font-size: 13px; font-weight: bold; }
+      .nt  { font-size: 13px; font-weight: bold; }
+      .nb  { font-size: 12.5px; }
+      .mn  { font-size: 12.5px; }
+      .sm  { font-size: 11px; }
+      .ph  { font-size: 12.5px; font-weight: bold; }
+      .lh  { font-size: 11px; font-weight: bold; }
+      .sec { fill: #4b5563; }
+      .bp  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+      .bh  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+      .bg  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+      .bf  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+      .ba  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+      .e   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#arr133); }
+      .eb  { fill: none; stroke: #475569; stroke-width: 2; }
+      .ef  { fill: none; stroke: #b91c1c; stroke-width: 2; marker-end: url(#arrR133); }
+      .ew  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#arrA133); }
+      .es  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#arrG133); }
+      .hr  { stroke: #d1d5db; stroke-width: 1.5; }
+    </style>
+    <marker id="arr133" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrR133" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="arrA133" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="arrG133" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="892" fill="#ffffff"/>
+
+  <text class="t ttl" x="20" y="32">reserveStake modelled twice: a checked exception, and a Result&lt;StakeSplit, InsufficientFunds&gt;</text>
+  <line class="hr" x1="20" y1="42" x2="1260" y2="42"/>
+
+  <!-- ============ LEFT LANE ============ -->
+  <text class="t bnd" x="40" y="70">CHECKED EXCEPTION — blocked at the Function boundary</text>
+
+  <rect class="bp" x="40" y="86" width="650" height="72" rx="6"/>
+  <text class="m mn" x="365" y="108" text-anchor="middle">reserveStake(ClientId, Money)</text>
+  <text class="m mn" x="365" y="128" text-anchor="middle">throws InsufficientFundsException</text>
+  <text class="t sm sec" x="365" y="148" text-anchor="middle">the checked-exception model — failure is a control-flow event</text>
+
+  <path class="e" d="M 365 158 V 176"/>
+
+  <rect class="bp" x="40" y="176" width="650" height="64" rx="6"/>
+  <text class="t nt" x="365" y="202" text-anchor="middle">call site inside a stream pipeline</text>
+  <text class="m mn" x="365" y="226" text-anchor="middle">reservations.stream().map(m -&gt; reserveStake(id, m))</text>
+
+  <path class="ef" d="M 365 240 V 266"/>
+
+  <rect class="bf" x="40" y="266" width="650" height="82" rx="6"/>
+  <text class="t nt" x="365" y="290" text-anchor="middle">DOES NOT COMPILE</text>
+  <text class="t nb" x="365" y="312" text-anchor="middle">java.util.function.Function.apply(T) declares no throws clause</text>
+  <text class="t sm sec" x="365" y="334" text-anchor="middle">javac: unhandled exception type InsufficientFundsException</text>
+
+  <!-- fan-out bus to four workarounds -->
+  <path class="eb" d="M 365 348 V 372"/>
+  <path class="eb" d="M 116 372 H 614"/>
+  <path class="ew" d="M 116 372 V 396"/>
+  <path class="ew" d="M 282 372 V 396"/>
+  <path class="ew" d="M 448 372 V 396"/>
+  <path class="es" d="M 614 372 V 396"/>
+
+  <rect class="bh" x="40" y="396" width="152" height="132" rx="6"/>
+  <text class="t lh" x="52" y="420">1. WRAP</text>
+  <text class="t sm" x="52" y="442">catch it and rethrow</text>
+  <text class="t sm" x="52" y="458">as a RuntimeException</text>
+  <text class="t sm" x="52" y="474">the compiler&#39;s</text>
+  <text class="t sm" x="52" y="490">obligation is gone</text>
+  <text class="t sm sec" x="52" y="506">callers stop knowing</text>
+
+  <rect class="bh" x="206" y="396" width="152" height="132" rx="6"/>
+  <text class="t lh" x="218" y="420">2. SNEAKY-THROW</text>
+  <text class="t sm" x="218" y="442">an unchecked generic</text>
+  <text class="t sm" x="218" y="458">cast throws it with</text>
+  <text class="t sm" x="218" y="474">no declaration — the</text>
+  <text class="t sm" x="218" y="490">type system is void</text>
+  <text class="t sm sec" x="218" y="506">no catch is possible</text>
+
+  <rect class="bh" x="372" y="396" width="152" height="132" rx="6"/>
+  <text class="t lh" x="384" y="420">3. CheckedFunction</text>
+  <text class="t sm" x="384" y="442">CheckedFunction&lt;T,R,</text>
+  <text class="t sm" x="384" y="458">E extends Exception&gt;</text>
+  <text class="t sm" x="384" y="474">plus an unchecked(..)</text>
+  <text class="t sm" x="384" y="490">adapter — the problem</text>
+  <text class="t sm sec" x="384" y="506">just moves there</text>
+
+  <rect class="bg" x="538" y="396" width="152" height="132" rx="6"/>
+  <text class="t lh" x="550" y="420">4. Result</text>
+  <text class="t sm" x="550" y="442">the checked condition</text>
+  <text class="t sm" x="550" y="458">becomes a value of</text>
+  <text class="t sm" x="550" y="474">type Result&lt;T,E&gt; —</text>
+  <text class="t sm" x="550" y="490">no boundary to cross</text>
+  <text class="t sm sec" x="550" y="506">see the right lane</text>
+
+  <!-- ============ RIGHT LANE ============ -->
+  <text class="t bnd" x="720" y="70">RESULT AS A VALUE — composes through the same boundary</text>
+
+  <rect class="bp" x="720" y="86" width="520" height="72" rx="6"/>
+  <text class="m mn" x="732" y="108">reserveStake(ClientId, Money)</text>
+  <text class="m mn" x="732" y="128">returns Result&lt;StakeSplit, InsufficientFunds&gt;</text>
+  <text class="t sm sec" x="732" y="148">the value model — failure is data, not control flow</text>
+
+  <path class="e" d="M 980 158 V 176"/>
+
+  <rect class="bg" x="720" y="176" width="520" height="64" rx="6"/>
+  <text class="t nt" x="732" y="202">the same stream pipeline compiles unchanged</text>
+  <text class="m mn" x="732" y="226">reservations.stream().map(m -&gt; reserveStake(id, m))</text>
+
+  <path class="es" d="M 980 240 V 266"/>
+
+  <rect class="bh" x="720" y="266" width="520" height="78" rx="6"/>
+  <text class="t nt" x="732" y="290">map(StakeSplit -&gt; LedgerEntry)</text>
+  <text class="t sm" x="732" y="312">transforms the success arm only; an InsufficientFunds</text>
+  <text class="t sm" x="732" y="330">failure passes straight through untouched</text>
+
+  <path class="es" d="M 980 344 V 370"/>
+
+  <rect class="bh" x="720" y="370" width="520" height="94" rx="6"/>
+  <text class="t nt" x="732" y="394">flatMap(split -&gt; applyRestrictions(split))</text>
+  <text class="t sm" x="732" y="416">chains a second fallible step onto the first</text>
+  <text class="t sm" x="732" y="434">applyRestrictions returns Result&lt;StakeSplit, RestrictedAction&gt;</text>
+  <text class="t sm sec" x="732" y="452">both failure types unify under one declared error channel</text>
+
+  <path class="es" d="M 980 464 V 490"/>
+
+  <rect class="bg" x="720" y="490" width="520" height="94" rx="6"/>
+  <text class="t nt" x="732" y="514">fold(onSuccess, onFailure)</text>
+  <text class="t sm" x="732" y="536">collapses both arms into a single value</text>
+  <text class="t sm" x="732" y="554">success -&gt; LedgerEntry posted to the FundsLedger</text>
+  <text class="t sm" x="732" y="572">failure -&gt; InsufficientFunds rendered to the client</text>
+
+  <!-- ============ ANNOTATION PANELS ============ -->
+  <rect class="ba" x="40" y="612" width="650" height="112" rx="6"/>
+  <text class="t ph" x="52" y="636">WHY THE BOUNDARY BLOCKS</text>
+  <text class="t sm" x="52" y="656">A lambda body may throw only what the functional method declares.</text>
+  <text class="t sm" x="52" y="674">Function.apply(T) declares nothing, so the checked throw is rejected.</text>
+  <text class="t sm" x="52" y="692">Wrap and sneaky-throw discard the obligation; CheckedFunction relocates it.</text>
+  <text class="t sm" x="52" y="710">Only Result removes it, by changing what the method returns.</text>
+
+  <rect class="ba" x="720" y="612" width="520" height="112" rx="6"/>
+  <text class="t ph" x="732" y="636">WHY Result COMPOSES</text>
+  <text class="t sm" x="732" y="656">The failure is a value, so the signature stays Function-compatible.</text>
+  <text class="t sm" x="732" y="674">map / flatMap / fold keep the failure visible in the type.</text>
+  <text class="t sm" x="732" y="692">QuizStakes peak: 1,200 stake reservations/sec, no stack unwinding.</text>
+  <text class="t sm" x="732" y="710">Cost: every caller must handle both arms; nothing is implicit.</text>
+
+  <!-- ============ LEGEND ============ -->
+  <line class="hr" x1="20" y1="748" x2="1260" y2="748"/>
+
+  <rect class="bp" x="40" y="762" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="773">the reserveStake operation and its call site, as declared</text>
+  <rect class="bf" x="40" y="786" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="797">compile-time failure at the java.util.function boundary</text>
+  <rect class="bh" x="40" y="810" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="821">a workaround, or a Result combinator step</text>
+  <rect class="bg" x="40" y="834" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="845">compiles and composes — the success path</text>
+  <rect class="ba" x="40" y="858" width="24" height="14" rx="3"/>
+  <text class="t sm" x="74" y="869">annotation panel — prose facts, neither node nor edge</text>
+
+  <path class="e" d="M 720 769 H 770"/>
+  <text class="t sm" x="782" y="773">primary flow — arrow points at the next step</text>
+  <path class="ef" d="M 720 793 H 770"/>
+  <text class="t sm" x="782" y="797">blocked — arrow points at the rejected call</text>
+  <path class="ew" d="M 720 817 H 770"/>
+  <text class="t sm" x="782" y="821">workaround — arrow points at the workaround taken</text>
+  <path class="es" d="M 720 841 H 770"/>
+  <text class="t sm" x="782" y="845">success path — arrow points at what it composes into</text>
+</svg>

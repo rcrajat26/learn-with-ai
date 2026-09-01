@@ -1,0 +1,46 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Frame 1 of 3. A SKILL.md file on disk containing an inline backtick-bang git branch show-current placeholder and a fenced triple-backtick-bang block, both shown as literal, unexecuted text.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; font-family: "SF Mono", Menlo, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+  <defs/>
+
+  <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FRAME 1 OF 3 — SKILL.md ON DISK, BOTH PLACEHOLDERS LITERAL</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="60" y="70" width="780" height="290" rx="6" class="boxW"/>
+  <text x="80" y="98" class="lbl node">SKILL.md</text>
+
+  <rect x="80" y="112" width="740" height="60" rx="5" class="boxP"/>
+  <text x="96" y="134" class="lbl dense">Current branch: !`git branch --show-current`</text>
+  <text x="96" y="156" class="lbl sub">inline form — recognised only at line start or after whitespace</text>
+
+  <rect x="80" y="184" width="740" height="140" rx="5" class="boxP"/>
+  <text x="96" y="206" class="lbl dense">```!</text>
+  <text x="96" y="228" class="lbl dense">git status --short</text>
+  <text x="96" y="250" class="lbl dense">git log -1 --oneline</text>
+  <text x="96" y="272" class="lbl dense">```</text>
+  <text x="96" y="300" class="lbl sub">fenced form — a block, both commands literal, unexecuted</text>
+
+  <text x="80" y="340" class="lbl tiny" font-weight="700">both placeholders are inert text on disk — nothing has run yet</text>
+
+  <rect x="60" y="376" width="780" height="0" fill="none"/>
+  <line x1="20" y1="376" x2="880" y2="376" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="398" class="lbl h1" font-size="13">LEGEND</text>
+  <rect x="120" y="386" width="22" height="16" rx="3" class="boxP"/>
+  <text x="150" y="399" class="lbl tiny">literal placeholder text, not yet substituted</text>
+  <rect x="450" y="386" width="22" height="16" rx="3" class="boxW"/>
+  <text x="480" y="399" class="lbl tiny">file container (SKILL.md on disk)</text>
+</svg>

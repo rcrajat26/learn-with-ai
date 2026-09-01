@@ -1,0 +1,68 @@
+<svg viewBox="0 0 1040 580" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart of PECS on the signature FundsLedger.post(Collection of super LedgerEntry sink, Collection of extends LedgerEntry source). An arrow labelled PRODUCES leads from source to a panel explaining that reads yield LedgerEntry, that source.add(new CashEntry(...)) is rejected because the compiler only knows the type as capture number 1 of extends LedgerEntry, and cannot verify it. Another arrow labelled CONSUMES leads from sink to a panel explaining that sink.add of LedgerEntry or CashEntry is accepted because CashEntry is a subtype, but reads only yield Object.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .tiny  { font-size: 11px; }
+    .bold  { font-weight: 700; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .red   { fill: #b91c1c; }
+    .green { fill: #15803d; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1040" height="580" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">PECS ON A REAL SIGNATURE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="270" y="80" width="500" height="110" rx="4" class="boxP"/>
+  <text x="290" y="108" class="lbl node">FundsLedger.post(</text>
+  <text x="290" y="130" class="lbl body">&#160;&#160;Collection&lt;? super LedgerEntry&gt; sink,</text>
+  <text x="290" y="152" class="lbl body">&#160;&#160;Collection&lt;? extends LedgerEntry&gt; source)</text>
+  <text x="290" y="176" class="lbl tiny">// producer extends, consumer super</text>
+
+  <path class="flow" d="M 400 190 V 225 H 250 V 260"/>
+  <text x="270" y="215" class="lbl tiny bold">PRODUCES</text>
+
+  <path class="flow" d="M 640 190 V 225 H 790 V 260"/>
+  <text x="700" y="215" class="lbl tiny bold">CONSUMES</text>
+
+  <rect x="60" y="260" width="380" height="180" rx="4" class="panel"/>
+  <text x="80" y="285" class="lbl tiny bold">source: Collection&lt;? extends LedgerEntry&gt;</text>
+  <text x="80" y="308" class="lbl tiny">reads yield LedgerEntry (safe &#8212; upper bound</text>
+  <text x="80" y="324" class="lbl tiny">guarantees at least LedgerEntry)</text>
+  <text x="80" y="348" class="lbl tiny red">source.add(new CashEntry(...)) &#8212; REJECTED</text>
+  <text x="80" y="370" class="lbl tiny">capture#1 of ? extends LedgerEntry &#8212;</text>
+  <text x="80" y="386" class="lbl tiny">compiler cannot verify T; add() rejected</text>
+  <text x="80" y="410" class="lbl tiny">only Collection.isEmpty(), size(), iterator() etc. stay safe</text>
+
+  <rect x="600" y="260" width="380" height="180" rx="4" class="panel"/>
+  <text x="620" y="285" class="lbl tiny bold">sink: Collection&lt;? super LedgerEntry&gt;</text>
+  <text x="620" y="308" class="lbl tiny green">sink.add(new LedgerEntry(...)) &#8212; ACCEPTED</text>
+  <text x="620" y="326" class="lbl tiny green">sink.add(new CashEntry(...)) &#8212; ACCEPTED</text>
+  <text x="620" y="342" class="lbl tiny">(CashEntry is a subtype of LedgerEntry)</text>
+  <text x="620" y="366" class="lbl tiny">reads yield only Object</text>
+  <text x="620" y="382" class="lbl tiny">(lower bound erases specificity)</text>
+  <text x="620" y="406" class="lbl tiny">// PECS: Producer Extends, Consumer Super</text>
+
+  <line x1="20" y1="470" x2="1020" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="492" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="506" width="20" height="14" class="boxP"/>
+  <text x="46" y="517" class="lbl tiny">method signature under discussion</text>
+
+  <rect x="330" y="506" width="20" height="14" class="panel"/>
+  <text x="356" y="517" class="lbl tiny">explanatory panel (reads/writes allowed for the wildcard)</text>
+
+  <path class="flow" d="M 20 542 H 70"/>
+  <text x="80" y="546" class="lbl tiny">solid arrow, labelled PRODUCES/CONSUMES: role of that parameter</text>
+</svg>

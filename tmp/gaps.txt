@@ -1,0 +1,3 @@
+- I had forgotten treeify happens after 8 nodes
+- Got confused about ArrayList 1.5x and HM 2x resizing.
+- I did not understand "but a == b for 127 prints true: autoboxing caches −128..127, so both 127s are the SAME object", is there anything like Integer literal the same way we have String literal

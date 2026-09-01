@@ -1,0 +1,180 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Layered hierarchy. Top band: the four base JMM rules — program order, synchronizes-with, transitivity, and the constructor-to-finalizer edge. Each fans out on a bus to its derived corollaries on the band below: program order feeds the default-initialization edge, the monitor edge, and the volatile edge; synchronizes-with feeds the monitor edge, the volatile edge, Thread.start, Thread.join, and the j.u.c edges such as a CountDownLatch release-acquire pair; the constructor edge feeds the final-field freeze. A dashed transitivity bus ties every derived edge together at the base, since any two hb edges chain through transitivity. Two annotation panels below explain why each corollary reduces to one of the four base rules rather than being a new rule.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .impl  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE DERIVED HAPPENS-BEFORE EDGES YOU ACTUALLY USE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="54" width="1000" height="26" rx="6" class="boxW"/>
+  <text x="520" y="72" text-anchor="middle" class="lbl h2">BASE RULES (JLS 17.4.5) — top band, everything else is a corollary of these four</text>
+
+  <!-- Top band: 4 base rules, x0=30 w=230 gap=12 -->
+  <rect x="30"  y="92" width="230" height="58" rx="6" class="boxP"/>
+  <text x="145" y="114" text-anchor="middle" class="lbl node">program order</text>
+  <text x="145" y="132" text-anchor="middle" class="lbl sub">each action hb the next</text>
+  <text x="145" y="145" text-anchor="middle" class="lbl sub">action in the same thread</text>
+
+  <rect x="272" y="92" width="230" height="58" rx="6" class="boxP"/>
+  <text x="387" y="114" text-anchor="middle" class="lbl node">synchronizes-with</text>
+  <text x="387" y="132" text-anchor="middle" class="lbl sub">a release hb the matching</text>
+  <text x="387" y="145" text-anchor="middle" class="lbl sub">acquire on the same guard</text>
+
+  <rect x="514" y="92" width="230" height="58" rx="6" class="boxP"/>
+  <text x="629" y="114" text-anchor="middle" class="lbl node">transitivity</text>
+  <text x="629" y="132" text-anchor="middle" class="lbl sub">A hb B and B hb C</text>
+  <text x="629" y="145" text-anchor="middle" class="lbl sub">implies A hb C</text>
+
+  <rect x="756" y="92" width="254" height="58" rx="6" class="boxP"/>
+  <text x="883" y="114" text-anchor="middle" class="lbl node">constructor / finalizer edge</text>
+  <text x="883" y="132" text-anchor="middle" class="lbl sub">constructor completion hb</text>
+  <text x="883" y="145" text-anchor="middle" class="lbl sub">the start of finalize()</text>
+
+  <!-- ============ derived band: 7 boxes, w=134, gap=10, x_i = 20 + i*144 ============ -->
+  <!-- i0 default-init (20-154) i1 volatile (164-298) i2 monitor (308-442)
+       i3 start (452-586) i4 join (596-730) i5 j.u.c (740-874) i6 final-field (884-1018) -->
+
+  <!-- fan-out bus: program order -> default-init, volatile(write half), monitor -->
+  <path class="flow" d="M 145 150 V 172"/>
+  <line x1="87" y1="172" x2="375" y2="172" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 87 172 V 198"/>
+  <path class="flow" d="M 231 172 V 198"/>
+  <path class="flow" d="M 375 172 V 198"/>
+
+  <!-- fan-out bus: synchronizes-with -> volatile, monitor, start, join, j.u.c -->
+  <path class="flow" d="M 387 150 V 164"/>
+  <line x1="231" y1="164" x2="807" y2="164" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 231 164 V 198"/>
+  <path class="flow" d="M 375 164 V 198"/>
+  <path class="flow" d="M 519 164 V 198"/>
+  <path class="flow" d="M 663 164 V 198"/>
+  <path class="flow" d="M 807 164 V 198"/>
+
+  <!-- fan-out bus: constructor edge -> final-field freeze -->
+  <path class="flow" d="M 883 150 V 198"/>
+
+  <rect x="20" y="204" width="1000" height="26" rx="6" class="boxW"/>
+  <text x="520" y="222" text-anchor="middle" class="lbl h2">DERIVED COROLLARIES — one generation, each hangs off a base rule above</text>
+
+  <!-- derived band, all boxes y=240 h=76 w=134 -->
+  <rect x="20" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="87" y="262" text-anchor="middle" class="lbl node">default init</text>
+  <text x="87" y="282" text-anchor="middle" class="lbl sub">field zeroing hb</text>
+  <text x="87" y="296" text-anchor="middle" class="lbl sub">first program read</text>
+  <text x="87" y="310" text-anchor="middle" class="lbl sub">(program order)</text>
+
+  <rect x="164" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="231" y="262" text-anchor="middle" class="lbl node">volatile edge</text>
+  <text x="231" y="282" text-anchor="middle" class="lbl sub">write hb subsequent</text>
+  <text x="231" y="296" text-anchor="middle" class="lbl sub">read of the same field</text>
+  <text x="231" y="310" text-anchor="middle" class="lbl sub">(program order + sync)</text>
+
+  <rect x="308" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="375" y="262" text-anchor="middle" class="lbl node">monitor edge</text>
+  <text x="375" y="282" text-anchor="middle" class="lbl sub">unlock(m) hb the</text>
+  <text x="375" y="296" text-anchor="middle" class="lbl sub">next lock(m)</text>
+  <text x="375" y="310" text-anchor="middle" class="lbl sub">(program order + sync)</text>
+
+  <rect x="452" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="519" y="262" text-anchor="middle" class="lbl node">Thread.start</text>
+  <text x="519" y="282" text-anchor="middle" class="lbl sub">start() hb every action</text>
+  <text x="519" y="296" text-anchor="middle" class="lbl sub">in the new thread</text>
+  <text x="519" y="310" text-anchor="middle" class="lbl sub">(synchronizes-with)</text>
+
+  <rect x="596" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="663" y="262" text-anchor="middle" class="lbl node">Thread.join</text>
+  <text x="663" y="282" text-anchor="middle" class="lbl sub">every prior action hb</text>
+  <text x="663" y="296" text-anchor="middle" class="lbl sub">a successful join()</text>
+  <text x="663" y="310" text-anchor="middle" class="lbl sub">(synchronizes-with)</text>
+
+  <rect x="740" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="807" y="262" text-anchor="middle" class="lbl node">j.u.c edges</text>
+  <text x="807" y="282" text-anchor="middle" class="lbl sub">countDown() hb a</text>
+  <text x="807" y="296" text-anchor="middle" class="lbl sub">returning await()</text>
+  <text x="807" y="310" text-anchor="middle" class="lbl sub">(synchronizes-with)</text>
+
+  <rect x="884" y="240" width="134" height="76" rx="6" class="boxR"/>
+  <text x="951" y="262" text-anchor="middle" class="lbl node">final field freeze</text>
+  <text x="951" y="282" text-anchor="middle" class="lbl sub">ctor's final write hb</text>
+  <text x="951" y="296" text-anchor="middle" class="lbl sub">any post-publish read</text>
+  <text x="951" y="310" text-anchor="middle" class="lbl sub">(constructor edge)</text>
+
+  <!-- transitivity bus tying all derived edges together, drawn as a dashed bus beneath.
+       No vertical stub is drawn from the transitivity box itself — routing one down would
+       cross the Thread.start / Thread.join boxes above; transitivity's role is instead
+       spelled out in the legend and the annotation panel below. -->
+  <line x1="87" y1="350" x2="951" y2="350" class="impl"/>
+  <path class="impl" d="M 87 316 V 350"/>
+  <path class="impl" d="M 231 316 V 350"/>
+  <path class="impl" d="M 375 316 V 350"/>
+  <path class="impl" d="M 519 316 V 350"/>
+  <path class="impl" d="M 663 316 V 350"/>
+  <path class="impl" d="M 807 316 V 350"/>
+  <path class="impl" d="M 951 316 V 350"/>
+
+  <rect x="20" y="368" width="1000" height="26" rx="6" class="boxW"/>
+  <text x="520" y="386" text-anchor="middle" class="lbl h2">WHY THESE ARE COROLLARIES, NOT NEW RULES</text>
+
+  <rect x="20" y="404" width="490" height="205" rx="6" class="boxA"/>
+  <text x="36" y="426" class="lbl node">monitor and volatile = synchronizes-with</text>
+  <text x="36" y="446" class="lbl body">a monitor unlock/lock pair and a volatile</text>
+  <text x="36" y="464" class="lbl body">write/read pair are both instances of</text>
+  <text x="36" y="482" class="lbl body">"release synchronizes-with matching</text>
+  <text x="36" y="500" class="lbl body">acquire" — the JLS names the guard</text>
+  <text x="36" y="518" class="lbl body">type, but the rule is the same one.</text>
+  <text x="36" y="544" class="lbl node">start / join / j.u.c reduce the same way</text>
+  <text x="36" y="562" class="lbl sub">Thread.start, Thread.join, and every j.u.c</text>
+  <text x="36" y="577" class="lbl sub">release-acquire pair (CountDownLatch,</text>
+  <text x="36" y="592" class="lbl sub">Semaphore) are all synchronizes-with pairs.</text>
+
+  <rect x="530" y="404" width="490" height="205" rx="6" class="boxA"/>
+  <text x="546" y="426" class="lbl node">default init and final-field reduce differently</text>
+  <text x="546" y="446" class="lbl body">default init is a special case of program</text>
+  <text x="546" y="464" class="lbl body">order: the JVM's zeroing of a field happens</text>
+  <text x="546" y="482" class="lbl body">before any thread can run code reading it.</text>
+  <text x="546" y="500" class="lbl body">The final-field freeze is a special case of</text>
+  <text x="546" y="518" class="lbl body">the constructor edge, extended by JLS 17.5</text>
+  <text x="546" y="536" class="lbl body">to cover any safely published reference.</text>
+  <text x="546" y="562" class="lbl sub">transitivity (the dashed bus above) is what</text>
+  <text x="546" y="577" class="lbl sub">lets these edges chain into multi-hop</text>
+  <text x="546" y="592" class="lbl sub">guarantees across three or more threads.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="620" x2="1020" y2="620" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="632" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="645" class="lbl tiny">base rule (JLS 17.4.5)</text>
+  <rect x="220" y="632" width="22" height="16" rx="3" class="boxR"/>
+  <text x="250" y="645" class="lbl tiny">derived corollary edge</text>
+  <rect x="440" y="632" width="22" height="16" rx="3" class="boxA"/>
+  <text x="470" y="645" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 620 640 H 660"/>
+  <text x="668" y="645" class="lbl tiny">"is a base for" (fan-out bus)</text>
+  <path class="impl" d="M 20 666 H 60"/>
+  <text x="68" y="671" class="lbl tiny">transitivity bus — chains any two derived edges through JLS 17.4.5's third rule</text>
+</svg>
