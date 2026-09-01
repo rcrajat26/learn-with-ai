@@ -461,4 +461,4 @@ or "check the metrics" signals a misunderstanding of what a data race actually i
 **Leaves deferred:** none
 **Diagrams included:** D-197
 **Target version:** Java 21 LTS
-**Lines:** 380
+**Lines:** 464

@@ -91,7 +91,6 @@ public void onBonusGranted(Money bonusAmount) {
 
 **How it works.** A `VarHandle` exposes access through named methods, not a single `get`/`set` pair, and each name carries an explicit ordering strength baked into the method itself.
 
-![D-055 — The VarHandle access-mode taxonomy](../diagrams/D-055-varhandle-access-modes.svg)
 
 **D-055** — The `VarHandle` access-mode taxonomy.
 
@@ -112,7 +111,6 @@ public void onBonusGranted(Money bonusAmount) {
 
 **How it works — [PROVE] working the guarantees through.** Start from what a plain field access gives: for a `long`/`double` field, a plain write is **not even guaranteed atomic** — two threads can observe a torn value, half of one write and half of another, because the JLS only guarantees atomicity for ≤32-bit fields (`int` and narrower) accessed plainly; every other field type or width needs at least opaque to guarantee no tearing. Opaque adds atomicity and coherence — every thread eventually sees writes to that one variable in a single total order — but it says nothing about how this variable's ordering relates to any *other* variable's reads and writes; the compiler and CPU are still free to reorder around it. Acquire/release adds a one-way barrier: a release-write cannot be reordered with anything that happened *before* it in program order, and an acquire-read cannot be reordered with anything that happens *after* it — so if thread A does `writeField(); handle.setRelease(ready, true);` and thread B does `if (handle.getAcquire(ready)) { readField(); }`, B's `readField()` is guaranteed to see A's `writeField()`, but two release-writes to two different variables from A carry no guarantee about *their* relative order as seen by a third thread. Volatile closes that last gap: it adds a full bidirectional fence plus a single global total order across *all* volatile accesses, matching Java's `happens-before` volatile semantics — this is the only one of the four that is sequentially consistent.
 
-![D-056 — The four memory-ordering levels](../diagrams/D-056-ordering-levels.svg)
 
 **D-056** — The four memory-ordering levels.
 
@@ -211,7 +209,14 @@ Money runningTotal = ledgerLock.protectedAdd(bonusAmount);
 // A feature-flag class hand-rolling publication with a raw VarHandle,
 // believing this is "more correct" than the standard tool.
 private static final VarHandle READY;
-static { /* ... findVarHandle setup ... */ }
+static {
+    try {
+        READY = MethodHandles.lookup()
+                .findVarHandle(FeatureFlag.class, "ready", boolean.class);
+    } catch (ReflectiveOperationException e) {
+        throw new ExceptionInInitializerError(e);
+    }
+}
 private boolean ready;
 void publish() { READY.setRelease(this, true); }
 boolean isReady() { return (boolean) READY.getAcquire(this); }
@@ -346,4 +351,4 @@ In Java 21 its memory-access methods still work, at most with a compile-time war
 **Leaves deferred:** none
 **Diagrams included:** D-054, D-055, D-056
 **Target version:** Java 21 LTS
-**Lines:** 349
+**Lines:** 354

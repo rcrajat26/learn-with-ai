@@ -596,4 +596,4 @@ unrelated code sharing the same pool — a dedicated pool's mistakes stay contai
 **Leaves deferred:** none
 **Diagrams included:** D-185, D-186, D-187, D-188, D-189
 **Target version:** Java 21 LTS
-**Lines:** 450
+**Lines:** 599

@@ -91,7 +91,7 @@ and its atomic API; the sibling file covers the sorted map/set, the copy-on-writ
 queue types. The table below is the map of all fifteen so each one's place is visible before the
 detail — treat it as the family tree, not a reading list.
 
-**D-066 — The concurrent collection inventory.**
+**D-066** — The concurrent collection inventory.
 
 | Class | Ordering | Bounded | Null policy | Read cost | Write cost | Iterator model | Blocking | Locks | Alloc/element | Right for |
 |---|---|---|---|---|---|---|---|---|---|---|

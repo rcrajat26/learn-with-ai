@@ -15,6 +15,8 @@ reservations/day, 55k peak concurrent sessions, ~19.8M `LedgerEntry` rows/day.
 
 ## 2.1.1 — The master cost table
 
+**D-107** — The master cost table.
+
 **Read this table against the latency ladder in 2.1.2, not in isolation** — "cheap" and
 "expensive" below are shorthand for a specific rung on that ladder. Every one of the 21 primitive
 operations named in the syllabus leaf appears once.
@@ -75,6 +77,8 @@ round trip if the lock is about to free up anyway.
 
 ## 2.1.3 — The memory-footprint table
 
+**D-109** — The memory-footprint table.
+
 All figures assume a 64-bit JVM with compressed oops (the default under 32 GB heap) and are
 **shown with the arithmetic, not asserted** — treat the totals as estimates that move with JVM
 build and flags, not as ABI guarantees.
@@ -125,6 +129,8 @@ different algorithm entirely.
 ---
 
 ## 2.1.5 — The five progress guarantees
+
+**D-110** — The five progress guarantees.
 
 | Guarantee | Precise statement | JDK example | Counter-example | Effect of descheduling one thread mid-operation |
 |---|---|---|---|---|
@@ -411,4 +417,4 @@ has to escalate to rung 5, a lock, even though the surrounding lookup structure 
 **Leaves deferred:** none
 **Diagrams included:** D-107, D-108, D-109, D-110, D-111
 **Target version:** Java 21 LTS
-**Lines:** 414
+**Lines:** 420

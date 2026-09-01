@@ -21,7 +21,7 @@ and MCS), a backoff variant, a reentrant mutex, and the consolidated diff table 
 
 ## Hierarchy before details
 
-**D-199 — Five spin locks, compared**
+**D-199** — Five spin locks, compared
 
 | Lock | Where each waiter spins | Coherence traffic per acquisition | FIFO fair | Space per waiter | NUMA suitability | AQS derives from this? |
 |---|---|---|---|---|---|---|
@@ -258,7 +258,9 @@ the OS scheduler is on the order of 1–10 microseconds; an involuntary context 
 preempting a thread) is in the same low-microsecond range, sometimes higher under load. These
 numbers explain the crossover shape above without being a substitute for running the harness.
 
-![Spin versus park: the crossover depends on how long you wait](../diagrams/D-201-spin-vs-park.svg)
+![D-201 — Spin versus park, measured](../diagrams/D-201-spin-vs-park.svg)
+
+**D-201** — Spin versus park, measured.
 
 **Interview:** "When would you ever write a spin lock instead of using `ReentrantLock`?" — when
 the critical section's expected duration is provably shorter than a park/unpark round trip *and*
@@ -576,4 +578,4 @@ critical section and release the lock.
 **Leaves deferred:** none
 **Diagrams included:** D-199, D-201
 **Target version:** Java 21 LTS
-**Lines:** 450
+**Lines:** 581

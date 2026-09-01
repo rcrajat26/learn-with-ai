@@ -244,7 +244,7 @@ instruction (`lock addl`/`xchg` on x86, `stlr`'s built-in release, which HotSpot
 `[NUM]` The concrete comparison, as order-of-magnitude, never as measured constants — no
 authoritative per-instruction cycle table exists across microarchitectures:
 
-**D-033 — Volatile read is free; volatile write is not.**
+**D-033** — Volatile read is free; volatile write is not.
 
 | Access | Instruction emitted | Barrier implemented | Cost |
 |---|---|---|---|
@@ -387,8 +387,9 @@ the one link, everything before it on the writer side piggybacks across.
 **Wrong**
 ```java
 private volatile Money[] buckets = new Money[4];
-// ...
-buckets[CASH_AVAILABLE] = buckets[CASH_AVAILABLE].plus(deposit); // element write is plain
+void creditCash(Money deposit) {
+    buckets[CASH_AVAILABLE] = buckets[CASH_AVAILABLE].plus(deposit); // element write is plain
+}
 ```
 A concurrent reader of `buckets[CASH_AVAILABLE]` has no happens-before edge to this write and may
 observe a stale `Money` value indefinitely.
@@ -396,8 +397,9 @@ observe a stale `Money` value indefinitely.
 **Right**
 ```java
 private final AtomicReferenceArray<Money> buckets = new AtomicReferenceArray<>(4);
-// ...
-buckets.getAndUpdate(CASH_AVAILABLE, current -> current.plus(deposit));
+void creditCash(Money deposit) {
+    buckets.getAndUpdate(CASH_AVAILABLE, current -> current.plus(deposit));
+}
 ```
 `AtomicReferenceArray` gives each element its own volatile-equivalent get/set, closing exactly the
 gap the plain array left open.
@@ -586,4 +588,4 @@ requires.
 **Leaves deferred:** none
 **Diagrams included:** D-033, D-034
 **Target version:** Java 21 LTS
-**Lines:** 589
+**Lines:** 591

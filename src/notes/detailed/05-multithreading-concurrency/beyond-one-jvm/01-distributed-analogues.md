@@ -233,7 +233,9 @@ class Bonus {
     @Id UUID id;
     BigDecimal availableAmount;
     @Version long version;
-    // ...
+
+    BigDecimal getAvailableAmount() { return availableAmount; }
+    void setAvailableAmount(BigDecimal availableAmount) { this.availableAmount = availableAmount; }
 }
 
 @Retryable(retryFor = OptimisticLockException.class, maxAttempts = 3)
@@ -494,4 +496,4 @@ edge between them.
 **Leaves deferred:** none
 **Diagrams included:** D-141, D-142
 **Target version:** Java 21 LTS
-**Lines:** 497
+**Lines:** 499

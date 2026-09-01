@@ -424,7 +424,7 @@ The scale argument is what makes this a production concern rather than a curiosi
 
 ## Atomic concept checklist
 
-The flat, set-wide atomic concept checklist for all five parts lives at the end of [94f — trap index and drills](94f-trap-index-and-drills.md).
+The flat, set-wide atomic concept checklist for all five parts lives at the end of [94f2 — drills and the atomic concept checklist](94f2-drills-and-atomic-checklist.md).
 
 ---
 

@@ -240,6 +240,8 @@ magnitude thirty seconds per dump once you know what to look for.
 
 ### One dump per harness
 
+**D-212** — One dump per harness.
+
 The table below is the payoff of Part 4: given any one of these five dumps, know in thirty seconds
 which failure it is.
 
@@ -473,4 +475,4 @@ None — both leaves (4.8.11, 4.8.12) are fully covered above.
 **Leaves deferred:** none
 **Diagrams included:** D-211, D-212
 **Target version:** Java 21 LTS
-**Lines:** 476
+**Lines:** 478

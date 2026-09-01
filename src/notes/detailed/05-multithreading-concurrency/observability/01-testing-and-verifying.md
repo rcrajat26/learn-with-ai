@@ -248,7 +248,6 @@ subsequent volatile read of the same field forces `(0,0)` out of the permitted s
 volatile version of the same test reclassifies that row `FORBIDDEN`, and jcstress failing to
 observe it after billions of runs becomes actual evidence, not the absence of luck.
 
-![D-138 — A jcstress litmus test, read](../diagrams/D-138-jcstress-litmus-read.svg)
 
 **D-138** — A jcstress litmus test, read.
 
@@ -423,7 +422,6 @@ count well beyond production concurrency, insert `Thread.onSpinWait()` to widen 
 a context switch, run on the weakest-ordered hardware available (2.12.5), and remove — never add —
 the suspected accidental barrier.
 
-![D-139 — What each verification tool can and cannot find](../diagrams/D-139-tool-coverage-matrix.svg)
 
 **D-139** — What each verification tool can and cannot find.
 
@@ -597,4 +595,4 @@ a cycle that resolves before the next poll is invisible to JFR's contention view
 **Leaves deferred:** none
 **Diagrams included:** D-138, D-139
 **Target version:** Java 21 LTS
-**Lines:** 600
+**Lines:** 598

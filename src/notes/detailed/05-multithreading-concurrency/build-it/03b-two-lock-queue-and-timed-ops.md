@@ -583,4 +583,4 @@ two nearby wrapped values still produces the correct signed difference, which is
 **Leaves deferred:** none
 **Diagrams included:** none
 **Target version:** Java 21 LTS
-**Lines:** 450
+**Lines:** 586

@@ -503,4 +503,4 @@ introducing a phantom reachability.
 **Leaves deferred:** none
 **Diagrams included:** D-205
 **Target version:** Java 21 LTS
-**Lines:** 450
+**Lines:** 506

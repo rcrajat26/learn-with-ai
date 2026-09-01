@@ -19,7 +19,7 @@ I read the `jdk-21-ga` tag of `openjdk/jdk`'s `AbstractQueuedSynchronizer.java` 
 
 ## Hierarchy before details
 
-**D-202 — one base class, four meanings of `state`**
+**D-202** — one base class, four meanings of `state`
 
 | Class (this file) | What `state` means | Template methods overridden | Mode | Mirrors |
 |---|---|---|---|---|

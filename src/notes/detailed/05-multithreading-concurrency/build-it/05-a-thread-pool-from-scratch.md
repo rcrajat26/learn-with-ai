@@ -432,7 +432,7 @@ only the queue.
 try {
     future.get();
 } catch (LedgerImbalanceException e) { // never matches — compile error, in fact
-    ...
+    handleImbalance(e);
 }
 ```
 

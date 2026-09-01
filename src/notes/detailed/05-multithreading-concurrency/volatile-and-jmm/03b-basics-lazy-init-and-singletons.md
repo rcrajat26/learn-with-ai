@@ -303,6 +303,10 @@ and enum singleton safe — but a lock is a lock, and two classes that each bloc
 lock deadlock exactly like two threads holding two `ReentrantLock`s in opposite order. The
 difference is that this deadlock is invisible to the tool everyone reaches for first.
 
+![D-047 — Class-initialisation deadlock is invisible to `jstack`](../diagrams/D-047-class-init-deadlock.svg)
+
+**D-047** — Class-initialisation deadlock is invisible to `jstack`.
+
 **Why it exists as a trap.** `ClientRestrictions` and `AccountActivation` are two real services in
 this domain with a plausible reason to reference each other's constants during class
 initialisation — say `ClientRestrictions` eagerly builds a lookup table keyed by
@@ -314,13 +318,19 @@ constants:
 public class ClientRestrictions {
     static final Map<String, RestrictionType> BLOCKING_STATUSES =
             AccountActivation.buildBlockingStatusIndex();   // touches AccountActivation
-    // ...
+
+    static Map<String, RestrictionKey> buildAutoLiftIndex() {
+        return Map.of("KYC_PENDING", RestrictionKey.WITHDRAWAL_BLOCKED);
+    }
 }
 
 public class AccountActivation {
     static final Map<String, RestrictionKey> AUTO_LIFT_TABLE =
             ClientRestrictions.buildAutoLiftIndex();        // touches ClientRestrictions
-    // ...
+
+    static Map<String, RestrictionType> buildBlockingStatusIndex() {
+        return Map.of("SUSPENDED", RestrictionType.WITHDRAWAL);
+    }
 }
 ```
 
@@ -562,4 +572,4 @@ None — all 8 leaves in this row (1.11.15–1.11.22) are covered above.
 **Leaves deferred:** none
 **Diagrams included:** D-045, D-046, D-047
 **Target version:** Java 21 LTS
-**Lines:** 565
+**Lines:** 575

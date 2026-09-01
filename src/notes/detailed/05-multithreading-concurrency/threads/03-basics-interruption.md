@@ -230,7 +230,6 @@ interruptible and the latter, once a thread is `BLOCKED` waiting to *acquire* th
 this is the standing `ReentrantLock`-over-`synchronized` argument for anything that must remain
 cancellable under contention.
 
-![D-017 — What is interruptible and what is not](../diagrams/D-017-interruptible-inventory.svg)
 
 **D-017** — What is interruptible and what is not.
 
@@ -581,4 +580,4 @@ through.
 **Leaves deferred:** none
 **Diagrams included:** D-016, D-017, D-018
 **Target version:** Java 21 LTS
-**Lines:** 584
+**Lines:** 583

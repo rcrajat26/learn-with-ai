@@ -40,7 +40,7 @@
   <text x="56" y="120" class="lbl mono">source: synchronized (ledgerLock) {</text>
   <text x="56" y="136" class="lbl mono">  ledger.applyCapture(reservation); }</text>
 
-  <rect x="40" y="158" width="490" height="252" rx="6" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+  <rect x="40" y="158" width="490" height="252" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.3"/>
   <text x="56" y="176" class="lbl monoB">0:  aload_1</text>
   <text x="56" y="192" class="lbl monoB">1:  dup</text>
   <text x="56" y="208" class="lbl monoB">2:  astore_2</text>
@@ -99,7 +99,7 @@
 
   <path class="flow" d="M 835 276 V 294"/>
 
-  <rect x="590" y="294" width="490" height="150" rx="6" fill="#ffffff" stroke="#9ca3af" stroke-width="1.3"/>
+  <rect x="590" y="294" width="490" height="150" rx="6" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.3"/>
   <text x="606" y="314" class="lbl node">Code attribute — the body</text>
   <text x="606" y="334" class="lbl mono">0: aload_0</text>
   <text x="606" y="350" class="lbl mono">1: getfield #7   // ledger</text>

@@ -90,7 +90,14 @@ and a caller can flip fairness without changing a single call site's type.
 
 ```java
 ReentrantLock ledgerLock = new ReentrantLock();
-// ...
+settlementPool.execute(() -> {
+    ledgerLock.lock();
+    try {
+        fundsLedger.reserveStake(reservationId, amount);
+    } finally {
+        ledgerLock.unlock();
+    }
+});
 if (ledgerLock.getQueuedThreads().isEmpty()) {
     // "nobody's waiting, so reading balances without the lock is fine"
     return readBalancesUnlocked();
@@ -101,7 +108,14 @@ if (ledgerLock.getQueuedThreads().isEmpty()) {
 
 ```java
 ReentrantLock ledgerLock = new ReentrantLock();
-// ...
+settlementPool.execute(() -> {
+    ledgerLock.lock();
+    try {
+        fundsLedger.reserveStake(reservationId, amount);
+    } finally {
+        ledgerLock.unlock();
+    }
+});
 ledgerLock.lock();
 try {
     return readBalances();
@@ -249,4 +263,4 @@ site's type instead of hiding it behind one constructor argument.
 **Leaves deferred:** none
 **Diagrams included:** none
 **Target version:** Java 21 LTS
-**Lines:** 280
+**Lines:** 266

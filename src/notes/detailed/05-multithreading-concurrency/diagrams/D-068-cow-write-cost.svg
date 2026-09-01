@@ -59,10 +59,11 @@
   <text x="745" y="458" text-anchor="middle" class="lbl sub">2.1M</text>
   <text x="960" y="458" text-anchor="middle" class="lbl sub">2.8M</text>
 
-  <!-- write curve: parabola from (100,440) to (960,110) -->
-  <path class="curveW" d="M 100 440
-    C 400 435, 700 380, 850 260
-    S 940 150, 960 110"/>
+  <!-- write curve: parabola from (100,440) to (960,110), drawn as a stepped polyline of straight segments -->
+  <path class="curveW" fill="none" d="M 100 440
+    L 186 439 L 272 436 L 358 430 L 444 419
+    L 530 402 L 616 375 L 702 335 L 788 278
+    L 874 200 L 960 110"/>
   <text x="740" y="150" class="lbl node" fill="#b91c1c">write cost — O(n²) total</text>
   <text x="740" y="168" class="lbl sub" fill="#b91c1c">each add() copies the full array</text>
 

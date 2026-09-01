@@ -9,7 +9,7 @@ Three ways to build the same bounded queue, all correct, all shipping different 
 builds the first two; the third is the subject of the next file, but its row belongs in this table
 because the whole point of §4.3 is comparing all three side by side before committing to one.
 
-**D-203 — Three bounded queues, three signalling schemes**
+**D-203** — Three bounded queues, three signalling schemes
 
 | Version | Waiters woken per operation | Producers/consumers contend on the same lock? | Allocation per element | Cascading-signal rule | Correctness obligation |
 |---|---|---|---|---|---|
@@ -572,4 +572,4 @@ such as an `AtomicInteger`, which is precisely D-203's third row.
 **Leaves deferred:** none
 **Diagrams included:** D-203
 **Target version:** Java 21 LTS
-**Lines:** 450
+**Lines:** 575

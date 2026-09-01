@@ -528,4 +528,4 @@ removed in the same release since it has nothing left to report.
 **Leaves deferred:** none
 **Diagrams included:** D-060, D-061, D-062
 **Target version:** Java 21 LTS
-**Lines:** 530
+**Lines:** 531

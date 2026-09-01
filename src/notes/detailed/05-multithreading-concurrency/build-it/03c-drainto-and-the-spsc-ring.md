@@ -259,7 +259,9 @@ order-of-magnitude not measured). The producer publishes an element by writing t
 release-storing the incremented `tail`; the consumer acquire-loads `tail` to check availability, reads
 the slot, then release-stores the incremented `head`. No CAS is used anywhere in the hot path.
 
-![An SPSC ring buffer: padded head and tail on separate cache lines](../diagrams/D-204-spsc-ring-buffer.svg)
+![D-204 — An SPSC ring buffer](../diagrams/D-204-spsc-ring-buffer.svg)
+
+**D-204** — An SPSC ring buffer.
 
 ```java
 package quizstakes.settlement;
@@ -588,4 +590,4 @@ same way regardless of which index gains a second writer.
 **Leaves deferred:** none
 **Diagrams included:** D-204
 **Target version:** Java 21 LTS
-**Lines:** 450
+**Lines:** 593

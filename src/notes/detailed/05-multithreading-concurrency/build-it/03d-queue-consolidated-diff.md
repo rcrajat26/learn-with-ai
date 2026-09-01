@@ -268,8 +268,20 @@ public boolean remove(Object o) {
     if (o == null) return false;
     fullyLock();               // putLock then takeLock — matches every other whole-queue op
     try {
-        // walk head -> ... -> last, unlink matching node
-        return true;   // or false
+        for (Node trail = head, p = trail.next; p != null; trail = p, p = p.next) {
+            if (o.equals(p.item)) {
+                p.item = null;
+                trail.next = p.next;
+                if (last == p) {
+                    last = trail;
+                }
+                if (count.getAndDecrement() == capacity) {
+                    notFull.signal();
+                }
+                return true;
+            }
+        }
+        return false;
     } finally {
         fullyUnlock();          // takeLock then putLock — exact reverse order
     }
@@ -290,7 +302,9 @@ just one end, it touches the whole structure.
 // "Weakly consistent must mean it's not thread-safe to iterate concurrently,
 // so I need external synchronization around this loop."
 synchronized (settlementQueue) {
-    for (WithdrawalTransaction tx : settlementQueue) { /* ... */ }
+    for (WithdrawalTransaction tx : settlementQueue) {
+        System.out.println("visited " + tx.withdrawalId()); // held a useless lock to do this
+    }
 }
 ```
 `LinkedBlockingQueue` and `ArrayBlockingQueue` iterators are safe to use without any external lock —
@@ -451,4 +465,4 @@ persistent enough, to actually show up in a profile or a latency budget.
 **Leaves deferred:** none
 **Diagrams included:** none
 **Target version:** Java 21 LTS
-**Lines:** 280
+**Lines:** 468

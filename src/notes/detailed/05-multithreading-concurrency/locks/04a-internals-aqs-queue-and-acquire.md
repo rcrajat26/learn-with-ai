@@ -122,7 +122,7 @@ count lives in the low 16 bits, extracted as `state & 0xFFFF`. That is also why 
 reader throws `Error("Maximum lock count exceeded")` — the same overflow shape as
 `nonfairTryAcquire` above, just against a 16-bit ceiling instead of a 32-bit one.
 
-**D-162 (table).** What `state` means, per synchronizer.
+**D-162** — What `state` means, per synchronizer.
 
 | Synchronizer | AQS-based | What the 32 bits of `state` mean | Mode |
 |---|---|---|---|
@@ -180,7 +180,10 @@ abstract static class Node {
     volatile Node next;   // visibly nonnull when signallable
     Thread waiter;        // visibly nonnull when enqueued
     volatile int status;  // written by owner, atomic bit ops by others
-    ...
+
+    static final int WAITING   = 1;          // parked, awaiting signal
+    static final int CANCELLED = 0x80000000; // interrupted or timed out; never clears
+    static final int COND      = 2;          // currently on a condition queue, not the sync queue
 }
 ```
 
@@ -246,7 +249,7 @@ static final int CANCELLED = 0x80000000; // must be negative
 static final int COND      = 2;          // in a condition wait
 ```
 
-**D-161 (table).** The AQS node status encoding changed.
+**D-161** — The AQS node status encoding changed.
 
 | | JDK 8–14 (`waitStatus`, the version almost every blog describes) | JDK 14+ / Java 21 (bit flags, confirmed via `jdk-21+35` source) |
 |---|---|---|
@@ -593,4 +596,4 @@ has to be written as if a `CANCELLED` node could appear between any two live one
 **Leaves deferred:** none
 **Diagrams included:** D-158, D-159, D-160, D-161, D-162, D-164
 **Target version:** Java 21 LTS
-**Lines:** 596
+**Lines:** 599

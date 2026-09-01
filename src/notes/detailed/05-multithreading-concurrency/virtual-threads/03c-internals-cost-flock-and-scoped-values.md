@@ -166,7 +166,9 @@ map, so forking ten thousand `PaymentRun` reconciliation subtasks, each needing 
 correlation ID and `ClientRestrictions` snapshot, costs ten thousand pointer copies, not
 ten thousand map copies. `[SOURCE]`
 
-![ScopedValue's immutable binding chain and per-thread cache](../diagrams/D-194-scopedvalue-binding-chain.svg)
+![D-194 — `ScopedValue`'s binding chain](../diagrams/D-194-scopedvalue-binding-chain.svg)
+
+**D-194** — `ScopedValue`'s binding chain.
 
 ```java
 private static final ScopedValue<ClientRestrictions> ACTIVE_RESTRICTIONS = ScopedValue.newInstance();
@@ -380,4 +382,4 @@ None — the two `[RESEARCH]`-tagged claims in this file (the `Carrier`/`Snapsho
 **Leaves deferred:** none
 **Diagrams included:** D-194
 **Target version:** Java 21 LTS
-**Lines:** 300
+**Lines:** 385

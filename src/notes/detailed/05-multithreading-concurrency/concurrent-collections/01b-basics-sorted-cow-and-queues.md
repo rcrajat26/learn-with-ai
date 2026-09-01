@@ -277,7 +277,6 @@ because Java 21 requires `List.copyOf` to return, and to be documented as return
 | `CopyOnWriteArrayList` iterator | Snapshot | N/A — `remove`/`set`/`add` throw | fully (immutable snapshot) | No | expecting an in-flight loop to notice a listener registered mid-loop |
 | `list.subList(from, to)` | View | Yes | as safe as the backing list | Yes | structurally modifying the backing list invalidates the view, `ConcurrentModificationException` on next use |
 
-![D-069 — Views, copies and snapshots](../diagrams/D-069-views-copies-snapshots.svg)
 
 **D-069** — Views, copies and snapshots: the table above, keyed on write-through, thread-safety,
 and the specific bug each mistake produces.
@@ -462,4 +461,4 @@ returned.
 **Leaves deferred:** none
 **Diagrams included:** D-068, D-069
 **Target version:** Java 21 LTS
-**Lines:** 465
+**Lines:** 464

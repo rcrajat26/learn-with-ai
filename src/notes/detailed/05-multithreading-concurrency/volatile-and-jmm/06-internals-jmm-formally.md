@@ -160,7 +160,6 @@ under `volatile`) disagree about whether a surprising outcome is legal.
 
 Rendered as a table, `D-166`.
 
-![D-166 — the five litmus tests](../diagrams/D-166-five-litmus-tests.svg)
 
 **D-166** — the five litmus tests, rendered here as a Markdown table since D-166 is a `table`-type
 diagram.
@@ -345,7 +344,6 @@ unnecessary on every mainstream architecture but Alpha.
 formal model into "which barrier goes between which pair of adjacent operations." Rendered as a
 table, `D-154`.
 
-![D-154 — the JSR-133 cookbook barrier table](../diagrams/D-154-jsr133-cookbook.svg)
 
 **D-154** — the JSR-133 cookbook barrier table, rendered here as a Markdown table since D-154 is
 a `table`-type diagram.
@@ -588,7 +586,7 @@ ahead of the field initialization.
 **Leaves deferred:** none
 **Diagrams included:** D-154, D-166, D-167, D-168
 **Target version:** Java 21 LTS
-**Lines:** 597
+**Lines:** 595
 
 ## Open questions
 

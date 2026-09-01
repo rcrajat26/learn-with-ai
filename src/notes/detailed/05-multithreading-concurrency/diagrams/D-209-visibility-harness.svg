@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 620" font-family="Menlo, Consolas, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 660" font-family="Menlo, Consolas, monospace" role="img"
+     aria-label="The visibility harness on the settlement-ingest-3 worker's stop flag. Left panel: a
+     plain, non-volatile stop field never exits its spin loop; PrintCompilation shows C2
+     recompiling SettlementLoop::run and hoisting the load of stop out before the loop so the
+     writer's store is never re-read, and the observed run is killed manually after ten minutes
+     still spinning in the billions. Right panel: the same loop with stop declared volatile
+     reloads the field every iteration and exits within roughly one scheduling quantum of the
+     writer's store, because volatile forbids the JIT from hoisting the load and installs a
+     happens-before edge between the write and the next read.">
   <style>
     .title { font: bold 18px sans-serif; fill: #1a1a1a; }
     .sub   { font: bold 13px sans-serif; fill: #333; }
@@ -15,10 +23,12 @@
     </marker>
   </defs>
 
+  <rect x="0" y="0" width="980" height="660" fill="#ffffff"/>
+
   <text x="20" y="30" class="title">D-209 — The visibility harness: non-volatile stop flag vs. volatile</text>
 
   <!-- LEFT: non-volatile, hoisted -->
-  <rect x="20" y="50" width="450" height="330" class="bad" rx="6"/>
+  <rect x="20" y="50" width="450" height="365" class="bad" rx="6"/>
   <text x="35" y="72" class="sub">Non-volatile flag — settlement-ingest-3 never sees the write</text>
   <text x="35" y="95" class="code">boolean stop = false;   // plain field</text>
   <text x="35" y="112" class="code">while (!stop) { spins++; }</text>
@@ -49,7 +59,7 @@
   <text x="472" y="230" class="note" font-size="11">volatile</text>
 
   <!-- RIGHT: volatile -->
-  <rect x="510" y="50" width="450" height="330" class="good" rx="6"/>
+  <rect x="510" y="50" width="450" height="365" class="good" rx="6"/>
   <text x="525" y="72" class="sub">volatile flag — exits promptly</text>
   <text x="525" y="95" class="code">volatile boolean stop = false;</text>
   <text x="525" y="112" class="code">while (!stop) { spins++; }</text>
@@ -72,13 +82,13 @@
   <text x="525" y="368" class="note">store — order-of-magnitude low tens of milliseconds on x86-64 and</text>
   <text x="525" y="383" class="note">aarch64 alike (both give volatile the same happens-before guarantee).</text>
 
-  <rect x="20" y="400" width="940" height="200" class="box" rx="6"/>
-  <text x="35" y="422" class="sub">Elapsed time, side by side (order-of-magnitude, not measured absolutes)</text>
-  <text x="35" y="448" class="code">non-volatile stop:  loop runs until the process is killed — no upper bound observed</text>
-  <text x="35" y="468" class="code">volatile stop:      loop exits within roughly one scheduling quantum after the write</text>
-  <text x="35" y="496" class="note">This is the store-buffer / invalidate-queue reality, not a "flush to main memory" event:</text>
-  <text x="35" y="514" class="note">MESI already keeps caches coherent across cores. What volatile changes is compiler</text>
-  <text x="35" y="532" class="note">licence — it forbids hoisting the load and inserts the happens-before edge (JLS 17.4.5)</text>
-  <text x="35" y="550" class="note">between the writer's store and the reader's next load, so the reader is guaranteed to</text>
-  <text x="35" y="568" class="note">observe SOME later value of stop, not pinned to a stale register-cached copy.</text>
+  <rect x="20" y="435" width="940" height="200" class="box" rx="6"/>
+  <text x="35" y="457" class="sub">Elapsed time, side by side (order-of-magnitude, not measured absolutes)</text>
+  <text x="35" y="483" class="code">non-volatile stop:  loop runs until the process is killed — no upper bound observed</text>
+  <text x="35" y="503" class="code">volatile stop:      loop exits within roughly one scheduling quantum after the write</text>
+  <text x="35" y="531" class="note">This is the store-buffer / invalidate-queue reality, not a "flush to main memory" event:</text>
+  <text x="35" y="549" class="note">MESI already keeps caches coherent across cores. What volatile changes is compiler</text>
+  <text x="35" y="567" class="note">licence — it forbids hoisting the load and inserts the happens-before edge (JLS 17.4.5)</text>
+  <text x="35" y="585" class="note">between the writer's store and the reader's next load, so the reader is guaranteed to</text>
+  <text x="35" y="603" class="note">observe SOME later value of stop, not pinned to a stale register-cached copy.</text>
 </svg>

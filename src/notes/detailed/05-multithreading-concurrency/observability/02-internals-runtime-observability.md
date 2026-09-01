@@ -64,7 +64,7 @@ and the one thread that is holding the monitor the other eleven are queued for:
 	- None
 ```
 
-**D-195 — A `jstack` dump, annotated line by line**
+**D-195** — A `jstack` dump, annotated line by line
 
 | Line | What it means | What it rules out |
 |---|---|---|
@@ -145,7 +145,7 @@ number of *carrier* threads `RUNNABLE`, each one currently mounting a virtual th
 held `synchronized` block (prior file, §3.12). The give-away is the carrier count matching
 `Runtime.availableProcessors()` regardless of how many virtual threads were submitted.
 
-**D-196 — The three dump signatures**
+**D-196** — The three dump signatures
 
 | Signature | Threads and state | Give-away stack frame | CPU usage | Throughput | Next command | Fix |
 |---|---|---|---|---|---|---|
@@ -329,7 +329,7 @@ intermittent or already over by the time anyone reacts — exactly the shape of 
 the `jdk-21` tag in `openjdk/jdk`.** The two shipped configurations enable different subsets at
 different thresholds:
 
-**D-198 — JFR concurrency events and their thresholds**
+**D-198** — JFR concurrency events and their thresholds
 
 | Event | Enabled in `default.jfc` | Default threshold (`default.jfc`) | Enabled / threshold in `profile.jfc` | What it proves | What it misses at that threshold |
 |---|---|---|---|---|---|
@@ -557,4 +557,4 @@ files disagree and a reader must state which one a given number came from.
 **Leaves deferred:** none
 **Diagrams included:** D-195, D-196, D-197, D-198
 **Target version:** Java 21 LTS
-**Lines:** 440
+**Lines:** 560

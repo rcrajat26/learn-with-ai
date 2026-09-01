@@ -11,7 +11,10 @@ point of each claim.
 | Prompt last modified | 2026-08-31 17:18:25, 363939 bytes, 4102 lines |
 | Syllabus leaves | 1141 (Part 1: 470, Part 2: 198, Part 3: 207, Part 4: 69, Part 5: 197) across 65 numbered sections |
 | Diagram manifest | 218 ids, D-001 … D-218. 59 are `table` type (rendered as Markdown tables, no SVG); 159 are standalone SVGs in `diagrams/` |
-| Note files planned | 78 (77 note files + this index) |
+| Note files | **118 written**, plus this index and 2 retired stubs. All rows `written`; none `planned` |
+| Total lines | ~61,300 across the set |
+| Diagrams on disk | **164 SVGs**; all 218 manifest ids render (159 as SVG, 59 as Markdown tables) |
+| Leaf coverage | **1141 of 1141** claimed covered; no leaf deferred |
 | Example domain | QuizStakes — `src/scenario/scenario.md` (read-only) |
 
 **On resume:** if the prompt's SHA-256 no longer matches the value above, every row reverts to
@@ -85,24 +88,24 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 3a | `threads/01-basics-thread-api.md` | §1.3 | 1.3.1–1.3.9 (9) | B | D-010 | 380 | written | 587 |
 | 3b | `threads/01b-basics-thread-api-builder-and-removals.md` | §1.3 | 1.3.10–1.3.18 (9) | B | D-011, D-012 | 380 | written | 600 |
 | 4 | `threads/02-basics-lifecycle-and-states.md` | §1.4 | 1.4.1–1.4.12 (12) | B | D-013, D-014, D-015 | 340 | written | 559 |
-| 5 | `threads/03-basics-interruption.md` | §1.5 | 1.5.1–1.5.14 (14) | B | D-016, D-017, D-018 | 360 | written | 584 |
+| 5 | `threads/03-basics-interruption.md` | §1.5 | 1.5.1–1.5.14 (14) | B | D-016, D-017, D-018 | 360 | written | 583 |
 | 6 | `thread-safety/01-basics-vocabulary.md` | §1.6 | 1.6.1–1.6.13 (13) | B | D-019, D-020, D-021, D-022 | 350 | written | 600 |
 | 7 | `thread-safety/02-basics-races.md` | §1.7 | 1.7.1–1.7.12 (12) | B | D-023, D-024, D-025, D-026 | 360 | written | 599 |
 | 8 | `synchronized/01-basics.md` | §1.8 | 1.8.1–1.8.18 (18) | B | D-027, D-028, D-029, D-030 | 440 | written | 600 |
 | 9a | `volatile-and-jmm/01-basics-volatile.md` | §1.9 | 1.9.1–1.9.7 (7) | B | D-031, D-032 | 400 | written | 456 |
-| 9b | `volatile-and-jmm/01b-basics-volatile-cost-and-arrays.md` | §1.9 | 1.9.8–1.9.14 (7) | B | D-033, D-034 | 400 | written | 589 |
+| 9b | `volatile-and-jmm/01b-basics-volatile-cost-and-arrays.md` | §1.9 | 1.9.8–1.9.14 (7) | B | D-033, D-034 | 400 | written | 591 |
 | 10 | `volatile-and-jmm/02a-basics-happens-before.md` | §1.10 | 1.10.1–1.10.13 (13) | B | D-036, D-037, D-038 | 400 | written | 595 |
 | 11 | `volatile-and-jmm/02b-basics-reordering-and-barriers.md` | §1.10 | 1.10.14–1.10.26 (13) | B | D-035, D-039, D-040, D-041, D-042 | 400 | written | 596 |
 | 12 | `volatile-and-jmm/03a-basics-final-fields-and-publication.md` | §1.11 | 1.11.1–1.11.14 (14) | B | D-043, D-044 | 400 | written | 598 |
-| 13 | `volatile-and-jmm/03b-basics-lazy-init-and-singletons.md` | §1.11 | 1.11.15–1.11.22 (8) | B | D-045, D-046, D-047 | 330 | written | 565 |
+| 13 | `volatile-and-jmm/03b-basics-lazy-init-and-singletons.md` | §1.11 | 1.11.15–1.11.22 (8) | B | D-045, D-046, D-047 | 330 | written | 575 |
 | 14 | `wait-notify/01-basics.md` | §1.12 | 1.12.1–1.12.16 (16) | B | D-048, D-049, D-050 | 410 | written | 600 |
 | 15 | `atomics/01a-basics-cas-and-atomics.md` | §1.13 | 1.13.1–1.13.15 (15) | B | D-051, D-052, D-053 | 410 | written | 518 |
-| 16 | `atomics/01b-basics-adders-varhandles-ordering.md` | §1.13 | 1.13.16–1.13.29 (14) | B | D-054, D-055, D-056 | 400 | written | 349 |
-| 17 | `locks/01a-basics-reentrantlock-and-rwlock.md` | §1.14 | 1.14.1–1.14.18 (18) | B | D-057, D-058, D-059 | 440 | written | 408 |
+| 16 | `atomics/01b-basics-adders-varhandles-ordering.md` | §1.13 | 1.13.16–1.13.29 (14) | B | D-054, D-055, D-056 | 400 | written | 354 |
+| 17 | `locks/01a-basics-reentrantlock-and-rwlock.md` | §1.14 | 1.14.1–1.14.18 (18) | B | D-057, D-058, D-059 | 440 | written | 407 |
 | 18 | `locks/01b-basics-stampedlock-and-locksupport.md` | §1.14 | 1.14.19–1.14.29 (11) | B | D-060, D-061, D-062 | 360 | written | 531 |
 | 19 | `synchronizers/01-basics.md` | §1.15 | 1.15.1–1.15.18 (18) | B | D-063, D-064, D-065 | 450 | written | 598 |
 | 20 | `concurrent-collections/01a-basics-maps-and-iterators.md` | §1.16 | 1.16.1–1.16.14 (14) | B | D-066, D-067, D-070, D-071 | 410 | written | 596 |
-| 21 | `concurrent-collections/01b-basics-sorted-cow-and-queues.md` | §1.16 | 1.16.15–1.16.24 (10) | B | D-068, D-069 | 330 | written | 465 |
+| 21 | `concurrent-collections/01b-basics-sorted-cow-and-queues.md` | §1.16 | 1.16.15–1.16.24 (10) | B | D-068, D-069 | 330 | written | 464 |
 | 22 | `queues/01-basics-blockingqueue.md` | §1.17 | 1.17.1–1.17.18 (18) | B | D-072, D-073, D-074, D-075 | 450 | written | 600 |
 | 23 | `executors/01-basics-executor-framework.md` | §1.18 | 1.18.1–1.18.19 (19) | B | D-076, D-077 | 450 | written | 595 |
 | 24 | `executors/02a-basics-threadpoolexecutor-submission.md` | §1.19 | 1.19.1–1.19.11 (11) | B | D-078, D-079, D-080 | 400 | written | 520 |
@@ -111,12 +114,12 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 27 | `completable-future/01a-basics-composition.md` | §1.21 | 1.21.1–1.21.14 (14) | B | D-085, D-086, D-087, D-088, D-089, D-090 | 440 | written | 598 |
 | 28 | `completable-future/01b-basics-executors-timeouts-lifecycle.md` | §1.21 | 1.21.15–1.21.27 (13) | B | — | 400 | written | 600 |
 | 29 | `fork-join/01-basics.md` | §1.22 | 1.22.1–1.22.16 (16) | B | D-091, D-092 | 420 | written | 565 |
-| 30 | `thread-local/01-basics.md` | §1.23 | 1.23.1–1.23.13 (13) | B | D-093, D-094 | 370 | written | 327 |
+| 30 | `thread-local/01-basics.md` | §1.23 | 1.23.1–1.23.13 (13) | B | D-093, D-094 | 370 | written | 326 |
 | 31 | `virtual-threads/01-basics-the-model.md` | §1.24 | 1.24.1–1.24.19 (19) | B | D-095, D-096, D-097, D-098, D-099 | 460 | written | 591 |
 | 32 | `structured-concurrency/01-basics.md` | §1.25 | 1.25.1–1.25.16 (16) | B | D-100, D-101, D-102, D-103 | 420 | written | 579 |
 | 33 | `liveness/01-basics-failures.md` | §1.26 | 1.26.1–1.26.20 (20) | B | D-104, D-105, D-106 | 480 | written | 600 |
 | 34 | `90-interview-basics.md` | Part 1 wrap-up over §1.1–§1.26 | — | Q | — | 420 | written | 401 |
-| 35 | `master-tables/01-the-master-tables.md` | §2.1 | 2.1.1–2.1.8 (8) | I | D-107, D-108, D-109, D-110, D-111 | 420 | written | 414 |
+| 35 | `master-tables/01-the-master-tables.md` | §2.1 | 2.1.1–2.1.8 (8) | I | D-107, D-108, D-109, D-110, D-111 | 420 | written | 420 |
 | 36 | `locks/03-contention-economics.md` | §2.2 | 2.2.1–2.2.14 (14) | I | D-112, D-113, D-114, D-115 | 400 | written | 600 |
 | 37 | `locks/02-choosing-a-primitive.md` | §2.3 | 2.3.1–2.3.14 (14) | I | D-116, D-117, D-118 | 390 | written | 600 |
 | 38 | `executors/04-pool-sizing.md` | §2.4 | 2.4.1–2.4.18 (18) | I | D-119, D-120, D-121 | 450 | written | 600 |
@@ -127,42 +130,42 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 43 | `virtual-threads/02-in-production.md` | §2.9 | 2.9.1–2.9.14 (14) | I | D-132, D-133, D-134 | 400 | written | 600 |
 | 44 | `thread-safety/03-class-design.md` | §2.10 | 2.10.1–2.10.16 (16) | I | D-135, D-136 | 420 | written | 485 |
 | 45 | `thread-local/02-context-propagation.md` | §2.11 | 2.11.1–2.11.10 (10) | I | D-137 | 340 | written | 528 |
-| 46 | `observability/01-testing-and-verifying.md` | §2.12 | 2.12.1–2.12.14 (14) | I | D-138, D-139 | 400 | written | 600 |
-| 47 | `utility-surface/01-the-adjacent-apis.md` | §2.13 | 2.13.1–2.13.16 (16) | I | D-140 | 410 | written | 551 |
-| 48 | `beyond-one-jvm/01-distributed-analogues.md` | §2.14 | 2.14.1–2.14.8 (8) | I | D-141, D-142 | 300 | written | 497 |
+| 46 | `observability/01-testing-and-verifying.md` | §2.12 | 2.12.1–2.12.14 (14) | I | D-138, D-139 | 400 | written | 598 |
+| 47 | `utility-surface/01-the-adjacent-apis.md` | §2.13 | 2.13.1–2.13.16 (16) | I | D-140 | 410 | written | 550 |
+| 48 | `beyond-one-jvm/01-distributed-analogues.md` | §2.14 | 2.14.1–2.14.8 (8) | I | D-141, D-142 | 300 | written | 499 |
 | 49 | `version-delta/01-java-5-to-25.md` | §2.15 | 2.15.1–2.15.16 (16) | I | D-143, D-144 | 410 | written | 595 |
 | 50 | `91-interview-intermediate.md` | Part 2 wrap-up over §2.1–§2.15 | — | Q | — | 420 | written | 401 |
 | 51 | `synchronized/02-internals-header-and-mark-word.md` | §3.1 | 3.1.1–3.1.8 (8) | X | D-145, D-146, D-147 | 320 | written | 519 |
 | 52 | `synchronized/03-internals-monitors.md` | §3.2 | 3.2.1–3.2.18 (18) | X | D-148, D-149, D-150, D-151, D-152 | 470 | written | 599 |
 | 53 | `volatile-and-jmm/04-internals-jit-and-barriers.md` | §3.3 | 3.3.1–3.3.12 (12) | X | D-153, D-155 | 380 | written | 599 |
 | 54 | `volatile-and-jmm/05-internals-safepoints.md` | §3.4 | 3.4.1–3.4.10 (10) | X | D-156, D-157 | 340 | written | 446 |
-| 55 | `locks/04a-internals-aqs-queue-and-acquire.md` | §3.5 | 3.5.1–3.5.13 (13) | X | D-158, D-159, D-160, D-161, D-162, D-164 | 440 | written | 596 |
+| 55 | `locks/04a-internals-aqs-queue-and-acquire.md` | §3.5 | 3.5.1–3.5.13 (13) | X | D-158, D-159, D-160, D-161, D-162, D-164 | 440 | written | 599 |
 | 56 | `locks/04b-internals-aqs-conditions-and-mappings.md` | §3.5 | 3.5.14–3.5.22 (9) | X | D-163 | 340 | written | 528 |
 | 57 | `locks/05-internals-locksupport-and-os.md` | §3.6 | 3.6.1–3.6.10 (10) | X | D-165 | 340 | written | 533 |
-| 58 | `volatile-and-jmm/06-internals-jmm-formally.md` | §3.7 | 3.7.1–3.7.15 (15) | X | D-154, D-166, D-167, D-168 | 430 | written | 597 |
+| 58 | `volatile-and-jmm/06-internals-jmm-formally.md` | §3.7 | 3.7.1–3.7.15 (15) | X | D-154, D-166, D-167, D-168 | 430 | written | 595 |
 | 59 | `concurrent-collections/03a-internals-chm-table-and-resize.md` | §3.8 | 3.8.1–3.8.12 (12) | X | D-169, D-170, D-171, D-172 | 430 | written | 435 |
 | 60 | `concurrent-collections/03b-internals-chm-trees-counting-traversal.md` | §3.8 | 3.8.13–3.8.24 (12) | X | D-173, D-174, D-175 | 410 | written | 424 |
 | 61 | `atomics/03-internals-striped64-and-false-sharing.md` | §3.9 | 3.9.1–3.9.14 (14) | X | D-176, D-177 | 400 | written | 600 |
 | 62 | `executors/05a-internals-queue-internals.md` | §3.10 | 3.10.1–3.10.11 (11) | X | D-178 | 390 | written | 599 |
 | 63 | `executors/05b-internals-executor-and-future-internals.md` | §3.10 | 3.10.12–3.10.24 (13) | X | D-179, D-180, D-181, D-182, D-183, D-184 | 450 | written | 600 |
 | 64 | `fork-join/02-internals-work-stealing.md` | §3.11 | 3.11.1–3.11.16 (16) | X | D-185, D-186, D-187, D-188, D-189 | 450 | written | 599 |
-| 65 | `virtual-threads/03a-internals-continuations-and-mounting.md` | §3.12 | 3.12.1–3.12.11 (11) | X | D-190, D-191 | 400 | written | 351 |
+| 65 | `virtual-threads/03a-internals-continuations-and-mounting.md` | §3.12 | 3.12.1–3.12.11 (11) | X | D-190, D-191 | 400 | written | 522 |
 | 66a | `virtual-threads/03b-internals-io-pinning-and-dumps.md` | §3.12 | 3.12.12–3.12.19 (8) | X | D-192, D-193 | 430 | written | 460 |
-| 66b | `virtual-threads/03c-internals-cost-flock-and-scoped-values.md` | §3.12 | 3.12.20–3.12.22 (3) | X | D-194 | 300 | written | 383 |
+| 66b | `virtual-threads/03c-internals-cost-flock-and-scoped-values.md` | §3.12 | 3.12.20–3.12.22 (3) | X | D-194 | 300 | written | 385 |
 | 67a | `observability/02-internals-runtime-observability.md` | §3.13 | 3.13.1–3.13.7 (7) | X | D-195, D-196, D-197, D-198 | 440 | written | 560 |
 | 67b | `observability/03-internals-profiling-and-metrics.md` | §3.13 | 3.13.8–3.13.12 (5) | X | D-197 | 380 | written | 464 |
-| 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 391 |
-| 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | written | 579 |
+| 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 435 |
+| 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | written | 581 |
 | 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.10 (6) | BLD | D-200 | 480 | written | 597 |
-| — | `build-it/01c-backoff-reentrancy-and-diffs.md` | — | **retired**, subsumed by 69b | — | — | — | retired | 8 |
+| — | `build-it/01c-backoff-reentrancy-and-diffs.md` | — | **retired**, subsumed by 69b | — | — | — | retired | 7 |
 | 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.4 (4) | BLD | D-202 | 450 | written | 600 |
-| — | `build-it/02a-latch-and-reentrant-mutex.md` | — | **retired**, subsumed by 70a | — | — | — | retired | 8 |
+| — | `build-it/02a-latch-and-reentrant-mutex.md` | — | **retired**, subsumed by 70a | — | — | — | retired | 6 |
 | 70b | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.6 (2) | BLD | — | 450 | written | 598 |
-| 70c | `build-it/02c-aqs-consolidated-diff.md` | §4.2 | 4.2.7 (1) | BLD | — | 280 | written | 252 |
+| 70c | `build-it/02c-aqs-consolidated-diff.md` | §4.2 | 4.2.7 (1) | BLD | — | 280 | written | 266 |
 | 71a | `build-it/03-bounded-blocking-queue.md` | §4.3 | 4.3.1–4.3.2 (2) | BLD | D-203 | 450 | written | 575 |
 | 71b | `build-it/03b-two-lock-queue-and-timed-ops.md` | §4.3 | 4.3.3–4.3.4 (2) | BLD | — | 450 | written | 586 |
-| 71c | `build-it/03c-drainto-and-the-spsc-ring.md` | §4.3 | 4.3.5–4.3.6 (2) | BLD | D-204 | 450 | written | 591 |
-| 71d | `build-it/03d-queue-consolidated-diff.md` | §4.3 | 4.3.7 (1) | BLD | — | 280 | written | 454 |
+| 71c | `build-it/03c-drainto-and-the-spsc-ring.md` | §4.3 | 4.3.5–4.3.6 (2) | BLD | D-204 | 450 | written | 593 |
+| 71d | `build-it/03d-queue-consolidated-diff.md` | §4.3 | 4.3.7 (1) | BLD | — | 280 | written | 468 |
 | 72a | `build-it/04-treiber-stack-and-aba.md` | §4.4 | 4.4.1–4.4.2 (2) | BLD | D-205 | 450 | written | 506 |
 | 72b | `build-it/04b-why-java-is-aba-safe.md` | §4.4 | 4.4.3–4.4.4 (2) | BLD | — | 380 | written | 339 |
 | 72c | `build-it/04c-michael-scott-queue.md` | §4.4 | 4.4.5–4.4.6 (2) | BLD | D-178 | 450 | written | 508 |
@@ -186,20 +189,20 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 76c | `build-it/08c-false-sharing-and-starvation.md` | §4.8 | 4.8.5–4.8.6 (2) | BLD | — | 420 | written | 524 |
 | 76d | `build-it/08d-threadlocal-leak-and-pinning.md` | §4.8 | 4.8.7–4.8.8 (2) | BLD | — | 450 | written | 521 |
 | 76e | `build-it/08e-jcstress-publication-and-dcl.md` | §4.8 | 4.8.9–4.8.10 (2) | BLD | — | 450 | written | 455 |
-| 76f | `build-it/08f-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 450 | written | 476 |
+| 76f | `build-it/08f-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 450 | written | 478 |
 | 77 | `93-interview-build-it.md` | Part 4 wrap-up over §4.1–§4.8 | — | Q | — | 420 | written | 382 |
-| 78a | `94a-interview-questions-fundamentals.md` | §5.1 | 5.1.1–5.1.17 (17) | Q | — | 460 | planned | |
-| 78b | `94a2-interview-questions-fundamentals-ii.md` | §5.1 | 5.1.18–5.1.33 (16) | Q | — | 440 | planned | |
-| 79a | `94b-interview-questions-locks-and-atomics.md` | §5.1 | 5.1.34–5.1.47 (14) | Q | — | 440 | planned | |
-| 79b | `94b2-interview-questions-locks-and-atomics-ii.md` | §5.1 | 5.1.48–5.1.60 (13) | Q | — | 420 | planned | |
-| 80a | `94c-interview-questions-collections-and-executors.md` | §5.1 | 5.1.61–5.1.76 (16) | Q | — | 460 | planned | |
-| 80b | `94c2-interview-questions-collections-and-executors-ii.md` | §5.1 | 5.1.77–5.1.91 (15) | Q | — | 440 | planned | |
-| 81a | `94d-interview-questions-liveness-and-loom.md` | §5.1 | 5.1.92–5.1.103 (12) | Q | — | 420 | planned | |
-| 81b | `94d2-interview-questions-liveness-and-loom-ii.md` | §5.1 | 5.1.104–5.1.115 (12) | Q | — | 420 | planned | |
-| 82a | `94e-interview-design-and-judgement.md` | §5.1 | 5.1.116–5.1.124 (9) | Q | — | 460 | planned | |
-| 82b | `94e2-interview-design-and-judgement-ii.md` | §5.1 | 5.1.125–5.1.132 (8) | Q | — | 440 | planned | |
-| 83a | `94f-trap-index.md` | §5.2 | 5.2.1–5.2.55 (55) | Q | D-213 | 500 | planned | |
-| 83b | `94f2-drills-and-atomic-checklist.md` | §5.3 + Part 5 wrap-up | 5.3.1–5.3.10 (10) | Q | D-214, D-215, D-216, D-217, D-218 | 560 | planned | |
+| 78a | `94a-interview-questions-fundamentals.md` | §5.1 | 5.1.1–5.1.17 (17) | Q | — | 460 | written | 421 |
+| 78b | `94a2-interview-questions-fundamentals-ii.md` | §5.1 | 5.1.18–5.1.33 (16) | Q | — | 440 | written | 431 |
+| 79a | `94b-interview-questions-locks-and-atomics.md` | §5.1 | 5.1.34–5.1.47 (14) | Q | — | 440 | written | 434 |
+| 79b | `94b2-interview-questions-locks-and-atomics-ii.md` | §5.1 | 5.1.48–5.1.60 (13) | Q | — | 420 | written | 420 |
+| 80a | `94c-interview-questions-collections-and-executors.md` | §5.1 | 5.1.61–5.1.76 (16) | Q | — | 460 | written | 423 |
+| 80b | `94c2-interview-questions-collections-and-executors-ii.md` | §5.1 | 5.1.77–5.1.91 (15) | Q | — | 440 | written | 421 |
+| 81a | `94d-interview-questions-liveness-and-loom.md` | §5.1 | 5.1.92–5.1.103 (12) | Q | — | 420 | written | 420 |
+| 81b | `94d2-interview-questions-liveness-and-loom-ii.md` | §5.1 | 5.1.104–5.1.115 (12) | Q | — | 420 | written | 420 |
+| 82a | `94e-interview-design-and-judgement.md` | §5.1 | 5.1.116–5.1.124 (9) | Q | — | 460 | written | 519 |
+| 82b | `94e2-interview-design-and-judgement-ii.md` | §5.1 | 5.1.125–5.1.132 (8) | Q | — | 440 | written | 344 |
+| 83a | `94f-trap-index.md` | §5.2 | 5.2.1–5.2.55 (55) | Q | D-213 | 500 | written | 250 |
+| 83b | `94f2-drills-and-atomic-checklist.md` | §5.3 + Part 5 wrap-up | 5.3.1–5.3.10 (10) | Q | D-214, D-215, D-216, D-217, D-218 | 560 | written | 633 |
 
 Row count grew past the original 83 because Parts 3 and 4 needed finer splits than first planned. The
 governing evidence is measured, not guessed: `build-it/01-locks-from-first-principles.md` runs **579

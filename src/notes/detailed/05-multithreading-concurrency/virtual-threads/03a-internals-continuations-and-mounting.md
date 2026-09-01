@@ -40,7 +40,9 @@ public boolean isDone()
 
 **Why "delimited" matters (3.12.2 — `[PROVE]`).** Say `run()` is called at frame F0. Execution proceeds through F1, F2, F3, and F3 calls `Continuation.yield(scope)`. A continuation is *delimited* because `yield` only unwinds F3, F2, F1 — the frames pushed *since* F0 entered `run()` for this scope — and stops exactly at F0. It does not touch whatever called `run()` in the first place, and it does not touch frames from an *outer* continuation scope if one exists (this is why `ContinuationScope` is a named token, not a singleton: nested scopes let `yield` target the correct boundary and skip past unrelated ones). Proof by construction: the frames below F0 are never even visible to the freeze walk — the walk starts at the top of stack and stops the instant it reaches the frame that matches `scope`'s entry marker. Contrast with a thrown, uncaught `Exception`, which unwinds *everything* until some frame catches it or the thread dies. `yield` unwinds a bounded, known slice and always returns control to a specific caller, never to "whoever happens to catch."
 
-![A delimited continuation: yield unwinds only up to the scope entry frame](../diagrams/D-190-delimited-continuation.svg)
+![D-190 — A delimited continuation](../diagrams/D-190-delimited-continuation.svg)
+
+**D-190** — A delimited continuation.
 
 Look at: the shaded frames above the `ContinuationScope` entry marker are the ones `yield` copies out; the frame at the marker and everything below it never move. `Continuation.run`, `yield(scope)`, and `isDone` are the entire public surface, and the class is flagged internal/unsupported — this is deliberate: the JDK team wants the freedom to change the freeze/thaw representation between releases without a compatibility promise (and they have — the `StackChunk` layout has already changed between 19/20 preview and 21 GA).
 
@@ -108,7 +110,9 @@ Read it line by line. The constructor passes a single shared `VTHREAD_SCOPE` tok
 
 **Interview:** if someone says "what state is a virtual thread in while blocked on I/O," the honest answer is `PARKED` internally, which `Thread.getState()` reports back to Java code as `WAITING` or `TIMED_WAITING` — the public API deliberately collapses the richer internal machine into the six historical `Thread.State` values so existing tooling and code keep working.
 
-![VirtualThread's internal state machine, and what Thread.State a caller sees](../diagrams/D-191-virtualthread-state-machine.svg)
+![D-191 — The `VirtualThread` internal state machine](../diagrams/D-191-virtualthread-state-machine.svg)
+
+**D-191** — The `VirtualThread` internal state machine.
 
 Look at: the left column is the internal `int` state with every transition edge labeled by the call that causes it (`start`, mount, `park`, `yield`, `unpark`, pinning, completion); the right column is the `Thread.State` a caller's `getState()` call actually observes for each internal state; the note that the internal names (`PARKING`, `PINNED`, etc.) surface literally only in `jcmd Thread.dump_to_file -format=json`, never through the public `Thread` API.
 
@@ -515,4 +519,4 @@ A platform thread's park keeps its OS thread — its kernel thread-control-block
 **Leaves deferred:** none
 **Diagrams included:** D-190, D-191
 **Target version:** Java 21 LTS
-**Lines:** 518
+**Lines:** 522
