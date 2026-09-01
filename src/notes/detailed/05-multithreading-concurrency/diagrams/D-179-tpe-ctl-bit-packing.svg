@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1040 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ThreadPoolExecutor.ctl is a single 32-bit AtomicInteger for the settlement pool
+     that packs both the run state and the worker count into one field so they can be read and
+     updated atomically together. The top 3 bits hold the run state and the bottom 29 bits hold
+     the worker count. Five run-state constants are shown with their exact values: RUNNING equals
+     -1 shifted left 29, SHUTDOWN equals 0, STOP equals 1 shifted left 29, TIDYING equals 2 shifted
+     left 29, TERMINATED equals 3 shifted left 29. CAPACITY equals (1 shifted left 29) minus 1,
+     which is 536,870,911, the maximum representable worker count. An annotation explains that
+     packing both fields into one word lets a single compare-and-swap change state and count
+     together, avoiding the torn read/write race that two separate fields would allow.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .bit   { font-size: 10.5px; font-family: "Segoe UI", monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ThreadPoolExecutor.ctl PACKS STATE AND COUNT INTO ONE WORD</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">the stake-settlement pool's ctl field — one AtomicInteger&lt;Integer&gt; backing the pool at 3,400/sec burst</text>
+
+  <!-- 32-bit register, drawn bit by bit -->
+  <text x="20" y="92" class="lbl tinyB">ctl : AtomicInteger — 32 bits total</text>
+  <g>
+    <!-- 32 cells: 3 run-state bits (boxH) + 29 count bits (boxP) -->
+    <!-- cell width 30, x starts at 20 -->
+    <rect x="20"  y="100" width="30" height="46" class="boxH"/>
+    <rect x="50"  y="100" width="30" height="46" class="boxH"/>
+    <rect x="80"  y="100" width="30" height="46" class="boxH"/>
+    <rect x="110" y="100" width="30" height="46" class="boxP"/>
+    <rect x="140" y="100" width="30" height="46" class="boxP"/>
+    <rect x="170" y="100" width="30" height="46" class="boxP"/>
+    <rect x="200" y="100" width="30" height="46" class="boxP"/>
+    <rect x="230" y="100" width="30" height="46" class="boxP"/>
+    <rect x="260" y="100" width="30" height="46" class="boxP"/>
+    <rect x="290" y="100" width="30" height="46" class="boxP"/>
+    <rect x="320" y="100" width="30" height="46" class="boxP"/>
+    <rect x="350" y="100" width="30" height="46" class="boxP"/>
+    <rect x="380" y="100" width="30" height="46" class="boxP"/>
+    <rect x="410" y="100" width="30" height="46" class="boxP"/>
+    <rect x="440" y="100" width="30" height="46" class="boxP"/>
+    <rect x="470" y="100" width="30" height="46" class="boxP"/>
+    <rect x="500" y="100" width="30" height="46" class="boxP"/>
+    <rect x="530" y="100" width="30" height="46" class="boxP"/>
+    <rect x="560" y="100" width="30" height="46" class="boxP"/>
+    <rect x="590" y="100" width="30" height="46" class="boxP"/>
+    <rect x="620" y="100" width="30" height="46" class="boxP"/>
+    <rect x="650" y="100" width="30" height="46" class="boxP"/>
+    <rect x="680" y="100" width="30" height="46" class="boxP"/>
+    <rect x="710" y="100" width="30" height="46" class="boxP"/>
+    <rect x="740" y="100" width="30" height="46" class="boxP"/>
+    <rect x="770" y="100" width="30" height="46" class="boxP"/>
+    <rect x="800" y="100" width="30" height="46" class="boxP"/>
+    <rect x="830" y="100" width="30" height="46" class="boxP"/>
+    <rect x="860" y="100" width="30" height="46" class="boxP"/>
+    <rect x="890" y="100" width="30" height="46" class="boxP"/>
+    <rect x="920" y="100" width="30" height="46" class="boxP"/>
+    <rect x="950" y="100" width="30" height="46" class="boxP"/>
+    <!-- bit index labels for the three run-state bits and edges of count field -->
+    <text x="35"  y="118" text-anchor="middle" class="lbl bit">31</text>
+    <text x="65"  y="118" text-anchor="middle" class="lbl bit">30</text>
+    <text x="95"  y="118" text-anchor="middle" class="lbl bit">29</text>
+    <text x="125" y="118" text-anchor="middle" class="lbl bit">28</text>
+    <text x="965" y="118" text-anchor="middle" class="lbl bit">0</text>
+  </g>
+  <!-- outer border on the whole register -->
+  <rect x="20" y="100" width="960" height="46" fill="none" stroke="#1f2937" stroke-width="1.3"/>
+
+  <!-- brace/labels under the two fields -->
+  <path class="flow" d="M 65 156 V 170 H 65"/>
+  <rect x="20" y="170" width="110" height="46" rx="6" class="boxH"/>
+  <text x="75" y="192" text-anchor="middle" class="lbl body">bits 31-29</text>
+  <text x="75" y="208" text-anchor="middle" class="lbl sub">3 high bits: run state</text>
+
+  <path class="flow" d="M 545 156 V 170 H 545"/>
+  <rect x="140" y="170" width="840" height="46" rx="6" class="boxP"/>
+  <text x="560" y="192" text-anchor="middle" class="lbl body">bits 28-0</text>
+  <text x="560" y="208" text-anchor="middle" class="lbl sub">29 low bits: worker count (workerCountOf) — settlement-ingest-1 .. settlement-ingest-4 counted here</text>
+
+  <!-- five constants table -->
+  <text x="20" y="252" class="lbl tinyB">RUN-STATE CONSTANTS — stored in the 3 high bits</text>
+  <rect x="20" y="264" width="480" height="200" rx="6" class="boxLg"/>
+  <text x="40" y="288" class="lbl body">RUNNING</text>
+  <text x="480" y="288" text-anchor="end" class="lbl body">-1 &lt;&lt; 29</text>
+  <line x1="40" y1="298" x2="480" y2="298" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="320" class="lbl body">SHUTDOWN</text>
+  <text x="480" y="320" text-anchor="end" class="lbl body">0</text>
+  <line x1="40" y1="330" x2="480" y2="330" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="352" class="lbl body">STOP</text>
+  <text x="480" y="352" text-anchor="end" class="lbl body">1 &lt;&lt; 29</text>
+  <line x1="40" y1="362" x2="480" y2="362" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="384" class="lbl body">TIDYING</text>
+  <text x="480" y="384" text-anchor="end" class="lbl body">2 &lt;&lt; 29</text>
+  <line x1="40" y1="394" x2="480" y2="394" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="416" class="lbl body">TERMINATED</text>
+  <text x="480" y="416" text-anchor="end" class="lbl body">3 &lt;&lt; 29</text>
+  <line x1="40" y1="426" x2="480" y2="426" stroke="#d1d5db" stroke-width="1"/>
+  <text x="40" y="450" class="lbl sub">values are ordered so a plain integer compare (ctl &lt; SHUTDOWN, etc.) tests run-state ordering</text>
+
+  <!-- CAPACITY box -->
+  <rect x="540" y="264" width="440" height="120" rx="6" class="boxP"/>
+  <text x="560" y="288" class="lbl body">CAPACITY (max worker count)</text>
+  <text x="560" y="312" class="lbl body">CAPACITY = (1 &lt;&lt; 29) - 1</text>
+  <text x="560" y="336" class="lbl body">= 536 870 911</text>
+  <text x="560" y="360" class="lbl sub">largest value the 29 low bits can hold —</text>
+  <text x="560" y="376" class="lbl sub">workerCountOf(ctl) masks against CAPACITY</text>
+
+  <!-- annotation panel: why atomic together -->
+  <rect x="540" y="396" width="460" height="90" rx="6" class="boxA"/>
+  <text x="560" y="418" class="lbl tinyB">WHY BOTH FIELDS MUST MOVE TOGETHER</text>
+  <text x="560" y="438" class="lbl body">a shutdown request and a worker increment/decrement</text>
+  <text x="560" y="454" class="lbl body">must be one atomic CAS on ctl, or a worker could be</text>
+  <text x="560" y="470" class="lbl body">counted after the pool is already SHUTDOWN or STOP</text>
+
+  <!-- worked example -->
+  <rect x="20" y="500" width="1000" height="80" rx="6" class="boxA"/>
+  <text x="40" y="522" class="lbl tinyB">WORKED EXAMPLE — settlement pool with 4 workers, RUNNING</text>
+  <text x="40" y="544" class="lbl body">ctl = runStateFor(RUNNING) | workerCountOf(4) — one 32-bit int encodes "RUNNING, 4 workers" (settlement-ingest-1..4)</text>
+  <text x="40" y="562" class="lbl sub">a single compareAndSet on ctl changes state, count, or both without a lock and without a torn intermediate value</text>
+
+  <line x1="20" y1="600" x2="1020" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="614" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="626" class="lbl tiny">run-state bits (3 high bits)</text>
+  <rect x="260" y="614" width="22" height="16" rx="3" class="boxP"/>
+  <text x="290" y="626" class="lbl tiny">worker-count bits (29 low bits)</text>
+  <rect x="560" y="614" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="590" y="626" class="lbl tiny">constant reference table</text>
+  <rect x="800" y="614" width="22" height="16" rx="3" class="boxA"/>
+  <text x="830" y="626" class="lbl tiny">annotation / worked example</text>
+</svg>

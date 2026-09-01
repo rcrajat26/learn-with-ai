@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The cost of a contended lock on FundsLedger.reserveStake, itemised across four
+     frames for settlement-ingest-3 the lock owner and settlement-ingest-4 the contender. Frame 1:
+     the uncontended fast path, a CAS on the mark word, tens of nanoseconds. Frame 2: contention
+     detected, settlement-ingest-4 adaptively spins, hundreds of nanoseconds, no syscall yet.
+     Frame 3: the lock inflates to an ObjectMonitor, settlement-ingest-4 is enqueued and parked, a
+     context switch takes it off the core, one to ten microseconds. Frame 4: settlement-ingest-3
+     releases and unparks settlement-ingest-4, which resumes after another context switch with a
+     cold cache and must re-fetch FundsLedger's cache lines, another one to ten microseconds plus
+     a per-line cache-refill tax. A footer states every figure is an order of magnitude, not a
+     measured constant.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxOK { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxCas{ fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .lane  { stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1060" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE COST OF A CONTENDED LOCK ON reserveStake, ITEMISED</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- setup panel -->
+  <rect x="20" y="54" width="1000" height="40" rx="6" class="boxA"/>
+  <text x="40" y="78" class="lbl body">FundsLedger.reserveStake under the 3,400 settlements/sec burst — two threads meet on one lock</text>
+
+  <!-- lane headers -->
+  <text x="300" y="118" text-anchor="middle" class="lbl h2">settlement-ingest-3 — lock owner</text>
+  <text x="740" y="118" text-anchor="middle" class="lbl h2">settlement-ingest-4 — contender</text>
+  <line x1="300" y1="128" x2="300" y2="858" class="lane"/>
+  <line x1="740" y1="128" x2="740" y2="858" class="lane"/>
+  <text x="70" y="132" class="lbl tinyB">TIME</text>
+  <path class="flow" d="M 70 138 V 848"/>
+
+  <!-- FRAME 1 : y 148-318 -->
+  <rect x="20" y="148" width="1000" height="170" rx="6" class="boxOK"/>
+  <text x="40" y="170" class="lbl tinyB">FRAME 1 — uncontended fast path</text>
+  <rect x="200" y="184" width="200" height="64" rx="6" class="boxOK"/>
+  <text x="300" y="206" text-anchor="middle" class="lbl body">CAS on the mark word</text>
+  <text x="300" y="224" text-anchor="middle" class="lbl sub">unlocked &#8594; locked, pointing</text>
+  <text x="300" y="240" text-anchor="middle" class="lbl sub">at its own lock record</text>
+  <rect x="640" y="184" width="200" height="64" rx="6" class="boxLg"/>
+  <text x="740" y="212" text-anchor="middle" class="lbl body">not contending yet</text>
+  <text x="740" y="230" text-anchor="middle" class="lbl sub">no other thread has called</text>
+  <text x="740" y="246" text-anchor="middle" class="lbl sub">reserveStake at this instant</text>
+  <rect x="220" y="264" width="600" height="36" rx="6" class="boxOK"/>
+  <text x="520" y="287" text-anchor="middle" class="lbl body">cost: tens of nanoseconds — one uncontended CAS, no syscall</text>
+
+  <!-- FRAME 2 : y 328-498 -->
+  <rect x="20" y="328" width="1000" height="170" rx="6" class="boxCas"/>
+  <text x="40" y="350" class="lbl tinyB">FRAME 2 — contention detected, adaptive spin</text>
+  <rect x="200" y="364" width="200" height="64" rx="6" class="boxOK"/>
+  <text x="300" y="392" text-anchor="middle" class="lbl body">still holds the mark word</text>
+  <text x="300" y="410" text-anchor="middle" class="lbl sub">executing reserveStake's body</text>
+  <rect x="640" y="364" width="200" height="64" rx="6" class="boxCas"/>
+  <text x="740" y="386" text-anchor="middle" class="lbl body">CAS fails, spins</text>
+  <text x="740" y="404" text-anchor="middle" class="lbl sub">adaptive spin count set from</text>
+  <text x="740" y="420" text-anchor="middle" class="lbl sub">this monitor's recent history</text>
+  <rect x="220" y="444" width="600" height="36" rx="6" class="boxCas"/>
+  <text x="520" y="467" text-anchor="middle" class="lbl body">cost: hundreds of nanoseconds of spinning — no syscall yet</text>
+
+  <!-- FRAME 3 : y 508-678 -->
+  <rect x="20" y="508" width="1000" height="170" rx="6" class="boxD"/>
+  <text x="40" y="530" class="lbl tinyB">FRAME 3 — inflation to an ObjectMonitor, contender parked</text>
+  <rect x="200" y="544" width="200" height="64" rx="6" class="boxOK"/>
+  <text x="300" y="572" text-anchor="middle" class="lbl body">still holds the monitor</text>
+  <text x="300" y="590" text-anchor="middle" class="lbl sub">still executing reserveStake</text>
+  <rect x="640" y="544" width="200" height="64" rx="6" class="boxD"/>
+  <text x="740" y="566" text-anchor="middle" class="lbl body">spin gives up, inflates,</text>
+  <text x="740" y="582" text-anchor="middle" class="lbl body">enqueued, parked</text>
+  <text x="740" y="600" text-anchor="middle" class="lbl sub">context switch takes it off-core</text>
+  <rect x="220" y="624" width="600" height="36" rx="6" class="boxD"/>
+  <text x="520" y="647" text-anchor="middle" class="lbl body">cost: 1&#8211;10 &#181;s to park — the OS scheduler now owns the wakeup</text>
+
+  <!-- FRAME 4 : y 688-858 -->
+  <rect x="20" y="688" width="1000" height="170" rx="6" class="boxD"/>
+  <text x="40" y="710" class="lbl tinyB">FRAME 4 — owner releases, contender resumes cold</text>
+  <rect x="200" y="724" width="200" height="64" rx="6" class="boxOK"/>
+  <text x="300" y="746" text-anchor="middle" class="lbl body">finishes, releases,</text>
+  <text x="300" y="762" text-anchor="middle" class="lbl body">unparks the queue head</text>
+  <text x="300" y="780" text-anchor="middle" class="lbl sub">mark word goes back to unlocked</text>
+  <rect x="640" y="724" width="200" height="64" rx="6" class="boxD"/>
+  <text x="740" y="746" text-anchor="middle" class="lbl body">wakes, context switch in,</text>
+  <text x="740" y="762" text-anchor="middle" class="lbl body">resumes with cold L1/L2</text>
+  <text x="740" y="780" text-anchor="middle" class="lbl sub">must re-fetch FundsLedger's lines</text>
+  <path class="flow" d="M 300 798 V 812 H 740 V 812"/>
+  <rect x="220" y="804" width="600" height="36" rx="6" class="boxD"/>
+  <text x="520" y="827" text-anchor="middle" class="lbl body">cost: another 1&#8211;10 &#181;s to wake, plus 100+ ns per re-fetched cache line</text>
+
+  <!-- legend -->
+  <line x1="20" y1="900" x2="1020" y2="900" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="920" class="lbl h2">LEGEND</text>
+  <rect x="20" y="932" width="22" height="16" rx="3" class="boxOK"/>
+  <text x="50" y="944" class="lbl tiny">fast, uncontended path — tens of ns</text>
+  <rect x="330" y="932" width="22" height="16" rx="3" class="boxCas"/>
+  <text x="360" y="944" class="lbl tiny">spinning, no syscall — hundreds of ns</text>
+  <rect x="680" y="932" width="22" height="16" rx="3" class="boxD"/>
+  <text x="710" y="944" class="lbl tiny">parked, context switch, cold cache — 1&#8211;10 &#181;s+</text>
+  <rect x="20" y="958" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="50" y="970" class="lbl tiny">idle lane, not yet contending</text>
+  <path class="flow" d="M 330 958 H 370"/>
+  <text x="378" y="970" class="lbl tiny">A &#8594; B : A happens, then B happens next on the time axis</text>
+
+  <!-- footer -->
+  <rect x="20" y="990" width="1000" height="56" rx="6" class="boxA"/>
+  <text x="520" y="1012" text-anchor="middle" class="lbl h2" fill="#2563eb">ORDER OF MAGNITUDE, NOT MEASURED CONSTANTS</text>
+  <text x="520" y="1032" text-anchor="middle" class="lbl tiny">Every figure above is a rank, not a promise — actual costs depend on CPU, JVM, and OS scheduler.</text>
+</svg>

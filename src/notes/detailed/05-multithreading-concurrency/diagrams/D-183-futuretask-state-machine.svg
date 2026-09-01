@@ -1,0 +1,175 @@
+<svg viewBox="0 0 1120 720" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="FutureTask's state machine for an affordability-assessment task calling the
+     identity vendor, p50 900 milliseconds. Seven states with integer values: NEW = 0,
+     COMPLETING = 1, NORMAL = 2, EXCEPTIONAL = 3, CANCELLED = 4, INTERRUPTING = 5,
+     INTERRUPTED = 6. Legal edges: NEW to COMPLETING when run begins completion via a CAS,
+     COMPLETING to NORMAL when set finishes, COMPLETING to EXCEPTIONAL when setException
+     finishes, NEW to CANCELLED on cancel(false), NEW to INTERRUPTING on cancel(true), and
+     INTERRUPTING to INTERRUPTED once the runner thread is interrupted. Beside it, a Treiber
+     stack of WaitNode records rooted at the volatile waiters field: onboarding-worker-7 pushed
+     first, onboarding-worker-4 pushed after, both parked by calling get() while the vendor call
+     is in flight.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .sub2  { font-size: 11px; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .annh  { font-size: 12.5px; font-weight: 700; }
+    .ann   { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weakE { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triw); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="720" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FUTURETASK STATE MACHINE AND THE TREIBER STACK OF WAITERS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="645" y1="50" x2="645" y2="410" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="lbl h2">STATE MACHINE — affordability check, identity vendor p50 900 ms</text>
+  <text x="665" y="62" class="lbl h2">TREIBER STACK — FutureTask.waiters</text>
+  <text x="665" y="78" class="lbl sub2">get() callers park here while the vendor call is in flight</text>
+
+  <!-- NEW -->
+  <rect x="279" y="70" width="150" height="64" rx="6" class="boxP"/>
+  <text x="354" y="90" text-anchor="middle" class="lbl node">NEW</text>
+  <text x="354" y="107" text-anchor="middle" class="lbl body">value = 0</text>
+  <text x="354" y="122" text-anchor="middle" class="lbl sub">created, not started</text>
+
+  <!-- row1 -->
+  <rect x="108" y="190" width="150" height="64" rx="6" class="boxW"/>
+  <text x="183" y="210" text-anchor="middle" class="lbl node">COMPLETING</text>
+  <text x="183" y="227" text-anchor="middle" class="lbl body">value = 1</text>
+  <text x="183" y="242" text-anchor="middle" class="lbl sub">result being set</text>
+
+  <rect x="275" y="190" width="150" height="64" rx="6" class="boxL"/>
+  <text x="350" y="210" text-anchor="middle" class="lbl node">CANCELLED</text>
+  <text x="350" y="227" text-anchor="middle" class="lbl body">value = 4</text>
+  <text x="350" y="242" text-anchor="middle" class="lbl sub">cancelled, terminal</text>
+
+  <rect x="455" y="190" width="150" height="64" rx="6" class="boxW"/>
+  <text x="530" y="210" text-anchor="middle" class="lbl node">INTERRUPTING</text>
+  <text x="530" y="227" text-anchor="middle" class="lbl body">value = 5</text>
+  <text x="530" y="242" text-anchor="middle" class="lbl sub">interrupt pending</text>
+
+  <!-- row2 -->
+  <rect x="20" y="310" width="150" height="64" rx="6" class="boxR"/>
+  <text x="95" y="330" text-anchor="middle" class="lbl node">NORMAL</text>
+  <text x="95" y="347" text-anchor="middle" class="lbl body">value = 2</text>
+  <text x="95" y="362" text-anchor="middle" class="lbl sub">completed, terminal</text>
+
+  <rect x="195" y="310" width="150" height="64" rx="6" class="boxD"/>
+  <text x="270" y="330" text-anchor="middle" class="lbl node">EXCEPTIONAL</text>
+  <text x="270" y="347" text-anchor="middle" class="lbl body">value = 3</text>
+  <text x="270" y="362" text-anchor="middle" class="lbl sub">exception, terminal</text>
+
+  <rect x="455" y="310" width="150" height="64" rx="6" class="boxD"/>
+  <text x="530" y="330" text-anchor="middle" class="lbl node">INTERRUPTED</text>
+  <text x="530" y="347" text-anchor="middle" class="lbl body">value = 6</text>
+  <text x="530" y="362" text-anchor="middle" class="lbl sub">interrupted, terminal</text>
+
+  <!-- edges NEW -> row1 -->
+  <path class="flow" d="M 354 134 V 155 H 183 V 190"/>
+  <path class="flow" d="M 354 134 V 155 H 350 V 190"/>
+  <path class="flow" d="M 354 134 V 155 H 530 V 190"/>
+  <text x="192" y="176" class="lbl tiny">begins completion (CAS)</text>
+  <text x="359" y="176" class="lbl tiny">cancel(false)</text>
+  <text x="539" y="176" class="lbl tiny">cancel(true)</text>
+
+  <!-- edges COMPLETING -> row2 -->
+  <path class="flow" d="M 183 254 V 275 H 95 V 310"/>
+  <path class="flow" d="M 183 254 V 275 H 270 V 310"/>
+  <text x="20" y="296" class="lbl tiny">set(v) finishes</text>
+  <text x="279" y="296" class="lbl tiny">setException finishes</text>
+
+  <!-- edge INTERRUPTING -> INTERRUPTED -->
+  <path class="flow" d="M 530 254 V 310"/>
+  <text x="538" y="286" class="lbl tiny">interrupt delivered</text>
+
+  <!-- Treiber stack -->
+  <rect x="680" y="90" width="180" height="50" rx="6" class="boxH"/>
+  <text x="770" y="112" text-anchor="middle" class="lbl node">waiters</text>
+  <text x="770" y="128" text-anchor="middle" class="lbl sub">volatile head pointer</text>
+
+  <rect x="680" y="180" width="180" height="70" rx="6" class="boxP"/>
+  <text x="770" y="200" text-anchor="middle" class="lbl node">WaitNode</text>
+  <text x="770" y="217" text-anchor="middle" class="lbl body">thread = onboarding-worker-7</text>
+  <text x="770" y="233" text-anchor="middle" class="lbl sub">next → next node</text>
+
+  <rect x="680" y="290" width="180" height="70" rx="6" class="boxP"/>
+  <text x="770" y="310" text-anchor="middle" class="lbl node">WaitNode</text>
+  <text x="770" y="327" text-anchor="middle" class="lbl body">thread = onboarding-worker-4</text>
+  <text x="770" y="343" text-anchor="middle" class="lbl sub">next = null</text>
+
+  <rect x="900" y="180" width="180" height="70" rx="6" class="boxA"/>
+  <text x="990" y="200" text-anchor="middle" class="lbl node">onboarding-worker-7</text>
+  <text x="990" y="217" text-anchor="middle" class="lbl body">future.get()</text>
+  <text x="990" y="233" text-anchor="middle" class="lbl sub">calling thread</text>
+
+  <rect x="900" y="290" width="180" height="70" rx="6" class="boxA"/>
+  <text x="990" y="310" text-anchor="middle" class="lbl node">onboarding-worker-4</text>
+  <text x="990" y="327" text-anchor="middle" class="lbl body">future.get()</text>
+  <text x="990" y="343" text-anchor="middle" class="lbl sub">calling thread</text>
+
+  <path class="flow" d="M 770 140 V 180"/>
+  <text x="778" y="165" class="lbl tiny">push (CAS)</text>
+  <path class="flow" d="M 770 250 V 290"/>
+  <text x="778" y="274" class="lbl tiny">next</text>
+  <path class="flow" d="M 770 360 V 390"/>
+  <text x="782" y="398" text-anchor="start" class="lbl sub">null</text>
+
+  <path class="weakE" d="M 900 215 H 862"/>
+  <path class="weakE" d="M 900 325 H 862"/>
+
+  <rect x="680" y="430" width="400" height="100" rx="6" class="boxA"/>
+  <text x="696" y="450" class="lbl annh">Treiber stack push, no lock</text>
+  <text x="696" y="468" class="lbl ann">node.next = waiters; then CAS(waiters,</text>
+  <text x="696" y="484" class="lbl ann">oldHead, node) — retried if another get()</text>
+  <text x="696" y="500" class="lbl ann">raced in. finishCompletion() pops and</text>
+  <text x="696" y="516" class="lbl ann">unparks every node, LIFO, once resolved.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="560" x2="1100" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="575" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="588" class="lbl tiny">NEW / WaitNode</text>
+  <rect x="200" y="575" width="22" height="16" rx="3" class="boxW"/>
+  <text x="230" y="588" class="lbl tiny">transient in-flight state</text>
+  <rect x="420" y="575" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="588" class="lbl tiny">terminal, normal completion</text>
+  <rect x="660" y="575" width="22" height="16" rx="3" class="boxD"/>
+  <text x="690" y="588" class="lbl tiny">terminal, exception / interrupted</text>
+  <rect x="920" y="575" width="22" height="16" rx="3" class="boxL"/>
+  <text x="950" y="588" class="lbl tiny">terminal, cancelled</text>
+
+  <rect x="20" y="600" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="613" class="lbl tiny">stack head pointer</text>
+  <rect x="200" y="600" width="22" height="16" rx="3" class="boxA"/>
+  <text x="230" y="613" class="lbl tiny">annotation / calling thread</text>
+  <path class="flow" d="M 420 608 H 460"/>
+  <text x="468" y="613" class="lbl tiny">A → B : state transition / stack link</text>
+  <path class="weakE" d="M 780 608 H 820"/>
+  <text x="828" y="613" class="lbl tiny">A → B : A parks on B via get()</text>
+</svg>

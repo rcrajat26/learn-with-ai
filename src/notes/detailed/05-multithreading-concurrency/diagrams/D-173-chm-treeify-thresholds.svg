@@ -1,0 +1,166 @@
+<svg viewBox="0 0 1160 1080" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence on ConcurrentHashMap treeification. Frame 1: a bin
+     reaches 8 nodes in a 32-slot table, but because MIN_TREEIFY_CAPACITY is 64 the table
+     resizes instead of treeifying. Frame 2: the same 8-node bin in a 64-slot table forms a
+     TreeBin, which holds both a red-black tree and a prev/next doubly linked list view, with
+     its lockState read-write lock labelled. Frame 3: during a resize the tree shrinks to 6
+     nodes and untreeifies back to a plain list, with the 8-to-6 hysteresis gap named.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .dashG { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+    .dotA  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/></marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/></marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="1080" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TREEIFY AT 8, UNTREEIFY AT 6, ONLY ABOVE 64</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt; &#8212; bin holding collisions on ClientId hashes</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="80" width="1120" height="280" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="104" class="lbl h2">FRAME 1 &#8212; 8 NODES, TABLE SIZE 32: RESIZE INSTEAD OF TREEIFY</text>
+
+  <rect x="60" y="124" width="260" height="110" rx="6" class="boxP"/>
+  <text x="190" y="146" text-anchor="middle" class="lbl node">table (32 slots)</text>
+  <text x="190" y="166" text-anchor="middle" class="lbl body">bin[11] chain length = 8</text>
+  <text x="190" y="184" text-anchor="middle" class="lbl tiny">TREEIFY_THRESHOLD = 8 reached</text>
+  <text x="190" y="202" text-anchor="middle" class="lbl tiny">clients hashing to bin 11:</text>
+  <text x="190" y="218" text-anchor="middle" class="lbl tiny">C-118820 .. C-118827</text>
+
+  <path class="dotA" d="M 320 179 H 380"/>
+
+  <rect x="380" y="124" width="300" height="110" rx="6" class="boxD"/>
+  <text x="530" y="146" text-anchor="middle" class="lbl node">treeifyBin() checks capacity</text>
+  <text x="530" y="166" text-anchor="middle" class="lbl body">table.length = 32 &lt; MIN_TREEIFY_CAPACITY = 64</text>
+  <text x="530" y="184" text-anchor="middle" class="lbl tiny">condition fails: too few bins overall</text>
+  <text x="530" y="202" text-anchor="middle" class="lbl tiny">to justify a tree; more capacity is</text>
+  <text x="530" y="218" text-anchor="middle" class="lbl tiny">cheaper than a red-black tree here</text>
+
+  <path class="flow" d="M 680 179 H 740"/>
+
+  <rect x="740" y="124" width="340" height="110" rx="6" class="boxH"/>
+  <text x="910" y="146" text-anchor="middle" class="lbl node">tryPresize() called instead</text>
+  <text x="910" y="166" text-anchor="middle" class="lbl body">table doubles: 32 &#8594; 64 slots</text>
+  <text x="910" y="184" text-anchor="middle" class="lbl tiny">bin 11's 8 nodes redistribute across</text>
+  <text x="910" y="202" text-anchor="middle" class="lbl tiny">the lo/hi split (see D-172), typically</text>
+  <text x="910" y="218" text-anchor="middle" class="lbl tiny">shrinking each resulting bin below 8</text>
+
+  <rect x="60" y="252" width="1020" height="90" rx="6" class="boxA"/>
+  <text x="74" y="272" class="lbl tiny" font-weight="700">CHANGED SINCE START: bin 11 hit 8 nodes, but MIN_TREEIFY_CAPACITY = 64</text>
+  <text x="74" y="290" class="lbl tiny">blocks tree conversion while table.length = 32. treeifyBin() redirects to tryPresize(),</text>
+  <text x="74" y="308" class="lbl tiny">doubling the table instead of allocating a TreeBin. No TreeBin exists after this frame.</text>
+  <text x="74" y="326" class="lbl tiny">MIN_TREEIFY_CAPACITY = 64 named explicitly; TREEIFY_THRESHOLD = 8 named explicitly.</text>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="380" width="1120" height="320" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="404" class="lbl h2">FRAME 2 &#8212; 8 NODES, TABLE SIZE 64: TreeBin FORMS</text>
+
+  <rect x="60" y="424" width="260" height="90" rx="6" class="boxP"/>
+  <text x="190" y="446" text-anchor="middle" class="lbl node">table (64 slots)</text>
+  <text x="190" y="466" text-anchor="middle" class="lbl body">bin[43] chain length = 8</text>
+  <text x="190" y="484" text-anchor="middle" class="lbl tiny">table.length = 64 &#8805; 64: condition met</text>
+  <text x="190" y="500" text-anchor="middle" class="lbl tiny">TREEIFY_THRESHOLD = 8</text>
+
+  <path class="flow" d="M 320 469 H 380"/>
+
+  <rect x="380" y="424" width="700" height="220" rx="6" class="boxR"/>
+  <text x="730" y="448" text-anchor="middle" class="lbl node">TreeBin replaces table[43]</text>
+
+  <rect x="400" y="464" width="320" height="150" rx="6" class="boxH"/>
+  <text x="560" y="484" text-anchor="middle" class="lbl body" font-weight="700">red-black tree (TreeNode root)</text>
+  <text x="560" y="502" text-anchor="middle" class="lbl tiny">ordered by hash, then by tie-break</text>
+  <text x="560" y="518" text-anchor="middle" class="lbl tiny">Comparable / identity hash</text>
+  <text x="560" y="538" text-anchor="middle" class="lbl tiny">O(log n) find replaces O(n) scan</text>
+  <text x="560" y="558" text-anchor="middle" class="lbl tiny">8 ClientId keys: C-118820..27</text>
+  <text x="560" y="578" text-anchor="middle" class="lbl tiny">rooted for balanced lookup</text>
+  <text x="560" y="598" text-anchor="middle" class="lbl tiny">restriction-apply-1 builds tree</text>
+
+  <rect x="740" y="464" width="320" height="150" rx="6" class="boxW"/>
+  <text x="900" y="484" text-anchor="middle" class="lbl body" font-weight="700">prev / next list view</text>
+  <text x="900" y="502" text-anchor="middle" class="lbl tiny">doubly linked, insertion order</text>
+  <text x="900" y="522" text-anchor="middle" class="lbl tiny">kept alongside the tree so plain</text>
+  <text x="900" y="538" text-anchor="middle" class="lbl tiny">traversal (iterators, toString)</text>
+  <text x="900" y="554" text-anchor="middle" class="lbl tiny">need not walk the tree structure</text>
+  <text x="900" y="574" text-anchor="middle" class="lbl tiny">lockState: read-write lock guarding</text>
+  <text x="900" y="590" text-anchor="middle" class="lbl tiny">tree rotations vs. concurrent reads</text>
+  <text x="900" y="606" text-anchor="middle" class="lbl tiny">WRITER bit + READER count encoded</text>
+
+  <rect x="60" y="656" width="1020" height="30" rx="6" class="boxA"/>
+  <text x="74" y="676" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 1: same 8-node collision, but table.length = 64 now satisfies MIN_TREEIFY_CAPACITY, so a TreeBin is allocated holding both structures plus a lockState.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="20" y="720" width="1120" height="300" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="744" class="lbl h2">FRAME 3 &#8212; SHRINKING TO 6 DURING RESIZE: UNTREEIFY</text>
+
+  <rect x="60" y="764" width="300" height="110" rx="6" class="boxR"/>
+  <text x="210" y="786" text-anchor="middle" class="lbl node">TreeBin, 8 nodes</text>
+  <text x="210" y="806" text-anchor="middle" class="lbl body">resize splits bin into lo/hi</text>
+  <text x="210" y="824" text-anchor="middle" class="lbl tiny">(hash &amp; oldCap) partitions nodes</text>
+  <text x="210" y="842" text-anchor="middle" class="lbl tiny">lo list keeps 6 of the 8 nodes</text>
+  <text x="210" y="858" text-anchor="middle" class="lbl tiny">2 nodes move to the hi bin</text>
+
+  <path class="dotA" d="M 360 819 H 420"/>
+  <text x="390" y="810" text-anchor="middle" class="lbl tiny">split()</text>
+
+  <rect x="420" y="764" width="300" height="110" rx="6" class="boxD"/>
+  <text x="570" y="786" text-anchor="middle" class="lbl node">UNTREEIFY_THRESHOLD = 6</text>
+  <text x="570" y="806" text-anchor="middle" class="lbl body">lo list count == 6: untreeify</text>
+  <text x="570" y="824" text-anchor="middle" class="lbl tiny">TreeBin converts back to a plain</text>
+  <text x="570" y="842" text-anchor="middle" class="lbl tiny">Node chain via untreeify()</text>
+  <text x="570" y="858" text-anchor="middle" class="lbl tiny">tree torn down, list view kept</text>
+
+  <path class="flow" d="M 720 819 H 780"/>
+
+  <rect x="780" y="764" width="300" height="110" rx="6" class="boxW"/>
+  <text x="930" y="786" text-anchor="middle" class="lbl node">plain Node chain, 6 entries</text>
+  <text x="930" y="806" text-anchor="middle" class="lbl body">no TreeBin, no lockState</text>
+  <text x="930" y="824" text-anchor="middle" class="lbl tiny">next resize point: must climb</text>
+  <text x="930" y="842" text-anchor="middle" class="lbl tiny">back to 8 to re-treeify &#8212;</text>
+  <text x="930" y="858" text-anchor="middle" class="lbl tiny">8/6 hysteresis gap prevents flapping</text>
+
+  <rect x="60" y="900" width="1020" height="100" rx="6" class="boxA"/>
+  <text x="74" y="920" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 2: resize splits the 8-node TreeBin; the lo list that stays behind</text>
+  <text x="74" y="938" class="lbl tiny">drops to 6 nodes, at or below UNTREEIFY_THRESHOLD = 6, so it converts back to a plain list.</text>
+  <text x="74" y="956" class="lbl tiny">The 8-to-6 gap (TREEIFY_THRESHOLD = 8, UNTREEIFY_THRESHOLD = 6) is deliberate hysteresis:</text>
+  <text x="74" y="974" class="lbl tiny">a bin oscillating between 6 and 8 nodes would otherwise treeify/untreeify on every change.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="1010" x2="1140" y2="1010" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="1028" class="lbl h2">LEGEND</text>
+  <rect x="20" y="1038" width="20" height="16" rx="3" class="boxP"/>
+  <text x="48" y="1051" class="lbl tiny">table slot / bin chain</text>
+  <rect x="220" y="1038" width="20" height="16" rx="3" class="boxD"/>
+  <text x="248" y="1051" class="lbl tiny">threshold check / failure path</text>
+  <rect x="450" y="1038" width="20" height="16" rx="3" class="boxH"/>
+  <text x="478" y="1051" class="lbl tiny">resize / capacity change</text>
+  <rect x="680" y="1038" width="20" height="16" rx="3" class="boxR"/>
+  <text x="708" y="1051" class="lbl tiny">TreeBin (tree + list view)</text>
+  <rect x="900" y="1038" width="20" height="16" rx="3" class="boxW"/>
+  <text x="928" y="1051" class="lbl tiny">plain Node chain (untreeified)</text>
+
+  <path class="flow" d="M 20 1068 H 60"/>
+  <text x="68" y="1073" class="lbl tiny">primary flow / transition</text>
+  <path class="dotA" d="M 260 1068 H 300"/>
+  <text x="308" y="1073" class="lbl tiny">condition check leading to a branch</text>
+</svg>

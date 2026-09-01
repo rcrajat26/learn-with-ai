@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1000 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve: added latency versus queue depth for the CardPayments PSP capture
+     path, a 50 ms service time. The long queue, capacity 1000, rises step by step to 50,000 ms
+     (50 s) of added latency at depth 1000, with its p99 marked near depth 500 at about 25,000 ms.
+     The short queue, capacity 20, stays under 1,000 ms and is rejected once depth 20 is reached,
+     its p99 marked at that rejection point. An arithmetic panel spells out 50 ms times 1,000
+     equals 50,000 ms, and a second panel names queue time and execution time as the two metrics
+     to export separately. All figures are labelled order-of-magnitude illustrations, not measured
+     production values.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 11px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .floor  { font-size: 10.5px; fill: #4b5563; }
+    .bold   { font-weight: 700; }
+
+    .axis   { stroke: #475569; stroke-width: 1.6; fill: none; }
+    .grid   { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 3 3; }
+
+    .longq  { stroke: #b45309; stroke-width: 2.2; fill: none; stroke-linejoin: round; }
+    .shortq { stroke: #15803d; stroke-width: 2.2; fill: none; stroke-linejoin: round; }
+    .p99g   { stroke: #9ca3af; stroke-width: 1.6; fill: none; stroke-dasharray: 4 3; }
+
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .reject { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="dotG" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5">
+      <circle cx="4" cy="4" r="3.4" fill="#b45309" stroke="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">QUEUE DEPTH IS LATENCY YOU CANNOT SEE</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="58" class="lbl sub bold">Service under test: CardPayments capture (PSP), 50 ms service time.</text>
+  <text x="20" y="72" class="lbl sub bold">Figures below are order-of-magnitude illustrations of queueing delay — not measured production values.</text>
+
+  <!-- gridlines + y ticks: latency 0..50000ms across y=520(0) to y=100(50000) -->
+  <line x1="120" y1="520" x2="860" y2="520" class="grid"/>
+  <text x="112" y="524" text-anchor="end" class="lbl floor">0</text>
+  <line x1="120" y1="436" x2="860" y2="436" class="grid"/>
+  <text x="112" y="440" text-anchor="end" class="lbl floor">10,000 ms</text>
+  <line x1="120" y1="352" x2="860" y2="352" class="grid"/>
+  <text x="112" y="356" text-anchor="end" class="lbl floor">20,000 ms</text>
+  <line x1="120" y1="268" x2="860" y2="268" class="grid"/>
+  <text x="112" y="272" text-anchor="end" class="lbl floor">30,000 ms</text>
+  <line x1="120" y1="184" x2="860" y2="184" class="grid"/>
+  <text x="112" y="188" text-anchor="end" class="lbl floor">40,000 ms</text>
+  <line x1="120" y1="100" x2="860" y2="100" class="grid"/>
+  <text x="112" y="104" text-anchor="end" class="lbl floor">50,000 ms</text>
+
+  <text x="46" y="310" text-anchor="middle" class="lbl sub" transform="rotate(-90 46 310)">added latency (ms)</text>
+
+  <!-- axes -->
+  <path class="axis" d="M 120 100 V 520 H 860"/>
+
+  <!-- x ticks: depth 1,10,20,50,100,200,500,1000 -->
+  <line x1="120" y1="520" x2="120" y2="526" class="axis"/>
+  <text x="120" y="540" text-anchor="middle" class="lbl floor">1</text>
+  <line x1="225.71" y1="520" x2="225.71" y2="526" class="axis"/>
+  <text x="225.71" y="540" text-anchor="middle" class="lbl floor">10</text>
+  <line x1="331.43" y1="520" x2="331.43" y2="526" class="axis"/>
+  <text x="331.43" y="540" text-anchor="middle" class="lbl floor">20</text>
+  <line x1="437.14" y1="520" x2="437.14" y2="526" class="axis"/>
+  <text x="437.14" y="540" text-anchor="middle" class="lbl floor">50</text>
+  <line x1="542.86" y1="520" x2="542.86" y2="526" class="axis"/>
+  <text x="542.86" y="540" text-anchor="middle" class="lbl floor">100</text>
+  <line x1="648.57" y1="520" x2="648.57" y2="526" class="axis"/>
+  <text x="648.57" y="540" text-anchor="middle" class="lbl floor">200</text>
+  <line x1="754.29" y1="520" x2="754.29" y2="526" class="axis"/>
+  <text x="754.29" y="540" text-anchor="middle" class="lbl floor">500</text>
+  <line x1="860" y1="520" x2="860" y2="526" class="axis"/>
+  <text x="860" y="540" text-anchor="middle" class="lbl floor">1000</text>
+  <text x="490" y="558" text-anchor="middle" class="lbl sub">queue depth (requests waiting ahead of you)</text>
+
+  <!-- long queue series, cap 1000, step polyline -->
+  <path class="longq" d="M120 519.6 H225.71 V515.8 H331.43 V511.6 H437.14 V499 H542.86 V478 H648.57 V436 H754.29 V310 H860 V100"/>
+  <text x="700" y="220" text-anchor="middle" class="lbl body bold" fill="#b45309">long queue (cap 1,000)</text>
+
+  <!-- short queue series, cap 20, step polyline, then rejection -->
+  <path class="shortq" d="M120 519.6 H225.71 V515.8 H331.43 V511.6"/>
+  <text x="225" y="500" text-anchor="middle" class="lbl body bold" fill="#15803d">short queue (cap 20)</text>
+
+  <!-- rejection marker at depth 20 -->
+  <circle cx="331.43" cy="511.6" r="6" class="reject"/>
+  <path d="M331.43 511.6 V 460" stroke="#b91c1c" stroke-width="1.6" stroke-dasharray="4 3" fill="none"/>
+  <rect x="270" y="424" width="185" height="34" rx="5" class="reject"/>
+  <text x="362.5" y="437" text-anchor="middle" class="lbl floor bold" fill="#b91c1c">queue full at depth 20</text>
+  <text x="362.5" y="451" text-anchor="middle" class="lbl floor" fill="#b91c1c">first request rejected here</text>
+
+  <!-- p99 marker: short queue, at the rejection point -->
+  <path class="p99g" d="M331.43 511.6 H 40"/>
+  <path class="p99g" d="M331.43 511.6 V 595"/>
+  <circle cx="331.43" cy="511.6" r="4.5" fill="#15803d" stroke="#15803d"/>
+  <text x="185" y="580" text-anchor="middle" class="lbl floor bold" fill="#15803d">short-queue p99 ≈ 1,000 ms (1 s)</text>
+  <text x="185" y="594" text-anchor="middle" class="lbl floor" fill="#4b5563">20 × 50 ms, then reject</text>
+
+  <!-- p99 marker: long queue, near depth 500 -->
+  <path class="p99g" d="M754.29 310 H 40"/>
+  <path class="p99g" d="M754.29 310 V 595"/>
+  <circle cx="754.29" cy="310" r="4.5" fill="#b45309" stroke="#b45309"/>
+  <text x="640" y="580" text-anchor="middle" class="lbl floor bold" fill="#b45309">long-queue p99 ≈ 25,000 ms (25 s)</text>
+  <text x="640" y="594" text-anchor="middle" class="lbl floor" fill="#4b5563">500 × 50 ms, still climbing</text>
+
+  <!-- annotation panel A: the arithmetic -->
+  <rect x="120" y="612" width="360" height="112" rx="6" class="panel"/>
+  <text x="132" y="631" class="lbl h2" fill="#2563eb">THE ARITHMETIC</text>
+  <text x="132" y="650" class="lbl floor">50 ms service time × 1,000 queued ahead</text>
+  <text x="132" y="664" class="lbl floor bold">= 50,000 ms = 50 s added latency</text>
+  <text x="132" y="683" class="lbl floor">before the first request is rejected</text>
+  <text x="132" y="702" class="lbl floor">cap 20: 20 × 50 ms = 1,000 ms (1 s) max</text>
+
+  <!-- annotation panel B: metrics to export -->
+  <rect x="500" y="612" width="360" height="112" rx="6" class="panel"/>
+  <text x="512" y="631" class="lbl h2" fill="#2563eb">METRICS TO EXPORT — SEPARATELY</text>
+  <text x="512" y="650" class="lbl floor bold">queue time</text>
+  <text x="512" y="664" class="lbl floor">ms spent waiting in line before service starts</text>
+  <text x="512" y="683" class="lbl floor bold">execution time</text>
+  <text x="512" y="697" class="lbl floor">the 50 ms actually doing the PSP capture</text>
+  <text x="512" y="716" class="lbl floor" fill="#4b5563">one "response time" number hides which one grew</text>
+
+  <!-- legend -->
+  <line x1="20" y1="736" x2="980" y2="736" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="752" x2="46" y2="752" class="longq"/>
+  <text x="52" y="756" class="lbl tiny">long queue (cap 1,000) — latency series</text>
+  <line x1="330" y1="752" x2="356" y2="752" class="shortq"/>
+  <text x="362" y="756" class="lbl tiny">short queue (cap 20) — latency series</text>
+  <line x1="620" y1="752" x2="646" y2="752" class="p99g"/>
+  <text x="652" y="756" class="lbl tiny">p99 marker guide</text>
+
+  <rect x="20" y="768" width="22" height="16" rx="3" class="reject"/>
+  <text x="52" y="780" class="lbl tiny">queue full → request rejected</text>
+  <rect x="330" y="768" width="22" height="16" rx="3" class="panel"/>
+  <text x="362" y="780" class="lbl tiny">annotation panel (arithmetic / metrics)</text>
+</svg>

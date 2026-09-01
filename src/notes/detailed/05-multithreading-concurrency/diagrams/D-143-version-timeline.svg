@@ -1,0 +1,149 @@
+<svg viewBox="0 0 1840 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The concurrency version timeline, Java 5 through 25, one mark per release along a single time axis. Additions above the axis: Java 5 brings j.u.c and JSR-133, the new Java Memory Model; Java 7 brings fork/join; Java 8 brings CompletableFuture, StampedLock, LongAdder, and a new ConcurrentHashMap; Java 9 brings VarHandle and Flow; Java 10 brings cgroup awareness; Java 19 brings virtual threads as a preview; Java 21 finalizes virtual threads; Java 24 brings JEP 491; Java 25 finalizes scoped values. Removals in a separate lane below the axis: Java 15 disables biased locking, and Java 20 removes Thread.stop.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .pillt { font-size: 12px; font-weight: 700; fill: #1f2937; }
+
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+    .axis { fill: none; stroke: #475569; stroke-width: 2.2; marker-end: url(#triSlate); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1840" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE CONCURRENCY VERSION TIMELINE — JAVA 5 TO 25</text>
+  <line x1="20" y1="42" x2="1820" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="40" y="222" class="lbl h2">ADDITIONS</text>
+  <text x="40" y="446" class="lbl h2">REMOVALS</text>
+
+  <line x1="60" y1="400" x2="1770" y2="400" class="axis"/>
+  <text x="1786" y="406" class="lbl tiny">time</text>
+
+  <!-- Java 5 -->
+  <rect x="40" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="110" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 5</text>
+  <text x="110" y="282" text-anchor="middle" class="lbl body">j.u.c</text>
+  <text x="110" y="300" text-anchor="middle" class="lbl body">JSR-133 (JMM)</text>
+  <path class="flow" d="M 110 370 V 389"/>
+  <rect x="88" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="110" y="405" text-anchor="middle" class="pillt">5</text>
+
+  <!-- Java 7 -->
+  <rect x="200" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="270" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 7</text>
+  <text x="270" y="282" text-anchor="middle" class="lbl body">fork/join</text>
+  <path class="flow" d="M 270 370 V 389"/>
+  <rect x="248" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="270" y="405" text-anchor="middle" class="pillt">7</text>
+
+  <!-- Java 8 -->
+  <rect x="360" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="430" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 8</text>
+  <text x="430" y="282" text-anchor="middle" class="lbl body">CompletableFuture</text>
+  <text x="430" y="300" text-anchor="middle" class="lbl body">StampedLock</text>
+  <text x="430" y="318" text-anchor="middle" class="lbl body">LongAdder</text>
+  <text x="430" y="336" text-anchor="middle" class="lbl body">new CHM</text>
+  <path class="flow" d="M 430 370 V 389"/>
+  <rect x="408" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="430" y="405" text-anchor="middle" class="pillt">8</text>
+
+  <!-- Java 9 -->
+  <rect x="520" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="590" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 9</text>
+  <text x="590" y="282" text-anchor="middle" class="lbl body">VarHandle</text>
+  <text x="590" y="300" text-anchor="middle" class="lbl body">Flow (reactive)</text>
+  <path class="flow" d="M 590 370 V 389"/>
+  <rect x="568" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="590" y="405" text-anchor="middle" class="pillt">9</text>
+
+  <!-- Java 10 -->
+  <rect x="680" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="750" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 10</text>
+  <text x="750" y="282" text-anchor="middle" class="lbl body">cgroup awareness</text>
+  <path class="flow" d="M 750 370 V 389"/>
+  <rect x="728" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="750" y="405" text-anchor="middle" class="pillt">10</text>
+
+  <!-- Java 15 (removal only) -->
+  <rect x="840" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="862" y="405" text-anchor="middle" class="pillt">15</text>
+  <path class="flow" d="M 862 411 V 430"/>
+  <rect x="792" y="430" width="140" height="70" rx="6" class="boxD"/>
+  <text x="862" y="452" text-anchor="middle" class="lbl body" font-weight="700">Java 15</text>
+  <text x="862" y="470" text-anchor="middle" class="lbl body">biased locking</text>
+  <text x="862" y="486" text-anchor="middle" class="lbl body">disabled</text>
+
+  <!-- Java 19 -->
+  <rect x="1000" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="1070" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 19</text>
+  <text x="1070" y="282" text-anchor="middle" class="lbl body">virtual threads</text>
+  <text x="1070" y="300" text-anchor="middle" class="lbl body">(preview)</text>
+  <path class="flow" d="M 1070 370 V 389"/>
+  <rect x="1048" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="1070" y="405" text-anchor="middle" class="pillt">19</text>
+
+  <!-- Java 20 (removal only) -->
+  <rect x="1208" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="1230" y="405" text-anchor="middle" class="pillt">20</text>
+  <path class="flow" d="M 1230 411 V 430"/>
+  <rect x="1160" y="430" width="140" height="70" rx="6" class="boxD"/>
+  <text x="1230" y="452" text-anchor="middle" class="lbl body" font-weight="700">Java 20</text>
+  <text x="1230" y="470" text-anchor="middle" class="lbl body">Thread.stop</text>
+  <text x="1230" y="486" text-anchor="middle" class="lbl body">removed</text>
+
+  <!-- Java 21 -->
+  <rect x="1320" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="1390" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 21</text>
+  <text x="1390" y="282" text-anchor="middle" class="lbl body">virtual threads</text>
+  <text x="1390" y="300" text-anchor="middle" class="lbl body">(final)</text>
+  <path class="flow" d="M 1390 370 V 389"/>
+  <rect x="1368" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="1390" y="405" text-anchor="middle" class="pillt">21</text>
+
+  <!-- Java 24 -->
+  <rect x="1480" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="1550" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 24</text>
+  <text x="1550" y="282" text-anchor="middle" class="lbl body">JEP 491</text>
+  <text x="1550" y="300" text-anchor="middle" class="lbl sub">no vthread pinning</text>
+  <path class="flow" d="M 1550 370 V 389"/>
+  <rect x="1528" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="1550" y="405" text-anchor="middle" class="pillt">24</text>
+
+  <!-- Java 25 -->
+  <rect x="1640" y="240" width="140" height="130" rx="6" class="boxH"/>
+  <text x="1710" y="262" text-anchor="middle" class="lbl body" font-weight="700">Java 25</text>
+  <text x="1710" y="282" text-anchor="middle" class="lbl body">scoped values</text>
+  <text x="1710" y="300" text-anchor="middle" class="lbl body">(final)</text>
+  <path class="flow" d="M 1710 370 V 389"/>
+  <rect x="1688" y="389" width="44" height="22" rx="8" class="pill"/>
+  <text x="1710" y="405" text-anchor="middle" class="pillt">25</text>
+
+  <!-- legend -->
+  <line x1="20" y1="560" x2="1820" y2="560" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="574" width="44" height="22" rx="8" class="pill"/>
+  <text x="76" y="590" class="lbl tiny">Java release mark (version number)</text>
+
+  <rect x="420" y="574" width="22" height="16" rx="3" class="boxH"/>
+  <text x="450" y="587" class="lbl tiny">capability added in this release</text>
+
+  <rect x="800" y="574" width="22" height="16" rx="3" class="boxD"/>
+  <text x="830" y="587" class="lbl tiny">capability removed or disabled in this release</text>
+
+  <path class="flow" d="M 1300 582 H 1340"/>
+  <text x="1348" y="587" class="lbl tiny">A → B : connects the release mark to what changed</text>
+</svg>

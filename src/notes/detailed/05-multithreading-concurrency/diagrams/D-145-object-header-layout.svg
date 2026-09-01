@@ -1,0 +1,147 @@
+<svg viewBox="0 0 1040 460" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Byte layout of a QuizStakes Reservation instance on 64-bit HotSpot with compressed
+     oops on: an 8-byte mark word at offset 0, a 4-byte compressed klass pointer at offset 8, then
+     fields in HotSpot size-class order — the 8-byte long placedAtNanos, the 4-byte int
+     stakeCents holding 333 for a 3.33 stake, the 2-byte short oddsTierId, the 1-byte byte
+     statusFlag, the 4-byte compressed oop reference to Client — then 1 byte of padding to the
+     8-byte boundary at offset 32. Header total is 12 bytes with compressed oops on; without
+     compressed oops the klass pointer and the oop field each widen to 8 bytes, making a 16-byte
+     header and a 40-byte instance.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .body   { font-size: 12.5px; }
+    .sub    { font-size: 11px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .floor  { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .tick   { stroke: #4b5563; stroke-width: 1; }
+    .leader { stroke: #9ca3af; stroke-width: 1.2; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="460" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">RESERVATION INSTANCE — BYTE LAYOUT ON 64-BIT HOTSPOT</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl h2">COMPRESSED OOPS ON — DEFAULT HEAP &lt; 32 GB</text>
+
+  <!-- far-row labels (segments 2,4,6,8) -->
+  <text x="350" y="90"  text-anchor="middle" class="lbl tiny">klass ptr*</text>
+  <text x="350" y="103" text-anchor="middle" class="lbl floor">4 B, offset 8</text>
+  <path class="leader" d="M 350 108 V 170"/>
+
+  <text x="662" y="90"  text-anchor="middle" class="lbl tiny">int stakeCents</text>
+  <text x="662" y="103" text-anchor="middle" class="lbl floor">4 B, offset 20 (= 333)</text>
+  <path class="leader" d="M 662 108 V 170"/>
+
+  <text x="779" y="90"  text-anchor="middle" class="lbl tiny">byte statusFlag</text>
+  <text x="779" y="103" text-anchor="middle" class="lbl floor">1 B, offset 26</text>
+  <path class="leader" d="M 779 108 V 170"/>
+
+  <text x="909" y="90"  text-anchor="middle" class="lbl tiny">padding</text>
+  <text x="909" y="103" text-anchor="middle" class="lbl floor">1 B, offset 31</text>
+  <path class="leader" d="M 909 108 V 170"/>
+
+  <!-- near-row labels (segments 1,3,5,7) -->
+  <text x="194" y="130" text-anchor="middle" class="lbl tiny">mark word</text>
+  <text x="194" y="143" text-anchor="middle" class="lbl floor">8 B, offset 0</text>
+  <path class="leader" d="M 194 148 V 170"/>
+
+  <text x="506" y="130" text-anchor="middle" class="lbl tiny">long placedAtNanos</text>
+  <text x="506" y="143" text-anchor="middle" class="lbl floor">8 B, offset 12</text>
+  <path class="leader" d="M 506 148 V 170"/>
+
+  <text x="740" y="130" text-anchor="middle" class="lbl tiny">short oddsTierId</text>
+  <text x="740" y="143" text-anchor="middle" class="lbl floor">2 B, offset 24</text>
+  <path class="leader" d="M 740 148 V 170"/>
+
+  <text x="844" y="130" text-anchor="middle" class="lbl tiny">oop* client</text>
+  <text x="844" y="143" text-anchor="middle" class="lbl floor">4 B, offset 27</text>
+  <path class="leader" d="M 844 148 V 170"/>
+
+  <!-- the strip: 8 segments, ticks every byte -->
+  <g>
+    <rect x="90"  y="170" width="208" height="40" class="boxP"/>
+    <rect x="298" y="170" width="104" height="40" class="boxH"/>
+    <rect x="402" y="170" width="208" height="40" class="boxR"/>
+    <rect x="610" y="170" width="104" height="40" class="boxR"/>
+    <rect x="714" y="170" width="52"  height="40" class="boxR"/>
+    <rect x="766" y="170" width="26"  height="40" class="boxR"/>
+    <rect x="792" y="170" width="104" height="40" class="boxP"/>
+    <rect x="896" y="170" width="26"  height="40" class="boxW"/>
+
+    <!-- byte ticks inside each segment -->
+    <line class="tick" x1="116" y1="170" x2="116" y2="210"/>
+    <line class="tick" x1="142" y1="170" x2="142" y2="210"/>
+    <line class="tick" x1="168" y1="170" x2="168" y2="210"/>
+    <line class="tick" x1="194" y1="170" x2="194" y2="210"/>
+    <line class="tick" x1="220" y1="170" x2="220" y2="210"/>
+    <line class="tick" x1="246" y1="170" x2="246" y2="210"/>
+    <line class="tick" x1="272" y1="170" x2="272" y2="210"/>
+    <line class="tick" x1="324" y1="170" x2="324" y2="210"/>
+    <line class="tick" x1="350" y1="170" x2="350" y2="210"/>
+    <line class="tick" x1="376" y1="170" x2="376" y2="210"/>
+    <line class="tick" x1="428" y1="170" x2="428" y2="210"/>
+    <line class="tick" x1="454" y1="170" x2="454" y2="210"/>
+    <line class="tick" x1="480" y1="170" x2="480" y2="210"/>
+    <line class="tick" x1="506" y1="170" x2="506" y2="210"/>
+    <line class="tick" x1="532" y1="170" x2="532" y2="210"/>
+    <line class="tick" x1="558" y1="170" x2="558" y2="210"/>
+    <line class="tick" x1="584" y1="170" x2="584" y2="210"/>
+    <line class="tick" x1="636" y1="170" x2="636" y2="210"/>
+    <line class="tick" x1="662" y1="170" x2="662" y2="210"/>
+    <line class="tick" x1="688" y1="170" x2="688" y2="210"/>
+    <line class="tick" x1="740" y1="170" x2="740" y2="210"/>
+    <line class="tick" x1="818" y1="170" x2="818" y2="210"/>
+    <line class="tick" x1="844" y1="170" x2="844" y2="210"/>
+    <line class="tick" x1="870" y1="170" x2="870" y2="210"/>
+  </g>
+
+  <!-- offset numbers at segment boundaries -->
+  <g class="lbl floor" text-anchor="middle">
+    <text x="90"  y="225">0</text>
+    <text x="298" y="225">8</text>
+    <text x="402" y="225">12</text>
+    <text x="610" y="225">20</text>
+    <text x="714" y="225">24</text>
+    <text x="766" y="225">26</text>
+    <text x="792" y="225">27</text>
+    <text x="896" y="225">31</text>
+    <text x="922" y="225">32</text>
+  </g>
+  <text x="922" y="242" text-anchor="end" class="lbl sub">8-byte aligned instance size</text>
+
+  <!-- annotation panels: header size with / without compressed oops -->
+  <rect x="90" y="270" width="440" height="118" rx="6" class="panel"/>
+  <text x="106" y="292" class="lbl node">HEADER — COMPRESSED OOPS ON (DEFAULT)</text>
+  <text x="106" y="312" class="lbl sub">mark word 8 B + compressed klass ptr 4 B</text>
+  <text x="106" y="330" class="lbl sub">= 12 B header</text>
+  <text x="106" y="352" class="lbl sub">fields 8+4+2+1+4 B, +1 B pad</text>
+  <text x="106" y="370" class="lbl sub">= 32 B total Reservation instance</text>
+
+  <rect x="550" y="270" width="440" height="118" rx="6" class="panel"/>
+  <text x="566" y="292" class="lbl node">HEADER — COMPRESSED OOPS OFF</text>
+  <text x="566" y="312" class="lbl sub">-XX:-UseCompressedOops, or heap &gt;= 32 GB</text>
+  <text x="566" y="330" class="lbl sub">mark word 8 B + klass ptr 8 B = 16 B header</text>
+  <text x="566" y="350" class="lbl sub">client oop field also widens 4 B -&gt; 8 B</text>
+  <text x="566" y="370" class="lbl sub">= 40 B total Reservation instance</text>
+
+  <!-- legend -->
+  <line x1="20" y1="408" x2="1020" y2="408" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="420" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="433" class="lbl tiny">mark word / compressed oop reference field</text>
+  <rect x="330" y="420" width="22" height="16" rx="3" class="boxH"/>
+  <text x="360" y="433" class="lbl tiny">compressed klass pointer</text>
+  <rect x="560" y="420" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="433" class="lbl tiny">primitive fields (long, int, short, byte)</text>
+  <rect x="850" y="420" width="22" height="16" rx="3" class="boxW"/>
+  <text x="880" y="433" class="lbl tiny">padding</text>
+</svg>

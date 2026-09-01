@@ -1,0 +1,169 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing CountedCompleter joining without blocking, fanning out over
+     95,000 card deposits. Frame 1: the root completer's pending count is set to the number of
+     child leaf completers, one per batch of deposits, and each child's pending count is set to
+     zero since leaves have no children of their own. Frame 2: leaves finish processing their
+     deposit batch and call tryComplete, which decrements the parent's pending count; a parent
+     only proceeds once its count reaches zero. Frame 3: once the last leaf decrements it, the
+     root's pending count reaches zero and its onCompletion fires, having required no thread to
+     ever block on a join. This propagate-on-completion style is what ConcurrentHashMap's bulk
+     operations, such as forEach and reduce, and java.util.stream's parallel pipelines use
+     internally instead of RecursiveTask's fork/join/blocking-join pattern.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .etxt  { font-size: 11px; fill: #1f2937; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWk  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .impl { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CountedCompleter — JOINS WITHOUT BLOCKING (FAN-OUT OVER 95,000 CARD DEPOSITS)</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="66" class="lbl h2">FRAME 1 — PENDING COUNTS SET ON THE COMPLETER TREE</text>
+  <rect x="20" y="76" width="1000" height="180" rx="6" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="440" y="96" width="200" height="60" rx="6" class="boxP"/>
+  <text x="540" y="118" text-anchor="middle" class="lbl node">root completer</text>
+  <text x="540" y="136" text-anchor="middle" class="lbl body">pending = 4</text>
+  <text x="540" y="150" text-anchor="middle" class="lbl sub">95,000 deposits total</text>
+
+  <path class="flow" d="M 540 156 V 172 H 540 V 172"/>
+  <path class="flow" d="M 540 156 V 172 H 130 V 188"/>
+  <path class="flow" d="M 540 156 V 172 H 410 V 188"/>
+  <path class="flow" d="M 540 156 V 172 H 670 V 188"/>
+  <path class="flow" d="M 540 156 V 172 H 950 V 188"/>
+
+  <rect x="60" y="192" width="140" height="56" rx="6" class="boxWk"/>
+  <text x="130" y="212" text-anchor="middle" class="lbl node">leaf 1</text>
+  <text x="130" y="230" text-anchor="middle" class="lbl body">pending = 0</text>
+  <text x="130" y="244" text-anchor="middle" class="lbl sub">batch of 23,750</text>
+
+  <rect x="340" y="192" width="140" height="56" rx="6" class="boxWk"/>
+  <text x="410" y="212" text-anchor="middle" class="lbl node">leaf 2</text>
+  <text x="410" y="230" text-anchor="middle" class="lbl body">pending = 0</text>
+  <text x="410" y="244" text-anchor="middle" class="lbl sub">batch of 23,750</text>
+
+  <rect x="600" y="192" width="140" height="56" rx="6" class="boxWk"/>
+  <text x="670" y="212" text-anchor="middle" class="lbl node">leaf 3</text>
+  <text x="670" y="230" text-anchor="middle" class="lbl body">pending = 0</text>
+  <text x="670" y="244" text-anchor="middle" class="lbl sub">batch of 23,750</text>
+
+  <rect x="880" y="192" width="140" height="56" rx="6" class="boxWk"/>
+  <text x="950" y="212" text-anchor="middle" class="lbl node">leaf 4</text>
+  <text x="950" y="230" text-anchor="middle" class="lbl body">pending = 0</text>
+  <text x="950" y="244" text-anchor="middle" class="lbl sub">batch of 23,750</text>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="296" class="lbl h2">FRAME 2 — LEAVES FINISH AND CALL tryComplete, DECREMENTING THEIR PARENT</text>
+  <rect x="20" y="306" width="1000" height="270" rx="6" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="440" y="326" width="200" height="60" rx="6" class="boxP"/>
+  <text x="540" y="348" text-anchor="middle" class="lbl node">root completer</text>
+  <text x="540" y="366" text-anchor="middle" class="lbl body">pending = 4 -&gt; 2</text>
+  <text x="540" y="380" text-anchor="middle" class="lbl sub">not yet zero, waits</text>
+
+  <rect x="60" y="422" width="140" height="66" rx="6" class="boxR"/>
+  <text x="130" y="444" text-anchor="middle" class="lbl node">leaf 1</text>
+  <text x="130" y="462" text-anchor="middle" class="lbl body">done, DEP-* CAPTURED</text>
+  <text x="130" y="478" text-anchor="middle" class="lbl sub">calls tryComplete()</text>
+
+  <path class="impl" d="M 130 422 V 400 H 500 V 386"/>
+  <text x="270" y="394" text-anchor="middle" class="lbl etxt">tryComplete() decrements parent</text>
+
+  <rect x="340" y="422" width="140" height="66" rx="6" class="boxR"/>
+  <text x="410" y="444" text-anchor="middle" class="lbl node">leaf 2</text>
+  <text x="410" y="462" text-anchor="middle" class="lbl body">done, DEP-* CAPTURED</text>
+  <text x="410" y="478" text-anchor="middle" class="lbl sub">calls tryComplete()</text>
+
+  <path class="impl" d="M 410 422 V 406 H 560 V 386"/>
+
+  <rect x="600" y="422" width="140" height="66" rx="6" class="boxWk"/>
+  <text x="670" y="444" text-anchor="middle" class="lbl node">leaf 3</text>
+  <text x="670" y="462" text-anchor="middle" class="lbl body">still processing</text>
+  <text x="670" y="478" text-anchor="middle" class="lbl sub">batch of 23,750</text>
+
+  <rect x="880" y="422" width="140" height="66" rx="6" class="boxWk"/>
+  <text x="950" y="444" text-anchor="middle" class="lbl node">leaf 4</text>
+  <text x="950" y="462" text-anchor="middle" class="lbl body">still processing</text>
+  <text x="950" y="478" text-anchor="middle" class="lbl sub">batch of 23,750</text>
+
+  <rect x="40" y="510" width="960" height="52" rx="6" class="boxAnn"/>
+  <text x="54" y="530" class="lbl tiny">No thread here calls join() and no thread blocks — each leaf, on finishing, propagates completion upward itself.</text>
+  <text x="54" y="546" class="lbl tiny">A parent only fires its own onCompletion once every child has decremented its count to zero.</text>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="606" class="lbl h2">FRAME 3 — ROOT's onCompletion FIRES, NO THREAD EVER BLOCKED</text>
+  <rect x="20" y="616" width="1000" height="230" rx="6" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="60" y="636" width="140" height="56" rx="6" class="boxR"/>
+  <text x="130" y="656" text-anchor="middle" class="lbl node">leaf 1</text>
+  <text x="130" y="674" text-anchor="middle" class="lbl sub">done</text>
+
+  <rect x="340" y="636" width="140" height="56" rx="6" class="boxR"/>
+  <text x="410" y="656" text-anchor="middle" class="lbl node">leaf 2</text>
+  <text x="410" y="674" text-anchor="middle" class="lbl sub">done</text>
+
+  <rect x="600" y="636" width="140" height="56" rx="6" class="boxR"/>
+  <text x="670" y="656" text-anchor="middle" class="lbl node">leaf 3</text>
+  <text x="670" y="674" text-anchor="middle" class="lbl sub">done</text>
+
+  <rect x="880" y="636" width="140" height="66" rx="6" class="boxR"/>
+  <text x="950" y="656" text-anchor="middle" class="lbl node">leaf 4</text>
+  <text x="950" y="674" text-anchor="middle" class="lbl body">last to finish</text>
+  <text x="950" y="690" text-anchor="middle" class="lbl sub">calls tryComplete()</text>
+
+  <path class="impl" d="M 130 636 V 620 H 500 V 606 V 720"/>
+  <path class="impl" d="M 410 636 V 626 H 520 V 720"/>
+  <path class="impl" d="M 670 636 V 626 H 560 V 720"/>
+  <path class="impl" d="M 950 702 V 720 H 640 V 720"/>
+
+  <rect x="440" y="724" width="200" height="66" rx="6" class="boxHi"/>
+  <text x="540" y="746" text-anchor="middle" class="lbl node">root completer</text>
+  <text x="540" y="764" text-anchor="middle" class="lbl body">pending = 0</text>
+  <text x="540" y="780" text-anchor="middle" class="lbl body">onCompletion() fires</text>
+
+  <rect x="700" y="724" width="300" height="90" rx="6" class="boxAnn"/>
+  <text x="714" y="746" class="lbl h2">USED BY CHM BULK OPS AND STREAM</text>
+  <text x="714" y="764" class="lbl tiny">ConcurrentHashMap.forEach/reduce and</text>
+  <text x="714" y="780" class="lbl tiny">java.util.stream's parallel pipelines use this</text>
+  <text x="714" y="796" class="lbl tiny">propagate-on-completion style, not RecursiveTask.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="860" x2="1020" y2="860" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="868" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="879" class="lbl tiny">root / interface completer</text>
+  <rect x="220" y="868" width="22" height="14" rx="3" class="boxHi"/>
+  <text x="250" y="879" class="lbl tiny">the completion this diagram is about</text>
+  <rect x="500" y="868" width="22" height="14" rx="3" class="boxR"/>
+  <text x="530" y="879" class="lbl tiny">a finished leaf / resolved state</text>
+  <rect x="740" y="868" width="22" height="14" rx="3" class="boxWk"/>
+  <text x="770" y="879" class="lbl tiny">a leaf still processing</text>
+  <path class="flow" d="M 20 890 H 60"/>
+  <text x="68" y="895" class="lbl tiny">A → B : tree structure (parent to child)</text>
+  <path class="impl" d="M 480 890 H 520"/>
+  <text x="528" y="895" class="lbl tiny">A → B : tryComplete() decrementing the parent</text>
+</svg>

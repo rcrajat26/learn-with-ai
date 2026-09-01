@@ -1,0 +1,173 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Two families side by side. Left: a worker about to block calls tryCompensate,
+     which either spawns a spare or releases one already parked, bounded by maximumPoolSize —
+     documented as 256 plus parallelism for the common pool but unconfirmed against source —
+     minimumRunnable defaulting to 1, and a saturate predicate that can veto compensation and
+     throw RejectedExecutionException. Right: the ManagedBlocker contract loops isReleasable then
+     block, letting the pool compensate correctly around a genuine external wait such as the PSP
+     card-withdrawal callback. Below both, the unsupported path: plain blocking I/O such as an
+     uncompensated Socket read with no ManagedBlocker, which the pool cannot see, so it does not
+     compensate and the pool's parallelism silently starves.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .etxt  { font-size: 11px; fill: #1f2937; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWk  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .pill   { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COMPENSATION (tryCompensate) AND ManagedBlocker — WHO KEEPS PARALLELISM WHOLE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- section band headers -->
+  <text x="20" y="66" class="lbl h2">LEFT — POOL-SIDE: tryCompensate BEFORE A WORKER BLOCKS</text>
+  <text x="580" y="66" class="lbl h2">RIGHT — CALLER-SIDE: THE ManagedBlocker CONTRACT</text>
+  <line x1="560" y1="52" x2="560" y2="700" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <!-- LEFT FLOWCHART -->
+  <rect x="40" y="84" width="280" height="60" rx="6" class="boxP"/>
+  <text x="180" y="108" text-anchor="middle" class="lbl node">worker about to block</text>
+  <text x="180" y="126" text-anchor="middle" class="lbl body">e.g. join() on an unstolen task</text>
+
+  <path class="flow" d="M 180 144 V 168"/>
+
+  <rect x="40" y="172" width="280" height="60" rx="6" class="boxHi"/>
+  <text x="180" y="196" text-anchor="middle" class="lbl node">tryCompensate(ctl)</text>
+  <text x="180" y="214" text-anchor="middle" class="lbl body">decide: spawn spare, or release one</text>
+
+  <path class="flow" d="M 180 232 V 256"/>
+
+  <rect x="40" y="260" width="280" height="86" rx="6" class="boxWk"/>
+  <text x="180" y="282" text-anchor="middle" class="lbl node">bounds checked</text>
+  <text x="180" y="300" text-anchor="middle" class="lbl body">TC &lt; maximumPoolSize?</text>
+  <text x="180" y="316" text-anchor="middle" class="lbl body">idle spares &gt;= minimumRunnable?</text>
+  <text x="180" y="332" text-anchor="middle" class="lbl sub">minimumRunnable default = 1</text>
+
+  <path class="flow" d="M 320 300 H 380"/>
+  <text x="350" y="292" text-anchor="middle" class="lbl etxt">in bounds</text>
+
+  <rect x="384" y="266" width="140" height="76" rx="6" class="boxR"/>
+  <text x="454" y="290" text-anchor="middle" class="lbl node">compensate</text>
+  <text x="454" y="308" text-anchor="middle" class="lbl body">spawn a spare, or</text>
+  <text x="454" y="324" text-anchor="middle" class="lbl body">release a parked one</text>
+
+  <path class="flow" d="M 180 346 V 400"/>
+  <text x="196" y="378" text-anchor="middle" class="lbl etxt">bound exceeded</text>
+
+  <rect x="40" y="404" width="280" height="66" rx="6" class="boxDeg"/>
+  <text x="180" y="426" text-anchor="middle" class="lbl node">saturate predicate</text>
+  <text x="180" y="446" text-anchor="middle" class="lbl body">caller-supplied veto: run inline,</text>
+  <text x="180" y="460" text-anchor="middle" class="lbl body">block anyway, or reject</text>
+
+  <path class="flow" d="M 320 437 H 380"/>
+  <text x="350" y="429" text-anchor="middle" class="lbl etxt">no veto</text>
+
+  <rect x="384" y="404" width="172" height="66" rx="6" class="boxDeg"/>
+  <text x="470" y="426" text-anchor="middle" class="lbl node">reject</text>
+  <text x="470" y="444" text-anchor="middle" class="lbl sub">RejectedExecution-</text>
+  <text x="470" y="458" text-anchor="middle" class="lbl sub">Exception</text>
+
+  <!-- bound values panel -->
+  <rect x="40" y="490" width="484" height="130" rx="6" class="boxAnn"/>
+  <text x="54" y="512" class="lbl h2">COMMON-POOL COMPENSATION BOUNDS</text>
+  <rect x="54" y="522" width="230" height="24" rx="4" class="pill"/>
+  <text x="169" y="539" text-anchor="middle" class="lbl tiny">maximumPoolSize = 256 + parallelism</text>
+  <text x="294" y="539" class="lbl tiny">— documented default, unconfirmed</text>
+  <rect x="54" y="554" width="230" height="24" rx="4" class="pill"/>
+  <text x="169" y="571" text-anchor="middle" class="lbl tiny">common.maximumSpares = 256</text>
+  <text x="294" y="571" class="lbl tiny">— DEFAULT_COMMON_MAX_SPARES, confirmed in source</text>
+  <rect x="54" y="586" width="230" height="24" rx="4" class="pill"/>
+  <text x="169" y="603" text-anchor="middle" class="lbl tiny">minimumRunnable = 1</text>
+  <text x="294" y="603" class="lbl tiny">— documented default, unconfirmed</text>
+
+  <!-- RIGHT: ManagedBlocker loop -->
+  <rect x="600" y="84" width="280" height="60" rx="6" class="boxP"/>
+  <text x="740" y="108" text-anchor="middle" class="lbl node">ManagedBlocker.block()</text>
+  <text x="740" y="126" text-anchor="middle" class="lbl body">wrapped e.g. PSP callback wait</text>
+
+  <path class="flow" d="M 740 144 V 168"/>
+
+  <rect x="600" y="172" width="280" height="70" rx="6" class="boxHi"/>
+  <text x="740" y="196" text-anchor="middle" class="lbl node">ForkJoinPool.managedBlock(blocker)</text>
+  <text x="740" y="216" text-anchor="middle" class="lbl body">pool sees the block coming and</text>
+  <text x="740" y="232" text-anchor="middle" class="lbl body">calls tryCompensate on its behalf</text>
+
+  <path class="flow" d="M 740 242 V 266"/>
+
+  <rect x="600" y="270" width="280" height="60" rx="6" class="boxWk"/>
+  <text x="740" y="294" text-anchor="middle" class="lbl node">isReleasable()?</text>
+  <text x="740" y="312" text-anchor="middle" class="lbl body">e.g. withdrawal DEP-301 settled?</text>
+
+  <path class="flow" d="M 740 330 V 354"/>
+  <text x="705" y="346" text-anchor="middle" class="lbl etxt">false</text>
+
+  <rect x="600" y="354" width="280" height="60" rx="6" class="boxR"/>
+  <text x="740" y="378" text-anchor="middle" class="lbl node">block()</text>
+  <text x="740" y="396" text-anchor="middle" class="lbl body">actually waits, compensated</text>
+
+  <path class="weak" d="M 880 384 H 940 V 300 H 880"/>
+  <text x="950" y="330" class="lbl etxt">loop until</text>
+  <text x="950" y="344" class="lbl etxt">isReleasable()</text>
+  <text x="950" y="358" class="lbl etxt">is true</text>
+
+  <path class="flow" d="M 600 300 H 582 V 450 H 600"/>
+  <text x="591" y="288" text-anchor="middle" class="lbl etxt">true</text>
+
+  <rect x="600" y="424" width="280" height="62" rx="6" class="boxAnn"/>
+  <text x="614" y="442" class="lbl h2">CONTRACT</text>
+  <text x="614" y="460" class="lbl tiny">isReleasable() then block(),</text>
+  <text x="614" y="476" class="lbl tiny">repeated until true</text>
+
+  <!-- unsupported path bottom, spanning full width -->
+  <line x1="40" y1="656" x2="1080" y2="656" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="40" y="678" class="lbl h2">UNSUPPORTED PATH — PLAIN BLOCKING I/O, NO ManagedBlocker</text>
+
+  <rect x="40" y="690" width="360" height="70" rx="6" class="boxDeg"/>
+  <text x="220" y="712" text-anchor="middle" class="lbl node">worker calls socket.read() directly</text>
+  <text x="220" y="730" text-anchor="middle" class="lbl body">e.g. an uncompensated PSP call, no wrapper</text>
+  <text x="220" y="746" text-anchor="middle" class="lbl sub">pool cannot see this block coming</text>
+
+  <path class="flow" d="M 400 725 H 460"/>
+
+  <rect x="464" y="690" width="360" height="70" rx="6" class="boxDeg"/>
+  <text x="644" y="712" text-anchor="middle" class="lbl node">no compensation triggered</text>
+  <text x="644" y="730" text-anchor="middle" class="lbl body">TC/RC unchanged, no spare spawned</text>
+  <text x="644" y="746" text-anchor="middle" class="lbl sub">pool's usable parallelism silently starves</text>
+
+  <!-- legend -->
+  <line x1="20" y1="770" x2="1100" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="778" width="22" height="14" rx="3" class="boxHi"/>
+  <text x="50" y="789" class="lbl tiny">the mechanism this diagram is about</text>
+  <rect x="260" y="778" width="22" height="14" rx="3" class="boxR"/>
+  <text x="290" y="789" class="lbl tiny">successful / compensated path</text>
+  <rect x="480" y="778" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="510" y="789" class="lbl tiny">rejected / uncompensated / starves</text>
+  <rect x="740" y="778" width="22" height="14" rx="3" class="boxWk"/>
+  <text x="770" y="789" class="lbl tiny">decision / check step</text>
+  <rect x="940" y="778" width="18" height="14" rx="3" class="pill"/>
+  <text x="962" y="789" class="lbl tiny">bound value pill</text>
+</svg>

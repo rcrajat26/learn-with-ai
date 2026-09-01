@@ -1,0 +1,194 @@
+<svg viewBox="0 0 1120 860" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison: jstack walks only the JVM's JavaThread list, so a
+     virtual thread that is unmounted from its carrier has no JavaThread and never appears in the
+     dump, which shows only the handful of carrier platform threads such as
+     ForkJoinPool-1-worker-3, while settlement-ingest-3 and gateway-http-7 are missing entirely.
+     On the right, jcmd pid Thread.dump_to_file with format=json produces a thread-container tree
+     with one container per StructuredTaskScope or executor: the AssessmentService structured
+     scope, container id 41, nests gateway-http-7 calling the identity vendor at p50 900 ms and
+     watchlist-check-2 calling the watchlist provider at p50 1.4 s as children, with a sibling
+     Executor container for the shared vthread pool. The dump still omits lock-owner detail and
+     JNI critical-section statistics for those virtual threads.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; stroke-dasharray: 4 3; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri475); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#tri9ca); }
+    .nest  { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#tri158); }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="tri9ca" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="tri158" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="860" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY jstack CANNOT SEE A VIRTUAL THREAD</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT HALF: x 20-530 -->
+  <text x="20" y="66" class="lbl h2">LEFT — jstack: JavaThread-LIST WALK, BLIND TO UNMOUNTED VTs</text>
+
+  <rect x="20" y="80" width="510" height="46" rx="6" class="boxP"/>
+  <text x="275" y="100" text-anchor="middle" class="lbl node mono">jstack &lt;pid&gt;</text>
+  <text x="275" y="118" text-anchor="middle" class="lbl sub">walks the JVM's internal JavaThread list only</text>
+
+  <path class="flow" d="M 275 126 V 148"/>
+
+  <rect x="60" y="148" width="430" height="60" rx="6" class="boxW"/>
+  <text x="275" y="170" text-anchor="middle" class="lbl body">JavaThread list</text>
+  <text x="275" y="190" text-anchor="middle" class="lbl sub">one entry per OS-backed thread the JVM created</text>
+  <text x="275" y="203" text-anchor="middle" class="lbl sub">carrier platform threads live here — vthreads do not</text>
+
+  <!-- fan to two children: carriers box, missing box -->
+  <path class="flow" d="M 275 208 V 222 H 155 V 234"/>
+  <path class="flow" d="M 275 208 V 222 H 415 V 234"/>
+
+  <rect x="40" y="234" width="230" height="96" rx="6" class="boxR"/>
+  <text x="155" y="256" text-anchor="middle" class="lbl body" font-weight="600">Dump: only the carriers</text>
+  <text x="155" y="276" text-anchor="middle" class="lbl dense mono">worker-3 #23</text>
+  <text x="155" y="294" text-anchor="middle" class="lbl dense mono">worker-7 #27</text>
+  <text x="155" y="315" text-anchor="middle" class="lbl sub">"ForkJoinPool-1-worker-N"</text>
+
+  <rect x="300" y="234" width="230" height="96" rx="6" class="boxD"/>
+  <text x="415" y="256" text-anchor="middle" class="lbl body" font-weight="600">Missing entirely</text>
+  <text x="415" y="276" text-anchor="middle" class="lbl dense">settlement-ingest-3</text>
+  <text x="415" y="294" text-anchor="middle" class="lbl dense">gateway-http-7</text>
+  <text x="415" y="315" text-anchor="middle" class="lbl sub">(unmounted vthreads)</text>
+
+  <!-- unmounted vthread detail below "missing" box -->
+  <path class="weak" d="M 415 330 V 356"/>
+  <text x="425" y="350" class="lbl sub">why —</text>
+
+  <rect x="220" y="356" width="310" height="118" rx="6" class="boxW"/>
+  <text x="235" y="378" class="lbl body" font-weight="600">Unmounted virtual thread</text>
+  <text x="235" y="398" class="lbl dense">settlement-ingest-3</text>
+  <text x="235" y="416" class="lbl sub">parked awaiting identity vendor call</text>
+  <text x="235" y="432" class="lbl sub">(AssessmentService, p50 900 ms)</text>
+  <text x="235" y="452" class="lbl sub" font-weight="600">has no JavaThread while unmounted —</text>
+  <text x="235" y="466" class="lbl sub" font-weight="600">jstack's walk never reaches it</text>
+
+  <!-- carrier reference-back, from carriers box -->
+  <path class="weak" d="M 155 330 V 356 H 120 V 494"/>
+  <text x="70" y="486" class="lbl sub">transient</text>
+
+  <rect x="40" y="494" width="230" height="72" rx="6" class="boxR"/>
+  <text x="155" y="516" text-anchor="middle" class="lbl body" font-weight="600">Carrier:</text>
+  <text x="155" y="534" text-anchor="middle" class="lbl dense mono">worker-3</text>
+  <text x="155" y="552" text-anchor="middle" class="lbl sub">what jstack reports for the vthread</text>
+
+  <!-- annotation panel left -->
+  <rect x="20" y="596" width="510" height="150" rx="6" class="boxA"/>
+  <text x="36" y="618" class="lbl body" font-weight="700">Why the dump lies</text>
+  <text x="36" y="638" class="lbl tiny">jstack predates Project Loom (JEP 444, Java 21). It has</text>
+  <text x="36" y="654" class="lbl tiny">no concept of a carrier/mount relationship — only</text>
+  <text x="36" y="670" class="lbl tiny">JavaThread objects registered with the JVM's thread</text>
+  <text x="36" y="686" class="lbl tiny">list. A parked vthread is unmounted: no JavaThread</text>
+  <text x="36" y="702" class="lbl tiny">exists for it until it is re-scheduled onto a carrier —</text>
+  <text x="36" y="718" class="lbl tiny">the mount relationship above (worker-3) is transient,</text>
+  <text x="36" y="734" class="lbl tiny">not a stable identity for the vthread.</text>
+
+  <!-- RIGHT HALF: x 580-1060 -->
+  <line x1="560" y1="60" x2="560" y2="780" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="580" y="66" class="lbl h2">RIGHT — jcmd Thread.dump_to_file: THREAD-CONTAINER TREE</text>
+
+  <rect x="580" y="80" width="480" height="46" rx="6" class="boxH"/>
+  <text x="820" y="100" text-anchor="middle" class="lbl node mono">jcmd &lt;pid&gt; Thread.dump_to_file</text>
+  <text x="820" y="118" text-anchor="middle" class="lbl sub mono">-format=json &lt;file&gt;</text>
+
+  <path class="flow" d="M 820 126 V 148"/>
+
+  <rect x="600" y="148" width="440" height="50" rx="6" class="boxP"/>
+  <text x="820" y="170" text-anchor="middle" class="lbl body">Root: JVM thread containers</text>
+  <text x="820" y="186" text-anchor="middle" class="lbl sub">every StructuredTaskScope and Executor registers a container</text>
+
+  <!-- fan to two sibling containers -->
+  <path class="flow" d="M 820 198 V 212 H 705 V 224"/>
+  <path class="flow" d="M 820 198 V 212 H 935 V 224"/>
+
+  <rect x="600" y="224" width="210" height="54" rx="6" class="boxH"/>
+  <text x="705" y="244" text-anchor="middle" class="lbl body" font-weight="600">StructuredTaskScope</text>
+  <text x="705" y="262" text-anchor="middle" class="lbl sub">AssessmentService.assess()</text>
+  <text x="705" y="273" text-anchor="middle" class="lbl sub" font-style="italic">container id 41</text>
+
+  <rect x="830" y="224" width="210" height="54" rx="6" class="boxW"/>
+  <text x="935" y="244" text-anchor="middle" class="lbl body" font-weight="600">Executor container</text>
+  <text x="935" y="262" text-anchor="middle" class="lbl sub">shared vthread pool</text>
+  <text x="935" y="273" text-anchor="middle" class="lbl sub" font-style="italic">container id 44</text>
+
+  <!-- nested children of container 41 only, both wide, fanned below it -->
+  <path class="nest" d="M 705 278 V 292 H 700 V 304"/>
+  <path class="nest" d="M 705 278 V 292 H 940 V 304"/>
+
+  <rect x="600" y="304" width="200" height="72" rx="6" class="boxR"/>
+  <text x="700" y="326" text-anchor="middle" class="lbl body" font-weight="600">gateway-http-7</text>
+  <text x="700" y="344" text-anchor="middle" class="lbl sub">identity vendor call</text>
+  <text x="700" y="360" text-anchor="middle" class="lbl sub">p50 900 ms</text>
+  <text x="700" y="372" text-anchor="middle" class="lbl sub" font-style="italic">RUNNABLE</text>
+
+  <rect x="840" y="304" width="200" height="72" rx="6" class="boxR"/>
+  <text x="940" y="326" text-anchor="middle" class="lbl body" font-weight="600">watchlist-check-2</text>
+  <text x="940" y="344" text-anchor="middle" class="lbl sub">watchlist provider call</text>
+  <text x="940" y="360" text-anchor="middle" class="lbl sub">p50 1.4 s</text>
+  <text x="940" y="372" text-anchor="middle" class="lbl sub" font-style="italic">WAITING</text>
+
+  <!-- parent link label -->
+  <text x="600" y="398" class="lbl sub">parent link: container 41 → gateway-http-7, watchlist-check-2</text>
+
+  <!-- annotation panel right -->
+  <rect x="580" y="416" width="480" height="150" rx="6" class="boxA"/>
+  <text x="596" y="438" class="lbl body" font-weight="700">What the JSON dump adds</text>
+  <text x="596" y="458" class="lbl tiny">Every StructuredTaskScope or ExecutorService owns a</text>
+  <text x="596" y="474" class="lbl tiny">thread container; each vthread it forked appears nested</text>
+  <text x="596" y="490" class="lbl tiny">under it, mounted or not — so settlement-ingest-3 and</text>
+  <text x="596" y="506" class="lbl tiny">gateway-http-7 are visible even while unmounted and</text>
+  <text x="596" y="522" class="lbl tiny">waiting on the identity vendor or watchlist provider.</text>
+  <text x="596" y="546" class="lbl tiny" font-weight="600">It still omits: lock-owner / monitor detail and JNI</text>
+  <text x="596" y="562" class="lbl tiny" font-weight="600">critical-section statistics for those threads.</text>
+
+  <rect x="580" y="582" width="480" height="60" rx="6" class="boxD"/>
+  <text x="820" y="604" text-anchor="middle" class="lbl body" font-weight="700">Omitted from the JSON dump</text>
+  <text x="820" y="624" text-anchor="middle" class="lbl sub">held/waited-on locks, JNI critical-section counters</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="790" x2="1100" y2="790" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="800" width="16" height="14" rx="3" class="boxP"/>
+  <text x="42" y="811" class="lbl tiny">interface / list root</text>
+  <rect x="200" y="800" width="16" height="14" rx="3" class="boxH"/>
+  <text x="222" y="811" class="lbl tiny">tool invocation / container</text>
+  <rect x="410" y="800" width="16" height="14" rx="3" class="boxR"/>
+  <text x="432" y="811" class="lbl tiny">visible thread / carrier</text>
+  <rect x="600" y="800" width="16" height="14" rx="3" class="boxW"/>
+  <text x="622" y="811" class="lbl tiny">structural / secondary</text>
+  <rect x="790" y="800" width="16" height="14" rx="3" class="boxD"/>
+  <text x="812" y="811" class="lbl tiny">missing / omitted data</text>
+
+  <path class="flow" d="M 20 833 H 60"/>
+  <text x="68" y="837" class="lbl tiny">primary flow / walk order</text>
+  <path class="weak" d="M 260 833 H 300"/>
+  <text x="308" y="837" class="lbl tiny">no path found / transient link</text>
+  <path class="nest" d="M 560 833 H 600"/>
+  <text x="608" y="837" class="lbl tiny">contains (nested child)</text>
+</svg>

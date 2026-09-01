@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1120 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="AQS anatomy for the ReentrantLock guarding a wallet's four buckets. A volatile
+     int state field holds 2, the reentrant hold count for exclusiveOwnerThread
+     payment-run-worker-2, touched only through getState, setState and compareAndSetState. AQS.head
+     points at a dummy sentinel node with no thread; AQS.tail points at the last real waiter. A
+     chain runs head to Node settlement-ingest-3 to Node operator-review (tail), each node carrying
+     a thread field, a prev pointer back toward head, a next pointer forward toward tail, and a
+     WAITING status. A side panel lists the five subclass template methods: tryAcquire,
+     tryRelease, tryAcquireShared, tryReleaseShared, isHeldExclusively.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flowNext { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triDark); }
+    .flowPrev { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#triGreen); }
+    .flowCas  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AQS ANATOMY — REENTRANTLOCK GUARDING THE WALLET BUCKETS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- state panel -->
+  <rect x="40" y="60" width="320" height="110" rx="6" class="boxH"/>
+  <text x="60" y="86" class="lbl node">volatile int state</text>
+  <text x="60" y="108" class="lbl body">= 2  (reentrant hold count)</text>
+  <text x="60" y="130" class="lbl sub">exclusiveOwnerThread =</text>
+  <text x="60" y="146" class="lbl sub">payment-run-worker-2</text>
+  <text x="60" y="162" class="lbl floor">guards CLIENT_CASH_AVAILABLE / RESERVED /</text>
+
+  <!-- accessors panel -->
+  <rect x="450" y="60" width="310" height="110" rx="6" class="boxA"/>
+  <text x="470" y="82" class="lbl h2">STATE ACCESSORS — ONLY LEGAL PATH</text>
+  <text x="470" y="102" class="lbl tiny">getState()</text>
+  <text x="470" y="120" class="lbl tiny">setState(int newState)</text>
+  <text x="470" y="138" class="lbl tiny">compareAndSetState(expected, update)</text>
+  <text x="470" y="158" class="lbl floor">no direct field write anywhere else in AQS</text>
+
+  <path class="flowCas" d="M 450 115 H 360"/>
+  <text x="405" y="103" text-anchor="middle" class="lbl floor">only path</text>
+
+  <!-- template methods panel -->
+  <rect x="780" y="60" width="300" height="230" rx="6" class="boxA"/>
+  <text x="800" y="84" class="lbl h2">TEMPLATE METHODS</text>
+  <text x="800" y="100" class="lbl floor">(subclass hooks — Sync overrides these)</text>
+  <text x="800" y="126" class="lbl tiny">1. tryAcquire(int arg)</text>
+  <text x="800" y="150" class="lbl tiny">2. tryRelease(int arg)</text>
+  <text x="800" y="174" class="lbl tiny">3. tryAcquireShared(int arg)</text>
+  <text x="800" y="198" class="lbl tiny">4. tryReleaseShared(int arg)</text>
+  <text x="800" y="222" class="lbl tiny">5. isHeldExclusively()</text>
+  <text x="800" y="252" class="lbl floor">AQS itself never decides exclusive vs</text>
+  <text x="800" y="266" class="lbl floor">shared semantics — these five do</text>
+
+  <!-- AQS head/tail pointer fields -->
+  <rect x="130" y="210" width="140" height="34" rx="5" class="boxW"/>
+  <text x="200" y="231" text-anchor="middle" class="lbl tiny">AQS.head</text>
+
+  <rect x="630" y="210" width="140" height="34" rx="5" class="boxW"/>
+  <text x="700" y="231" text-anchor="middle" class="lbl tiny">AQS.tail</text>
+
+  <path class="flowNext" d="M 170 244 V 270"/>
+  <path class="flowNext" d="M 730 244 V 270"/>
+
+  <!-- queue -->
+  <rect x="60" y="270" width="220" height="112" rx="6" class="boxW"/>
+  <text x="170" y="294" text-anchor="middle" class="lbl node">head (dummy)</text>
+  <text x="170" y="316" text-anchor="middle" class="lbl body">thread: null</text>
+  <text x="170" y="336" text-anchor="middle" class="lbl body">status: 0</text>
+  <text x="170" y="356" text-anchor="middle" class="lbl sub">sentinel, never parked</text>
+
+  <rect x="340" y="270" width="240" height="112" rx="6" class="boxP"/>
+  <text x="460" y="294" text-anchor="middle" class="lbl node">Node A</text>
+  <text x="460" y="314" text-anchor="middle" class="lbl body">thread: settlement-ingest-3</text>
+  <text x="460" y="334" text-anchor="middle" class="lbl body">status: WAITING (1)</text>
+  <text x="460" y="354" text-anchor="middle" class="lbl sub">prev → head, next → Node B</text>
+
+  <rect x="640" y="270" width="240" height="112" rx="6" class="boxP"/>
+  <text x="760" y="294" text-anchor="middle" class="lbl node">Node B (tail)</text>
+  <text x="760" y="314" text-anchor="middle" class="lbl body">thread: operator-review</text>
+  <text x="760" y="334" text-anchor="middle" class="lbl body">status: WAITING (1)</text>
+  <text x="760" y="354" text-anchor="middle" class="lbl sub">prev → Node A, next → null</text>
+
+  <path class="flowNext" d="M 280 300 H 340"/>
+  <text x="310" y="292" text-anchor="middle" class="lbl floor">next</text>
+  <path class="flowPrev" d="M 340 355 H 280"/>
+  <text x="310" y="372" text-anchor="middle" class="lbl floor">prev</text>
+
+  <path class="flowNext" d="M 580 300 H 640"/>
+  <text x="610" y="292" text-anchor="middle" class="lbl floor">next</text>
+  <path class="flowPrev" d="M 640 355 H 580"/>
+  <text x="610" y="372" text-anchor="middle" class="lbl floor">prev</text>
+
+  <!-- legend -->
+  <line x1="20" y1="425" x2="1100" y2="425" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="440" width="20" height="16" rx="3" class="boxH"/>
+  <text x="46" y="453" class="lbl tiny">state field — the subject</text>
+  <rect x="240" y="440" width="20" height="16" rx="3" class="boxP"/>
+  <text x="266" y="453" class="lbl tiny">real queue node (a waiter)</text>
+  <rect x="470" y="440" width="20" height="16" rx="3" class="boxW"/>
+  <text x="496" y="453" class="lbl tiny">dummy head / pointer field</text>
+  <rect x="710" y="440" width="20" height="16" rx="3" class="boxA"/>
+  <text x="736" y="453" class="lbl tiny">annotation / method panel</text>
+
+  <path class="flowNext" d="M 20 480 H 60"/>
+  <text x="68" y="484" class="lbl tiny">A → B : next pointer</text>
+  <path class="flowPrev" d="M 260 480 H 300"/>
+  <text x="308" y="484" class="lbl tiny">A → B : prev pointer</text>
+  <path class="flowCas" d="M 500 480 H 540"/>
+  <text x="548" y="484" class="lbl tiny">A → B : CAS, the only legal write to state</text>
+</svg>

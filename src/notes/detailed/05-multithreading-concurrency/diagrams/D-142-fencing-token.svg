@@ -1,0 +1,158 @@
+<svg viewBox="0 0 1040 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Why a distributed lock needs a fencing token. Top timeline, without fencing: payment-run-worker-1 acquires the lease, then GC-pauses past its expiry; the ledger's lease expires; payment-run-worker-2 acquires the lease; payment-run-worker-1 then wakes and writes to the ledger anyway, and the ledger accepts the corrupting stale write. Bottom timeline, the same sequence but with monotonically increasing fencing tokens: worker-1 acquires with token 33, GC-pauses, the lease expires, worker-2 acquires with token 34; worker-1 wakes and writes with the stale token 33, which the ledger rejects because 33 is less than the last granted token 34; worker-2 later writes with token 34 and the ledger accepts it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .lane  { font-size: 13px; font-weight: 700; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .pillt { font-size: 11px; font-weight: 700; fill: #1f2937; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .pill { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+    .weakln { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1060" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY A DISTRIBUTED LOCK NEEDS A FENCING TOKEN</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===== SECTION 1: no fencing ===== -->
+  <text x="20" y="64" class="lbl h2">WITHOUT FENCING — the stale write corrupts the ledger</text>
+  <line x1="20" y1="70" x2="1020" y2="70" stroke="#b91c1c" stroke-width="2.5"/>
+
+  <text x="150" y="92" text-anchor="middle" class="lbl lane">payment-run-worker-1</text>
+  <text x="450" y="92" text-anchor="middle" class="lbl lane">payment-run-worker-2</text>
+  <text x="750" y="92" text-anchor="middle" class="lbl lane">ledger (storage)</text>
+  <line x1="150" y1="100" x2="150" y2="440" stroke="#d1d5db" stroke-width="1"/>
+  <line x1="450" y1="100" x2="450" y2="440" stroke="#d1d5db" stroke-width="1"/>
+  <line x1="750" y1="100" x2="750" y2="440" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="108" width="220" height="46" rx="5" class="boxP"/>
+  <text x="150" y="128" text-anchor="middle" class="lbl dense">1. acquires lease</text>
+  <text x="150" y="144" text-anchor="middle" class="lbl sub">expires at T+10s</text>
+  <path class="flow" d="M 150 154 V 164"/>
+
+  <rect x="40" y="164" width="220" height="46" rx="5" class="boxD"/>
+  <text x="150" y="184" text-anchor="middle" class="lbl dense">2. GC pause</text>
+  <text x="150" y="200" text-anchor="middle" class="lbl sub">pause exceeds lease (T+10s)</text>
+
+  <rect x="640" y="220" width="220" height="46" rx="5" class="boxW"/>
+  <text x="750" y="240" text-anchor="middle" class="lbl dense">3. lease expires</text>
+  <text x="750" y="256" text-anchor="middle" class="lbl sub">no fencing token in use</text>
+  <path class="weakln" d="M 750 266 H 450 V 276"/>
+
+  <rect x="340" y="276" width="220" height="46" rx="5" class="boxP"/>
+  <text x="450" y="296" text-anchor="middle" class="lbl dense">4. acquires lease</text>
+  <text x="450" y="312" text-anchor="middle" class="lbl sub">believes it now owns the run</text>
+
+  <path class="weakln" d="M 150 210 V 332"/>
+  <rect x="40" y="332" width="220" height="46" rx="5" class="boxD"/>
+  <text x="150" y="352" text-anchor="middle" class="lbl dense">5. wakes, writes to ledger</text>
+  <text x="150" y="368" text-anchor="middle" class="lbl sub">unaware its lease already expired</text>
+
+  <path class="flow" d="M 150 378 V 383 H 750 V 388"/>
+  <rect x="640" y="388" width="220" height="52" rx="5" class="boxD"/>
+  <text x="750" y="408" text-anchor="middle" class="lbl dense" font-weight="700">6. CORRUPTING WRITE ACCEPTED</text>
+  <text x="750" y="424" text-anchor="middle" class="lbl sub">overwrites worker-2's in-flight</text>
+  <text x="750" y="436" text-anchor="middle" class="lbl sub">PaymentRun update</text>
+
+  <!-- ===== SECTION 2: with fencing ===== -->
+  <text x="20" y="470" class="lbl h2">WITH FENCING TOKENS 33 AND 34 — storage rejects the stale token</text>
+  <line x1="20" y1="476" x2="1020" y2="476" stroke="#15803d" stroke-width="2.5"/>
+
+  <text x="150" y="498" text-anchor="middle" class="lbl lane">payment-run-worker-1</text>
+  <text x="450" y="498" text-anchor="middle" class="lbl lane">payment-run-worker-2</text>
+  <text x="750" y="498" text-anchor="middle" class="lbl lane">ledger (storage)</text>
+  <line x1="150" y1="506" x2="150" y2="928" stroke="#d1d5db" stroke-width="1"/>
+  <line x1="450" y1="506" x2="450" y2="928" stroke="#d1d5db" stroke-width="1"/>
+  <line x1="750" y1="506" x2="750" y2="928" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="40" y="514" width="220" height="46" rx="5" class="boxP"/>
+  <text x="105" y="534" text-anchor="middle" class="lbl dense">1. acquires lease</text>
+  <rect x="205" y="522" width="30" height="18" rx="8" class="pill"/>
+  <text x="220" y="535" text-anchor="middle" class="pillt">33</text>
+  <text x="150" y="550" text-anchor="middle" class="lbl sub">expires at T+10s</text>
+  <path class="flow" d="M 150 560 V 566"/>
+
+  <rect x="40" y="566" width="220" height="46" rx="5" class="boxD"/>
+  <text x="150" y="586" text-anchor="middle" class="lbl dense">2. GC pause</text>
+  <text x="150" y="602" text-anchor="middle" class="lbl sub">pause exceeds lease (T+10s)</text>
+
+  <rect x="640" y="618" width="220" height="42" rx="5" class="boxW"/>
+  <text x="750" y="638" text-anchor="middle" class="lbl dense">3. lease expires</text>
+  <text x="750" y="652" text-anchor="middle" class="lbl sub">storage still holds last token = 33</text>
+  <path class="weakln" d="M 750 660 H 450 V 666"/>
+
+  <rect x="340" y="666" width="220" height="46" rx="5" class="boxP"/>
+  <text x="415" y="686" text-anchor="middle" class="lbl dense">4. acquires lease</text>
+  <rect x="500" y="674" width="30" height="18" rx="8" class="pill"/>
+  <text x="515" y="687" text-anchor="middle" class="pillt">34</text>
+  <text x="450" y="702" text-anchor="middle" class="lbl sub">token 34 &gt; token 33, monotonic</text>
+
+  <path class="weakln" d="M 150 612 V 718"/>
+  <rect x="40" y="718" width="220" height="46" rx="5" class="boxW"/>
+  <text x="105" y="738" text-anchor="middle" class="lbl dense">5. wakes, writes</text>
+  <rect x="205" y="726" width="30" height="18" rx="8" class="pill"/>
+  <text x="220" y="739" text-anchor="middle" class="pillt">33</text>
+  <text x="150" y="754" text-anchor="middle" class="lbl sub">stale token, unaware of expiry</text>
+
+  <path class="flow" d="M 150 764 V 769 H 750 V 774"/>
+  <rect x="640" y="774" width="220" height="52" rx="5" class="boxR"/>
+  <text x="750" y="794" text-anchor="middle" class="lbl dense" font-weight="700">6. REJECTED</text>
+  <text x="750" y="810" text-anchor="middle" class="lbl sub">token 33 &lt; last-granted token 34</text>
+  <text x="750" y="822" text-anchor="middle" class="lbl sub">write is refused, ledger stays correct</text>
+
+  <path class="weakln" d="M 450 712 V 826"/>
+  <rect x="340" y="826" width="220" height="46" rx="5" class="boxW"/>
+  <text x="430" y="846" text-anchor="middle" class="lbl dense">7. writes</text>
+  <rect x="480" y="834" width="30" height="18" rx="8" class="pill"/>
+  <text x="495" y="847" text-anchor="middle" class="pillt">34</text>
+  <text x="450" y="862" text-anchor="middle" class="lbl sub">using its granted token</text>
+
+  <path class="flow" d="M 450 872 V 877 H 750 V 882"/>
+  <rect x="640" y="882" width="220" height="46" rx="5" class="boxR"/>
+  <text x="750" y="902" text-anchor="middle" class="lbl dense" font-weight="700">8. ACCEPTED</text>
+  <text x="750" y="918" text-anchor="middle" class="lbl sub">token 34 = last-granted, write applied</text>
+
+  <!-- legend -->
+  <line x1="20" y1="950" x2="1020" y2="950" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="964" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="977" class="lbl tiny">lease acquired</text>
+
+  <rect x="220" y="964" width="22" height="16" rx="3" class="boxW"/>
+  <text x="250" y="977" class="lbl tiny">event / write attempt, outcome pending</text>
+
+  <rect x="540" y="964" width="22" height="16" rx="3" class="boxD"/>
+  <text x="570" y="977" class="lbl tiny">GC pause, expiry, or corrupting result</text>
+
+  <rect x="820" y="964" width="22" height="16" rx="3" class="boxR"/>
+  <text x="850" y="977" class="lbl tiny">storage's correct decision</text>
+
+  <rect x="20" y="990" width="30" height="18" rx="8" class="pill"/>
+  <text x="60" y="1003" class="lbl tiny">fencing token carried with the write</text>
+
+  <path class="flow" d="M 340 994 H 380"/>
+  <text x="388" y="999" class="lbl tiny">A → B : causes / is followed by</text>
+
+  <path class="weakln" d="M 660 994 H 700"/>
+  <text x="708" y="999" class="lbl tiny">elapsed time, same actor, no activity shown</text>
+</svg>

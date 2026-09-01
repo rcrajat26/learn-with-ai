@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="System.nanoTime is the only correct deadline basis. Left, a wall-clock deadline built from System.currentTimeMillis: start plus the watchlist provider's 30 second timeout gives deadline 1,030,000; an NTP step moves the clock backward by one hour, and the loop check currentTimeMillis less than deadline stays true, so the timeout fires about an hour late, or immediately if the step is forward instead. Right, a monotonic deadline built from System.nanoTime: deadline is start plus 30,000,000,000 nanoseconds, and the loop checks nanoTime minus deadline less than zero, which is immune to clock steps and wraps correctly through Long overflow; the broken alternative nanoTime greater than or equal to deadline compares an arbitrary per-JVM origin directly and can be false forever or true immediately near overflow.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">System.nanoTime() IS THE ONLY CORRECT DEADLINE BASIS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">WALL-CLOCK DEADLINE — currentTimeMillis()</text>
+  <line x1="20" y1="70" x2="540" y2="70" stroke="#b91c1c" stroke-width="2.5"/>
+  <text x="580" y="64" class="lbl h2">MONOTONIC DEADLINE — nanoTime()</text>
+  <line x1="580" y1="70" x2="1100" y2="70" stroke="#15803d" stroke-width="2.5"/>
+
+  <!-- LEFT -->
+  <rect x="60" y="92" width="440" height="54" rx="6" class="boxP"/>
+  <text x="280" y="114" text-anchor="middle" class="lbl body">start = System.currentTimeMillis()</text>
+  <text x="280" y="132" text-anchor="middle" class="lbl sub">= 1,000,000 (ms since epoch)</text>
+  <path class="flow" d="M 280 146 V 166"/>
+
+  <rect x="60" y="166" width="440" height="54" rx="6" class="boxP"/>
+  <text x="280" y="188" text-anchor="middle" class="lbl body">deadline = start + 30_000</text>
+  <text x="280" y="206" text-anchor="middle" class="lbl sub">= 1,030,000 (watchlist-provider 30 s timeout)</text>
+  <path class="flow" d="M 280 220 V 240"/>
+
+  <rect x="60" y="240" width="440" height="62" rx="6" class="boxD"/>
+  <text x="280" y="262" text-anchor="middle" class="lbl body" font-weight="700">NTP steps the wall clock backward</text>
+  <text x="280" y="280" text-anchor="middle" class="lbl sub">clock jumps by -3,600,000 ms (1 hour)</text>
+  <text x="280" y="294" text-anchor="middle" class="lbl sub">(a forward step is the same failure, opposite direction)</text>
+  <path class="flow" d="M 280 302 V 322"/>
+
+  <rect x="60" y="322" width="440" height="54" rx="6" class="boxW"/>
+  <text x="280" y="344" text-anchor="middle" class="lbl dense">while (currentTimeMillis() &lt; deadline) park(...)</text>
+  <text x="280" y="362" text-anchor="middle" class="lbl sub">loop re-reads the wall clock every iteration</text>
+  <path class="flow" d="M 280 376 V 396"/>
+
+  <rect x="60" y="396" width="440" height="72" rx="6" class="boxD"/>
+  <text x="280" y="420" text-anchor="middle" class="lbl body" font-weight="700">TIMEOUT FIRES ~1 HOUR LATE</text>
+  <text x="280" y="438" text-anchor="middle" class="lbl sub">now stays below 1,030,000 for about an hour</text>
+  <text x="280" y="452" text-anchor="middle" class="lbl sub">after the real 30 s already elapsed</text>
+  <text x="280" y="466" text-anchor="middle" class="lbl sub">(forward step instead: timeout fires immediately)</text>
+
+  <rect x="60" y="484" width="440" height="96" rx="6" class="boxA"/>
+  <text x="76" y="506" class="lbl tiny" font-weight="700">WHY</text>
+  <text x="76" y="526" class="lbl tiny">currentTimeMillis() is wall-clock time. NTP sync,</text>
+  <text x="76" y="544" class="lbl tiny">leap-second slew, and manual changes can move it —</text>
+  <text x="76" y="562" class="lbl tiny">backward as well as forward — at any moment, so a</text>
+  <text x="76" y="568" class="lbl tiny" dy="8">deadline computed from it is not trustworthy.</text>
+
+  <!-- RIGHT -->
+  <rect x="620" y="92" width="440" height="54" rx="6" class="boxP"/>
+  <text x="840" y="114" text-anchor="middle" class="lbl body">start = System.nanoTime()</text>
+  <text x="840" y="132" text-anchor="middle" class="lbl sub">= t0 (arbitrary per-JVM origin, not epoch time)</text>
+  <path class="flow" d="M 840 146 V 166"/>
+
+  <rect x="620" y="166" width="440" height="54" rx="6" class="boxP"/>
+  <text x="840" y="188" text-anchor="middle" class="lbl body">deadline = start + 30_000_000_000L</text>
+  <text x="840" y="206" text-anchor="middle" class="lbl sub">30 s expressed in nanoseconds</text>
+  <path class="flow" d="M 840 220 V 240"/>
+
+  <rect x="620" y="240" width="440" height="72" rx="6" class="boxR"/>
+  <text x="840" y="262" text-anchor="middle" class="lbl dense" font-weight="700">while (nanoTime() - deadline &lt; 0) park(...)</text>
+  <text x="840" y="280" text-anchor="middle" class="lbl sub">subtraction form — monotonic, immune to NTP steps</text>
+  <text x="840" y="296" text-anchor="middle" class="lbl sub">wraps correctly even across Long overflow of nanoTime()</text>
+  <path class="flow" d="M 840 312 V 332"/>
+
+  <rect x="620" y="332" width="440" height="72" rx="6" class="boxD"/>
+  <text x="840" y="354" text-anchor="middle" class="lbl dense" font-weight="700">BROKEN: nanoTime() &gt;= deadline</text>
+  <text x="840" y="372" text-anchor="middle" class="lbl sub">direct comparison — nanoTime()'s origin is arbitrary</text>
+  <text x="840" y="388" text-anchor="middle" class="lbl sub">near Long overflow this is false forever, or true at once</text>
+
+  <rect x="620" y="422" width="440" height="96" rx="6" class="boxA"/>
+  <text x="636" y="444" class="lbl tiny" font-weight="700">WHY THE SUBTRACTION FORM WINS</text>
+  <text x="636" y="464" class="lbl tiny">nanoTime() only promises differences between two calls</text>
+  <text x="636" y="482" class="lbl tiny">are meaningful. (a - b) &gt;= 0 relies on two's-complement</text>
+  <text x="636" y="500" class="lbl tiny">wraparound to stay correct past Long.MAX_VALUE; a</text>
+  <text x="636" y="512" class="lbl tiny">direct &gt;= comparison has no such guarantee.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="600" x2="1100" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="614" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="627" class="lbl tiny">computed value (start / deadline)</text>
+
+  <rect x="300" y="614" width="22" height="16" rx="3" class="boxW"/>
+  <text x="330" y="627" class="lbl tiny">loop / check step</text>
+
+  <rect x="520" y="614" width="22" height="16" rx="3" class="boxR"/>
+  <text x="550" y="627" class="lbl tiny">correct — safe deadline form</text>
+
+  <rect x="800" y="614" width="22" height="16" rx="3" class="boxD"/>
+  <text x="830" y="627" class="lbl tiny">broken — clock step or bad comparison</text>
+
+  <path class="flow" d="M 20 650 H 60"/>
+  <text x="68" y="655" class="lbl tiny">A → B : B happens after A, in program order</text>
+
+  <rect x="500" y="642" width="22" height="16" rx="3" class="boxA"/>
+  <text x="530" y="655" class="lbl tiny">annotation panel — explains the "why"</text>
+</svg>

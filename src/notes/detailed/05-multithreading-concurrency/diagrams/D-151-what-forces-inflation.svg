@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree: what forces inflation of the FundsLedger monitor from a thin
+     stack lock to a full ObjectMonitor. Four independent triggers branch from the root: another
+     thread contends the stack lock, wait() is called and needs a wait set, System.identityHashCode
+     is called and must be stored in the mark word, and a JVMTI or monitor-inspection operation
+     demands a real monitor. Each leaf states the resulting mark word state and the cost.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri475); }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT FORCES INFLATION OF THE FundsLedger MONITOR</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- root -->
+  <rect x="400" y="64" width="240" height="76" rx="6" class="boxP"/>
+  <text x="520" y="92" text-anchor="middle" class="lbl node">FundsLedger monitor</text>
+  <text x="520" y="112" text-anchor="middle" class="lbl body">thin lock, stack-locked</text>
+  <text x="520" y="128" text-anchor="middle" class="lbl floor">mark word points at lock record on stack</text>
+
+  <!-- bus -->
+  <path class="flow" d="M 520 140 V 168"/>
+  <line x1="90" y1="168" x2="950" y2="168" stroke="#475569" stroke-width="2"/>
+
+  <!-- 4 branch stubs -->
+  <path d="M 90 168 V 190" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri475)"/>
+  <path d="M 370 168 V 190" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri475)"/>
+  <path d="M 650 168 V 190" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri475)"/>
+  <path d="M 950 168 V 190" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#tri475)"/>
+
+  <!-- Branch 1: contention -->
+  <rect x="20" y="192" width="200" height="90" rx="6" class="boxD"/>
+  <text x="120" y="216" text-anchor="middle" class="lbl body">settlement-ingest-4</text>
+  <text x="120" y="234" text-anchor="middle" class="lbl body">contends the stack lock</text>
+  <text x="120" y="252" text-anchor="middle" class="lbl floor">CAS on the mark word fails —</text>
+  <text x="120" y="266" text-anchor="middle" class="lbl floor">a second thread wants in</text>
+
+  <path class="flow" d="M 120 282 V 320"/>
+  <rect x="20" y="322" width="200" height="120" rx="6" class="boxW"/>
+  <text x="120" y="346" text-anchor="middle" class="lbl h2">leaf</text>
+  <text x="30" y="366" class="lbl dense">mark word → pointer to</text>
+  <text x="30" y="382" class="lbl dense">a heap-allocated ObjectMonitor</text>
+  <text x="30" y="402" class="lbl dense">cost: one-time inflation +</text>
+  <text x="30" y="418" class="lbl dense">CAS onto _cxq per contender</text>
+  <text x="30" y="434" class="lbl floor">see D-150 for the struct</text>
+
+  <!-- Branch 2: wait() -->
+  <rect x="300" y="192" width="200" height="90" rx="6" class="boxD"/>
+  <text x="400" y="216" text-anchor="middle" class="lbl body">settlement-ingest-3</text>
+  <text x="400" y="234" text-anchor="middle" class="lbl body">calls FundsLedger.wait()</text>
+  <text x="400" y="252" text-anchor="middle" class="lbl floor">a _WaitSet is needed —</text>
+  <text x="400" y="266" text-anchor="middle" class="lbl floor">a thin lock has none</text>
+
+  <path class="flow" d="M 400 282 V 320"/>
+  <rect x="300" y="322" width="200" height="120" rx="6" class="boxW"/>
+  <text x="400" y="346" text-anchor="middle" class="lbl h2">leaf</text>
+  <text x="310" y="366" class="lbl dense">mark word → pointer to</text>
+  <text x="310" y="382" class="lbl dense">ObjectMonitor with non-empty</text>
+  <text x="310" y="398" class="lbl dense">_WaitSet capability</text>
+  <text x="310" y="418" class="lbl dense">cost: inflation + wait/notify</text>
+  <text x="310" y="434" class="lbl floor">park/unpark round trip, 1-10 µs</text>
+
+  <!-- Branch 3: identityHashCode -->
+  <rect x="580" y="192" width="200" height="90" rx="6" class="boxD"/>
+  <text x="680" y="216" text-anchor="middle" class="lbl body">operator-review thread calls</text>
+  <text x="680" y="234" text-anchor="middle" class="lbl body">System.identityHashCode(ledger)</text>
+  <text x="680" y="252" text-anchor="middle" class="lbl floor">hash has nowhere to live</text>
+  <text x="680" y="266" text-anchor="middle" class="lbl floor">in a locked thin mark word</text>
+
+  <path class="flow" d="M 680 282 V 320"/>
+  <rect x="580" y="322" width="200" height="120" rx="6" class="boxW"/>
+  <text x="680" y="346" text-anchor="middle" class="lbl h2">leaf</text>
+  <text x="590" y="366" class="lbl dense">mark word → pointer to</text>
+  <text x="590" y="382" class="lbl dense">ObjectMonitor caching the</text>
+  <text x="590" y="398" class="lbl dense">identity hash in the header</text>
+  <text x="590" y="418" class="lbl dense">cost: forced inflation even</text>
+  <text x="590" y="434" class="lbl floor">with zero contention</text>
+
+  <!-- Branch 4: JVMTI -->
+  <rect x="860" y="192" width="170" height="90" rx="6" class="boxD"/>
+  <text x="945" y="216" text-anchor="middle" class="lbl body">JVMTI agent inspects</text>
+  <text x="945" y="234" text-anchor="middle" class="lbl body">FundsLedger's monitor</text>
+  <text x="945" y="252" text-anchor="middle" class="lbl floor">GetObjectMonitorUsage</text>
+  <text x="945" y="266" text-anchor="middle" class="lbl floor">needs a real struct</text>
+
+  <path class="flow" d="M 945 282 V 320"/>
+  <rect x="850" y="322" width="180" height="120" rx="6" class="boxW"/>
+  <text x="940" y="346" text-anchor="middle" class="lbl h2">leaf</text>
+  <text x="860" y="366" class="lbl dense">mark word → pointer to</text>
+  <text x="860" y="382" class="lbl dense">ObjectMonitor, inspectable</text>
+  <text x="860" y="398" class="lbl dense">by the debugger/profiler</text>
+  <text x="860" y="418" class="lbl dense">cost: inflation forced by</text>
+  <text x="860" y="434" class="lbl floor">tooling, not application load</text>
+
+  <!-- shared note panel -->
+  <rect x="60" y="470" width="920" height="110" rx="6" class="boxA"/>
+  <text x="80" y="494" class="lbl h2">common thread across all four triggers</text>
+  <text x="90" y="516" class="lbl dense">Each trigger performs a compare-and-swap that replaces the thin lock's stack-record pointer in the mark word with a</text>
+  <text x="90" y="536" class="lbl dense">pointer to a heap-allocated ObjectMonitor (see D-150). Deflation later reclaims it only at a safepoint when the</text>
+  <text x="90" y="556" class="lbl dense">monitor is provably idle — inflation is one-way in the interim, so a hot FundsLedger under burst stays inflated.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="600" x2="1020" y2="600" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="612" width="20" height="16" rx="3" class="boxP"/>
+  <text x="48" y="625" class="lbl tiny">root state (thin lock)</text>
+  <rect x="220" y="612" width="20" height="16" rx="3" class="boxD"/>
+  <text x="248" y="625" class="lbl tiny">trigger (branch condition)</text>
+  <rect x="460" y="612" width="20" height="16" rx="3" class="boxW"/>
+  <text x="488" y="625" class="lbl tiny">leaf: resulting mark-word state + cost</text>
+  <rect x="780" y="612" width="20" height="16" rx="3" class="boxA"/>
+  <text x="808" y="625" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 20 648 H 60"/>
+  <text x="68" y="653" class="lbl tiny">branch / causal flow</text>
+</svg>

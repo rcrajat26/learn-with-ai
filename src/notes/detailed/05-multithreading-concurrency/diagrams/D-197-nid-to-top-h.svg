@@ -1,0 +1,119 @@
+<svg viewBox="0 0 900 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame sequence for finding the thread burning a core. Frame 1: top -H -p pid on the settlement-ingest JVM shows LWP 22391 at 98 percent CPU, a decimal id. Frame 2: converting 22391 to hex gives 5777. Frame 3: matching nid=0x5777 in the jstack thread dump identifies the thread as settlement-ingest-3. Frame 4: reading that thread's stack trace shows it spinning inside FundsLedger.reserveStake. A fifth panel shows proc pid task tid status as the source of voluntary_ctxt_switches and nonvoluntary_ctxt_switches for the same thread id, explaining that a high nonvoluntary count corroborates CPU-bound spinning rather than blocking.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+    .monoS { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 3 3; marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FINDING THE THREAD THAT IS BURNING A CORE — settlement-ingest JVM</text>
+  <line x1="20" y1="42" x2="880" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Frame 1 -->
+  <text x="20" y="66" class="lbl h2">FRAME 1 — top -H -p &lt;pid&gt;</text>
+  <rect x="20" y="76" width="400" height="122" rx="8" class="boxH"/>
+  <text x="36" y="98" class="lbl node" font-size="13">per-LWP CPU sampling</text>
+  <text x="36" y="118" class="lbl mono">PID    LWP    %CPU  COMMAND</text>
+  <text x="36" y="136" class="lbl mono">41207  22391  98.0  java</text>
+  <text x="36" y="154" class="lbl mono">41207  22388   1.2  java</text>
+  <text x="36" y="176" class="lbl sub">LWP 22391 is decimal — the OS thread id,</text>
+  <text x="36" y="190" class="lbl sub">not yet comparable to a jstack "nid".</text>
+
+  <path class="flow" d="M 420 137 H 460"/>
+
+  <!-- Frame 2 -->
+  <text x="480" y="66" class="lbl h2">FRAME 2 — DECIMAL TO HEX</text>
+  <rect x="480" y="76" width="400" height="122" rx="8" class="boxA"/>
+  <text x="496" y="98" class="lbl node" font-size="13">printf conversion</text>
+  <text x="496" y="120" class="lbl mono">$ printf '%x\n' 22391</text>
+  <text x="496" y="138" class="lbl mono">5777</text>
+  <text x="496" y="164" class="lbl sub">jstack always prints nid in hex —</text>
+  <text x="496" y="178" class="lbl sub">22391 decimal becomes 0x5777.</text>
+
+  <path class="flow" d="M 680 198 V 236"/>
+
+  <!-- Frame 3 -->
+  <text x="480" y="260" class="lbl h2">FRAME 3 — MATCH nid IN THE THREAD DUMP</text>
+  <rect x="480" y="270" width="400" height="130" rx="8" class="boxP"/>
+  <text x="496" y="292" class="lbl node" font-size="13">jstack &lt;pid&gt; output</text>
+  <text x="496" y="312" class="lbl mono">"settlement-ingest-3"</text>
+  <text x="496" y="328" class="lbl mono">  #47 prio=5 os_prio=0</text>
+  <text x="496" y="344" class="lbl mono">  tid=0x... nid=0x5777</text>
+  <text x="496" y="360" class="lbl mono">  runnable [0x00007f...]</text>
+  <text x="496" y="382" class="lbl sub">nid=0x5777 matches — the hot LWP is the</text>
+  <text x="496" y="396" class="lbl sub">thread named settlement-ingest-3.</text>
+
+  <path class="flow" d="M 480 335 H 420 V 236"/>
+
+  <!-- Frame 4 -->
+  <text x="20" y="260" class="lbl h2">FRAME 4 — READ THE STACK</text>
+  <rect x="20" y="270" width="400" height="130" rx="8" class="boxD"/>
+  <text x="36" y="292" class="lbl node" font-size="13">settlement-ingest-3 stack trace</text>
+  <text x="36" y="312" class="lbl mono">java.lang.Thread.State: RUNNABLE</text>
+  <text x="36" y="328" class="lbl mono">at FundsLedger.reserveStake</text>
+  <text x="36" y="344" class="lbl mono">    (FundsLedger.java:214)</text>
+  <text x="36" y="360" class="lbl mono">at StakeSplit.apply(StakeSplit.java:58)</text>
+  <text x="36" y="382" class="lbl sub">RUNNABLE + tight loop here is the</text>
+  <text x="36" y="396" class="lbl sub">signature of a busy-spin, not I/O wait.</text>
+
+  <path class="flow" d="M 220 400 V 438"/>
+
+  <!-- Frame 5 / proc corroboration -->
+  <text x="20" y="462" class="lbl h2">CORROBORATING SOURCE — /proc/&lt;pid&gt;/task/&lt;tid&gt;/status</text>
+  <rect x="20" y="472" width="860" height="150" rx="8" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="494" class="lbl node" font-size="13">/proc/41207/task/22391/status (tid 22391 = the same LWP as Frame 1)</text>
+  <text x="36" y="516" class="lbl mono">voluntary_ctxt_switches:      12</text>
+  <text x="36" y="534" class="lbl mono">nonvoluntary_ctxt_switches: 8840</text>
+
+  <rect x="480" y="500" width="360" height="106" rx="6" class="boxA"/>
+  <text x="496" y="520" class="lbl dense">High nonvoluntary, low voluntary:</text>
+  <text x="496" y="538" class="lbl dense">the scheduler is preempting a thread</text>
+  <text x="496" y="556" class="lbl dense">that never yields on its own —</text>
+  <text x="496" y="574" class="lbl dense">consistent with CPU-bound spinning</text>
+  <text x="496" y="592" class="lbl dense">inside reserveStake, not blocking I/O.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="656" x2="880" y2="656" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="676" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="688" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="701" class="lbl tiny">the thing under investigation (top output)</text>
+
+  <rect x="330" y="688" width="22" height="16" rx="3" class="boxA"/>
+  <text x="360" y="701" class="lbl tiny">adapter step / annotation panel</text>
+
+  <rect x="640" y="688" width="22" height="16" rx="3" class="boxP"/>
+  <text x="670" y="701" class="lbl tiny">resolved identity match (thread dump)</text>
+
+  <rect x="20" y="712" width="22" height="16" rx="3" class="boxD"/>
+  <text x="50" y="725" class="lbl tiny">failure surface — the spinning stack frame</text>
+
+  <line x1="330" y1="720" x2="370" y2="720" class="flow"/>
+  <text x="378" y="724" class="lbl tiny">A → B : B is derived from / follows A in the sequence</text>
+</svg>

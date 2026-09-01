@@ -1,0 +1,133 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="x86-TSO store buffer: Core 0 (settlement-ingest-3) stores stakeReserved=true into its
+     own store buffer, then loads bonusApplied directly from the coherent cache, bypassing its own
+     buffered store. Core 1 (ledger-reconcile-1) does the symmetric thing with bonusApplied and
+     stakeReserved. Each buffer eventually drains to the shared coherent cache in FIFO order. Only
+     this StoreLoad case reorders; loads are never reordered with loads, and stores are never
+     reordered with stores. This is why most JMM bugs are invisible on a single laptop core.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; }
+    .hdr13  { font-size: 13px; font-weight: 700; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .ann  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flowSolid  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triSlate); }
+    .flowDashed { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#triGreen); }
+    .flowDotted { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">X86-TSO: THE STORE BUFFER IS THE WHOLE STORY</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="170" y="64" class="lbl h2">CORE 0 — settlement-ingest-3</text>
+  <text x="690" y="64" class="lbl h2">CORE 1 — ledger-reconcile-1</text>
+
+  <!-- Core 0 -->
+  <rect x="170" y="80" width="260" height="96" rx="6" class="boxP"/>
+  <text x="300" y="104" text-anchor="middle" class="lbl node">CORE 0</text>
+  <text x="300" y="124" text-anchor="middle" class="lbl body">settlement-ingest-3</text>
+  <text x="300" y="144" text-anchor="middle" class="lbl tiny">① store stakeReserved = true</text>
+  <text x="300" y="160" text-anchor="middle" class="lbl tiny">② load bonusApplied</text>
+
+  <!-- Core 1 -->
+  <rect x="690" y="80" width="260" height="96" rx="6" class="boxP"/>
+  <text x="820" y="104" text-anchor="middle" class="lbl node">CORE 1</text>
+  <text x="820" y="124" text-anchor="middle" class="lbl body">ledger-reconcile-1</text>
+  <text x="820" y="144" text-anchor="middle" class="lbl tiny">① store bonusApplied = true</text>
+  <text x="820" y="160" text-anchor="middle" class="lbl tiny">② load stakeReserved</text>
+
+  <!-- Store buffers -->
+  <rect x="170" y="210" width="260" height="120" rx="6" class="boxW"/>
+  <text x="300" y="232" text-anchor="middle" class="lbl hdr13">STORE BUFFER (per-core, FIFO)</text>
+  <rect x="190" y="248" width="220" height="44" rx="4" class="boxH"/>
+  <text x="300" y="268" text-anchor="middle" class="lbl body">stakeReserved = true</text>
+  <text x="300" y="284" text-anchor="middle" class="lbl sub">not yet globally visible</text>
+
+  <rect x="690" y="210" width="260" height="120" rx="6" class="boxW"/>
+  <text x="820" y="232" text-anchor="middle" class="lbl hdr13">STORE BUFFER (per-core, FIFO)</text>
+  <rect x="710" y="248" width="220" height="44" rx="4" class="boxH"/>
+  <text x="820" y="268" text-anchor="middle" class="lbl body">bonusApplied = true</text>
+  <text x="820" y="284" text-anchor="middle" class="lbl sub">not yet globally visible</text>
+
+  <!-- store-into-buffer arrows -->
+  <path class="flowSolid" d="M 300 176 V 210"/>
+  <text x="312" y="196" class="lbl tiny">① store</text>
+  <path class="flowSolid" d="M 820 176 V 210"/>
+  <text x="832" y="196" class="lbl tiny">① store</text>
+
+  <!-- bypass load arrows (the one permitted reordering) -->
+  <path class="flowDotted" d="M 430 160 H 450 V 610"/>
+  <text x="458" y="256" class="lbl tiny">② load bonusApplied</text>
+  <text x="458" y="272" class="lbl tiny">bypasses buffer (sees cache)</text>
+
+  <path class="flowDotted" d="M 690 160 H 670 V 610"/>
+  <text x="662" y="296" text-anchor="end" class="lbl tiny">load stakeReserved ②</text>
+  <text x="662" y="312" text-anchor="end" class="lbl tiny">bypasses buffer (sees cache)</text>
+
+  <!-- drain arrows -->
+  <path class="flowDashed" d="M 300 330 V 610"/>
+  <text x="312" y="472" class="lbl tiny">③ drains to cache</text>
+  <text x="312" y="488" class="lbl tiny">(FIFO order preserved)</text>
+
+  <path class="flowDashed" d="M 820 330 V 610"/>
+  <text x="832" y="472" class="lbl tiny">③ drains to cache</text>
+  <text x="832" y="488" class="lbl tiny">(FIFO order preserved)</text>
+
+  <!-- coherent cache -->
+  <rect x="110" y="610" width="900" height="80" rx="6" class="boxR"/>
+  <text x="560" y="634" text-anchor="middle" class="lbl node">COHERENT CACHE / MAIN MEMORY (MESI)</text>
+  <text x="560" y="654" text-anchor="middle" class="lbl sub">single source of truth — what every core eventually sees</text>
+  <text x="560" y="672" text-anchor="middle" class="lbl sub">before any drain: stakeReserved = false, bonusApplied = false</text>
+
+  <!-- annotation -->
+  <rect x="110" y="700" width="900" height="90" rx="6" class="ann"/>
+  <text x="130" y="724" class="lbl hdr13">WHY THIS MATTERS</text>
+  <text x="130" y="744" class="lbl tiny">x86-TSO permits exactly one reordering — StoreLoad: a load may pass a still-buffered store from the same core.</text>
+  <text x="130" y="760" class="lbl tiny">LoadLoad and StoreStore never reorder on x86 — this is why most JMM bugs are invisible on your laptop and only</text>
+  <text x="130" y="776" class="lbl tiny">surface on ARM/POWER, or under real store-buffer pressure at scale.</text>
+
+  <line x1="20" y1="798" x2="1100" y2="798" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- legend: box styles -->
+  <rect x="20" y="806" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="819" class="lbl tiny">core (issues stores/loads)</text>
+  <rect x="260" y="806" width="22" height="16" rx="3" class="boxW"/>
+  <text x="290" y="819" class="lbl tiny">store buffer (private, FIFO)</text>
+  <rect x="520" y="806" width="22" height="16" rx="3" class="boxH"/>
+  <text x="550" y="819" class="lbl tiny">buffered store (pending)</text>
+  <rect x="780" y="806" width="22" height="16" rx="3" class="boxR"/>
+  <text x="810" y="819" class="lbl tiny">coherent cache</text>
+  <rect x="960" y="806" width="22" height="16" rx="3" class="ann"/>
+  <text x="990" y="819" class="lbl tiny">note</text>
+
+  <!-- legend: edge styles -->
+  <path class="flowSolid" d="M 20 848 H 62"/>
+  <text x="74" y="852" class="lbl tiny">store enters buffer (program order)</text>
+  <path class="flowDashed" d="M 380 848 H 422"/>
+  <text x="434" y="852" class="lbl tiny">buffer drains to cache (FIFO, order-preserving)</text>
+  <path class="flowDotted" d="M 740 848 H 782"/>
+  <text x="794" y="852" class="lbl tiny">load bypasses own buffer — StoreLoad reorder</text>
+</svg>

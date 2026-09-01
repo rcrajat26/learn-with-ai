@@ -1,0 +1,160 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The ForkJoinPool WorkQueue array for a parallel fold over one day's 19.8 million
+     LedgerEntry rows. External submitter ledger-fold-submitter hashes via a ThreadLocalRandom
+     probe into an even-indexed submission queue slot; even slots 0, 2, 4, 6 hold submission
+     queues, odd slots 1, 3, 5, 7 hold worker queues owned by ForkJoinWorkerThreads. WorkQueue
+     slot 3 is expanded to show its array of ForkJoinTask chunks, the volatile base field marking
+     the steal end, the top field marking the push and pop end owned solely by the worker, and
+     the phase, source and nsteals bookkeeping fields.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 13.5px; font-weight: 600; }
+    .body  { font-size: 12px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .annh  { font-size: 12.5px; font-weight: 700; }
+    .ann   { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FORKJOINPOOL WORKQUEUE ARRAY — PARALLEL FOLD OVER 19.8M LEDGERENTRY ROWS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- submitter -->
+  <rect x="440" y="60" width="240" height="64" rx="6" class="boxP"/>
+  <text x="560" y="82" text-anchor="middle" class="lbl node">ledger-fold-submitter</text>
+  <text x="560" y="99" text-anchor="middle" class="lbl body">external thread, main()</text>
+  <text x="560" y="114" text-anchor="middle" class="lbl sub">fold over 19.8M LedgerEntry rows</text>
+
+  <path class="flow" d="M 560 124 V 150 H 365 V 220"/>
+  <text x="372" y="145" class="lbl tiny">ThreadLocalRandom probe hash → even slot</text>
+
+  <text x="20" y="205" class="lbl h2">WorkQueue[] — ForkJoinPool.workQueues, size 8</text>
+
+  <!-- 8 slots -->
+  <rect x="60" y="220" width="110" height="70" rx="6" class="boxP"/>
+  <text x="115" y="242" text-anchor="middle" class="lbl node">slot 0</text>
+  <text x="115" y="259" text-anchor="middle" class="lbl body">SUBMISSION</text>
+  <text x="115" y="274" text-anchor="middle" class="lbl sub">even index</text>
+
+  <rect x="185" y="220" width="110" height="70" rx="6" class="boxR"/>
+  <text x="240" y="242" text-anchor="middle" class="lbl node">slot 1</text>
+  <text x="240" y="259" text-anchor="middle" class="lbl body">WORKER</text>
+  <text x="240" y="274" text-anchor="middle" class="lbl sub">odd index</text>
+
+  <rect x="310" y="220" width="110" height="70" rx="6" class="boxP"/>
+  <text x="365" y="242" text-anchor="middle" class="lbl node">slot 2</text>
+  <text x="365" y="259" text-anchor="middle" class="lbl body">SUBMISSION</text>
+  <text x="365" y="274" text-anchor="middle" class="lbl sub">even index</text>
+
+  <rect x="435" y="220" width="110" height="70" rx="6" class="boxR"/>
+  <text x="490" y="242" text-anchor="middle" class="lbl node">slot 3</text>
+  <text x="490" y="259" text-anchor="middle" class="lbl body">WORKER</text>
+  <text x="490" y="274" text-anchor="middle" class="lbl sub">worker-3, expanded ↓</text>
+
+  <rect x="560" y="220" width="110" height="70" rx="6" class="boxP"/>
+  <text x="615" y="242" text-anchor="middle" class="lbl node">slot 4</text>
+  <text x="615" y="259" text-anchor="middle" class="lbl body">SUBMISSION</text>
+  <text x="615" y="274" text-anchor="middle" class="lbl sub">even index</text>
+
+  <rect x="685" y="220" width="110" height="70" rx="6" class="boxR"/>
+  <text x="740" y="242" text-anchor="middle" class="lbl node">slot 5</text>
+  <text x="740" y="259" text-anchor="middle" class="lbl body">WORKER</text>
+  <text x="740" y="274" text-anchor="middle" class="lbl sub">odd index</text>
+
+  <rect x="810" y="220" width="110" height="70" rx="6" class="boxP"/>
+  <text x="865" y="242" text-anchor="middle" class="lbl node">slot 6</text>
+  <text x="865" y="259" text-anchor="middle" class="lbl body">SUBMISSION</text>
+  <text x="865" y="274" text-anchor="middle" class="lbl sub">even index</text>
+
+  <rect x="935" y="220" width="110" height="70" rx="6" class="boxR"/>
+  <text x="990" y="242" text-anchor="middle" class="lbl node">slot 7</text>
+  <text x="990" y="259" text-anchor="middle" class="lbl body">WORKER</text>
+  <text x="990" y="274" text-anchor="middle" class="lbl sub">odd index</text>
+
+  <path class="flow" d="M 490 290 V 310 H 550 V 340"/>
+
+  <!-- expanded WorkQueue[3] -->
+  <rect x="260" y="340" width="580" height="310" rx="6" class="boxW"/>
+  <text x="280" y="362" class="lbl node">WorkQueue[3] — WORKER, owned by ForkJoinPool-worker-3</text>
+
+  <rect x="275" y="395" width="130" height="60" rx="5" class="boxP"/>
+  <text x="340" y="415" text-anchor="middle" class="lbl body">fold chunk</text>
+  <text x="340" y="432" text-anchor="middle" class="lbl sub">9.90M–11.15M rows</text>
+  <text x="340" y="446" text-anchor="middle" class="lbl sub">idx 0</text>
+
+  <rect x="415" y="395" width="130" height="60" rx="5" class="boxP"/>
+  <text x="480" y="415" text-anchor="middle" class="lbl body">fold chunk</text>
+  <text x="480" y="432" text-anchor="middle" class="lbl sub">11.15–12.40M rows</text>
+  <text x="480" y="446" text-anchor="middle" class="lbl sub">idx 1</text>
+
+  <rect x="555" y="395" width="130" height="60" rx="5" class="boxW"/>
+  <text x="620" y="418" text-anchor="middle" class="lbl body">empty</text>
+  <text x="620" y="435" text-anchor="middle" class="lbl sub">idx 2</text>
+
+  <rect x="695" y="395" width="130" height="60" rx="5" class="boxW"/>
+  <text x="760" y="418" text-anchor="middle" class="lbl body">empty</text>
+  <text x="760" y="435" text-anchor="middle" class="lbl sub">idx 3</text>
+
+  <rect x="270" y="500" width="140" height="50" rx="5" class="boxH"/>
+  <text x="340" y="519" text-anchor="middle" class="lbl body">base = 0</text>
+  <text x="340" y="535" text-anchor="middle" class="lbl sub">volatile — steal end</text>
+  <path class="flow" d="M 340 500 V 455"/>
+
+  <rect x="480" y="500" width="140" height="50" rx="5" class="boxH"/>
+  <text x="550" y="519" text-anchor="middle" class="lbl body">top = 2</text>
+  <text x="550" y="535" text-anchor="middle" class="lbl sub">owner-only push/pop end</text>
+  <path class="flow" d="M 550 500 V 455"/>
+
+  <rect x="280" y="570" width="170" height="50" rx="5" class="boxH"/>
+  <text x="365" y="589" text-anchor="middle" class="lbl body">phase = 3</text>
+  <text x="365" y="605" text-anchor="middle" class="lbl sub">active, unlocked</text>
+
+  <rect x="470" y="570" width="170" height="50" rx="5" class="boxH"/>
+  <text x="555" y="589" text-anchor="middle" class="lbl body">source = 2</text>
+  <text x="555" y="605" text-anchor="middle" class="lbl sub">last stole from slot 2</text>
+
+  <rect x="660" y="570" width="170" height="50" rx="5" class="boxH"/>
+  <text x="745" y="589" text-anchor="middle" class="lbl body">nsteals = 143</text>
+  <text x="745" y="605" text-anchor="middle" class="lbl sub">successful steals so far</text>
+
+  <rect x="260" y="665" width="580" height="115" rx="6" class="boxA"/>
+  <text x="276" y="685" class="lbl annh">why base is volatile and top is not CAS'd</text>
+  <text x="276" y="703" class="lbl ann">Only worker-3 ever pushes or pops at top, so top needs no</text>
+  <text x="276" y="719" class="lbl ann">synchronization. Other workers steal from base — the far</text>
+  <text x="276" y="735" class="lbl ann">end of the deque — so a steal is a CAS on base, letting</text>
+  <text x="276" y="751" class="lbl ann">owner pushes and thief steals proceed without a shared lock.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="800" x2="1100" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="815" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="828" class="lbl tiny">submission queue slot / occupied task</text>
+  <rect x="300" y="815" width="22" height="16" rx="3" class="boxR"/>
+  <text x="330" y="828" class="lbl tiny">worker queue slot</text>
+  <rect x="500" y="815" width="22" height="16" rx="3" class="boxW"/>
+  <text x="530" y="828" class="lbl tiny">empty task slot / nested container</text>
+  <rect x="770" y="815" width="22" height="16" rx="3" class="boxH"/>
+  <text x="800" y="828" class="lbl tiny">WorkQueue bookkeeping field</text>
+  <rect x="990" y="815" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1020" y="828" class="lbl tiny">note</text>
+
+  <path class="flow" d="M 20 850 H 60"/>
+  <text x="68" y="855" class="lbl tiny">A → B : B is derived from / expands / points into A</text>
+</svg>

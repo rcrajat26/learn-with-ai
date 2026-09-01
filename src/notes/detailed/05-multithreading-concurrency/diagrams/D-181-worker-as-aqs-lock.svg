@@ -1,0 +1,149 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after showing why ThreadPoolExecutor.Worker extends
+     AbstractQueuedSynchronizer as a non-reentrant lock. Left, the bug the trick prevents:
+     shutdownNow interrupts settlement-ingest-2 while it is parked inside getTask's call to
+     workQueue.poll, even though that worker is mid-poll and not actually idle, corrupting the
+     in-flight WithdrawalTransaction retrieval. Right, the fix: Worker extends
+     AbstractQueuedSynchronizer, non-reentrant, and is locked only for the duration of
+     runWorker's task execution; interruptIdleWorkers calls tryLock on each worker and skips any
+     that are already locked, meaning busy workers are never interrupted. A note shows runWorker
+     and getTask choosing between workQueue.poll(keepAliveTime) and workQueue.take() depending on
+     whether allowCoreThreadTimeOut is set.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .bad   { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#triD); }
+    .lane  { stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">Worker IS AN AQS LOCK THAT MEANS "BUSY"</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- divider between before/after -->
+  <line x1="560" y1="56" x2="560" y2="740" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: BEFORE -->
+  <text x="290" y="72" text-anchor="middle" class="lbl h2">BEFORE — THE BUG THE TRICK PREVENTS</text>
+
+  <rect x="40" y="90" width="500" height="46" rx="6" class="boxD"/>
+  <text x="290" y="118" text-anchor="middle" class="lbl body">no busy/idle distinction on workers</text>
+
+  <text x="180" y="160" text-anchor="middle" class="lbl tinyB">settlement-ingest-2</text>
+  <line x1="180" y1="170" x2="180" y2="600" class="lane"/>
+  <text x="60" y="176" class="lbl tinyB">TIME</text>
+  <path class="flow" d="M 60 182 V 590"/>
+
+  <rect x="80" y="200" width="200" height="60" rx="6" class="boxP"/>
+  <text x="180" y="224" text-anchor="middle" class="lbl body">1. runWorker loop</text>
+  <text x="180" y="244" text-anchor="middle" class="lbl sub">calls getTask()</text>
+
+  <path class="flow" d="M 180 260 V 290"/>
+  <rect x="40" y="290" width="220" height="70" rx="6" class="boxH"/>
+  <text x="150" y="310" text-anchor="middle" class="lbl body">2. getTask() mid-poll</text>
+  <text x="150" y="328" text-anchor="middle" class="lbl sub">workQueue.poll(keepAliveTime)</text>
+  <text x="150" y="344" text-anchor="middle" class="lbl sub">retrieving a WithdrawalTransaction</text>
+
+  <rect x="330" y="290" width="190" height="70" rx="6" class="boxD"/>
+  <text x="425" y="310" text-anchor="middle" class="lbl body">operator-review</text>
+  <text x="425" y="326" text-anchor="middle" class="lbl body">shutdownNow()</text>
+  <text x="425" y="344" text-anchor="middle" class="lbl sub">interrupts every worker</text>
+
+  <path class="bad" d="M 330 325 H 260"/>
+  <text x="295" y="316" text-anchor="middle" class="lbl tiny">interrupt()</text>
+
+  <path class="bad" d="M 180 360 V 400"/>
+  <rect x="60" y="400" width="240" height="70" rx="6" class="boxD"/>
+  <text x="180" y="420" text-anchor="middle" class="lbl body">3. InterruptedException</text>
+  <text x="180" y="438" text-anchor="middle" class="lbl sub">worker was mid-retrieval, not idle —</text>
+  <text x="180" y="454" text-anchor="middle" class="lbl sub">the in-flight WD-71 poll is corrupted</text>
+
+  <rect x="60" y="490" width="460" height="90" rx="6" class="boxA"/>
+  <text x="80" y="512" class="lbl tinyB">THE BUG</text>
+  <text x="80" y="532" class="lbl body">shutdownNow() cannot tell a worker that is</text>
+  <text x="80" y="548" class="lbl body">idle-waiting for work from one that is genuinely</text>
+  <text x="80" y="564" class="lbl body">busy inside getTask's blocking poll</text>
+
+  <!-- RIGHT: AFTER -->
+  <text x="840" y="72" text-anchor="middle" class="lbl h2">AFTER — Worker AS A NON-REENTRANT AQS LOCK</text>
+
+  <rect x="590" y="90" width="500" height="46" rx="6" class="boxR"/>
+  <text x="840" y="118" text-anchor="middle" class="lbl body">Worker extends AbstractQueuedSynchronizer</text>
+
+  <rect x="590" y="150" width="500" height="70" rx="6" class="boxR"/>
+  <text x="840" y="172" text-anchor="middle" class="lbl body">non-reentrant lock, state 0 = unlocked</text>
+  <text x="840" y="192" text-anchor="middle" class="lbl sub">locked (state = 1) only while runWorker</text>
+  <text x="840" y="208" text-anchor="middle" class="lbl sub">is executing a task — not while idle</text>
+
+  <path class="flow" d="M 840 220 V 250"/>
+  <rect x="590" y="250" width="230" height="80" rx="6" class="boxP"/>
+  <text x="705" y="272" text-anchor="middle" class="lbl body">runWorker</text>
+  <text x="705" y="292" text-anchor="middle" class="lbl sub">w.lock() before task.run()</text>
+  <text x="705" y="308" text-anchor="middle" class="lbl sub">w.unlock() after task completes</text>
+
+  <rect x="860" y="250" width="230" height="80" rx="6" class="boxP"/>
+  <text x="975" y="270" text-anchor="middle" class="lbl body">getTask()</text>
+  <text x="975" y="290" text-anchor="middle" class="lbl sub">allowCoreThreadTimeOut ?</text>
+  <text x="975" y="306" text-anchor="middle" class="lbl sub">poll(keepAliveTime) : take()</text>
+
+  <path class="flow" d="M 840 330 V 360"/>
+  <rect x="620" y="360" width="440" height="70" rx="6" class="boxH"/>
+  <text x="840" y="384" text-anchor="middle" class="lbl body">interruptIdleWorkers</text>
+  <text x="840" y="404" text-anchor="middle" class="lbl sub">for each worker: w.tryLock() — succeeds only if idle</text>
+
+  <path class="flow" d="M 730 430 V 460"/>
+  <rect x="600" y="460" width="220" height="70" rx="6" class="boxR"/>
+  <text x="710" y="484" text-anchor="middle" class="lbl body">idle worker</text>
+  <text x="710" y="504" text-anchor="middle" class="lbl sub">tryLock succeeds → interrupted safely</text>
+
+  <path class="flow" d="M 950 430 V 460"/>
+  <rect x="840" y="460" width="230" height="70" rx="6" class="boxD"/>
+  <text x="955" y="484" text-anchor="middle" class="lbl body">settlement-ingest-2 (busy)</text>
+  <text x="955" y="504" text-anchor="middle" class="lbl sub">already locked → tryLock fails, skipped</text>
+
+  <rect x="610" y="550" width="480" height="90" rx="6" class="boxA"/>
+  <text x="630" y="572" class="lbl tinyB">WHY NON-REENTRANT</text>
+  <text x="630" y="592" class="lbl body">a worker never tries to re-lock itself, so reentrancy</text>
+  <text x="630" y="608" class="lbl body">is neither needed nor allowed — a simpler AQS state</text>
+  <text x="630" y="624" class="lbl body">machine (0/1) is sufficient to encode busy/idle</text>
+
+  <line x1="20" y1="668" x2="1100" y2="668" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="682" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="694" class="lbl tiny">normal worker step</text>
+  <rect x="200" y="682" width="22" height="16" rx="3" class="boxH"/>
+  <text x="230" y="694" class="lbl tiny">shutdown / lock-state box</text>
+  <rect x="440" y="682" width="22" height="16" rx="3" class="boxR"/>
+  <text x="470" y="694" class="lbl tiny">safe / idle outcome</text>
+  <rect x="640" y="682" width="22" height="16" rx="3" class="boxD"/>
+  <text x="670" y="694" class="lbl tiny">bug / busy-skipped outcome</text>
+  <path class="flow" d="M 20 714 H 60"/>
+  <text x="70" y="718" class="lbl tiny">A → B : A causes or leads to B</text>
+  <path class="bad" d="M 340 714 H 380"/>
+  <text x="390" y="718" class="lbl tiny">A → B : incorrect interrupt delivered</text>
+</svg>

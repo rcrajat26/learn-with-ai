@@ -1,0 +1,130 @@
+<svg viewBox="0 0 1120 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="False sharing on the stake-settlement counter's cell array. Left: a[0] and a[1]
+     sit in the same 64-byte cache line. Thread settlement-ingest-3 writes a[0] and thread
+     settlement-ingest-7 writes a[1]; because they share a line, every write by either thread
+     invalidates the other core's cached copy of that line, two invalidations per round trip.
+     Right: a[0] and a[16] are 128 bytes apart, landing on separate cache lines, so the same two
+     threads writing them cause zero invalidations. An annotation panel names the JVM's own
+     -XX:ContendedPaddingWidth default of 128 bytes, the Apple M-series 128-byte cache sector, and
+     states as an order-of-magnitude estimate, not a measured constant, that the padded layout
+     runs roughly ten times faster under heavy contention on the 3,400-settlements-per-second
+     burst load.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+    .legend{ font-size: 11px; }
+
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxPrim { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triFlow); }
+    .inval { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round;
+             marker-end: url(#triInval); marker-start: url(#triInval); }
+    .bracket { fill: none; stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="triFlow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triInval" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FALSE SHARING ON THE STAKE-SETTLEMENT COUNTER</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">SAME CACHE LINE &#8212; a[0] AND a[1] FALSE-SHARE 64 B</text>
+  <text x="590" y="64" class="lbl h2">SEPARATE LINES &#8212; a[0] AND a[16], 128 B APART</text>
+  <line x1="560" y1="52" x2="560" y2="462" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: one shared 64B line -->
+  <text x="270" y="84" text-anchor="middle" class="lbl body">64-byte cache line</text>
+  <rect x="40" y="90" width="60" height="70" class="boxHi"/>
+  <text x="70" y="118" text-anchor="middle" class="lbl node">a[0]</text>
+  <rect x="100" y="90" width="60" height="70" class="boxHi"/>
+  <text x="130" y="118" text-anchor="middle" class="lbl node">a[1]</text>
+  <rect x="160" y="90" width="340" height="70" class="boxWeak"/>
+  <text x="330" y="118" text-anchor="middle" class="lbl body">a[2] &#8230; a[7]</text>
+  <text x="330" y="136" text-anchor="middle" class="lbl tiny">unused by these threads</text>
+
+  <path class="inval" d="M 75 145 H 125"/>
+
+  <path class="flow" d="M 150 210 V 198 H 70 V 160"/>
+
+  <path class="flow" d="M 390 210 V 190 H 130 V 160"/>
+
+  <rect x="40" y="210" width="200" height="70" rx="6" class="boxPrim"/>
+  <text x="140" y="240" text-anchor="middle" class="lbl node">settlement-ingest-3</text>
+  <text x="140" y="260" text-anchor="middle" class="lbl body">writes a[0]</text>
+
+  <rect x="280" y="210" width="200" height="70" rx="6" class="boxPrim"/>
+  <text x="380" y="240" text-anchor="middle" class="lbl node">settlement-ingest-7</text>
+  <text x="380" y="260" text-anchor="middle" class="lbl body">writes a[1]</text>
+
+  <!-- RIGHT: two separate lines -->
+  <rect x="590" y="90" width="200" height="70" class="boxHi"/>
+  <text x="690" y="118" text-anchor="middle" class="lbl node">a[0]</text>
+  <text x="690" y="136" text-anchor="middle" class="lbl tiny">cache line N</text>
+
+  <rect x="790" y="90" width="80" height="70" class="boxWeak"/>
+  <text x="830" y="130" text-anchor="middle" class="lbl tiny">padding</text>
+
+  <rect x="870" y="90" width="200" height="70" class="boxHi"/>
+  <text x="970" y="118" text-anchor="middle" class="lbl node">a[16]</text>
+  <text x="970" y="136" text-anchor="middle" class="lbl tiny">cache line N+2</text>
+
+  <path class="bracket" d="M 790 178 V 184 H 870 V 178"/>
+  <text x="830" y="200" text-anchor="middle" class="lbl tiny">128 B apart</text>
+
+  <path class="flow" d="M 690 160 V 210"/>
+  <path class="flow" d="M 970 160 V 210"/>
+
+  <rect x="590" y="210" width="200" height="70" rx="6" class="boxPrim"/>
+  <text x="690" y="240" text-anchor="middle" class="lbl node">settlement-ingest-3</text>
+  <text x="690" y="260" text-anchor="middle" class="lbl body">writes a[0]</text>
+
+  <rect x="870" y="210" width="200" height="70" rx="6" class="boxPrim"/>
+  <text x="970" y="240" text-anchor="middle" class="lbl node">settlement-ingest-7</text>
+  <text x="970" y="260" text-anchor="middle" class="lbl body">writes a[16]</text>
+
+  <!-- annotation panel -->
+  <rect x="40" y="310" width="1040" height="152" rx="6" class="boxAnn"/>
+  <text x="56" y="334" class="lbl h2">PADDING WIDTHS AND THE COST OF FALSE SHARING</text>
+  <text x="56" y="356" class="lbl tiny">a[16] is 16 longs &#215; 8 B = 128 B past a[0], on a separate line: 2 invalidations per round trip</text>
+  <text x="56" y="373" class="lbl tiny">on the shared line (one per write direction) vs. 0 invalidations once the lines are separate</text>
+  <text x="56" y="390" class="lbl tiny">-XX:ContendedPaddingWidth default = 128 B &#8212; the JVM's own padding width for @Contended fields</text>
+  <text x="56" y="407" class="lbl tiny">Apple M-series: 128-byte cache line sector &#8212; double the classic 64 B x86 line used above</text>
+  <text x="56" y="424" class="lbl tiny">Throughput ratio is order-of-magnitude, not a measured constant: padded runs roughly 10&#215; faster</text>
+  <text x="56" y="441" class="lbl tiny">than false-shared under heavy contention on the 3,400 settlements/sec burst load</text>
+
+  <!-- legend -->
+  <line x1="20" y1="480" x2="1100" y2="480" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="492" width="18" height="14" rx="3" class="boxHi"/>
+  <text x="44" y="503" class="lbl legend">hot array element</text>
+
+  <rect x="200" y="492" width="18" height="14" rx="3" class="boxWeak"/>
+  <text x="224" y="503" class="lbl legend">unused / padding bytes</text>
+
+  <rect x="420" y="492" width="18" height="14" rx="3" class="boxPrim"/>
+  <text x="444" y="503" class="lbl legend">writer thread</text>
+
+  <path class="flow" d="M 600 499 H 636"/>
+  <text x="644" y="503" class="lbl legend">write</text>
+
+  <path class="inval" d="M 740 499 H 776"/>
+  <text x="784" y="503" class="lbl legend">cache-line invalidation</text>
+
+  <rect x="960" y="492" width="18" height="14" rx="3" class="boxAnn"/>
+  <text x="984" y="503" class="lbl legend">annotation</text>
+</svg>

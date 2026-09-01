@@ -1,0 +1,181 @@
+<svg viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Shared-mode propagation on Semaphore(3) guarding settlement-ingest's slice of the
+     20-connection pool, with five waiters settlement-ingest-1 through settlement-ingest-5. Frame 1:
+     three permits are released, all five waiters remain parked. Frame 2: settlement-ingest-1's
+     shared acquire succeeds, tryAcquireShared returns remaining permits of 2, and
+     setHeadAndPropagate calls releaseShared on the new head, propagating the wake signal to
+     settlement-ingest-2. Frame 3: the cascade completes — settlement-ingest-1, -2 and -3 acquire
+     and permits reach 0 — while settlement-ingest-4 and settlement-ingest-5 stay parked because no
+     permits remain to propagate further. An annotation contrasts this with exclusive mode, where a
+     single release unparks exactly one waiter.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .body   { font-size: 12.5px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .capt   { font-size: 11px; fill: #4b5563; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .frame  { fill: none; stroke: #d1d5db; stroke-width: 1.5; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+              marker-end: url(#tri); }
+    .prop   { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+              marker-end: url(#triH); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triH" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SHARED MODE PROPAGATES — Semaphore(3) OVER THE SETTLEMENT-INGEST CONNECTION SLICE</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Semaphore(3) guards settlement-ingest's slice of the 20-connection pool. Five waiters queue for it: settlement-ingest-1 .. settlement-ingest-5.</text>
+
+  <!-- ===================== FRAME 1 ===================== -->
+  <g>
+    <rect x="20" y="80" width="440" height="660" rx="6" class="frame"/>
+    <text x="40" y="106" class="lbl h2">FRAME 1 — three permits released</text>
+    <line x1="40" y1="116" x2="440" y2="116" stroke="#d1d5db" stroke-width="1"/>
+
+    <rect x="40" y="132" width="400" height="58" rx="6" class="boxP"/>
+    <text x="240" y="156" text-anchor="middle" class="lbl node">Semaphore(3)</text>
+    <text x="240" y="176" text-anchor="middle" class="lbl body">permits available: 3</text>
+
+    <!-- waiters -->
+    <g>
+      <rect x="40" y="212" width="400" height="38" rx="5" class="boxW"/>
+      <text x="60" y="236" class="lbl body">settlement-ingest-1 — PARKED</text>
+    </g>
+    <g>
+      <rect x="40" y="258" width="400" height="38" rx="5" class="boxW"/>
+      <text x="60" y="282" class="lbl body">settlement-ingest-2 — PARKED</text>
+    </g>
+    <g>
+      <rect x="40" y="304" width="400" height="38" rx="5" class="boxW"/>
+      <text x="60" y="328" class="lbl body">settlement-ingest-3 — PARKED</text>
+    </g>
+    <g>
+      <rect x="40" y="350" width="400" height="38" rx="5" class="boxW"/>
+      <text x="60" y="374" class="lbl body">settlement-ingest-4 — PARKED</text>
+    </g>
+    <g>
+      <rect x="40" y="396" width="400" height="38" rx="5" class="boxW"/>
+      <text x="60" y="420" class="lbl body">settlement-ingest-5 — PARKED</text>
+    </g>
+
+    <rect x="40" y="450" width="400" height="98" rx="6" class="panel"/>
+    <text x="56" y="470" class="lbl tiny" font-weight="700">what changed</text>
+    <text x="56" y="488" class="lbl tiny">release() called 3 times; permits go 0 to 3.</text>
+    <text x="56" y="504" class="lbl tiny">No acquire has run yet — the AQS wait queue</text>
+    <text x="56" y="520" class="lbl tiny">still holds all five nodes, none signalled.</text>
+  </g>
+
+  <!-- ===================== FRAME 2 ===================== -->
+  <g>
+    <rect x="480" y="80" width="440" height="660" rx="6" class="frame"/>
+    <text x="500" y="106" class="lbl h2">FRAME 2 — first shared acquire propagates</text>
+    <line x1="500" y1="116" x2="900" y2="116" stroke="#d1d5db" stroke-width="1"/>
+
+    <rect x="500" y="132" width="400" height="58" rx="6" class="boxP"/>
+    <text x="700" y="156" text-anchor="middle" class="lbl node">Semaphore(3)</text>
+    <text x="700" y="176" text-anchor="middle" class="lbl body">permits available: 2 (remaining)</text>
+
+    <rect x="500" y="212" width="400" height="38" rx="5" class="boxR"/>
+    <text x="520" y="236" class="lbl body">settlement-ingest-1 — ACQUIRED, remaining=2</text>
+
+    <path class="prop" d="M 700 250 V 258"/>
+    <rect x="500" y="258" width="400" height="38" rx="5" class="boxH"/>
+    <text x="520" y="282" class="lbl body">settlement-ingest-2 — signalled by propagate</text>
+
+    <rect x="500" y="304" width="400" height="38" rx="5" class="boxW"/>
+    <text x="520" y="328" class="lbl body">settlement-ingest-3 — PARKED</text>
+
+    <rect x="500" y="350" width="400" height="38" rx="5" class="boxW"/>
+    <text x="520" y="374" class="lbl body">settlement-ingest-4 — PARKED</text>
+
+    <rect x="500" y="396" width="400" height="38" rx="5" class="boxW"/>
+    <text x="520" y="420" class="lbl body">settlement-ingest-5 — PARKED</text>
+
+    <rect x="500" y="450" width="400" height="98" rx="6" class="panel"/>
+    <text x="516" y="470" class="lbl tiny" font-weight="700">what changed</text>
+    <text x="516" y="488" class="lbl tiny">tryAcquireShared returns remaining=2 (&gt;=0).</text>
+    <text x="516" y="504" class="lbl tiny">setHeadAndPropagate calls releaseShared() on</text>
+    <text x="516" y="520" class="lbl tiny">the new head — the signal propagates onward.</text>
+  </g>
+
+  <!-- ===================== FRAME 3 ===================== -->
+  <g>
+    <rect x="940" y="80" width="440" height="660" rx="6" class="frame"/>
+    <text x="960" y="106" class="lbl h2">FRAME 3 — cascade: three wake, two stay parked</text>
+    <line x1="960" y1="116" x2="1360" y2="116" stroke="#d1d5db" stroke-width="1"/>
+
+    <rect x="960" y="132" width="400" height="58" rx="6" class="boxP"/>
+    <text x="1160" y="156" text-anchor="middle" class="lbl node">Semaphore(3)</text>
+    <text x="1160" y="176" text-anchor="middle" class="lbl body">permits available: 0 (exhausted)</text>
+
+    <rect x="960" y="212" width="400" height="38" rx="5" class="boxR"/>
+    <text x="980" y="236" class="lbl body">settlement-ingest-1 — ACQUIRED</text>
+
+    <path class="prop" d="M 1160 250 V 258"/>
+    <rect x="960" y="258" width="400" height="38" rx="5" class="boxR"/>
+    <text x="980" y="282" class="lbl body">settlement-ingest-2 — ACQUIRED</text>
+
+    <path class="prop" d="M 1160 296 V 304"/>
+    <rect x="960" y="304" width="400" height="38" rx="5" class="boxR"/>
+    <text x="980" y="328" class="lbl body">settlement-ingest-3 — ACQUIRED</text>
+
+    <rect x="960" y="350" width="400" height="38" rx="5" class="boxW"/>
+    <text x="980" y="374" class="lbl body">settlement-ingest-4 — PARKED (no permits left)</text>
+
+    <rect x="960" y="396" width="400" height="38" rx="5" class="boxW"/>
+    <text x="980" y="420" class="lbl body">settlement-ingest-5 — PARKED (no permits left)</text>
+
+    <rect x="960" y="450" width="400" height="98" rx="6" class="panel"/>
+    <text x="976" y="470" class="lbl tiny" font-weight="700">what changed</text>
+    <text x="976" y="488" class="lbl tiny">propagate ran until permits hit 0: three</text>
+    <text x="976" y="504" class="lbl tiny">readers woke off one initial release burst.</text>
+    <text x="976" y="520" class="lbl tiny">-4 and -5 have nothing left to propagate to.</text>
+  </g>
+
+  <!-- Contrast annotation -->
+  <rect x="20" y="562" width="1360" height="66" rx="6" class="panel"/>
+  <text x="36" y="582" class="lbl tiny" font-weight="700">contrast: exclusive mode</text>
+  <text x="36" y="600" class="lbl tiny">A ReentrantLock's release() (exclusive mode) unparks exactly one waiter per call — never a cascade.</text>
+  <text x="36" y="616" class="lbl tiny">Shared mode's setHeadAndPropagate is what lets one release() wake many nodes in a single pass.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="646" x2="1380" y2="646" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="660" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="673" class="lbl tiny">Semaphore state</text>
+
+  <rect x="200" y="660" width="22" height="16" rx="3" class="boxR"/>
+  <text x="230" y="673" class="lbl tiny">waiter acquired (RUNNABLE)</text>
+
+  <rect x="440" y="660" width="22" height="16" rx="3" class="boxH"/>
+  <text x="470" y="673" class="lbl tiny">waiter signalled by propagate</text>
+
+  <rect x="700" y="660" width="22" height="16" rx="3" class="boxW"/>
+  <text x="730" y="673" class="lbl tiny">waiter still PARKED</text>
+
+  <rect x="900" y="660" width="22" height="16" rx="3" class="panel"/>
+  <text x="930" y="673" class="lbl tiny">annotation panel</text>
+
+  <path class="prop" d="M 1120 668 H 1160"/>
+  <text x="1168" y="673" class="lbl tiny">propagate signal (A → B: A wakes B)</text>
+</svg>

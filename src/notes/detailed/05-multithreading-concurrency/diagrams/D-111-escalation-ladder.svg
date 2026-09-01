@@ -1,0 +1,166 @@
+<svg viewBox="0 0 950 1040" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The escalation ladder for making shared state on FundsLedger.reserveStake safe.
+     Root question: can you not share it? Yes leads to confinement, free. No leads down a spine of
+     five further questions, each escalating cost: can the state be immutable, near free; does one
+     atomic field cover the invariant, ten to twenty nanoseconds uncontended; does a concurrent
+     collection already model it, amortised JDK-tuned cost; can one lock guard the whole
+     invariant, one hundred or more nanoseconds under contention with monitor inflation risk; and
+     finally hand-rolled lock-free, very high engineering cost, where the diagram warns this is
+     where you need jcstress.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 14px; font-weight: 700; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .warn  { font-size: 12.5px; font-weight: 700; fill: #b91c1c; }
+
+    .boxQ   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxOK  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxBad { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .note   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .warnbox{ fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="950" height="1040" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE ESCALATION LADDER FOR "MAKE reserveStake SAFE"</text>
+  <line x1="20" y1="42" x2="930" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT : y 58-124 -->
+  <rect x="280" y="58" width="390" height="66" rx="6" class="boxQ"/>
+  <text x="475" y="82" text-anchor="middle" class="lbl node">CAN YOU NOT SHARE IT?</text>
+  <text x="475" y="102" text-anchor="middle" class="lbl sub">cost: $0 — no sharing means no synchronization at all</text>
+
+  <!-- bus 1 : root bottom 124 -> bus at 148 -> row1 top 186 -->
+  <path d="M 475 124 V 148" class="flow"/>
+  <path d="M 275 148 H 675" class="bus"/>
+  <path d="M 275 148 V 186" class="flow"/>
+  <path d="M 675 148 V 186" class="flow"/>
+  <text x="330" y="142" class="lbl tiny">YES</text>
+  <text x="600" y="142" class="lbl tiny">NO</text>
+
+  <!-- ROW 1 : y 186-282 (leaf) / 186-252 (Q) -->
+  <rect x="120" y="186" width="310" height="96" rx="6" class="boxOK"/>
+  <text x="275" y="208" text-anchor="middle" class="lbl node">CONFINEMENT</text>
+  <text x="275" y="228" text-anchor="middle" class="lbl body">settlement-ingest-3 owns its own</text>
+  <text x="275" y="244" text-anchor="middle" class="lbl body">SettlementBatch — never shared</text>
+  <text x="275" y="264" text-anchor="middle" class="lbl sub">cost: free — no cross-thread visibility needed</text>
+
+  <rect x="500" y="186" width="350" height="66" rx="6" class="boxQ"/>
+  <text x="675" y="210" text-anchor="middle" class="lbl node">CAN THE SHARED STATE BE IMMUTABLE?</text>
+  <text x="675" y="230" text-anchor="middle" class="lbl sub">cost: near-free — one safe publication (final fields)</text>
+
+  <!-- bus 2 : row1 max bottom 282 -> bus at 306 -> row2 top 336 -->
+  <path d="M 275 282 V 306" class="flow"/>
+  <path d="M 675 252 V 306" class="flow"/>
+  <path d="M 275 306 H 675" class="bus"/>
+  <path d="M 275 306 V 336" class="flow"/>
+  <path d="M 675 306 V 336" class="flow"/>
+  <text x="330" y="300" class="lbl tiny">YES</text>
+  <text x="600" y="300" class="lbl tiny">NO</text>
+
+  <!-- ROW 2 : y 336-432 (leaf) / 336-402 (Q) -->
+  <rect x="120" y="336" width="310" height="96" rx="6" class="boxOK"/>
+  <text x="275" y="358" text-anchor="middle" class="lbl node">IMMUTABILITY</text>
+  <text x="275" y="378" text-anchor="middle" class="lbl body">a frozen PaymentRun snapshot,</text>
+  <text x="275" y="394" text-anchor="middle" class="lbl body">published once, never mutated</text>
+  <text x="275" y="414" text-anchor="middle" class="lbl sub">cost: near-free once safely published</text>
+
+  <rect x="500" y="336" width="350" height="66" rx="6" class="boxQ"/>
+  <text x="675" y="360" text-anchor="middle" class="lbl node">DOES ONE ATOMIC FIELD COVER IT?</text>
+  <text x="675" y="380" text-anchor="middle" class="lbl sub">cost: ~10–20 ns per uncontended CAS</text>
+
+  <!-- bus 3 : row2 max bottom 432 -> bus at 456 -> row3 top 486 -->
+  <path d="M 275 432 V 456" class="flow"/>
+  <path d="M 675 402 V 456" class="flow"/>
+  <path d="M 275 456 H 675" class="bus"/>
+  <path d="M 275 456 V 486" class="flow"/>
+  <path d="M 675 456 V 486" class="flow"/>
+  <text x="330" y="450" class="lbl tiny">YES</text>
+  <text x="600" y="450" class="lbl tiny">NO</text>
+
+  <!-- ROW 3 : y 486-582 (leaf) / 486-566 (Q, two-line title, h=80) -->
+  <rect x="120" y="486" width="310" height="96" rx="6" class="boxOK"/>
+  <text x="275" y="508" text-anchor="middle" class="lbl node">A SINGLE ATOMIC</text>
+  <text x="275" y="528" text-anchor="middle" class="lbl body">AtomicLong reservedStake,</text>
+  <text x="275" y="544" text-anchor="middle" class="lbl body">a compareAndSet retry loop</text>
+  <text x="275" y="564" text-anchor="middle" class="lbl sub">cost: 10–20 ns uncontended, 100+ ns contended</text>
+
+  <rect x="500" y="486" width="350" height="80" rx="6" class="boxQ"/>
+  <text x="675" y="508" text-anchor="middle" class="lbl node">DOES A CONCURRENT COLLECTION</text>
+  <text x="675" y="524" text-anchor="middle" class="lbl node">ALREADY MODEL IT?</text>
+  <text x="675" y="552" text-anchor="middle" class="lbl sub">cost: amortised — JDK-tuned striping/CAS inside</text>
+
+  <!-- bus 4 : row3 max bottom 582 -> bus at 606 -> row4 top 636 -->
+  <path d="M 275 582 V 606" class="flow"/>
+  <path d="M 675 566 V 606" class="flow"/>
+  <path d="M 275 606 H 675" class="bus"/>
+  <path d="M 275 606 V 636" class="flow"/>
+  <path d="M 675 606 V 636" class="flow"/>
+  <text x="330" y="600" class="lbl tiny">YES</text>
+  <text x="600" y="600" class="lbl tiny">NO</text>
+
+  <!-- ROW 4 : y 636-732 (leaf) / 636-716 (Q, h=80) -->
+  <rect x="120" y="636" width="310" height="96" rx="6" class="boxOK"/>
+  <text x="275" y="658" text-anchor="middle" class="lbl node">A CONCURRENT COLLECTION</text>
+  <text x="275" y="678" text-anchor="middle" class="lbl body">ConcurrentHashMap&lt;ClientId, Wallet&gt;</text>
+  <text x="275" y="694" text-anchor="middle" class="lbl body">for the per-client wallet table</text>
+  <text x="275" y="714" text-anchor="middle" class="lbl sub">cost: amortised, tuned by the JDK authors</text>
+
+  <rect x="500" y="636" width="350" height="80" rx="6" class="boxQ"/>
+  <text x="675" y="658" text-anchor="middle" class="lbl node">CAN ONE LOCK GUARD THE</text>
+  <text x="675" y="674" text-anchor="middle" class="lbl node">WHOLE INVARIANT?</text>
+  <text x="675" y="702" text-anchor="middle" class="lbl sub">cost: 100+ ns contended, monitor-inflation risk</text>
+
+  <!-- bus 5 : row4 max bottom 732 -> bus at 756 -> row5 top 786 -->
+  <path d="M 275 732 V 756" class="flow"/>
+  <path d="M 675 716 V 756" class="flow"/>
+  <path d="M 275 756 H 675" class="bus"/>
+  <path d="M 275 756 V 786" class="flow"/>
+  <path d="M 675 756 V 786" class="flow"/>
+  <text x="330" y="750" class="lbl tiny">YES</text>
+  <text x="600" y="750" class="lbl tiny">NO</text>
+
+  <!-- ROW 5 (terminal) : y 786-882 (leaf) / 786-916 (final, taller for warning strip) -->
+  <rect x="120" y="786" width="310" height="96" rx="6" class="boxOK"/>
+  <text x="275" y="808" text-anchor="middle" class="lbl node">ONE LOCK</text>
+  <text x="275" y="828" text-anchor="middle" class="lbl body">synchronized(ledger) wrapping</text>
+  <text x="275" y="844" text-anchor="middle" class="lbl body">the reserveStake critical section</text>
+  <text x="275" y="864" text-anchor="middle" class="lbl sub">cost: 100+ ns contended, simplest correct fallback</text>
+
+  <rect x="500" y="786" width="350" height="130" rx="6" class="boxBad"/>
+  <text x="675" y="808" text-anchor="middle" class="lbl node">HAND-ROLLED LOCK-FREE</text>
+  <text x="675" y="826" text-anchor="middle" class="lbl body">a custom CAS retry loop inside</text>
+  <text x="675" y="842" text-anchor="middle" class="lbl body">FundsLedger, no lock at all</text>
+  <text x="675" y="860" text-anchor="middle" class="lbl sub">cost: very high engineering cost, easy to get subtly wrong</text>
+  <rect x="520" y="872" width="310" height="34" rx="5" class="warnbox"/>
+  <text x="675" y="894" text-anchor="middle" class="warn">THIS IS WHERE YOU NEED jcstress</text>
+
+  <!-- legend -->
+  <line x1="20" y1="944" x2="930" y2="944" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="964" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="976" width="22" height="16" rx="3" class="boxQ"/>
+  <text x="50" y="989" class="lbl tiny">decision — "can this technique cover the invariant?"</text>
+
+  <rect x="400" y="976" width="22" height="16" rx="3" class="boxOK"/>
+  <text x="430" y="989" class="lbl tiny">answer accepted — stop escalating here</text>
+
+  <rect x="710" y="976" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="740" y="989" class="lbl tiny">last resort — highest cost and risk</text>
+
+  <path class="flow" d="M 20 1012 H 60"/>
+  <text x="68" y="1017" class="lbl tiny">YES/NO : decision flow, arrow points at the chosen next step</text>
+</svg>

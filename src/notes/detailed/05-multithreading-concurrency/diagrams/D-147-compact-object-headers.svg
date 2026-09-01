@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1120 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison of the QuizStakes Reservation object header. Before:
+     a 96 to 128 bit legacy header made of an 8-byte mark word and a separate compressed klass
+     pointer, where an inflated FundsLedger monitor's pointer fits directly in the mark word.
+     After: a 64-bit compact header that folds the compressed klass pointer into the mark word;
+     the monitor pointer no longer fits, so an inflated lock looks itself up in a side
+     ObjectMonitorTable keyed by object identity. Labelled: 10 to 20 percent heap reduction,
+     experimental in JDK 24, and delivered in JDK 25 with the default-on claim marked as
+     unconfirmed.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .adapter { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+               marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COMPACT OBJECT HEADERS SHRINK THE LOCK SPACE (JEP 450)</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="60" x2="560" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="100" y="70" class="lbl h2">BEFORE — LEGACY HEADER (JDK &lt;= 23)</text>
+  <text x="620" y="70" class="lbl h2">AFTER — COMPACT HEADER</text>
+
+  <!-- left: legacy header, two separate segments -->
+  <rect x="100" y="100" width="360" height="80" rx="6" class="boxP"/>
+  <text x="280" y="126" text-anchor="middle" class="lbl node">mark word — Reservation</text>
+  <text x="280" y="146" text-anchor="middle" class="lbl body">64 bits: hash / age / lock bits</text>
+  <text x="280" y="164" text-anchor="middle" class="lbl sub">inflated: holds FundsLedger monitor* directly</text>
+
+  <text x="470" y="196" text-anchor="middle" class="lbl body">+</text>
+
+  <rect x="100" y="200" width="360" height="60" rx="6" class="boxH"/>
+  <text x="280" y="224" text-anchor="middle" class="lbl node">compressed klass ptr</text>
+  <text x="280" y="244" text-anchor="middle" class="lbl body">32 bits (4 B) — separate field</text>
+
+  <rect x="100" y="284" width="360" height="70" rx="6" class="panel"/>
+  <text x="116" y="304" class="lbl node">HEADER TOTAL</text>
+  <text x="116" y="322" class="lbl sub">96 bits (12 B) with compressed oops</text>
+  <text x="116" y="340" class="lbl sub">128 bits (16 B) without compressed oops</text>
+
+  <!-- right: compact header, single word -->
+  <rect x="620" y="100" width="360" height="100" rx="6" class="boxH"/>
+  <text x="800" y="126" text-anchor="middle" class="lbl node">compact header — Reservation</text>
+  <text x="800" y="146" text-anchor="middle" class="lbl body">64 bits (8 B) total — one word</text>
+  <text x="800" y="164" text-anchor="middle" class="lbl sub">mark bits + compressed klass ptr folded in</text>
+  <text x="800" y="182" text-anchor="middle" class="lbl sub">no room left for a full monitor pointer</text>
+
+  <path class="adapter" d="M 800 200 V 240"/>
+  <text x="812" y="224" class="lbl floor">inflated lock lookup</text>
+
+  <rect x="620" y="240" width="360" height="80" rx="6" class="boxW"/>
+  <text x="800" y="264" text-anchor="middle" class="lbl node">ObjectMonitorTable (side map)</text>
+  <text x="800" y="284" text-anchor="middle" class="lbl sub">object identity -&gt; ObjectMonitor*</text>
+  <text x="800" y="302" text-anchor="middle" class="lbl sub">holds the FundsLedger monitor once inflated</text>
+
+  <rect x="620" y="344" width="360" height="70" rx="6" class="panel"/>
+  <text x="636" y="364" class="lbl node">HEADER TOTAL</text>
+  <text x="636" y="382" class="lbl sub">64 bits (8 B) — down from 96-128 bits</text>
+  <text x="636" y="400" class="lbl sub">klass ptr no longer a separate field</text>
+
+  <!-- bottom-wide impact + rollout panels -->
+  <rect x="100" y="440" width="440" height="90" rx="6" class="panel"/>
+  <text x="116" y="462" class="lbl node">HEAP IMPACT</text>
+  <text x="116" y="482" class="lbl sub">10-20% heap reduction reported across</text>
+  <text x="116" y="500" class="lbl sub">representative heaps (JEP 450)</text>
+
+  <rect x="620" y="440" width="360" height="90" rx="6" class="panel"/>
+  <text x="636" y="462" class="lbl node">ROLLOUT</text>
+  <text x="636" y="482" class="lbl sub">experimental in JDK 24 (-XX:+UseCompactObjectHeaders)</text>
+  <text x="636" y="500" class="lbl sub">delivered in JDK 25; "default" claim unconfirmed here</text>
+
+  <!-- legend -->
+  <line x1="20" y1="558" x2="1100" y2="558" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="572" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="585" class="lbl tiny">mark word (legacy header)</text>
+  <rect x="260" y="572" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="585" class="lbl tiny">compressed klass ptr / the compact header (subject of diagram)</text>
+  <rect x="660" y="572" width="22" height="16" rx="3" class="boxW"/>
+  <text x="690" y="585" class="lbl tiny">side table (nested detail)</text>
+  <rect x="880" y="572" width="22" height="16" rx="3" class="panel"/>
+  <text x="910" y="585" class="lbl tiny">annotation panel</text>
+
+  <path class="adapter" d="M 20 610 H 60"/>
+  <text x="70" y="615" class="lbl tiny">adapter / side lookup, not inheritance (A -&gt; B : A looks B up)</text>
+</svg>

@@ -1,0 +1,183 @@
+<svg viewBox="0 0 1400 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The diagnosis decision tree. Root: check top -H -p pid to see if CPU is high or low. If CPU is
+     high, branch into three causes: GC, a spin loop, or a livelock retry, each with its own command to run and
+     evidence to expect. If CPU is low, branch into three causes: threads BLOCKED on contention, threads WAITING
+     on a queue either idle or starved, or the JVM idle with sockets stuck in CLOSE_WAIT indicating carrier
+     thread pinning — each again with its own command and expected evidence.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn{ fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .bus   { fill: none; stroke: #475569; stroke-width: 2; }
+    .drop  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE DIAGNOSIS DECISION TREE — CPU HIGH OR LOW?</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ROOT -->
+  <rect x="530" y="60" width="300" height="50" rx="6" class="boxP"/>
+  <text x="680" y="80" text-anchor="middle" class="lbl node">IS CPU HIGH OR LOW?</text>
+  <text x="680" y="98" text-anchor="middle" class="lbl sub">top -H -p &lt;pid&gt;, or /proc/&lt;pid&gt;/stat</text>
+
+  <path class="bus" d="M 680 110 V 130 H 350 V 150"/>
+  <path class="drop" d="M 680 130 H 1010 V 150"/>
+
+  <!-- GEN 1: CPU HIGH / CPU LOW -->
+  <rect x="260" y="150" width="180" height="45" rx="6" class="boxP"/>
+  <text x="350" y="177" text-anchor="middle" class="lbl node">CPU HIGH</text>
+
+  <rect x="920" y="150" width="180" height="45" rx="6" class="boxP"/>
+  <text x="1010" y="177" text-anchor="middle" class="lbl node">CPU LOW</text>
+
+  <!-- fan-out under CPU HIGH -->
+  <path class="bus" d="M 350 195 V 210 H 130 V 225"/>
+  <path class="drop" d="M 350 210 V 225"/>
+  <path class="drop" d="M 350 210 H 570 V 225"/>
+
+  <!-- fan-out under CPU LOW -->
+  <path class="bus" d="M 1010 195 V 210 H 790 V 225"/>
+  <path class="drop" d="M 1010 210 V 225"/>
+  <path class="drop" d="M 1010 210 H 1230 V 225"/>
+
+  <!-- GEN 2: three causes under CPU HIGH -->
+  <rect x="30" y="225" width="200" height="50" rx="6" class="boxH"/>
+  <text x="130" y="255" text-anchor="middle" class="lbl node">GC</text>
+
+  <rect x="250" y="225" width="200" height="50" rx="6" class="boxH"/>
+  <text x="350" y="247" text-anchor="middle" class="lbl node">SPIN LOOP</text>
+  <text x="350" y="264" text-anchor="middle" class="lbl sub">busy-wait, same stack every sample</text>
+
+  <rect x="470" y="225" width="200" height="50" rx="6" class="boxH"/>
+  <text x="570" y="247" text-anchor="middle" class="lbl node">LIVELOCK RETRY</text>
+  <text x="570" y="264" text-anchor="middle" class="lbl sub">RUNNABLE, no forward progress</text>
+
+  <!-- GEN 2: three causes under CPU LOW -->
+  <rect x="690" y="225" width="200" height="50" rx="6" class="boxH"/>
+  <text x="790" y="247" text-anchor="middle" class="lbl node">BLOCKED</text>
+  <text x="790" y="264" text-anchor="middle" class="lbl sub">contention on a monitor</text>
+
+  <rect x="910" y="225" width="200" height="50" rx="6" class="boxH"/>
+  <text x="1010" y="247" text-anchor="middle" class="lbl node">WAITING (queue)</text>
+  <text x="1010" y="264" text-anchor="middle" class="lbl sub">idle or starved</text>
+
+  <rect x="1130" y="225" width="200" height="50" rx="6" class="boxH"/>
+  <text x="1230" y="247" text-anchor="middle" class="lbl node">JVM IDLE +</text>
+  <text x="1230" y="264" text-anchor="middle" class="lbl node">CLOSE_WAIT (pinning)</text>
+
+  <!-- connectors gen2 -> leaf panels (1:1, no fan-out) -->
+  <path class="drop" d="M 130 275 V 295"/>
+  <path class="drop" d="M 350 275 V 295"/>
+  <path class="drop" d="M 570 275 V 295"/>
+  <path class="drop" d="M 790 275 V 295"/>
+  <path class="drop" d="M 1010 275 V 295"/>
+  <path class="drop" d="M 1230 275 V 295"/>
+
+  <!-- LEAF PANELS -->
+  <!-- GC -->
+  <rect x="30" y="295" width="200" height="230" rx="6" class="boxAnn"/>
+  <text x="46" y="317" class="lbl tinyB">RUN:</text>
+  <text x="46" y="335" class="lbl tiny">jstat -gcutil &lt;pid&gt; 1000</text>
+  <text x="46" y="351" class="lbl tiny">(or -Xlog:gc log)</text>
+  <text x="46" y="375" class="lbl tinyB">EXPECT:</text>
+  <text x="46" y="393" class="lbl tiny">old-gen usage climbs</text>
+  <text x="46" y="409" class="lbl tiny">every cycle; full GCs</text>
+  <text x="46" y="425" class="lbl tiny">back-to-back; GC threads</text>
+  <text x="46" y="441" class="lbl tiny">dominate the CPU-high</text>
+  <text x="46" y="457" class="lbl tiny">sample</text>
+
+  <!-- Spin loop -->
+  <rect x="250" y="295" width="200" height="230" rx="6" class="boxAnn"/>
+  <text x="266" y="317" class="lbl tinyB">RUN:</text>
+  <text x="266" y="335" class="lbl tiny">jstack &lt;pid&gt;, repeat</text>
+  <text x="266" y="351" class="lbl tiny">3x, 1s apart</text>
+  <text x="266" y="375" class="lbl tinyB">EXPECT:</text>
+  <text x="266" y="393" class="lbl tiny">same thread, same stack</text>
+  <text x="266" y="409" class="lbl tiny">frame every sample —</text>
+  <text x="266" y="425" class="lbl tiny">e.g. payment-run-worker-2</text>
+  <text x="266" y="441" class="lbl tiny">RUNNABLE in a busy-wait,</text>
+  <text x="266" y="457" class="lbl tiny">no syscall</text>
+
+  <!-- Livelock retry -->
+  <rect x="470" y="295" width="200" height="230" rx="6" class="boxAnn"/>
+  <text x="486" y="317" class="lbl tinyB">RUN:</text>
+  <text x="486" y="335" class="lbl tiny">jstack &lt;pid&gt;, repeat</text>
+  <text x="486" y="351" class="lbl tiny">3x, 1s apart</text>
+  <text x="486" y="375" class="lbl tinyB">EXPECT:</text>
+  <text x="486" y="393" class="lbl tiny">RUNNABLE but stack</text>
+  <text x="486" y="409" class="lbl tiny">frames change every</text>
+  <text x="486" y="425" class="lbl tiny">sample — e.g. reserveStake</text>
+  <text x="486" y="441" class="lbl tiny">retrying a failed CAS on</text>
+  <text x="486" y="457" class="lbl tiny">ClientRestrictions</text>
+
+  <!-- BLOCKED -->
+  <rect x="690" y="295" width="200" height="230" rx="6" class="boxAnn"/>
+  <text x="706" y="317" class="lbl tinyB">RUN:</text>
+  <text x="706" y="335" class="lbl tiny">jstack &lt;pid&gt;, grep</text>
+  <text x="706" y="351" class="lbl tiny">'BLOCKED (on object</text>
+  <text x="706" y="367" class="lbl tiny">monitor)'</text>
+  <text x="706" y="391" class="lbl tinyB">EXPECT:</text>
+  <text x="706" y="409" class="lbl tiny">multiple threads BLOCKED</text>
+  <text x="706" y="425" class="lbl tiny">on the same monitor —</text>
+  <text x="706" y="441" class="lbl tiny">e.g. FundsLedger's wallet</text>
+  <text x="706" y="457" class="lbl tiny">lock held by</text>
+  <text x="706" y="473" class="lbl tiny">payment-run-worker-1</text>
+
+  <!-- WAITING (queue) -->
+  <rect x="910" y="295" width="200" height="230" rx="6" class="boxAnn"/>
+  <text x="926" y="317" class="lbl tinyB">RUN:</text>
+  <text x="926" y="335" class="lbl tiny">jstack &lt;pid&gt;, grep</text>
+  <text x="926" y="351" class="lbl tiny">'WAITING (parking)';</text>
+  <text x="926" y="367" class="lbl tiny">check queue depth</text>
+  <text x="926" y="391" class="lbl tinyB">EXPECT:</text>
+  <text x="926" y="409" class="lbl tiny">parked in</text>
+  <text x="926" y="425" class="lbl tiny">BlockingQueue.take();</text>
+  <text x="926" y="441" class="lbl tiny">depth ≈0 = idle, or the</text>
+  <text x="926" y="457" class="lbl tiny">upstream producer is</text>
+  <text x="926" y="473" class="lbl tiny">itself blocked = starved</text>
+
+  <!-- JVM idle + CLOSE_WAIT (pinning) -->
+  <rect x="1130" y="295" width="200" height="230" rx="6" class="boxAnn"/>
+  <text x="1146" y="317" class="lbl tinyB">RUN:</text>
+  <text x="1146" y="335" class="lbl tiny">netstat -an | grep</text>
+  <text x="1146" y="351" class="lbl tiny">CLOSE_WAIT; jstack</text>
+  <text x="1146" y="367" class="lbl tiny">&lt;pid&gt; for carriers</text>
+  <text x="1146" y="391" class="lbl tinyB">EXPECT:</text>
+  <text x="1146" y="409" class="lbl tiny">sockets stuck in</text>
+  <text x="1146" y="425" class="lbl tiny">CLOSE_WAIT while a</text>
+  <text x="1146" y="441" class="lbl tiny">virtual thread pins its</text>
+  <text x="1146" y="457" class="lbl tiny">carrier inside a</text>
+  <text x="1146" y="473" class="lbl tiny">synchronized block —</text>
+  <text x="1146" y="489" class="lbl tiny">e.g. a withdrawal-intake</text>
+  <text x="1146" y="505" class="lbl tiny">handler</text>
+
+  <!-- legend -->
+  <line x1="20" y1="545" x2="1380" y2="545" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="558" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="571" class="lbl tiny">decision node — a question to answer</text>
+
+  <rect x="360" y="558" width="22" height="16" rx="3" class="boxH"/>
+  <text x="390" y="571" class="lbl tiny">named cause — the branch's diagnosis</text>
+
+  <rect x="740" y="558" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="770" y="571" class="lbl tiny">leaf: the command to run + evidence to expect</text>
+
+  <path class="drop" d="M 20 601 H 60"/>
+  <text x="68" y="605" class="lbl tiny">A → B : answering A leads to B (bus fan-out for 3+ children)</text>
+</svg>

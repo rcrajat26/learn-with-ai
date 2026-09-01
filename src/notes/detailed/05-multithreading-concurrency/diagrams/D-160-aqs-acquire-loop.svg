@@ -1,0 +1,151 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The AQS acquire and release loops for the ReentrantLock guarding the wallet
+     buckets. Acquire: settlement-ingest-3 calls tryAcquire; on success it returns holding the
+     lock. On failure it checks whether it is the head's successor and retries tryAcquire once; if
+     that still fails it enqueues as an ExclusiveNode, sets the predecessor's status to WAITING,
+     calls LockSupport.park, and on wake re-checks from the top. Release, drawn beside it:
+     payment-run-worker-2 calls tryRelease, which decrements state; once state reaches zero the
+     lock is fully released and exactly one successor is unparked, never the whole queue.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triDark); }
+    .flowB { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triGrey); }
+  </style>
+  <defs>
+    <marker id="triDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE AQS ACQUIRE LOOP AND ITS RELEASE PATH</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="530" y1="60" x2="530" y2="760" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="60" y="76" class="lbl h2">ACQUIRE — lock.lock() by settlement-ingest-3</text>
+  <text x="570" y="76" class="lbl h2">RELEASE — lock.unlock() by payment-run-worker-2</text>
+
+  <!-- ACQUIRE column -->
+  <rect x="80" y="96" width="260" height="50" rx="6" class="boxP"/>
+  <text x="210" y="126" text-anchor="middle" class="lbl body">tryAcquire(1)</text>
+
+  <rect x="80" y="176" width="260" height="50" rx="6" class="boxW"/>
+  <text x="210" y="200" text-anchor="middle" class="lbl body">CAS on state succeeded?</text>
+  <text x="210" y="216" text-anchor="middle" class="lbl floor">decision</text>
+
+  <rect x="360" y="176" width="220" height="50" rx="6" class="boxR"/>
+  <text x="470" y="200" text-anchor="middle" class="lbl body">RETURN — lock held</text>
+  <text x="470" y="216" text-anchor="middle" class="lbl floor">hold count = state</text>
+
+  <rect x="80" y="256" width="260" height="50" rx="6" class="boxW"/>
+  <text x="210" y="280" text-anchor="middle" class="lbl body">am I the head's successor?</text>
+  <text x="210" y="296" text-anchor="middle" class="lbl floor">decision</text>
+
+  <rect x="360" y="256" width="220" height="50" rx="6" class="boxP"/>
+  <text x="470" y="280" text-anchor="middle" class="lbl body">retry tryAcquire(1)</text>
+  <text x="470" y="296" text-anchor="middle" class="lbl floor">once, before parking</text>
+
+  <rect x="80" y="336" width="260" height="50" rx="6" class="boxP"/>
+  <text x="210" y="360" text-anchor="middle" class="lbl body">enqueue as ExclusiveNode</text>
+  <text x="210" y="376" text-anchor="middle" class="lbl floor">thread: settlement-ingest-3</text>
+
+  <rect x="80" y="416" width="260" height="50" rx="6" class="boxP"/>
+  <text x="210" y="440" text-anchor="middle" class="lbl body">predecessor.status = WAITING (1)</text>
+  <text x="210" y="456" text-anchor="middle" class="lbl floor">bit flag on the node ahead of us</text>
+
+  <rect x="80" y="496" width="260" height="50" rx="6" class="boxH"/>
+  <text x="210" y="520" text-anchor="middle" class="lbl body">LockSupport.park(this)</text>
+  <text x="210" y="536" text-anchor="middle" class="lbl floor">thread now blocked, off the CPU</text>
+
+  <rect x="80" y="576" width="260" height="50" rx="6" class="boxW"/>
+  <text x="210" y="600" text-anchor="middle" class="lbl body">on wake: re-check</text>
+  <text x="210" y="616" text-anchor="middle" class="lbl floor">spurious wakeups possible</text>
+
+  <path class="flow" d="M 210 146 V 176"/>
+  <path class="flow" d="M 340 201 H 360"/>
+  <text x="350" y="193" class="lbl floor">yes</text>
+  <path class="flow" d="M 210 226 V 256"/>
+  <text x="222" y="244" class="lbl floor">no</text>
+  <path class="flow" d="M 340 281 H 360"/>
+  <text x="350" y="273" class="lbl floor">yes</text>
+  <path class="flow" d="M 210 306 V 336"/>
+  <text x="222" y="324" class="lbl floor">no</text>
+  <path class="flow" d="M 210 386 V 416"/>
+  <path class="flow" d="M 210 466 V 496"/>
+  <path class="flow" d="M 210 546 V 576"/>
+
+  <!-- retry loop-back -->
+  <path class="flowB" d="M 470 306 V 340 H 30 V 201 H 80"/>
+  <text x="350" y="328" class="lbl floor">retry checked at CAS decision</text>
+
+  <!-- wake loop-back -->
+  <path class="flowB" d="M 80 601 H 10 V 121 H 80"/>
+  <text x="16" y="360" class="lbl floor" transform="rotate(-90 16 360)">loop back to tryAcquire</text>
+
+  <!-- RELEASE column -->
+  <rect x="600" y="96" width="260" height="50" rx="6" class="boxP"/>
+  <text x="730" y="120" text-anchor="middle" class="lbl body">release(1)</text>
+  <text x="730" y="136" text-anchor="middle" class="lbl floor">payment-run-worker-2</text>
+
+  <rect x="600" y="176" width="260" height="50" rx="6" class="boxP"/>
+  <text x="730" y="200" text-anchor="middle" class="lbl body">tryRelease(1)</text>
+  <text x="730" y="216" text-anchor="middle" class="lbl floor">state = state - 1</text>
+
+  <rect x="600" y="256" width="260" height="50" rx="6" class="boxW"/>
+  <text x="730" y="280" text-anchor="middle" class="lbl body">state == 0 ?</text>
+  <text x="730" y="296" text-anchor="middle" class="lbl floor">decision</text>
+
+  <rect x="600" y="336" width="260" height="50" rx="6" class="boxR"/>
+  <text x="730" y="358" text-anchor="middle" class="lbl body">fully released</text>
+  <text x="730" y="374" text-anchor="middle" class="lbl floor">exclusiveOwnerThread = null</text>
+
+  <rect x="600" y="416" width="260" height="60" rx="6" class="boxH"/>
+  <text x="730" y="438" text-anchor="middle" class="lbl body">unpark head's successor</text>
+  <text x="730" y="454" text-anchor="middle" class="lbl floor">exactly one thread, exclusive mode</text>
+  <text x="730" y="468" text-anchor="middle" class="lbl floor">— no thundering herd</text>
+
+  <rect x="840" y="256" width="150" height="50" rx="6" class="boxR"/>
+  <text x="915" y="280" text-anchor="middle" class="lbl tiny">return</text>
+  <text x="915" y="296" text-anchor="middle" class="lbl floor">still reentrant-held</text>
+
+  <path class="flow" d="M 730 146 V 176"/>
+  <path class="flow" d="M 730 226 V 256"/>
+  <path class="flow" d="M 730 306 V 336"/>
+  <text x="742" y="324" class="lbl floor">yes</text>
+  <path class="flow" d="M 860 281 H 840"/>
+  <text x="850" y="273" class="lbl floor">no</text>
+  <path class="flow" d="M 730 386 V 416"/>
+
+  <!-- legend -->
+  <line x1="20" y1="800" x2="1020" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="816" width="20" height="16" rx="3" class="boxP"/>
+  <text x="46" y="829" class="lbl tiny">action step</text>
+  <rect x="180" y="816" width="20" height="16" rx="3" class="boxW"/>
+  <text x="206" y="829" class="lbl tiny">decision step</text>
+  <rect x="360" y="816" width="20" height="16" rx="3" class="boxH"/>
+  <text x="386" y="829" class="lbl tiny">park / unpark — the blocking edge</text>
+  <rect x="660" y="816" width="20" height="16" rx="3" class="boxR"/>
+  <text x="686" y="829" class="lbl tiny">terminal / success outcome</text>
+
+  <path class="flow" d="M 20 856 H 60"/>
+  <text x="68" y="860" class="lbl tiny">sequential control flow</text>
+  <path class="flowB" d="M 260 856 H 300"/>
+  <text x="308" y="860" class="lbl tiny">loop-back / retry edge</text>
+</svg>

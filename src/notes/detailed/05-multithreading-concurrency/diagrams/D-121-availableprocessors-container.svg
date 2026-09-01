@@ -1,0 +1,122 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after: on a bare 8-core host, Runtime.availableProcessors() reports 8. The
+     same JVM redeployed under a 0.5-CPU cgroup quota reports 1, with -XX:ActiveProcessorCount
+     shown as the manual override. Beneath each side, a panel lists every consumer of that
+     number — ForkJoinPool.commonPool, the virtual-thread scheduler, Netty's event-loop group,
+     Reactor's parallel scheduler, Tomcat's embedded connector, and G1's worker threads — showing
+     they all mis-size together from 8 down to 1, with the common pool's parallelism collapsing to
+     0 and falling back to the calling thread.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .body   { font-size: 13px; }
+    .tiny   { font-size: 11px; }
+    .floor  { font-size: 10.5px; fill: #4b5563; }
+    .sub    { font-size: 11px; fill: #4b5563; }
+    .bold   { font-weight: 700; }
+    .big    { font-size: 30px; font-weight: 700; }
+
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">AVAILABLEPROCESSORS() IN A CONTAINER</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="58" x2="560" y2="792" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="280" y="66" text-anchor="middle" class="lbl h2">BARE 8-CORE HOST</text>
+  <text x="840" y="66" text-anchor="middle" class="lbl h2">SAME JVM — 0.5-CPU CGROUP QUOTA</text>
+
+  <!-- transformation arrow -->
+  <path class="flow" d="M 420 155 H 700"/>
+  <text x="560" y="140" text-anchor="middle" class="lbl floor">same JVM, deployed under a cgroup quota</text>
+
+  <!-- left pill: host -->
+  <rect x="140" y="110" width="280" height="90" rx="8" class="boxR"/>
+  <text x="280" y="132" text-anchor="middle" class="lbl body bold">Runtime.availableProcessors()</text>
+  <text x="280" y="172" text-anchor="middle" class="lbl big" fill="#15803d">8</text>
+  <text x="280" y="192" text-anchor="middle" class="lbl floor">8 logical cores, no cgroup limits</text>
+
+  <!-- right pill: container -->
+  <rect x="700" y="110" width="280" height="90" rx="8" class="boxD"/>
+  <text x="840" y="132" text-anchor="middle" class="lbl body bold">Runtime.availableProcessors()</text>
+  <text x="840" y="172" text-anchor="middle" class="lbl big" fill="#b91c1c">1</text>
+  <text x="840" y="192" text-anchor="middle" class="lbl floor">cgroup caps CPU to 0.5 — rounds up to 1</text>
+
+  <!-- left detail note -->
+  <rect x="140" y="215" width="280" height="60" rx="6" class="boxW"/>
+  <text x="280" y="237" text-anchor="middle" class="lbl tiny bold">no cgroup on this host</text>
+  <text x="280" y="255" text-anchor="middle" class="lbl floor">availableProcessors() matches real topology</text>
+
+  <!-- right detail: cgroup quota -->
+  <rect x="700" y="215" width="280" height="60" rx="6" class="panel"/>
+  <text x="840" y="235" text-anchor="middle" class="lbl tiny bold" fill="#2563eb">cgroup quota</text>
+  <text x="840" y="252" text-anchor="middle" class="lbl floor">cpu.cfs_quota_us / cpu.cfs_period_us = 0.5 CPU</text>
+  <text x="840" y="267" text-anchor="middle" class="lbl floor">a fraction of one core, reported as an integer</text>
+
+  <!-- left override slot (not needed) -->
+  <rect x="140" y="285" width="280" height="60" rx="6" class="boxW"/>
+  <text x="280" y="308" text-anchor="middle" class="lbl tiny bold">no override needed</text>
+  <text x="280" y="326" text-anchor="middle" class="lbl floor">host topology already matches reality</text>
+
+  <!-- right override: -XX:ActiveProcessorCount -->
+  <rect x="700" y="285" width="280" height="60" rx="6" class="boxH"/>
+  <text x="840" y="308" text-anchor="middle" class="lbl tiny bold" fill="#b45309">-XX:ActiveProcessorCount=2</text>
+  <text x="840" y="326" text-anchor="middle" class="lbl floor">explicit override forces the reported value</text>
+
+  <!-- leaf panel: consumers, host -->
+  <rect x="60" y="370" width="440" height="300" rx="6" class="boxW"/>
+  <text x="76" y="394" class="lbl h2">CONSUMERS OF THAT NUMBER — HOST (8)</text>
+  <text x="76" y="420" class="lbl tiny">ForkJoinPool.commonPool() → parallelism 7 (8 − 1)</text>
+  <text x="76" y="446" class="lbl tiny">virtual-thread scheduler → 8 carrier threads</text>
+  <text x="76" y="472" class="lbl tiny">Netty NioEventLoopGroup → 16 event-loop threads (2 × 8)</text>
+  <text x="76" y="498" class="lbl tiny">Reactor Schedulers.parallel() → 8 workers</text>
+  <text x="76" y="524" class="lbl tiny">Tomcat embedded connector → I/O threads sized off 8</text>
+  <text x="76" y="550" class="lbl tiny">G1 GC → 8 parallel worker threads</text>
+  <text x="76" y="580" class="lbl floor">all six read the same JVM-reported core count</text>
+
+  <!-- leaf panel: consumers, container -->
+  <rect x="620" y="370" width="440" height="300" rx="6" class="boxW"/>
+  <text x="636" y="394" class="lbl h2">CONSUMERS OF THAT NUMBER — CONTAINER (1)</text>
+  <text x="636" y="420" class="lbl tiny">ForkJoinPool.commonPool() → parallelism 0</text>
+  <text x="636" y="446" class="lbl tiny">virtual-thread scheduler → 1 carrier thread</text>
+  <text x="636" y="472" class="lbl tiny">Netty NioEventLoopGroup → 2 event-loop threads (2 × 1)</text>
+  <text x="636" y="498" class="lbl tiny">Reactor Schedulers.parallel() → 1 worker</text>
+  <text x="636" y="524" class="lbl tiny">Tomcat embedded connector → I/O threads sized off 1</text>
+  <text x="636" y="550" class="lbl tiny">G1 GC → 1 parallel worker thread</text>
+  <text x="636" y="580" class="lbl floor bold" fill="#b91c1c">parallelism 0 → tasks run on the caller thread</text>
+
+  <!-- bottom-wide summary panel -->
+  <rect x="60" y="700" width="1000" height="72" rx="6" class="panel"/>
+  <text x="76" y="722" class="lbl h2" fill="#2563eb">ALL MIS-SIZE TOGETHER</text>
+  <text x="76" y="742" class="lbl tiny">One wrong core-count number silently caps compute pools, GC parallelism, and reactive schedulers across the whole JVM.</text>
+  <text x="76" y="760" class="lbl tiny">Only 0.5 CPU of real entitlement was granted, yet most of these consumers still assume at least one full core.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="792" x2="1100" y2="792" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="806" width="22" height="16" rx="3" class="boxR"/>
+  <text x="52" y="818" class="lbl tiny">correct / expected sizing (host)</text>
+  <rect x="290" y="806" width="22" height="16" rx="3" class="boxD"/>
+  <text x="322" y="818" class="lbl tiny">misconfigured / capped sizing (container)</text>
+  <rect x="600" y="806" width="22" height="16" rx="3" class="boxH"/>
+  <text x="632" y="818" class="lbl tiny">override flag (-XX:ActiveProcessorCount)</text>
+  <rect x="20" y="834" width="22" height="16" rx="3" class="panel"/>
+  <text x="52" y="846" class="lbl tiny">annotation — quota detail or summary</text>
+  <rect x="290" y="834" width="22" height="16" rx="3" class="boxW"/>
+  <text x="322" y="846" class="lbl tiny">note, or grouped leaf panel of consumers</text>
+  <path class="flow" d="M 600 842 H 626"/>
+  <text x="632" y="846" class="lbl tiny">same JVM redeployed under a quota</text>
+</svg>

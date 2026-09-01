@@ -1,0 +1,146 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="MiniScope lifecycle for the AssessmentService fan-out to the identity vendor and
+     the watchlist provider. States flow open to joined to closed. fork is legal only in the open
+     state, before join. join is legal only on the owning thread. Three illegal edges are shown:
+     join called from a non-owner thread raises WrongThreadException, fork called after join
+     raises IllegalStateException because the scope is already joined, and closing a scope before
+     a nested child scope has closed raises StructureViolationException because close must happen
+     in LIFO order. A worked example shows an outer assessment-scope opened first enclosing an
+     inner nested affordability-recheck-scope opened second, which must close first. A final
+     annotation states the honest limitation: a deadline on the scope cannot stop a subtask that
+     ignores interruption.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxF { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .illeg { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triR); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">MiniScope LIFECYCLE FOR THE AssessmentService FAN-OUT</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="62" class="lbl h2">OPEN → JOINED → CLOSED, with the three illegal edges that raise</text>
+
+  <!-- fork self-loop above OPEN -->
+  <path class="flow" d="M 130 150 V 95 H 210 V 150"/>
+  <text x="170" y="82" text-anchor="middle" class="lbl tiny" font-weight="700">fork(identityVendorTask), fork(watchlistTask)</text>
+  <text x="170" y="112" text-anchor="middle" class="lbl sub">legal only while OPEN, before join()</text>
+
+  <!-- state boxes -->
+  <rect x="60" y="150" width="220" height="70" rx="8" class="boxP"/>
+  <text x="170" y="180" text-anchor="middle" class="lbl node">OPEN</text>
+  <text x="170" y="200" text-anchor="middle" class="lbl sub">scope created, subtasks may fork</text>
+
+  <rect x="410" y="150" width="220" height="70" rx="8" class="boxH"/>
+  <text x="520" y="180" text-anchor="middle" class="lbl node">JOINED</text>
+  <text x="520" y="200" text-anchor="middle" class="lbl sub">join() returned; results/failures visible</text>
+
+  <rect x="760" y="150" width="220" height="70" rx="8" class="boxR"/>
+  <text x="870" y="180" text-anchor="middle" class="lbl node">CLOSED</text>
+  <text x="870" y="200" text-anchor="middle" class="lbl sub">try-with-resources exited; resources freed</text>
+
+  <!-- legal transitions -->
+  <text x="345" y="170" text-anchor="middle" class="lbl tiny" font-weight="700">join()</text>
+  <text x="345" y="184" text-anchor="middle" class="lbl sub">owner thread only</text>
+  <path class="flow" d="M 280 185 H 410"/>
+
+  <text x="695" y="170" text-anchor="middle" class="lbl tiny" font-weight="700">close()</text>
+  <text x="695" y="184" text-anchor="middle" class="lbl sub">LIFO order required</text>
+  <path class="flow" d="M 630 185 H 760"/>
+
+  <!-- illegal edges -->
+  <path class="illeg" d="M 170 220 V 260"/>
+  <path class="illeg" d="M 500 220 V 260"/>
+  <path class="illeg" d="M 560 220 V 240 H 870 V 260"/>
+
+  <rect x="60" y="264" width="220" height="86" rx="6" class="boxF"/>
+  <text x="170" y="284" text-anchor="middle" class="lbl node">illegal: wrong thread</text>
+  <text x="170" y="302" text-anchor="middle" class="lbl body">join() from watchlist-fetch,</text>
+  <text x="170" y="318" text-anchor="middle" class="lbl body">not the owner thread</text>
+  <text x="170" y="336" text-anchor="middle" class="lbl sub">→ WrongThreadException</text>
+
+  <rect x="410" y="264" width="220" height="86" rx="6" class="boxF"/>
+  <text x="520" y="284" text-anchor="middle" class="lbl node">illegal: fork after join</text>
+  <text x="520" y="302" text-anchor="middle" class="lbl body">fork(auditTask) attempted</text>
+  <text x="520" y="318" text-anchor="middle" class="lbl body">once scope is JOINED</text>
+  <text x="520" y="336" text-anchor="middle" class="lbl sub">→ IllegalStateException</text>
+
+  <rect x="760" y="264" width="220" height="86" rx="6" class="boxF"/>
+  <text x="870" y="284" text-anchor="middle" class="lbl node">illegal: out-of-order close</text>
+  <text x="870" y="302" text-anchor="middle" class="lbl body">close() on the outer scope</text>
+  <text x="870" y="318" text-anchor="middle" class="lbl body">before its nested child closes</text>
+  <text x="870" y="336" text-anchor="middle" class="lbl sub">→ StructureViolationException</text>
+
+  <!-- LIFO worked example -->
+  <line x1="20" y1="370" x2="1020" y2="370" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="390" class="lbl h2">LIFO CLOSE ORDER — NESTED MiniScope INSTANCES</text>
+
+  <rect x="60" y="404" width="700" height="120" rx="8" class="boxP"/>
+  <text x="80" y="426" class="lbl node">assessment-scope — opened T0</text>
+  <text x="80" y="442" class="lbl sub">encloses the whole AssessmentService fan-out</text>
+
+  <rect x="100" y="454" width="380" height="54" rx="6" class="boxH"/>
+  <text x="290" y="476" text-anchor="middle" class="lbl node">affordability-recheck-scope — opened T1, nested</text>
+  <text x="290" y="494" text-anchor="middle" class="lbl sub">forks a second affordability lookup mid-assessment</text>
+
+  <path class="flow" d="M 490 481 H 780"/>
+  <rect x="784" y="454" width="220" height="54" rx="6" class="boxW"/>
+  <text x="894" y="474" text-anchor="middle" class="lbl body">① close() legal here first</text>
+  <text x="894" y="492" text-anchor="middle" class="lbl sub">inner scope, opened last</text>
+
+  <path class="flow" d="M 760 500 V 560 H 900 V 560"/>
+  <rect x="784" y="534" width="220" height="54" rx="6" class="boxR"/>
+  <text x="894" y="554" text-anchor="middle" class="lbl body">② close() legal only after ①</text>
+  <text x="894" y="572" text-anchor="middle" class="lbl sub">outer scope, opened first</text>
+
+  <!-- honest limitation -->
+  <rect x="20" y="606" width="1000" height="70" rx="6" class="boxA"/>
+  <text x="36" y="628" class="lbl tiny" font-weight="700">honest limitation</text>
+  <text x="36" y="646" class="lbl tiny">a deadline set on MiniScope cannot forcibly stop identityVendorTask or watchlistTask once running —</text>
+  <text x="36" y="662" class="lbl tiny">it only stops waiting for them; a subtask that ignores its interrupt keeps running past the deadline</text>
+
+  <!-- legend -->
+  <line x1="20" y1="694" x2="1020" y2="694" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="708" width="20" height="16" rx="3" class="boxP"/>
+  <text x="46" y="721" class="lbl tiny">OPEN state / outer scope</text>
+  <rect x="240" y="708" width="20" height="16" rx="3" class="boxH"/>
+  <text x="266" y="721" class="lbl tiny">JOINED state / nested scope</text>
+  <rect x="470" y="708" width="20" height="16" rx="3" class="boxR"/>
+  <text x="496" y="721" class="lbl tiny">CLOSED state / correct close order</text>
+  <rect x="720" y="708" width="20" height="16" rx="3" class="boxF"/>
+  <text x="746" y="721" class="lbl tiny">illegal transition / exception raised</text>
+  <rect x="20" y="734" width="20" height="16" rx="3" class="boxW"/>
+  <text x="46" y="747" class="lbl tiny">ordering note</text>
+  <rect x="180" y="734" width="20" height="16" rx="3" class="boxA"/>
+  <text x="206" y="747" class="lbl tiny">explanation / limitation panel</text>
+  <path class="flow" d="M 400 742 H 440"/>
+  <text x="446" y="747" class="lbl tiny">A → B : legal transition from A to B</text>
+  <path class="illeg" d="M 700 742 H 740"/>
+  <text x="746" y="747" class="lbl tiny">A → B : illegal call from state A raises an exception</text>
+</svg>

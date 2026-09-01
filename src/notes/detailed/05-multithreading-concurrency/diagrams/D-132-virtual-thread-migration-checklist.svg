@@ -1,0 +1,95 @@
+<svg viewBox="0 0 660 1000" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The virtual-thread migration checklist as six ordered gates on a straight vertical spine: audit synchronized on blocking paths, watching the JDBC driver, Java 21 only; audit ThreadLocal caches, watching the object pool; add a Semaphore at every bounded downstream, watching the connection pool; re-size the connection pool; re-point monitoring at in-flight tasks, watching the tracing agent; and enable behind a runtime flag per workload, watching the logging appender. Each gate must clear before the next begins.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .pill  { font-size: 11px; font-weight: 700; fill: #1f2937; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .pillC { fill: #fbbf24; stroke: #b45309; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="660" height="1000" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE VIRTUAL-THREAD MIGRATION CHECKLIST</text>
+  <line x1="20" y1="42" x2="620" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Gate 1 -->
+  <rect x="20" y="90" width="580" height="100" rx="6" class="boxP"/>
+  <rect x="32" y="100" width="66" height="20" rx="4" class="pillC"/>
+  <text x="65" y="114" text-anchor="middle" class="lbl pill">GATE 1</text>
+  <text x="112" y="114" class="lbl node">Audit synchronized on blocking paths</text>
+  <text x="40" y="140" class="lbl body">Watch: JDBC driver — synchronized blocks pin the carrier thread</text>
+  <text x="40" y="162" class="lbl sub">(Java 21 only — before pinning fixes land)</text>
+
+  <path class="flow" d="M 310 190 V 210"/>
+
+  <!-- Gate 2 -->
+  <rect x="20" y="210" width="580" height="100" rx="6" class="boxP"/>
+  <rect x="32" y="220" width="66" height="20" rx="4" class="pillC"/>
+  <text x="65" y="234" text-anchor="middle" class="lbl pill">GATE 2</text>
+  <text x="112" y="234" class="lbl node">Audit ThreadLocal caches</text>
+  <text x="40" y="260" class="lbl body">Watch: object pool — cache re-inits per task, not per thread</text>
+  <text x="40" y="282" class="lbl sub">one init per platform thread becomes one per task (see D-134)</text>
+
+  <path class="flow" d="M 310 310 V 330"/>
+
+  <!-- Gate 3 -->
+  <rect x="20" y="330" width="580" height="100" rx="6" class="boxP"/>
+  <rect x="32" y="340" width="66" height="20" rx="4" class="pillC"/>
+  <text x="65" y="354" text-anchor="middle" class="lbl pill">GATE 3</text>
+  <text x="112" y="354" class="lbl node">Add a Semaphore at every bounded downstream</text>
+  <text x="40" y="380" class="lbl body">Watch: connection pool — unbounded submits flood a fixed pool</text>
+  <text x="40" y="402" class="lbl sub">cap concurrent calls before they reach the pool, not after</text>
+
+  <path class="flow" d="M 310 430 V 450"/>
+
+  <!-- Gate 4 -->
+  <rect x="20" y="450" width="580" height="100" rx="6" class="boxP"/>
+  <rect x="32" y="460" width="66" height="20" rx="4" class="pillC"/>
+  <text x="65" y="474" text-anchor="middle" class="lbl pill">GATE 4</text>
+  <text x="112" y="474" class="lbl node">Re-size the connection pool</text>
+  <text x="40" y="500" class="lbl body">Watch: connection pool — 200-thread sizing no longer holds</text>
+  <text x="40" y="522" class="lbl sub">old pool size was an accidental concurrency cap (see D-133)</text>
+
+  <path class="flow" d="M 310 550 V 570"/>
+
+  <!-- Gate 5 -->
+  <rect x="20" y="570" width="580" height="100" rx="6" class="boxP"/>
+  <rect x="32" y="580" width="66" height="20" rx="4" class="pillC"/>
+  <text x="65" y="594" text-anchor="middle" class="lbl pill">GATE 5</text>
+  <text x="112" y="594" class="lbl node">Re-point monitoring at in-flight tasks</text>
+  <text x="40" y="620" class="lbl body">Watch: tracing agent — thread-count metrics miss vthreads</text>
+  <text x="40" y="642" class="lbl sub">APM agents built for one-thread-per-request lose the mapping</text>
+
+  <path class="flow" d="M 310 670 V 690"/>
+
+  <!-- Gate 6 -->
+  <rect x="20" y="690" width="580" height="100" rx="6" class="boxP"/>
+  <rect x="32" y="700" width="66" height="20" rx="4" class="pillC"/>
+  <text x="65" y="714" text-anchor="middle" class="lbl pill">GATE 6</text>
+  <text x="112" y="714" class="lbl node">Enable behind a runtime flag per workload</text>
+  <text x="40" y="740" class="lbl body">Watch: logging appender — blocking appenders throttle first</text>
+  <text x="40" y="762" class="lbl sub">canary AssessmentService before SettlementIngest, roll back fast</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="830" x2="620" y2="830" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="844" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="857" class="lbl tiny">migration gate — must clear before the flip</text>
+  <rect x="330" y="844" width="30" height="16" rx="4" class="pillC"/>
+  <text x="368" y="857" class="lbl tiny">gate sequence number</text>
+
+  <path class="flow" d="M 20 885 H 60"/>
+  <text x="68" y="890" class="lbl tiny">A → B : gate A complete, gate B begins — spine runs straight down</text>
+</svg>

@@ -1,0 +1,153 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="CompletableFuture internals for an affordability-assessment task calling the
+     identity vendor, p50 900 milliseconds. The volatile Object result field holds one of three
+     shapes: the plain value AffordabilityResult APPROVED, the NIL sentinel standing in for a
+     completed null, or an AltResult wrapping a Throwable such as a vendor TimeoutException. The
+     volatile Completion field is the head of a Treiber stack of Completion nodes — UniApply for
+     thenApply, UniExceptionally for exceptionally — each pushed by a dependent stage and popped
+     and fired by postComplete in LIFO order. postComplete unrolls that popping into an explicit
+     loop instead of recursing, which is what protects a long dependency chain from overflowing
+     the stack.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .sub2  { font-size: 11px; fill: #4b5563; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; fill: #4b5563; }
+    .annh  { font-size: 12.5px; font-weight: 700; }
+    .ann   { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weakE { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triw); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">COMPLETABLEFUTURE INTERNALS — RESULT FIELD AND COMPLETION STACK</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="58" x2="560" y2="660" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="62" class="lbl h2">RESULT — volatile Object result</text>
+  <text x="580" y="62" class="lbl h2">STACK — Treiber stack of Completion</text>
+
+  <!-- left: CompletableFuture -->
+  <rect x="180" y="80" width="200" height="60" rx="6" class="boxH"/>
+  <text x="280" y="102" text-anchor="middle" class="lbl node">CompletableFuture</text>
+  <text x="280" y="119" text-anchor="middle" class="lbl body">volatile Object result</text>
+  <text x="280" y="134" text-anchor="middle" class="lbl sub">affordability check task</text>
+
+  <rect x="15" y="200" width="150" height="74" rx="6" class="boxR"/>
+  <text x="90" y="220" text-anchor="middle" class="lbl node">value</text>
+  <text x="90" y="237" text-anchor="middle" class="lbl body">score = APPROVED</text>
+  <text x="90" y="253" text-anchor="middle" class="lbl sub">the completed value</text>
+  <text x="90" y="266" text-anchor="middle" class="lbl sub">AffordabilityResult</text>
+
+  <rect x="205" y="200" width="150" height="74" rx="6" class="boxW"/>
+  <text x="280" y="220" text-anchor="middle" class="lbl node">NIL</text>
+  <text x="280" y="237" text-anchor="middle" class="lbl body">sentinel object</text>
+  <text x="280" y="253" text-anchor="middle" class="lbl sub">represents null</text>
+  <text x="280" y="266" text-anchor="middle" class="lbl sub">(never stored literally)</text>
+
+  <rect x="395" y="200" width="150" height="74" rx="6" class="boxD"/>
+  <text x="470" y="220" text-anchor="middle" class="lbl node">AltResult</text>
+  <text x="470" y="237" text-anchor="middle" class="lbl body">wraps a Throwable</text>
+  <text x="470" y="253" text-anchor="middle" class="lbl sub">ex: TimeoutException</text>
+  <text x="470" y="266" text-anchor="middle" class="lbl sub">(identity vendor call)</text>
+
+  <path class="flow" d="M 280 140 V 165 H 90 V 200"/>
+  <path class="flow" d="M 280 140 V 165 H 280 V 200"/>
+  <path class="flow" d="M 280 140 V 165 H 470 V 200"/>
+
+  <rect x="20" y="310" width="520" height="110" rx="6" class="boxA"/>
+  <text x="36" y="330" class="lbl annh">result doubles as the completion flag</text>
+  <text x="36" y="348" class="lbl ann">result == null means not yet complete. On completion,</text>
+  <text x="36" y="364" class="lbl ann">exactly one of value / NIL / AltResult is written with a</text>
+  <text x="36" y="380" class="lbl ann">single CAS, so isDone() is one non-null check — never</text>
+  <text x="36" y="396" class="lbl ann">a separate boolean flag racing the value.</text>
+
+  <rect x="20" y="440" width="520" height="110" rx="6" class="boxA"/>
+  <text x="36" y="460" class="lbl annh">why a sentinel and a wrapper, not null / rethrow</text>
+  <text x="36" y="478" class="lbl ann">A single Object field cannot distinguish "no result yet"</text>
+  <text x="36" y="494" class="lbl ann">from "completed with null", so NIL stands in for a real</text>
+  <text x="36" y="510" class="lbl ann">null. AltResult wraps a Throwable so the same field can</text>
+  <text x="36" y="526" class="lbl ann">carry either a value or a failure without a second field.</text>
+
+  <!-- right: stack -->
+  <rect x="780" y="80" width="200" height="60" rx="6" class="boxH"/>
+  <text x="880" y="102" text-anchor="middle" class="lbl node">CompletableFuture</text>
+  <text x="880" y="119" text-anchor="middle" class="lbl body">Completion stack (head)</text>
+  <text x="880" y="134" text-anchor="middle" class="lbl sub">affordability check task</text>
+
+  <rect x="780" y="200" width="220" height="76" rx="6" class="boxP"/>
+  <text x="890" y="220" text-anchor="middle" class="lbl node">UniApply</text>
+  <text x="890" y="237" text-anchor="middle" class="lbl body">thenApply: score → decision</text>
+  <text x="890" y="253" text-anchor="middle" class="lbl sub">next → node below</text>
+
+  <rect x="780" y="320" width="220" height="76" rx="6" class="boxP"/>
+  <text x="890" y="340" text-anchor="middle" class="lbl node">UniExceptionally</text>
+  <text x="890" y="357" text-anchor="middle" class="lbl body">handles vendor timeout</text>
+  <text x="890" y="373" text-anchor="middle" class="lbl sub">→ AO-145 WEALTH_REFERRED</text>
+
+  <path class="flow" d="M 880 140 V 200"/>
+  <text x="888" y="175" class="lbl tiny">push (CAS)</text>
+  <path class="flow" d="M 890 276 V 320"/>
+  <text x="898" y="303" class="lbl tiny">next</text>
+  <path class="flow" d="M 890 396 V 420"/>
+  <text x="900" y="428" class="lbl sub">null</text>
+
+  <rect x="780" y="460" width="220" height="60" rx="6" class="boxH"/>
+  <text x="890" y="482" text-anchor="middle" class="lbl node">postComplete()</text>
+  <text x="890" y="499" text-anchor="middle" class="lbl body">pops LIFO, tryFire each node</text>
+  <text x="890" y="513" text-anchor="middle" class="lbl sub">runs on the completing thread</text>
+
+  <path class="weakE" d="M 980 127 H 1040 V 490 H 1000"/>
+  <text x="1006" y="150" class="lbl tiny">drains stack, LIFO</text>
+
+  <rect x="600" y="560" width="480" height="110" rx="6" class="boxA"/>
+  <text x="616" y="580" class="lbl annh">postComplete loops instead of recursing</text>
+  <text x="616" y="598" class="lbl ann">tryFire on one Completion can complete another</text>
+  <text x="616" y="614" class="lbl ann">CompletableFuture, which would push its own</text>
+  <text x="616" y="630" class="lbl ann">postComplete call. Recursing here risks a</text>
+  <text x="616" y="646" class="lbl ann">StackOverflowError on a long .thenApply chain — so</text>
+  <text x="616" y="660" class="lbl ann">postComplete unrolls the recursion into a loop.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="715" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="728" class="lbl tiny">CompletableFuture / postComplete</text>
+  <rect x="260" y="715" width="22" height="16" rx="3" class="boxP"/>
+  <text x="290" y="728" class="lbl tiny">Completion node</text>
+  <rect x="450" y="715" width="22" height="16" rx="3" class="boxR"/>
+  <text x="480" y="728" class="lbl tiny">value present</text>
+  <rect x="630" y="715" width="22" height="16" rx="3" class="boxW"/>
+  <text x="660" y="728" class="lbl tiny">NIL sentinel</text>
+  <rect x="800" y="715" width="22" height="16" rx="3" class="boxD"/>
+  <text x="830" y="728" class="lbl tiny">AltResult (failure)</text>
+  <rect x="980" y="715" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1010" y="728" class="lbl tiny">annotation</text>
+
+  <path class="flow" d="M 20 745 H 60"/>
+  <text x="68" y="750" class="lbl tiny">A → B : B is written into / pushed onto A</text>
+  <path class="weakE" d="M 500 745 H 540"/>
+  <text x="548" y="750" class="lbl tiny">A → B : A drains / pops from B</text>
+</svg>

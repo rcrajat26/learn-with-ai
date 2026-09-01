@@ -1,0 +1,103 @@
+<svg viewBox="0 0 960 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The backpressure harness comparing an unbounded queue of WithdrawalTransaction to a bounded
+     queue capped at 1,000. Top chart, heap usage over time: the unbounded queue's heap climbs steadily toward
+     an out-of-memory ceiling around 4,096 MB, while the bounded queue's heap tracks the same climb until the
+     queue fills at t≈40s, then flatlines around 1.4 GB. Bottom chart, producer rate over time: the unbounded
+     queue's producer rate stays pinned at its intake capacity of roughly 2,000 transactions per second and
+     never slows, while the bounded queue's producer rate collapses at the same t≈40s from 2,000 down to the
+     consumer's drain rate of roughly 180 transactions per second. Both charts mark the divergence at t≈40s
+     with a dashed vertical line and an annotation panel. Curve shapes are illustrative, not measured constants.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .tinyB  { font-size: 11px; font-weight: 700; }
+
+    .axis   { stroke: #475569; stroke-width: 1.6; fill: none; }
+    .grid   { stroke: #d1d5db; stroke-width: 1; }
+    .divider{ stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; fill: none; }
+
+    .curveBad { fill: none; stroke: #b91c1c; stroke-width: 2.4; stroke-linejoin: round; }
+    .curveOk  { fill: none; stroke: #15803d; stroke-width: 2.4; stroke-linejoin: round; }
+
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+
+  <rect x="0" y="0" width="960" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE BACKPRESSURE HARNESS — UNBOUNDED VS BOUNDED (CAP 1,000) WithdrawalTransaction QUEUE</text>
+  <line x1="20" y1="42" x2="940" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- PANEL 1: heap usage -->
+  <text x="20" y="62" class="lbl h2">HEAP USAGE OVER TIME (shape only — not measured constants)</text>
+
+  <path class="axis" d="M 80 80 V 270"/>
+  <path class="axis" d="M 80 270 H 920"/>
+  <text x="88" y="76" class="lbl sub">≈4,096 MB (OOM ceiling)</text>
+  <text x="140" y="284" class="lbl sub">(baseline: 0 MB)</text>
+
+  <path class="divider" d="M 460 80 V 270"/>
+
+  <!-- unbounded: climbs straight to the OOM ceiling -->
+  <path class="curveBad" d="M 80 258 H 200 V 232 H 320 V 200 H 460 V 168 H 580 V 138 H 700 V 112 H 860 V 92"/>
+  <circle cx="880" cy="90" r="5" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.6"/>
+  <text x="820" y="76" text-anchor="middle" class="lbl tinyB" fill="#b91c1c">OutOfMemoryError</text>
+
+  <!-- bounded: same shape until divergence, then flat -->
+  <path class="curveOk" d="M 80 262 H 200 V 236 H 320 V 204 H 460 V 172 H 920"/>
+  <text x="700" y="164" text-anchor="middle" class="lbl tinyB" fill="#15803d">flat ≈1.4 GB after divergence</text>
+
+  <text x="80" y="286" class="lbl sub">t=0</text>
+  <text x="460" y="286" text-anchor="middle" class="lbl sub">t≈40s (queue fills)</text>
+  <text x="920" y="286" text-anchor="end" class="lbl sub">t=90s</text>
+
+  <rect x="80" y="300" width="840" height="78" rx="6" class="boxAnn"/>
+  <text x="96" y="320" class="lbl tinyB">Where the behaviour diverges: t ≈ 40s</text>
+  <text x="96" y="338" class="lbl tiny">Bounded (cap 1,000): withdrawal-intake threads now block on put() — heap flatlines at the settled backlog.</text>
+  <text x="96" y="356" class="lbl tiny">Unbounded: no such gate — every accepted WithdrawalTransaction is more live heap, climbing toward OutOfMemoryError.</text>
+
+  <!-- PANEL 2: producer rate -->
+  <text x="20" y="400" class="lbl h2">PRODUCER RATE OVER TIME — WithdrawalTransaction enqueues/sec (shape only)</text>
+
+  <path class="axis" d="M 80 420 V 610"/>
+  <path class="axis" d="M 80 610 H 920"/>
+  <text x="88" y="416" class="lbl sub">≈2,000 tx/sec (intake capacity)</text>
+  <text x="88" y="606" class="lbl sub">0 tx/sec</text>
+
+  <path class="divider" d="M 460 420 V 610"/>
+
+  <!-- unbounded producer: never slows -->
+  <path class="curveBad" d="M 80 440 H 920"/>
+  <text x="700" y="432" text-anchor="middle" class="lbl tinyB" fill="#b91c1c">never slows — stays pinned to intake capacity</text>
+
+  <!-- bounded producer: clamps to consumer's drain rate at divergence -->
+  <path class="curveOk" d="M 80 444 H 460 V 580 H 920"/>
+  <text x="700" y="598" text-anchor="middle" class="lbl tinyB" fill="#15803d">clamped to consumer's drain rate, ≈180 tx/sec</text>
+
+  <text x="80" y="626" class="lbl sub">t=0</text>
+  <text x="460" y="626" text-anchor="middle" class="lbl sub">t≈40s (queue fills)</text>
+  <text x="920" y="626" text-anchor="end" class="lbl sub">t=90s</text>
+
+  <rect x="80" y="640" width="840" height="78" rx="6" class="boxAnn"/>
+  <text x="96" y="660" class="lbl tinyB">Where the behaviour diverges: t ≈ 40s (same moment as the heap chart)</text>
+  <text x="96" y="678" class="lbl tiny">Bounded: producer rate collapses from ≈2,000 tx/sec to the consumer's drain rate, ≈180 tx/sec — backpressure, not failure.</text>
+  <text x="96" y="696" class="lbl tiny">Unbounded: producer rate never changes — nothing ever tells withdrawal-intake-1 to slow down.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="736" x2="940" y2="736" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="20" y1="753" x2="46" y2="753" class="curveBad"/>
+  <text x="52" y="757" class="lbl tiny">unbounded queue — heap climbs to OOM, producer rate never slows</text>
+
+  <line x1="20" y1="775" x2="46" y2="775" class="curveOk"/>
+  <text x="52" y="779" class="lbl tiny">bounded queue, cap 1,000 — heap flatlines, producer rate clamps to consumer</text>
+
+  <line x1="500" y1="753" x2="526" y2="753" class="divider"/>
+  <text x="532" y="757" class="lbl tiny">moment of divergence (t≈40s, queue reaches capacity)</text>
+
+  <rect x="500" y="767" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="532" y="780" class="lbl tiny">annotation panel — explains the divergence in prose</text>
+</svg>

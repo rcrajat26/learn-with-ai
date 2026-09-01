@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The stake-settlement thread pool's five run states and their transitions. RUNNING
+     accepts and processes tasks. Calling shutdown() moves RUNNING to SHUTDOWN, which stops
+     accepting new WithdrawalTransaction tasks but keeps draining the queue and running workers.
+     Calling shutdownNow() moves RUNNING or SHUTDOWN to STOP, which stops accepting tasks, drains
+     nothing further, and interrupts running workers. From SHUTDOWN, when both the task queue and
+     the pool are empty, the pool moves to TIDYING. From STOP, when the pool is empty, the pool
+     also moves to TIDYING. TIDYING runs the terminated() hook, and when it returns the pool moves
+     to TERMINATED, its final state. A numbered overlay traces the two-phase shutdown idiom used to
+     drain the settlement pool safely: 1) call shutdown(), 2) awaitTermination(timeout), 3) if it
+     times out call shutdownNow(), 4) awaitTermination again to confirm termination.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .path2 { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+             stroke-linejoin: round; marker-end: url(#triH); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triH" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE POOL'S RUN-STATE TRANSITIONS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">the stake-settlement pool (settlement-ingest-1..4) moving through ctl's run states</text>
+
+  <!-- states, layered left to right in causal order -->
+  <rect x="40" y="100" width="170" height="70" rx="6" class="boxR"/>
+  <text x="125" y="130" text-anchor="middle" class="lbl node">RUNNING</text>
+  <text x="125" y="150" text-anchor="middle" class="lbl sub">accepts + runs tasks</text>
+
+  <rect x="280" y="100" width="190" height="70" rx="6" class="boxP"/>
+  <text x="375" y="130" text-anchor="middle" class="lbl node">SHUTDOWN</text>
+  <text x="375" y="150" text-anchor="middle" class="lbl sub">no new tasks, drains queue</text>
+
+  <rect x="280" y="240" width="190" height="70" rx="6" class="boxD"/>
+  <text x="375" y="270" text-anchor="middle" class="lbl node">STOP</text>
+  <text x="375" y="290" text-anchor="middle" class="lbl sub">interrupts running workers</text>
+
+  <rect x="580" y="170" width="170" height="70" rx="6" class="boxH"/>
+  <text x="665" y="200" text-anchor="middle" class="lbl node">TIDYING</text>
+  <text x="665" y="220" text-anchor="middle" class="lbl sub">runs terminated() hook</text>
+
+  <rect x="900" y="170" width="120" height="70" rx="6" class="boxLg"/>
+  <text x="960" y="200" text-anchor="middle" class="lbl node">TERMINATED</text>
+  <text x="960" y="220" text-anchor="middle" class="lbl sub">final state</text>
+
+  <!-- edges -->
+  <path class="flow" d="M 210 135 H 280"/>
+  <text x="245" y="127" text-anchor="middle" class="lbl tiny">shutdown()</text>
+
+  <path class="flow" d="M 125 170 V 275 H 280"/>
+  <text x="160" y="230" class="lbl tiny">shutdownNow()</text>
+
+  <path class="flow" d="M 470 135 H 600 V 170"/>
+  <text x="535" y="127" text-anchor="middle" class="lbl tiny">queue &amp; pool empty</text>
+
+  <path class="flow" d="M 470 275 H 600 V 240"/>
+  <text x="535" y="293" text-anchor="middle" class="lbl tiny">pool empty</text>
+
+  <path class="flow" d="M 375 170 V 240"/>
+  <text x="390" y="208" class="lbl tiny">shutdownNow()</text>
+
+  <path class="flow" d="M 750 205 H 900"/>
+  <text x="825" y="197" text-anchor="middle" class="lbl tiny">terminated() returning</text>
+
+  <!-- two-phase shutdown idiom overlay -->
+  <rect x="40" y="360" width="970" height="220" rx="6" class="boxA"/>
+  <text x="60" y="384" class="lbl tinyB">TWO-PHASE SHUTDOWN IDIOM — draining the settlement pool safely</text>
+
+  <rect x="60" y="404" width="200" height="60" rx="6" class="boxR"/>
+  <text x="160" y="428" text-anchor="middle" class="lbl body">1. shutdown()</text>
+  <text x="160" y="448" text-anchor="middle" class="lbl sub">no more accepted tasks</text>
+
+  <path class="path2" d="M 260 434 H 320"/>
+  <rect x="320" y="404" width="220" height="60" rx="6" class="boxP"/>
+  <text x="430" y="428" text-anchor="middle" class="lbl body">2. awaitTermination(timeout)</text>
+  <text x="430" y="448" text-anchor="middle" class="lbl sub">wait for in-flight tasks to finish</text>
+
+  <path class="path2" d="M 540 434 H 600"/>
+  <rect x="600" y="404" width="200" height="60" rx="6" class="boxD"/>
+  <text x="700" y="428" text-anchor="middle" class="lbl body">3. shutdownNow()</text>
+  <text x="700" y="448" text-anchor="middle" class="lbl sub">timed out, forces interrupt</text>
+
+  <path class="path2" d="M 700 464 V 490 H 430 V 484"/>
+  <rect x="320" y="490" width="220" height="60" rx="6" class="boxP"/>
+  <text x="430" y="514" text-anchor="middle" class="lbl body">4. awaitTermination(timeout)</text>
+  <text x="430" y="534" text-anchor="middle" class="lbl sub">confirm termination completed</text>
+
+  <text x="60" y="570" class="lbl sub">running this on the settlement pool guards against orphaned WithdrawalTransactions mid-PaymentRun batching</text>
+
+  <line x1="40" y1="616" x2="1020" y2="616" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="40" y="630" width="22" height="16" rx="3" class="boxR"/>
+  <text x="70" y="642" class="lbl tiny">RUNNING</text>
+  <rect x="180" y="630" width="22" height="16" rx="3" class="boxP"/>
+  <text x="210" y="642" class="lbl tiny">SHUTDOWN / idiom step (blue)</text>
+  <rect x="440" y="630" width="22" height="16" rx="3" class="boxD"/>
+  <text x="470" y="642" class="lbl tiny">STOP / forced idiom step (red)</text>
+  <rect x="700" y="630" width="22" height="16" rx="3" class="boxH"/>
+  <text x="730" y="642" class="lbl tiny">TIDYING</text>
+  <rect x="860" y="630" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="890" y="642" class="lbl tiny">TERMINATED</text>
+  <path class="flow" d="M 40 664 H 80"/>
+  <text x="90" y="668" class="lbl tiny">A → B : cause labelled on the edge triggers B from A</text>
+  <path class="path2" d="M 500 664 H 540"/>
+  <text x="550" y="668" class="lbl tiny">numbered two-phase shutdown path, in call order</text>
+</svg>

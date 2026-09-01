@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1000 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Cost curve for the QuizStakes stake-settlement counter under a 3,400 per second
+     burst. Throughput against writer-thread count, on axes 1, 2, 4, 8, 16, 32, 64 threads.
+     AtomicLong throughput peaks near 2 threads then collapses as CAS retries serialize writers.
+     LongAdder throughput keeps climbing across the same range. The two series cross at roughly
+     2 to 4 writer threads. A third series, on a secondary right-hand axis, shows LongAdder.sum()
+     cost in microseconds rising as the striped-counter cell count grows with contention. The
+     chart is labelled as shaped on JMH throughput benchmark results and all figures are marked
+     order-of-magnitude illustrations, not measured numbers.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 12.5px; font-weight: 700; letter-spacing: .3px; }
+    .body   { font-size: 13px; }
+    .tiny   { font-size: 11px; }
+    .floor  { font-size: 10.5px; fill: #4b5563; }
+    .bold   { font-weight: 700; }
+
+    .axis   { stroke: #475569; stroke-width: 1.6; fill: none; }
+    .grid   { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 3 3; }
+
+    .atomic { stroke: #b91c1c; stroke-width: 2.2; fill: none; stroke-linejoin: round; }
+    .adder  { stroke: #15803d; stroke-width: 2.2; fill: none; stroke-linejoin: round; }
+    .cost   { stroke: #b45309; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+    .guideg { stroke: #9ca3af; stroke-width: 1.6; fill: none; stroke-dasharray: 4 3; }
+
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="1000" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE ATOMICLONG / LONGADDER CROSSOVER</text>
+  <line x1="20" y1="42" x2="980" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="58" class="lbl floor bold">Stake-settlement counter (SettleStake calls) under a 3,400/sec burst. Shape modeled on JMH throughput benchmark results.</text>
+  <text x="20" y="72" class="lbl floor bold">All figures are order-of-magnitude illustrations — not measured numbers.</text>
+
+  <!-- gridlines + primary y ticks: throughput, relative ops/sec (millions), 0..600 -->
+  <line x1="120" y1="520" x2="860" y2="520" class="grid"/>
+  <text x="112" y="524" text-anchor="end" class="lbl floor">0</text>
+  <line x1="120" y1="436" x2="860" y2="436" class="grid"/>
+  <text x="112" y="440" text-anchor="end" class="lbl floor">150 M</text>
+  <line x1="120" y1="352" x2="860" y2="352" class="grid"/>
+  <text x="112" y="356" text-anchor="end" class="lbl floor">300 M</text>
+  <line x1="120" y1="268" x2="860" y2="268" class="grid"/>
+  <text x="112" y="272" text-anchor="end" class="lbl floor">450 M</text>
+  <line x1="120" y1="100" x2="860" y2="100" class="grid"/>
+  <text x="112" y="104" text-anchor="end" class="lbl floor">600 M</text>
+
+  <text x="46" y="310" text-anchor="middle" class="lbl tiny" transform="rotate(-90 46 310)">throughput (relative ops/sec)</text>
+
+  <!-- secondary y axis: LongAdder.sum() cost, 0..50 us, right side -->
+  <line x1="860" y1="100" x2="860" y2="520" class="axis"/>
+  <text x="868" y="104" class="lbl floor">50 µs</text>
+  <text x="868" y="272" class="lbl floor">25 µs</text>
+  <text x="868" y="524" class="lbl floor">0</text>
+  <text x="954" y="310" text-anchor="middle" class="lbl tiny" transform="rotate(-90 954 310)">LongAdder.sum() cost (µs)</text>
+
+  <!-- primary axis -->
+  <path class="axis" d="M 120 100 V 520 H 860"/>
+
+  <!-- x ticks: writer threads 1,2,4,8,16,32,64 -->
+  <line x1="120" y1="520" x2="120" y2="526" class="axis"/>
+  <text x="120" y="540" text-anchor="middle" class="lbl floor">1</text>
+  <line x1="243.33" y1="520" x2="243.33" y2="526" class="axis"/>
+  <text x="243.33" y="540" text-anchor="middle" class="lbl floor">2</text>
+  <line x1="366.67" y1="520" x2="366.67" y2="526" class="axis"/>
+  <text x="366.67" y="540" text-anchor="middle" class="lbl floor">4</text>
+  <line x1="490" y1="520" x2="490" y2="526" class="axis"/>
+  <text x="490" y="540" text-anchor="middle" class="lbl floor">8</text>
+  <line x1="613.33" y1="520" x2="613.33" y2="526" class="axis"/>
+  <text x="613.33" y="540" text-anchor="middle" class="lbl floor">16</text>
+  <line x1="736.67" y1="520" x2="736.67" y2="526" class="axis"/>
+  <text x="736.67" y="540" text-anchor="middle" class="lbl floor">32</text>
+  <line x1="860" y1="520" x2="860" y2="526" class="axis"/>
+  <text x="860" y="540" text-anchor="middle" class="lbl floor">64</text>
+  <text x="490" y="558" text-anchor="middle" class="lbl tiny">writer thread count</text>
+
+  <!-- AtomicLong series: step polyline, peaks then collapses -->
+  <path class="atomic" d="M120 485 H243.33 V471 H366.67 V481.5 H490 V499 H613.33 V509.5 H736.67 V514.4 H860 V517.2"/>
+  <text x="700" y="500" text-anchor="middle" class="lbl body bold" fill="#b91c1c">AtomicLong — collapses under CAS retries</text>
+
+  <!-- LongAdder series: step polyline, keeps scaling -->
+  <path class="adder" d="M120 488.5 H243.33 V474.5 H366.67 V457 H490 V415 H613.33 V338 H736.67 V226 H860 V100"/>
+  <text x="700" y="180" text-anchor="middle" class="lbl body bold" fill="#15803d">LongAdder — scales with writer count</text>
+
+  <!-- LongAdder.sum() cost series (secondary axis) -->
+  <path class="cost" d="M120 503.2 H243.33 V486.4 H366.67 V452.8 H490 V402.4 H613.33 V335.2 H736.67 V234.4 H860 V116.8"/>
+  <text x="300" y="410" text-anchor="middle" class="lbl tiny bold" fill="#b45309">LongAdder.sum() cost — rises with cell count</text>
+
+  <!-- crossover marker, ~2-4 writer threads -->
+  <circle cx="305" cy="476" r="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+  <path class="guideg" d="M305 476 V 588"/>
+  <text x="305" y="600" text-anchor="middle" class="lbl floor bold" fill="#b45309">crossover ≈ 2–4 writer threads</text>
+
+  <!-- annotation panels -->
+  <rect x="60" y="612" width="430" height="100" rx="6" class="panel"/>
+  <text x="72" y="632" class="lbl h2" fill="#2563eb">WHY ATOMICLONG COLLAPSES</text>
+  <text x="72" y="650" class="lbl tiny">every settleStake() increment is a compareAndSet</text>
+  <text x="72" y="666" class="lbl tiny">loop on one shared cache line — above the crossover,</text>
+  <text x="72" y="682" class="lbl tiny">retries dominate and writers serialize on that line.</text>
+
+  <rect x="510" y="612" width="430" height="100" rx="6" class="panel"/>
+  <text x="522" y="632" class="lbl h2" fill="#2563eb">WHY LONGADDER SCALES, AND ITS COST</text>
+  <text x="522" y="650" class="lbl tiny">writes spread across striped Cell[] slots, so CAS</text>
+  <text x="522" y="666" class="lbl tiny">contention drops — but sum() must walk every cell,</text>
+  <text x="522" y="682" class="lbl tiny">and cell count grows with contention, not shrinks.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="738" x2="980" y2="738" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="754" x2="46" y2="754" class="atomic"/>
+  <text x="52" y="758" class="lbl tiny">AtomicLong throughput</text>
+  <line x1="260" y1="754" x2="286" y2="754" class="adder"/>
+  <text x="292" y="758" class="lbl tiny">LongAdder throughput</text>
+  <line x1="500" y1="754" x2="526" y2="754" class="cost"/>
+  <text x="532" y="758" class="lbl tiny">LongAdder.sum() cost (secondary axis)</text>
+  <line x1="800" y1="754" x2="826" y2="754" class="guideg"/>
+  <text x="832" y="758" class="lbl tiny">crossover guide</text>
+  <rect x="20" y="772" width="22" height="16" rx="3" class="panel"/>
+  <text x="52" y="784" class="lbl tiny">annotation — mechanism explanation</text>
+</svg>

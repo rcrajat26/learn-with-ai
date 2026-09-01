@@ -1,0 +1,162 @@
+<svg viewBox="0 0 1200 690" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing why AQS sometimes walks backwards from the tail. Frame 1: a
+     new node for settlement-ingest-3 sets its prev pointer to the current tail, operator-review,
+     while not yet linked into the queue. Frame 2: the new node is CAS-installed as AQS.tail; at
+     this exact instant prev is valid but operator-review.next is still null. Frame 3:
+     operator-review.next is finally set to the new node. Below, a traversal starting from head
+     hits that still-null next field and restarts by walking backwards from tail via prev instead,
+     labelled the single most surprising line in AQS.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+    .cap   { font-size: 11px; font-style: italic; fill: #4b5563; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flowNext { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triDark); }
+    .flowPrev { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; marker-end: url(#triGreen); }
+    .flowCas  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="690" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHY AQS SOMETIMES WALKS BACKWARDS FROM THE TAIL</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="400" y1="62" x2="400" y2="460" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="780" y1="62" x2="780" y2="460" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="60" y="78" class="lbl h2">FRAME 1</text>
+  <text x="440" y="78" class="lbl h2">FRAME 2</text>
+  <text x="820" y="78" class="lbl h2">FRAME 3</text>
+
+  <!-- Frame 1 -->
+  <rect x="90" y="100" width="240" height="60" rx="6" class="boxP"/>
+  <text x="210" y="124" text-anchor="middle" class="lbl node">tail → operator-review</text>
+  <text x="210" y="146" text-anchor="middle" class="lbl sub">next: null (still tail)</text>
+
+  <rect x="90" y="230" width="240" height="72" rx="6" class="boxH" stroke-dasharray="4 3"/>
+  <text x="210" y="254" text-anchor="middle" class="lbl node">new Node</text>
+  <text x="210" y="274" text-anchor="middle" class="lbl body">thread: settlement-ingest-3</text>
+  <text x="210" y="292" text-anchor="middle" class="lbl sub">not linked into queue yet</text>
+
+  <path class="flowPrev" d="M 210 230 V 160"/>
+  <text x="248" y="196" class="lbl floor">prev := tail</text>
+
+  <text x="210" y="330" text-anchor="middle" class="lbl cap">new node's prev is set to the</text>
+  <text x="210" y="346" text-anchor="middle" class="lbl cap">current tail — nothing points at it yet</text>
+
+  <!-- Frame 2 -->
+  <rect x="610" y="90" width="140" height="32" rx="5" class="boxW"/>
+  <text x="680" y="111" text-anchor="middle" class="lbl tiny">AQS.tail (field)</text>
+
+  <rect x="430" y="160" width="190" height="60" rx="6" class="boxP"/>
+  <text x="525" y="182" text-anchor="middle" class="lbl node">operator-review</text>
+  <text x="525" y="202" text-anchor="middle" class="lbl sub">predecessor once CAS lands</text>
+
+  <rect x="430" y="252" width="190" height="70" rx="6" class="boxH"/>
+  <text x="525" y="274" text-anchor="middle" class="lbl node">new Node (new tail)</text>
+  <text x="525" y="294" text-anchor="middle" class="lbl body">prev: operator-review</text>
+  <text x="525" y="310" text-anchor="middle" class="lbl floor">just CAS'd in as tail</text>
+
+  <path class="flowPrev" d="M 525 252 V 220"/>
+
+  <path class="flowCas" d="M 680 122 V 287 H 620"/>
+  <text x="682" y="200" class="lbl floor">CAS(tail,</text>
+  <text x="682" y="214" class="lbl floor">old, new)</text>
+
+  <rect x="440" y="345" width="270" height="34" rx="5" class="boxD"/>
+  <text x="575" y="367" text-anchor="middle" class="lbl tiny">predecessor.next STILL NULL</text>
+
+  <text x="580" y="400" text-anchor="middle" class="lbl cap">at this exact instant: prev is valid,</text>
+  <text x="580" y="416" text-anchor="middle" class="lbl cap">next has not been written yet</text>
+
+  <!-- Frame 3 -->
+  <rect x="850" y="150" width="220" height="60" rx="6" class="boxP"/>
+  <text x="960" y="172" text-anchor="middle" class="lbl node">operator-review</text>
+  <text x="960" y="192" text-anchor="middle" class="lbl sub">next: (about to be set below)</text>
+
+  <rect x="850" y="248" width="220" height="60" rx="6" class="boxR"/>
+  <text x="960" y="270" text-anchor="middle" class="lbl node">new Node (tail)</text>
+  <text x="960" y="290" text-anchor="middle" class="lbl sub">fully reachable forward and backward</text>
+
+  <path class="flowNext" d="M 960 210 V 248"/>
+  <text x="1000" y="232" class="lbl floor">next</text>
+
+  <text x="960" y="330" text-anchor="middle" class="lbl cap">predecessor.next is finally set —</text>
+  <text x="960" y="346" text-anchor="middle" class="lbl cap">forward traversal now works too</text>
+
+  <!-- bottom: backward walk -->
+  <line x1="20" y1="470" x2="1180" y2="470" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="490" class="lbl h2">TRAVERSAL FROM HEAD: WHY IT RESTARTS BACKWARDS FROM TAIL</text>
+
+  <rect x="60" y="510" width="120" height="50" rx="6" class="boxW"/>
+  <text x="120" y="540" text-anchor="middle" class="lbl tiny">head</text>
+
+  <rect x="270" y="510" width="180" height="50" rx="6" class="boxP"/>
+  <text x="360" y="535" text-anchor="middle" class="lbl tiny">operator-review</text>
+  <text x="360" y="552" text-anchor="middle" class="lbl floor">(predecessor)</text>
+
+  <path class="flowNext" d="M 180 535 H 270"/>
+
+  <rect x="530" y="510" width="140" height="50" rx="6" class="boxD"/>
+  <text x="600" y="535" text-anchor="middle" class="lbl tiny">next = null</text>
+  <text x="600" y="552" text-anchor="middle" class="lbl floor">forward walk stalls</text>
+
+  <path class="flowNext" d="M 450 535 H 530"/>
+
+  <rect x="800" y="510" width="120" height="50" rx="6" class="boxR"/>
+  <text x="860" y="540" text-anchor="middle" class="lbl tiny">tail (new node)</text>
+
+  <path class="flowPrev" d="M 800 555 H 470 V 545 H 450"/>
+  <text x="650" y="592" text-anchor="middle" class="lbl floor">restart: walk backwards from tail via prev instead</text>
+
+  <rect x="960" y="500" width="220" height="80" rx="6" class="boxA"/>
+  <text x="978" y="522" class="lbl tiny" font-weight="700">the single most surprising</text>
+  <text x="978" y="538" class="lbl tiny" font-weight="700">line in AQS</text>
+  <text x="978" y="558" class="lbl floor">prev is reliable the instant</text>
+  <text x="978" y="570" class="lbl floor">CAS lands; next lags behind</text>
+
+  <line x1="20" y1="610" x2="1180" y2="610" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="626" width="20" height="16" rx="3" class="boxP"/>
+  <text x="46" y="639" class="lbl tiny">linked queue node</text>
+  <rect x="220" y="626" width="20" height="16" rx="3" class="boxH"/>
+  <text x="246" y="639" class="lbl tiny">new node, in flight</text>
+  <rect x="420" y="626" width="20" height="16" rx="3" class="boxR"/>
+  <text x="446" y="639" class="lbl tiny">fully linked node</text>
+  <rect x="600" y="626" width="20" height="16" rx="3" class="boxD"/>
+  <text x="626" y="639" class="lbl tiny">observed-null field</text>
+  <rect x="800" y="626" width="20" height="16" rx="3" class="boxW"/>
+  <text x="826" y="639" class="lbl tiny">pointer field / sentinel</text>
+  <rect x="1000" y="626" width="20" height="16" rx="3" class="boxA"/>
+  <text x="1026" y="639" class="lbl tiny">annotation</text>
+
+  <path class="flowNext" d="M 20 664 H 60"/>
+  <text x="68" y="668" class="lbl tiny">next</text>
+  <path class="flowPrev" d="M 140 664 H 180"/>
+  <text x="188" y="668" class="lbl tiny">prev</text>
+  <path class="flowCas" d="M 280 664 H 320"/>
+  <text x="328" y="668" class="lbl tiny">A → B : B installed via CAS on A's field</text>
+</svg>

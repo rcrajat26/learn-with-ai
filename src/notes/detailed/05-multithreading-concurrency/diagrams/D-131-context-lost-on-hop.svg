@@ -1,0 +1,136 @@
+<svg viewBox="0 0 1160 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before: ApplicationGateway sets MDC traceId=trace-8842 on gateway-http-7, AssessmentService.assess(...).thenApplyAsync(...) hops to assessment-pool-2 whose MDC map is empty, and the resulting log line prints traceId= with no value. After: three fixes, each copying context at the hop from the same gateway-http-7 source — a decorating TracingExecutor that copies MDC.getCopyOfContextMap() before submit, a Micrometer ContextSnapshot captured on the request thread and wrapped around the async stage, and a ScopedValue bound before a StructuredTaskScope.fork() so the forked worker inherits it — each restoring traceId=trace-8842 on its new thread.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CONTEXT DOES NOT FOLLOW A STAGE HOP</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="60" class="lbl h2">BEFORE — TRACE ID LOST ON thenApplyAsync</text>
+  <line x1="20" y1="70" x2="580" y2="70" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="600" y="60" class="lbl h2">AFTER — THREE FIXES, EACH COPIES CONTEXT AT THE HOP</text>
+  <line x1="600" y1="70" x2="1140" y2="70" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: BEFORE -->
+  <rect x="60" y="90" width="420" height="70" rx="6" class="boxP"/>
+  <text x="270" y="114" text-anchor="middle" class="lbl node">gateway-http-7</text>
+  <text x="270" y="134" text-anchor="middle" class="lbl body">ApplicationGateway sets MDC traceId=trace-8842</text>
+  <text x="270" y="150" text-anchor="middle" class="lbl sub">before calling AssessmentService.assess(app-77341)</text>
+
+  <path class="flow" d="M 270 160 V 190"/>
+  <text x="284" y="180" class="lbl sub">.thenApplyAsync(...)</text>
+
+  <rect x="60" y="190" width="420" height="70" rx="6" class="boxD"/>
+  <text x="270" y="214" text-anchor="middle" class="lbl node">assessment-pool-2</text>
+  <text x="270" y="234" text-anchor="middle" class="lbl body">MDC context map: empty — no traceId key</text>
+  <text x="270" y="250" text-anchor="middle" class="lbl sub">ForkJoinPool.commonPool thread, new ThreadLocal slot</text>
+
+  <path class="flow" d="M 270 260 V 290"/>
+  <text x="284" y="280" class="lbl sub">log.info("assessment scored")</text>
+
+  <rect x="60" y="290" width="420" height="70" rx="6" class="boxD"/>
+  <text x="270" y="314" text-anchor="middle" class="lbl node">console output</text>
+  <text x="270" y="334" text-anchor="middle" class="lbl body">traceId= score=612 decision=REFER</text>
+  <text x="270" y="350" text-anchor="middle" class="lbl sub">empty trace id — cannot correlate with the gateway request</text>
+
+  <path class="weak" d="M 270 360 V 380"/>
+
+  <rect x="60" y="380" width="420" height="90" rx="6" class="boxA"/>
+  <text x="76" y="400" class="lbl tiny" font-weight="700">WHY THE CONTEXT DID NOT SURVIVE THE HOP</text>
+  <text x="76" y="418" class="lbl tiny">MDC is ThreadLocal-backed — the map lives on gateway-http-7 only</text>
+  <text x="76" y="435" class="lbl tiny">thenApplyAsync schedules the continuation on a pool thread</text>
+  <text x="76" y="452" class="lbl tiny">MDC.get("traceId") on assessment-pool-2 returns null</text>
+
+  <!-- RIGHT: AFTER -->
+  <rect x="770" y="90" width="200" height="56" rx="6" class="boxP"/>
+  <text x="870" y="112" text-anchor="middle" class="lbl node">gateway-http-7</text>
+  <text x="870" y="130" text-anchor="middle" class="lbl body">traceId=trace-8842 set</text>
+
+  <path class="flow" d="M 870 146 V 160 H 630 V 422"/>
+
+  <!-- Fix 1 -->
+  <text x="650" y="185" class="lbl tiny" font-weight="700" fill="#4b5563">FIX 1 — DECORATING EXECUTOR</text>
+  <path class="flow" d="M 630 224 H 650"/>
+  <rect x="650" y="189" width="230" height="70" rx="6" class="boxH"/>
+  <text x="765" y="212" text-anchor="middle" class="lbl node">Decorating Executor</text>
+  <text x="765" y="232" text-anchor="middle" class="lbl body">TracingExecutor.execute(r)</text>
+  <text x="765" y="248" text-anchor="middle" class="lbl sub">copies MDC map before submit</text>
+
+  <path class="flow" d="M 880 224 H 900"/>
+  <rect x="900" y="189" width="230" height="70" rx="6" class="boxR"/>
+  <text x="1015" y="212" text-anchor="middle" class="lbl node">assessment-pool-2</text>
+  <text x="1015" y="232" text-anchor="middle" class="lbl body">traceId=trace-8842</text>
+  <text x="1015" y="248" text-anchor="middle" class="lbl sub">restored via MDC.setContextMap()</text>
+
+  <!-- Fix 2 -->
+  <text x="650" y="304" class="lbl tiny" font-weight="700" fill="#4b5563">FIX 2 — Micrometer Snapshot</text>
+  <path class="flow" d="M 630 323 H 650"/>
+  <rect x="650" y="288" width="230" height="70" rx="6" class="boxH"/>
+  <text x="765" y="308" text-anchor="middle" class="lbl node">ContextSnapshot</text>
+  <text x="765" y="326" text-anchor="middle" class="lbl body">ContextSnapshotFactory</text>
+  <text x="765" y="341" text-anchor="middle" class="lbl body">.captureAll()</text>
+
+  <path class="flow" d="M 880 323 H 900"/>
+  <rect x="900" y="288" width="230" height="70" rx="6" class="boxR"/>
+  <text x="1015" y="311" text-anchor="middle" class="lbl node">assessment-pool-2</text>
+  <text x="1015" y="331" text-anchor="middle" class="lbl body">traceId=trace-8842</text>
+  <text x="1015" y="347" text-anchor="middle" class="lbl sub">snapshot.wrap() reinstates MDC</text>
+
+  <!-- Fix 3 -->
+  <text x="650" y="403" class="lbl tiny" font-weight="700" fill="#4b5563">FIX 3 — ScopedValue + Scope</text>
+  <path class="flow" d="M 630 422 H 650"/>
+  <rect x="650" y="387" width="230" height="70" rx="6" class="boxH"/>
+  <text x="765" y="407" text-anchor="middle" class="lbl node">ScopedValue</text>
+  <text x="765" y="425" text-anchor="middle" class="lbl body">.where(TRACE_ID, trace-8842)</text>
+  <text x="765" y="441" text-anchor="middle" class="lbl sub">.run(...) opens the scope</text>
+
+  <path class="flow" d="M 880 422 H 900"/>
+  <rect x="900" y="387" width="230" height="70" rx="6" class="boxR"/>
+  <text x="1015" y="410" text-anchor="middle" class="lbl node">scope-worker-1</text>
+  <text x="1015" y="430" text-anchor="middle" class="lbl body">traceId=trace-8842</text>
+  <text x="1015" y="446" text-anchor="middle" class="lbl sub">assessment-scope-worker-1</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="500" x2="1140" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="514" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="527" class="lbl tiny">request thread, context source</text>
+  <rect x="260" y="514" width="22" height="16" rx="3" class="boxD"/>
+  <text x="290" y="527" class="lbl tiny">context lost / empty MDC</text>
+  <rect x="500" y="514" width="22" height="16" rx="3" class="boxH"/>
+  <text x="530" y="527" class="lbl tiny">fix mechanism copying context</text>
+  <rect x="770" y="514" width="22" height="16" rx="3" class="boxR"/>
+  <text x="800" y="527" class="lbl tiny">context restored on new thread</text>
+  <rect x="1030" y="514" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1057" y="527" class="lbl tiny">notes</text>
+
+  <path class="flow" d="M 20 555 H 60"/>
+  <text x="68" y="560" class="lbl tiny">A → B : context flows / hop crossed</text>
+  <path class="weak" d="M 400 555 H 440"/>
+  <text x="448" y="560" class="lbl tiny">explanatory link</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1040 480" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="What a ConcurrentHashMap entry costs. One Node holding a ClientId key and a
+     ClientRestrictions value breaks into an object header of 12 bytes with compressed oops or 16
+     bytes without, a 4-byte hash, a 4-byte key reference, a 4-byte val reference and a 4-byte next
+     reference, aligning to about 32 bytes either way. Adding the map's own 4-byte table slot
+     brings the per-entry cost to roughly 36 to 40 bytes before the key and value objects
+     themselves. Scaled to 2.4 million registered clients that is about 86.4 to 96.0 megabytes of
+     Node and slot overhead alone.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+    .legend{ font-size: 11px; }
+    .plus  { font-size: 20px; font-weight: 700; fill: #4b5563; }
+
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxPrim { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .bracket { fill: none; stroke: #d1d5db; stroke-width: 1.5; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="480" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHAT A CONCURRENTHASHMAP ENTRY COSTS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">ONE Node&lt;ClientId, ClientRestrictions&gt; &#8212; PER-ENTRY OBJECT LAYOUT</text>
+
+  <!-- memory bar -->
+  <rect x="60" y="80" width="180" height="80" class="boxWeak"/>
+  <text x="150" y="110" text-anchor="middle" class="lbl node">header</text>
+  <text x="150" y="130" text-anchor="middle" class="lbl sub">12 B compressed oops</text>
+  <text x="150" y="145" text-anchor="middle" class="lbl sub">16 B without</text>
+
+  <rect x="240" y="80" width="100" height="80" class="boxPrim"/>
+  <text x="290" y="110" text-anchor="middle" class="lbl node">hash</text>
+  <text x="290" y="130" text-anchor="middle" class="lbl body">4 B</text>
+  <text x="290" y="145" text-anchor="middle" class="lbl sub">int</text>
+
+  <rect x="340" y="80" width="100" height="80" class="boxPrim"/>
+  <text x="390" y="110" text-anchor="middle" class="lbl node">key ref</text>
+  <text x="390" y="130" text-anchor="middle" class="lbl body">4 B</text>
+  <text x="390" y="145" text-anchor="middle" class="lbl sub">ClientId</text>
+
+  <rect x="440" y="80" width="150" height="80" class="boxPrim"/>
+  <text x="515" y="110" text-anchor="middle" class="lbl node">val ref</text>
+  <text x="515" y="130" text-anchor="middle" class="lbl body">4 B</text>
+  <text x="515" y="145" text-anchor="middle" class="lbl sub">ClientRestrictions</text>
+
+  <rect x="590" y="80" width="110" height="80" class="boxPrim"/>
+  <text x="645" y="110" text-anchor="middle" class="lbl node">next ref</text>
+  <text x="645" y="130" text-anchor="middle" class="lbl body">4 B</text>
+  <text x="645" y="145" text-anchor="middle" class="lbl sub">next Node</text>
+
+  <path class="bracket" d="M 60 168 V 176 H 700 V 168"/>
+  <text x="380" y="192" text-anchor="middle" class="lbl tiny">&#8776; 32 B per Node (12 B or 16 B header, both align to 32 B)</text>
+
+  <!-- table slot + total -->
+  <rect x="60" y="210" width="170" height="60" class="boxHi"/>
+  <text x="145" y="234" text-anchor="middle" class="lbl node">table[i] slot</text>
+  <text x="145" y="254" text-anchor="middle" class="lbl body">4 B ref to Node</text>
+
+  <text x="253" y="248" text-anchor="middle" class="lbl plus">+</text>
+
+  <rect x="280" y="210" width="380" height="60" class="boxAnn"/>
+  <text x="470" y="234" text-anchor="middle" class="lbl node">per-entry total</text>
+  <text x="470" y="254" text-anchor="middle" class="lbl body">&#8776; 36&#8211;40 B before key/value objects</text>
+
+  <!-- scaled -->
+  <rect x="60" y="290" width="920" height="110" rx="6" class="boxAnn"/>
+  <text x="76" y="314" class="lbl h2">SCALED TO 2.4M REGISTERED CLIENTS</text>
+  <text x="76" y="336" class="lbl tiny">2.4M entries &#215; ~36 B (12 B header case) &#8776; 86.4 MB</text>
+  <text x="76" y="354" class="lbl tiny">2.4M entries &#215; ~40 B (16 B header case) &#8776; 96.0 MB</text>
+  <text x="76" y="374" class="lbl tiny">Node + table slot only &#8212; excludes the ClientId and ClientRestrictions objects themselves</text>
+
+  <!-- legend -->
+  <line x1="20" y1="420" x2="1020" y2="420" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="432" width="18" height="14" rx="3" class="boxWeak"/>
+  <text x="44" y="443" class="lbl legend">object header (variable)</text>
+
+  <rect x="220" y="432" width="18" height="14" rx="3" class="boxPrim"/>
+  <text x="244" y="443" class="lbl legend">Node field (hash / key / val / next)</text>
+
+  <rect x="500" y="432" width="18" height="14" rx="3" class="boxHi"/>
+  <text x="524" y="443" class="lbl legend">table[] slot &#8212; outside the Node</text>
+
+  <rect x="760" y="432" width="18" height="14" rx="3" class="boxAnn"/>
+  <text x="784" y="443" class="lbl legend">computed total</text>
+</svg>

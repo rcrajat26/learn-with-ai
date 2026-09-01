@@ -1,0 +1,152 @@
+<svg viewBox="0 0 1160 920" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four frames showing Condition.await transferring a node between two queues on the
+     bank-withdrawal bounded queue. Frame 1: payment-run-worker-2 holds the ReentrantLock with hold
+     count 2, the sync queue and the notFull and notEmpty condition queues are all empty. Frame 2:
+     calling notEmpty.await() fully releases state to zero, saving 2 as savedState, links a new
+     ConditionNode with waitStatus COND onto the notEmpty condition queue, and parks the thread —
+     it is not simply blocked in place, it has left the lock entirely. Frame 3: settlement-ingest-3
+     pushes a withdrawal and calls notEmpty.signal(), which transfers the node from the notEmpty
+     condition queue onto the AQS sync queue and flips its status from COND to WAITING; the thread
+     is not woken directly by signal. Frame 4: once the node reaches the sync queue's head it
+     re-acquires the lock with the saved state, restoring hold count 2, and payment-run-worker-2
+     resumes exactly where await() was called.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+    .cap   { font-size: 11px; font-style: italic; fill: #4b5563; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#triDark); }
+    .flowT { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="920" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CONDITION.AWAIT TRANSFERS A NODE BETWEEN TWO QUEUES</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="590" y1="55" x2="590" y2="760" stroke="#d1d5db" stroke-width="1.5"/>
+  <line x1="20" y1="410" x2="1140" y2="410" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="40" y="76" class="lbl h2">FRAME 1 — LOCK HELD, HOLD COUNT 2</text>
+
+  <rect x="50" y="96" width="240" height="80" rx="6" class="boxP"/>
+  <text x="170" y="118" text-anchor="middle" class="lbl node">ReentrantLock</text>
+  <text x="170" y="138" text-anchor="middle" class="lbl body">state = 2 (hold count)</text>
+  <text x="170" y="158" text-anchor="middle" class="lbl sub">owner: payment-run-worker-2</text>
+
+  <rect x="320" y="96" width="240" height="80" rx="6" class="boxW"/>
+  <text x="440" y="118" text-anchor="middle" class="lbl node">AQS sync queue</text>
+  <text x="440" y="138" text-anchor="middle" class="lbl body">empty — no waiters</text>
+
+  <rect x="50" y="210" width="240" height="70" rx="6" class="boxW"/>
+  <text x="170" y="232" text-anchor="middle" class="lbl node">notFull queue</text>
+  <text x="170" y="252" text-anchor="middle" class="lbl body">empty</text>
+
+  <rect x="320" y="210" width="240" height="70" rx="6" class="boxW"/>
+  <text x="440" y="232" text-anchor="middle" class="lbl node">notEmpty queue</text>
+  <text x="440" y="252" text-anchor="middle" class="lbl body">empty</text>
+
+  <text x="305" y="320" text-anchor="middle" class="lbl cap">bank-withdrawal queue is empty; payment-run-worker-2</text>
+  <text x="305" y="336" text-anchor="middle" class="lbl cap">is about to call notEmpty.await()</text>
+
+  <!-- FRAME 2 -->
+  <text x="610" y="76" class="lbl h2">FRAME 2 — AWAIT() RELEASES AND PARKS</text>
+
+  <rect x="620" y="96" width="240" height="90" rx="6" class="boxP"/>
+  <text x="740" y="118" text-anchor="middle" class="lbl node">ReentrantLock</text>
+  <text x="740" y="138" text-anchor="middle" class="lbl body">state = 0 (fully released)</text>
+  <text x="740" y="158" text-anchor="middle" class="lbl sub">savedState = 2, kept aside</text>
+  <text x="740" y="174" text-anchor="middle" class="lbl sub">owner: null</text>
+
+  <rect x="890" y="96" width="230" height="90" rx="6" class="boxH"/>
+  <text x="1005" y="118" text-anchor="middle" class="lbl node">ConditionNode</text>
+  <text x="1005" y="138" text-anchor="middle" class="lbl body">thread: payment-run-worker-2</text>
+  <text x="1005" y="158" text-anchor="middle" class="lbl body">waitStatus = COND (2)</text>
+  <text x="1005" y="174" text-anchor="middle" class="lbl sub">parked via LockSupport.park</text>
+
+  <rect x="890" y="222" width="230" height="58" rx="6" class="boxW"/>
+  <text x="1005" y="244" text-anchor="middle" class="lbl node">notEmpty queue</text>
+  <text x="1005" y="264" text-anchor="middle" class="lbl body">→ [ConditionNode]</text>
+
+  <path class="flow" d="M 1005 186 V 222"/>
+  <text x="1050" y="207" class="lbl floor">enqueued</text>
+
+  <text x="875" y="320" text-anchor="middle" class="lbl cap">await() fully releases (saving 2), links a</text>
+  <text x="875" y="336" text-anchor="middle" class="lbl cap">ConditionNode onto notEmpty, then parks</text>
+
+  <!-- FRAME 3 -->
+  <text x="40" y="430" class="lbl h2">FRAME 3 — SIGNAL() TRANSFERS THE NODE</text>
+
+  <rect x="50" y="450" width="230" height="50" rx="6" class="boxW"/>
+  <text x="165" y="472" text-anchor="middle" class="lbl tiny">settlement-ingest-3 pushes a</text>
+  <text x="165" y="488" text-anchor="middle" class="lbl tiny">WithdrawalTransaction, calls signal()</text>
+
+  <rect x="50" y="530" width="230" height="70" rx="6" class="boxW"/>
+  <text x="165" y="552" text-anchor="middle" class="lbl node">notEmpty queue</text>
+  <text x="165" y="572" text-anchor="middle" class="lbl body">had 1 ConditionNode</text>
+
+  <rect x="330" y="530" width="230" height="90" rx="6" class="boxP"/>
+  <text x="445" y="552" text-anchor="middle" class="lbl node">AQS sync queue</text>
+  <text x="445" y="572" text-anchor="middle" class="lbl body">tail ← transferred node</text>
+  <text x="445" y="592" text-anchor="middle" class="lbl sub">waitStatus: COND → WAITING (1)</text>
+
+  <path class="flowT" d="M 280 565 H 330"/>
+  <text x="305" y="557" text-anchor="middle" class="lbl floor">transfer</text>
+
+  <text x="305" y="655" text-anchor="middle" class="lbl cap">signal() moves the node between queues —</text>
+  <text x="305" y="671" text-anchor="middle" class="lbl cap">the thread is NOT woken here</text>
+
+  <!-- FRAME 4 -->
+  <text x="610" y="430" class="lbl h2">FRAME 4 — RE-ACQUIRE RESTORES HOLD COUNT</text>
+
+  <rect x="620" y="530" width="230" height="70" rx="6" class="boxP"/>
+  <text x="735" y="552" text-anchor="middle" class="lbl node">sync queue</text>
+  <text x="735" y="572" text-anchor="middle" class="lbl body">node reaches the head</text>
+
+  <rect x="900" y="510" width="220" height="90" rx="6" class="boxR"/>
+  <text x="1010" y="532" text-anchor="middle" class="lbl node">ReentrantLock re-acquired</text>
+  <text x="1010" y="552" text-anchor="middle" class="lbl body">state = 2 (restored)</text>
+  <text x="1010" y="572" text-anchor="middle" class="lbl sub">owner: payment-run-worker-2</text>
+
+  <path class="flow" d="M 850 555 H 900"/>
+  <text x="875" y="547" text-anchor="middle" class="lbl floor">acquireQueued</text>
+
+  <text x="875" y="655" text-anchor="middle" class="lbl cap">acquireQueued(node, savedState=2) restores</text>
+  <text x="875" y="671" text-anchor="middle" class="lbl cap">hold count 2 — exactly as before await()</text>
+
+  <!-- legend -->
+  <line x1="20" y1="790" x2="1140" y2="790" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="806" width="20" height="16" rx="3" class="boxP"/>
+  <text x="46" y="819" class="lbl tiny">lock / sync-queue holder</text>
+  <rect x="260" y="806" width="20" height="16" rx="3" class="boxH"/>
+  <text x="286" y="819" class="lbl tiny">ConditionNode, waiting on a condition</text>
+  <rect x="580" y="806" width="20" height="16" rx="3" class="boxW"/>
+  <text x="606" y="819" class="lbl tiny">empty container / caller</text>
+  <rect x="820" y="806" width="20" height="16" rx="3" class="boxR"/>
+  <text x="846" y="819" class="lbl tiny">re-acquired, hold count restored</text>
+
+  <path class="flow" d="M 20 850 H 60"/>
+  <text x="68" y="854" class="lbl tiny">A → B : B produced from / links to A</text>
+  <path class="flowT" d="M 360 850 H 400"/>
+  <text x="408" y="854" class="lbl tiny">A → B : node transferred from A's queue to B's queue</text>
+</svg>

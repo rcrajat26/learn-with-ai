@@ -1,0 +1,201 @@
+<svg viewBox="0 0 1120 960" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ShutdownOnFailure versus allOf, on one downward time axis with the same failure.
+     Lane 1, ShutdownOnFailure: step 1 forks the identity vendor call and the watchlist provider
+     call; step 2 the watchlist call fails at 1.4 seconds; step 3 ShutdownOnFailure interrupts the
+     still-running identity vendor call; step 4 scope.join() returns; step 5
+     scope.throwIfFailed() rethrows, and the stack trace names the parent thread
+     gateway-http-7. Lane 2, allOf: step 1 starts the same two CompletableFutures; step 2 the
+     watchlist call fails at 1.4 seconds; step 3 the combined future completes exceptionally but
+     the identity vendor call keeps running past the block, marked orphan; step 4 the stack trace
+     shows only the completing thread, with no frame naming the parent.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .step  { font-size: 12px; font-weight: 700; fill: #ffffff; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-linejoin: round;
+             stroke-dasharray: 4 3; marker-end: url(#triW); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 3 3;
+             marker-end: url(#triD); }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .div   { stroke: #d1d5db; stroke-width: 1; }
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .badge { fill: #b45309; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="960" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SHUTDOWNONFAILURE VERSUS ALLOF — SAME FAILURE, ONE TIME AXIS</text>
+  <line x1="20" y1="42" x2="1100" y2="42" class="rule"/>
+
+  <text x="120" y="62" class="lbl h2">LANE 1 — ShutdownOnFailure</text>
+  <line x1="120" y1="70" x2="560" y2="70" class="div"/>
+  <text x="620" y="62" class="lbl h2">LANE 2 — CompletableFuture.allOf</text>
+  <line x1="620" y1="70" x2="1060" y2="70" class="div"/>
+
+  <!-- time axis -->
+  <line x1="60" y1="90" x2="60" y2="800" class="axis" marker-end="url(#tri)"/>
+  <text x="30" y="94" class="lbl tiny">t</text>
+  <text x="64" y="94" class="lbl sub">0 s</text>
+  <line x1="55" y1="90" x2="65" y2="90" class="axis"/>
+  <text x="64" y="330" class="lbl sub">1.4 s</text>
+  <line x1="55" y1="326" x2="65" y2="326" class="axis"/>
+  <text x="64" y="470" class="lbl sub">later</text>
+  <line x1="55" y1="466" x2="65" y2="466" class="axis"/>
+
+  <!-- lane divider -->
+  <line x1="590" y1="80" x2="590" y2="800" class="div"/>
+
+  <!-- LANE 1 -->
+  <circle cx="130" cy="110" r="12" class="badge"/>
+  <text x="130" y="115" text-anchor="middle" class="lbl step">1</text>
+  <rect x="150" y="94" width="230" height="32" rx="5" class="boxY"/>
+  <text x="265" y="115" text-anchor="middle" class="lbl sub">fork identity vendor + watchlist</text>
+
+  <path class="weak" d="M 130 122 V 300"/>
+  <text x="140" y="230" class="lbl tiny">identity vendor call running (p50 900 ms)</text>
+
+  <rect x="150" y="150" width="220" height="30" rx="5" class="boxY"/>
+  <text x="260" y="170" text-anchor="middle" class="lbl sub">watchlist call running (30 s timeout)</text>
+
+  <circle cx="130" cy="326" r="12" class="badge"/>
+  <text x="130" y="331" text-anchor="middle" class="lbl step">2</text>
+  <rect x="150" y="310" width="220" height="32" rx="5" class="boxD"/>
+  <text x="260" y="331" text-anchor="middle" class="lbl sub">watchlist call fails at 1.4 s</text>
+
+  <path class="fail" d="M 260 342 V 370"/>
+  <circle cx="130" cy="392" r="12" class="badge"/>
+  <text x="130" y="397" text-anchor="middle" class="lbl step">3</text>
+  <rect x="150" y="376" width="270" height="32" rx="5" class="boxD"/>
+  <text x="285" y="397" text-anchor="middle" class="lbl sub">ShutdownOnFailure interrupts identity vendor</text>
+
+  <path class="flow" d="M 130 300 V 420"/>
+  <path class="flow" d="M 130 420 H 285"/>
+  <path class="flow" d="M 285 408 V 420"/>
+  <path class="flow" d="M 285 420 V 442"/>
+
+  <circle cx="130" cy="464" r="12" class="badge"/>
+  <text x="130" y="469" text-anchor="middle" class="lbl step">4</text>
+  <rect x="150" y="448" width="220" height="32" rx="5" class="boxP"/>
+  <text x="260" y="469" text-anchor="middle" class="lbl sub">scope.join() returns</text>
+
+  <path class="flow" d="M 260 480 V 510"/>
+  <circle cx="130" cy="532" r="12" class="badge"/>
+  <text x="130" y="537" text-anchor="middle" class="lbl step">5</text>
+  <rect x="150" y="516" width="280" height="32" rx="5" class="boxD"/>
+  <text x="290" y="537" text-anchor="middle" class="lbl sub">scope.throwIfFailed() rethrows</text>
+
+  <rect x="150" y="566" width="380" height="150" rx="6" class="ann"/>
+  <text x="162" y="586" class="lbl tiny" font-weight="700">STACK TRACE — LANE 1</text>
+  <text x="162" y="604" class="lbl sub" font-family="monospace">Caused by: WatchlistTimeoutException</text>
+  <text x="162" y="620" class="lbl sub" font-family="monospace">  at WatchlistProvider.call(...)</text>
+  <text x="162" y="636" class="lbl sub" font-family="monospace">  at StructuredTaskScope.fork(...)</text>
+  <text x="162" y="652" class="lbl sub" font-family="monospace">  at AssessmentService.assess(...)</text>
+  <text x="162" y="668" class="lbl sub" font-family="monospace">  at gateway-http-7 (parent thread)</text>
+  <text x="162" y="690" class="lbl sub">parent frame is present — the exception is</text>
+  <text x="162" y="704" class="lbl sub">attributed to the caller that owns the scope.</text>
+
+  <!-- LANE 2 -->
+  <circle cx="630" cy="110" r="12" class="badge"/>
+  <text x="630" y="115" text-anchor="middle" class="lbl step">1</text>
+  <rect x="650" y="88" width="240" height="44" rx="5" class="boxY"/>
+  <text x="770" y="106" text-anchor="middle" class="lbl sub">start CF&lt;IdentityResult&gt;</text>
+  <text x="770" y="122" text-anchor="middle" class="lbl sub">+ CF&lt;WatchlistResult&gt;</text>
+
+  <path class="weak" d="M 630 122 V 470"/>
+  <text x="640" y="240" class="lbl tiny">identity vendor CF still running</text>
+  <text x="640" y="256" class="lbl tiny">(p50 900 ms, p99 38 s)</text>
+
+  <rect x="650" y="150" width="220" height="30" rx="5" class="boxY"/>
+  <text x="760" y="170" text-anchor="middle" class="lbl sub">watchlist CF running (30 s timeout)</text>
+
+  <circle cx="630" cy="326" r="12" class="badge"/>
+  <text x="630" y="331" text-anchor="middle" class="lbl step">2</text>
+  <rect x="650" y="310" width="220" height="32" rx="5" class="boxD"/>
+  <text x="760" y="331" text-anchor="middle" class="lbl sub">watchlist CF fails at 1.4 s</text>
+
+  <path class="fail" d="M 760 342 V 370"/>
+  <circle cx="630" cy="392" r="12" class="badge"/>
+  <text x="630" y="397" text-anchor="middle" class="lbl step">3</text>
+  <rect x="650" y="376" width="270" height="32" rx="5" class="boxD"/>
+  <text x="785" y="397" text-anchor="middle" class="lbl sub">allOf(...) completes exceptionally</text>
+
+  <path class="flow" d="M 785 408 V 442"/>
+  <rect x="650" y="442" width="270" height="32" rx="5" class="boxW"/>
+  <text x="785" y="463" text-anchor="middle" class="lbl sub">block exits — no join(), no shutdown</text>
+
+  <path class="weak" d="M 630 470 V 500"/>
+  <rect x="650" y="484" width="270" height="34" rx="5" class="boxD"/>
+  <text x="785" y="502" text-anchor="middle" class="lbl sub">identity vendor CF: ORPHAN — still</text>
+  <text x="785" y="516" text-anchor="middle" class="lbl sub">running past the block</text>
+
+  <circle cx="630" cy="548" r="12" class="badge"/>
+  <text x="630" y="553" text-anchor="middle" class="lbl step">4</text>
+  <rect x="650" y="532" width="280" height="32" rx="5" class="boxD"/>
+  <text x="790" y="553" text-anchor="middle" class="lbl sub">stack trace shows only watchlist thread</text>
+
+  <rect x="650" y="566" width="380" height="150" rx="6" class="ann"/>
+  <text x="662" y="586" class="lbl tiny" font-weight="700">STACK TRACE — LANE 2</text>
+  <text x="662" y="604" class="lbl sub" font-family="monospace">Caused by: WatchlistTimeoutException</text>
+  <text x="662" y="620" class="lbl sub" font-family="monospace">  at WatchlistProvider.call(...)</text>
+  <text x="662" y="636" class="lbl sub" font-family="monospace">  at CompletableFuture.uniWhenComplete(...)</text>
+  <text x="662" y="652" class="lbl sub" font-family="monospace">  at ForkJoinPool.commonPool-worker-3</text>
+  <text x="662" y="674" class="lbl sub">no frame names gateway-http-7 — the caller</text>
+  <text x="662" y="690" class="lbl sub">that started the assessment is invisible; only</text>
+  <text x="662" y="706" class="lbl sub">the completing pool worker appears.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="796" x2="1100" y2="796" class="rule"/>
+
+  <rect x="40" y="814" width="20" height="14" rx="3" class="boxY"/>
+  <text x="68" y="825" class="lbl tiny">the subject — call or future in flight</text>
+
+  <rect x="600" y="814" width="20" height="14" rx="3" class="boxD"/>
+  <text x="628" y="825" class="lbl tiny">failure, orphan, or degraded outcome</text>
+
+  <rect x="40" y="840" width="20" height="14" rx="3" class="boxW"/>
+  <text x="68" y="851" class="lbl tiny">block exits with no payload / no cleanup</text>
+
+  <rect x="600" y="840" width="20" height="14" rx="3" class="boxP"/>
+  <text x="628" y="851" class="lbl tiny">structured control call — join()</text>
+
+  <rect x="40" y="866" width="20" height="14" rx="3" class="ann"/>
+  <text x="68" y="877" class="lbl tiny">annotation panel — the rethrown stack trace</text>
+
+  <path class="flow" d="M 600 873 H 640"/>
+  <text x="648" y="877" class="lbl tiny">A → B : A causes / drives B</text>
+
+  <path class="fail" d="M 40 899 H 80"/>
+  <text x="88" y="903" class="lbl tiny">failure propagates</text>
+
+  <path class="weak" d="M 600 899 H 640"/>
+  <text x="648" y="903" class="lbl tiny">thread/future still running (elapsed span)</text>
+</svg>

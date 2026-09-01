@@ -1,0 +1,108 @@
+<svg viewBox="0 0 1160 560" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ThreadLocal as context, never as cache. Before, on a 200-thread platform pool, a ThreadLocal-cached ObjectMapper initializes 200 times, once per long-lived thread, for the workload of 500 000 affordability checks. After, on virtual threads with one thread per task, the same ThreadLocal cache initializes 443 267 times because each task gets its own fresh Thread identity and ThreadLocal slot. No exception is thrown either way; the only symptom on the virtual-thread side is GC pressure from the churned cached instances.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h1b   { font-size: 12.5px; fill: #4b5563; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .num   { font-size: 15px; font-weight: 700; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="560" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE THREADLOCAL CACHE REGRESSION UNDER VIRTUAL THREADS</text>
+  <text x="20" y="52" class="lbl h1b">Rule: ThreadLocal as context, never as cache</text>
+  <line x1="20" y1="62" x2="1140" y2="62" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="82" class="lbl h2">PLATFORM POOL — 200 THREADS, 200 INITIALIZATIONS</text>
+  <line x1="20" y1="92" x2="560" y2="92" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="600" y="82" class="lbl h2">VIRTUAL THREADS — ONE PER TASK, 443 267 INITIALIZATIONS</text>
+  <line x1="600" y1="92" x2="1140" y2="92" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <rect x="60" y="110" width="440" height="66" rx="6" class="boxP"/>
+  <text x="280" y="134" text-anchor="middle" class="lbl node">AssessmentService workload</text>
+  <text x="280" y="154" text-anchor="middle" class="lbl body">500 000 affordability checks processed</text>
+  <text x="280" y="170" text-anchor="middle" class="lbl sub">same workload compared on both sides</text>
+
+  <path class="flow" d="M 280 176 V 206"/>
+  <text x="294" y="196" class="lbl sub">runs on</text>
+
+  <rect x="60" y="206" width="440" height="70" rx="6" class="boxH"/>
+  <text x="280" y="230" text-anchor="middle" class="lbl node">platform thread pool</text>
+  <text x="280" y="250" text-anchor="middle" class="lbl body">Executors.newFixedThreadPool(200)</text>
+  <text x="280" y="266" text-anchor="middle" class="lbl sub">each thread lives for the pool's lifetime</text>
+
+  <path class="flow" d="M 280 276 V 306"/>
+  <text x="294" y="296" class="lbl sub">ThreadLocal&lt;ObjectMapper&gt; cache</text>
+
+  <rect x="60" y="306" width="440" height="70" rx="6" class="boxR"/>
+  <text x="280" y="332" text-anchor="middle" class="lbl num">200 initializations</text>
+  <text x="280" y="352" text-anchor="middle" class="lbl body">one per thread, created once, reused forever</text>
+  <text x="280" y="368" text-anchor="middle" class="lbl sub">200 platform threads → 200 ThreadLocal slots, ever</text>
+
+  <rect x="60" y="396" width="440" height="70" rx="6" class="boxA"/>
+  <text x="76" y="416" class="lbl tiny" font-weight="700">SYMPTOM</text>
+  <text x="76" y="434" class="lbl tiny">no exception thrown — the cache behaves as designed</text>
+  <text x="76" y="452" class="lbl tiny">long-lived instances, no added GC pressure</text>
+
+  <!-- RIGHT -->
+  <rect x="660" y="110" width="440" height="66" rx="6" class="boxP"/>
+  <text x="880" y="134" text-anchor="middle" class="lbl node">AssessmentService workload</text>
+  <text x="880" y="154" text-anchor="middle" class="lbl body">500 000 affordability checks processed</text>
+  <text x="880" y="170" text-anchor="middle" class="lbl sub">same workload compared on both sides</text>
+
+  <path class="flow" d="M 880 176 V 206"/>
+  <text x="894" y="196" class="lbl sub">runs on</text>
+
+  <rect x="660" y="206" width="440" height="70" rx="6" class="boxH"/>
+  <text x="880" y="230" text-anchor="middle" class="lbl node">virtual threads</text>
+  <text x="880" y="250" text-anchor="middle" class="lbl body">Thread.ofVirtual().start(task) — one per task</text>
+  <text x="880" y="266" text-anchor="middle" class="lbl sub">each task is its own fresh Thread identity</text>
+
+  <path class="flow" d="M 880 276 V 306"/>
+  <text x="894" y="296" class="lbl sub">ThreadLocal&lt;ObjectMapper&gt; cache</text>
+
+  <rect x="660" y="306" width="440" height="70" rx="6" class="boxD"/>
+  <text x="880" y="332" text-anchor="middle" class="lbl num">443 267 initializations</text>
+  <text x="880" y="352" text-anchor="middle" class="lbl body">same 500 000-task workload, near one init per task</text>
+  <text x="880" y="368" text-anchor="middle" class="lbl sub">no thread reuse → no ThreadLocal reuse</text>
+
+  <rect x="660" y="396" width="440" height="70" rx="6" class="boxD"/>
+  <text x="676" y="416" class="lbl tiny" font-weight="700">SYMPTOM</text>
+  <text x="676" y="434" class="lbl tiny">no exception thrown here either — silently wrong, not loud</text>
+  <text x="676" y="452" class="lbl tiny">443 267 churned ObjectMapper instances raise GC pressure</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="486" x2="1140" y2="486" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="500" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="513" class="lbl tiny">workload / entry point</text>
+  <rect x="260" y="500" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="513" class="lbl tiny">threading model under study</text>
+  <rect x="530" y="500" width="22" height="16" rx="3" class="boxR"/>
+  <text x="560" y="513" class="lbl tiny">cache behaves as intended</text>
+  <rect x="790" y="500" width="22" height="16" rx="3" class="boxD"/>
+  <text x="820" y="513" class="lbl tiny">cache regression / GC pressure</text>
+  <rect x="1060" y="500" width="22" height="16" rx="3" class="boxA"/>
+  <text x="1088" y="513" class="lbl tiny">notes</text>
+
+  <path class="flow" d="M 20 534 H 60"/>
+  <text x="68" y="539" class="lbl tiny">A → B : workload runs on this threading model</text>
+</svg>

@@ -1,0 +1,107 @@
+<svg viewBox="0 0 1040 1060" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The two-minute thread-safety answer template, worked once on making FundsLedger.reserveStake
+     thread-safe, as five sequential frames. Frame 1 states the invariant: a StakeSplit's bonusPortion plus
+     cashPortion must exactly equal the stake, drawing from CLIENT_BONUS_AVAILABLE before
+     CLIENT_CASH_AVAILABLE. Frame 2 states the policy: locking, because confinement and immutability are both
+     ruled out. Frame 3 states the mechanism: a ReentrantLock per client id held across the read-check-write.
+     Frame 4 states the cost: serialized reservations per client against a 1,200 reservations per second
+     platform-wide load. Frame 5 states the accepted failure mode: possible stall under a slow call, but not
+     deadlock, since there is exactly one lock per client.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 12.5px; fill: #4b5563; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .badgeN { font-size: 16px; font-weight: 700; fill: #b45309; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1060" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE TWO-MINUTE THREAD-SAFETY ANSWER TEMPLATE</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="56" class="lbl h2">Worked example: make FundsLedger.reserveStake thread-safe</text>
+
+  <!-- FRAME 1: INVARIANT -->
+  <rect x="40" y="60" width="960" height="150" rx="8" class="boxP"/>
+  <circle cx="80" cy="95" r="22" class="boxH"/>
+  <text x="80" y="101" text-anchor="middle" class="badgeN">1</text>
+  <text x="115" y="90" class="lbl node">FRAME 1 — STATE THE INVARIANT</text>
+  <text x="115" y="118" class="lbl body">"The invariant: a StakeSplit's bonusPortion plus cashPortion must exactly equal the stake —</text>
+  <text x="115" y="138" class="lbl body">a 3.33 stake always splits as 0.33 bonus + 3.00 cash, drawing from CLIENT_BONUS_AVAILABLE</text>
+  <text x="115" y="158" class="lbl body">before CLIENT_CASH_AVAILABLE, and neither available balance may go negative."</text>
+  <text x="115" y="182" class="lbl sub">change: nothing yet — this is the fixed point every later beat must preserve</text>
+
+  <path class="flow" d="M 520 210 V 240"/>
+
+  <!-- FRAME 2: POLICY -->
+  <rect x="40" y="240" width="960" height="150" rx="8" class="boxP"/>
+  <circle cx="80" cy="275" r="22" class="boxH"/>
+  <text x="80" y="281" text-anchor="middle" class="badgeN">2</text>
+  <text x="115" y="270" class="lbl node">FRAME 2 — STATE THE POLICY</text>
+  <text x="115" y="298" class="lbl body">"The policy: confinement is out — reserveStake is called concurrently from multiple request</text>
+  <text x="115" y="318" class="lbl body">threads for the same client. Immutability is out too — the wallet's available balances are</text>
+  <text x="115" y="338" class="lbl body">mutated on every call. So the policy is locking: serialize every reserveStake per client."</text>
+  <text x="115" y="362" class="lbl sub">change: from what must hold to what discipline enforces it — confinement and immutability ruled out first</text>
+
+  <path class="flow" d="M 520 390 V 420"/>
+
+  <!-- FRAME 3: MECHANISM -->
+  <rect x="40" y="420" width="960" height="150" rx="8" class="boxP"/>
+  <circle cx="80" cy="455" r="22" class="boxH"/>
+  <text x="80" y="461" text-anchor="middle" class="badgeN">3</text>
+  <text x="115" y="450" class="lbl node">FRAME 3 — STATE THE MECHANISM</text>
+  <text x="115" y="478" class="lbl body">"The mechanism: a ReentrantLock per client id, held across the read-check-write of</text>
+  <text x="115" y="498" class="lbl body">CLIENT_BONUS_AVAILABLE and CLIENT_CASH_AVAILABLE and the write of the StakeSplit —</text>
+  <text x="115" y="518" class="lbl body">acquired at the top of reserveStake, released in a finally block."</text>
+  <text x="115" y="542" class="lbl sub">change: the policy becomes a concrete API — try/finally around ReentrantLock.lock()/unlock()</text>
+
+  <path class="flow" d="M 520 570 V 600"/>
+
+  <!-- FRAME 4: COST -->
+  <rect x="40" y="600" width="960" height="150" rx="8" class="boxP"/>
+  <circle cx="80" cy="635" r="22" class="boxH"/>
+  <text x="80" y="641" text-anchor="middle" class="badgeN">4</text>
+  <text x="115" y="630" class="lbl node">FRAME 4 — STATE THE COST</text>
+  <text x="115" y="658" class="lbl body">"The cost: every reserveStake for the same client now serializes. QuizStakes runs at</text>
+  <text x="115" y="678" class="lbl body">1,200 reservations/sec platform-wide, so a client with unusually high stake volume</text>
+  <text x="115" y="698" class="lbl body">becomes a lock-contention hotspot, and every acquisition adds latency under load."</text>
+  <text x="115" y="722" class="lbl sub">change: names the price of the mechanism — per-client throughput, not platform-wide throughput</text>
+
+  <path class="flow" d="M 520 750 V 780"/>
+
+  <!-- FRAME 5: FAILURE MODE ACCEPTED -->
+  <rect x="40" y="780" width="960" height="170" rx="8" class="boxP"/>
+  <circle cx="80" cy="815" r="22" class="boxH"/>
+  <text x="80" y="821" text-anchor="middle" class="badgeN">5</text>
+  <text x="115" y="810" class="lbl node">FRAME 5 — STATE THE FAILURE MODE YOU ACCEPT</text>
+  <text x="115" y="838" class="lbl body">"The failure mode I accept: if the lock is ever held across a slow call — I/O, a downstream</text>
+  <text x="115" y="858" class="lbl body">request — threads queue up behind one client's lock and stall. I accept that because the</text>
+  <text x="115" y="878" class="lbl body">critical section is memory-only. I do not accept deadlock: there is exactly one lock per</text>
+  <text x="115" y="898" class="lbl body">client, and reserveStake never holds two clients' locks at once."</text>
+  <text x="115" y="922" class="lbl sub">change: names the trade-off explicitly instead of leaving it implied — stall accepted, deadlock engineered out</text>
+
+  <!-- legend -->
+  <line x1="20" y1="970" x2="1020" y2="970" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <circle cx="31" cy="990" r="9" class="boxH"/>
+  <text x="50" y="994" class="lbl tiny">frame number badge</text>
+
+  <rect x="260" y="982" width="22" height="16" rx="3" class="boxP"/>
+  <text x="290" y="995" class="lbl tiny">frame panel — one beat's spoken sentence(s) + what changed since the last frame</text>
+
+  <path class="flow" d="M 20 1015 H 60"/>
+  <text x="68" y="1019" class="lbl tiny">A → B : frame A is spoken, then frame B follows in the same two-minute answer</text>
+</svg>

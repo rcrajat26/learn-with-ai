@@ -1,0 +1,127 @@
+<svg viewBox="0 0 1040 875" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame sequence for finding the thread burning a core inside
+     FundsLedger.reserveStake. Frame 1: top -H -p pid shows LWP 40128 at 97 percent CPU, a decimal
+     id. Frame 2: converting 40128 to hex gives 9cc0. Frame 3: the thread dump is searched for
+     nid=0x9cc0, matching the thread named settlement-ingest-3 in state RUNNABLE. Frame 4: that
+     thread's stack shows it inside FundsLedger.reserveStake retrying a compare-and-swap in a
+     tight loop, and /proc/pid/task/40128/status is read as the source of that same thread's
+     voluntary_ctxt_switches and nonvoluntary_ctxt_switches counters.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+    .boxFrame { fill: none; stroke: #d1d5db; stroke-width: 1.6; }
+    .boxH     { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR     { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxDeg   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxAnnW  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+  </style>
+
+  <rect x="0" y="0" width="1040" height="875" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FINDING THE THREAD BURNING A CORE — FundsLedger.reserveStake</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Frame 1: top -H -->
+  <rect x="20" y="60" width="490" height="330" rx="8" class="boxFrame"/>
+  <text x="36" y="84" class="lbl h2">FRAME 1 — top -H -p &lt;pid&gt;: HOT LWP, DECIMAL</text>
+
+  <rect x="40" y="98" width="450" height="98" rx="6" class="boxDeg"/>
+  <text x="56" y="118" class="lbl mono dense" font-weight="600">PID   LWP    %CPU  COMMAND</text>
+  <text x="56" y="138" class="lbl mono dense" font-weight="700">2201  40128  97.0  java</text>
+  <text x="56" y="156" class="lbl mono sub">2201  40130   2.1  java</text>
+  <text x="56" y="172" class="lbl mono sub">2201  40131   1.4  java</text>
+  <text x="56" y="188" class="lbl sub">LWP 40128 pegged at 97% — a decimal thread id</text>
+
+  <rect x="40" y="212" width="450" height="154" rx="6" class="boxAnn"/>
+  <text x="56" y="232" class="lbl tiny" font-weight="700">STATE</text>
+  <text x="56" y="250" class="lbl tiny">top -H breaks the process down by lightweight process</text>
+  <text x="56" y="266" class="lbl tiny">(LWP) — one row per OS thread. LWP 40128 is consuming</text>
+  <text x="56" y="282" class="lbl tiny">nearly a full core while the reservation-worker pool</text>
+  <text x="56" y="298" class="lbl tiny">handling 2.8M/day stake reservations otherwise idles</text>
+  <text x="56" y="314" class="lbl tiny">near 2%.</text>
+  <text x="56" y="338" class="lbl tiny" font-weight="600">40128 is decimal — the thread dump's nid= field</text>
+  <text x="56" y="354" class="lbl tiny" font-weight="600">records native thread ids in hexadecimal.</text>
+
+  <!-- Frame 2: hex conversion -->
+  <rect x="530" y="60" width="490" height="330" rx="8" class="boxFrame"/>
+  <text x="546" y="84" class="lbl h2">FRAME 2 — CONVERT THE LWP TO HEX</text>
+
+  <rect x="550" y="98" width="450" height="90" rx="6" class="boxH"/>
+  <text x="775" y="126" text-anchor="middle" class="lbl mono node">printf '%x\n' 40128</text>
+  <text x="775" y="152" text-anchor="middle" class="lbl mono node" font-weight="700">9cc0</text>
+  <text x="775" y="172" text-anchor="middle" class="lbl sub">decimal 40128 → hex 9cc0</text>
+
+  <rect x="550" y="204" width="450" height="162" rx="6" class="boxAnn"/>
+  <text x="566" y="224" class="lbl tiny" font-weight="700">STATE</text>
+  <text x="566" y="242" class="lbl tiny">The thread dump's nid= field prints the native thread</text>
+  <text x="566" y="258" class="lbl tiny">id in hexadecimal, unlike top -H's decimal LWP column</text>
+  <text x="566" y="274" class="lbl tiny">— the single most common reason engineers searching</text>
+  <text x="566" y="290" class="lbl tiny">a dump for "40128" find nothing.</text>
+  <text x="566" y="314" class="lbl tiny" font-weight="600">40128 (decimal) = 9cc0 (hex); the dump prints it</text>
+  <text x="566" y="330" class="lbl tiny" font-weight="600">lowercase as nid=0x9cc0.</text>
+
+  <!-- Frame 3: match nid in dump -->
+  <rect x="20" y="410" width="490" height="330" rx="8" class="boxFrame"/>
+  <text x="36" y="434" class="lbl h2">FRAME 3 — MATCH nid=0x… IN THE THREAD DUMP</text>
+
+  <rect x="40" y="448" width="450" height="98" rx="6" class="boxR"/>
+  <text x="56" y="468" class="lbl mono dense">"settlement-ingest-3" #58</text>
+  <text x="56" y="486" class="lbl mono dense" font-weight="700">nid=0x9cc0 runnable</text>
+  <text x="56" y="504" class="lbl sub">[0x00007f2a1c3fe000]</text>
+  <text x="56" y="522" class="lbl sub">java.lang.Thread.State: RUNNABLE</text>
+
+  <rect x="40" y="562" width="450" height="154" rx="6" class="boxAnn"/>
+  <text x="56" y="582" class="lbl tiny" font-weight="700">STATE</text>
+  <text x="56" y="600" class="lbl tiny">jstack (or the JSON container dump) is grepped for</text>
+  <text x="56" y="616" class="lbl tiny">nid=0x9cc0. It resolves to thread #58, named</text>
+  <text x="56" y="632" class="lbl tiny" font-weight="600">settlement-ingest-3 — the pool worker draining</text>
+  <text x="56" y="648" class="lbl tiny" font-weight="600">withdrawal transactions toward a PaymentRun.</text>
+  <text x="56" y="672" class="lbl tiny">State RUNNABLE confirms it is actually executing, not</text>
+  <text x="56" y="688" class="lbl tiny">blocked — consistent with the 97% CPU reading.</text>
+
+  <!-- Frame 4: read the stack -->
+  <rect x="530" y="410" width="490" height="330" rx="8" class="boxFrame"/>
+  <text x="546" y="434" class="lbl h2">FRAME 4 — READ THAT THREAD'S STACK</text>
+
+  <rect x="550" y="448" width="450" height="140" rx="6" class="boxDeg"/>
+  <text x="566" y="468" class="lbl mono sub" font-weight="700">at FundsLedger.reserveStake(FundsLedger.java:214)</text>
+  <text x="566" y="486" class="lbl mono sub">at FundsLedger.tryReserve(FundsLedger.java:188)</text>
+  <text x="566" y="504" class="lbl mono sub">at PaymentService.processWithdrawal(...)</text>
+  <text x="566" y="524" class="lbl sub">tight loop retrying a CAS on CLIENT_CASH_RESERVED</text>
+  <text x="566" y="560" class="lbl sub" font-style="italic">this is the burning core's actual work</text>
+
+  <rect x="550" y="602" width="450" height="114" rx="6" class="boxAnn"/>
+  <text x="566" y="622" class="lbl tiny" font-weight="700">STATE</text>
+  <text x="566" y="640" class="lbl tiny">The stack shows settlement-ingest-3 spinning inside</text>
+  <text x="566" y="656" class="lbl tiny">reserveStake — a retry loop with no backoff — which is</text>
+  <text x="566" y="672" class="lbl tiny">what pegs the core at 97% rather than blocking it.</text>
+  <text x="566" y="696" class="lbl tiny" font-weight="600">Same nid=0x9cc0 / LWP 40128 throughout frames 1–4.</text>
+
+  <!-- Cross-frame source panel: /proc as the counter source for the same thread -->
+  <rect x="20" y="756" width="1000" height="60" rx="6" class="boxAnnW"/>
+  <text x="36" y="776" class="lbl tiny" font-weight="700">Source of the context-switch counts, same tid as frames 1–4</text>
+  <text x="36" y="796" class="lbl mono dense" font-weight="600">/proc/2201/task/40128/status</text>
+  <text x="320" y="796" class="lbl tiny">→ voluntary_ctxt_switches and nonvoluntary_ctxt_switches for LWP 40128 (= nid=0x9cc0, settlement-ingest-3)</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="826" x2="1020" y2="826" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="838" width="16" height="14" rx="3" class="boxFrame"/>
+  <text x="42" y="849" class="lbl tiny">frame boundary</text>
+  <rect x="200" y="838" width="16" height="14" rx="3" class="boxDeg"/>
+  <text x="222" y="849" class="lbl tiny">hot / burning-core evidence</text>
+  <rect x="440" y="838" width="16" height="14" rx="3" class="boxH"/>
+  <text x="462" y="849" class="lbl tiny">tool invocation / conversion</text>
+  <rect x="680" y="838" width="16" height="14" rx="3" class="boxR"/>
+  <text x="702" y="849" class="lbl tiny">matched / resolved thread</text>
+  <rect x="900" y="838" width="16" height="14" rx="3" class="boxAnn"/>
+  <text x="922" y="849" class="lbl tiny">STATE note</text>
+</svg>

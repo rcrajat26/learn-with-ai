@@ -1,0 +1,135 @@
+<svg viewBox="0 0 1360 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Decision tree for choosing a concurrent collection. Root question: does it need
+     ordering. The no-ordering branch splits on read/write ratio into ConcurrentHashMap for
+     read-heavy key access and ConcurrentHashMap with striped updates for write-heavy. The ordering
+     branch splits into index access and blocking-or-not. Index access ends in a leaf stating there
+     is no concurrent List, with three workarounds: CopyOnWriteArrayList for read-heavy,
+     Collections.synchronizedList for mixed access, or a ConcurrentHashMap keyed by index. The
+     blocking-or-not question fans out to three leaves: ArrayBlockingQueue for bounded blocking,
+     LinkedBlockingQueue for unbounded blocking, and ConcurrentLinkedQueue for non-blocking.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+
+    .boxQ  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxL  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .stem  { fill: none; stroke: #475569; stroke-width: 2; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1360" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CHOOSING A CONCURRENT COLLECTION</text>
+  <line x1="20" y1="42" x2="1340" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Generation 1: root question, y band 60-116 -->
+  <rect x="410" y="60" width="220" height="56" rx="6" class="boxQ"/>
+  <text x="520" y="84" text-anchor="middle" class="lbl node">does it need ordering?</text>
+  <text x="520" y="102" text-anchor="middle" class="lbl sub">FIFO across stake settlements?</text>
+
+  <!-- bus down from root to gen-2 band, y 132 -->
+  <path d="M 520 116 V 132" class="stem"/>
+  <line x1="200" y1="132" x2="1060" y2="132" class="stem"/>
+  <path d="M 200 132 V 164" class="flow"/>
+  <path d="M 1060 132 V 164" class="flow"/>
+  <text x="150" y="150" text-anchor="middle" class="lbl tiny">no — key/value only</text>
+  <text x="895" y="150" text-anchor="middle" class="lbl tiny">yes — must preserve arrival order</text>
+
+  <!-- Generation 2: three branch questions, y band 168-224 -->
+  <rect x="90" y="168" width="220" height="56" rx="6" class="boxQ"/>
+  <text x="200" y="192" text-anchor="middle" class="lbl node">read/write ratio?</text>
+  <text x="200" y="210" text-anchor="middle" class="lbl sub">ClientRestrictions lookups</text>
+
+  <rect x="500" y="168" width="240" height="56" rx="6" class="boxQ"/>
+  <text x="620" y="192" text-anchor="middle" class="lbl node">need index access by position?</text>
+  <text x="620" y="210" text-anchor="middle" class="lbl sub">e.g. get(i) on a client list</text>
+
+  <rect x="930" y="168" width="260" height="56" rx="6" class="boxQ"/>
+  <text x="1060" y="192" text-anchor="middle" class="lbl node">must a producer block?</text>
+  <text x="1060" y="210" text-anchor="middle" class="lbl sub">PaymentRun withdrawal queue</text>
+
+  <!-- gen2 -> gen3 band, y 268 leaves -->
+  <!-- left branch: read/write ratio -->
+  <path d="M 200 224 V 244" class="stem"/>
+  <line x1="110" y1="244" x2="320" y2="244" class="stem"/>
+  <path d="M 110 244 V 264" class="flow"/>
+  <path d="M 320 244 V 264" class="flow"/>
+  <text x="110" y="240" text-anchor="middle" class="lbl sub">read-heavy</text>
+  <text x="320" y="240" text-anchor="middle" class="lbl sub">write-heavy</text>
+
+  <rect x="20" y="268" width="180" height="70" rx="6" class="boxL"/>
+  <text x="110" y="292" text-anchor="middle" class="lbl node">ConcurrentHashMap</text>
+  <text x="110" y="310" text-anchor="middle" class="lbl sub">lock-free reads</text>
+  <text x="110" y="326" text-anchor="middle" class="lbl sub">key = clientId</text>
+
+  <rect x="230" y="268" width="200" height="70" rx="6" class="boxL"/>
+  <text x="330" y="292" text-anchor="middle" class="lbl node">ConcurrentHashMap</text>
+  <text x="330" y="310" text-anchor="middle" class="lbl sub">striped bin locks absorb</text>
+  <text x="330" y="326" text-anchor="middle" class="lbl sub">concurrent restriction writes</text>
+
+  <!-- middle: index access -->
+  <path d="M 620 224 V 264" class="flow"/>
+  <text x="640" y="244" class="lbl sub">yes</text>
+
+  <rect x="460" y="268" width="320" height="150" rx="6" class="boxW"/>
+  <text x="620" y="292" text-anchor="middle" class="lbl node">there is no concurrent List</text>
+  <text x="480" y="314" class="lbl dense">1. CopyOnWriteArrayList</text>
+  <text x="480" y="330" class="lbl sub">read-heavy, tolerate copy-on-write cost</text>
+  <text x="480" y="348" class="lbl dense">2. Collections.synchronizedList</text>
+  <text x="480" y="364" class="lbl sub">mixed access, manual sync on iteration</text>
+  <text x="480" y="382" class="lbl dense">3. ConcurrentHashMap&lt;Integer, V&gt;</text>
+  <text x="480" y="398" class="lbl sub">keyed by index, only if position is stable</text>
+
+  <!-- right: blocking or not — fans directly to three leaves, bus-fan-out rule -->
+  <path d="M 1060 224 V 244" class="stem"/>
+  <line x1="880" y1="244" x2="1240" y2="244" class="stem"/>
+  <path d="M 880 244 V 264" class="flow"/>
+  <path d="M 1060 244 V 264" class="flow"/>
+  <path d="M 1240 244 V 264" class="flow"/>
+  <text x="880" y="240" text-anchor="middle" class="lbl sub">bounded, blocks</text>
+  <text x="1060" y="240" text-anchor="middle" class="lbl sub">unbounded, blocks</text>
+  <text x="1240" y="240" text-anchor="middle" class="lbl sub">non-blocking</text>
+
+  <rect x="800" y="268" width="160" height="86" rx="6" class="boxL"/>
+  <text x="880" y="292" text-anchor="middle" class="lbl node">ArrayBlockingQueue</text>
+  <text x="880" y="310" text-anchor="middle" class="lbl sub">fixed capacity</text>
+  <text x="880" y="326" text-anchor="middle" class="lbl sub">put() applies</text>
+  <text x="880" y="342" text-anchor="middle" class="lbl sub">backpressure</text>
+
+  <rect x="980" y="268" width="160" height="86" rx="6" class="boxL"/>
+  <text x="1060" y="292" text-anchor="middle" class="lbl node">LinkedBlockingQueue</text>
+  <text x="1060" y="310" text-anchor="middle" class="lbl sub">unbounded by</text>
+  <text x="1060" y="326" text-anchor="middle" class="lbl sub">default — grows</text>
+  <text x="1060" y="342" text-anchor="middle" class="lbl sub">until OOM</text>
+
+  <rect x="1160" y="268" width="160" height="86" rx="6" class="boxL"/>
+  <text x="1240" y="292" text-anchor="middle" class="lbl node">ConcurrentLinkedQueue</text>
+  <text x="1240" y="310" text-anchor="middle" class="lbl sub">CAS-based</text>
+  <text x="1240" y="326" text-anchor="middle" class="lbl sub">never blocks</text>
+  <text x="1240" y="342" text-anchor="middle" class="lbl sub">no capacity limit</text>
+
+  <!-- legend -->
+  <line x1="20" y1="800" x2="1340" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="814" width="22" height="16" rx="3" class="boxQ"/>
+  <text x="50" y="827" class="lbl tiny">decision question</text>
+  <rect x="220" y="814" width="22" height="16" rx="3" class="boxL"/>
+  <text x="250" y="827" class="lbl tiny">recommended class (leaf)</text>
+  <rect x="480" y="814" width="22" height="16" rx="3" class="boxW"/>
+  <text x="510" y="827" class="lbl tiny">no direct answer — workarounds required</text>
+  <path class="flow" d="M 820 822 H 860"/>
+  <text x="870" y="827" class="lbl tiny">A → B : B is the next decision or leaf from A</text>
+</svg>

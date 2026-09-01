@@ -1,0 +1,145 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Inside the native ObjectMonitor backing the FundsLedger monitor under a 3,400
+     settlements per second burst. The monitor struct holds _owner, _recursions, _object, _succ,
+     _cxq, _EntryList and _WaitSet. Contending threads settlement-ingest-6 and settlement-ingest-5
+     are pushed LIFO onto _cxq via compare-and-swap. settlement-ingest-7 already sits parked in
+     _EntryList. On release the owner thread settlement-ingest-3 splices _cxq onto the tail of
+     _EntryList and unparks the thread named in _succ, settlement-ingest-4. Because _cxq is LIFO
+     and the splice reorders arrival order, monitor wakeup order is unspecified and unfair.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri475); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triGray); }
+    .fail  { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triRed); }
+    .plain { fill: none; stroke: #b91c1c; stroke-width: 1.6; }
+    .plainG{ fill: none; stroke: #9ca3af; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">INSIDE AN OBJECTMONITOR — THE FundsLedger MONITOR AT 3,400 SETTLEMENTS/SEC</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Row A: owner, struct, succ -->
+  <rect x="40" y="70" width="220" height="90" rx="6" class="boxR"/>
+  <text x="150" y="100" text-anchor="middle" class="lbl node">settlement-ingest-3</text>
+  <text x="150" y="122" text-anchor="middle" class="lbl body">current owner</text>
+  <text x="150" y="142" text-anchor="middle" class="lbl floor">holds the FundsLedger lock</text>
+
+  <rect x="360" y="60" width="320" height="260" rx="6" class="boxH"/>
+  <text x="520" y="84" text-anchor="middle" class="lbl node">ObjectMonitor</text>
+  <text x="520" y="102" text-anchor="middle" class="lbl floor">native struct, one per inflated monitor</text>
+  <line x1="376" y1="112" x2="664" y2="112" stroke="#b45309" stroke-width="1"/>
+  <text x="384" y="134" class="lbl dense">_owner = settlement-ingest-3</text>
+  <text x="384" y="154" class="lbl dense">_recursions = 0</text>
+  <text x="384" y="174" class="lbl dense">_object = FundsLedger</text>
+  <text x="384" y="194" class="lbl dense">_succ = settlement-ingest-4</text>
+  <text x="384" y="214" class="lbl dense">_cxq = [ingest-6 → ingest-5]</text>
+  <text x="384" y="234" class="lbl dense">_EntryList = [ingest-7]</text>
+  <text x="384" y="254" class="lbl dense">_WaitSet = [ ]</text>
+  <text x="384" y="278" class="lbl floor">_owner holds the lock now; _recursions</text>
+  <text x="384" y="294" class="lbl floor">counts re-entrant settleStake() calls</text>
+
+  <rect x="780" y="70" width="220" height="90" rx="6" class="boxW"/>
+  <text x="890" y="100" text-anchor="middle" class="lbl node">settlement-ingest-4</text>
+  <text x="890" y="122" text-anchor="middle" class="lbl body">designated _succ</text>
+  <text x="890" y="142" text-anchor="middle" class="lbl floor">preferred wakeup target</text>
+
+  <path class="flow" d="M 260 115 H 360"/>
+  <text x="310" y="107" text-anchor="middle" class="lbl floor">holds _owner</text>
+  <path class="weak" d="M 680 115 H 780"/>
+  <text x="730" y="107" text-anchor="middle" class="lbl floor">_succ names heir</text>
+
+  <!-- Row B headers (kept short so they clear the bus risers at x=140/360/890) -->
+  <text x="40" y="366" class="lbl h2">_cxq (LIFO)</text>
+  <text x="780" y="366" class="lbl h2">_EntryList</text>
+
+  <!-- Row B boxes -->
+  <rect x="40" y="380" width="200" height="70" rx="6" class="boxD"/>
+  <text x="140" y="404" text-anchor="middle" class="lbl body">settlement-ingest-6</text>
+  <text x="140" y="424" text-anchor="middle" class="lbl floor">arrived last, CAS to LIFO head</text>
+
+  <rect x="260" y="380" width="200" height="70" rx="6" class="boxD"/>
+  <text x="360" y="404" text-anchor="middle" class="lbl body">settlement-ingest-5</text>
+  <text x="360" y="424" text-anchor="middle" class="lbl floor">arrived first, pushed under</text>
+
+  <rect x="780" y="380" width="220" height="70" rx="6" class="boxW"/>
+  <text x="890" y="404" text-anchor="middle" class="lbl body">settlement-ingest-7</text>
+  <text x="890" y="424" text-anchor="middle" class="lbl floor">already parked, FIFO ready queue</text>
+
+  <!-- cxq fan-in bus into ObjectMonitor -->
+  <path class="plain" d="M 140 380 V 336"/>
+  <path class="plain" d="M 360 380 V 336"/>
+  <line x1="140" y1="336" x2="480" y2="336" stroke="#b91c1c" stroke-width="1.6"/>
+  <path class="fail" d="M 480 336 V 320"/>
+
+  <!-- EntryList fan-in bus from ObjectMonitor -->
+  <path class="weak" d="M 580 320 V 336 H 890 V 380"/>
+
+  <!-- Row C: release path panel -->
+  <rect x="40" y="460" width="960" height="150" rx="6" class="boxA"/>
+  <text x="60" y="484" class="lbl h2">RELEASE PATH — settlement-ingest-3 calls monitorexit</text>
+  <text x="70" y="508" class="lbl dense">1. _owner is cleared; if _cxq is non-empty, the whole _cxq list is spliced onto the tail of _EntryList.</text>
+  <text x="70" y="528" class="lbl dense">2. One thread is chosen to unpark — preferentially _succ (settlement-ingest-4), to avoid an extra wakeup storm.</text>
+  <text x="70" y="548" class="lbl dense">3. The unparked thread re-CASes for ownership; it can lose to a fresh acquirer that never queued at all, so being</text>
+  <text x="70" y="566" class="lbl dense">   unparked does not guarantee becoming the next owner.</text>
+  <text x="70" y="590" class="lbl floor">Net effect: arrival order at _cxq is LIFO; service order after the splice is a LIFO-ordered append to _EntryList.</text>
+
+  <path class="flow" d="M 520 320 V 460"/>
+  <text x="540" y="440" class="lbl floor">on release</text>
+
+  <!-- Row D: conclusion -->
+  <rect x="40" y="632" width="960" height="90" rx="6" class="boxD"/>
+  <text x="60" y="658" class="lbl h2">this is why monitor wakeup order is unspecified and unfair</text>
+  <text x="70" y="682" class="lbl dense">ingest-5 arrived at _cxq before ingest-6, but LIFO push plus later _succ preference means neither FIFO</text>
+  <text x="70" y="700" class="lbl dense">arrival order nor request order is honoured — a thread can wait many cycles while newer arrivals win the CAS.</text>
+
+  <path class="flow" d="M 520 610 V 632"/>
+
+  <!-- Legend -->
+  <line x1="20" y1="750" x2="1020" y2="750" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="762" width="20" height="16" rx="3" class="boxH"/>
+  <text x="48" y="775" class="lbl tiny">ObjectMonitor struct</text>
+  <rect x="220" y="762" width="20" height="16" rx="3" class="boxR"/>
+  <text x="248" y="775" class="lbl tiny">current owner</text>
+  <rect x="380" y="762" width="20" height="16" rx="3" class="boxD"/>
+  <text x="408" y="775" class="lbl tiny">_cxq contenders (LIFO)</text>
+  <rect x="600" y="762" width="20" height="16" rx="3" class="boxW"/>
+  <text x="628" y="775" class="lbl tiny">_EntryList / _succ (queued)</text>
+  <rect x="840" y="762" width="20" height="16" rx="3" class="boxA"/>
+  <text x="868" y="775" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 800 H 60"/>
+  <text x="68" y="805" class="lbl tiny">structural link / release flow</text>
+  <path class="weak" d="M 380 800 H 420"/>
+  <text x="428" y="805" class="lbl tiny">reference (weak / pointer)</text>
+  <path class="fail" d="M 700 800 H 740"/>
+  <text x="748" y="805" class="lbl tiny">contended CAS push onto _cxq</text>
+</svg>

@@ -1,0 +1,164 @@
+<svg viewBox="0 0 1400 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three panels compare AQS-based locks guarding FundsLedger.reserveStake. Left: SimpleMutex, a non-reentrant lock whose tryAcquire CASes state from 0 to 1 and sets the exclusive owner thread, and whose tryRelease clears the owner and sets state back to 0. Middle: a reentrant mutex where state doubles as a hold count — tryAcquire either CASes 0 to 1 for a fresh acquire or increments state when the current thread already owns it, and tryRelease decrements the hold count, throwing IllegalMonitorStateException if a foreign thread that is not the owner calls it. Right: OneShotLatch, a shared-mode AQS synchronizer where state 0 means closed and tryAcquireShared returns -1 to park callers, while releaseShared CASes state to 1, opening the gate permanently so every past and future acquirer succeeds.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .tiny  { font-size: 11px; }
+    .tinySec { font-size: 11px; fill: #4b5563; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxR  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1400" height="780" fill="#ffffff"/>
+  <text x="20" y="32" class="lbl h1">A 25-LINE AQS MUTEX — SIMPLEMUTEX, REENTRANT, AND SHARED-MODE LATCH</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== PANEL 1: SimpleMutex ===================== -->
+  <text x="40" y="66" class="lbl h2">SIMPLEMUTEX — NON-REENTRANT</text>
+
+  <rect x="40" y="90" width="400" height="50" class="boxP"/>
+  <text x="52" y="120" class="lbl body">state: AtomicInteger = 0</text>
+  <line x1="240" y1="140" x2="240" y2="160" class="flow"/>
+
+  <rect x="40" y="160" width="400" height="56" class="boxP"/>
+  <text x="52" y="180" class="lbl node">tryAcquire(int acquires)</text>
+  <text x="52" y="200" class="lbl body">compareAndSetState(0, 1)</text>
+  <line x1="240" y1="216" x2="240" y2="236" class="flow"/>
+
+  <rect x="40" y="236" width="400" height="54" class="boxG"/>
+  <text x="52" y="258" class="lbl body">CAS succeeds → setExclusiveOwnerThread(current)</text>
+  <text x="52" y="276" class="lbl body">return true (state = 1, locked)</text>
+  <line x1="240" y1="290" x2="240" y2="310" class="flow"/>
+
+  <rect x="40" y="310" width="400" height="72" class="boxP"/>
+  <text x="52" y="330" class="lbl node">tryRelease(int acquires)</text>
+  <text x="52" y="348" class="lbl body">setExclusiveOwnerThread(null);</text>
+  <text x="52" y="364" class="lbl body">setState(0)</text>
+  <line x1="240" y1="382" x2="240" y2="402" class="flow"/>
+
+  <rect x="40" y="402" width="400" height="54" class="boxG"/>
+  <text x="52" y="424" class="lbl body">state back to 0 —</text>
+  <text x="52" y="442" class="lbl body">FundsLedger.reserveStake unlocked for the next caller</text>
+  <line x1="240" y1="456" x2="240" y2="476" class="flow"/>
+
+  <rect x="40" y="476" width="400" height="100" class="boxA"/>
+  <text x="52" y="496" class="lbl tiny" font-weight="700">WHY THIS WORKS</text>
+  <text x="52" y="514" class="lbl tinySec">• Guards FundsLedger.reserveStake</text>
+  <text x="52" y="530" class="lbl tinySec">• One CAS is the entire lock; no owner check needed</text>
+  <text x="52" y="546" class="lbl tinySec">• Non-reentrant: the owner re-locking would deadlock itself</text>
+
+  <!-- ===================== PANEL 2: Reentrant mutex ===================== -->
+  <text x="500" y="66" class="lbl h2">REENTRANT MUTEX — HOLD COUNT IN STATE</text>
+
+  <rect x="500" y="90" width="400" height="54" class="boxP"/>
+  <text x="512" y="112" class="lbl body">state: int = hold count</text>
+  <text x="512" y="130" class="lbl body">owner: setExclusiveOwnerThread</text>
+  <line x1="700" y1="144" x2="700" y2="164" class="flow"/>
+
+  <rect x="500" y="164" width="400" height="72" class="boxP"/>
+  <text x="512" y="184" class="lbl node">tryAcquire(int acquires)</text>
+  <text x="512" y="202" class="lbl body">state==0 → CAS 0→1, set owner</text>
+  <text x="512" y="218" class="lbl body">owner==current → setState(state+acquires)</text>
+  <line x1="700" y1="236" x2="700" y2="256" class="flow"/>
+
+  <rect x="500" y="256" width="400" height="54" class="boxG"/>
+  <text x="512" y="278" class="lbl body">reentrant relock by owner:</text>
+  <text x="512" y="296" class="lbl body">state 1 → 2, no blocking, same thread</text>
+  <line x1="700" y1="310" x2="700" y2="330" class="flow"/>
+
+  <rect x="500" y="330" width="400" height="72" class="boxP"/>
+  <text x="512" y="350" class="lbl node">tryRelease(int acquires)</text>
+  <text x="512" y="368" class="lbl body">current != owner →</text>
+  <text x="512" y="384" class="lbl body">else: state -= acquires</text>
+
+  <!-- fan-out: normal decrement vs foreign-thread exception -->
+  <line x1="700" y1="402" x2="700" y2="412" class="flow"/>
+  <path d="M 700 412 H 596" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 700 412 H 804" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="596" y1="412" x2="596" y2="422" class="flow"/>
+  <line x1="804" y1="412" x2="804" y2="422" class="flow"/>
+
+  <rect x="500" y="422" width="192" height="84" class="boxG"/>
+  <text x="512" y="440" class="lbl tiny">state reaches 0:</text>
+  <text x="512" y="454" class="lbl tiny">owner = null,</text>
+  <text x="512" y="468" class="lbl tiny">lock free for</text>
+  <text x="512" y="482" class="lbl tiny">others</text>
+
+  <rect x="708" y="422" width="192" height="84" class="boxR"/>
+  <text x="720" y="440" class="lbl tiny">foreign thread</text>
+  <text x="720" y="454" class="lbl tiny">calls unlock() →</text>
+  <text x="720" y="468" class="lbl tiny">IllegalMonitorState-</text>
+  <text x="720" y="482" class="lbl tiny">Exception</text>
+
+  <line x1="700" y1="506" x2="700" y2="526" class="flow"/>
+  <rect x="500" y="526" width="400" height="100" class="boxA"/>
+  <text x="512" y="546" class="lbl tiny" font-weight="700">REENTRANT LOCK</text>
+  <text x="512" y="564" class="lbl tinySec">• state doubles as the hold count</text>
+  <text x="512" y="580" class="lbl tinySec">• owner field enables the reentrancy check</text>
+  <text x="512" y="596" class="lbl tinySec">• unlock() calls must be balanced with lock() calls</text>
+
+  <!-- ===================== PANEL 3: OneShotLatch shared mode ===================== -->
+  <text x="960" y="66" class="lbl h2">ONESHOTLATCH — SHARED MODE</text>
+
+  <rect x="960" y="90" width="400" height="50" class="boxP"/>
+  <text x="972" y="120" class="lbl body">state: 0 = CLOSED, 1 = OPEN</text>
+  <line x1="1160" y1="140" x2="1160" y2="160" class="flow"/>
+
+  <rect x="960" y="160" width="400" height="56" class="boxP"/>
+  <text x="972" y="180" class="lbl node">tryAcquireShared(int)</text>
+  <text x="972" y="200" class="lbl body">return state==1 ? 1 : -1</text>
+  <line x1="1160" y1="216" x2="1160" y2="236" class="flow"/>
+
+  <rect x="960" y="236" width="400" height="54" class="boxW"/>
+  <text x="972" y="258" class="lbl body">return -1 → caller parks</text>
+  <text x="972" y="276" class="lbl body">in the AQS shared wait queue</text>
+  <line x1="1160" y1="290" x2="1160" y2="310" class="flow"/>
+
+  <rect x="960" y="310" width="400" height="56" class="boxP"/>
+  <text x="972" y="330" class="lbl node">releaseShared(int)</text>
+  <text x="972" y="350" class="lbl body">compareAndSetState(0, 1)</text>
+  <line x1="1160" y1="366" x2="1160" y2="386" class="flow"/>
+
+  <rect x="960" y="386" width="400" height="64" class="boxG"/>
+  <text x="972" y="406" class="lbl body">state = 1 OPEN — every</text>
+  <text x="972" y="422" class="lbl body">tryAcquireShared (queued or new)</text>
+  <text x="972" y="438" class="lbl body">now returns 1; latch never re-closes</text>
+  <line x1="1160" y1="450" x2="1160" y2="470" class="flow"/>
+
+  <rect x="960" y="470" width="400" height="84" class="boxA"/>
+  <text x="972" y="490" class="lbl tiny" font-weight="700">ONE-SHOT INVARIANT</text>
+  <text x="972" y="508" class="lbl tinySec">• state only ever moves 0 → 1, never back</text>
+  <text x="972" y="524" class="lbl tinySec">• shared mode lets unlimited threads pass once open</text>
+
+  <!-- ===================== LEGEND ===================== -->
+  <line x1="20" y1="690" x2="1380" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="700" width="18" height="14" class="boxP"/>
+  <text x="46" y="712" class="lbl tiny">state field / method body (tryAcquire, tryRelease, tryAcquireShared, releaseShared)</text>
+
+  <rect x="20" y="722" width="18" height="14" class="boxG"/>
+  <text x="46" y="734" class="lbl tiny">successful acquire / release outcome</text>
+
+  <rect x="20" y="744" width="18" height="14" class="boxW"/>
+  <text x="46" y="756" class="lbl tiny">caller blocks / parks in the AQS wait queue — not yet resolved</text>
+
+  <rect x="740" y="700" width="18" height="14" class="boxR"/>
+  <text x="766" y="712" class="lbl tiny">exception path — foreign thread releases (IllegalMonitorStateException)</text>
+
+  <rect x="740" y="722" width="18" height="14" class="boxA"/>
+  <text x="766" y="734" class="lbl tiny">explanatory notes panel</text>
+
+  <line x1="740" y1="751" x2="768" y2="751" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="778" y="756" class="lbl tiny">A → B: sequential step / CAS state transition</text>
+</svg>

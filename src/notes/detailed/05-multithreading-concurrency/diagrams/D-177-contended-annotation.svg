@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1120 580" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="At-Contended versus manual padding on Striped64.Cell, the JDK's internal counter
+     cell used by the stake-settlement counter. Left, before: an unannotated Cell holding a long
+     value shares a 64-byte line with sibling cells. After adding
+     at-jdk.internal.vm.annotation.Contended, the JVM pads the cell to its own cache line per
+     -XX:ContendedPaddingWidth of 128 bytes. Right, before: the historical trick declares a value
+     field plus seven long padding fields p1 through p7, intending 64 bytes total. After: HotSpot's
+     field layout can reorder those fields, and its dead-field elimination can drop padding fields
+     that are never read, so the actual layout no longer keeps the padding adjacent to value and
+     false sharing can return. A shared panel names -XX:-RestrictContended, the flag application
+     code would need to make Contended effective outside the JDK, and advises against enabling it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+    .legend{ font-size: 11px; }
+
+    .boxWeak   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxWeakDs { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 6 4; }
+    .boxHi     { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxDeg    { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn    { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triFlow2); }
+  </style>
+  <defs>
+    <marker id="triFlow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="580" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">@CONTENDED VS. MANUAL PADDING ON Striped64.Cell</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="64" class="lbl h2">MODERN &#8212; @Contended</text>
+  <text x="580" y="64" class="lbl h2">HISTORICAL &#8212; MANUAL long PADDING</text>
+  <line x1="560" y1="52" x2="560" y2="490" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT before -->
+  <rect x="40" y="90" width="460" height="90" rx="6" class="boxWeak"/>
+  <text x="270" y="114" text-anchor="middle" class="lbl node">Striped64.Cell (unannotated)</text>
+  <text x="270" y="134" text-anchor="middle" class="lbl body">long value;  // 8 B</text>
+  <text x="270" y="152" text-anchor="middle" class="lbl sub">shares a 64 B line with sibling Cells &#8594; false sharing</text>
+
+  <path class="flow" d="M 270 180 V 215"/>
+  <text x="285" y="194" class="lbl tiny">@jdk.internal.vm.annotation</text>
+  <text x="285" y="208" class="lbl tiny">.Contended</text>
+
+  <!-- LEFT after -->
+  <rect x="40" y="225" width="460" height="110" rx="6" class="boxWeakDs"/>
+  <text x="270" y="245" text-anchor="middle" class="lbl sub">@jdk.internal.vm.annotation.Contended</text>
+  <rect x="190" y="260" width="160" height="60" rx="6" class="boxHi"/>
+  <text x="270" y="283" text-anchor="middle" class="lbl node">Striped64.Cell</text>
+  <text x="270" y="303" text-anchor="middle" class="lbl body">long value; // 8 B</text>
+
+  <text x="270" y="352" text-anchor="middle" class="lbl tiny">JVM pads it to its own cache line</text>
+  <text x="270" y="368" text-anchor="middle" class="lbl tiny">-XX:ContendedPaddingWidth = 128 B</text>
+
+  <!-- RIGHT before -->
+  <rect x="580" y="90" width="460" height="110" rx="6" class="boxWeak"/>
+  <text x="810" y="114" text-anchor="middle" class="lbl node">PaddedCell (as declared)</text>
+  <text x="810" y="134" text-anchor="middle" class="lbl body">long value;</text>
+  <text x="810" y="152" text-anchor="middle" class="lbl body">long p1, p2, p3, p4, p5, p6, p7;</text>
+  <text x="810" y="170" text-anchor="middle" class="lbl sub">intended: 8 B value + 56 B padding = 64 B</text>
+
+  <path class="flow" d="M 810 200 V 235"/>
+  <text x="825" y="212" class="lbl tiny">HotSpot field layout</text>
+  <text x="825" y="226" class="lbl tiny">(declaration order not guaranteed)</text>
+
+  <!-- RIGHT after -->
+  <rect x="580" y="240" width="460" height="110" rx="6" class="boxDeg"/>
+  <text x="810" y="264" text-anchor="middle" class="lbl node">actual layout (reordered / trimmed)</text>
+  <text x="810" y="284" text-anchor="middle" class="lbl body">value, p3, p6, p1, &#8230;</text>
+  <text x="810" y="302" text-anchor="middle" class="lbl sub">p2, p5, p7 eliminated as dead fields (never read)</text>
+  <text x="810" y="320" text-anchor="middle" class="lbl sub">value sits next to the following object's fields again</text>
+
+  <!-- shared panel -->
+  <rect x="40" y="400" width="1040" height="90" rx="6" class="boxAnn"/>
+  <text x="56" y="424" class="lbl h2">-XX:-RestrictContended &#8212; THE FLAG APPLICATION CODE WOULD NEED</text>
+  <text x="56" y="446" class="lbl tiny">By default @Contended only pads JDK-internal classes (like Striped64.Cell); application classes</text>
+  <text x="56" y="462" class="lbl tiny">need -XX:-RestrictContended to get the same padding.</text>
+  <text x="56" y="478" class="lbl tiny">Advised against: unsupported, JVM-internal flag; widens memory footprint unpredictably app-wide.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="500" x2="1100" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="512" width="18" height="14" rx="3" class="boxWeak"/>
+  <text x="46" y="523" class="lbl legend">unannotated / as-declared</text>
+
+  <rect x="330" y="512" width="18" height="14" rx="3" class="boxWeakDs"/>
+  <text x="356" y="523" class="lbl legend">JVM-inserted padding</text>
+
+  <rect x="600" y="512" width="18" height="14" rx="3" class="boxHi"/>
+  <text x="626" y="523" class="lbl legend">the padded object</text>
+
+  <rect x="20" y="540" width="18" height="14" rx="3" class="boxDeg"/>
+  <text x="46" y="551" class="lbl legend">broken outcome (reordered/trimmed)</text>
+
+  <rect x="420" y="540" width="18" height="14" rx="3" class="boxAnn"/>
+  <text x="446" y="551" class="lbl legend">explanatory panel</text>
+
+  <path class="flow" d="M 650 547 H 686"/>
+  <text x="694" y="551" class="lbl legend">before &#8594; after transition</text>
+</svg>

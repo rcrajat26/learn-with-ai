@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1120 620" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A three-stage withdrawal-processing pipeline for a PaymentRun of 7000 bank
+     withdrawals per day across 4 windows. Stage 1 validate feeds a bounded queue of capacity 500
+     into a pool of 4 threads. Stage 2 risk-score feeds a bounded queue of capacity 200, drawn full,
+     into a pool of 2 threads, the slowest stage. Stage 3 submit-to-bank feeds a bounded queue of
+     capacity 500 into a pool of 6 threads. The consumer of stage 2's queue uses drainTo with a
+     batch size of 50, amortising one lock acquisition across the batch instead of one per item.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxL  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .cell  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1; }
+    .cellE { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="620" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A MULTI-STAGE PIPELINE MAKES THE BOTTLENECK VISIBLE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">PaymentRun — 7,000 bank withdrawals/day, 4 windows/day</text>
+
+  <!-- Stage 1: validate -->
+  <rect x="30" y="90" width="150" height="60" rx="6" class="boxP"/>
+  <text x="105" y="114" text-anchor="middle" class="lbl node">validate</text>
+  <text x="105" y="132" text-anchor="middle" class="lbl sub">pool: 4 threads</text>
+
+  <path class="flow" d="M 180 120 H 220"/>
+
+  <!-- queue 1: capacity 500, mostly empty -->
+  <rect x="224" y="96" width="140" height="48" rx="4" class="boxA"/>
+  <text x="294" y="88" text-anchor="middle" class="lbl tiny">queue, capacity 500</text>
+  <g>
+    <rect x="230" y="102" width="14" height="36" class="cell"/>
+    <rect x="246" y="102" width="14" height="36" class="cell"/>
+    <rect x="262" y="102" width="14" height="36" class="cellE"/>
+    <rect x="278" y="102" width="14" height="36" class="cellE"/>
+    <rect x="294" y="102" width="14" height="36" class="cellE"/>
+    <rect x="310" y="102" width="14" height="36" class="cellE"/>
+    <rect x="326" y="102" width="14" height="36" class="cellE"/>
+    <rect x="342" y="102" width="14" height="36" class="cellE"/>
+  </g>
+  <text x="294" y="156" text-anchor="middle" class="lbl sub">mostly drained</text>
+
+  <path class="flow" d="M 364 120 H 404"/>
+
+  <!-- Stage 2: risk-score, bottleneck -->
+  <rect x="408" y="90" width="150" height="60" rx="6" class="boxW"/>
+  <text x="483" y="114" text-anchor="middle" class="lbl node">risk-score</text>
+  <text x="483" y="132" text-anchor="middle" class="lbl sub">pool: 2 threads — bottleneck</text>
+
+  <path class="flow" d="M 558 120 H 598"/>
+
+  <!-- queue 2: capacity 200, FULL -->
+  <rect x="602" y="96" width="140" height="48" rx="4" class="boxW"/>
+  <text x="672" y="88" text-anchor="middle" class="lbl tiny">queue, capacity 200 — FULL</text>
+  <g>
+    <rect x="608" y="102" width="14" height="36" class="cell"/>
+    <rect x="624" y="102" width="14" height="36" class="cell"/>
+    <rect x="640" y="102" width="14" height="36" class="cell"/>
+    <rect x="656" y="102" width="14" height="36" class="cell"/>
+    <rect x="672" y="102" width="14" height="36" class="cell"/>
+    <rect x="688" y="102" width="14" height="36" class="cell"/>
+    <rect x="704" y="102" width="14" height="36" class="cell"/>
+    <rect x="720" y="102" width="14" height="36" class="cell"/>
+  </g>
+  <text x="672" y="156" text-anchor="middle" class="lbl sub">200/200 — producers block on put()</text>
+
+  <path class="flow" d="M 742 120 H 782"/>
+
+  <!-- Stage 3: submit-to-bank -->
+  <rect x="786" y="90" width="150" height="60" rx="6" class="boxP"/>
+  <text x="861" y="114" text-anchor="middle" class="lbl node">submit-to-bank</text>
+  <text x="861" y="132" text-anchor="middle" class="lbl sub">pool: 6 threads</text>
+
+  <path class="flow" d="M 936 120 H 976"/>
+
+  <!-- queue 3: capacity 500, empty-ish -->
+  <rect x="980" y="96" width="120" height="48" rx="4" class="boxA"/>
+  <text x="1040" y="88" text-anchor="middle" class="lbl tiny">capacity 500</text>
+  <g>
+    <rect x="986" y="102" width="12" height="36" class="cellE"/>
+    <rect x="1000" y="102" width="12" height="36" class="cellE"/>
+    <rect x="1014" y="102" width="12" height="36" class="cellE"/>
+    <rect x="1028" y="102" width="12" height="36" class="cellE"/>
+    <rect x="1042" y="102" width="12" height="36" class="cellE"/>
+    <rect x="1056" y="102" width="12" height="36" class="cellE"/>
+    <rect x="1070" y="102" width="12" height="36" class="cellE"/>
+  </g>
+  <text x="1040" y="156" text-anchor="middle" class="lbl sub">to BankWithdrawal</text>
+
+  <!-- drainTo callout, positioned in empty canvas below stage2/queue2 -->
+  <path class="flow" d="M 672 144 V 250"/>
+  <rect x="480" y="254" width="390" height="120" rx="6" class="boxA"/>
+  <text x="500" y="278" class="lbl h2">drainTo BATCHING AT THE CONSUMER</text>
+  <text x="500" y="300" class="lbl dense">queue2.drainTo(batch, 50)</text>
+  <text x="500" y="320" class="lbl sub">consumer pulls up to 50 withdrawals per call</text>
+  <text x="500" y="338" class="lbl sub">instead of 50 separate poll() calls</text>
+  <text x="500" y="356" class="lbl sub">1 lock acquisition amortised across the batch,</text>
+  <text x="500" y="370" class="lbl sub">not 1 acquisition per withdrawal</text>
+
+  <!-- throughput annotation panel -->
+  <rect x="30" y="420" width="1060" height="90" rx="6" class="boxA"/>
+  <text x="50" y="444" class="lbl h2">WHY THE QUEUE IN FRONT OF risk-score FILLS</text>
+  <text x="50" y="466" class="lbl body">validate (4 threads) and submit-to-bank (6 threads) outrun risk-score (2 threads).</text>
+  <text x="50" y="484" class="lbl body">Withdrawals pile up in the capacity-200 queue until it is full, then validate's threads block on put() —</text>
+  <text x="50" y="502" class="lbl body">the queue depth is the diagnostic signal that names risk-score as the pipeline's bottleneck stage.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="536" x2="1100" y2="536" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="550" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="563" class="lbl tiny">processing stage, own thread pool</text>
+  <rect x="220" y="550" width="22" height="16" rx="3" class="boxW"/>
+  <text x="250" y="563" class="lbl tiny">bottleneck stage / full queue</text>
+  <rect x="440" y="550" width="22" height="16" rx="3" class="boxA"/>
+  <text x="470" y="563" class="lbl tiny">bounded queue / annotation panel</text>
+  <rect x="700" y="550" width="14" height="16" class="cell"/>
+  <text x="720" y="563" class="lbl tiny">occupied slot</text>
+  <rect x="820" y="550" width="14" height="16" class="cellE"/>
+  <text x="840" y="563" class="lbl tiny">free slot</text>
+  <path class="flow" d="M 940 558 H 980"/>
+  <text x="990" y="563" class="lbl tiny">A → B : items flow A to B</text>
+</svg>

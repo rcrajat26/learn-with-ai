@@ -1,0 +1,156 @@
+<svg viewBox="0 0 1040 1020" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The Michael-Scott lock-free queue holding WithdrawalTransaction nodes awaiting a
+     PaymentRun, shown across four frames. Frame 1: a dummy head node and a tail pointer that
+     already points at the last real node, WD-71. Frame 2: settlement-ingest-2 enqueues WD-72 by
+     CASing the next field of node WD-71 from null to WD-72; the tail pointer still points at
+     WD-71, one node behind, because the enqueue has not yet advanced it. Frame 3: any thread that
+     notices tail lagging, here settlement-ingest-4, helps by CASing tail from WD-71 to WD-72 on
+     behalf of the original enqueuer. Frame 4: after WD-71 is dequeued its next pointer is set to
+     point at itself, p.next == p, so a stale traverser holding a reference to WD-71 detects the
+     self-link and restarts its traversal from head instead of following a freed node. A closing
+     note states that size() must walk the whole list to count nodes, making it O(n) and only
+     approximate under concurrent modification.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+             stroke-linejoin: round; marker-end: url(#triW); }
+    .cas   { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+             stroke-linejoin: round; marker-end: url(#triH); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triH" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1020" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE MICHAEL-SCOTT QUEUE'S LAGGING TAIL</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">ConcurrentLinkedQueue&lt;WithdrawalTransaction&gt; — nodes await batching into a PaymentRun</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="76" width="1000" height="150" rx="6" class="boxLg" fill-opacity="1"/>
+  <text x="40" y="98" class="lbl tinyB">FRAME 1 — dummy head, tail already pointing at the last real node</text>
+  <rect x="70" y="120" width="120" height="56" rx="6" class="boxLg"/>
+  <text x="130" y="144" text-anchor="middle" class="lbl body">dummy</text>
+  <text x="130" y="162" text-anchor="middle" class="lbl sub">sentinel head node</text>
+  <path class="flow" d="M 190 148 H 280"/>
+  <rect x="280" y="120" width="150" height="56" rx="6" class="boxP"/>
+  <text x="355" y="144" text-anchor="middle" class="lbl body">WD-71</text>
+  <text x="355" y="162" text-anchor="middle" class="lbl sub">WithdrawalTransaction</text>
+  <text x="230" y="112" class="lbl tiny">.next</text>
+  <path class="weak" d="M 900 178 V 148 H 430"/>
+  <rect x="900" y="120" width="90" height="56" rx="6" class="boxH"/>
+  <text x="945" y="144" text-anchor="middle" class="lbl body">head</text>
+  <text x="945" y="162" text-anchor="middle" class="lbl sub">pointer field</text>
+  <rect x="600" y="120" width="90" height="56" rx="6" class="boxH"/>
+  <text x="645" y="144" text-anchor="middle" class="lbl body">tail</text>
+  <text x="645" y="162" text-anchor="middle" class="lbl sub">pointer field</text>
+  <path class="weak" d="M 600 148 H 430"/>
+  <text x="60" y="200" class="lbl sub">head points at the dummy; tail points at WD-71, the sole real node — both pointers correct here</text>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="236" width="1000" height="180" rx="6" class="boxP"/>
+  <text x="40" y="258" class="lbl tinyB">FRAME 2 — enqueue CASes next on the last node; tail still lags by one</text>
+  <rect x="70" y="284" width="120" height="56" rx="6" class="boxLg"/>
+  <text x="130" y="308" text-anchor="middle" class="lbl body">dummy</text>
+  <text x="130" y="326" text-anchor="middle" class="lbl sub">sentinel head node</text>
+  <path class="flow" d="M 190 312 H 280"/>
+  <rect x="280" y="284" width="150" height="56" rx="6" class="boxLg"/>
+  <text x="355" y="308" text-anchor="middle" class="lbl body">WD-71</text>
+  <text x="355" y="326" text-anchor="middle" class="lbl sub">WithdrawalTransaction</text>
+  <path class="cas" d="M 430 312 H 560"/>
+  <text x="495" y="304" text-anchor="middle" class="lbl tiny">CAS next</text>
+  <rect x="560" y="284" width="150" height="56" rx="6" class="boxH"/>
+  <text x="635" y="308" text-anchor="middle" class="lbl body">WD-72</text>
+  <text x="635" y="326" text-anchor="middle" class="lbl sub">new node — settlement-ingest-2</text>
+  <rect x="600" y="360" width="90" height="40" rx="6" class="boxD"/>
+  <text x="645" y="384" text-anchor="middle" class="lbl body">tail</text>
+  <path class="weak" d="M 645 360 V 340 H 355"/>
+  <text x="400" y="374" class="lbl sub">tail STILL points at WD-71 — one node behind WD-72</text>
+
+  <!-- FRAME 3 -->
+  <rect x="20" y="426" width="1000" height="204" rx="6" class="boxR"/>
+  <text x="40" y="448" class="lbl tinyB">FRAME 3 — any thread notices the lag and helps advance tail</text>
+  <rect x="70" y="474" width="120" height="56" rx="6" class="boxLg"/>
+  <text x="130" y="498" text-anchor="middle" class="lbl body">dummy</text>
+  <path class="flow" d="M 190 502 H 280"/>
+  <rect x="280" y="474" width="150" height="56" rx="6" class="boxLg"/>
+  <text x="355" y="498" text-anchor="middle" class="lbl body">WD-71</text>
+  <path class="flow" d="M 430 502 H 560"/>
+  <rect x="560" y="474" width="150" height="56" rx="6" class="boxR"/>
+  <text x="635" y="498" text-anchor="middle" class="lbl body">WD-72</text>
+  <text x="635" y="516" text-anchor="middle" class="lbl sub">now the true last node</text>
+  <rect x="805" y="474" width="180" height="56" rx="6" class="boxH"/>
+  <text x="895" y="494" text-anchor="middle" class="lbl body">settlement-ingest-4</text>
+  <text x="895" y="512" text-anchor="middle" class="lbl sub">helper thread, not enqueuer</text>
+  <path class="cas" d="M 895 530 V 552 H 645 V 546"/>
+  <text x="895" y="544" text-anchor="middle" class="lbl tiny">CAS tail: WD-71 → WD-72</text>
+  <rect x="600" y="554" width="90" height="34" rx="6" class="boxR"/>
+  <text x="645" y="576" text-anchor="middle" class="lbl body">tail</text>
+  <text x="40" y="612" class="lbl sub">tail now correctly points at WD-72 — the queue is never left permanently wrong</text>
+
+  <!-- FRAME 4 -->
+  <rect x="20" y="644" width="1000" height="200" rx="6" class="boxD"/>
+  <text x="40" y="666" class="lbl tinyB">FRAME 4 — dequeue self-links the removed node so stale traversers restart from head</text>
+  <rect x="70" y="692" width="150" height="56" rx="6" class="boxLg"/>
+  <text x="145" y="716" text-anchor="middle" class="lbl body">dummy</text>
+  <path class="flow" d="M 220 720 H 340"/>
+  <rect x="340" y="692" width="160" height="56" rx="6" class="boxR"/>
+  <text x="420" y="716" text-anchor="middle" class="lbl body">WD-72</text>
+  <text x="420" y="734" text-anchor="middle" class="lbl sub">new dummy after dequeue</text>
+  <rect x="600" y="692" width="170" height="56" rx="6" class="boxD"/>
+  <text x="685" y="716" text-anchor="middle" class="lbl body">WD-71 (dequeued)</text>
+  <text x="685" y="734" text-anchor="middle" class="lbl sub">p.next == p — self-linked</text>
+  <path class="weak" d="M 770 688 H 850 V 720 H 770"/>
+  <text x="800" y="678" class="lbl tiny">self-link</text>
+  <rect x="60" y="778" width="960" height="56" rx="6" class="boxA"/>
+  <text x="80" y="798" class="lbl tinyB">STALE TRAVERSER</text>
+  <text x="80" y="818" class="lbl sub">an iterator or poll() holding a reference to WD-71 sees next == self, recognizes the</text>
+  <text x="80" y="832" class="lbl sub">removed marker, and restarts traversal from head instead of walking into a freed node</text>
+
+  <!-- size() note -->
+  <rect x="20" y="852" width="1000" height="60" rx="6" class="boxA"/>
+  <text x="40" y="874" class="lbl tinyB">size() IS O(n) AND APPROXIMATE</text>
+  <text x="40" y="894" class="lbl body">no maintained counter exists — size() walks the whole linked list, and under concurrent enqueue/dequeue the count it returns may already be stale</text>
+
+  <line x1="20" y1="932" x2="1020" y2="932" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="946" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="50" y="958" class="lbl tiny">stable node (dummy head / already-linked node)</text>
+  <rect x="330" y="946" width="22" height="16" rx="3" class="boxH"/>
+  <text x="360" y="958" class="lbl tiny">newly enqueued node, or the acting thread</text>
+  <rect x="640" y="946" width="22" height="16" rx="3" class="boxR"/>
+  <text x="670" y="958" class="lbl tiny">correctly-advanced tail / node</text>
+  <rect x="880" y="946" width="22" height="16" rx="3" class="boxD"/>
+  <text x="910" y="958" class="lbl tiny">dequeued / self-linked</text>
+  <path class="flow" d="M 20 980 H 60"/>
+  <text x="70" y="984" class="lbl tiny">A → B : A links to B via .next</text>
+  <path class="cas" d="M 340 980 H 380"/>
+  <text x="390" y="984" class="lbl tiny">CAS operation on a pointer field</text>
+  <path class="weak" d="M 660 980 H 700"/>
+  <text x="710" y="984" class="lbl tiny">pointer field reference</text>
+</svg>

@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison. Before: stake settlements at 3400 per second burst
+     flow through a single consumer that preserves total order, capping throughput at one thread.
+     After: the same settlement stream is hash-partitioned on ClientId into N partitions, each fed
+     to its own consumer, preserving order per client while throughput scales with N consumers.
+     Kafka's partition model is named as the same idea: total order only within a partition, not
+     across the topic.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxL  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">TOTAL ORDER NEEDS ONE CONSUMER; PER-KEY ORDER DOES NOT</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Stake settlements, 3,400/sec burst</text>
+
+  <!-- divider between the two halves -->
+  <line x1="560" y1="70" x2="560" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: BEFORE -->
+  <text x="40" y="90" class="lbl h2">BEFORE — TOTAL ORDER, ONE CONSUMER</text>
+
+  <rect x="40" y="106" width="480" height="44" rx="6" class="boxP"/>
+  <text x="280" y="133" text-anchor="middle" class="lbl node">settlement stream — 3,400/sec</text>
+
+  <path class="flow" d="M 280 150 V 180"/>
+
+  <rect x="120" y="184" width="320" height="50" rx="6" class="boxA"/>
+  <text x="280" y="205" text-anchor="middle" class="lbl body">single ordered queue</text>
+  <text x="280" y="222" text-anchor="middle" class="lbl sub">all settlements, arrival order preserved</text>
+
+  <path class="flow" d="M 280 234 V 264"/>
+
+  <rect x="150" y="268" width="260" height="60" rx="6" class="boxL"/>
+  <text x="280" y="292" text-anchor="middle" class="lbl node">settlement-ingest-1</text>
+  <text x="280" y="310" text-anchor="middle" class="lbl sub">the only consumer — total order</text>
+
+  <rect x="60" y="360" width="440" height="130" rx="6" class="boxW"/>
+  <text x="80" y="384" class="lbl h2">COST</text>
+  <text x="80" y="406" class="lbl body">throughput capped at what ONE thread</text>
+  <text x="80" y="424" class="lbl body">can settle — one consumer, no fan-out</text>
+  <text x="80" y="446" class="lbl body">ceiling = 1 thread's settlement rate,</text>
+  <text x="80" y="464" class="lbl body">regardless of how many partitions the</text>
+  <text x="80" y="480" class="lbl body">upstream topic actually has</text>
+
+  <!-- RIGHT: AFTER -->
+  <text x="600" y="90" class="lbl h2">AFTER — HASH-PARTITION ON ClientId, N CONSUMERS</text>
+
+  <rect x="600" y="106" width="480" height="44" rx="6" class="boxP"/>
+  <text x="840" y="133" text-anchor="middle" class="lbl node">settlement stream — 3,400/sec</text>
+
+  <path class="flow" d="M 840 150 V 166"/>
+  <rect x="770" y="170" width="140" height="34" rx="5" class="boxA"/>
+  <text x="840" y="192" text-anchor="middle" class="lbl sub">hash(ClientId)</text>
+
+  <!-- bus fan-out to 3 partitions -->
+  <path d="M 840 204 V 220" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="660" y1="220" x2="1020" y2="220" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 660 220 V 244"/>
+  <path class="flow" d="M 840 220 V 244"/>
+  <path class="flow" d="M 1020 220 V 244"/>
+
+  <rect x="600" y="248" width="120" height="42" rx="5" class="boxA"/>
+  <text x="660" y="266" text-anchor="middle" class="lbl sub">partition 0</text>
+  <text x="660" y="281" text-anchor="middle" class="lbl sub">ClientId % N = 0</text>
+
+  <rect x="780" y="248" width="120" height="42" rx="5" class="boxA"/>
+  <text x="840" y="266" text-anchor="middle" class="lbl sub">partition 1</text>
+  <text x="840" y="281" text-anchor="middle" class="lbl sub">ClientId % N = 1</text>
+
+  <rect x="960" y="248" width="120" height="42" rx="5" class="boxA"/>
+  <text x="1020" y="266" text-anchor="middle" class="lbl sub">partition 2</text>
+  <text x="1020" y="281" text-anchor="middle" class="lbl sub">ClientId % N = 2</text>
+
+  <path class="flow" d="M 660 290 V 314"/>
+  <path class="flow" d="M 840 290 V 314"/>
+  <path class="flow" d="M 1020 290 V 314"/>
+
+  <rect x="600" y="318" width="120" height="54" rx="6" class="boxL"/>
+  <text x="660" y="340" text-anchor="middle" class="lbl sub">settlement-</text>
+  <text x="660" y="354" text-anchor="middle" class="lbl sub">ingest-1</text>
+
+  <rect x="780" y="318" width="120" height="54" rx="6" class="boxL"/>
+  <text x="840" y="340" text-anchor="middle" class="lbl sub">settlement-</text>
+  <text x="840" y="354" text-anchor="middle" class="lbl sub">ingest-2</text>
+
+  <rect x="960" y="318" width="120" height="54" rx="6" class="boxL"/>
+  <text x="1020" y="340" text-anchor="middle" class="lbl sub">settlement-</text>
+  <text x="1020" y="354" text-anchor="middle" class="lbl sub">ingest-3</text>
+
+  <rect x="600" y="400" width="480" height="130" rx="6" class="boxL"/>
+  <text x="620" y="424" class="lbl h2">GAIN</text>
+  <text x="620" y="446" class="lbl body">order preserved PER ClientId — every settlement</text>
+  <text x="620" y="464" class="lbl body">for one client still lands on the same partition,</text>
+  <text x="620" y="482" class="lbl body">same consumer, in arrival order</text>
+  <text x="620" y="504" class="lbl body">throughput scales with N — 3 consumers here,</text>
+  <text x="620" y="522" class="lbl body">no cross-client ordering guarantee needed</text>
+
+  <!-- Kafka annotation -->
+  <rect x="60" y="560" width="1020" height="70" rx="6" class="boxA"/>
+  <text x="80" y="584" class="lbl h2">SAME IDEA AS KAFKA'S PARTITION MODEL</text>
+  <text x="80" y="606" class="lbl body">A Kafka topic guarantees total order only within one partition, never across the whole topic —</text>
+  <text x="80" y="622" class="lbl body">keying settlement records by ClientId reproduces exactly that guarantee in-process.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="654" x2="1100" y2="654" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="668" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="681" class="lbl tiny">incoming stream</text>
+  <rect x="200" y="668" width="22" height="16" rx="3" class="boxA"/>
+  <text x="230" y="681" class="lbl tiny">queue / partition / annotation panel</text>
+  <rect x="480" y="668" width="22" height="16" rx="3" class="boxL"/>
+  <text x="510" y="681" class="lbl tiny">consumer thread / gain panel</text>
+  <rect x="700" y="668" width="22" height="16" rx="3" class="boxW"/>
+  <text x="730" y="681" class="lbl tiny">cost / throughput ceiling</text>
+  <path class="flow" d="M 900 676 H 940"/>
+  <text x="950" y="681" class="lbl tiny">A → B : items flow A to B</text>
+</svg>

@@ -32,7 +32,15 @@ point of each claim.
 3. **`94-interview-questions-and-drills.md` is split six ways** (`94a`–`94f`). §5.1's 132 questions
    with full spoken-length answers cannot fit one file. `94f` carries §5.2, §5.3, Part 5's own
    wrap-up, and the set-wide flat `## Atomic concept checklist`.
-4. **`92-interview-internals.md` carries a pointer, not a copy, of the checklist.** The canonical
+4. **The per-tier interview files carry the prompt's 10 Q&As, not a subject-scaled count.** The
+   generator's default is ten Q&As plus two per subject folder beyond the fifth, which for this
+   topic's eighteen Part 1 subjects would be thirty-six. The prompt's `# TASK` hard instruction
+   fixes it at "10 interview Q&As with full model answers" plus five predict-the-output puzzles
+   per part, and Part 5 already carries the exhaustive bank — 132 questions in `94a`–`94e` and
+   55 traps in `94f`. Scaling `90`–`93` as well would duplicate that bank and force each wrap-up
+   past the split threshold for no added coverage. `90`–`93` therefore carry the summary table,
+   10 Q&As and 5 puzzles, each spanning every subject in its part.
+5. **`92-interview-internals.md` carries a pointer, not a copy, of the checklist.** The canonical
    flat `## Atomic concept checklist` lives at the end of `94f-trap-index-and-drills.md` per the
    prompt. `92` carries a `## Atomic concept checklist` heading with a one-line pointer to it, so
    that downstream parsers keyed on either location resolve.
@@ -102,52 +110,64 @@ Tier key: **B** = PART 1 BASICS, **I** = PART 2 INTERMEDIATE, **X** = PART 3 INT
 | 28 | `completable-future/01b-basics-executors-timeouts-lifecycle.md` | §1.21 | 1.21.15–1.21.27 (13) | B | — | 400 | written | 600 |
 | 29 | `fork-join/01-basics.md` | §1.22 | 1.22.1–1.22.16 (16) | B | D-091, D-092 | 420 | written | 565 |
 | 30 | `thread-local/01-basics.md` | §1.23 | 1.23.1–1.23.13 (13) | B | D-093, D-094 | 370 | written | 327 |
-| 31 | `virtual-threads/01-basics-the-model.md` | §1.24 | 1.24.1–1.24.19 (19) | B | D-095, D-096, D-097, D-098, D-099 | 460 | planned | |
-| 32 | `structured-concurrency/01-basics.md` | §1.25 | 1.25.1–1.25.16 (16) | B | D-100, D-101, D-102, D-103 | 420 | planned | |
-| 33 | `liveness/01-basics-failures.md` | §1.26 | 1.26.1–1.26.20 (20) | B | D-104, D-105, D-106 | 480 | planned | |
-| 34 | `90-interview-basics.md` | Part 1 wrap-up over §1.1–§1.26 | — | Q | — | 420 | planned | |
-| 35 | `master-tables/01-the-master-tables.md` | §2.1 | 2.1.1–2.1.8 (8) | I | D-107, D-108, D-109, D-110, D-111 | 420 | planned | |
-| 36 | `locks/03-contention-economics.md` | §2.2 | 2.2.1–2.2.14 (14) | I | D-112, D-113, D-114, D-115 | 400 | planned | |
-| 37 | `locks/02-choosing-a-primitive.md` | §2.3 | 2.3.1–2.3.14 (14) | I | D-116, D-117, D-118 | 390 | planned | |
-| 38 | `executors/04-pool-sizing.md` | §2.4 | 2.4.1–2.4.18 (18) | I | D-119, D-120, D-121 | 450 | planned | |
-| 39 | `atomics/02-the-atomicity-decision.md` | §2.5 | 2.5.1–2.5.10 (10) | I | D-122, D-123, D-124 | 350 | planned | |
-| 40 | `concurrent-collections/02-the-collection-decision.md` | §2.6 | 2.6.1–2.6.14 (14) | I | D-125, D-126 | 390 | planned | |
-| 41 | `queues/02-backpressure-design.md` | §2.7 | 2.7.1–2.7.12 (12) | I | D-127, D-128, D-129 | 370 | planned | |
-| 42 | `completable-future/02-in-anger.md` | §2.8 | 2.8.1–2.8.14 (14) | I | D-130, D-131 | 400 | planned | |
-| 43 | `virtual-threads/02-in-production.md` | §2.9 | 2.9.1–2.9.14 (14) | I | D-132, D-133, D-134 | 400 | planned | |
-| 44 | `thread-safety/03-class-design.md` | §2.10 | 2.10.1–2.10.16 (16) | I | D-135, D-136 | 420 | planned | |
-| 45 | `thread-local/02-context-propagation.md` | §2.11 | 2.11.1–2.11.10 (10) | I | D-137 | 340 | planned | |
-| 46 | `observability/01-testing-and-verifying.md` | §2.12 | 2.12.1–2.12.14 (14) | I | D-138, D-139 | 400 | planned | |
-| 47 | `utility-surface/01-the-adjacent-apis.md` | §2.13 | 2.13.1–2.13.16 (16) | I | D-140 | 410 | planned | |
-| 48 | `beyond-one-jvm/01-distributed-analogues.md` | §2.14 | 2.14.1–2.14.8 (8) | I | D-141, D-142 | 300 | planned | |
-| 49 | `version-delta/01-java-5-to-25.md` | §2.15 | 2.15.1–2.15.16 (16) | I | D-143, D-144 | 410 | planned | |
-| 50 | `91-interview-intermediate.md` | Part 2 wrap-up over §2.1–§2.15 | — | Q | — | 420 | planned | |
-| 51 | `synchronized/02-internals-header-and-mark-word.md` | §3.1 | 3.1.1–3.1.8 (8) | X | D-145, D-146, D-147 | 320 | planned | |
-| 52 | `synchronized/03-internals-monitors.md` | §3.2 | 3.2.1–3.2.18 (18) | X | D-148, D-149, D-150, D-151, D-152 | 470 | planned | |
-| 53 | `volatile-and-jmm/04-internals-jit-and-barriers.md` | §3.3 | 3.3.1–3.3.12 (12) | X | D-153, D-155 | 380 | planned | |
-| 54 | `volatile-and-jmm/05-internals-safepoints.md` | §3.4 | 3.4.1–3.4.10 (10) | X | D-156, D-157 | 340 | planned | |
-| 55 | `locks/04a-internals-aqs-queue-and-acquire.md` | §3.5 | 3.5.1–3.5.13 (13) | X | D-158, D-159, D-160, D-161, D-162, D-164 | 440 | planned | |
-| 56 | `locks/04b-internals-aqs-conditions-and-mappings.md` | §3.5 | 3.5.14–3.5.22 (9) | X | D-163 | 340 | planned | |
-| 57 | `locks/05-internals-locksupport-and-os.md` | §3.6 | 3.6.1–3.6.10 (10) | X | D-165 | 340 | planned | |
-| 58 | `volatile-and-jmm/06-internals-jmm-formally.md` | §3.7 | 3.7.1–3.7.15 (15) | X | D-154, D-166, D-167, D-168 | 430 | planned | |
-| 59 | `concurrent-collections/03a-internals-chm-table-and-resize.md` | §3.8 | 3.8.1–3.8.12 (12) | X | D-169, D-170, D-171, D-172 | 430 | planned | |
-| 60 | `concurrent-collections/03b-internals-chm-trees-counting-traversal.md` | §3.8 | 3.8.13–3.8.24 (12) | X | D-173, D-174, D-175 | 410 | planned | |
-| 61 | `atomics/03-internals-striped64-and-false-sharing.md` | §3.9 | 3.9.1–3.9.14 (14) | X | D-176, D-177 | 400 | planned | |
-| 62 | `executors/05a-internals-queue-internals.md` | §3.10 | 3.10.1–3.10.11 (11) | X | D-178 | 390 | planned | |
-| 63 | `executors/05b-internals-executor-and-future-internals.md` | §3.10 | 3.10.12–3.10.24 (13) | X | D-179, D-180, D-181, D-182, D-183, D-184 | 450 | planned | |
-| 64 | `fork-join/02-internals-work-stealing.md` | §3.11 | 3.11.1–3.11.16 (16) | X | D-185, D-186, D-187, D-188, D-189 | 450 | planned | |
-| 65 | `virtual-threads/03a-internals-continuations-and-mounting.md` | §3.12 | 3.12.1–3.12.11 (11) | X | D-190, D-191 | 400 | planned | |
-| 66 | `virtual-threads/03b-internals-io-pinning-and-dumps.md` | §3.12 | 3.12.12–3.12.22 (11) | X | D-192, D-193, D-194 | 400 | planned | |
-| 67 | `observability/02-internals-runtime-observability.md` | §3.13 | 3.13.1–3.13.12 (12) | X | D-195, D-196, D-197, D-198 | 400 | planned | |
-| 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | planned | |
-| 69 | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.10 (10) | BLD | D-199, D-200, D-201 | 480 | planned | |
-| 70 | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.7 (7) | BLD | D-202 | 400 | planned | |
-| 71 | `build-it/03-bounded-blocking-queue.md` | §4.3 | 4.3.1–4.3.7 (7) | BLD | D-203, D-204 | 450 | planned | |
-| 72 | `build-it/04-non-blocking-structures.md` | §4.4 | 4.4.1–4.4.11 (11) | BLD | D-205 | 500 | planned | |
-| 73 | `build-it/05-a-thread-pool-from-scratch.md` | §4.5 | 4.5.1–4.5.9 (9) | BLD | D-206 | 500 | planned | |
-| 74 | `build-it/06-work-stealing-and-mini-forkjoin.md` | §4.6 | 4.6.1–4.6.7 (7) | BLD | D-207 | 440 | planned | |
-| 75 | `build-it/07-structured-concurrency-and-futures.md` | §4.7 | 4.7.1–4.7.6 (6) | BLD | D-208 | 420 | planned | |
-| 76 | `build-it/08-diagnostic-harnesses.md` | §4.8 | 4.8.1–4.8.12 (12) | BLD | D-209, D-210, D-211, D-212 | 500 | planned | |
+| 31 | `virtual-threads/01-basics-the-model.md` | §1.24 | 1.24.1–1.24.19 (19) | B | D-095, D-096, D-097, D-098, D-099 | 460 | written | 591 |
+| 32 | `structured-concurrency/01-basics.md` | §1.25 | 1.25.1–1.25.16 (16) | B | D-100, D-101, D-102, D-103 | 420 | written | 579 |
+| 33 | `liveness/01-basics-failures.md` | §1.26 | 1.26.1–1.26.20 (20) | B | D-104, D-105, D-106 | 480 | written | 600 |
+| 34 | `90-interview-basics.md` | Part 1 wrap-up over §1.1–§1.26 | — | Q | — | 420 | written | 401 |
+| 35 | `master-tables/01-the-master-tables.md` | §2.1 | 2.1.1–2.1.8 (8) | I | D-107, D-108, D-109, D-110, D-111 | 420 | written | 414 |
+| 36 | `locks/03-contention-economics.md` | §2.2 | 2.2.1–2.2.14 (14) | I | D-112, D-113, D-114, D-115 | 400 | written | 600 |
+| 37 | `locks/02-choosing-a-primitive.md` | §2.3 | 2.3.1–2.3.14 (14) | I | D-116, D-117, D-118 | 390 | written | 600 |
+| 38 | `executors/04-pool-sizing.md` | §2.4 | 2.4.1–2.4.18 (18) | I | D-119, D-120, D-121 | 450 | written | 600 |
+| 39 | `atomics/02-the-atomicity-decision.md` | §2.5 | 2.5.1–2.5.10 (10) | I | D-122, D-123, D-124 | 350 | written | 549 |
+| 40 | `concurrent-collections/02-the-collection-decision.md` | §2.6 | 2.6.1–2.6.14 (14) | I | D-125, D-126 | 390 | written | 599 |
+| 41 | `queues/02-backpressure-design.md` | §2.7 | 2.7.1–2.7.12 (12) | I | D-127, D-128, D-129 | 370 | written | 561 |
+| 42 | `completable-future/02-in-anger.md` | §2.8 | 2.8.1–2.8.14 (14) | I | D-130, D-131 | 400 | written | 600 |
+| 43 | `virtual-threads/02-in-production.md` | §2.9 | 2.9.1–2.9.14 (14) | I | D-132, D-133, D-134 | 400 | written | 600 |
+| 44 | `thread-safety/03-class-design.md` | §2.10 | 2.10.1–2.10.16 (16) | I | D-135, D-136 | 420 | written | 485 |
+| 45 | `thread-local/02-context-propagation.md` | §2.11 | 2.11.1–2.11.10 (10) | I | D-137 | 340 | written | 528 |
+| 46 | `observability/01-testing-and-verifying.md` | §2.12 | 2.12.1–2.12.14 (14) | I | D-138, D-139 | 400 | written | 600 |
+| 47 | `utility-surface/01-the-adjacent-apis.md` | §2.13 | 2.13.1–2.13.16 (16) | I | D-140 | 410 | written | 551 |
+| 48 | `beyond-one-jvm/01-distributed-analogues.md` | §2.14 | 2.14.1–2.14.8 (8) | I | D-141, D-142 | 300 | written | 497 |
+| 49 | `version-delta/01-java-5-to-25.md` | §2.15 | 2.15.1–2.15.16 (16) | I | D-143, D-144 | 410 | written | 595 |
+| 50 | `91-interview-intermediate.md` | Part 2 wrap-up over §2.1–§2.15 | — | Q | — | 420 | written | 401 |
+| 51 | `synchronized/02-internals-header-and-mark-word.md` | §3.1 | 3.1.1–3.1.8 (8) | X | D-145, D-146, D-147 | 320 | written | 519 |
+| 52 | `synchronized/03-internals-monitors.md` | §3.2 | 3.2.1–3.2.18 (18) | X | D-148, D-149, D-150, D-151, D-152 | 470 | written | 599 |
+| 53 | `volatile-and-jmm/04-internals-jit-and-barriers.md` | §3.3 | 3.3.1–3.3.12 (12) | X | D-153, D-155 | 380 | written | 599 |
+| 54 | `volatile-and-jmm/05-internals-safepoints.md` | §3.4 | 3.4.1–3.4.10 (10) | X | D-156, D-157 | 340 | written | 446 |
+| 55 | `locks/04a-internals-aqs-queue-and-acquire.md` | §3.5 | 3.5.1–3.5.13 (13) | X | D-158, D-159, D-160, D-161, D-162, D-164 | 440 | written | 596 |
+| 56 | `locks/04b-internals-aqs-conditions-and-mappings.md` | §3.5 | 3.5.14–3.5.22 (9) | X | D-163 | 340 | written | 528 |
+| 57 | `locks/05-internals-locksupport-and-os.md` | §3.6 | 3.6.1–3.6.10 (10) | X | D-165 | 340 | written | 533 |
+| 58 | `volatile-and-jmm/06-internals-jmm-formally.md` | §3.7 | 3.7.1–3.7.15 (15) | X | D-154, D-166, D-167, D-168 | 430 | written | 597 |
+| 59 | `concurrent-collections/03a-internals-chm-table-and-resize.md` | §3.8 | 3.8.1–3.8.12 (12) | X | D-169, D-170, D-171, D-172 | 430 | written | 435 |
+| 60 | `concurrent-collections/03b-internals-chm-trees-counting-traversal.md` | §3.8 | 3.8.13–3.8.24 (12) | X | D-173, D-174, D-175 | 410 | written | 424 |
+| 61 | `atomics/03-internals-striped64-and-false-sharing.md` | §3.9 | 3.9.1–3.9.14 (14) | X | D-176, D-177 | 400 | written | 600 |
+| 62 | `executors/05a-internals-queue-internals.md` | §3.10 | 3.10.1–3.10.11 (11) | X | D-178 | 390 | written | 599 |
+| 63 | `executors/05b-internals-executor-and-future-internals.md` | §3.10 | 3.10.12–3.10.24 (13) | X | D-179, D-180, D-181, D-182, D-183, D-184 | 450 | written | 719 |
+| 64 | `fork-join/02-internals-work-stealing.md` | §3.11 | 3.11.1–3.11.16 (16) | X | D-185, D-186, D-187, D-188, D-189 | 450 | written | 599 |
+| 65 | `virtual-threads/03a-internals-continuations-and-mounting.md` | §3.12 | 3.12.1–3.12.11 (11) | X | D-190, D-191 | 400 | written | 351 |
+| 66a | `virtual-threads/03b-internals-io-pinning-and-dumps.md` | §3.12 | 3.12.12–3.12.19 (8) | X | D-192, D-193 | 430 | planned | |
+| 66b | `virtual-threads/03c-internals-cost-flock-and-scoped-values.md` | §3.12 | 3.12.20–3.12.22 (3) | X | D-194 | 300 | planned | |
+| 67a | `observability/02-internals-runtime-observability.md` | §3.13 | 3.13.1–3.13.7 (7) | X | D-195, D-196, D-197, D-198 | 440 | planned | |
+| 67b | `observability/03-internals-profiling-and-metrics.md` | §3.13 | 3.13.8–3.13.12 (5) | X | D-197 | 380 | planned | |
+| 68 | `92-interview-internals.md` | Part 3 wrap-up over §3.1–§3.13 | — | Q | — | 430 | written | 349 |
+| 69a | `build-it/01-locks-from-first-principles.md` | §4.1 | 4.1.1–4.1.4 (4) | BLD | D-199, D-201 | 450 | planned | |
+| 69b | `build-it/01b-queue-locks-and-reentrancy.md` | §4.1 | 4.1.5–4.1.10 (6) | BLD | D-200 | 480 | planned | |
+| 70a | `build-it/02-building-on-aqs.md` | §4.2 | 4.2.1–4.2.4 (4) | BLD | D-202 | 450 | planned | |
+| 70b | `build-it/02b-aqs-fairness-and-conditions.md` | §4.2 | 4.2.5–4.2.7 (3) | BLD | — | 420 | planned | |
+| 71a | `build-it/03-bounded-blocking-queue.md` | §4.3 | 4.3.1–4.3.3 (3) | BLD | D-203 | 470 | planned | |
+| 71b | `build-it/03b-timed-drain-and-spsc-ring.md` | §4.3 | 4.3.4–4.3.7 (4) | BLD | D-204 | 470 | planned | |
+| 72a | `build-it/04-non-blocking-stacks-and-aba.md` | §4.4 | 4.4.1–4.4.4 (4) | BLD | D-205 | 470 | planned | |
+| 72b | `build-it/04b-lock-free-queue-and-striping.md` | §4.4 | 4.4.5–4.4.8 (4) | BLD | — | 470 | planned | |
+| 72c | `build-it/04c-cow-list-mini-chm-and-diffs.md` | §4.4 | 4.4.9–4.4.11 (3) | BLD | — | 450 | planned | |
+| 73a | `build-it/05-a-thread-pool-from-scratch.md` | §4.5 | 4.5.1–4.5.5 (5) | BLD | D-206 | 500 | planned | |
+| 73b | `build-it/05b-factories-context-and-completion.md` | §4.5 | 4.5.6–4.5.9 (4) | BLD | — | 450 | planned | |
+| 74a | `build-it/06-work-stealing-deque.md` | §4.6 | 4.6.1–4.6.3 (3) | BLD | D-207 | 450 | planned | |
+| 74b | `build-it/06b-mini-forkjoin-pool.md` | §4.6 | 4.6.4–4.6.7 (4) | BLD | — | 470 | planned | |
+| 75a | `build-it/07-structured-concurrency-from-scratch.md` | §4.7 | 4.7.1–4.7.4 (4) | BLD | D-208 | 470 | planned | |
+| 75b | `build-it/07b-a-minimal-completablefuture.md` | §4.7 | 4.7.5–4.7.6 (2) | BLD | — | 420 | planned | |
+| 76a | `build-it/08-visibility-and-update-harnesses.md` | §4.8 | 4.8.1–4.8.5 (5) | BLD | D-209, D-210 | 470 | planned | |
+| 76b | `build-it/08b-starvation-leak-and-race-harnesses.md` | §4.8 | 4.8.6–4.8.10 (5) | BLD | — | 470 | planned | |
+| 76c | `build-it/08c-backpressure-and-dump-reading.md` | §4.8 | 4.8.11–4.8.12 (2) | BLD | D-211, D-212 | 420 | planned | |
 | 77 | `93-interview-build-it.md` | Part 4 wrap-up over §4.1–§4.8 | — | Q | — | 420 | planned | |
 | 78 | `94a-interview-questions-fundamentals.md` | §5.1 | 5.1.1–5.1.33 (33) | Q | — | 480 | planned | |
 | 79 | `94b-interview-questions-locks-and-atomics.md` | §5.1 | 5.1.34–5.1.60 (27) | Q | — | 450 | planned | |
@@ -431,16 +451,21 @@ leaves belonging to more than one file, the other files may embed the same path 
 | `executors/05b` | D-179, D-180, D-181, D-182, D-183, D-184 |
 | `fork-join/02` | D-185, D-186, D-187, D-188, D-189 |
 | `virtual-threads/03a` | D-190, D-191 |
-| `virtual-threads/03b` | D-192, D-193, D-194 |
+| `virtual-threads/03b` | D-192, D-193 |
+| `virtual-threads/03c` | D-194 |
 | `observability/02` | D-195, D-196, D-197, D-198 |
-| `build-it/01` | D-199, D-200, D-201 |
+| `observability/03` | D-197 (re-embedded at the `/proc` walk; same file, never a copy) |
+| `build-it/01` | D-199, D-201 |
+| `build-it/01b` | D-200 |
 | `build-it/02` | D-202 |
-| `build-it/03` | D-203, D-204 |
+| `build-it/03` | D-203 |
+| `build-it/03b` | D-204 |
 | `build-it/04` | D-205 |
 | `build-it/05` | D-206 |
 | `build-it/06` | D-207 |
 | `build-it/07` | D-208 |
-| `build-it/08` | D-209, D-210, D-211, D-212 |
+| `build-it/08` | D-209, D-210 |
+| `build-it/08c` | D-211, D-212 |
 | `94f` | D-213, D-214, D-215, D-216, D-217, D-218 |
 
 ### Substitutions
@@ -470,9 +495,17 @@ the prompt's own research pass as needing re-verification before they are printe
 here from the outset:
 
 1. `jdk.virtualThreadScheduler.maxPoolSize` defaulting to **256** (leaves 1.24.4, 2.9.9, 3.12.9) —
-   confirm against `VirtualThread.java` at the jdk-21+35 tag or a running JDK 21.
+   **substantially settled.** A fetch of `VirtualThread.java` at jdk-21+35 gives the default as
+   `Integer.max(parallelism, 256)`, which confirms the 256 figure. The fetch went through a
+   summarising model rather than a literal line-numbered read, so
+   `virtual-threads/03a-internals-continuations-and-mounting.md` still carries it as
+   `**Unverified:**`. A direct read of the source line would close it.
 2. `ForkJoinPool` common-pool `maximumPoolSize = 256 + parallelism` and `common.maximumSpares = 256`
-   (3.11.9, 3.11.13) — confirm against the `ForkJoinPool` javadoc.
+   (3.11.9, 3.11.13) — **partially settled.** `ForkJoinPool.java` at jdk-21+35 confirms
+   `DEFAULT_COMMON_MAX_SPARES = 256` and the RC/TC/SS/ID `ctl` bit layout. No `maximumPoolSize` or
+   `minimumRunnable` **constant** exists in that source — they are constructor parameters, so the
+   `256 + parallelism` figure is a documented default that could not be confirmed from source.
+   D-188 labels it "documented default, unconfirmed"; any file quoting it must do the same.
 3. The mark-word tag-bit encoding (3.1.3) and the `ObjectMonitor` field names (3.2.7) — confirm
    against the OpenJDK HotSpot `Synchronization Using The ObjectMonitorTable` wiki page.
 4. The post-JDK-14 AQS bit-flag constants (3.5.9) — read from `AbstractQueuedSynchronizer.java` at
@@ -482,6 +515,27 @@ here from the outset:
 6. The park/unpark and context-switch cost figures in 2.1.2 and 3.6.6 — **present as
    order-of-magnitude, explicitly stated as such, never as measured constants.** No authoritative
    per-instruction table was found during the prompt's research pass.
+
+10. **Settled during this run, no longer open.** Verified against the per-release JEP listings on
+    `javaalmanac.io`: JEP 491 (`synchronized` no longer pins) was **delivered final in JDK 24**;
+    JEP 506 (scoped values) is **final in JDK 25**; structured concurrency is **still preview in
+    JDK 25** (JEP 505, fifth preview); JEP 519 (compact object headers) is **delivered in JDK 25**,
+    though whether it is on *by default* there remains unconfirmed by that source.
+
+12. OpenTelemetry `Context`/`Scope` method names and Micrometer `ContextSnapshot` signatures
+    (`captureAll`/`wrap`/`setThreadLocalsFrom`) in `thread-local/02-context-propagation.md` —
+    WebFetch reached only landing pages, not the interface javadoc. Flagged `**Unverified:**`
+    inline.
+
+11. The USL σ and κ values (0.02, 0.0006) used in the worked contention-cliff illustration in
+    `locks/03-contention-economics.md` are stated inline as illustrative, not measured production
+    figures.
+
+9. JEP 505's exact `Joiner` static factory names (`allSuccessfulOrThrow`,
+   `anySuccessfulResultOrThrow`, `awaitAll`, `awaitAllSuccessfulOrThrow`) in
+   `structured-concurrency/01-basics.md` — taken from the JEP text and corroborated by secondary
+   sources, but structured concurrency was still preview at time of writing and JEP 525/533 may
+   rename them. Re-check when the API finalises.
 
 8. Container-specific `ThreadLocal` leak-detector behaviour on redeploy (leaf 1.23.7), and the
    interaction of `Thread.Builder.inheritInheritableThreadLocals(false)` with virtual-thread

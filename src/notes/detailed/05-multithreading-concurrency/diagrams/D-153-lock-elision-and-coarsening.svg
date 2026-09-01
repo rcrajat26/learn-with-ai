@@ -1,0 +1,155 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before-after comparison of two JIT lock optimizations on the FundsLedger monitor.
+     Left panel, lock elision: a StringBuilder that builds an audit line for a LedgerEntry is
+     proved non-escaping inside one method, so escape analysis strikes out its monitorenter and
+     monitorexit with a horizontal rule rather than a diagonal cross. Right panel, lock coarsening:
+     three adjacent synchronized blocks on the same FundsLedger lock in one method are merged by
+     the compiler into one wider critical section, with a note that narrowing your critical section
+     in source can be undone by the compiler, and a counter-note that elision only fires when the
+     lock was already provably unnecessary.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .dense { font-size: 12.5px; }
+    .mono  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .strike{ font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; fill: #78716c; }
+    .tiny  { font-size: 11px; }
+    .floor { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxL  { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri475); }
+  </style>
+  <defs>
+    <marker id="tri475" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">LOCK ELISION AND LOCK COARSENING ON THE FundsLedger MONITOR</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- section bands -->
+  <text x="20" y="68" class="lbl h2">LEFT — LOCK ELISION: SYNCHRONIZATION REMOVED ENTIRELY</text>
+  <text x="580" y="68" class="lbl h2">RIGHT — LOCK COARSENING: SYNCHRONIZATION WIDENED</text>
+  <line x1="560" y1="80" x2="560" y2="720" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: BEFORE -->
+  <rect x="20" y="96" width="220" height="200" rx="6" class="boxP"/>
+  <text x="130" y="120" text-anchor="middle" class="lbl node">before</text>
+  <text x="36" y="144" class="lbl mono">StringBuilder audit =</text>
+  <text x="36" y="160" class="lbl mono">  new StringBuilder();</text>
+  <text x="36" y="182" class="lbl mono">synchronized(audit) {</text>
+  <text x="36" y="198" class="lbl mono">  audit.append(entry.id());</text>
+  <text x="36" y="214" class="lbl mono">}</text>
+  <text x="36" y="238" class="lbl floor">audit built inside</text>
+  <text x="36" y="252" class="lbl floor">formatAuditLine(LedgerEntry entry),</text>
+  <text x="36" y="266" class="lbl floor">never returned or stored</text>
+
+  <path class="flow" d="M 240 186 H 330"/>
+  <text x="285" y="176" text-anchor="middle" class="lbl floor">escapes?</text>
+  <text x="285" y="204" text-anchor="middle" class="lbl floor">no — elided</text>
+
+  <!-- LEFT: AFTER -->
+  <rect x="330" y="96" width="220" height="200" rx="6" class="boxL"/>
+  <text x="440" y="120" text-anchor="middle" class="lbl node">after</text>
+  <text x="346" y="144" class="lbl mono">StringBuilder audit =</text>
+  <text x="346" y="160" class="lbl mono">  new StringBuilder();</text>
+  <text x="346" y="182" class="lbl strike">monitorenter(audit)</text>
+  <line x1="346" y1="178" x2="480" y2="178" stroke="#78716c" stroke-width="1.6"/>
+  <text x="346" y="198" class="lbl mono">audit.append(entry.id());</text>
+  <text x="346" y="220" class="lbl strike">monitorexit(audit)</text>
+  <line x1="346" y1="216" x2="474" y2="216" stroke="#78716c" stroke-width="1.6"/>
+  <text x="346" y="244" class="lbl floor">audit never escapes this frame:</text>
+  <text x="346" y="258" class="lbl floor">no other thread can ever see it,</text>
+  <text x="346" y="272" class="lbl floor">so the lock is provably redundant</text>
+
+  <!-- LEFT annotation -->
+  <rect x="20" y="320" width="530" height="90" rx="6" class="boxA"/>
+  <text x="36" y="342" class="lbl h2">elision only fires when the lock was already unnecessary</text>
+  <text x="36" y="362" class="lbl dense">If audit ever escaped — passed to NotificationService, stored on a field,</text>
+  <text x="36" y="380" class="lbl dense">or returned from the method — escape analysis backs off and the</text>
+  <text x="36" y="396" class="lbl dense">monitorenter/monitorexit pair stays, because another thread could see it.</text>
+
+  <!-- LEFT: FundsLedger contrast note -->
+  <rect x="20" y="430" width="530" height="80" rx="6" class="boxW"/>
+  <text x="36" y="452" class="lbl h2">contrast: the FundsLedger monitor itself is never elided</text>
+  <text x="36" y="472" class="lbl dense">FundsLedger is shared across settlement-ingest-3 and settlement-ingest-4 —</text>
+  <text x="36" y="488" class="lbl dense">it demonstrably escapes, so its monitorenter/monitorexit always stay real.</text>
+
+  <!-- RIGHT: BEFORE -->
+  <rect x="590" y="96" width="220" height="300" rx="6" class="boxP"/>
+  <text x="700" y="120" text-anchor="middle" class="lbl node">before</text>
+  <text x="606" y="146" class="lbl mono">synchronized(ledger) {</text>
+  <text x="606" y="162" class="lbl mono">  reserve(entry);</text>
+  <text x="606" y="178" class="lbl mono">}</text>
+  <text x="606" y="200" class="lbl mono">synchronized(ledger) {</text>
+  <text x="606" y="216" class="lbl mono">  settle(entry);</text>
+  <text x="606" y="232" class="lbl mono">}</text>
+  <text x="606" y="254" class="lbl mono">synchronized(ledger) {</text>
+  <text x="606" y="270" class="lbl mono">  writeAuditLine(entry);</text>
+  <text x="606" y="286" class="lbl mono">}</text>
+  <text x="606" y="310" class="lbl floor">three adjacent blocks, same</text>
+  <text x="606" y="324" class="lbl floor">FundsLedger lock, three</text>
+  <text x="606" y="338" class="lbl floor">acquire/release round trips</text>
+  <text x="606" y="352" class="lbl floor">at the 3,400/sec settlement burst —</text>
+  <text x="606" y="366" class="lbl floor">the "narrow critical section" written</text>
+  <text x="606" y="380" class="lbl floor">by the author</text>
+
+  <path class="flow" d="M 810 236 H 900"/>
+  <text x="855" y="226" text-anchor="middle" class="lbl floor">coarsening</text>
+
+  <!-- RIGHT: AFTER -->
+  <rect x="900" y="96" width="200" height="300" rx="6" class="boxR"/>
+  <text x="1000" y="120" text-anchor="middle" class="lbl node">after</text>
+  <text x="916" y="146" class="lbl mono">synchronized(ledger) {</text>
+  <text x="916" y="164" class="lbl mono">  reserve(entry);</text>
+  <text x="916" y="182" class="lbl mono">  settle(entry);</text>
+  <text x="916" y="200" class="lbl mono">  writeAuditLine(entry);</text>
+  <text x="916" y="218" class="lbl mono">}</text>
+  <text x="916" y="244" class="lbl floor">JIT merges the three blocks</text>
+  <text x="916" y="258" class="lbl floor">into one wider critical section:</text>
+  <text x="916" y="272" class="lbl floor">one acquire, one release, no</text>
+  <text x="916" y="286" class="lbl floor">gap for another thread to</text>
+  <text x="916" y="300" class="lbl floor">interleave</text>
+  <text x="916" y="322" class="lbl floor">held-lock duration grows even</text>
+  <text x="916" y="336" class="lbl floor">though source shows three</text>
+  <text x="916" y="350" class="lbl floor">separate, narrow blocks</text>
+
+  <!-- RIGHT annotation -->
+  <rect x="580" y="430" width="520" height="90" rx="6" class="boxA"/>
+  <text x="596" y="452" class="lbl h2">"narrow your critical section" can be undone by the compiler</text>
+  <text x="596" y="472" class="lbl dense">Writing three small synchronized blocks does not guarantee three short</text>
+  <text x="596" y="490" class="lbl dense">holds — adjacent blocks on the same monitor with no intervening lock use</text>
+  <text x="596" y="506" class="lbl dense">are candidates for coarsening, widening the actual held-lock window.</text>
+
+  <!-- RIGHT: counter note -->
+  <rect x="580" y="532" width="520" height="80" rx="6" class="boxW"/>
+  <text x="596" y="554" class="lbl h2">why this does not contradict elision</text>
+  <text x="596" y="574" class="lbl dense">Coarsening widens a lock that is genuinely contended (FundsLedger, shared</text>
+  <text x="596" y="590" class="lbl dense">across ingest threads); elision removes a lock only when nothing contends it at all.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="640" x2="1100" y2="640" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="654" width="20" height="16" rx="3" class="boxP"/>
+  <text x="48" y="667" class="lbl tiny">before: source as written</text>
+  <rect x="230" y="654" width="20" height="16" rx="3" class="boxL"/>
+  <text x="258" y="667" class="lbl tiny">elided: legacy/struck-out monitor op (rule, not X)</text>
+  <rect x="20" y="684" width="20" height="16" rx="3" class="boxR"/>
+  <text x="48" y="697" class="lbl tiny">after: compiler-merged critical section</text>
+  <rect x="330" y="684" width="20" height="16" rx="3" class="boxW"/>
+  <text x="358" y="697" class="lbl tiny">contrast / counter-note panel</text>
+  <rect x="620" y="684" width="20" height="16" rx="3" class="boxA"/>
+  <text x="648" y="697" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 20 720 H 60"/>
+  <text x="68" y="725" class="lbl tiny">A → B : optimization transforms A into B</text>
+</svg>

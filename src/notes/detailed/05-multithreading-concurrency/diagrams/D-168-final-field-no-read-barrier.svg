@@ -1,0 +1,157 @@
+<svg viewBox="0 0 1400 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three-frame sequence showing why final-field semantics need no read-side barrier,
+     using StakeSplit(bonusPortion, cashPortion) built from a 3.33 stake as 0.33 bonus plus 3.00
+     cash. Frame 1: settlement-ingest-1's constructor writes the two final fields; the reference is
+     not yet published. Frame 2: at freeze, right after the constructor's last final-field write, a
+     StoreStore barrier is emitted — the only barrier involved — before the reference is published
+     to ReservationSplits. Frame 3: payment-run-worker dereferences the published reference and
+     correctly sees bonusPortion 0.33 and cashPortion 3.00, because the field load has a data
+     dependency on the reference load that hardware will not reorder — except the DEC Alpha
+     architecture, noted as the one exception that needed an explicit read-side barrier anyway.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .body   { font-size: 12.5px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .frame  { fill: none; stroke: #d1d5db; stroke-width: 1.5; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+              marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">FINAL-FIELD SEMANTICS NEED NO READ-SIDE BARRIER — StakeSplit FROM A 3.33 STAKE</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">StakeSplit(Money bonusPortion, Money cashPortion) — invariant: bonusPortion + cashPortion sums exactly to the stake (3.33 = 0.33 + 3.00).</text>
+
+  <!-- ===================== FRAME 1 ===================== -->
+  <g>
+    <rect x="20" y="80" width="440" height="560" rx="6" class="frame"/>
+    <text x="40" y="106" class="lbl h2">FRAME 1 — the constructor's field writes</text>
+    <line x1="40" y1="116" x2="440" y2="116" stroke="#d1d5db" stroke-width="1"/>
+
+    <rect x="40" y="132" width="400" height="54" rx="6" class="boxP"/>
+    <text x="240" y="153" text-anchor="middle" class="lbl node">settlement-ingest-1</text>
+    <text x="240" y="172" text-anchor="middle" class="lbl body">new StakeSplit(0.33, 3.00)</text>
+
+    <path class="flow" d="M 240 186 V 200"/>
+    <rect x="40" y="200" width="400" height="40" rx="5" class="boxW"/>
+    <text x="60" y="225" class="lbl body">this.bonusPortion = 0.33  (final)</text>
+
+    <rect x="40" y="248" width="400" height="40" rx="5" class="boxW"/>
+    <text x="60" y="273" class="lbl body">this.cashPortion  = 3.00  (final)</text>
+
+    <rect x="40" y="300" width="400" height="46" rx="6" class="boxR"/>
+    <text x="240" y="328" text-anchor="middle" class="lbl body">invariant: 0.33 + 3.00 = 3.33 (the stake)</text>
+
+    <rect x="40" y="360" width="400" height="110" rx="6" class="panel"/>
+    <text x="56" y="380" class="lbl tiny" font-weight="700">what changed</text>
+    <text x="56" y="398" class="lbl tiny">Both final fields are written inside the</text>
+    <text x="56" y="414" class="lbl tiny">constructor body. The reference is not yet</text>
+    <text x="56" y="430" class="lbl tiny">published — only settlement-ingest-1's local</text>
+    <text x="56" y="446" class="lbl tiny">variable `split` holds it. No other thread can</text>
+    <text x="56" y="462" class="lbl tiny">observe this object at all yet.</text>
+  </g>
+
+  <!-- ===================== FRAME 2 ===================== -->
+  <g>
+    <rect x="480" y="80" width="440" height="560" rx="6" class="frame"/>
+    <text x="500" y="106" class="lbl h2">FRAME 2 — freeze: StoreStore, the only barrier</text>
+    <line x1="500" y1="116" x2="920" y2="116" stroke="#d1d5db" stroke-width="1"/>
+
+    <rect x="500" y="132" width="400" height="54" rx="6" class="boxP"/>
+    <text x="700" y="153" text-anchor="middle" class="lbl node">settlement-ingest-1</text>
+    <text x="700" y="172" text-anchor="middle" class="lbl body">constructor body completes</text>
+
+    <path class="flow" d="M 700 186 V 200"/>
+    <rect x="500" y="200" width="400" height="54" rx="6" class="boxH"/>
+    <text x="700" y="221" text-anchor="middle" class="lbl node">StoreStore barrier — freeze</text>
+    <text x="700" y="240" text-anchor="middle" class="lbl body">the only barrier emitted for final fields</text>
+
+    <path class="flow" d="M 700 254 V 268"/>
+    <rect x="500" y="268" width="400" height="54" rx="6" class="boxR"/>
+    <text x="700" y="289" text-anchor="middle" class="lbl node">reference published</text>
+    <text x="700" y="308" text-anchor="middle" class="lbl body">ReservationSplits.put(DEP-301, split)</text>
+
+    <rect x="500" y="340" width="400" height="130" rx="6" class="panel"/>
+    <text x="516" y="360" class="lbl tiny" font-weight="700">what changed</text>
+    <text x="516" y="378" class="lbl tiny">Freeze happens once, right after the last</text>
+    <text x="516" y="394" class="lbl tiny">final-field write, before the reference can</text>
+    <text x="516" y="410" class="lbl tiny">escape the constructor. The StoreStore</text>
+    <text x="516" y="426" class="lbl tiny">orders those field writes ahead of the store</text>
+    <text x="516" y="442" class="lbl tiny">that publishes the reference. No read-side</text>
+    <text x="516" y="458" class="lbl tiny">barrier is emitted anywhere for this field.</text>
+  </g>
+
+  <!-- ===================== FRAME 3 ===================== -->
+  <g>
+    <rect x="940" y="80" width="440" height="560" rx="6" class="frame"/>
+    <text x="960" y="106" class="lbl h2">FRAME 3 — dereference, correct via data dependency</text>
+    <line x1="960" y1="116" x2="1380" y2="116" stroke="#d1d5db" stroke-width="1"/>
+
+    <rect x="960" y="132" width="400" height="54" rx="6" class="boxP"/>
+    <text x="1160" y="153" text-anchor="middle" class="lbl node">payment-run-worker</text>
+    <text x="1160" y="172" text-anchor="middle" class="lbl body">split = ReservationSplits.get(DEP-301)</text>
+
+    <path class="flow" d="M 1160 186 V 200"/>
+    <rect x="960" y="200" width="400" height="54" rx="6" class="boxH"/>
+    <text x="1160" y="221" text-anchor="middle" class="lbl node">data dependency</text>
+    <text x="1160" y="240" text-anchor="middle" class="lbl body">split.bonusPortion load depends on split load</text>
+
+    <path class="flow" d="M 1160 254 V 268"/>
+    <rect x="960" y="268" width="400" height="54" rx="6" class="boxR"/>
+    <text x="1160" y="289" text-anchor="middle" class="lbl node">correct read</text>
+    <text x="1160" y="308" text-anchor="middle" class="lbl body">bonusPortion=0.33, cashPortion=3.00</text>
+
+    <rect x="960" y="340" width="400" height="130" rx="6" class="panel"/>
+    <text x="976" y="360" class="lbl tiny" font-weight="700">what changed</text>
+    <text x="976" y="378" class="lbl tiny">On every mainstream CPU, a load that</text>
+    <text x="976" y="394" class="lbl tiny">depends on an earlier load's result cannot</text>
+    <text x="976" y="410" class="lbl tiny">be reordered ahead of it — the hardware</text>
+    <text x="976" y="426" class="lbl tiny">enforces this ordering for free, so no</text>
+    <text x="976" y="442" class="lbl tiny">explicit read-side barrier is needed to see</text>
+    <text x="976" y="458" class="lbl tiny">0.33 and 3.00 correctly.</text>
+  </g>
+
+  <!-- Alpha exception annotation -->
+  <rect x="20" y="656" width="1360" height="66" rx="6" class="panel"/>
+  <text x="36" y="676" class="lbl tiny" font-weight="700">the Alpha exception</text>
+  <text x="36" y="694" class="lbl tiny">The DEC Alpha architecture could reorder even data-dependent loads — the one architecture this ordering was not free on.</text>
+  <text x="36" y="710" class="lbl tiny">It is the sole case where final-field safety needed an explicit read-side barrier in addition to the constructor's StoreStore.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="734" x2="1380" y2="734" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="742" width="18" height="14" rx="3" class="boxP"/>
+  <text x="44" y="753" class="lbl tiny">actor / entry step</text>
+
+  <rect x="200" y="742" width="18" height="14" rx="3" class="boxW"/>
+  <text x="224" y="753" class="lbl tiny">plain final-field write</text>
+
+  <rect x="400" y="742" width="18" height="14" rx="3" class="boxH"/>
+  <text x="424" y="753" class="lbl tiny">the barrier / dependency step this diagram is about</text>
+
+  <rect x="740" y="742" width="18" height="14" rx="3" class="boxR"/>
+  <text x="764" y="753" class="lbl tiny">outcome — published / correctly read</text>
+
+  <rect x="1020" y="742" width="18" height="14" rx="3" class="panel"/>
+  <text x="1044" y="753" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 1230 749 H 1270"/>
+  <text x="1278" y="753" class="lbl tiny">A → B : A then B</text>
+</svg>

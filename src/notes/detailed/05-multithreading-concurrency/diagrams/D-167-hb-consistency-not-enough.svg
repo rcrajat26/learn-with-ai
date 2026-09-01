@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Flowchart: a candidate execution E interleaving a PaymentRun worker and a
+     settlement-ingest thread over CLIENT_BONUS_AVAILABLE and CLIENT_CASH_AVAILABLE must pass gate
+     1, happens-before consistency clause 1, and gate 2, happens-before consistency clause 2,
+     failing either sends it to a rejected branch. Executions that pass both proceed to gate 3, the
+     committed-action construction of JLS 17.4.8, which rejects an out-of-thin-air execution that
+     satisfied both earlier clauses but has no causal justification. Executions surviving all three
+     gates reach the DRF-SC exit: if every conflicting access is ordered by happens-before, every
+     happens-before-consistent execution is sequentially consistent. A caveat attached to the exit
+     states that one racy field anywhere in the program loses sequential-consistency reasoning in
+     principle, because the guarantee is whole-program, not per-field.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .node   { font-size: 13px; font-weight: 700; }
+    .body   { font-size: 12.5px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxD   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+              marker-end: url(#tri); }
+    .reject { fill: none; stroke: #b91c1c; stroke-width: 2; stroke-dasharray: 6 4;
+              marker-end: url(#triD); }
+    .weak   { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3;
+              marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triD" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">HAPPENS-BEFORE CONSISTENCY IS NOT ENOUGH — GATES A CANDIDATE EXECUTION MUST PASS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Candidate execution -->
+  <rect x="170" y="60" width="440" height="64" rx="6" class="boxP"/>
+  <text x="390" y="82" text-anchor="middle" class="lbl node">Candidate execution E</text>
+  <text x="390" y="100" text-anchor="middle" class="lbl sub">PaymentRun worker + settlement-ingest thread interleave reads/writes</text>
+  <text x="390" y="115" text-anchor="middle" class="lbl sub">over CLIENT_BONUS_AVAILABLE and CLIENT_CASH_AVAILABLE</text>
+
+  <path class="flow" d="M 390 124 V 150"/>
+
+  <!-- Gate 1 -->
+  <rect x="170" y="150" width="440" height="80" rx="6" class="boxP"/>
+  <text x="390" y="172" text-anchor="middle" class="lbl node">GATE 1 — happens-before consistency, clause (1)</text>
+  <text x="390" y="190" text-anchor="middle" class="lbl sub">every action is consistent with the sequential program-order</text>
+  <text x="390" y="205" text-anchor="middle" class="lbl sub">semantics of its own thread — each read sees its thread's own</text>
+  <text x="390" y="220" text-anchor="middle" class="lbl sub">most recent prior write</text>
+
+  <path class="reject" d="M 610 190 H 645 V 202 H 680"/>
+  <rect x="680" y="175" width="340" height="54" rx="6" class="boxD"/>
+  <text x="850" y="194" text-anchor="middle" class="lbl body" font-weight="700">REJECTED — clause (1) fails</text>
+  <text x="850" y="211" text-anchor="middle" class="lbl sub">settlement-ingest-2 reads a value its own</text>
+  <text x="850" y="224" text-anchor="middle" class="lbl sub">thread never wrote or observed via hb</text>
+
+  <path class="flow" d="M 390 230 V 260"/>
+
+  <!-- Gate 2 -->
+  <rect x="170" y="260" width="440" height="80" rx="6" class="boxP"/>
+  <text x="390" y="282" text-anchor="middle" class="lbl node">GATE 2 — happens-before consistency, clause (2)</text>
+  <text x="390" y="300" text-anchor="middle" class="lbl sub">for every read r of a shared write w, no write w' exists with</text>
+  <text x="390" y="315" text-anchor="middle" class="lbl sub">w hb w' hb r on the same field — no read is skipped over by</text>
+  <text x="390" y="330" text-anchor="middle" class="lbl sub">an intervening happens-before write</text>
+
+  <path class="reject" d="M 610 300 H 645 V 312 H 680"/>
+  <rect x="680" y="285" width="340" height="54" rx="6" class="boxD"/>
+  <text x="850" y="304" text-anchor="middle" class="lbl body" font-weight="700">REJECTED — clause (2) fails</text>
+  <text x="850" y="321" text-anchor="middle" class="lbl sub">operator-review reads a stale 180 though a</text>
+  <text x="850" y="334" text-anchor="middle" class="lbl sub">hb-ordered write already stored 260</text>
+
+  <path class="flow" d="M 390 340 V 370"/>
+
+  <!-- Gate 3 -->
+  <rect x="170" y="370" width="440" height="100" rx="6" class="boxP"/>
+  <text x="390" y="392" text-anchor="middle" class="lbl node">GATE 3 — committed-action construction (JLS 17.4.8)</text>
+  <text x="390" y="410" text-anchor="middle" class="lbl sub">actions are added incrementally from a well-formed prefix;</text>
+  <text x="390" y="425" text-anchor="middle" class="lbl sub">each newly committed read must be justified by a write already</text>
+  <text x="390" y="440" text-anchor="middle" class="lbl sub">committed, or by a legal race — hb-consistency alone is not a</text>
+  <text x="390" y="455" text-anchor="middle" class="lbl sub">causal justification</text>
+
+  <path class="reject" d="M 610 420 H 645 H 680"/>
+  <rect x="680" y="380" width="340" height="80" rx="6" class="boxD"/>
+  <text x="850" y="399" text-anchor="middle" class="lbl body" font-weight="700">REJECTED — out-of-thin-air</text>
+  <text x="850" y="416" text-anchor="middle" class="lbl sub">passed both hb-consistency clauses, yet a</text>
+  <text x="850" y="430" text-anchor="middle" class="lbl sub">PaymentRun worker reads CLIENT_BONUS_AVAILABLE</text>
+  <text x="850" y="444" text-anchor="middle" class="lbl sub">= 42 with no write order ever producing 42</text>
+  <text x="850" y="458" text-anchor="middle" class="lbl sub">— no causal justification exists</text>
+
+  <path class="flow" d="M 390 470 V 500"/>
+
+  <!-- Exit -->
+  <rect x="140" y="500" width="500" height="110" rx="6" class="boxR"/>
+  <text x="390" y="524" text-anchor="middle" class="lbl node">EXIT — DRF-SC</text>
+  <text x="390" y="544" text-anchor="middle" class="lbl body">data-race-free implies sequential consistency</text>
+  <text x="390" y="562" text-anchor="middle" class="lbl sub">if every conflicting access in E is ordered by happens-before</text>
+  <text x="390" y="577" text-anchor="middle" class="lbl sub">(E is properly synchronized), then every happens-before-consistent</text>
+  <text x="390" y="592" text-anchor="middle" class="lbl sub">execution of E is sequentially consistent</text>
+
+  <path class="weak" d="M 390 610 V 636"/>
+
+  <!-- Caveat -->
+  <rect x="140" y="636" width="500" height="104" rx="6" class="panel"/>
+  <text x="156" y="658" class="lbl body" font-weight="700">caveat — the guarantee is all-or-nothing</text>
+  <text x="156" y="676" class="lbl tiny">One racy field anywhere in the program loses SC reasoning</text>
+  <text x="156" y="691" class="lbl tiny">in principle — DRF-SC is a whole-program property, not a</text>
+  <text x="156" y="706" class="lbl tiny">per-field one. One unsynchronized access to, say,</text>
+  <text x="156" y="721" class="lbl tiny">CLIENT_BONUS_AVAILABLE forfeits it for the whole execution.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="770" x2="1020" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="784" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="797" class="lbl tiny">candidate execution / gate</text>
+
+  <rect x="240" y="784" width="22" height="16" rx="3" class="boxD"/>
+  <text x="270" y="797" class="lbl tiny">rejected branch</text>
+
+  <rect x="420" y="784" width="22" height="16" rx="3" class="boxR"/>
+  <text x="450" y="797" class="lbl tiny">DRF-SC exit theorem</text>
+
+  <rect x="620" y="784" width="22" height="16" rx="3" class="panel"/>
+  <text x="650" y="797" class="lbl tiny">annotation / caveat panel</text>
+
+  <path class="flow" d="M 20 820 H 60"/>
+  <text x="68" y="825" class="lbl tiny">A → B : E passes gate A into gate B</text>
+
+  <path class="reject" d="M 340 820 H 380"/>
+  <text x="388" y="825" class="lbl tiny">A → B : E fails gate A, rejected as B</text>
+
+  <path class="weak" d="M 660 820 H 700"/>
+  <text x="708" y="825" class="lbl tiny">A → B : caveat attached to A</text>
+</svg>

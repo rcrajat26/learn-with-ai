@@ -1,0 +1,126 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The contention cliff for one global lock guarding FundsLedger.reserveStake under
+     a 3,400 settlements-per-second burst. Throughput rises steeply from about 170 settlements per
+     second at 1 thread to a peak of about 2,850 per second at 8 threads, then falls as contention
+     dominates, collapsing to about 950 per second at 64 threads. A dashed amber asymptote marks
+     Amdahl's ceiling for a 5 percent critical section: 1 over S equals 20x, about 3,400 per second,
+     which the real curve never reaches. A panel gives the fitted Universal Scalability Law
+     parameters, sigma approximately 0.08 for contention and kappa approximately 0.003 for
+     coherency delay. Every figure on this diagram is an order-of-magnitude estimate, not a
+     measured constant.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .body  { font-size: 12.5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pkpt  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.8; }
+    .copt  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.8; }
+
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .tick  { stroke: #475569; stroke-width: 1.3; }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 2 3; }
+    .curve { fill: none; stroke: #2563eb; stroke-width: 2.4; stroke-linejoin: round; }
+    .asym  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 6 4; }
+    .guide { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .lead  { fill: none; stroke: #475569; stroke-width: 1.8; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE CONTENTION CLIFF — ONE GLOBAL LOCK ON FundsLedger.reserveStake</text>
+  <line x1="20" y1="42" x2="980" y2="42" class="rule"/>
+  <text x="20" y="60" class="lbl sub">Every throughput value, σ, and κ below is an order-of-magnitude estimate — none is a measured constant.</text>
+
+  <!-- axes -->
+  <line x1="100" y1="560" x2="100" y2="100" class="axis"/>
+  <line x1="100" y1="560" x2="900" y2="560" class="axis"/>
+
+  <line x1="100" y1="560" x2="900" y2="560" class="grid"/>
+  <line x1="100" y1="455.4" x2="900" y2="455.4" class="grid"/>
+  <line x1="100" y1="350.9" x2="900" y2="350.9" class="grid"/>
+  <line x1="100" y1="246.4" x2="900" y2="246.4" class="grid"/>
+  <line x1="100" y1="141.8" x2="900" y2="141.8" class="grid"/>
+
+  <line x1="96" y1="560" x2="100" y2="560" class="tick"/>
+  <text x="88" y="564" text-anchor="end" class="lbl sub">0</text>
+  <line x1="96" y1="455.4" x2="100" y2="455.4" class="tick"/>
+  <text x="88" y="459.4" text-anchor="end" class="lbl sub">850</text>
+  <line x1="96" y1="350.9" x2="100" y2="350.9" class="tick"/>
+  <text x="88" y="354.9" text-anchor="end" class="lbl sub">1,700</text>
+  <line x1="96" y1="246.4" x2="100" y2="246.4" class="tick"/>
+  <text x="88" y="250.4" text-anchor="end" class="lbl sub">2,550</text>
+  <line x1="96" y1="141.8" x2="100" y2="141.8" class="tick"/>
+  <text x="88" y="145.8" text-anchor="end" class="lbl sub">3,400</text>
+  <text x="40" y="330" text-anchor="middle" class="lbl sub" transform="rotate(-90 40 330)">throughput, settlements/sec</text>
+
+  <line x1="100" y1="560" x2="100" y2="565" class="tick"/>
+  <text x="100" y="580" text-anchor="middle" class="lbl sub">1</text>
+  <line x1="233.3" y1="560" x2="233.3" y2="565" class="tick"/>
+  <text x="233.3" y="580" text-anchor="middle" class="lbl sub">2</text>
+  <line x1="366.7" y1="560" x2="366.7" y2="565" class="tick"/>
+  <text x="366.7" y="580" text-anchor="middle" class="lbl sub">4</text>
+  <line x1="500" y1="560" x2="500" y2="565" class="tick"/>
+  <text x="500" y="580" text-anchor="middle" class="lbl sub">8</text>
+  <line x1="633.3" y1="560" x2="633.3" y2="565" class="tick"/>
+  <text x="633.3" y="580" text-anchor="middle" class="lbl sub">16</text>
+  <line x1="766.7" y1="560" x2="766.7" y2="565" class="tick"/>
+  <text x="766.7" y="580" text-anchor="middle" class="lbl sub">32</text>
+  <line x1="900" y1="560" x2="900" y2="565" class="tick"/>
+  <text x="900" y="580" text-anchor="middle" class="lbl sub">64</text>
+  <text x="500" y="600" text-anchor="middle" class="lbl sub">concurrent threads holding the global lock (log2 scale)</text>
+
+  <line x1="100" y1="141.8" x2="900" y2="141.8" class="asym"/>
+  <text x="112" y="100" class="lbl tiny">AMDAHL CEILING — 5% CRITICAL SECTION</text>
+  <text x="112" y="116" class="lbl sub">1/S = 20× ≈ 3,400/sec (order-of-magnitude)</text>
+
+  <!-- throughput curve -->
+  <polyline class="curve" points="100,539.1 233.3,519.4 366.7,480 500,209.2 577.9,221.5 633.3,239.9 766.7,338.4 900,443.1"/>
+
+  <!-- peak: 8 threads -->
+  <circle cx="500" cy="209.2" r="5.5" class="pkpt"/>
+  <path class="lead" d="M 620 130 H 650 V 209.2 H 512"/>
+  <rect x="620" y="96" width="270" height="60" rx="6" class="panel"/>
+  <text x="634" y="114" class="lbl node">8 threads: ≈2,850/sec</text>
+  <text x="634" y="130" class="lbl tiny">peak — order-of-magnitude</text>
+  <text x="634" y="146" class="lbl tiny">recorded during the 3,400/sec burst</text>
+
+  <!-- collapse: 64 threads -->
+  <circle cx="900" cy="443.1" r="5.5" class="copt"/>
+  <path class="lead" d="M 700 480 H 760 V 443.1 H 892"/>
+  <rect x="450" y="446" width="252" height="56" rx="6" class="panel"/>
+  <text x="464" y="464" class="lbl node">64 threads: ≈950/sec</text>
+  <text x="464" y="480" class="lbl tiny">contention collapse</text>
+  <text x="464" y="494" class="lbl tiny">— order-of-magnitude</text>
+
+  <!-- USL fit panel -->
+  <rect x="120" y="170" width="400" height="78" rx="6" class="panel"/>
+  <text x="134" y="190" class="lbl body">C(N) = N / (1 + σ(N−1) + κN(N−1))</text>
+  <text x="134" y="208" class="lbl tiny">σ (contention) ≈ 0.08, κ (coherency delay) ≈ 0.003</text>
+  <text x="134" y="224" class="lbl tiny">— fitted, order-of-magnitude, not measured constants</text>
+  <text x="134" y="240" class="lbl tiny">baseline: 1 thread ≈ 170 settlements/sec</text>
+
+  <line x1="20" y1="618" x2="980" y2="618" class="rule"/>
+  <line x1="20" y1="630" x2="46" y2="630" stroke="#2563eb" stroke-width="2.4"/>
+  <text x="54" y="635" class="lbl tiny">throughput curve, FundsLedger.reserveStake (order-of-magnitude)</text>
+  <line x1="460" y1="630" x2="486" y2="630" class="asym"/>
+  <text x="494" y="635" class="lbl tiny">Amdahl ceiling asymptote, 5% critical section → 20×</text>
+
+  <line x1="20" y1="648" x2="980" y2="648" class="rule"/>
+  <circle cx="30" cy="658" r="5.5" class="pkpt"/>
+  <text x="44" y="663" class="lbl tiny">peak throughput point (8 threads)</text>
+  <circle cx="330" cy="658" r="5.5" class="copt"/>
+  <text x="344" y="663" class="lbl tiny">contention-collapse point (64 threads)</text>
+  <rect x="660" y="650" width="22" height="16" rx="3" class="panel"/>
+  <text x="690" y="663" class="lbl tiny">annotation panel (fit / callout)</text>
+</svg>

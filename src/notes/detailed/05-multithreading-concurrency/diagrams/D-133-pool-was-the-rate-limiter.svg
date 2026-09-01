@@ -1,0 +1,115 @@
+<svg viewBox="0 0 1160 640" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before: AssessmentService calls run on a 200-thread platform pool, so at most 200 concurrent attempts ever reach the 20-connection HikariCP pool, which queues briefly and PostgreSQL stays within budget — the thread pool was an accidental rate limiter. After: the pool is removed in favour of virtual threads with no cap, so 14 000 concurrent sessions all reach the same 20-connection pool at once, the queue of 13 980 tasks forms at the connection pool instead of upstream, and a second new bound appears — the OS ulimit -n file-descriptor ceiling of 4096 is hit before the connection pool queue even drains, since each virtual-thread session holds an open socket.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .3px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="640" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">REMOVING THE POOL REMOVED THE RATE LIMITER</text>
+  <line x1="20" y1="42" x2="1140" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="20" y="60" class="lbl h2">BEFORE — 200-THREAD POOL IS THE ACCIDENTAL LIMITER</text>
+  <line x1="20" y1="70" x2="560" y2="70" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="600" y="60" class="lbl h2">AFTER — VIRTUAL THREADS, TWO NEW BOUNDS APPEAR</text>
+  <line x1="600" y1="70" x2="1140" y2="70" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT -->
+  <rect x="60" y="90" width="440" height="66" rx="6" class="boxP"/>
+  <text x="280" y="114" text-anchor="middle" class="lbl node">AssessmentService.assess(...)</text>
+  <text x="280" y="134" text-anchor="middle" class="lbl body">calls arrive concurrently, no explicit app-level cap</text>
+  <text x="280" y="150" text-anchor="middle" class="lbl sub">gateway-http-* threads submit tasks</text>
+
+  <path class="flow" d="M 280 156 V 186"/>
+  <text x="294" y="176" class="lbl sub">submitted to</text>
+
+  <rect x="60" y="186" width="440" height="70" rx="6" class="boxH"/>
+  <text x="280" y="210" text-anchor="middle" class="lbl node">platform thread pool</text>
+  <text x="280" y="230" text-anchor="middle" class="lbl body">Executors.newFixedThreadPool(200)</text>
+  <text x="280" y="246" text-anchor="middle" class="lbl sub">200 platform threads — hard ceiling on parallelism</text>
+
+  <path class="flow" d="M 280 256 V 286"/>
+  <text x="294" y="276" class="lbl sub">≤200 concurrent attempts reach</text>
+
+  <rect x="60" y="286" width="440" height="70" rx="6" class="boxR"/>
+  <text x="280" y="310" text-anchor="middle" class="lbl node">HikariCP connection pool</text>
+  <text x="280" y="330" text-anchor="middle" class="lbl body">maximumPoolSize=20</text>
+  <text x="280" y="346" text-anchor="middle" class="lbl sub">≤180 tasks wait briefly, pool keeps up</text>
+
+  <path class="flow" d="M 280 356 V 386"/>
+
+  <rect x="60" y="386" width="440" height="66" rx="6" class="boxR"/>
+  <text x="280" y="410" text-anchor="middle" class="lbl node">PostgreSQL primary</text>
+  <text x="280" y="430" text-anchor="middle" class="lbl body">p50 well within budget</text>
+  <text x="280" y="446" text-anchor="middle" class="lbl sub">the 200-thread pool was an accidental rate limiter</text>
+
+  <!-- RIGHT -->
+  <rect x="660" y="90" width="440" height="66" rx="6" class="boxP"/>
+  <text x="880" y="114" text-anchor="middle" class="lbl node">AssessmentService.assess(...)</text>
+  <text x="880" y="134" text-anchor="middle" class="lbl body">calls arrive concurrently, no explicit app-level cap</text>
+  <text x="880" y="150" text-anchor="middle" class="lbl sub">gateway-http-* threads submit tasks</text>
+
+  <path class="flow" d="M 880 156 V 186"/>
+  <text x="894" y="176" class="lbl sub">submitted as</text>
+
+  <rect x="660" y="186" width="440" height="70" rx="6" class="boxH"/>
+  <text x="880" y="210" text-anchor="middle" class="lbl node">virtual threads</text>
+  <text x="880" y="230" text-anchor="middle" class="lbl body">Thread.ofVirtual().start(...) — no pool</text>
+  <text x="880" y="246" text-anchor="middle" class="lbl sub">no ceiling on how many run "in parallel"</text>
+
+  <path d="M 880 256 V 276" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 780 276 H 980" fill="none" stroke="#475569" stroke-width="2"/>
+  <path class="flow" d="M 780 276 V 286"/>
+  <path class="flow" d="M 980 276 V 286"/>
+  <text x="700" y="269" class="lbl sub">14 000 concurrent sessions</text>
+
+  <rect x="660" y="286" width="240" height="80" rx="6" class="boxD"/>
+  <text x="780" y="308" text-anchor="middle" class="lbl node">connection pool</text>
+  <text x="780" y="326" text-anchor="middle" class="lbl body">maximumPoolSize=20 (unchanged)</text>
+  <text x="780" y="342" text-anchor="middle" class="lbl sub">13 980 tasks queue at the pool,</text>
+  <text x="780" y="356" text-anchor="middle" class="lbl sub">not upstream</text>
+
+  <rect x="920" y="286" width="180" height="80" rx="6" class="boxD"/>
+  <text x="1010" y="306" text-anchor="middle" class="lbl node">ulimit -n</text>
+  <text x="1010" y="324" text-anchor="middle" class="lbl body">soft limit 4096</text>
+  <text x="1010" y="340" text-anchor="middle" class="lbl sub">14 000 sockets &gt; 4096</text>
+  <text x="1010" y="354" text-anchor="middle" class="lbl sub">open-file ceiling</text>
+
+  <path class="flow" d="M 780 366 V 396"/>
+
+  <rect x="660" y="396" width="240" height="56" rx="6" class="boxD"/>
+  <text x="780" y="418" text-anchor="middle" class="lbl node">PostgreSQL primary</text>
+  <text x="780" y="436" text-anchor="middle" class="lbl sub">connectionTimeout after 30s</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="500" x2="1140" y2="500" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="514" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="527" class="lbl tiny">request-arrival node</text>
+  <rect x="260" y="514" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="527" class="lbl tiny">the concurrency mechanism under study</text>
+  <rect x="560" y="514" width="22" height="16" rx="3" class="boxR"/>
+  <text x="590" y="527" class="lbl tiny">bound holds, healthy</text>
+  <rect x="800" y="514" width="22" height="16" rx="3" class="boxD"/>
+  <text x="830" y="527" class="lbl tiny">bound is overrun / new bottleneck</text>
+
+  <path class="flow" d="M 20 555 H 60"/>
+  <text x="68" y="560" class="lbl tiny">A → B : concurrent work flows from A to B</text>
+</svg>

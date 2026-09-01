@@ -1,0 +1,152 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Three frames showing why helpJoin prevents fork/join deadlock while reconciling
+     one day's 19.8 million LedgerEntry rows for HOUSE_REVENUE. Frame 1: ledger-reconcile-1 forks
+     the left half of 9.9 million rows onto the deque and computes the right half of 9.9 million
+     rows itself. Frame 2: it finishes its half and calls join() on the left half's task, which
+     ledger-reconcile-2 has already stolen — the task is not done. Frame 3: instead of blocking,
+     ledger-reconcile-1 executes that stolen task itself, or another task ledger-reconcile-2 is
+     currently working on, so no thread ever parks and the two-thread pool cannot deadlock. This is
+     why fork(); compute(); join(); is safe on a fixed-size pool, and why fork(); fork(); join();
+     join(); is worse — it forks twice before helping, which needs two stealable tasks in flight
+     and burns twice the deque churn to reach the same-shaped answer.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .etxt  { font-size: 11px; fill: #1f2937; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHi  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxWk  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">helpJoin — WHY FORK/JOIN DOES NOT DEADLOCK (RECONCILING 19.8M LedgerEntry ROWS)</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- FRAME 1 -->
+  <text x="20" y="66" class="lbl h2">FRAME 1 — FORK THE LEFT HALF, COMPUTE THE RIGHT HALF</text>
+  <rect x="20" y="76" width="1000" height="180" rx="6" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="50" y="100" width="220" height="70" rx="6" class="boxP"/>
+  <text x="160" y="126" text-anchor="middle" class="lbl node">ledger-reconcile-1</text>
+  <text x="160" y="146" text-anchor="middle" class="lbl body">RecursiveTask, 19.8M rows</text>
+  <text x="160" y="162" text-anchor="middle" class="lbl sub">HOUSE_REVENUE reconciliation</text>
+
+  <path class="flow" d="M 270 122 H 340"/>
+  <text x="305" y="114" text-anchor="middle" class="lbl etxt">fork()</text>
+
+  <rect x="344" y="98" width="230" height="66" rx="6" class="boxHi"/>
+  <text x="459" y="122" text-anchor="middle" class="lbl node">left-half task</text>
+  <text x="459" y="140" text-anchor="middle" class="lbl body">rows 1..9.9M, pushed to deque</text>
+  <text x="459" y="156" text-anchor="middle" class="lbl sub">stealable by any worker</text>
+
+  <path class="flow" d="M 270 150 H 344"/>
+  <text x="305" y="196" text-anchor="middle" class="lbl etxt">compute() the right half itself</text>
+  <path class="flow" d="M 160 170 V 200 H 459 V 220"/>
+
+  <rect x="344" y="220" width="230" height="34" rx="4" class="boxWk"/>
+  <text x="459" y="234" text-anchor="middle" class="lbl tiny">right-half compute</text>
+  <text x="459" y="248" text-anchor="middle" class="lbl tiny">rows 9.9M..19.8M</text>
+
+  <!-- FRAME 2 -->
+  <text x="20" y="296" class="lbl h2">FRAME 2 — REACHES join() ON A TASK ANOTHER WORKER ALREADY STOLE</text>
+  <rect x="20" y="306" width="1000" height="220" rx="6" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="50" y="330" width="220" height="70" rx="6" class="boxP"/>
+  <text x="160" y="356" text-anchor="middle" class="lbl node">ledger-reconcile-1</text>
+  <text x="160" y="376" text-anchor="middle" class="lbl body">right half done,</text>
+  <text x="160" y="392" text-anchor="middle" class="lbl sub">calls join() on left-half task</text>
+
+  <path class="weak" d="M 270 356 H 340 V 456 H 424"/>
+  <text x="285" y="440" text-anchor="middle" class="lbl etxt">join()</text>
+
+  <rect x="344" y="330" width="230" height="66" rx="6" class="boxDeg"/>
+  <text x="459" y="354" text-anchor="middle" class="lbl node">left-half task</text>
+  <text x="459" y="372" text-anchor="middle" class="lbl body">not done — stolen by</text>
+  <text x="459" y="388" text-anchor="middle" class="lbl body">ledger-reconcile-2</text>
+
+  <path class="weak" d="M 459 396 V 430"/>
+  <text x="500" y="418" text-anchor="middle" class="lbl etxt">stolen by</text>
+
+  <rect x="344" y="434" width="230" height="66" rx="6" class="boxWk"/>
+  <text x="459" y="458" text-anchor="middle" class="lbl node">ledger-reconcile-2</text>
+  <text x="459" y="478" text-anchor="middle" class="lbl body">currently running</text>
+  <text x="459" y="494" text-anchor="middle" class="lbl sub">rows 1..9.9M, subtask X</text>
+
+  <rect x="700" y="380" width="280" height="120" rx="6" class="boxDeg"/>
+  <text x="714" y="402" class="lbl h2">DEADLOCK IF THIS WERE A PLAIN BLOCK</text>
+  <text x="714" y="422" class="lbl tiny">If join() were monitor.wait() on a</text>
+  <text x="714" y="438" class="lbl tiny">2-worker pool, worker-1 blocks here</text>
+  <text x="714" y="454" class="lbl tiny">and never re-enters the pool — no</text>
+  <text x="714" y="470" class="lbl tiny">worker is left to run further stolen</text>
+  <text x="714" y="486" class="lbl tiny">work, so the pool starves.</text>
+
+  <!-- FRAME 3 -->
+  <text x="20" y="546" class="lbl h2">FRAME 3 — INSTEAD OF BLOCKING, HELP: RUN THE STOLEN TASK OR ONE THE STEALER HOLDS</text>
+  <rect x="20" y="556" width="1000" height="200" rx="6" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+
+  <rect x="50" y="580" width="220" height="70" rx="6" class="boxP"/>
+  <text x="160" y="606" text-anchor="middle" class="lbl node">ledger-reconcile-1</text>
+  <text x="160" y="626" text-anchor="middle" class="lbl sub">calls helpJoin() inside join()</text>
+  <text x="160" y="642" text-anchor="middle" class="lbl sub">never parks</text>
+
+  <path class="flow" d="M 270 606 H 340"/>
+  <text x="305" y="598" text-anchor="middle" class="lbl etxt">executes</text>
+
+  <rect x="344" y="580" width="230" height="70" rx="6" class="boxR"/>
+  <text x="459" y="602" text-anchor="middle" class="lbl node">left-half task, subtask Y</text>
+  <text x="459" y="622" text-anchor="middle" class="lbl body">runs it on worker-1's own stack</text>
+  <text x="459" y="638" text-anchor="middle" class="lbl sub">"or a task the stealer is working on"</text>
+
+  <path class="weak" d="M 574 606 H 660"/>
+  <text x="617" y="598" text-anchor="middle" class="lbl etxt">or helps</text>
+
+  <rect x="664" y="580" width="250" height="70" rx="6" class="boxHi"/>
+  <text x="789" y="602" text-anchor="middle" class="lbl node">a task ledger-reconcile-2</text>
+  <text x="789" y="622" text-anchor="middle" class="lbl body">is currently working on</text>
+  <text x="789" y="638" text-anchor="middle" class="lbl sub">making forward progress either way</text>
+
+  <rect x="50" y="668" width="864" height="70" rx="6" class="boxAnn"/>
+  <text x="64" y="690" class="lbl h2">THIS IS WHY fork(); compute(); join(); IS SAFE — AND fork(); fork(); join(); join(); IS WORSE</text>
+  <text x="64" y="710" class="lbl tiny">One fork leaves one stealable task to help; helpJoin always has forward-progress work available. Two forks before</text>
+  <text x="64" y="726" class="lbl tiny">any join need two tasks stolen and coordinated before either join can help, doubling deque churn for the same split.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="770" x2="1020" y2="770" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="782" width="22" height="14" rx="3" class="boxP"/>
+  <text x="50" y="793" class="lbl tiny">the forking / joining worker</text>
+  <rect x="220" y="782" width="22" height="14" rx="3" class="boxHi"/>
+  <text x="250" y="793" class="lbl tiny">the forked task / helped work</text>
+  <rect x="480" y="782" width="22" height="14" rx="3" class="boxR"/>
+  <text x="510" y="793" class="lbl tiny">work executed in place of blocking</text>
+  <rect x="730" y="782" width="22" height="14" rx="3" class="boxDeg"/>
+  <text x="760" y="793" class="lbl tiny">a would-be block / stolen-not-yet-done state</text>
+  <rect x="20" y="804" width="22" height="14" rx="3" class="boxWk"/>
+  <text x="50" y="815" class="lbl tiny">the stealing worker</text>
+  <rect x="220" y="804" width="22" height="14" rx="3" class="boxAnn"/>
+  <text x="250" y="815" class="lbl tiny">annotation panel</text>
+  <path class="flow" d="M 480 811 H 520"/>
+  <text x="528" y="816" class="lbl tiny">A → B : direct action</text>
+  <path class="weak" d="M 700 811 H 740"/>
+  <text x="748" y="816" class="lbl tiny">A → B : cross-worker relation (join / steal / help)</text>
+</svg>

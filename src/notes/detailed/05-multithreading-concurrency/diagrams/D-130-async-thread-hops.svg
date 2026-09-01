@@ -1,0 +1,159 @@
+<svg viewBox="0 0 1120 760" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Timeline of an affordability assessment built from five thenApplyAsync and
+     thenCombineAsync stages: look up the Client, fetch the Wallet, combine with the LimitSet, call
+     the identity vendor at p50 900 milliseconds, call the watchlist provider at p50 1.4 seconds.
+     Top timeline: every stage is async, so every hop is a queue push to the common pool plus a
+     possible unpark, each hop costing an order-of-magnitude 1 to 100 microseconds of scheduling
+     overhead on top of the work, accumulating across 5 hops. Bottom timeline: the same chain with
+     the cheap Client and Wallet and LimitSet steps left as plain non-async thenApply, running
+     inline on the thread that completed the previous stage, with only the two slow vendor calls
+     dispatched async, removing 3 of the 5 unnecessary hops.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxW  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxL  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .hop   { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3;
+             marker-end: url(#tri-amber); }
+    .inline{ fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4;
+             marker-end: url(#tri-green); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="tri-amber" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="tri-green" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="760" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">EVERY ASYNC STAGE IS A THREAD HOP</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Affordability assessment chain — 5 stages</text>
+
+  <!-- TOP band: all-async chain -->
+  <text x="20" y="86" class="lbl h2">ALL FIVE STAGES ASYNC — EVERY BOUNDARY HOPS THREADS</text>
+
+  <!-- stage boxes across x, same y band -->
+  <rect x="20"  y="100" width="150" height="56" rx="6" class="boxP"/>
+  <text x="95" y="122" text-anchor="middle" class="lbl dense">lookup Client</text>
+  <text x="95" y="140" text-anchor="middle" class="lbl sub">thenApplyAsync</text>
+
+  <rect x="215" y="100" width="150" height="56" rx="6" class="boxP"/>
+  <text x="290" y="122" text-anchor="middle" class="lbl dense">fetch Wallet</text>
+  <text x="290" y="140" text-anchor="middle" class="lbl sub">thenApplyAsync</text>
+
+  <rect x="410" y="100" width="150" height="56" rx="6" class="boxP"/>
+  <text x="485" y="122" text-anchor="middle" class="lbl dense">combine LimitSet</text>
+  <text x="485" y="140" text-anchor="middle" class="lbl sub">thenCombineAsync</text>
+
+  <rect x="605" y="100" width="150" height="56" rx="6" class="boxW"/>
+  <text x="680" y="122" text-anchor="middle" class="lbl dense">identity vendor</text>
+  <text x="680" y="140" text-anchor="middle" class="lbl sub">thenComposeAsync, p50 900 ms</text>
+
+  <rect x="800" y="100" width="150" height="56" rx="6" class="boxW"/>
+  <text x="875" y="122" text-anchor="middle" class="lbl dense">watchlist provider</text>
+  <text x="875" y="140" text-anchor="middle" class="lbl sub">thenComposeAsync, p50 1.4 s</text>
+
+  <!-- hops: queue push + possible unpark -->
+  <path class="hop" d="M 170 128 H 215"/>
+  <path class="hop" d="M 365 128 H 410"/>
+  <path class="hop" d="M 560 128 H 605"/>
+  <path class="hop" d="M 755 128 H 800"/>
+
+  <text x="192" y="176" text-anchor="middle" class="lbl sub">hop 1</text>
+  <text x="387" y="176" text-anchor="middle" class="lbl sub">hop 2</text>
+  <text x="582" y="176" text-anchor="middle" class="lbl sub">hop 3</text>
+  <text x="777" y="176" text-anchor="middle" class="lbl sub">hop 4</text>
+
+  <rect x="965" y="100" width="130" height="56" rx="6" class="boxL"/>
+  <text x="1030" y="122" text-anchor="middle" class="lbl dense">assessment</text>
+  <text x="1030" y="140" text-anchor="middle" class="lbl sub">result complete</text>
+  <path class="hop" d="M 950 128 H 965"/>
+  <text x="957" y="176" text-anchor="middle" class="lbl sub">hop 5</text>
+
+  <rect x="20" y="190" width="1075" height="70" rx="6" class="boxA"/>
+  <text x="40" y="212" class="lbl h2">HOP COST — order of magnitude, not exact</text>
+  <text x="40" y="232" class="lbl body">each hop = one queue push to the common pool's work queue, plus a possible unpark() of a parked worker</text>
+  <text x="40" y="250" class="lbl body">per-hop overhead: O(1-100 microseconds) &#8226; accumulated over 5 hops: O(5-500 microseconds) of pure scheduling, before any work runs</text>
+
+  <!-- divider -->
+  <line x1="20" y1="290" x2="1100" y2="290" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BOTTOM band: mixed chain -->
+  <text x="20" y="316" class="lbl h2">CHEAP STEPS LEFT NON-ASYNC — RUN INLINE ON THE COMPLETING THREAD</text>
+
+  <rect x="20"  y="330" width="150" height="56" rx="6" class="boxL"/>
+  <text x="95" y="352" text-anchor="middle" class="lbl dense">lookup Client</text>
+  <text x="95" y="370" text-anchor="middle" class="lbl sub">thenApply (sync)</text>
+
+  <rect x="215" y="330" width="150" height="56" rx="6" class="boxL"/>
+  <text x="290" y="352" text-anchor="middle" class="lbl dense">fetch Wallet</text>
+  <text x="290" y="370" text-anchor="middle" class="lbl sub">thenApply (sync)</text>
+
+  <rect x="410" y="330" width="150" height="56" rx="6" class="boxL"/>
+  <text x="485" y="352" text-anchor="middle" class="lbl dense">combine LimitSet</text>
+  <text x="485" y="370" text-anchor="middle" class="lbl sub">thenCombine (sync)</text>
+
+  <rect x="605" y="330" width="150" height="56" rx="6" class="boxW"/>
+  <text x="680" y="352" text-anchor="middle" class="lbl dense">identity vendor</text>
+  <text x="680" y="370" text-anchor="middle" class="lbl sub">thenComposeAsync, p50 900 ms</text>
+
+  <rect x="800" y="330" width="150" height="56" rx="6" class="boxW"/>
+  <text x="875" y="352" text-anchor="middle" class="lbl dense">watchlist provider</text>
+  <text x="875" y="370" text-anchor="middle" class="lbl sub">thenComposeAsync, p50 1.4 s</text>
+
+  <rect x="965" y="330" width="130" height="56" rx="6" class="boxL"/>
+  <text x="1030" y="352" text-anchor="middle" class="lbl dense">assessment</text>
+  <text x="1030" y="370" text-anchor="middle" class="lbl sub">result complete</text>
+
+  <path class="inline" d="M 170 358 H 215"/>
+  <path class="inline" d="M 365 358 H 410"/>
+  <path class="hop"    d="M 560 358 H 605"/>
+  <path class="hop"    d="M 755 358 H 800"/>
+  <path class="inline" d="M 950 358 H 965"/>
+
+  <text x="192" y="406" text-anchor="middle" class="lbl sub">inline</text>
+  <text x="387" y="406" text-anchor="middle" class="lbl sub">inline</text>
+  <text x="582" y="406" text-anchor="middle" class="lbl sub">hop</text>
+  <text x="777" y="406" text-anchor="middle" class="lbl sub">hop</text>
+  <text x="957" y="406" text-anchor="middle" class="lbl sub">inline</text>
+
+  <rect x="20" y="420" width="1075" height="70" rx="6" class="boxA"/>
+  <text x="40" y="442" class="lbl h2">RESULT</text>
+  <text x="40" y="462" class="lbl body">Client, Wallet, and LimitSet steps run on whichever thread completed the previous stage —</text>
+  <text x="40" y="480" class="lbl body">no queue push, no unpark. Only identity-vendor and watchlist calls justify a hop, since their p50 latency (900 ms, 1.4 s) dwarfs the O(1-100 microseconds) hop cost — 3 of 5 hops removed.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="714" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="727" class="lbl tiny">async stage (all-async chain)</text>
+  <rect x="240" y="714" width="22" height="16" rx="3" class="boxL"/>
+  <text x="270" y="727" class="lbl tiny">non-async / inline stage</text>
+  <rect x="460" y="714" width="22" height="16" rx="3" class="boxW"/>
+  <text x="490" y="727" class="lbl tiny">slow external call, hop justified</text>
+  <path class="hop" d="M 720 722 H 760"/>
+  <text x="770" y="727" class="lbl tiny">thread hop: queue push + possible unpark</text>
+  <path class="inline" d="M 20 750 H 60"/>
+  <text x="70" y="755" class="lbl tiny">A &#8594; B : B runs inline on the thread that completed A, no hop</text>
+</svg>

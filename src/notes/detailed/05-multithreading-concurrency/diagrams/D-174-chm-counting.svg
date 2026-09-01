@@ -1,0 +1,135 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ConcurrentHashMap size accounting. addCount(x), called after a putVal insert or
+     remove on the ClientId to ClientRestrictions map, first CAS-updates baseCount. On CAS failure
+     it picks a random CounterCell via a ThreadLocalRandom probe hash and CAS-updates that cell.
+     On a second failure it calls fullAddCount, which resolves contention by lazily initialising
+     the cells array or doubling its capacity, then retries against a possibly new cell; all three
+     paths converge on an updated size. Below, two panels explain that size() walks baseCount plus
+     every cell with no lock and is therefore only approximate, and that mappingCount() returns
+     that same sum as a long for maps whose logical size can exceed Integer.MAX_VALUE.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+    .legend{ font-size: 11px; }
+
+    .boxWeak { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxPrim { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxDeg  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxRes  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxAnn  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri475569); }
+    .busln { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; }
+    .retry { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#tri9ca3af); }
+  </style>
+  <defs>
+    <marker id="tri475569" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="tri9ca3af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CONCURRENTHASHMAP SIZE ACCOUNTING: baseCount + CounterCell[]</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- A -->
+  <rect x="370" y="64" width="300" height="56" rx="6" class="boxWeak"/>
+  <text x="520" y="88" text-anchor="middle" class="lbl node">addCount(x)</text>
+  <text x="520" y="108" text-anchor="middle" class="lbl body">map: ClientId &#8594; ClientRestrictions</text>
+
+  <path class="flow" d="M 520 120 V 152"/>
+
+  <!-- B -->
+  <rect x="370" y="152" width="300" height="64" rx="6" class="boxPrim"/>
+  <text x="520" y="176" text-anchor="middle" class="lbl node">CAS baseCount += x</text>
+  <text x="520" y="196" text-anchor="middle" class="lbl body">fast path, uncontended</text>
+
+  <path class="flow" d="M 670 184 H 960 V 560"/>
+  <text x="680" y="176" class="lbl tiny">success</text>
+
+  <path class="flow" d="M 520 216 V 252"/>
+  <text x="530" y="238" class="lbl tiny">CAS fails (cell busy)</text>
+
+  <!-- C -->
+  <rect x="370" y="252" width="300" height="56" rx="6" class="boxWeak"/>
+  <text x="520" y="276" text-anchor="middle" class="lbl node">pick random CounterCell[i]</text>
+  <text x="520" y="296" text-anchor="middle" class="lbl body">via ThreadLocalRandom probe hash</text>
+
+  <path class="flow" d="M 520 308 V 340"/>
+
+  <!-- D -->
+  <rect x="370" y="340" width="300" height="64" rx="6" class="boxPrim"/>
+  <text x="520" y="364" text-anchor="middle" class="lbl node">CAS cell[i] += x</text>
+  <text x="520" y="384" text-anchor="middle" class="lbl body">contended slot in CounterCell[]</text>
+
+  <path class="flow" d="M 670 372 H 880 V 560"/>
+  <text x="680" y="364" class="lbl tiny">success</text>
+
+  <path class="flow" d="M 520 404 V 440"/>
+  <text x="530" y="426" class="lbl tiny">CAS fails (collision)</text>
+
+  <!-- E -->
+  <rect x="340" y="440" width="360" height="92" rx="6" class="boxDeg"/>
+  <text x="520" y="464" text-anchor="middle" class="lbl node">fullAddCount(x, uncontended)</text>
+  <text x="520" y="484" text-anchor="middle" class="lbl body">resolve contention: lazily init cells[]</text>
+  <text x="520" y="502" text-anchor="middle" class="lbl body">or double the array capacity, then retry</text>
+
+  <path class="flow" d="M 700 486 H 800 V 560"/>
+  <text x="705" y="478" class="lbl tiny">success</text>
+
+  <path class="retry" d="M 340 486 H 200 V 280 H 370"/>
+  <text x="25" y="380" class="lbl tiny">retry (may grow cells[])</text>
+
+  <!-- Done -->
+  <rect x="740" y="560" width="280" height="56" rx="6" class="boxRes"/>
+  <text x="880" y="584" text-anchor="middle" class="lbl node">size updated</text>
+  <text x="880" y="604" text-anchor="middle" class="lbl body">baseCount / cells reflect +x</text>
+
+  <!-- Annotation panels -->
+  <rect x="60" y="650" width="440" height="130" rx="6" class="boxAnn"/>
+  <text x="76" y="674" class="lbl h2">size() &#8212; no lock, approximate</text>
+  <text x="76" y="696" class="lbl tiny">sumCount() = baseCount + &#931; CounterCell[i].value</text>
+  <text x="76" y="716" class="lbl tiny">walked without acquiring any lock</text>
+  <text x="76" y="736" class="lbl tiny">concurrent puts/removes mid-walk &#8594; approximate,</text>
+  <text x="76" y="754" class="lbl tiny">not an exact, linearizable count</text>
+
+  <rect x="540" y="650" width="440" height="130" rx="6" class="boxAnn"/>
+  <text x="556" y="674" class="lbl h2">mappingCount() &#8212; long-valued size</text>
+  <text x="556" y="696" class="lbl tiny">returns sumCount() as a long, not an int</text>
+  <text x="556" y="716" class="lbl tiny">use when logical size can exceed Integer.MAX_VALUE</text>
+  <text x="556" y="736" class="lbl tiny">size() truncates to int and can misreport</text>
+  <text x="556" y="754" class="lbl tiny">on a map at that scale</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="800" x2="1020" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="812" width="18" height="14" rx="3" class="boxWeak"/>
+  <text x="44" y="823" class="lbl legend">entry / helper step</text>
+
+  <rect x="160" y="812" width="18" height="14" rx="3" class="boxPrim"/>
+  <text x="184" y="823" class="lbl legend">CAS attempt</text>
+
+  <rect x="300" y="812" width="18" height="14" rx="3" class="boxDeg"/>
+  <text x="324" y="823" class="lbl legend">contention path</text>
+
+  <rect x="440" y="812" width="18" height="14" rx="3" class="boxRes"/>
+  <text x="464" y="823" class="lbl legend">success / done</text>
+
+  <rect x="580" y="812" width="18" height="14" rx="3" class="boxAnn"/>
+  <text x="604" y="823" class="lbl legend">explanatory panel</text>
+
+  <path class="flow" d="M 740 819 H 776"/>
+  <text x="784" y="823" class="lbl legend">sequential flow</text>
+
+  <path class="retry" d="M 900 819 H 936"/>
+  <text x="944" y="823" class="lbl legend">retry / loop back</text>
+</svg>

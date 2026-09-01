@@ -1,0 +1,132 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Before and after comparison of LockSupport.park on a paymentRunWorker thread
+     draining the bank-withdrawal queue. Before, on a platform thread: park descends through
+     Parker slash PlatformEvent, to pthread_cond_wait, to the FUTEX_WAIT syscall, costing two
+     context switches — order of magnitude only, no measured constant given. After, on a virtual
+     thread: the identical park call goes through VirtualThread.park, sets state PARKING, and
+     calls Continuation.yield — no OS thread is parked at all, and the carrier thread is freed for
+     other virtual threads. Continuation.yield is labelled the hinge on which all of Loom turns.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; fill: #1f2937; }
+    .node   { font-size: 13px; font-weight: 600; }
+    .body   { font-size: 12.5px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR   { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW   { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD   { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .panel  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+              marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">park() ON A PLATFORM THREAD VERSUS A VIRTUAL THREAD — paymentRunWorker ON THE BANK-WITHDRAWAL QUEUE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- BEFORE column -->
+  <rect x="20" y="56" width="480" height="24" class="boxD" rx="4"/>
+  <text x="260" y="73" text-anchor="middle" class="lbl h2">BEFORE — PLATFORM THREAD, TWO CONTEXT SWITCHES</text>
+
+  <rect x="60" y="100" width="400" height="56" rx="6" class="boxP"/>
+  <text x="260" y="124" text-anchor="middle" class="lbl node">LockSupport.park(paymentRunWorker)</text>
+  <text x="260" y="142" text-anchor="middle" class="lbl sub">worker idles: bank-withdrawal queue is empty</text>
+
+  <path class="flow" d="M 260 156 V 178"/>
+  <rect x="60" y="178" width="400" height="52" rx="6" class="boxW"/>
+  <text x="260" y="200" text-anchor="middle" class="lbl node">Parker / PlatformEvent</text>
+  <text x="260" y="218" text-anchor="middle" class="lbl sub">JDK-level parking object bound to the OS thread</text>
+
+  <path class="flow" d="M 260 230 V 252"/>
+  <rect x="60" y="252" width="400" height="52" rx="6" class="boxW"/>
+  <text x="260" y="274" text-anchor="middle" class="lbl node">pthread_cond_wait</text>
+  <text x="260" y="292" text-anchor="middle" class="lbl sub">libc condition-variable wait, user → kernel</text>
+
+  <path class="flow" d="M 260 304 V 326"/>
+  <rect x="60" y="326" width="400" height="52" rx="6" class="boxD"/>
+  <text x="260" y="348" text-anchor="middle" class="lbl node">FUTEX_WAIT (syscall)</text>
+  <text x="260" y="366" text-anchor="middle" class="lbl sub">OS thread is descheduled off the CPU entirely</text>
+
+  <path class="flow" d="M 260 378 V 400"/>
+  <rect x="60" y="400" width="400" height="76" rx="6" class="boxD"/>
+  <text x="260" y="424" text-anchor="middle" class="lbl node">cost: two context switches</text>
+  <text x="260" y="444" text-anchor="middle" class="lbl sub">order-of-magnitude only — no measured constant here:</text>
+  <text x="260" y="460" text-anchor="middle" class="lbl sub">one switch out at park, one switch back in at unpark</text>
+
+  <rect x="60" y="492" width="400" height="80" rx="6" class="panel"/>
+  <text x="76" y="512" class="lbl tiny" font-weight="700">what it costs</text>
+  <text x="76" y="530" class="lbl tiny">A real OS thread — with its kernel scheduling</text>
+  <text x="76" y="546" class="lbl tiny">entity and stack — sits parked for the whole wait.</text>
+  <text x="76" y="562" class="lbl tiny">Thread count is bounded by what the OS can hold.</text>
+
+  <!-- AFTER column -->
+  <rect x="580" y="56" width="480" height="24" class="boxR" rx="4"/>
+  <text x="820" y="73" text-anchor="middle" class="lbl h2">AFTER — VIRTUAL THREAD, ZERO OS THREADS PARKED</text>
+
+  <rect x="620" y="100" width="400" height="56" rx="6" class="boxP"/>
+  <text x="820" y="124" text-anchor="middle" class="lbl node">LockSupport.park(paymentRunWorker)</text>
+  <text x="820" y="142" text-anchor="middle" class="lbl sub">identical call site — same worker, same queue</text>
+
+  <path class="flow" d="M 820 156 V 178"/>
+  <rect x="620" y="178" width="400" height="52" rx="6" class="boxW"/>
+  <text x="820" y="200" text-anchor="middle" class="lbl node">VirtualThread.park</text>
+  <text x="820" y="218" text-anchor="middle" class="lbl sub">intercepted before it ever reaches libc</text>
+
+  <path class="flow" d="M 820 230 V 252"/>
+  <rect x="620" y="252" width="400" height="52" rx="6" class="boxW"/>
+  <text x="820" y="274" text-anchor="middle" class="lbl node">state = PARKING</text>
+  <text x="820" y="292" text-anchor="middle" class="lbl sub">virtual thread's own state field is updated</text>
+
+  <path class="flow" d="M 820 304 V 326"/>
+  <rect x="620" y="326" width="400" height="52" rx="6" class="boxH"/>
+  <text x="820" y="348" text-anchor="middle" class="lbl node">Continuation.yield</text>
+  <text x="820" y="366" text-anchor="middle" class="lbl sub">"the hinge on which all of Loom turns"</text>
+
+  <path class="flow" d="M 820 378 V 400"/>
+  <rect x="620" y="400" width="400" height="76" rx="6" class="boxR"/>
+  <text x="820" y="424" text-anchor="middle" class="lbl node">no OS thread parked</text>
+  <text x="820" y="444" text-anchor="middle" class="lbl sub">carrier thread unmounts and is freed to run</text>
+  <text x="820" y="460" text-anchor="middle" class="lbl sub">any other runnable virtual thread instead</text>
+
+  <rect x="620" y="492" width="400" height="80" rx="6" class="panel"/>
+  <text x="636" y="512" class="lbl tiny" font-weight="700">what it saves</text>
+  <text x="636" y="530" class="lbl tiny">Zero kernel transitions on the park path: this is</text>
+  <text x="636" y="546" class="lbl tiny">a user-mode continuation swap, order-of-magnitude</text>
+  <text x="636" y="562" class="lbl tiny">cheaper than a futex round trip — not a fixed number.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="592" x2="1100" y2="592" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="606" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="619" class="lbl tiny">public API call site</text>
+
+  <rect x="220" y="606" width="22" height="16" rx="3" class="boxW"/>
+  <text x="250" y="619" class="lbl tiny">JDK / libc internal step</text>
+
+  <rect x="440" y="606" width="22" height="16" rx="3" class="boxD"/>
+  <text x="470" y="619" class="lbl tiny">kernel-level cost paid (syscall / context switch)</text>
+
+  <rect x="20" y="630" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="643" class="lbl tiny">the hinge — Continuation.yield</text>
+
+  <rect x="300" y="630" width="22" height="16" rx="3" class="boxR"/>
+  <text x="330" y="643" class="lbl tiny">outcome / fast path (no OS thread involved)</text>
+
+  <rect x="620" y="630" width="22" height="16" rx="3" class="panel"/>
+  <text x="650" y="643" class="lbl tiny">annotation panel</text>
+
+  <path class="flow" d="M 900 638 H 940"/>
+  <text x="948" y="643" class="lbl tiny">A → B : A becomes B</text>
+</svg>

@@ -1,0 +1,179 @@
+<svg viewBox="0 0 1120 840" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A structured scope is a tree with a lifetime. Left: AssessmentService opens a
+     try-with-resources StructuredTaskScope.ShutdownOnFailure and forks two subtasks as virtual
+     threads, the identity vendor call at p50 900 milliseconds and the watchlist provider call at
+     p50 1.4 seconds. Both subtasks live inside the try boundary; scope.join() runs before the
+     boundary closes, so neither subtask can outlive the block. Right: the unstructured version
+     starts two plain threads inside the same method, but they are not owned by any closing
+     boundary — the method returns while both threads run on, drawn crossing below the dashed
+     method boundary as orphan threads that still hold their identity vendor and watchlist
+     provider connections open with nothing left to join them.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxY  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .ann   { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round;
+             marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-linejoin: round;
+             stroke-dasharray: 4 3; marker-end: url(#triW); }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .div   { stroke: #d1d5db; stroke-width: 1; }
+    .boundary { fill: none; stroke: #b45309; stroke-width: 1.6; stroke-dasharray: 6 4; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="840" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A STRUCTURED SCOPE IS A TREE WITH A LIFETIME</text>
+  <line x1="20" y1="42" x2="1100" y2="42" class="rule"/>
+
+  <text x="30" y="62" class="lbl h2">STRUCTURED — SCOPE IS THE TREE'S LIFETIME</text>
+  <line x1="30" y1="70" x2="540" y2="70" class="div"/>
+  <text x="580" y="62" class="lbl h2">UNSTRUCTURED — THREADS OUTLIVE THE METHOD</text>
+  <line x1="580" y1="70" x2="1090" y2="70" class="div"/>
+  <line x1="560" y1="50" x2="560" y2="760" class="div"/>
+
+  <!-- LEFT: structured -->
+  <rect x="130" y="90" width="270" height="50" rx="6" class="boxP"/>
+  <text x="265" y="115" text-anchor="middle" class="lbl node">AssessmentService</text>
+  <text x="265" y="131" text-anchor="middle" class="lbl sub">assess(prospect)</text>
+
+  <path class="flow" d="M 265 140 V 158"/>
+
+  <rect x="60" y="158" width="410" height="470" rx="6" class="boundary"/>
+  <text x="72" y="178" class="lbl tiny" font-weight="700">try (var scope = new</text>
+  <text x="72" y="192" class="lbl tiny" font-weight="700">StructuredTaskScope.ShutdownOnFailure())</text>
+
+  <!-- fork bus -->
+  <path class="flow" d="M 265 192 V 214"/>
+  <path class="flow" d="M 130 214 H 400"/>
+  <path class="flow" d="M 155 214 V 236"/>
+  <path class="flow" d="M 375 214 V 236"/>
+
+  <rect x="80" y="236" width="150" height="70" rx="6" class="boxY"/>
+  <text x="155" y="258" text-anchor="middle" class="lbl node">identity vendor</text>
+  <text x="155" y="274" text-anchor="middle" class="lbl body">call — p50 900 ms</text>
+  <text x="155" y="290" text-anchor="middle" class="lbl sub">virtual thread, scope.fork()</text>
+
+  <rect x="300" y="236" width="150" height="70" rx="6" class="boxY"/>
+  <text x="375" y="258" text-anchor="middle" class="lbl node">watchlist provider</text>
+  <text x="375" y="274" text-anchor="middle" class="lbl body">call — p50 1.4 s</text>
+  <text x="375" y="290" text-anchor="middle" class="lbl sub">virtual thread, scope.fork()</text>
+
+  <path class="flow" d="M 155 306 V 330"/>
+  <path class="flow" d="M 375 306 V 330"/>
+  <path class="flow" d="M 155 330 H 375"/>
+  <path class="flow" d="M 265 330 V 352"/>
+
+  <rect x="165" y="352" width="200" height="44" rx="6" class="boxP"/>
+  <text x="265" y="379" text-anchor="middle" class="lbl node">scope.join()</text>
+
+  <path class="flow" d="M 265 396 V 418"/>
+  <rect x="165" y="418" width="200" height="44" rx="6" class="boxR"/>
+  <text x="265" y="445" text-anchor="middle" class="lbl node">both subtasks SUCCESS</text>
+
+  <rect x="80" y="486" width="370" height="120" rx="6" class="ann"/>
+  <text x="92" y="506" class="lbl tiny" font-weight="700">CANNOT OUTLIVE THE BLOCK</text>
+  <text x="92" y="524" class="lbl sub">both virtual threads are owned children of</text>
+  <text x="92" y="540" class="lbl sub">the scope; the try boundary is their lifetime.</text>
+  <text x="92" y="556" class="lbl sub">close() (implicit at the try's end) is the parent</text>
+  <text x="92" y="572" class="lbl sub">node that cannot exit while a child is still running —</text>
+  <text x="92" y="588" class="lbl sub">the tree closes bottom-up, in fork order.</text>
+
+  <line x1="60" y1="628" x2="470" y2="628" class="boundary"/>
+  <text x="150" y="646" class="lbl tiny" font-weight="700">boundary closes — scope is gone</text>
+
+  <!-- RIGHT: unstructured -->
+  <rect x="700" y="90" width="270" height="50" rx="6" class="boxP"/>
+  <text x="835" y="115" text-anchor="middle" class="lbl node">AssessmentService</text>
+  <text x="835" y="131" text-anchor="middle" class="lbl sub">assessUnstructured(prospect)</text>
+
+  <path class="flow" d="M 835 140 V 158"/>
+
+  <rect x="630" y="158" width="410" height="196" rx="6" class="boundary"/>
+  <text x="642" y="178" class="lbl tiny" font-weight="700">method body — no owning boundary</text>
+
+  <path class="flow" d="M 835 192 V 214"/>
+  <path class="flow" d="M 700 214 H 970"/>
+  <path class="flow" d="M 725 214 V 236"/>
+  <path class="flow" d="M 945 214 V 236"/>
+
+  <rect x="650" y="236" width="150" height="60" rx="6" class="boxY"/>
+  <text x="725" y="258" text-anchor="middle" class="lbl node">new Thread(...)</text>
+  <text x="725" y="274" text-anchor="middle" class="lbl sub">identity vendor call</text>
+  <text x="725" y="288" text-anchor="middle" class="lbl sub">900 ms p50</text>
+
+  <rect x="870" y="236" width="150" height="60" rx="6" class="boxY"/>
+  <text x="945" y="258" text-anchor="middle" class="lbl node">new Thread(...)</text>
+  <text x="945" y="274" text-anchor="middle" class="lbl sub">watchlist provider call</text>
+  <text x="945" y="288" text-anchor="middle" class="lbl sub">1.4 s p50</text>
+
+  <!-- threads escape the method boundary, no join -->
+  <path class="weak" d="M 725 296 V 354"/>
+  <path class="weak" d="M 945 296 V 354"/>
+
+  <text x="640" y="374" class="lbl tiny" font-weight="700">method returns — no join(), no close()</text>
+
+  <rect x="650" y="392" width="150" height="70" rx="6" class="boxD"/>
+  <text x="725" y="414" text-anchor="middle" class="lbl node">orphan thread</text>
+  <text x="725" y="430" text-anchor="middle" class="lbl sub">still holds the identity</text>
+  <text x="725" y="444" text-anchor="middle" class="lbl sub">vendor connection open</text>
+
+  <rect x="870" y="392" width="150" height="70" rx="6" class="boxD"/>
+  <text x="945" y="414" text-anchor="middle" class="lbl node">orphan thread</text>
+  <text x="945" y="430" text-anchor="middle" class="lbl sub">still holds the watchlist</text>
+  <text x="945" y="444" text-anchor="middle" class="lbl sub">provider connection open</text>
+
+  <rect x="650" y="486" width="370" height="120" rx="6" class="ann"/>
+  <text x="662" y="506" class="lbl tiny" font-weight="700">NO TREE, NO LIFETIME</text>
+  <text x="662" y="524" class="lbl sub">nothing owns these threads once the</text>
+  <text x="662" y="540" class="lbl sub">method frame is gone — no scope to join</text>
+  <text x="662" y="556" class="lbl sub">or interrupt them, no single place that</text>
+  <text x="662" y="572" class="lbl sub">reports their failure, and their sockets</text>
+  <text x="662" y="588" class="lbl sub">leak until GC finalizes or they time out.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1100" y2="700" class="rule"/>
+
+  <rect x="40" y="716" width="20" height="14" rx="3" class="boxP"/>
+  <text x="68" y="727" class="lbl tiny">service / method entry point</text>
+
+  <rect x="560" y="716" width="20" height="14" rx="3" class="boxY"/>
+  <text x="588" y="727" class="lbl tiny">the subject — a forked virtual thread</text>
+
+  <rect x="40" y="742" width="20" height="14" rx="3" class="boxR"/>
+  <text x="68" y="753" class="lbl tiny">success path — completed subtask</text>
+
+  <rect x="560" y="742" width="20" height="14" rx="3" class="boxD"/>
+  <text x="588" y="753" class="lbl tiny">degraded — thread escaped its owning scope</text>
+
+  <line x1="40" y1="775" x2="70" y2="775" class="boundary"/>
+  <text x="78" y="779" class="lbl tiny">try-with-resources / method boundary (the lifetime)</text>
+
+  <path class="flow" d="M 560 775 H 600"/>
+  <text x="608" y="779" class="lbl tiny">fork / owned call — A → B : A forks B</text>
+
+  <path class="weak" d="M 40 800 H 70"/>
+  <text x="78" y="804" class="lbl tiny">unowned continuation — thread runs past its block</text>
+</svg>

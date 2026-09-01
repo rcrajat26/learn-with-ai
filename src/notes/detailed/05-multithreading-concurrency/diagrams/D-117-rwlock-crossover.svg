@@ -1,0 +1,126 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Where a read-write lock actually wins, for the ClientRestrictions cache serving
+     2.4 million registered clients. Throughput in thousands of operations per second is plotted
+     against read fraction from 50 percent to 99.9 percent for three lock strategies: ReentrantLock,
+     which stays flat near 40k ops/sec regardless of read fraction; ReentrantReadWriteLock, which
+     rises slowly and crosses above ReentrantLock at roughly 90 percent reads; and StampedLock used
+     in optimistic-read mode, which rises fastest and dominates once reads exceed about 70 percent.
+     An annotation panel notes that the critical section guarded must be long enough to amortise the
+     shared-count compare-and-swap ReentrantReadWriteLock performs on every read acquisition, or the
+     read-write lock never earns back its bookkeeping cost. All throughput figures are
+     order-of-magnitude estimates, not measured constants.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .body  { font-size: 12.5px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .pt    { fill: #fef3c7; stroke: #b45309; stroke-width: 1.8; }
+
+    .axis  { stroke: #475569; stroke-width: 1.6; }
+    .tick  { stroke: #475569; stroke-width: 1.3; }
+    .rule  { stroke: #d1d5db; stroke-width: 1.5; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 2 3; }
+    .rl    { fill: none; stroke: #78716c; stroke-width: 2.2; stroke-linejoin: round; }
+    .rrwl  { fill: none; stroke: #2563eb; stroke-width: 2.2; stroke-linejoin: round; }
+    .sl    { fill: none; stroke: #b45309; stroke-width: 2.2; stroke-linejoin: round; }
+    .guide { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 4 3; }
+    .lead  { fill: none; stroke: #475569; stroke-width: 1.8; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="700" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">WHERE A READ-WRITE LOCK ACTUALLY WINS — ClientRestrictions CACHE</text>
+  <line x1="20" y1="42" x2="980" y2="42" class="rule"/>
+  <text x="20" y="60" class="lbl sub">2.4M registered clients, 99% reads at steady state. All throughput figures are order-of-magnitude, not measured constants.</text>
+
+  <!-- axes -->
+  <line x1="100" y1="560" x2="100" y2="100" class="axis"/>
+  <line x1="100" y1="560" x2="900" y2="560" class="axis"/>
+
+  <line x1="100" y1="560" x2="900" y2="560" class="grid"/>
+  <line x1="100" y1="456.7" x2="900" y2="456.7" class="grid"/>
+  <line x1="100" y1="353.3" x2="900" y2="353.3" class="grid"/>
+  <line x1="100" y1="250" x2="900" y2="250" class="grid"/>
+  <line x1="100" y1="146.7" x2="900" y2="146.7" class="grid"/>
+
+  <line x1="96" y1="560" x2="100" y2="560" class="tick"/>
+  <text x="88" y="564" text-anchor="end" class="lbl sub">0</text>
+  <line x1="96" y1="456.7" x2="100" y2="456.7" class="tick"/>
+  <text x="88" y="460.7" text-anchor="end" class="lbl sub">60k</text>
+  <line x1="96" y1="353.3" x2="100" y2="353.3" class="tick"/>
+  <text x="88" y="357.3" text-anchor="end" class="lbl sub">120k</text>
+  <line x1="96" y1="250" x2="100" y2="250" class="tick"/>
+  <text x="88" y="254" text-anchor="end" class="lbl sub">180k</text>
+  <line x1="96" y1="146.7" x2="100" y2="146.7" class="tick"/>
+  <text x="88" y="150.7" text-anchor="end" class="lbl sub">240k</text>
+  <text x="40" y="330" text-anchor="middle" class="lbl sub" transform="rotate(-90 40 330)">throughput, ops/sec (order-of-magnitude)</text>
+
+  <!-- x categories: 50 60 70 80 90 95 99 99.9 -->
+  <line x1="100" y1="560" x2="100" y2="565" class="tick"/>
+  <text x="100" y="580" text-anchor="middle" class="lbl sub">50%</text>
+  <line x1="214.3" y1="560" x2="214.3" y2="565" class="tick"/>
+  <text x="214.3" y="580" text-anchor="middle" class="lbl sub">60%</text>
+  <line x1="328.6" y1="560" x2="328.6" y2="565" class="tick"/>
+  <text x="328.6" y="580" text-anchor="middle" class="lbl sub">70%</text>
+  <line x1="442.9" y1="560" x2="442.9" y2="565" class="tick"/>
+  <text x="442.9" y="580" text-anchor="middle" class="lbl sub">80%</text>
+  <line x1="557.1" y1="560" x2="557.1" y2="565" class="tick"/>
+  <text x="557.1" y="580" text-anchor="middle" class="lbl sub">90%</text>
+  <line x1="671.4" y1="560" x2="671.4" y2="565" class="tick"/>
+  <text x="671.4" y="580" text-anchor="middle" class="lbl sub">95%</text>
+  <line x1="785.7" y1="560" x2="785.7" y2="565" class="tick"/>
+  <text x="785.7" y="580" text-anchor="middle" class="lbl sub">99%</text>
+  <line x1="900" y1="560" x2="900" y2="565" class="tick"/>
+  <text x="900" y="580" text-anchor="middle" class="lbl sub">99.9%</text>
+  <text x="500" y="600" text-anchor="middle" class="lbl sub">read fraction of ClientRestrictions lookups</text>
+
+  <!-- ReentrantLock: flat ≈40k ops/sec, y = 560 - v_k*1.722 -->
+  <polyline class="rl" points="100,491.1 214.3,491.1 328.6,491.1 442.9,491.1 557.1,491.1 671.4,491.1 785.7,491.1 900,491.1"/>
+
+  <!-- ReentrantReadWriteLock: 22,26,31,36,42,50,62,78 (k ops/sec) -->
+  <polyline class="rrwl" points="100,522.1 214.3,515.2 328.6,506.6 442.9,498 557.1,487.7 671.4,473.9 785.7,453.2 900,425.7"/>
+
+  <!-- StampedLock optimistic: 28,34,43,55,72,95,150,240 (k ops/sec) -->
+  <polyline class="sl" points="100,511.8 214.3,501.5 328.6,485.9 442.9,465.3 557.1,436 671.4,396.4 785.7,301.7 900,146.7"/>
+
+  <!-- crossover marker near 90% -->
+  <line x1="557.1" y1="560" x2="557.1" y2="100" class="guide"/>
+  <circle cx="557.1" cy="489.4" r="5.5" class="pt"/>
+  <path class="lead" d="M 505 344 V 400 H 557.1 V 483"/>
+  <rect x="380" y="280" width="250" height="64" rx="6" class="panel"/>
+  <text x="394" y="300" class="lbl node">crossover ≈ 90% reads</text>
+  <text x="394" y="316" class="lbl tiny">ReentrantReadWriteLock overtakes</text>
+  <text x="394" y="332" class="lbl tiny">ReentrantLock — order-of-magnitude</text>
+
+  <!-- amortisation note panel -->
+  <rect x="130" y="112" width="340" height="100" rx="6" class="panel"/>
+  <text x="144" y="132" class="lbl node">second-axis note</text>
+  <text x="144" y="150" class="lbl tiny">the guarded critical section must run long</text>
+  <text x="144" y="166" class="lbl tiny">enough to amortise the shared-count CAS every</text>
+  <text x="144" y="182" class="lbl tiny">ReentrantReadWriteLock read-lock pays, or the</text>
+  <text x="144" y="198" class="lbl tiny">bookkeeping cost is never earned back.</text>
+
+  <line x1="20" y1="618" x2="980" y2="618" class="rule"/>
+  <line x1="20" y1="630" x2="46" y2="630" stroke="#78716c" stroke-width="2.2"/>
+  <text x="54" y="635" class="lbl tiny">ReentrantLock — flat, exclusive, insensitive to read fraction</text>
+  <line x1="430" y1="630" x2="456" y2="630" stroke="#2563eb" stroke-width="2.2"/>
+  <text x="464" y="635" class="lbl tiny">ReentrantReadWriteLock — rises, crosses ReentrantLock ≈ 90%</text>
+
+  <line x1="20" y1="648" x2="980" y2="648" class="rule"/>
+  <line x1="20" y1="660" x2="46" y2="660" stroke="#b45309" stroke-width="2.2"/>
+  <text x="54" y="665" class="lbl tiny">StampedLock optimistic — fastest once reads dominate</text>
+  <circle cx="440" cy="660" r="5.5" class="pt"/>
+  <text x="454" y="665" class="lbl tiny">crossover point, ≈90% reads</text>
+  <line x1="700" y1="660" x2="726" y2="660" class="guide"/>
+  <text x="734" y="665" class="lbl tiny">guide: crossover read fraction</text>
+</svg>

@@ -1,0 +1,218 @@
+<svg viewBox="0 0 1040 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ConcurrentHashMap&#39;s table field is a Node array of 16 slots over
+     ClientId to ClientRestrictions entries. Bin 3 is empty and its first node is installed
+     by casTabAt with no lock. Bin 7 is populated: a writer holds synchronized(f) on the
+     head node while a chain of two more nodes follows it. Bin 12 holds a TreeBin instead of
+     a plain chain. A reader thread traverses bin 7 concurrently with the writer, labelled:
+     get is lock-free because val and next are volatile fields and tabAt is an acquire read.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+    .mono  { font-family: "SF Mono", Menlo, monospace; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .dashG { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+    .dotA  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+    .dotW  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CONCURRENTHASHMAP: TABLE, BINS, AND PER-BIN LOCKING</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">Node&lt;ClientId,ClientRestrictions&gt;[] table &#8212; 16 slots &#8212; ClientRestrictions map over 2.4M registered clients</text>
+
+  <!-- table array: 16 slots -->
+  <g>
+    <text x="20" y="90" class="lbl h2">table (Node[16])</text>
+    <!-- draw 16 slots in a row, wrap not needed if width allows: 16*58=928 -->
+    <g id="slots">
+      <!-- generic slot rectangles -->
+    </g>
+  </g>
+
+  <!-- Individually drawing 16 slot boxes at y=100..140 -->
+  <g font-family="-apple-system">
+    <!-- slots 0-2 empty/plain -->
+    <rect x="20"  y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="48" y="124" text-anchor="middle" class="lbl tiny">[0] null</text>
+    <rect x="80"  y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="108" y="124" text-anchor="middle" class="lbl tiny">[1] null</text>
+    <rect x="140" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="168" y="124" text-anchor="middle" class="lbl tiny">[2] null</text>
+
+    <!-- slot 3: empty bin, target of casTabAt -->
+    <rect x="200" y="100" width="56" height="40" rx="4" class="boxH"/>
+    <text x="228" y="118" text-anchor="middle" class="lbl tiny" font-weight="700">[3]</text>
+    <text x="228" y="132" text-anchor="middle" class="lbl tiny">casTabAt</text>
+
+    <rect x="260" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="288" y="124" text-anchor="middle" class="lbl tiny">[4] null</text>
+    <rect x="320" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="348" y="124" text-anchor="middle" class="lbl tiny">[5] null</text>
+    <rect x="380" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="408" y="124" text-anchor="middle" class="lbl tiny">[6] null</text>
+
+    <!-- slot 7: populated bin, synchronized on head -->
+    <rect x="440" y="100" width="56" height="40" rx="4" class="boxP"/>
+    <text x="468" y="118" text-anchor="middle" class="lbl tiny" font-weight="700">[7]</text>
+    <text x="468" y="132" text-anchor="middle" class="lbl tiny">head f</text>
+
+    <rect x="500" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="528" y="124" text-anchor="middle" class="lbl tiny">[8] null</text>
+    <rect x="560" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="588" y="124" text-anchor="middle" class="lbl tiny">[9] null</text>
+    <rect x="620" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="648" y="124" text-anchor="middle" class="lbl tiny">[10] null</text>
+    <rect x="680" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="708" y="124" text-anchor="middle" class="lbl tiny">[11] null</text>
+
+    <!-- slot 12: TreeBin -->
+    <rect x="740" y="100" width="56" height="40" rx="4" class="boxD"/>
+    <text x="768" y="118" text-anchor="middle" class="lbl tiny" font-weight="700">[12]</text>
+    <text x="768" y="132" text-anchor="middle" class="lbl tiny">TreeBin</text>
+
+    <rect x="800" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="828" y="124" text-anchor="middle" class="lbl tiny">[13] null</text>
+    <rect x="860" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="888" y="124" text-anchor="middle" class="lbl tiny">[14] null</text>
+    <rect x="920" y="100" width="56" height="40" rx="4" class="boxW"/>
+    <text x="948" y="124" text-anchor="middle" class="lbl tiny">[15] null</text>
+  </g>
+
+  <!-- ============ BIN 3: empty bin, casTabAt ============ -->
+  <text x="180" y="190" text-anchor="middle" class="lbl h2">BIN 3 &#8212; EMPTY, FIRST INSERT VIA casTabAt (NO LOCK)</text>
+  <line x1="60" y1="200" x2="360" y2="200" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <path class="flow" d="M 228 140 V 220 H 180 V 236"/>
+
+  <rect x="80" y="240" width="200" height="66" rx="6" class="boxH"/>
+  <text x="180" y="264" text-anchor="middle" class="lbl node">Node&lt;ClientId,ClientRestrictions&gt;</text>
+  <text x="180" y="282" text-anchor="middle" class="lbl body">key = C-501942</text>
+  <text x="180" y="298" text-anchor="middle" class="lbl tiny">val = RestrictionKey(STAKE_BLOCKED, ADMIN)</text>
+
+  <rect x="60" y="320" width="240" height="46" rx="6" class="boxA"/>
+  <text x="180" y="338" text-anchor="middle" class="lbl tiny" font-weight="700">casTabAt(table, 3, null, newNode)</text>
+  <text x="180" y="354" text-anchor="middle" class="lbl tiny">single CAS, no synchronized block</text>
+
+  <!-- ============ BIN 7: populated, synchronized head ============ -->
+  <text x="600" y="190" text-anchor="middle" class="lbl h2">BIN 7 &#8212; POPULATED, synchronized(f) ON HEAD</text>
+  <line x1="400" y1="200" x2="900" y2="200" stroke="#d1d5db" stroke-width="1.2"/>
+
+  <path class="flow" d="M 468 140 V 220 H 500 V 236"/>
+
+  <rect x="400" y="240" width="200" height="66" rx="6" class="boxD"/>
+  <text x="500" y="260" text-anchor="middle" class="lbl node" font-weight="700">head Node (f)</text>
+  <text x="500" y="278" text-anchor="middle" class="lbl body">key = C-118820</text>
+  <text x="500" y="296" text-anchor="middle" class="lbl tiny">synchronized (f) held by restriction-apply-1</text>
+
+  <path class="dashG" d="M 600 273 H 660"/>
+  <text x="630" y="264" text-anchor="middle" class="lbl tiny">next</text>
+
+  <rect x="660" y="240" width="180" height="66" rx="6" class="boxP"/>
+  <text x="750" y="260" text-anchor="middle" class="lbl node">Node</text>
+  <text x="750" y="278" text-anchor="middle" class="lbl body">key = C-118821</text>
+  <text x="750" y="296" text-anchor="middle" class="lbl tiny">val, next volatile</text>
+
+  <path class="dashG" d="M 750 306 V 326 H 750 V 336"/>
+
+  <rect x="660" y="340" width="180" height="52" rx="6" class="boxP"/>
+  <text x="750" y="360" text-anchor="middle" class="lbl node">Node</text>
+  <text x="750" y="378" text-anchor="middle" class="lbl body">key = C-118822 (tail)</text>
+
+  <!-- writer thread lane appending -->
+  <rect x="400" y="400" width="230" height="52" rx="6" class="boxA"/>
+  <text x="515" y="420" text-anchor="middle" class="lbl tiny" font-weight="700">restriction-apply-1 (writer)</text>
+  <text x="515" y="436" text-anchor="middle" class="lbl tiny">synchronized(f) { append / replace }</text>
+  <path class="flow" d="M 500 400 V 306"/>
+
+  <!-- reader concurrently traversing -->
+  <rect x="660" y="410" width="240" height="60" rx="6" class="boxA"/>
+  <text x="780" y="428" text-anchor="middle" class="lbl tiny" font-weight="700">get is lock-free: val and next are</text>
+  <text x="780" y="442" text-anchor="middle" class="lbl tiny" font-weight="700">volatile, tabAt is an acquire read</text>
+  <text x="780" y="458" text-anchor="middle" class="lbl tiny">restriction-read-9 (reader, no lock taken)</text>
+  <path class="dotW" d="M 780 410 V 392"/>
+
+  <!-- ============ BIN 12: TreeBin ============ -->
+  <text x="900" y="190" text-anchor="middle" class="lbl h2">BIN 12 &#8212; TreeBin</text>
+  <line x1="920" y1="200" x2="1020" y2="200" stroke="#d1d5db" stroke-width="1.2"/>
+  <path class="flow" d="M 768 140 V 170 H 960 V 236"/>
+
+  <rect x="900" y="240" width="120" height="66" rx="6" class="boxD"/>
+  <text x="960" y="262" text-anchor="middle" class="lbl node">TreeBin</text>
+  <text x="960" y="280" text-anchor="middle" class="lbl tiny">red-black tree</text>
+  <text x="960" y="296" text-anchor="middle" class="lbl tiny">root node</text>
+
+  <!-- annotation panel explaining reader/writer concurrency across bin 7 -->
+  <rect x="20" y="500" width="440" height="120" rx="6" class="boxA"/>
+  <text x="34" y="520" class="lbl tiny" font-weight="700">CONCURRENT READ WHILE WRITE ON BIN 7</text>
+  <text x="34" y="538" class="lbl tiny">restriction-apply-1 holds synchronized(f) on the head</text>
+  <text x="34" y="554" class="lbl tiny">Node to append/replace a ClientRestrictions entry for</text>
+  <text x="34" y="570" class="lbl tiny">key C-118821 (ClientId).</text>
+  <text x="34" y="590" class="lbl tiny">restriction-read-9 calls get(C-118822) concurrently:</text>
+  <text x="34" y="606" class="lbl tiny">it walks next without ever taking the lock, because</text>
+  <text x="34" y="622" class="lbl tiny">val/next are volatile and tabAt does an acquire read.</text>
+
+  <rect x="480" y="500" width="440" height="90" rx="6" class="boxA"/>
+  <text x="494" y="520" class="lbl tiny" font-weight="700">EMPTY BIN 3 VS POPULATED BIN 7</text>
+  <text x="494" y="538" class="lbl tiny">Bin 3's first insert needs no lock: casTabAt races</text>
+  <text x="494" y="554" class="lbl tiny">directly on the array slot. Once a bin has a head node,</text>
+  <text x="494" y="570" class="lbl tiny">every structural change synchronizes on that head.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="650" x2="1020" y2="650" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="670" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="682" width="20" height="16" rx="3" class="boxW"/>
+  <text x="48" y="695" class="lbl tiny">empty table slot</text>
+
+  <rect x="220" y="682" width="20" height="16" rx="3" class="boxH"/>
+  <text x="248" y="695" class="lbl tiny">bin installed via casTabAt (no lock)</text>
+
+  <rect x="560" y="682" width="20" height="16" rx="3" class="boxD"/>
+  <text x="588" y="695" class="lbl tiny">head node locked / TreeBin</text>
+
+  <rect x="820" y="682" width="20" height="16" rx="3" class="boxP"/>
+  <text x="848" y="695" class="lbl tiny">chained Node</text>
+
+  <rect x="20" y="710" width="20" height="16" rx="3" class="boxA"/>
+  <text x="48" y="723" class="lbl tiny">annotation / thread-role panel</text>
+
+  <path class="flow" d="M 300 718 H 340"/>
+  <text x="348" y="723" class="lbl tiny">A &#8594; B : structural flow (table &#8594; bin)</text>
+
+  <path class="dashG" d="M 620 718 H 660"/>
+  <text x="668" y="723" class="lbl tiny">A &#8594; B : next pointer (volatile)</text>
+
+  <path class="dotW" d="M 900 718 H 940"/>
+  <text x="948" y="723" class="lbl tiny">lock-free read</text>
+
+  <line x1="20" y1="740" x2="1020" y2="740" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="760" class="lbl tiny">Domain: ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt; over 2.4M registered clients.</text>
+</svg>

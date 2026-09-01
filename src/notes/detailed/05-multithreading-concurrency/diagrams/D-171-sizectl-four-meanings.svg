@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1040 1040" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="sizeCtl is one int field in ConcurrentHashMap with four meanings depending on
+     its value. Zero means the default-size table has not yet been created. A positive value
+     means either the requested initial capacity before the table exists, or the next resize
+     threshold once it does. Minus one means a thread is initialising the table, won by CAS,
+     and losing threads call Thread.yield(). Any other negative value packs a resize stamp in
+     the high bits and the count of resizing threads plus one in the low bits. Arrows show the
+     method that causes each transition: initTable, addCount, transfer, and helpTransfer.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 14px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="1040" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">sizeCtl IS ONE FIELD WITH FOUR MEANINGS</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt; &#8212; private transient volatile int sizeCtl</text>
+
+  <!-- Box1: sizeCtl == 0 -->
+  <rect x="140" y="90" width="300" height="110" rx="8" class="boxA"/>
+  <text x="290" y="112" text-anchor="middle" class="lbl node">sizeCtl == 0</text>
+  <text x="290" y="132" text-anchor="middle" class="lbl body">DEFAULT, TABLE ABSENT</text>
+  <text x="290" y="152" text-anchor="middle" class="lbl tiny">no explicit capacity given to the</text>
+  <text x="290" y="166" text-anchor="middle" class="lbl tiny">constructor; table not yet allocated</text>
+  <text x="290" y="186" text-anchor="middle" class="lbl tiny">new ConcurrentHashMap&lt;&gt;()</text>
+
+  <!-- A1: box1 -> box3 -->
+  <path class="flow" d="M 290 200 V 270"/>
+  <text x="304" y="220" class="lbl tiny" font-weight="700">initTable(): CAS</text>
+  <text x="304" y="234" class="lbl tiny" font-weight="700">sizeCtl 0 or positive N</text>
+  <text x="304" y="248" class="lbl tiny" font-weight="700">(pre-table capacity) &#8594; -1</text>
+
+  <!-- Box3: sizeCtl == -1 -->
+  <rect x="140" y="270" width="300" height="110" rx="8" class="boxH"/>
+  <text x="290" y="292" text-anchor="middle" class="lbl node">sizeCtl == -1</text>
+  <text x="290" y="312" text-anchor="middle" class="lbl body">INITIALISING</text>
+  <text x="290" y="332" text-anchor="middle" class="lbl tiny">a thread won the CAS to allocate</text>
+  <text x="290" y="346" text-anchor="middle" class="lbl tiny">the table; losers spin calling</text>
+  <text x="290" y="360" text-anchor="middle" class="lbl tiny">Thread.yield()</text>
+  <text x="290" y="374" text-anchor="middle" class="lbl tiny">restriction-apply-1 wins the CAS</text>
+
+  <!-- A2: box3 -> box2 -->
+  <path class="flow" d="M 290 380 V 450"/>
+  <text x="304" y="400" class="lbl tiny" font-weight="700">initTable(): winner allocates</text>
+  <text x="304" y="414" class="lbl tiny" font-weight="700">Node[16], sets sizeCtl to</text>
+  <text x="304" y="428" class="lbl tiny" font-weight="700">threshold n - (n &gt;&gt; 2), unblocks losers</text>
+
+  <!-- Box2: sizeCtl > 0 -->
+  <rect x="140" y="450" width="300" height="110" rx="8" class="boxP"/>
+  <text x="290" y="472" text-anchor="middle" class="lbl node">sizeCtl &gt; 0</text>
+  <text x="290" y="492" text-anchor="middle" class="lbl body">POSITIVE (RESIZE THRESHOLD)</text>
+  <text x="290" y="512" text-anchor="middle" class="lbl tiny">before table exists: requested</text>
+  <text x="290" y="526" text-anchor="middle" class="lbl tiny">initial capacity (constructor arg)</text>
+  <text x="290" y="542" text-anchor="middle" class="lbl tiny">after: next resize threshold = 0.75n</text>
+
+  <!-- A3: box2 -> box4 -->
+  <path class="flow" d="M 290 560 V 630"/>
+  <text x="304" y="580" class="lbl tiny" font-weight="700">addCount(): count &#8805; threshold</text>
+  <text x="304" y="594" class="lbl tiny" font-weight="700">triggers transfer(), CAS packs</text>
+  <text x="304" y="608" class="lbl tiny" font-weight="700">resize stamp + thread count into sizeCtl</text>
+
+  <!-- Box4: sizeCtl < -1 -->
+  <rect x="140" y="630" width="300" height="110" rx="8" class="boxD"/>
+  <text x="290" y="652" text-anchor="middle" class="lbl node">sizeCtl &lt; -1</text>
+  <text x="290" y="672" text-anchor="middle" class="lbl body">RESIZING (NEGATIVE-OTHER)</text>
+  <text x="290" y="692" text-anchor="middle" class="lbl tiny">high bits: resize stamp for oldCap</text>
+  <text x="290" y="706" text-anchor="middle" class="lbl tiny">low bits: (resizing threads + 1)</text>
+  <text x="290" y="722" text-anchor="middle" class="lbl tiny">two threads helping &#8594; low bits = 3</text>
+
+  <!-- Loop-back: box4 -> box2, transfer() finishes -->
+  <path class="flow" d="M 440 685 H 700 V 505 H 440"/>
+  <text x="452" y="678" class="lbl tiny" font-weight="700">transfer(): last stride finishes &#8212; sizeCtl reset to</text>
+  <text x="452" y="497" class="lbl tiny" font-weight="700">new threshold, table is now 32 slots (positive again)</text>
+
+  <!-- helpTransfer: box4 <-> helper panel, routed below the loop-back so it cannot cross it -->
+  <rect x="760" y="630" width="240" height="110" rx="8" class="boxA"/>
+  <text x="880" y="652" text-anchor="middle" class="lbl tiny" font-weight="700">helpTransfer()</text>
+  <text x="880" y="670" text-anchor="middle" class="lbl tiny">restriction-apply-2 joins</text>
+  <text x="880" y="686" text-anchor="middle" class="lbl tiny">the resize: CAS increments</text>
+  <text x="880" y="702" text-anchor="middle" class="lbl tiny">the low-bits thread count</text>
+  <text x="880" y="718" text-anchor="middle" class="lbl tiny">sizeCtl stays &lt; -1 throughout</text>
+
+  <path class="flow" d="M 440 700 H 760"/>
+  <text x="452" y="713" class="lbl tiny">helpTransfer(): second thread joins</text>
+
+  <path class="flow" d="M 760 725 H 440"/>
+  <text x="452" y="738" class="lbl tiny">count incremented, resize continues</text>
+
+  <!-- annotation panels -->
+  <rect x="20" y="770" width="480" height="120" rx="6" class="boxA"/>
+  <text x="34" y="790" class="lbl tiny" font-weight="700">WHY ONE FIELD DOES FOUR JOBS</text>
+  <text x="34" y="808" class="lbl tiny">sizeCtl is read and CAS'd far more often than a table</text>
+  <text x="34" y="824" class="lbl tiny">field would be if separate flags existed; packing state</text>
+  <text x="34" y="840" class="lbl tiny">into one int lets initTable, addCount, transfer, and</text>
+  <text x="34" y="856" class="lbl tiny">helpTransfer all coordinate with a single CAS loop.</text>
+  <text x="34" y="872" class="lbl tiny">Every arrow above is one CAS on this same field.</text>
+
+  <rect x="540" y="770" width="480" height="120" rx="6" class="boxA"/>
+  <text x="554" y="790" class="lbl tiny" font-weight="700">DECODING NEGATIVE-OTHER (RESIZE IN PROGRESS)</text>
+  <text x="554" y="808" class="lbl tiny">restriction-apply-1 and restriction-apply-2 both help</text>
+  <text x="554" y="824" class="lbl tiny">resize ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt;</text>
+  <text x="554" y="840" class="lbl tiny">from 16 &#8594; 32 bins; low bits hold 2 + 1 = 3 while the</text>
+  <text x="554" y="856" class="lbl tiny">resize stamp for oldCap = 16 occupies the high bits.</text>
+  <text x="554" y="872" class="lbl tiny">See D-172 for the full cooperative resize sequence.</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="910" x2="1020" y2="910" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="928" class="lbl h2">LEGEND</text>
+  <rect x="20" y="936" width="20" height="16" rx="3" class="boxA"/>
+  <text x="48" y="949" class="lbl tiny">sizeCtl == 0 (default)</text>
+  <rect x="220" y="936" width="20" height="16" rx="3" class="boxP"/>
+  <text x="248" y="949" class="lbl tiny">sizeCtl &gt; 0 (capacity / threshold)</text>
+  <rect x="480" y="936" width="20" height="16" rx="3" class="boxH"/>
+  <text x="508" y="949" class="lbl tiny">sizeCtl == -1 (initialising)</text>
+  <rect x="720" y="936" width="20" height="16" rx="3" class="boxD"/>
+  <text x="748" y="949" class="lbl tiny">sizeCtl &lt; -1 (resizing)</text>
+
+  <rect x="20" y="962" width="20" height="16" rx="3" class="boxA"/>
+  <text x="48" y="975" class="lbl tiny">helper panel / annotation</text>
+  <path class="flow" d="M 300 970 H 340"/>
+  <text x="348" y="975" class="lbl tiny">A &#8594; B : method call causes this transition</text>
+</svg>

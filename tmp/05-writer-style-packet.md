@@ -18,7 +18,31 @@ yourself.
 changed or removed in Java 22–25 is called out inline at the point of the claim, marked
 `[VERSION-TRAP]`, stating what is true in 21 and what changed.
 
-The six version deltas that matter most across this topic:
+### Already verified for you — use these, do not re-check them
+
+Confirmed against the JDK release listings on `javaalmanac.io` during this run:
+
+- **JEP 491, "Synchronize Virtual Threads without Pinning", was DELIVERED IN JDK 24 as a final
+  feature** — not preview, not targeted-but-slipped. State it as shipped in 24.
+- **JEP 506, "Scoped Values", is FINAL in JDK 25.**
+- **Structured concurrency is STILL PREVIEW in JDK 25** (JEP 505, the fifth preview). Do not
+  describe it as final.
+- **JEP 519, "Compact Object Headers", is delivered in JDK 25.** Whether it is on *by default*
+  there is not confirmed by that source — if you need to make the default claim, mark it
+  `**Unverified:**` rather than asserting it.
+
+### A constraint on your research
+
+**This session's WebSearch budget is exhausted.** `WebSearch` will refuse. Use `WebFetch` against
+a specific URL instead. Known-good hosts: `javaalmanac.io/jdk/<n>/` for per-release JEP listings,
+`raw.githubusercontent.com/openjdk/jdk/...` for source, `docs.oracle.com` for javadoc.
+`openjdk.org` and `bugs.openjdk.org` both return HTTP 403 — do not waste a call on them.
+
+If you cannot verify a version-dependent constant, **do not assert it**: mark the claim
+`**Unverified:**` inline, list it in an `## Open questions` block at the foot of your file, and
+report it on the `unverified:` line of your envelope. That is a correct outcome, not a failure.
+
+### The six version deltas that matter most across this topic
 
 1. `synchronized` pins a virtual thread on Java 21 — JEP 491 removes that cause in Java 24, and
    `-Djdk.tracePinnedThreads` was removed with it, so "use `ReentrantLock` instead" is a

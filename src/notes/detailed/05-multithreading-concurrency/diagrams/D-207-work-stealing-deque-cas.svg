@@ -1,0 +1,198 @@
+<svg viewBox="0 0 1400 660" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The one unavoidable CAS in a work-stealing deque of LedgerEntry fold chunks, in
+     three frames. Frame 1: top minus base is greater than one, the owner pops its own chunk at
+     top with a plain store, a thief polls at base with a CAS, and the two do not touch the same
+     slot. Frame 2: top minus base equals one, so both the owner and a thief now target the same
+     last chunk. Frame 3: the thief's CAS on base resolves the race; if the thief wins, the owner's
+     plain decrement is rolled back and it finds the deque empty; if the owner wins the race by
+     resetting the deque first, the thief's CAS fails and it retries stealing from another worker's
+     deque.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxF { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .frame{ fill: none; stroke: #d1d5db; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .cas   { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="660" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE ONE UNAVOIDABLE CAS IN A WORK-STEALING DEQUE OF LedgerEntry FOLD CHUNKS</text>
+  <line x1="20" y1="42" x2="1380" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= FRAME 1 ================= -->
+  <rect x="20" y="58" width="430" height="500" rx="6" class="frame"/>
+  <text x="34" y="80" class="lbl h2">FRAME 1 — top - base &gt; 1, no conflict</text>
+
+  <rect x="34" y="98" width="90" height="44" rx="4" class="boxW"/>
+  <text x="79" y="114" text-anchor="middle" class="lbl sub">chunk</text>
+  <text x="79" y="132" text-anchor="middle" class="lbl body" font-weight="700">400-499</text>
+  <rect x="132" y="98" width="90" height="44" rx="4" class="boxW"/>
+  <text x="177" y="114" text-anchor="middle" class="lbl sub">chunk</text>
+  <text x="177" y="132" text-anchor="middle" class="lbl body" font-weight="700">500-599</text>
+  <rect x="230" y="98" width="90" height="44" rx="4" class="boxP"/>
+  <text x="275" y="114" text-anchor="middle" class="lbl sub">chunk</text>
+  <text x="275" y="132" text-anchor="middle" class="lbl body" font-weight="700">600-699</text>
+  <rect x="328" y="98" width="90" height="44" rx="4" class="boxP"/>
+  <text x="373" y="114" text-anchor="middle" class="lbl sub">chunk</text>
+  <text x="373" y="132" text-anchor="middle" class="lbl body" font-weight="700">700-799</text>
+
+  <path class="flow" d="M 79 142 V 162"/>
+  <text x="79" y="178" text-anchor="middle" class="lbl node">base = 0</text>
+  <text x="79" y="193" text-anchor="middle" class="lbl sub">thief targets here</text>
+
+  <path class="flow" d="M 373 142 V 162"/>
+  <text x="373" y="178" text-anchor="middle" class="lbl node">top = 3</text>
+  <text x="373" y="193" text-anchor="middle" class="lbl sub">owner targets here</text>
+
+  <text x="34" y="220" class="lbl body">top - base = 3, distance &gt; 1</text>
+
+  <rect x="40" y="236" width="180" height="70" rx="6" class="boxR"/>
+  <text x="130" y="256" text-anchor="middle" class="lbl node">ledger-fold-owner</text>
+  <text x="130" y="274" text-anchor="middle" class="lbl sub">pops chunk[700..799]</text>
+  <text x="130" y="290" text-anchor="middle" class="lbl sub">plain store, no CAS</text>
+
+  <rect x="240" y="236" width="180" height="70" rx="6" class="boxH"/>
+  <text x="330" y="256" text-anchor="middle" class="lbl node">ledger-fold-thief</text>
+  <text x="330" y="274" text-anchor="middle" class="lbl body">CAS(base, 0, 1)</text>
+  <text x="330" y="290" text-anchor="middle" class="lbl sub">steals chunk[400..499]</text>
+
+  <rect x="34" y="322" width="400" height="92" rx="6" class="boxA"/>
+  <text x="50" y="342" class="lbl tiny" font-weight="700">why the owner needs no CAS here</text>
+  <text x="50" y="360" class="lbl tiny">only the owner ever writes top, and it is far enough from base</text>
+  <text x="50" y="376" class="lbl tiny">that no thief can be reading the same slot; the thief always</text>
+  <text x="50" y="392" class="lbl tiny">CASes base because many thieves may race for the stolen chunk</text>
+
+  <rect x="34" y="428" width="400" height="86" rx="6" class="boxW"/>
+  <text x="50" y="448" class="lbl node">result: no conflict this round</text>
+  <text x="50" y="466" class="lbl body">owner folds chunk[700..799] locally; thief folds</text>
+  <text x="50" y="482" class="lbl body">chunk[400..499] on its own worker</text>
+  <text x="50" y="500" class="lbl sub">deque now holds chunk[500..599], chunk[600..699]; base=1, top=3</text>
+
+  <!-- ================= FRAME 2 ================= -->
+  <rect x="470" y="58" width="430" height="500" rx="6" class="frame"/>
+  <text x="484" y="80" class="lbl h2">FRAME 2 — top - base == 1, same target slot</text>
+
+  <rect x="605" y="98" width="160" height="44" rx="4" class="boxH"/>
+  <text x="685" y="114" text-anchor="middle" class="lbl sub">chunk</text>
+  <text x="685" y="132" text-anchor="middle" class="lbl body" font-weight="700">500-599</text>
+
+  <path class="cas" d="M 645 142 V 162"/>
+  <text x="645" y="178" text-anchor="middle" class="lbl node">base = 2</text>
+  <path class="cas" d="M 725 142 V 162"/>
+  <text x="725" y="178" text-anchor="middle" class="lbl node">top = 3</text>
+
+  <text x="484" y="212" class="lbl body">top - base = 1: one chunk left, both threads race for it</text>
+
+  <rect x="480" y="230" width="200" height="76" rx="6" class="boxF"/>
+  <text x="580" y="250" text-anchor="middle" class="lbl node">ledger-fold-owner</text>
+  <text x="580" y="268" text-anchor="middle" class="lbl sub">next read: chunk[500..599]</text>
+  <text x="580" y="284" text-anchor="middle" class="lbl sub">plain store unsafe alone</text>
+
+  <rect x="700" y="230" width="200" height="76" rx="6" class="boxF"/>
+  <text x="800" y="250" text-anchor="middle" class="lbl node">ledger-fold-thief</text>
+  <text x="800" y="268" text-anchor="middle" class="lbl sub">about to CAS(base, 2, 3)</text>
+  <text x="800" y="284" text-anchor="middle" class="lbl sub">claims chunk[500..599]</text>
+
+  <rect x="480" y="322" width="420" height="112" rx="6" class="boxA"/>
+  <text x="496" y="342" class="lbl tiny" font-weight="700">why this is the one unavoidable race</text>
+  <text x="496" y="360" class="lbl tiny">the owner already decremented top to 2 locally, believing it owns</text>
+  <text x="496" y="376" class="lbl tiny">the last chunk; the thief has not yet learned top moved. Only a CAS</text>
+  <text x="496" y="392" class="lbl tiny">on base — the one word both sides touch — decides who actually</text>
+  <text x="496" y="408" class="lbl tiny">gets chunk[500..599]; a plain store here would fold it twice.</text>
+
+  <rect x="480" y="446" width="420" height="70" rx="6" class="boxW"/>
+  <text x="496" y="466" class="lbl body">deque is now ambiguous: base=2, top=2 (owner's view)</text>
+  <text x="496" y="484" class="lbl body">vs base=2, top=3 (thief's stale view)</text>
+  <text x="496" y="502" class="lbl sub">resolved in the next frame by the CAS on base</text>
+
+  <!-- ================= FRAME 3 ================= -->
+  <rect x="920" y="58" width="440" height="500" rx="6" class="frame"/>
+  <text x="934" y="80" class="lbl h2">FRAME 3 — the CAS resolves it</text>
+
+  <rect x="1070" y="98" width="140" height="52" rx="4" class="boxW"/>
+  <text x="1140" y="114" text-anchor="middle" class="lbl sub">chunk</text>
+  <text x="1140" y="132" text-anchor="middle" class="lbl body" font-weight="700">500-599</text>
+  <text x="1140" y="146" text-anchor="middle" class="lbl sub">base=2, top=2 (settled)</text>
+
+  <path class="cas" d="M 1140 150 V 165 H 1015 V 190"/>
+  <path class="weak" d="M 1140 165 H 1265 V 190"/>
+
+  <rect x="920" y="194" width="190" height="70" rx="6" class="boxH"/>
+  <text x="1015" y="214" text-anchor="middle" class="lbl node">CAS(base,2,3) SUCCEEDS</text>
+  <text x="1015" y="232" text-anchor="middle" class="lbl sub">ledger-fold-thief wins the chunk</text>
+  <text x="1015" y="248" text-anchor="middle" class="lbl sub">expected base 2 matched, base→3</text>
+
+  <rect x="1170" y="194" width="190" height="70" rx="6" class="boxF"/>
+  <text x="1265" y="214" text-anchor="middle" class="lbl node">owner's top-- LOSES</text>
+  <text x="1265" y="232" text-anchor="middle" class="lbl sub">CAS on base beat it</text>
+  <text x="1265" y="248" text-anchor="middle" class="lbl sub">retry path below</text>
+
+  <path class="flow" d="M 1015 264 V 284"/>
+  <rect x="920" y="288" width="190" height="58" rx="6" class="boxR"/>
+  <text x="1015" y="308" text-anchor="middle" class="lbl node">thief folds chunk[500..599]</text>
+  <text x="1015" y="326" text-anchor="middle" class="lbl sub">exactly-once, no double fold</text>
+
+  <path class="flow" d="M 1265 264 V 284"/>
+  <rect x="1170" y="288" width="190" height="58" rx="6" class="boxW"/>
+  <text x="1265" y="308" text-anchor="middle" class="lbl node">owner sets top = base</text>
+  <text x="1265" y="326" text-anchor="middle" class="lbl sub">deque empty, returns null</text>
+
+  <path class="flow" d="M 1265 346 V 362"/>
+  <rect x="920" y="366" width="440" height="70" rx="6" class="boxA"/>
+  <text x="936" y="386" class="lbl tiny" font-weight="700">loser's retry path</text>
+  <text x="936" y="404" class="lbl tiny">ledger-fold-owner goes idle on its own deque, then itself becomes a</text>
+  <text x="936" y="420" class="lbl tiny">thief and tries CAS(base, k, k+1) against another worker's deque</text>
+
+  <rect x="920" y="446" width="440" height="90" rx="6" class="boxW"/>
+  <text x="936" y="466" class="lbl node">mirror case — owner wins instead</text>
+  <text x="936" y="484" class="lbl body">if owner's CAS(top, 3, 2) commits first (the last-element path</text>
+  <text x="936" y="500" class="lbl body">also uses a CAS in real Chase-Lev), the thief's later</text>
+  <text x="936" y="516" class="lbl body">CAS(base, 2, 3) fails on the stale value and retries elsewhere</text>
+
+  <!-- ================= legend ================= -->
+  <line x1="20" y1="568" x2="1380" y2="568" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="582" width="20" height="16" rx="3" class="boxP"/>
+  <text x="46" y="595" class="lbl tiny">chunk owned exclusively by owner</text>
+  <rect x="300" y="582" width="20" height="16" rx="3" class="boxH"/>
+  <text x="326" y="595" class="lbl tiny">the CAS under discussion / contended chunk</text>
+  <rect x="640" y="582" width="20" height="16" rx="3" class="boxR"/>
+  <text x="666" y="595" class="lbl tiny">winning path, folded exactly once</text>
+  <rect x="900" y="582" width="20" height="16" rx="3" class="boxF"/>
+  <text x="926" y="595" class="lbl tiny">contended / losing attempt</text>
+  <rect x="1120" y="582" width="20" height="16" rx="3" class="boxW"/>
+  <text x="1146" y="595" class="lbl tiny">settled / retry outcome</text>
+  <rect x="1300" y="582" width="20" height="16" rx="3" class="boxA"/>
+  <text x="1326" y="595" class="lbl tiny">explanation</text>
+  <path class="flow" d="M 20 618 H 60"/>
+  <text x="66" y="623" class="lbl tiny">A → B : B follows A</text>
+  <path class="cas" d="M 220 618 H 260"/>
+  <text x="266" y="623" class="lbl tiny">A → B : B is the CAS applied to A</text>
+  <path class="weak" d="M 480 618 H 520"/>
+  <text x="526" y="623" class="lbl tiny">A → B : B is the losing / retry path from A</text>
+</svg>

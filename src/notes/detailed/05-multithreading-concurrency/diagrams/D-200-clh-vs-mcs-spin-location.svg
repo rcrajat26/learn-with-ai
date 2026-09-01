@@ -1,0 +1,177 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="CLH versus MCS queue locks contending for FundsLedger.reserveStake, four waiters each. In CLH each waiter node spins on its predecessor's node flag — the queue is implicit, formed only through each waiter's prev reference, and the cache line each waiter reads is its predecessor's node, which the predecessor itself is about to write on release, causing a cache-line handoff. In MCS each waiter spins on its own node's flag; the predecessor writes into the successor's node using an explicit next reference set during enqueue, so each waiter's spin touches a cache line it owns until release, and only the releaser needs to touch the successor's line once.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; letter-spacing: .4px; fill: #4b5563; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .mono  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 4 3; marker-end: url(#triGr); }
+    .adapt { fill: none; stroke: #b45309; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 3 3; marker-end: url(#triO); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLH VERSUS MCS — WHERE EACH WAITER SPINS, CONTENDING FOR FundsLedger.reserveStake</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- LEFT: CLH -->
+  <rect x="20" y="56" width="520" height="560" rx="8" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="280" y="80" text-anchor="middle" class="lbl h2">CLH — SPIN ON PREDECESSOR'S NODE FLAG (IMPLICIT QUEUE VIA prev)</text>
+  <line x1="40" y1="90" x2="520" y2="90" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- CLH nodes, holder then 4 waiters, laid top to bottom -->
+  <rect x="200" y="106" width="160" height="52" rx="6" class="boxR"/>
+  <text x="280" y="126" text-anchor="middle" class="lbl node" font-size="12.5">holder node</text>
+  <text x="280" y="144" text-anchor="middle" class="lbl sub">locked = true</text>
+
+  <path class="flow" d="M 280 158 V 178"/>
+
+  <rect x="180" y="178" width="200" height="54" rx="6" class="boxH"/>
+  <text x="280" y="197" text-anchor="middle" class="lbl node" font-size="12.5">W1 node (prev = holder)</text>
+  <text x="280" y="215" text-anchor="middle" class="lbl sub">spins on holder.locked</text>
+  <rect x="188" y="222" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="240" y="228" class="lbl tiny" fill="#4b5563" font-size="10.5">reads holder's line</text>
+
+  <path class="flow" d="M 280 232 V 252"/>
+
+  <rect x="180" y="252" width="200" height="54" rx="6" class="boxH"/>
+  <text x="280" y="271" text-anchor="middle" class="lbl node" font-size="12.5">W2 node (prev = W1)</text>
+  <text x="280" y="289" text-anchor="middle" class="lbl sub">spins on W1.locked</text>
+  <rect x="188" y="296" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="240" y="302" class="lbl tiny" fill="#4b5563" font-size="10.5">reads W1's line</text>
+
+  <path class="flow" d="M 280 306 V 326"/>
+
+  <rect x="180" y="326" width="200" height="54" rx="6" class="boxH"/>
+  <text x="280" y="345" text-anchor="middle" class="lbl node" font-size="12.5">W3 node (prev = W2)</text>
+  <text x="280" y="363" text-anchor="middle" class="lbl sub">spins on W2.locked</text>
+  <rect x="188" y="370" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="240" y="376" class="lbl tiny" fill="#4b5563" font-size="10.5">reads W2's line</text>
+
+  <path class="flow" d="M 280 380 V 400"/>
+
+  <rect x="180" y="400" width="200" height="54" rx="6" class="boxH"/>
+  <text x="280" y="419" text-anchor="middle" class="lbl node" font-size="12.5">W4 node (prev = W3)</text>
+  <text x="280" y="437" text-anchor="middle" class="lbl sub">spins on W3.locked</text>
+  <rect x="188" y="444" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="240" y="450" class="lbl tiny" fill="#4b5563" font-size="10.5">reads W3's line</text>
+
+  <!-- implicit prev links, dashed weak, running alongside the flow spine offset -->
+  <path class="weak" d="M 200 130 H 120 V 205 H 180"/>
+  <path class="weak" d="M 180 205 H 130 V 279 H 180"/>
+  <path class="weak" d="M 180 279 H 130 V 353 H 180"/>
+  <path class="weak" d="M 180 353 H 130 V 427 H 180"/>
+  <text x="60" y="290" transform="rotate(-90 60 290)" text-anchor="middle" class="lbl tiny" fill="#4b5563">prev references (implicit queue)</text>
+
+  <rect x="60" y="472" width="440" height="120" rx="6" class="boxA"/>
+  <text x="76" y="492" class="lbl node" font-size="13">cache-line consequence</text>
+  <text x="76" y="512" class="lbl sub">Every waiter's cache line is its predecessor's</text>
+  <text x="76" y="528" class="lbl sub">node — a node it did not allocate. On release,</text>
+  <text x="76" y="544" class="lbl sub">the predecessor writes that same line, forcing</text>
+  <text x="76" y="560" class="lbl sub">it to migrate to the successor's core: a true</text>
+  <text x="76" y="576" class="lbl sub">cache-line handoff on every unlock, per waiter.</text>
+
+  <!-- RIGHT: MCS -->
+  <rect x="580" y="56" width="520" height="560" rx="8" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="840" y="80" text-anchor="middle" class="lbl h2">MCS — SPIN ON OWN NODE FLAG (EXPLICIT QUEUE VIA next)</text>
+  <line x1="600" y1="90" x2="1080" y2="90" stroke="#d1d5db" stroke-width="1"/>
+
+  <rect x="760" y="106" width="160" height="52" rx="6" class="boxR"/>
+  <text x="840" y="126" text-anchor="middle" class="lbl node" font-size="12.5">holder node</text>
+  <text x="840" y="144" text-anchor="middle" class="lbl sub">next -&gt; W1</text>
+
+  <path class="flow" d="M 840 158 V 178"/>
+
+  <rect x="740" y="178" width="200" height="54" rx="6" class="boxH"/>
+  <text x="840" y="197" text-anchor="middle" class="lbl node" font-size="12.5">W1 node (own flag)</text>
+  <text x="840" y="215" text-anchor="middle" class="lbl sub">spins on this.locked</text>
+  <rect x="748" y="222" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="800" y="228" class="lbl tiny" fill="#4b5563" font-size="10.5">owns this line</text>
+
+  <path class="flow" d="M 840 232 V 252"/>
+
+  <rect x="740" y="252" width="200" height="54" rx="6" class="boxH"/>
+  <text x="840" y="271" text-anchor="middle" class="lbl node" font-size="12.5">W2 node (own flag)</text>
+  <text x="840" y="289" text-anchor="middle" class="lbl sub">spins on this.locked</text>
+  <rect x="748" y="296" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="800" y="302" class="lbl tiny" fill="#4b5563" font-size="10.5">owns this line</text>
+
+  <path class="flow" d="M 840 306 V 326"/>
+
+  <rect x="740" y="326" width="200" height="54" rx="6" class="boxH"/>
+  <text x="840" y="345" text-anchor="middle" class="lbl node" font-size="12.5">W3 node (own flag)</text>
+  <text x="840" y="363" text-anchor="middle" class="lbl sub">spins on this.locked</text>
+  <rect x="748" y="370" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="800" y="376" class="lbl tiny" fill="#4b5563" font-size="10.5">owns this line</text>
+
+  <path class="flow" d="M 840 380 V 400"/>
+
+  <rect x="740" y="400" width="200" height="54" rx="6" class="boxH"/>
+  <text x="840" y="419" text-anchor="middle" class="lbl node" font-size="12.5">W4 node (own flag)</text>
+  <text x="840" y="437" text-anchor="middle" class="lbl sub">spins on this.locked</text>
+  <rect x="748" y="444" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="800" y="450" class="lbl tiny" fill="#4b5563" font-size="10.5">owns this line</text>
+
+  <!-- explicit next links -->
+  <path class="adapt" d="M 920 130 H 1000 V 205 H 940"/>
+  <path class="adapt" d="M 940 205 H 1010 V 279 H 940"/>
+  <path class="adapt" d="M 940 279 H 1010 V 353 H 940"/>
+  <path class="adapt" d="M 940 353 H 1010 V 427 H 940"/>
+  <text x="1060" y="290" transform="rotate(-90 1060 290)" text-anchor="middle" class="lbl tiny" fill="#4b5563">next references (explicit queue)</text>
+
+  <rect x="620" y="472" width="440" height="120" rx="6" class="boxA"/>
+  <text x="636" y="492" class="lbl node" font-size="13">cache-line consequence</text>
+  <text x="636" y="512" class="lbl sub">Each waiter's cache line is its own node,</text>
+  <text x="636" y="528" class="lbl sub">allocated on its own core. On release the</text>
+  <text x="636" y="544" class="lbl sub">holder follows its next pointer and writes</text>
+  <text x="636" y="560" class="lbl sub">exactly one remote line — the successor's —</text>
+  <text x="636" y="576" class="lbl sub">so contention traffic does not fan out.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="632" x2="1100" y2="632" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="652" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="664" width="22" height="16" rx="3" class="boxR"/>
+  <text x="50" y="677" class="lbl tiny">current holder node</text>
+
+  <rect x="220" y="664" width="22" height="16" rx="3" class="boxH"/>
+  <text x="250" y="677" class="lbl tiny">waiting node (highlight)</text>
+
+  <rect x="440" y="668" width="30" height="8" rx="2" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>
+  <text x="480" y="677" class="lbl tiny">cache line touched by that waiter's spin</text>
+
+  <line x1="20" y1="696" x2="60" y2="696" class="weak"/>
+  <text x="68" y="700" class="lbl tiny">CLH: prev reference — spins on predecessor's line</text>
+
+  <line x1="500" y1="696" x2="540" y2="696" class="flow"/>
+  <text x="548" y="700" class="lbl tiny">enqueue order (top to bottom)</text>
+
+  <line x1="20" y1="720" x2="60" y2="720" class="adapt"/>
+  <text x="68" y="724" class="lbl tiny">MCS: next reference — releaser writes successor's flag</text>
+
+  <rect x="460" y="712" width="22" height="16" rx="3" class="boxA"/>
+  <text x="490" y="724" class="lbl tiny">annotation panel — cache-line consequence</text>
+</svg>

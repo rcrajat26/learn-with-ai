@@ -1,0 +1,164 @@
+<svg viewBox="0 0 1040 780" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A delimited continuation over the gateway-http-7 carrier stack: a ContinuationScope
+     entry frame marks the boundary set up by Continuation.run. Above that frame, authorisePsp and
+     writeLedgerEntry are copied out onto the heap when yield(scope) unwinds, leaving isDone false.
+     Below the frame, the JDK scheduler and carrier thread's own frames are left untouched, so the
+     carrier can be handed to another virtual thread. Continuation is marked internal, unsupported API.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 13px; }
+    .dense { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+    .adap  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="780" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A DELIMITED CONTINUATION — gateway-http-7 CARRIER STACK</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- Section band headers -->
+  <text x="150" y="66" text-anchor="middle" class="lbl h2">BEFORE yield(scope) — carrier stack, top to bottom</text>
+  <text x="770" y="66" text-anchor="middle" class="lbl h2">AFTER yield(scope) unwinds to the scope frame</text>
+  <line x1="520" y1="56" x2="520" y2="700" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="2 4"/>
+
+  <!-- LEFT: carrier stack before, growing upward, frames stacked -->
+  <!-- authorisePsp() frame - top of stack -->
+  <rect x="40" y="86" width="440" height="70" rx="6" class="boxH"/>
+  <text x="260" y="110" text-anchor="middle" class="lbl node">authorisePsp() frame</text>
+  <text x="260" y="132" text-anchor="middle" class="lbl body">card PSP authorise call, blocked on I/O</text>
+  <text x="260" y="148" text-anchor="middle" class="lbl sub">above the scope frame — copied out on yield</text>
+
+  <path class="flow" d="M 260 156 V 176"/>
+
+  <!-- writeLedgerEntry frame -->
+  <rect x="40" y="176" width="440" height="66" rx="6" class="boxH"/>
+  <text x="260" y="199" text-anchor="middle" class="lbl node">writeLedgerEntry() frame</text>
+  <text x="260" y="217" text-anchor="middle" class="lbl body">caller of authorisePsp, also above the scope</text>
+  <text x="260" y="233" text-anchor="middle" class="lbl sub">above the scope frame — copied out on yield</text>
+
+  <path class="flow" d="M 260 242 V 262"/>
+
+  <!-- ContinuationScope entry frame -->
+  <rect x="40" y="262" width="440" height="72" rx="6" class="boxD"/>
+  <text x="260" y="286" text-anchor="middle" class="lbl node">ContinuationScope entry frame</text>
+  <text x="260" y="306" text-anchor="middle" class="lbl body">set up by Continuation.run(this)</text>
+  <text x="260" y="322" text-anchor="middle" class="lbl sub">the unwind boundary — yield(scope) stops exactly here</text>
+
+  <path class="flow" d="M 260 334 V 354"/>
+
+  <!-- scheduler / carrier frames below, untouched -->
+  <rect x="40" y="354" width="440" height="66" rx="6" class="boxW"/>
+  <text x="260" y="377" text-anchor="middle" class="lbl node">ForkJoinPool worker-loop frame</text>
+  <text x="260" y="395" text-anchor="middle" class="lbl body">the JDK scheduler that called run()</text>
+  <text x="260" y="411" text-anchor="middle" class="lbl sub">below the scope — never touched by yield</text>
+
+  <path class="flow" d="M 260 420 V 440"/>
+
+  <rect x="40" y="440" width="440" height="60" rx="6" class="boxW"/>
+  <text x="260" y="464" text-anchor="middle" class="lbl node">gateway-http-7 platform frame</text>
+  <text x="260" y="484" text-anchor="middle" class="lbl body">the OS carrier thread's own base frame</text>
+
+  <!-- carrier stack outline label -->
+  <rect x="30" y="86" width="10" height="414" fill="#eff6ff" stroke="#2563eb" stroke-width="1" opacity="1"/>
+  <text x="24" y="300" text-anchor="middle" class="lbl sub" transform="rotate(-90 24 300)">carrier stack (grows up)</text>
+
+  <!-- isDone / API annotation panel left -->
+  <rect x="40" y="520" width="440" height="168" rx="6" class="boxA"/>
+  <text x="58" y="542" class="lbl body" style="font-weight:700">Continuation API used (internal, unsupported)</text>
+  <text x="58" y="562" class="lbl tiny">Continuation.run() — mounts and executes frames</text>
+  <text x="58" y="580" class="lbl tiny">yield(scope) — unwinds only up to the scope frame</text>
+  <text x="58" y="598" class="lbl tiny">isDone() — false here: frames above were copied out,</text>
+  <text x="58" y="614" class="lbl tiny">not discarded; run() can resume them later</text>
+  <text x="58" y="638" class="lbl tiny" style="fill:#b91c1c;font-weight:700">jdk.internal.vm.Continuation — not a public,</text>
+  <text x="58" y="654" class="lbl tiny" style="fill:#b91c1c;font-weight:700">supported API; VirtualThread is built on it</text>
+  <text x="58" y="674" class="lbl tiny">All three names above appear only inside this internal API</text>
+
+  <!-- RIGHT: after yield -->
+  <!-- heap-copied frames -->
+  <rect x="560" y="86" width="440" height="70" rx="6" class="boxA"/>
+  <text x="780" y="106" text-anchor="middle" class="lbl node">authorisePsp() frame — copied</text>
+  <text x="780" y="126" text-anchor="middle" class="lbl body">now heap data inside the StackChunk</text>
+  <text x="780" y="144" text-anchor="middle" class="lbl sub">not running, not on any OS stack</text>
+
+  <path class="weak" d="M 780 156 V 176"/>
+
+  <rect x="560" y="176" width="440" height="66" rx="6" class="boxA"/>
+  <text x="780" y="199" text-anchor="middle" class="lbl node">writeLedgerEntry() frame — copied</text>
+  <text x="780" y="219" text-anchor="middle" class="lbl body">stored with authorisePsp's frame</text>
+  <text x="780" y="235" text-anchor="middle" class="lbl sub">both parked off the carrier, on the heap</text>
+
+  <path class="weak" d="M 780 242 V 262"/>
+
+  <!-- ContinuationScope entry frame, now the unwind stop point -->
+  <rect x="560" y="262" width="440" height="72" rx="6" class="boxD"/>
+  <text x="780" y="286" text-anchor="middle" class="lbl node">ContinuationScope entry frame</text>
+  <text x="780" y="306" text-anchor="middle" class="lbl body">unwind stopped exactly here</text>
+  <text x="780" y="322" text-anchor="middle" class="lbl sub">this frame itself returns to the scheduler</text>
+
+  <path class="flow" d="M 780 334 V 354"/>
+
+  <!-- untouched frames below, unaffected -->
+  <rect x="560" y="354" width="440" height="66" rx="6" class="boxW"/>
+  <text x="780" y="377" text-anchor="middle" class="lbl node">ForkJoinPool worker-loop frame</text>
+  <text x="780" y="395" text-anchor="middle" class="lbl body">untouched — sees run() return</text>
+  <text x="780" y="411" text-anchor="middle" class="lbl sub">carrier now free for another virtual thread</text>
+
+  <path class="flow" d="M 780 420 V 440"/>
+
+  <rect x="560" y="440" width="440" height="60" rx="6" class="boxW"/>
+  <text x="780" y="464" text-anchor="middle" class="lbl node">gateway-http-7 platform frame</text>
+  <text x="780" y="484" text-anchor="middle" class="lbl body">untouched — carrier stack shrank back to here</text>
+
+  <!-- right annotation panel -->
+  <rect x="560" y="520" width="440" height="168" rx="6" class="boxA"/>
+  <text x="578" y="542" class="lbl body" style="font-weight:700">What is copied vs left alone</text>
+  <text x="578" y="562" class="lbl tiny">Frames above the scope entry: copied out to a heap</text>
+  <text x="578" y="578" class="lbl tiny">StackChunk — this is the "delimited" continuation</text>
+  <text x="578" y="598" class="lbl tiny">Frames below the scope entry (scheduler, carrier</text>
+  <text x="578" y="614" class="lbl tiny">base): left running, never unwound, never copied</text>
+  <text x="578" y="636" class="lbl tiny">gateway-http-7's OS stack shrinks back to the</text>
+  <text x="578" y="652" class="lbl tiny">scheduler frame — the carrier is now free to run</text>
+  <text x="578" y="668" class="lbl tiny">another virtual thread, e.g. settlement-ingest-3</text>
+
+  <!-- legend -->
+  <line x1="20" y1="700" x2="1020" y2="700" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="716" width="22" height="16" rx="3" class="boxH"/>
+  <text x="50" y="729" class="lbl tiny">frame above the scope (copied out on yield)</text>
+  <rect x="330" y="716" width="22" height="16" rx="3" class="boxD"/>
+  <text x="360" y="729" class="lbl tiny">ContinuationScope entry frame — the unwind boundary</text>
+  <rect x="700" y="716" width="22" height="16" rx="3" class="boxW"/>
+  <text x="730" y="729" class="lbl tiny">frame below the scope (untouched, still on carrier)</text>
+
+  <rect x="20" y="742" width="22" height="16" rx="3" class="boxA"/>
+  <text x="50" y="755" class="lbl tiny">annotation / heap-copied StackChunk</text>
+  <path class="flow" d="M 330 750 H 366"/>
+  <text x="374" y="755" class="lbl tiny">A → B : normal frame chain</text>
+  <path class="weak" d="M 620 750 H 656"/>
+  <text x="664" y="755" class="lbl tiny">A → B : chained after copy-out (still linked, off carrier)</text>
+</svg>

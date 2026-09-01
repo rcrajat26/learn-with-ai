@@ -1,0 +1,144 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Spin lock versus park-based ReentrantLock throughput for FundsLedger.reserveStake
+     under the 3,400 settlements per second burst, at thread counts 1, 2, 8 and 64, for a 100
+     nanosecond critical section and a 100 microsecond critical section. All figures are
+     order-of-magnitude illustrations, not measured benchmarks. Left panel, 100 nanosecond
+     critical section: spin lock throughput rises through 8 threads then collapses at 64 threads
+     as cache-line ping-pong dominates, crossing below ReentrantLock's park-based curve between 8
+     and 64 threads. Right panel, 100 microsecond critical section: the crossover happens earlier,
+     between 2 and 8 threads, because once the critical section is longer than a park/unpark round
+     trip, spinning wastes more CPU than it saves.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .axis  { font-size: 11px; fill: #4b5563; }
+
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+    .axLine{ stroke: #475569; stroke-width: 1.6; fill: none; }
+    .grid  { stroke: #d1d5db; stroke-width: 1; }
+
+    .spinLine { fill: none; stroke: #2563eb; stroke-width: 2.4; }
+    .parkLine { fill: none; stroke: #b45309; stroke-width: 2.4; stroke-dasharray: 6 4; }
+    .spinDot  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .parkDot  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+
+    .crossZone { fill: #fee2e2; opacity: 1; stroke: none; }
+  </style>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SPIN LOCK VERSUS PARK (ReentrantLock), MEASURED — reserveStake AT 3,400 SETTLEMENTS/SEC BURST</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="52" width="1080" height="26" rx="4" class="panel"/>
+  <text x="560" y="70" text-anchor="middle" class="lbl tiny" font-style="italic">All throughput figures below are order-of-magnitude illustrations of the shape of the tradeoff, not measured numbers — there is no authoritative benchmark cited here.</text>
+
+  <!-- ============ LEFT PANEL: 100ns CS ============ -->
+  <text x="60" y="102" class="lbl h2">100 ns CRITICAL SECTION</text>
+
+  <!-- axes -->
+  <line x1="60" y1="480" x2="520" y2="480" class="axLine"/>
+  <line x1="60" y1="120" x2="60" y2="480" class="axLine"/>
+  <text x="30" y="130" class="lbl axis" transform="rotate(-90 30 300)" text-anchor="middle">throughput (rel.)</text>
+
+  <!-- gridlines -->
+  <line x1="60" y1="200" x2="520" y2="200" class="grid"/>
+  <line x1="60" y1="300" x2="520" y2="300" class="grid"/>
+  <line x1="60" y1="400" x2="520" y2="400" class="grid"/>
+
+  <!-- crossover shading between 8 and 64 threads -->
+  <rect x="340" y="120" width="120" height="360" class="crossZone"/>
+
+  <!-- x ticks -->
+  <line x1="100" y1="480" x2="100" y2="486" class="axLine"/>
+  <line x1="220" y1="480" x2="220" y2="486" class="axLine"/>
+  <line x1="340" y1="480" x2="340" y2="486" class="axLine"/>
+  <line x1="460" y1="480" x2="460" y2="486" class="axLine"/>
+  <text x="100" y="500" text-anchor="middle" class="lbl axis">1</text>
+  <text x="220" y="500" text-anchor="middle" class="lbl axis">2</text>
+  <text x="340" y="500" text-anchor="middle" class="lbl axis">8</text>
+  <text x="460" y="500" text-anchor="middle" class="lbl axis">64</text>
+  <text x="290" y="518" text-anchor="middle" class="lbl axis">thread count</text>
+
+  <!-- spin series, stepped polyline -->
+  <path class="spinLine" d="M 100 371 H 220 V 285 H 340 V 133 H 460 V 317"/>
+  <circle cx="100" cy="371" r="4.5" class="spinDot"/>
+  <circle cx="220" cy="285" r="4.5" class="spinDot"/>
+  <circle cx="340" cy="133" r="4.5" class="spinDot"/>
+  <circle cx="460" cy="317" r="4.5" class="spinDot"/>
+
+  <!-- park series, stepped polyline -->
+  <path class="parkLine" d="M 100 382 H 220 V 328 H 340 V 285 H 460 V 274"/>
+  <circle cx="100" cy="382" r="4.5" class="parkDot"/>
+  <circle cx="220" cy="328" r="4.5" class="parkDot"/>
+  <circle cx="340" cy="285" r="4.5" class="parkDot"/>
+  <circle cx="460" cy="274" r="4.5" class="parkDot"/>
+
+  <text x="400" y="200" text-anchor="middle" class="lbl tiny" font-weight="600" fill="#b91c1c">crossover 8&#8594;64</text>
+  <text x="400" y="215" text-anchor="middle" class="lbl tiny" fill="#b91c1c">spin degrades below park</text>
+
+  <!-- ============ RIGHT PANEL: 100us CS ============ -->
+  <text x="620" y="102" class="lbl h2">100 &#181;s CRITICAL SECTION</text>
+
+  <line x1="620" y1="480" x2="1080" y2="480" class="axLine"/>
+  <line x1="620" y1="120" x2="620" y2="480" class="axLine"/>
+  <text x="590" y="130" class="lbl axis" transform="rotate(-90 590 300)" text-anchor="middle">throughput (rel.)</text>
+
+  <line x1="620" y1="200" x2="1080" y2="200" class="grid"/>
+  <line x1="620" y1="300" x2="1080" y2="300" class="grid"/>
+  <line x1="620" y1="400" x2="1080" y2="400" class="grid"/>
+
+  <!-- crossover shading between 2 and 8 threads -->
+  <rect x="780" y="120" width="120" height="360" class="crossZone"/>
+
+  <line x1="660" y1="480" x2="660" y2="486" class="axLine"/>
+  <line x1="780" y1="480" x2="780" y2="486" class="axLine"/>
+  <line x1="900" y1="480" x2="900" y2="486" class="axLine"/>
+  <line x1="1020" y1="480" x2="1020" y2="486" class="axLine"/>
+  <text x="660" y="500" text-anchor="middle" class="lbl axis">1</text>
+  <text x="780" y="500" text-anchor="middle" class="lbl axis">2</text>
+  <text x="900" y="500" text-anchor="middle" class="lbl axis">8</text>
+  <text x="1020" y="500" text-anchor="middle" class="lbl axis">64</text>
+  <text x="850" y="518" text-anchor="middle" class="lbl axis">thread count</text>
+
+  <path class="spinLine" d="M 660 243 H 780 V 148 H 900 V 243 H 1020 V 409"/>
+  <circle cx="660" cy="243" r="4.5" class="spinDot"/>
+  <circle cx="780" cy="148" r="4.5" class="spinDot"/>
+  <circle cx="900" cy="243" r="4.5" class="spinDot"/>
+  <circle cx="1020" cy="409" r="4.5" class="spinDot"/>
+
+  <path class="parkLine" d="M 660 266 H 780 V 171 H 900 V 124 H 1020 V 148"/>
+  <circle cx="660" cy="266" r="4.5" class="parkDot"/>
+  <circle cx="780" cy="171" r="4.5" class="parkDot"/>
+  <circle cx="900" cy="124" r="4.5" class="parkDot"/>
+  <circle cx="1020" cy="148" r="4.5" class="parkDot"/>
+
+  <text x="840" y="230" text-anchor="middle" class="lbl tiny" font-weight="600" fill="#b91c1c">crossover 2&#8594;8</text>
+  <text x="840" y="245" text-anchor="middle" class="lbl tiny" fill="#b91c1c">spin degrades below park</text>
+
+  <!-- annotation panel -->
+  <rect x="20" y="540" width="1080" height="120" rx="6" class="panel"/>
+  <text x="40" y="562" class="lbl body" font-weight="600">Why the crossover moves left as the critical section grows</text>
+  <text x="40" y="582" class="lbl tiny">A spin lock burns CPU cycles polling a flag; ReentrantLock parks the waiter (LockSupport.park) and wakes it with unpark — a round trip on the</text>
+  <text x="40" y="598" class="lbl tiny">order of a few &#181;s through the OS scheduler. Spinning wins only while the expected wait is shorter than that park/unpark round trip.</text>
+  <text x="40" y="614" class="lbl tiny">For a 100 ns critical section the wait is almost always shorter than the round trip, so spin wins up to moderate contention (8 threads on</text>
+  <text x="40" y="630" class="lbl tiny">reserveStake), then collapses at 64 threads as cache-line ping-pong on the lock word dominates. For a 100 &#181;s critical section the wait</text>
+  <text x="40" y="646" class="lbl tiny">already exceeds the round trip once more than a couple of ingest workers queue, so park/ReentrantLock overtakes spin much sooner.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="676" x2="1100" y2="676" stroke="#d1d5db" stroke-width="1.5"/>
+  <path class="spinLine" d="M 20 696 H 60"/>
+  <circle cx="40" cy="696" r="4.5" class="spinDot"/>
+  <text x="68" y="701" class="lbl tiny">spin lock (busy-wait on a flag), stepped throughput curve</text>
+  <path class="parkLine" d="M 480 696 H 520"/>
+  <circle cx="500" cy="696" r="4.5" class="parkDot"/>
+  <text x="528" y="701" class="lbl tiny">ReentrantLock (park/unpark on contention), stepped throughput curve</text>
+  <rect x="20" y="716" width="20" height="16" class="crossZone"/>
+  <text x="48" y="729" class="lbl tiny">crossover region — the thread-count band where the winning strategy flips</text>
+  <line x1="480" y1="724" x2="520" y2="724" class="grid"/>
+  <text x="528" y="729" class="lbl tiny">gridline, relative throughput reference (no absolute units — order-of-magnitude only)</text>
+</svg>

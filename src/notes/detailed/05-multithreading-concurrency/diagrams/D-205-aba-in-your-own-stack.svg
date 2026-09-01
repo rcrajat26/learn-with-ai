@@ -1,0 +1,169 @@
+<svg viewBox="0 0 1120 980" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="ABA in a hand-rolled TreiberStack of WithdrawalTransactions. Left: node pooling
+     lets the owner thread's CAS(top, A, B) succeed on a stale pointer after a pooling thread pops,
+     recycles and re-pushes nodes, corrupting the stack. Right: wrapping top in an
+     AtomicStampedReference makes the same CAS carry a stamp that increments on every push and pop,
+     so the owner's CAS fails on the stamp mismatch and retries correctly. A third panel explains
+     that plain non-pooling Java is usually ABA-safe because the garbage collector will not reuse a
+     Node's memory while a thread still holds a reference to it.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+    .step  { font-size: 11px; font-weight: 700; fill: #4b5563; }
+
+    .boxP { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxF { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxW { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxA { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .cas   { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+    .pool  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triG); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="980" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">ABA IN YOUR OWN TreiberStack&lt;WithdrawalTransaction&gt; — BROKEN AND FIXED</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- band headers -->
+  <text x="20" y="63" class="lbl h2">LEFT — NODE POOLING CORRUPTS THE CAS</text>
+  <text x="580" y="63" class="lbl h2">RIGHT — AtomicStampedReference FIXES IT</text>
+  <line x1="560" y1="52" x2="560" y2="792" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ STEP 1 : initial state, both panels ============ -->
+  <text x="20" y="84" class="lbl step">STEP 1 — initial stack, top holds two pending withdrawals</text>
+  <rect x="20" y="92" width="150" height="56" rx="6" class="boxH"/>
+  <text x="95" y="112" text-anchor="middle" class="lbl node">top</text>
+  <text x="95" y="130" text-anchor="middle" class="lbl sub">AtomicReference&lt;Node&gt;</text>
+  <path class="flow" d="M 170 120 H 200"/>
+  <rect x="204" y="92" width="150" height="56" rx="6" class="boxP"/>
+  <text x="279" y="112" text-anchor="middle" class="lbl node">Node A</text>
+  <text x="279" y="130" text-anchor="middle" class="lbl sub">W-101</text>
+  <path class="flow" d="M 354 120 H 384"/>
+  <rect x="388" y="92" width="150" height="56" rx="6" class="boxP"/>
+  <text x="463" y="112" text-anchor="middle" class="lbl node">Node B → null</text>
+  <text x="463" y="130" text-anchor="middle" class="lbl sub">W-102</text>
+
+  <text x="580" y="84" class="lbl step">STEP 1 — same stack, top now stamped</text>
+  <rect x="580" y="92" width="200" height="56" rx="6" class="boxH"/>
+  <text x="680" y="112" text-anchor="middle" class="lbl node">top (ref A, stamp 0)</text>
+  <text x="680" y="130" text-anchor="middle" class="lbl sub">AtomicStampedReference&lt;Node&gt;</text>
+  <path class="flow" d="M 780 120 H 810"/>
+  <rect x="814" y="92" width="140" height="56" rx="6" class="boxP"/>
+  <text x="884" y="112" text-anchor="middle" class="lbl node">Node A</text>
+  <text x="884" y="130" text-anchor="middle" class="lbl sub">W-101</text>
+  <path class="flow" d="M 954 120 H 984"/>
+  <rect x="988" y="92" width="92" height="56" rx="6" class="boxP"/>
+  <text x="1034" y="112" text-anchor="middle" class="lbl node">Node B</text>
+  <text x="1034" y="130" text-anchor="middle" class="lbl sub">W-102</text>
+
+  <!-- ============ STEP 2 : owner thread reads, prepares CAS ============ -->
+  <text x="20" y="178" class="lbl step">STEP 2 — settlement-worker reads top=A, next=B, about to CAS(top, A, B)</text>
+  <rect x="20" y="186" width="330" height="44" rx="6" class="boxA"/>
+  <text x="35" y="205" class="lbl tiny" font-weight="700">settlement-worker</text>
+  <text x="35" y="221" class="lbl tiny">local vars: expected = A, next = A.next = B</text>
+  <path class="cas" d="M 350 208 H 400"/>
+  <rect x="404" y="186" width="134" height="44" rx="6" class="boxH"/>
+  <text x="471" y="211" text-anchor="middle" class="lbl body">CAS(top, A, B)</text>
+
+  <text x="580" y="178" class="lbl step">STEP 2 — same read, but expects (ref A, stamp 0)</text>
+  <rect x="580" y="186" width="330" height="44" rx="6" class="boxA"/>
+  <text x="595" y="205" class="lbl tiny" font-weight="700">settlement-worker</text>
+  <text x="595" y="221" class="lbl tiny">local vars: expectedRef = A, expectedStamp = 0</text>
+  <path class="cas" d="M 910 208 H 950"/>
+  <rect x="954" y="186" width="126" height="44" rx="6" class="boxH"/>
+  <text x="1017" y="211" text-anchor="middle" class="lbl body">CAS(A,B,0,1)</text>
+
+  <!-- ============ STEP 3 : pooling thread recycles nodes ============ -->
+  <text x="20" y="264" class="lbl step">STEP 3 — payout-recycler pops A and B, frees both to the node pool, then re-pushes</text>
+  <rect x="20" y="272" width="150" height="52" rx="6" class="boxW"/>
+  <text x="95" y="292" text-anchor="middle" class="lbl node">pool.free(A)</text>
+  <text x="95" y="308" text-anchor="middle" class="lbl sub">pool.free(B)</text>
+  <path class="pool" d="M 170 298 H 200"/>
+  <rect x="204" y="272" width="330" height="52" rx="6" class="boxW"/>
+  <text x="219" y="292" class="lbl node">pool.acquire() returns A's memory</text>
+  <text x="219" y="308" class="lbl sub">push(W-103) reuses Node A's address, no allocation</text>
+
+  <text x="580" y="264" class="lbl step">STEP 3 — same recycling, but every push/pop bumps the stamp</text>
+  <rect x="580" y="272" width="150" height="52" rx="6" class="boxW"/>
+  <text x="655" y="292" text-anchor="middle" class="lbl node">pop A: stamp 0→1</text>
+  <text x="655" y="308" text-anchor="middle" class="lbl sub">pop B: stamp 1→2</text>
+  <path class="pool" d="M 730 298 H 760"/>
+  <rect x="764" y="272" width="316" height="52" rx="6" class="boxH"/>
+  <text x="922" y="292" text-anchor="middle" class="lbl node">push(W-103) reuses Node A, stamp 2→3</text>
+  <text x="922" y="308" text-anchor="middle" class="lbl sub">top now (ref A, stamp 3)</text>
+
+  <!-- ============ STEP 4 : CAS executes, outcome differs ============ -->
+  <text x="20" y="360" class="lbl step">STEP 4 — settlement-worker's CAS(top, A, B) executes</text>
+  <rect x="20" y="368" width="518" height="64" rx="6" class="boxF"/>
+  <text x="279" y="390" text-anchor="middle" class="lbl node">CAS SUCCEEDS — pointer equality only checks the address</text>
+  <text x="279" y="408" text-anchor="middle" class="lbl body">top is set to B, but B was freed to the pool in step 3</text>
+  <text x="279" y="423" text-anchor="middle" class="lbl sub">W-103 is dropped from the stack; a freed node is resurrected as live top</text>
+
+  <text x="580" y="360" class="lbl step">STEP 4 — settlement-worker's CAS(top, A, B, 0, 1) executes</text>
+  <rect x="580" y="368" width="500" height="64" rx="6" class="boxR"/>
+  <text x="830" y="390" text-anchor="middle" class="lbl node">CAS FAILS — expectedStamp 0 ≠ current stamp 3</text>
+  <text x="830" y="408" text-anchor="middle" class="lbl body">reference A still matches, but the stamp does not</text>
+  <text x="830" y="423" text-anchor="middle" class="lbl sub">settlement-worker re-reads (ref, stamp) and retries — no corruption</text>
+
+  <!-- ============ STEP 5 : final state ============ -->
+  <text x="20" y="464" class="lbl step">STEP 5 — final stack state</text>
+  <rect x="20" y="472" width="518" height="70" rx="6" class="boxF"/>
+  <text x="279" y="494" text-anchor="middle" class="lbl node">CORRUPTED: WithdrawalTransaction W-103 lost</text>
+  <text x="279" y="512" text-anchor="middle" class="lbl body">top points at a pool-freed node; W-102 may be paid out twice</text>
+  <text x="279" y="528" text-anchor="middle" class="lbl sub">the plain-object CAS cannot tell "same address" from "same withdrawal"</text>
+
+  <text x="580" y="464" class="lbl step">STEP 5 — final stack state</text>
+  <rect x="580" y="472" width="500" height="70" rx="6" class="boxR"/>
+  <text x="830" y="494" text-anchor="middle" class="lbl node">CORRECT: retry converges on (ref A, stamp 3)</text>
+  <text x="830" y="512" text-anchor="middle" class="lbl body">CAS(top, A, A.next, 3, 4) succeeds against the true current state</text>
+  <text x="830" y="528" text-anchor="middle" class="lbl sub">W-103 stays on the stack; nothing is dropped or paid out twice</text>
+
+  <!-- ============ annotation panel ============ -->
+  <line x1="20" y1="800" x2="1100" y2="800" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="812" width="1080" height="82" rx="6" class="boxA"/>
+  <text x="36" y="833" class="lbl tiny" font-weight="700">WHY PLAIN JAVA (NO POOLING) IS USUALLY ABA-SAFE</text>
+  <text x="36" y="852" class="lbl tiny">A non-pooling TreiberStack allocates a brand-new Node on every push. The garbage collector cannot reclaim or reuse</text>
+  <text x="36" y="868" class="lbl tiny">a Node's memory while settlement-worker still holds a reference to it in a local variable — so a stale CAS compares</text>
+  <text x="36" y="884" class="lbl tiny">against an address that can never be recycled mid-flight; ABA needs the pool above, or off-heap reuse, to reappear.</text>
+
+  <!-- ============ legend ============ -->
+  <line x1="20" y1="906" x2="1100" y2="906" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="918" width="20" height="16" rx="3" class="boxP"/>
+  <text x="46" y="931" class="lbl tiny">stack node (live)</text>
+  <rect x="180" y="918" width="20" height="16" rx="3" class="boxH"/>
+  <text x="206" y="931" class="lbl tiny">the thing under test: top ref / stamp / CAS op</text>
+  <rect x="470" y="918" width="20" height="16" rx="3" class="boxW"/>
+  <text x="496" y="931" class="lbl tiny">freed / pooled node</text>
+  <rect x="630" y="918" width="20" height="16" rx="3" class="boxR"/>
+  <text x="656" y="931" class="lbl tiny">CAS succeeds correctly</text>
+  <rect x="810" y="918" width="20" height="16" rx="3" class="boxF"/>
+  <text x="836" y="931" class="lbl tiny">CAS succeeds wrongly (corruption)</text>
+  <rect x="20" y="944" width="20" height="16" rx="3" class="boxA"/>
+  <text x="46" y="957" class="lbl tiny">explanation panel</text>
+  <path class="flow" d="M 180 952 H 220"/>
+  <text x="226" y="957" class="lbl tiny">A → B : B is next node from A</text>
+  <path class="cas" d="M 460 952 H 500"/>
+  <text x="506" y="957" class="lbl tiny">A → B : B is the CAS applied to A</text>
+  <path class="pool" d="M 760 952 H 800"/>
+  <text x="806" y="957" class="lbl tiny">A → B : B is the recycle/reuse path from A</text>
+</svg>

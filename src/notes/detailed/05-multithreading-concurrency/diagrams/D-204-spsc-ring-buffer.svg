@@ -1,0 +1,170 @@
+<svg viewBox="0 0 1040 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="An SPSC ring buffer of WithdrawalTransaction entries backed by a power-of-two
+     array of capacity 8. The head and tail are AtomicLongs padded onto separate 64-byte cache
+     lines so the single producer and single consumer never invalidate each other's line. Index
+     into the array is computed as logicalIndex bitwise-and (capacity - 1), avoiding a division.
+     Because there is exactly one producer thread writing tail and exactly one consumer thread
+     writing head, no compare-and-swap is needed: the empty condition is head equals tail, and the
+     full condition is tail minus head equals capacity.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .code  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+    .weak  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; marker-end: url(#triGray); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">SPSC RING BUFFER OF WithdrawalTransaction — CAPACITY 8</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ============ backing array ============ -->
+  <text x="20" y="66" class="lbl h2">BACKING ARRAY — power-of-two length, indices wrap via mask</text>
+
+  <!-- index labels above -->
+  <text x="142" y="94" text-anchor="middle" class="lbl sub">0</text>
+  <text x="226" y="94" text-anchor="middle" class="lbl sub">1</text>
+  <text x="310" y="94" text-anchor="middle" class="lbl sub">2</text>
+  <text x="394" y="94" text-anchor="middle" class="lbl sub">3</text>
+  <text x="478" y="94" text-anchor="middle" class="lbl sub">4</text>
+  <text x="562" y="94" text-anchor="middle" class="lbl sub">5</text>
+  <text x="646" y="94" text-anchor="middle" class="lbl sub">6</text>
+  <text x="730" y="94" text-anchor="middle" class="lbl sub">7</text>
+
+  <!-- 8 slots: capacity 8, occupied = slots 1..4 (head=9 -> 9&7=1, tail=13 -> 13&7=5, occupied count = tail-head = 4) -->
+  <rect x="102" y="100" width="80" height="64" rx="5" class="boxW"/>
+  <text x="142" y="126" text-anchor="middle" class="lbl tiny">empty</text>
+  <text x="142" y="146" text-anchor="middle" class="lbl sub">slot[0]</text>
+
+  <rect x="186" y="100" width="80" height="64" rx="5" class="boxR"/>
+  <text x="226" y="122" text-anchor="middle" class="lbl tiny">WithdrawalTx</text>
+  <text x="226" y="138" text-anchor="middle" class="lbl sub">seq 9</text>
+  <text x="226" y="154" text-anchor="middle" class="lbl sub">slot[1]</text>
+
+  <rect x="270" y="100" width="80" height="64" rx="5" class="boxR"/>
+  <text x="310" y="122" text-anchor="middle" class="lbl tiny">WithdrawalTx</text>
+  <text x="310" y="138" text-anchor="middle" class="lbl sub">seq 10</text>
+  <text x="310" y="154" text-anchor="middle" class="lbl sub">slot[2]</text>
+
+  <rect x="354" y="100" width="80" height="64" rx="5" class="boxR"/>
+  <text x="394" y="122" text-anchor="middle" class="lbl tiny">WithdrawalTx</text>
+  <text x="394" y="138" text-anchor="middle" class="lbl sub">seq 11</text>
+  <text x="394" y="154" text-anchor="middle" class="lbl sub">slot[3]</text>
+
+  <rect x="438" y="100" width="80" height="64" rx="5" class="boxR"/>
+  <text x="478" y="122" text-anchor="middle" class="lbl tiny">WithdrawalTx</text>
+  <text x="478" y="138" text-anchor="middle" class="lbl sub">seq 12</text>
+  <text x="478" y="154" text-anchor="middle" class="lbl sub">slot[4]</text>
+
+  <rect x="522" y="100" width="80" height="64" rx="5" class="boxW"/>
+  <text x="562" y="126" text-anchor="middle" class="lbl tiny">empty</text>
+  <text x="562" y="146" text-anchor="middle" class="lbl sub">slot[5]</text>
+
+  <rect x="606" y="100" width="80" height="64" rx="5" class="boxW"/>
+  <text x="646" y="126" text-anchor="middle" class="lbl tiny">empty</text>
+  <text x="646" y="146" text-anchor="middle" class="lbl sub">slot[6]</text>
+
+  <rect x="690" y="100" width="80" height="64" rx="5" class="boxW"/>
+  <text x="730" y="126" text-anchor="middle" class="lbl tiny">empty</text>
+  <text x="730" y="146" text-anchor="middle" class="lbl sub">slot[7]</text>
+
+  <!-- mask panel to the right of the array -->
+  <rect x="800" y="100" width="220" height="64" rx="6" class="panel"/>
+  <text x="814" y="120" class="lbl tiny" font-weight="600">mask trick</text>
+  <text x="814" y="138" class="lbl code" font-size="11px">capacity = 8, mask = 7</text>
+  <text x="814" y="154" class="lbl code" font-size="11px">idx = logicalSeq &amp; mask</text>
+
+  <!-- head arrow up to slot 1 -->
+  <path class="flow" d="M 226 234 V 168"/>
+  <!-- tail arrow up to slot 5 -->
+  <path class="flow" d="M 562 234 V 168"/>
+
+  <!-- ============ head AtomicLong, own cache line ============ -->
+  <text x="20" y="208" class="lbl h2">head — CONSUMER-OWNED AtomicLong</text>
+  <text x="20" y="224" class="lbl h2">PADDED ONTO ITS OWN CACHE LINE</text>
+
+  <rect x="60" y="234" width="380" height="60" rx="6" class="boxH"/>
+  <text x="80" y="252" class="lbl node">cache line A (64 bytes)</text>
+  <text x="80" y="270" class="lbl code" font-size="11px">p1 p2 p3 p4 p5 p6 | head = 9 | p7 p8 p9 p10 p11 p12</text>
+  <text x="80" y="286" class="lbl sub">only the consumer thread writes head — next slot to consume</text>
+
+  <!-- ============ tail AtomicLong, own cache line ============ -->
+  <text x="520" y="208" class="lbl h2">tail — PRODUCER-OWNED AtomicLong</text>
+  <text x="520" y="224" class="lbl h2">PADDED ONTO ITS OWN CACHE LINE</text>
+
+  <rect x="560" y="234" width="380" height="60" rx="6" class="boxH"/>
+  <text x="580" y="252" class="lbl node">cache line B (64 bytes)</text>
+  <text x="580" y="270" class="lbl code" font-size="11px">p1 p2 p3 p4 p5 p6 | tail = 13 | p7 p8 p9 p10 p11 p12</text>
+  <text x="580" y="286" class="lbl sub">only the producer thread writes tail — next slot to produce into</text>
+
+  <path class="weak" d="M 440 264 H 480 V 264 H 560"/>
+  <text x="500" y="312" text-anchor="middle" class="lbl tiny" fill="#9ca3af">deliberate gap: no shared line between head and tail — no false sharing</text>
+
+  <!-- ============ one-producer / one-consumer invariant panel ============ -->
+  <rect x="20" y="330" width="500" height="140" rx="6" class="panel"/>
+  <text x="40" y="352" class="lbl node">one-producer / one-consumer invariant</text>
+  <text x="40" y="372" class="lbl tiny">Exactly one thread (withdrawal-request-writer) ever writes tail; exactly one</text>
+  <text x="40" y="388" class="lbl tiny">thread (payment-run-worker) ever writes head. Each field has a single writer, so a</text>
+  <text x="40" y="404" class="lbl tiny">plain volatile store (or AtomicLong.lazySet) publishes it safely — the writer</text>
+  <text x="40" y="420" class="lbl tiny">never races itself, and the reader only ever reads, never CASes.</text>
+  <text x="40" y="440" class="lbl tiny" font-weight="600">This is why an SPSC ring needs no compare-and-swap at all,</text>
+  <text x="40" y="456" class="lbl tiny" font-weight="600">unlike an MPMC queue where multiple producers CAS the same tail.</text>
+
+  <!-- ============ full / empty conditions panel ============ -->
+  <rect x="540" y="330" width="480" height="140" rx="6" class="panel"/>
+  <text x="560" y="352" class="lbl node">full and empty conditions</text>
+  <text x="560" y="374" class="lbl code">empty:  head == tail</text>
+  <text x="560" y="392" class="lbl sub">no WithdrawalTransaction ready for payment-run-worker to drain</text>
+  <text x="560" y="416" class="lbl code">full:   tail - head == capacity</text>
+  <text x="560" y="434" class="lbl sub">producer must block/spin — array has no free slot</text>
+  <text x="560" y="454" class="lbl sub">example above: tail 13 - head 9 = 4 occupied, capacity 8, not full</text>
+
+  <!-- ============ mask arithmetic worked example ============ -->
+  <rect x="20" y="490" width="1000" height="110" rx="6" class="panel"/>
+  <text x="40" y="512" class="lbl node">worked mask arithmetic — why bitwise-and, not modulo</text>
+  <text x="40" y="532" class="lbl code">capacity = 8 (power of two)  =&gt;  mask = capacity - 1 = 7 = 0b0111</text>
+  <text x="40" y="552" class="lbl code">producer writes seq 13: idx = 13 &amp; 7 = 0b1101 &amp; 0b0111 = 0b0101 = 5   -&gt;  array[5]</text>
+  <text x="40" y="572" class="lbl code">consumer reads  seq 9:  idx = 9  &amp; 7 = 0b1001 &amp; 0b0111 = 0b0001 = 1   -&gt;  array[1]</text>
+  <text x="40" y="592" class="lbl sub">bitwise-and wraps the ever-increasing logical sequence into [0, capacity) in one cycle, no division</text>
+
+  <!-- ============ legend ============ -->
+  <line x1="20" y1="618" x2="1020" y2="618" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="630" width="20" height="16" rx="3" class="boxR"/>
+  <text x="48" y="643" class="lbl tiny">occupied slot — a WithdrawalTransaction awaiting the payment run</text>
+  <rect x="560" y="630" width="20" height="16" rx="3" class="boxW"/>
+  <text x="588" y="643" class="lbl tiny">empty slot — already drained or not yet produced into</text>
+
+  <rect x="20" y="652" width="20" height="16" rx="3" class="boxH"/>
+  <text x="48" y="665" class="lbl tiny">padded AtomicLong cache line (head or tail)</text>
+  <path class="flow" d="M 560 660 H 600"/>
+  <text x="608" y="665" class="lbl tiny">head/tail pointer into its target array slot</text>
+
+  <path class="weak" d="M 20 686 H 60"/>
+  <text x="68" y="691" class="lbl tiny">deliberate padding gap between the two cache lines (no false sharing)</text>
+
+  <rect x="20" y="710" width="1000" height="70" rx="6" class="panel"/>
+  <text x="40" y="730" class="lbl tiny" font-weight="600">3,400 settlements/sec burst context: the ring absorbs bursts of WithdrawalTransaction</text>
+  <text x="40" y="746" class="lbl tiny">objects between the withdrawal-request-writer producer and the payment-run-worker consumer</text>
+  <text x="40" y="762" class="lbl tiny">without a lock on the hot path — only two plain field accesses, head and tail.</text>
+</svg>

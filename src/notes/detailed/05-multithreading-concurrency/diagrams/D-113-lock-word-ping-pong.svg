@@ -1,0 +1,140 @@
+<svg viewBox="0 0 1040 940" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The lock-word ping-pong: two cores, Core 0 running settlement-ingest-3 and Core 1
+     running settlement-ingest-4, each with an L1 line caching the same 64-byte cache line that
+     holds FundsLedger's lock mark word. Across three transfers the line's MESI state bounces
+     Modified to Invalid to Modified between the two cores: settlement-ingest-4's CAS attempt
+     pulls the line to Core 1, settlement-ingest-3 touching the word pulls it back to Core 0, and
+     contention repeats the cycle. Each transfer costs 100 or more nanoseconds of coherence
+     traffic. The consequence: under sustained contention on one 8-byte word, throughput is capped
+     by coherence bandwidth, not by either core's compute speed, and does not improve with more
+     cores.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .tinyB { font-size: 11px; font-weight: 700; }
+    .tiny  { font-size: 11px; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .pill  { font-size: 12.5px; font-weight: 700; }
+
+    .boxOK { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxLg { fill: #f5f5f4; stroke: #78716c; stroke-width: 1.6; }
+    .boxCas{ fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxHd { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.4; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="940" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE LOCK-WORD PING-PONG — ONE CACHE LINE, TWO CORES</text>
+  <line x1="20" y1="42" x2="1020" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- setup -->
+  <rect x="20" y="54" width="1000" height="40" rx="6" class="boxA"/>
+  <text x="40" y="78" class="lbl body">FundsLedger's monitor mark word lives inside one 64-byte cache line, shared by two cores</text>
+
+  <!-- 64-byte cache line detail, shown once -->
+  <text x="520" y="118" text-anchor="middle" class="lbl tinyB">THE SHARED LINE — 64 BYTES</text>
+  <rect x="270" y="126" width="62" height="34" class="boxCas"/>
+  <rect x="332" y="126" width="438" height="34" class="boxHd"/>
+  <text x="301" y="148" text-anchor="middle" class="lbl tiny">bytes 0&#8211;7</text>
+  <text x="301" y="180" text-anchor="middle" class="lbl sub">lock (mark) word</text>
+  <text x="551" y="148" text-anchor="middle" class="lbl tiny">bytes 8&#8211;63 — rest of the object header / padding</text>
+
+  <!-- BAND 0 -->
+  <text x="270" y="212" text-anchor="middle" class="lbl h2">CORE 0 — settlement-ingest-3</text>
+  <text x="770" y="212" text-anchor="middle" class="lbl h2">CORE 1 — settlement-ingest-4</text>
+
+  <rect x="140" y="222" width="260" height="72" rx="6" class="boxOK"/>
+  <rect x="150" y="230" width="90" height="24" rx="10" class="boxOK"/>
+  <text x="195" y="247" text-anchor="middle" class="lbl pill">M</text>
+  <text x="270" y="265" text-anchor="middle" class="lbl body">mark word = UNLOCKED, dirty</text>
+  <text x="270" y="282" text-anchor="middle" class="lbl sub">this core's L1 owns the only valid copy</text>
+
+  <rect x="640" y="222" width="260" height="72" rx="6" class="boxLg"/>
+  <rect x="650" y="230" width="90" height="24" rx="10" class="boxLg"/>
+  <text x="695" y="247" text-anchor="middle" class="lbl pill">I</text>
+  <text x="770" y="265" text-anchor="middle" class="lbl body">no cached copy of this line</text>
+  <text x="770" y="282" text-anchor="middle" class="lbl sub">any read or write must fetch it first</text>
+
+  <!-- transfer 1: core0 -> core1 -->
+  <text x="520" y="316" text-anchor="middle" class="lbl tinyB">settlement-ingest-4 issues a CAS on the mark word — RFO for the line</text>
+  <path class="flow" d="M 270 294 V 330 H 770 V 358"/>
+  <text x="520" y="352" text-anchor="middle" class="lbl body">cost: 100+ ns coherence transfer &#183; Core 0: M &#8594; I &#183; Core 1: I &#8594; M</text>
+
+  <!-- BAND 1 -->
+  <rect x="140" y="368" width="260" height="72" rx="6" class="boxLg"/>
+  <rect x="150" y="376" width="90" height="24" rx="10" class="boxLg"/>
+  <text x="195" y="393" text-anchor="middle" class="lbl pill">I</text>
+  <text x="270" y="411" text-anchor="middle" class="lbl body">invalidated, must refetch</text>
+  <text x="270" y="428" text-anchor="middle" class="lbl sub">Core 0 no longer holds a valid copy</text>
+
+  <rect x="640" y="368" width="260" height="72" rx="6" class="boxOK"/>
+  <rect x="650" y="376" width="90" height="24" rx="10" class="boxOK"/>
+  <text x="695" y="393" text-anchor="middle" class="lbl pill">M</text>
+  <text x="770" y="411" text-anchor="middle" class="lbl body">mark word = LOCKED by ingest-4</text>
+  <text x="770" y="428" text-anchor="middle" class="lbl sub">CAS succeeded, this core's copy is dirty</text>
+
+  <!-- transfer 2: core1 -> core0 -->
+  <text x="520" y="462" text-anchor="middle" class="lbl tinyB">settlement-ingest-3 touches the mark word again — RFO pulls the line back</text>
+  <path class="flow" d="M 770 440 V 476 H 270 V 504"/>
+  <text x="520" y="498" text-anchor="middle" class="lbl body">cost: 100+ ns coherence transfer &#183; Core 1: M &#8594; I &#183; Core 0: I &#8594; M</text>
+
+  <!-- BAND 2 -->
+  <rect x="140" y="514" width="260" height="72" rx="6" class="boxOK"/>
+  <rect x="150" y="522" width="90" height="24" rx="10" class="boxOK"/>
+  <text x="195" y="539" text-anchor="middle" class="lbl pill">M</text>
+  <text x="270" y="557" text-anchor="middle" class="lbl body">re-reads / re-writes the mark word</text>
+  <text x="270" y="574" text-anchor="middle" class="lbl sub">Core 0 holds the line again, dirty</text>
+
+  <rect x="640" y="514" width="260" height="72" rx="6" class="boxLg"/>
+  <rect x="650" y="522" width="90" height="24" rx="10" class="boxLg"/>
+  <text x="695" y="539" text-anchor="middle" class="lbl pill">I</text>
+  <text x="770" y="557" text-anchor="middle" class="lbl body">invalidated again</text>
+  <text x="770" y="574" text-anchor="middle" class="lbl sub">Core 1's copy is stale until it refetches</text>
+
+  <!-- transfer 3: core0 -> core1 (contention repeats) -->
+  <text x="520" y="608" text-anchor="middle" class="lbl tinyB">contention continues — settlement-ingest-4 retries the CAS</text>
+  <path class="flow" d="M 270 586 V 622 H 770 V 650"/>
+  <text x="520" y="644" text-anchor="middle" class="lbl body">cost: 100+ ns coherence transfer &#183; Core 0: M &#8594; I &#183; Core 1: I &#8594; M</text>
+
+  <!-- BAND 3 -->
+  <rect x="140" y="660" width="260" height="72" rx="6" class="boxLg"/>
+  <rect x="150" y="668" width="90" height="24" rx="10" class="boxLg"/>
+  <text x="195" y="685" text-anchor="middle" class="lbl pill">I</text>
+  <text x="270" y="703" text-anchor="middle" class="lbl body">invalidated once more</text>
+  <text x="270" y="720" text-anchor="middle" class="lbl sub">the cycle has now run three times</text>
+
+  <rect x="640" y="660" width="260" height="72" rx="6" class="boxOK"/>
+  <rect x="650" y="668" width="90" height="24" rx="10" class="boxOK"/>
+  <text x="695" y="685" text-anchor="middle" class="lbl pill">M</text>
+  <text x="770" y="703" text-anchor="middle" class="lbl body">holds the line — ping-pong repeats</text>
+  <text x="770" y="720" text-anchor="middle" class="lbl sub">under sustained contention, indefinitely</text>
+
+  <!-- throughput consequence -->
+  <rect x="20" y="752" width="1000" height="66" rx="6" class="boxA"/>
+  <text x="40" y="774" class="lbl h2" fill="#2563eb">THROUGHPUT CONSEQUENCE</text>
+  <text x="40" y="794" class="lbl body">Every bounce costs 100+ ns of coherence traffic on both cores. Under sustained contention on this</text>
+  <text x="40" y="810" class="lbl body">one 8-byte word, throughput is capped by coherence bandwidth — adding more cores makes it worse, not better.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="838" x2="1020" y2="838" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="858" class="lbl h2">LEGEND</text>
+  <rect x="20" y="870" width="22" height="16" rx="3" class="boxOK"/>
+  <text x="50" y="882" class="lbl tiny">M — Modified: this core's copy is the only valid, dirty one</text>
+  <rect x="440" y="870" width="22" height="16" rx="3" class="boxLg"/>
+  <text x="470" y="882" class="lbl tiny">I — Invalid: no valid copy, must fetch before use</text>
+  <rect x="20" y="896" width="22" height="16" rx="3" class="boxCas"/>
+  <text x="50" y="908" class="lbl tiny">the lock (mark) word's 8 bytes within the 64-byte line</text>
+  <path class="flow" d="M 440 896 H 480"/>
+  <text x="488" y="908" class="lbl tiny">coherence transfer: the line moves to the requesting core</text>
+</svg>

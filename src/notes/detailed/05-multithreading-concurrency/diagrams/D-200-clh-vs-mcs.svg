@@ -1,0 +1,149 @@
+<svg viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="CLH versus MCS spin location for FundsLedger.reserveStake lock queues. Top: CLH
+     queue of four waiters settlement-ingest-1 through settlement-ingest-3 plus the holder, each
+     holding a QNode linked backward by a prev reference and spinning on its predecessor's node
+     flag — the same node the prev reference points to — which is why CLH causes remote-node
+     spinning across NUMA links. Bottom: MCS queue of the same waiters, each holding a QNode
+     linked forward by a next reference; each waiter spins on its own node's locked flag, which
+     the predecessor writes on release, so each waiter only ever touches its own cache line.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .panel { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; }
+
+    .prevEdge { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triSlate); }
+    .nextEdge { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triGreen); }
+    .spinEdge { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triAmber); }
+  </style>
+  <defs>
+    <marker id="triSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="triGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/>
+    </marker>
+    <marker id="triAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="820" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">CLH VERSUS MCS SPIN LOCATION — FundsLedger.reserveStake QUEUE</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= CLH SECTION ================= -->
+  <text x="20" y="64" class="lbl h2">CLH — IMPLICIT QUEUE, EACH WAITER SPINS ON ITS PREDECESSOR'S NODE</text>
+
+  <rect x="60" y="86" width="190" height="96" rx="6" class="boxR"/>
+  <text x="155" y="108" text-anchor="middle" class="lbl node">HOLDER QNode</text>
+  <text x="155" y="128" text-anchor="middle" class="lbl body">locked = false</text>
+  <text x="155" y="146" text-anchor="middle" class="lbl sub">reserveStake() running</text>
+  <text x="155" y="162" text-anchor="middle" class="lbl sub">cache line: HOLDER node</text>
+
+  <rect x="310" y="86" width="190" height="96" rx="6" class="boxP"/>
+  <text x="405" y="108" text-anchor="middle" class="lbl node">settlement-ingest-1</text>
+  <text x="405" y="128" text-anchor="middle" class="lbl body">QNode.locked = true</text>
+  <text x="405" y="146" text-anchor="middle" class="lbl sub">prev -&gt; HOLDER QNode</text>
+  <text x="405" y="162" text-anchor="middle" class="lbl sub">spins on: HOLDER.locked</text>
+
+  <rect x="560" y="86" width="190" height="96" rx="6" class="boxP"/>
+  <text x="655" y="108" text-anchor="middle" class="lbl node">settlement-ingest-2</text>
+  <text x="655" y="128" text-anchor="middle" class="lbl body">QNode.locked = true</text>
+  <text x="655" y="146" text-anchor="middle" class="lbl sub">prev -&gt; ingest-1's QNode</text>
+  <text x="655" y="162" text-anchor="middle" class="lbl sub">spins on: ingest-1.locked</text>
+
+  <rect x="810" y="86" width="190" height="96" rx="6" class="boxP"/>
+  <text x="905" y="108" text-anchor="middle" class="lbl node">settlement-ingest-3</text>
+  <text x="905" y="128" text-anchor="middle" class="lbl body">QNode.locked = true</text>
+  <text x="905" y="146" text-anchor="middle" class="lbl sub">prev -&gt; ingest-2's QNode</text>
+  <text x="905" y="162" text-anchor="middle" class="lbl sub">spins on: ingest-2.locked</text>
+
+  <!-- prev references == spin targets in CLH: one edge per pair, drawn below the row -->
+  <path class="prevEdge" d="M 405 182 V 204 H 155 V 182"/>
+  <path class="prevEdge" d="M 655 182 V 226 H 405 V 182"/>
+  <path class="prevEdge" d="M 905 182 V 248 H 655 V 182"/>
+
+  <rect x="770" y="256" width="270" height="40" rx="5" class="panel"/>
+  <text x="785" y="271" class="lbl tiny" font-weight="600">prev reference = spin target</text>
+  <text x="785" y="287" class="lbl tiny">each waiter polls the node its prev points to</text>
+
+  <text x="60" y="316" class="lbl sub" font-style="italic">CLH: a waiting thread's own QNode is never read by anyone else — only its predecessor's node.locked field is polled,</text>
+  <text x="60" y="330" class="lbl sub" font-style="italic">so the hot cache line for waiter N is waiter (N-1)'s node, often on a remote core or NUMA node.</text>
+
+  <line x1="20" y1="342" x2="1100" y2="342" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= MCS SECTION ================= -->
+  <text x="20" y="368" class="lbl h2">MCS — EXPLICIT QUEUE, EACH WAITER SPINS ON ITS OWN NODE</text>
+
+  <rect x="60" y="404" width="190" height="96" rx="6" class="boxR"/>
+  <text x="155" y="426" text-anchor="middle" class="lbl node">HOLDER QNode</text>
+  <text x="155" y="446" text-anchor="middle" class="lbl body">locked = false</text>
+  <text x="155" y="464" text-anchor="middle" class="lbl sub">reserveStake() running</text>
+  <text x="155" y="480" text-anchor="middle" class="lbl sub">cache line: HOLDER node</text>
+
+  <rect x="310" y="404" width="190" height="96" rx="6" class="boxP"/>
+  <text x="405" y="426" text-anchor="middle" class="lbl node">settlement-ingest-1</text>
+  <text x="405" y="446" text-anchor="middle" class="lbl body">own QNode.locked = true</text>
+  <text x="405" y="464" text-anchor="middle" class="lbl sub">next -&gt; ingest-2's QNode</text>
+  <text x="405" y="480" text-anchor="middle" class="lbl sub">spins on: OWN node</text>
+
+  <rect x="560" y="404" width="190" height="96" rx="6" class="boxP"/>
+  <text x="655" y="426" text-anchor="middle" class="lbl node">settlement-ingest-2</text>
+  <text x="655" y="446" text-anchor="middle" class="lbl body">own QNode.locked = true</text>
+  <text x="655" y="464" text-anchor="middle" class="lbl sub">next -&gt; ingest-3's QNode</text>
+  <text x="655" y="480" text-anchor="middle" class="lbl sub">spins on: OWN node</text>
+
+  <rect x="810" y="404" width="190" height="96" rx="6" class="boxP"/>
+  <text x="905" y="426" text-anchor="middle" class="lbl node">settlement-ingest-3</text>
+  <text x="905" y="446" text-anchor="middle" class="lbl body">own QNode.locked = true</text>
+  <text x="905" y="464" text-anchor="middle" class="lbl sub">next -&gt; null (tail)</text>
+  <text x="905" y="480" text-anchor="middle" class="lbl sub">spins on: OWN node</text>
+
+  <!-- next references, explicit chain, left-to-right, above the row -->
+  <path class="nextEdge" d="M 155 404 V 386 H 405 V 404"/>
+  <path class="nextEdge" d="M 405 404 V 386 H 655 V 404"/>
+  <path class="nextEdge" d="M 655 404 V 386 H 905 V 404"/>
+  <text x="560" y="382" text-anchor="middle" class="lbl tiny">next references, chained left to right</text>
+
+  <!-- spin arrows: each waiter spins on its OWN node -->
+  <path class="spinEdge" d="M 380 500 V 520 H 430 V 500"/>
+  <path class="spinEdge" d="M 630 500 V 520 H 680 V 500"/>
+  <path class="spinEdge" d="M 880 500 V 520 H 930 V 500"/>
+
+  <rect x="20" y="530" width="1080" height="66" rx="6" class="panel"/>
+  <text x="40" y="550" class="lbl node">Release protocol</text>
+  <text x="40" y="568" class="lbl tiny">HOLDER releases -&gt; writes ingest-1's OWN node.locked = false. ingest-1 wakes, its spin loop reads ITS OWN field —</text>
+  <text x="40" y="584" class="lbl tiny">the cache line invalidated is only ingest-1's node, never a line touched by other waiters.</text>
+
+  <line x1="20" y1="612" x2="1100" y2="612" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= COMPARISON PANEL ================= -->
+  <rect x="20" y="624" width="1080" height="108" rx="6" class="panel"/>
+  <text x="40" y="644" class="lbl node">Why the difference matters at 3,400 settlements/sec burst</text>
+  <text x="40" y="664" class="lbl tiny">CLH: waiter N polls predecessor's node.locked — under NUMA, that field usually lives on a remote cache line/socket, so every spin</text>
+  <text x="40" y="680" class="lbl tiny">iteration issues a cross-node coherence read. MCS: waiter N polls its OWN node.locked, a local cache line pinned by the writer's</text>
+  <text x="40" y="696" class="lbl tiny">single release write — no remote polling traffic. CLH's advantage: releasing a node back to a free-list is simpler (no next-pointer fixup);</text>
+  <text x="40" y="712" class="lbl tiny">MCS's advantage: no NUMA remote-spin cost, which is why java.util.concurrent's AbstractQueuedSynchronizer uses an MCS-style variant.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <line x1="20" y1="744" x2="1100" y2="744" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="756" width="20" height="16" rx="3" class="boxR"/>
+  <text x="48" y="769" class="lbl tiny">lock holder node (running reserveStake)</text>
+  <rect x="290" y="756" width="20" height="16" rx="3" class="boxP"/>
+  <text x="318" y="769" class="lbl tiny">waiting node (settlement-ingest-N)</text>
+  <path class="prevEdge" d="M 560 764 H 600"/>
+  <text x="608" y="769" class="lbl tiny">prev reference (CLH) — also the spin target</text>
+  <path class="nextEdge" d="M 870 764 H 910"/>
+  <text x="918" y="769" class="lbl tiny">next reference (MCS)</text>
+  <path class="spinEdge" d="M 20 788 H 60"/>
+  <text x="68" y="793" class="lbl tiny">spin target self-loop (MCS): each waiter polls a field inside its own node, never a neighbor's</text>
+</svg>

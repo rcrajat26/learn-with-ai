@@ -1,0 +1,168 @@
+<svg viewBox="0 0 1120 900" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="A 25-line AQS mutex, three panels, all guarding FundsLedger.reserveStake. Left:
+     SimpleMutex, a non-reentrant binary lock whose tryAcquire CASes state from 0 to 1 and whose
+     tryRelease unconditionally sets state to 0, with no owner check. Middle: a reentrant version
+     that uses state as a hold count, records the owner thread in setExclusiveOwnerThread, allows
+     the owning thread to re-acquire by incrementing state, and throws
+     IllegalMonitorStateException if a thread other than the owner calls release. Right:
+     OneShotLatch, a shared-mode synchronizer where state 0 means closed and 1 means open;
+     tryAcquireShared returns 1 once open so every waiter proceeds, and a one-time CAS from 0 to 1
+     opens the latch for all waiters at once.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; letter-spacing: .3px; fill: #1f2937; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .code  { font-size: 12.5px; font-family: "SFMono-Regular", Consolas, monospace; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxF  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="900" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">A 25-LINE AQS MUTEX GUARDING FundsLedger.reserveStake</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ================= PANEL 1: SimpleMutex ================= -->
+  <text x="20" y="66" class="lbl h2">SimpleMutex — NON-REENTRANT, BINARY STATE</text>
+
+  <rect x="20" y="80" width="340" height="112" rx="6" class="boxP"/>
+  <text x="34" y="100" class="lbl node">tryAcquire(int arg)</text>
+  <text x="34" y="120" class="lbl code">return compareAndSetState(</text>
+  <text x="34" y="136" class="lbl code">    0, 1);</text>
+  <text x="34" y="156" class="lbl sub">CAS state 0 -&gt; 1: unlocked -&gt; locked</text>
+  <text x="34" y="172" class="lbl sub">no owner recorded, no hold count</text>
+  <text x="34" y="188" class="lbl sub">any thread's CAS may win the race</text>
+
+  <path class="flow" d="M 190 192 V 216"/>
+
+  <rect x="20" y="220" width="340" height="60" rx="6" class="boxR"/>
+  <text x="190" y="246" text-anchor="middle" class="lbl node">critical section</text>
+  <text x="190" y="266" text-anchor="middle" class="lbl sub">FundsLedger.reserveStake(clientId, 3.33)</text>
+
+  <path class="flow" d="M 190 280 V 304"/>
+
+  <rect x="20" y="308" width="340" height="96" rx="6" class="boxP"/>
+  <text x="34" y="328" class="lbl node">tryRelease(int arg)</text>
+  <text x="34" y="348" class="lbl code">setState(0);</text>
+  <text x="34" y="364" class="lbl code">return true;</text>
+  <text x="34" y="384" class="lbl sub">unconditional: no owner check —</text>
+  <text x="34" y="398" class="lbl sub">any thread may call unlock()</text>
+
+  <line x1="20" y1="424" x2="360" y2="424" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="434" width="340" height="66" rx="6" class="boxW"/>
+  <text x="34" y="454" class="lbl sub" font-weight="600">Cost: 5 lines, but unsafe for</text>
+  <text x="34" y="470" class="lbl sub">re-entrant retry of reserveStake and</text>
+  <text x="34" y="486" class="lbl sub">for detecting a foreign release bug.</text>
+
+  <!-- ================= PANEL 2: Reentrant ================= -->
+  <text x="400" y="66" class="lbl h2">REENTRANT MUTEX — state = HOLD COUNT</text>
+
+  <rect x="400" y="80" width="340" height="182" rx="6" class="boxH"/>
+  <text x="414" y="100" class="lbl node">tryAcquire(int arg)</text>
+  <text x="414" y="118" class="lbl code">int c = getState();</text>
+  <text x="414" y="134" class="lbl code">if (c == 0 &amp;&amp;</text>
+  <text x="414" y="150" class="lbl code">    compareAndSetState(0, 1)) {</text>
+  <text x="414" y="166" class="lbl code">  setExclusiveOwnerThread(cur);</text>
+  <text x="414" y="182" class="lbl code">  return true; }</text>
+  <text x="414" y="198" class="lbl code">if (cur == getExclusiveOwner</text>
+  <text x="414" y="214" class="lbl code">    Thread()) {</text>
+  <text x="414" y="230" class="lbl code">  setState(c + 1); return true; }</text>
+  <text x="414" y="248" class="lbl sub">state now counts nested holds, not just 0/1</text>
+
+  <path class="flow" d="M 570 262 V 286"/>
+
+  <rect x="400" y="290" width="340" height="60" rx="6" class="boxR"/>
+  <text x="570" y="316" text-anchor="middle" class="lbl node">critical section (re-entrant)</text>
+  <text x="570" y="336" text-anchor="middle" class="lbl sub">nested reserveStake() retry increments state</text>
+
+  <path class="flow" d="M 570 350 V 374"/>
+
+  <rect x="400" y="378" width="340" height="150" rx="6" class="boxH"/>
+  <text x="414" y="398" class="lbl node">tryRelease(int arg)</text>
+  <text x="414" y="416" class="lbl code">int c = getState() - 1;</text>
+  <text x="414" y="432" class="lbl code">if (cur != getExclusiveOwner</text>
+  <text x="414" y="448" class="lbl code">    Thread()) throw new</text>
+  <text x="414" y="464" class="lbl code">    IllegalMonitorStateException();</text>
+  <text x="414" y="480" class="lbl code">boolean free = (c == 0);</text>
+  <text x="414" y="496" class="lbl code">if (free) setExclusiveOwnerThread(null);</text>
+  <text x="414" y="512" class="lbl code">setState(c); return free;</text>
+
+  <path class="flow" d="M 570 528 V 552"/>
+
+  <rect x="400" y="556" width="340" height="80" rx="6" class="boxF"/>
+  <text x="414" y="578" class="lbl node">foreign release attempt</text>
+  <text x="414" y="596" class="lbl sub">settlement-ingest-2 calls unlock() while</text>
+  <text x="414" y="610" class="lbl sub">settlement-ingest-1 holds the mutex</text>
+  <text x="414" y="626" class="lbl sub" fill="#b91c1c" font-weight="600">-&gt; throws IllegalMonitorStateException</text>
+
+  <!-- ================= PANEL 3: OneShotLatch ================= -->
+  <text x="780" y="66" class="lbl h2">OneShotLatch — SHARED MODE</text>
+
+  <rect x="780" y="80" width="320" height="80" rx="6" class="boxW"/>
+  <text x="794" y="100" class="lbl node">state semantics</text>
+  <text x="794" y="120" class="lbl code">0 = CLOSED</text>
+  <text x="794" y="140" class="lbl sub">settlement batch not yet armed</text>
+  <text x="794" y="156" class="lbl code">1 = OPEN</text>
+
+  <path class="flow" d="M 940 160 V 184"/>
+
+  <rect x="780" y="188" width="320" height="112" rx="6" class="boxP"/>
+  <text x="794" y="208" class="lbl node">tryAcquireShared(int arg)</text>
+  <text x="794" y="228" class="lbl code">return (getState() == 1)</text>
+  <text x="794" y="244" class="lbl code">    ? 1 : -1;</text>
+  <text x="794" y="264" class="lbl sub">1 = succeed and propagate to next</text>
+  <text x="794" y="280" class="lbl sub">waiter; -1 = park (batch still closed)</text>
+  <text x="794" y="296" class="lbl sub">every ingest worker calls this, unshared count</text>
+
+  <path class="flow" d="M 940 300 V 324"/>
+
+  <rect x="780" y="328" width="320" height="96" rx="6" class="boxR"/>
+  <text x="794" y="348" class="lbl node">tryReleaseShared(int arg) / signal()</text>
+  <text x="794" y="366" class="lbl code">return compareAndSetState(0, 1);</text>
+  <text x="794" y="386" class="lbl sub">CAS 0-&gt;1 opens the latch exactly once</text>
+  <text x="794" y="402" class="lbl sub">all parked settlement-ingest-N waiters</text>
+  <text x="794" y="418" class="lbl sub">wake together — no per-waiter hand-off</text>
+
+  <line x1="780" y1="440" x2="1100" y2="440" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="780" y="450" width="320" height="80" rx="6" class="boxW"/>
+  <text x="794" y="470" class="lbl sub" font-weight="600">Contrast with exclusive mutex panels:</text>
+  <text x="794" y="486" class="lbl sub">state is a 2-value flag, not a hold count,</text>
+  <text x="794" y="502" class="lbl sub">and release wakes an unbounded number</text>
+  <text x="794" y="518" class="lbl sub">of waiters, not just the next in line.</text>
+
+  <!-- ================= LEGEND ================= -->
+  <line x1="20" y1="656" x2="1100" y2="656" stroke="#d1d5db" stroke-width="1.5"/>
+  <rect x="20" y="668" width="20" height="16" rx="3" class="boxP"/>
+  <text x="48" y="681" class="lbl tiny">exclusive-mode AQS method (tryAcquire/tryRelease)</text>
+  <rect x="440" y="668" width="20" height="16" rx="3" class="boxH"/>
+  <text x="468" y="681" class="lbl tiny">reentrant-specific logic: hold count and owner tracking</text>
+  <rect x="820" y="668" width="20" height="16" rx="3" class="boxR"/>
+  <text x="848" y="681" class="lbl tiny">success / critical-section path</text>
+
+  <rect x="20" y="694" width="20" height="16" rx="3" class="boxW"/>
+  <text x="48" y="707" class="lbl tiny">note or nested detail, not executable AQS code</text>
+  <path class="flow" d="M 440 702 H 480"/>
+  <text x="488" y="707" class="lbl tiny">sequential control flow (A -&gt; B: B executes after A)</text>
+
+  <rect x="20" y="716" width="20" height="16" rx="3" class="boxF"/>
+  <text x="48" y="729" class="lbl tiny">failure path: foreign-thread release throws IllegalMonitorStateException</text>
+
+  <rect x="20" y="740" width="1080" height="80" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="40" y="762" class="lbl tiny" font-weight="600">Line count check: SimpleMutex's tryAcquire (2 lines) + tryRelease (2 lines) + field declarations and</text>
+  <text x="40" y="778" class="lbl tiny">class boilerplate account for the "25-line" figure — the reentrant and shared-mode variants trade that</text>
+  <text x="40" y="794" class="lbl tiny">line budget for owner tracking, reentrancy, and misuse detection, which SimpleMutex has none of.</text>
+</svg>

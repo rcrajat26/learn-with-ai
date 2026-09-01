@@ -1,0 +1,146 @@
+<svg viewBox="0 0 950 980" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The latency ladder: a single logarithmic axis from 1 nanosecond to 1 millisecond
+     with every rung marked, connected to the axis by orthogonal elbow lines at their true
+     log-scale position. From fastest to slowest: L1 cache reference 1 ns, L2 cache reference
+     4 ns, uncontended CAS 10 to 20 ns, L3 cache reference 15 to 40 ns, main memory reference 80
+     to 100 ns, cache-line transfer between cores 100 or more ns, contended CAS 100 or more ns,
+     virtual thread creation about 1 microsecond, park and unpark a thread 1 to 10 microseconds,
+     platform thread creation 50 to 200 microseconds. A footer states these are orders of
+     magnitude, not measured constants, and will vary by hardware and JVM.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .sub   { font-size: 10.5px; fill: #4b5563; }
+    .tiny  { font-size: 11px; }
+
+    .axis  { stroke: #475569; stroke-width: 2; }
+    .tick  { stroke: #475569; stroke-width: 1.6; }
+
+    .boxCore { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxMem  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxCas  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxThr  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxDeg  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+
+    .stem  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+    .note  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="950" height="980" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE LATENCY LADDER — 1 NS TO 1 MS, LOG SCALE</text>
+  <line x1="20" y1="42" x2="930" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- vertical log axis at x=150; y(ns) = 70 + 118*log10(ns); decades at 1,10,100ns,1,10,100us,1ms -->
+  <line x1="150" y1="65" x2="150" y2="783" class="axis"/>
+  <text x="150" y="56" text-anchor="middle" class="lbl tiny" fill="#4b5563">ns, log scale</text>
+
+  <line x1="145" y1="70"  x2="150" y2="70"  class="tick"/>
+  <text x="136" y="74" text-anchor="end" class="lbl sub">1 ns</text>
+  <line x1="145" y1="188" x2="150" y2="188" class="tick"/>
+  <text x="136" y="192" text-anchor="end" class="lbl sub">10 ns</text>
+  <line x1="145" y1="306" x2="150" y2="306" class="tick"/>
+  <text x="136" y="310" text-anchor="end" class="lbl sub">100 ns</text>
+  <line x1="145" y1="424" x2="150" y2="424" class="tick"/>
+  <text x="136" y="428" text-anchor="end" class="lbl sub">1 &#181;s</text>
+  <line x1="145" y1="542" x2="150" y2="542" class="tick"/>
+  <text x="136" y="546" text-anchor="end" class="lbl sub">10 &#181;s</text>
+  <line x1="145" y1="660" x2="150" y2="660" class="tick"/>
+  <text x="136" y="664" text-anchor="end" class="lbl sub">100 &#181;s</text>
+  <line x1="145" y1="778" x2="150" y2="778" class="tick"/>
+  <text x="136" y="782" text-anchor="end" class="lbl sub">1 ms</text>
+
+  <!-- rungs: each connects true axis y to a dedicated row via an orthogonal elbow: H to corridor, V to row, H into box -->
+
+  <!-- 0: L1, trueY=70, row=90, corridor x=195 -->
+  <path class="stem" d="M 150 70 H 195 V 96 H 260"/>
+  <rect x="260" y="82" width="170" height="28" rx="5" class="boxCore"/>
+  <text x="272" y="100" class="lbl node">L1 cache — 1 ns</text>
+
+  <!-- 1: L2, trueY=141, row=164, corridor x=199 -->
+  <path class="stem" d="M 150 141 H 199 V 170 H 260"/>
+  <rect x="260" y="156" width="170" height="28" rx="5" class="boxCore"/>
+  <text x="272" y="174" class="lbl node">L2 cache — 4 ns</text>
+
+  <!-- 2: uncontended CAS, trueY=209, row=238, corridor x=203 -->
+  <path class="stem" d="M 150 209 H 203 V 244 H 260"/>
+  <rect x="260" y="230" width="260" height="28" rx="5" class="boxCas"/>
+  <text x="272" y="248" class="lbl node">uncontended CAS — 10&#8211;20 ns</text>
+
+  <!-- 3: L3, trueY=239, row=312, corridor x=207 -->
+  <path class="stem" d="M 150 239 H 207 V 318 H 260"/>
+  <rect x="260" y="304" width="200" height="28" rx="5" class="boxCore"/>
+  <text x="272" y="322" class="lbl node">L3 cache — 15&#8211;40 ns</text>
+
+  <!-- 4: main memory, trueY=301, row=386, corridor x=211 -->
+  <path class="stem" d="M 150 301 H 211 V 392 H 260"/>
+  <rect x="260" y="378" width="220" height="28" rx="5" class="boxMem"/>
+  <text x="272" y="396" class="lbl node">main memory — 80&#8211;100 ns</text>
+
+  <!-- 5: cache-line transfer, trueY=306, row=460, corridor x=215 -->
+  <path class="stem" d="M 150 306 H 215 V 466 H 260"/>
+  <rect x="260" y="452" width="350" height="28" rx="5" class="boxDeg"/>
+  <text x="272" y="470" class="lbl node">cache-line transfer, core&#8594;core — 100+ ns</text>
+
+  <!-- 6: contended CAS, trueY=306, row=534, corridor x=219 -->
+  <path class="stem" d="M 150 306 H 219 V 540 H 260"/>
+  <rect x="260" y="526" width="240" height="28" rx="5" class="boxDeg"/>
+  <text x="272" y="544" class="lbl node">contended CAS — 100+ ns</text>
+
+  <!-- 7: virtual thread creation, trueY=424, row=608, corridor x=223 -->
+  <path class="stem" d="M 150 424 H 223 V 614 H 260"/>
+  <rect x="260" y="600" width="270" height="28" rx="5" class="boxCas"/>
+  <text x="272" y="618" class="lbl node">virtual thread creation — &#8776;1 &#181;s</text>
+
+  <!-- 8: park/unpark, trueY=480, row=682, corridor x=227 -->
+  <path class="stem" d="M 150 480 H 227 V 688 H 260"/>
+  <rect x="260" y="674" width="220" height="28" rx="5" class="boxThr"/>
+  <text x="272" y="692" class="lbl node">park / unpark — 1&#8211;10 &#181;s</text>
+
+  <!-- 9: platform thread creation, trueY=660, row=756, corridor x=231 -->
+  <path class="stem" d="M 150 660 H 231 V 762 H 260"/>
+  <rect x="260" y="748" width="300" height="28" rx="5" class="boxDeg"/>
+  <text x="272" y="766" class="lbl node">platform thread creation — 50&#8211;200 &#181;s</text>
+
+  <!-- annotation panel, placed in the open canvas to the right of the mid rows -->
+  <rect x="650" y="440" width="280" height="90" rx="6" class="note"/>
+  <text x="665" y="462" class="lbl h2" fill="#2563eb">READING THE LADDER</text>
+  <text x="665" y="482" class="lbl tiny">A contended CAS on FundsLedger</text>
+  <text x="665" y="498" class="lbl tiny">.reserveStake costs about the same</text>
+  <text x="665" y="514" class="lbl tiny">order as a cross-core cache-line pull.</text>
+
+  <!-- legend -->
+  <line x1="20" y1="810" x2="930" y2="810" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="830" class="lbl h2">LEGEND</text>
+
+  <rect x="20" y="842" width="22" height="16" rx="3" class="boxCore"/>
+  <text x="50" y="855" class="lbl tiny">CPU cache access (L1/L2/L3)</text>
+
+  <rect x="250" y="842" width="22" height="16" rx="3" class="boxMem"/>
+  <text x="280" y="855" class="lbl tiny">DRAM / main-memory access</text>
+
+  <rect x="480" y="842" width="22" height="16" rx="3" class="boxCas"/>
+  <text x="510" y="855" class="lbl tiny">atomic / lock-free primitive</text>
+
+  <rect x="710" y="842" width="22" height="16" rx="3" class="boxThr"/>
+  <text x="740" y="855" class="lbl tiny">thread parking primitive</text>
+
+  <rect x="20" y="868" width="22" height="16" rx="3" class="boxDeg"/>
+  <text x="50" y="881" class="lbl tiny">contended / coherence-cost / heavyweight path</text>
+
+  <path class="stem" d="M 400 876 H 440"/>
+  <text x="448" y="881" class="lbl tiny">elbow: rung's true position on the ns axis &#8594; its box row</text>
+
+  <!-- footer banner -->
+  <rect x="20" y="900" width="910" height="60" rx="6" class="note"/>
+  <text x="475" y="924" text-anchor="middle" class="lbl h2" fill="#2563eb">ORDER OF MAGNITUDE, NOT MEASURED CONSTANTS</text>
+  <text x="475" y="944" text-anchor="middle" class="lbl tiny">Actual numbers vary by CPU generation, JVM, and JIT state — treat every rung as a rank, not a promise.</text>
+</svg>

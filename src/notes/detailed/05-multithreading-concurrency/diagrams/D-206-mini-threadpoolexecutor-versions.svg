@@ -1,0 +1,226 @@
+<svg viewBox="0 0 1200 1680" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Five frames build up a mini ThreadPoolExecutor for the settlement pool, version by version. Frame 1: N worker threads named settlement-ingest-1 through settlement-ingest-3 all pull from one shared BlockingQueue of queued WithdrawalTransaction tasks. Frame 2: submit wraps a Runnable in a hand-rolled MiniFuture whose state machine moves from NEW to COMPLETING and then to NORMAL or EXCEPTIONAL, or directly from NEW to CANCELLED. Frame 3: run state and worker count are packed into one ctl AtomicInteger, split into a high runState field with values RUNNING, SHUTDOWN, STOP, TIDYING, TERMINATED and a low 29-bit workerCount field extracted with runStateOf and workerCountOf. Frame 4: core pool workers block on queue.take, extra workers up to maximumPoolSize use queue.poll with a keepAliveTime and exit on timeout, and once the queue is full and the pool is at maximumPoolSize a RejectedExecutionHandler runs one of four policies — AbortPolicy, CallerRunsPolicy, DiscardPolicy, DiscardOldestPolicy. Frame 5: beforeExecute runs before a task, task.run is wrapped in try/catch so afterExecute still observes a thrown exception, and the worker thread loops back to take the next task instead of dying.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 12.5px; font-weight: 700; fill: #4b5563; letter-spacing: .4px; }
+    .node  { font-size: 15px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .tiny  { font-size: 11px; }
+    .tinySec { font-size: 11px; fill: #4b5563; }
+    .pillTxt { font-size: 11px; font-weight: 700; }
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxG  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxV  { fill: #fbbf24; stroke: #b45309; stroke-width: 1.6; }
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1200" height="1680" fill="#ffffff"/>
+  <text x="20" y="32" class="lbl h1">THE MINI ThreadPoolExecutor, VERSION BY VERSION — THE settlement-ingest POOL</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <!-- ===================== FRAME 1 ===================== -->
+  <rect x="20" y="62" width="90" height="22" rx="4" class="boxV"/>
+  <text x="65" y="77" text-anchor="middle" class="lbl pillTxt">FRAME 1</text>
+  <text x="122" y="77" class="lbl h2">N WORKERS OVER ONE BlockingQueue</text>
+
+  <rect x="40" y="100" width="300" height="70" class="boxP"/>
+  <text x="52" y="122" class="lbl node">BlockingQueue&lt;Runnable&gt;</text>
+  <text x="52" y="142" class="lbl body">queued WithdrawalTransaction tasks</text>
+
+  <line x1="190" y1="170" x2="190" y2="180" class="flow"/>
+  <path d="M 190 180 H 890" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="490" y1="180" x2="490" y2="190" class="flow"/>
+  <line x1="700" y1="180" x2="700" y2="190" class="flow"/>
+  <line x1="890" y1="180" x2="890" y2="190" class="flow"/>
+
+  <rect x="400" y="190" width="180" height="56" class="boxG"/>
+  <text x="490" y="212" text-anchor="middle" class="lbl body">settlement-ingest-1</text>
+  <text x="490" y="230" text-anchor="middle" class="lbl body">poll queue, run task</text>
+
+  <rect x="610" y="190" width="180" height="56" class="boxG"/>
+  <text x="700" y="212" text-anchor="middle" class="lbl body">settlement-ingest-2</text>
+  <text x="700" y="230" text-anchor="middle" class="lbl body">poll queue, run task</text>
+
+  <rect x="800" y="190" width="180" height="56" class="boxG"/>
+  <text x="890" y="212" text-anchor="middle" class="lbl body">settlement-ingest-3</text>
+  <text x="890" y="230" text-anchor="middle" class="lbl body">poll queue, run task</text>
+
+  <!-- ===================== FRAME 2 ===================== -->
+  <rect x="20" y="282" width="90" height="22" rx="4" class="boxV"/>
+  <text x="65" y="297" text-anchor="middle" class="lbl pillTxt">FRAME 2</text>
+  <text x="122" y="297" class="lbl h2">submit() + A HAND-ROLLED FUTURE STATE MACHINE</text>
+
+  <rect x="40" y="320" width="210" height="50" class="boxP"/>
+  <text x="52" y="340" class="lbl body">submit(Runnable task)</text>
+  <text x="52" y="358" class="lbl body">wraps task in MiniFuture</text>
+  <line x1="250" y1="345" x2="300" y2="345" class="flow"/>
+
+  <rect x="300" y="320" width="140" height="50" class="boxH"/>
+  <text x="370" y="340" text-anchor="middle" class="lbl body">MiniFuture</text>
+  <text x="370" y="358" text-anchor="middle" class="lbl body">state = NEW</text>
+  <line x1="440" y1="345" x2="765" y2="345" class="flow"/>
+  <line x1="370" y1="370" x2="370" y2="410" class="flow"/>
+
+  <rect x="300" y="410" width="140" height="50" class="boxW"/>
+  <text x="370" y="430" text-anchor="middle" class="lbl body">cancel() called</text>
+  <text x="370" y="448" text-anchor="middle" class="lbl body">state = CANCELLED</text>
+
+  <rect x="765" y="320" width="150" height="50" class="boxW"/>
+  <text x="840" y="340" text-anchor="middle" class="lbl body">run() finishes or throws</text>
+  <text x="840" y="358" text-anchor="middle" class="lbl body">state = COMPLETING</text>
+
+  <line x1="840" y1="370" x2="840" y2="385" class="flow"/>
+  <path d="M 840 385 H 765" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 840 385 H 955" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="765" y1="385" x2="765" y2="410" class="flow"/>
+  <line x1="955" y1="385" x2="955" y2="410" class="flow"/>
+
+  <rect x="680" y="410" width="170" height="60" class="boxG"/>
+  <text x="765" y="432" text-anchor="middle" class="lbl body">state = NORMAL</text>
+  <text x="765" y="450" text-anchor="middle" class="lbl body">get() returns result</text>
+
+  <rect x="870" y="410" width="170" height="60" class="boxR"/>
+  <text x="955" y="432" text-anchor="middle" class="lbl body">state = EXCEPTIONAL</text>
+  <text x="955" y="450" text-anchor="middle" class="lbl body">get() rethrows cause</text>
+
+  <!-- ===================== FRAME 3 ===================== -->
+  <rect x="20" y="512" width="90" height="22" rx="4" class="boxV"/>
+  <text x="65" y="527" text-anchor="middle" class="lbl pillTxt">FRAME 3</text>
+  <text x="122" y="527" class="lbl h2">RUN STATE + WORKER COUNT PACKED INTO ONE ctl (AtomicInteger)</text>
+
+  <rect x="40" y="550" width="200" height="60" class="boxH"/>
+  <text x="140" y="574" text-anchor="middle" class="lbl body">runState</text>
+  <text x="140" y="592" text-anchor="middle" class="lbl tiny">high 3 bits</text>
+  <rect x="240" y="550" width="560" height="60" class="boxP"/>
+  <text x="520" y="574" text-anchor="middle" class="lbl body">workerCount</text>
+  <text x="520" y="592" text-anchor="middle" class="lbl tiny">low 29 bits — CAPACITY = (1 &lt;&lt; 29) - 1</text>
+
+  <line x1="420" y1="610" x2="420" y2="620" class="flow"/>
+  <path d="M 420 620 H 610" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="210" y1="620" x2="210" y2="630" class="flow"/>
+  <line x1="610" y1="620" x2="610" y2="630" class="flow"/>
+  <path d="M 420 620 H 210" fill="none" stroke="#475569" stroke-width="2"/>
+
+  <rect x="40" y="630" width="340" height="100" class="boxP"/>
+  <text x="52" y="650" class="lbl tiny" font-weight="700">RUN STATE VALUES (low → high)</text>
+  <text x="52" y="666" class="lbl tiny">RUNNING</text>
+  <text x="52" y="680" class="lbl tiny">SHUTDOWN</text>
+  <text x="52" y="694" class="lbl tiny">STOP</text>
+  <text x="52" y="708" class="lbl tiny">TIDYING → TERMINATED</text>
+
+  <rect x="420" y="630" width="380" height="100" class="boxA"/>
+  <text x="432" y="650" class="lbl tiny" font-weight="700">EXTRACTING THE FIELDS</text>
+  <text x="432" y="666" class="lbl tinySec">runStateOf(c) = c &amp; ~CAPACITY</text>
+  <text x="432" y="682" class="lbl tinySec">workerCountOf(c) = c &amp; CAPACITY</text>
+  <text x="432" y="698" class="lbl tinySec">one CAS on ctl updates both fields atomically</text>
+
+  <!-- ===================== FRAME 4 ===================== -->
+  <rect x="20" y="762" width="90" height="22" rx="4" class="boxV"/>
+  <text x="65" y="777" text-anchor="middle" class="lbl pillTxt">FRAME 4</text>
+  <text x="122" y="777" class="lbl h2">CORE/MAX SIZING, poll(keepAliveTime), AND FOUR REJECTION POLICIES</text>
+
+  <rect x="40" y="800" width="220" height="60" class="boxP"/>
+  <text x="150" y="822" text-anchor="middle" class="lbl body">corePoolSize workers</text>
+  <text x="150" y="840" text-anchor="middle" class="lbl tiny">always alive, block on queue.take()</text>
+  <line x1="260" y1="830" x2="300" y2="830" class="flow"/>
+
+  <rect x="300" y="800" width="240" height="60" class="boxP"/>
+  <text x="420" y="822" text-anchor="middle" class="lbl body">extra workers up to maximumPoolSize</text>
+  <text x="420" y="840" text-anchor="middle" class="lbl tiny">use queue.poll(keepAliveTime, unit)</text>
+  <line x1="540" y1="830" x2="580" y2="830" class="flow"/>
+
+  <rect x="580" y="800" width="260" height="60" class="boxW"/>
+  <text x="710" y="822" text-anchor="middle" class="lbl body">poll() times out (idle &gt; keepAliveTime)</text>
+  <text x="710" y="840" text-anchor="middle" class="lbl tiny">worker exits, workerCount--</text>
+
+  <line x1="420" y1="860" x2="420" y2="875" class="flow"/>
+  <path d="M 420 875 H 220" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="220" y1="875" x2="220" y2="890" class="flow"/>
+
+  <rect x="40" y="890" width="360" height="50" class="boxH"/>
+  <text x="220" y="910" text-anchor="middle" class="lbl body">queue full AND workers == maximumPoolSize</text>
+  <text x="220" y="928" text-anchor="middle" class="lbl body">→ RejectedExecutionHandler runs one policy</text>
+  <line x1="220" y1="940" x2="220" y2="960" class="flow"/>
+
+  <rect x="40" y="960" width="760" height="120" class="boxP"/>
+  <text x="52" y="982" class="lbl tiny" font-weight="700">FOUR REJECTION POLICIES</text>
+  <text x="52" y="1000" class="lbl tiny">AbortPolicy — throws RejectedExecutionException (the default)</text>
+  <text x="52" y="1018" class="lbl tiny">CallerRunsPolicy — runs the task on the caller's own thread</text>
+  <text x="52" y="1036" class="lbl tiny">DiscardPolicy — silently drops the task</text>
+  <text x="52" y="1054" class="lbl tiny">DiscardOldestPolicy — evicts the queue head, then retries submission</text>
+
+  <!-- ===================== FRAME 5 ===================== -->
+  <rect x="20" y="1112" width="90" height="22" rx="4" class="boxV"/>
+  <text x="65" y="1127" text-anchor="middle" class="lbl pillTxt">FRAME 5</text>
+  <text x="122" y="1127" class="lbl h2">beforeExecute/afterExecute AND THE TRY/CATCH THAT SAVES THE WORKER</text>
+
+  <rect x="40" y="1150" width="230" height="60" class="boxP"/>
+  <text x="155" y="1174" text-anchor="middle" class="lbl body">beforeExecute(thread, task)</text>
+  <text x="155" y="1192" text-anchor="middle" class="lbl tiny">hook runs before each task</text>
+  <line x1="270" y1="1180" x2="310" y2="1180" class="flow"/>
+
+  <rect x="310" y="1150" width="240" height="60" class="boxP"/>
+  <text x="430" y="1174" text-anchor="middle" class="lbl body">try { task.run(); }</text>
+  <text x="430" y="1192" text-anchor="middle" class="lbl tiny">e.g. FundsLedger.reserveStake(...)</text>
+
+  <line x1="430" y1="1210" x2="430" y2="1225" class="flow"/>
+  <path d="M 430 1225 H 540" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 430 1225 H 790" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="540" y1="1225" x2="540" y2="1245" class="flow"/>
+  <line x1="790" y1="1225" x2="790" y2="1245" class="flow"/>
+
+  <rect x="440" y="1245" width="200" height="70" class="boxG"/>
+  <text x="540" y="1268" text-anchor="middle" class="lbl body">afterExecute(task, null)</text>
+  <text x="540" y="1286" text-anchor="middle" class="lbl tiny">normal completion path</text>
+
+  <rect x="680" y="1245" width="220" height="70" class="boxH"/>
+  <text x="790" y="1264" text-anchor="middle" class="lbl body">catch (Throwable t) {</text>
+  <text x="790" y="1280" text-anchor="middle" class="lbl body">afterExecute(task, t) }</text>
+  <text x="790" y="1296" text-anchor="middle" class="lbl tiny">exception is observed, not fatal</text>
+
+  <line x1="540" y1="1315" x2="540" y2="1330" class="flow"/>
+  <line x1="790" y1="1315" x2="790" y2="1330" class="flow"/>
+  <path d="M 540 1330 H 665" fill="none" stroke="#475569" stroke-width="2"/>
+  <path d="M 790 1330 H 665" fill="none" stroke="#475569" stroke-width="2"/>
+  <line x1="665" y1="1330" x2="665" y2="1345" class="flow"/>
+
+  <rect x="435" y="1345" width="460" height="50" class="boxG"/>
+  <text x="665" y="1365" text-anchor="middle" class="lbl body">worker loops back to BlockingQueue.take() —</text>
+  <text x="665" y="1383" text-anchor="middle" class="lbl body">settlement-ingest-N survives a thrown task</text>
+
+  <rect x="435" y="1415" width="460" height="90" class="boxA"/>
+  <text x="447" y="1435" class="lbl tiny" font-weight="700">WHY THE WORKER SURVIVES</text>
+  <text x="447" y="1452" class="lbl tinySec">an uncaught Throwable in Worker.run() used to kill the thread</text>
+  <text x="447" y="1468" class="lbl tinySec">wrapping task.run() in try/catch keeps the thread alive for</text>
+  <text x="447" y="1484" class="lbl tinySec">the next task, while afterExecute(task, t) still sees the cause</text>
+
+  <!-- ===================== LEGEND ===================== -->
+  <line x1="20" y1="1555" x2="1180" y2="1555" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="1573" width="18" height="14" class="boxV"/>
+  <text x="46" y="1585" class="lbl tiny">frame marker (step-sequence order)</text>
+  <rect x="20" y="1595" width="18" height="14" class="boxP"/>
+  <text x="46" y="1607" class="lbl tiny">steady-state field, worker, or method</text>
+  <rect x="20" y="1617" width="18" height="14" class="boxW"/>
+  <text x="46" y="1629" class="lbl tiny">transient / idle-timeout state</text>
+  <rect x="20" y="1639" width="18" height="14" class="boxH"/>
+  <text x="46" y="1651" class="lbl tiny">the pivotal event this frame is about</text>
+
+  <rect x="640" y="1573" width="18" height="14" class="boxG"/>
+  <text x="666" y="1585" class="lbl tiny">successful / surviving outcome</text>
+  <rect x="640" y="1595" width="18" height="14" class="boxR"/>
+  <text x="666" y="1607" class="lbl tiny">failure outcome (propagated exception)</text>
+  <rect x="640" y="1617" width="18" height="14" class="boxA"/>
+  <text x="666" y="1629" class="lbl tiny">explanatory notes panel</text>
+  <line x1="640" y1="1646" x2="668" y2="1646" stroke="#475569" stroke-width="2" marker-end="url(#tri)"/>
+  <text x="678" y="1651" class="lbl tiny">A → B: sequential step / state transition</text>
+</svg>

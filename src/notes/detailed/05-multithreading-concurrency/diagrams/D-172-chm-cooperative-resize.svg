@@ -1,0 +1,197 @@
+<svg viewBox="0 0 1200 1400" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Four-frame sequence showing ConcurrentHashMap resizing cooperatively from a
+     16-slot table to a 32-slot table for ClientId to ClientRestrictions entries. Frame 1:
+     transferIndex is set to 16 and stride is computed as MIN_TRANSFER_STRIDE 16 divided
+     across NCPU. Frame 2: restriction-apply-1 and restriction-apply-2 each claim a disjoint
+     range of bins by decrementing transferIndex. Frame 3: a moved bin is replaced by a
+     ForwardingNode whose hash is MOVED -1; a reader follows nextTable while a late writer
+     calls helpTransfer. Frame 4: bin 5 splits into a lo list staying at index 5 and a hi
+     list moving to index 5 + 16 = 21, decided by testing hash and oldCap equal to zero,
+     shown with two worked hash values.">
+  <style>
+    .lbl   { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1    { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2    { font-size: 13px; font-weight: 700; }
+    .node  { font-size: 13px; font-weight: 600; }
+    .body  { font-size: 12.5px; }
+    .sub   { font-size: 11px; fill: #4b5563; }
+    .tiny  { font-size: 10.5px; fill: #4b5563; }
+
+    .boxP  { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH  { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxR  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+    .boxW  { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.3; }
+    .boxD  { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxA  { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+
+    .flow  { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#triS); }
+    .dashG { fill: none; stroke: #15803d; stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; marker-end: url(#triG); }
+    .dotA  { fill: none; stroke: #b45309; stroke-width: 2; stroke-dasharray: 3 3; stroke-linejoin: round; marker-end: url(#triA); }
+    .dotW  { fill: none; stroke: #9ca3af; stroke-width: 2; stroke-dasharray: 4 3; stroke-linejoin: round; marker-end: url(#triW); }
+  </style>
+  <defs>
+    <marker id="triS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/></marker>
+    <marker id="triG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#15803d"/></marker>
+    <marker id="triA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker>
+    <marker id="triW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="1400" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">RESIZING IS COOPERATIVE: 16 &#8594; 32 BINS</text>
+  <line x1="20" y1="42" x2="1180" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="60" class="lbl sub">ConcurrentHashMap&lt;ClientId, ClientRestrictions&gt; over 2.4M registered clients</text>
+
+  <!-- FRAME 1 -->
+  <rect x="20" y="80" width="1160" height="240" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="104" class="lbl h2">FRAME 1 &#8212; transferIndex AND STRIDE ESTABLISHED</text>
+
+  <rect x="40" y="120" width="260" height="90" rx="6" class="boxH"/>
+  <text x="170" y="142" text-anchor="middle" class="lbl node">transferIndex = 16</text>
+  <text x="170" y="162" text-anchor="middle" class="lbl body">oldCap = 16, newCap = 32</text>
+  <text x="170" y="180" text-anchor="middle" class="lbl tiny">index counts down from oldCap</text>
+  <text x="170" y="196" text-anchor="middle" class="lbl tiny">as ranges are claimed</text>
+
+  <path class="flow" d="M 300 165 H 360"/>
+
+  <rect x="360" y="120" width="300" height="90" rx="6" class="boxP"/>
+  <text x="510" y="142" text-anchor="middle" class="lbl node">stride computed from NCPU</text>
+  <text x="510" y="162" text-anchor="middle" class="lbl body">stride = max(MIN_TRANSFER_STRIDE, (n &gt;&gt;&gt; 3) / NCPU)</text>
+  <text x="510" y="180" text-anchor="middle" class="lbl tiny">MIN_TRANSFER_STRIDE = 16</text>
+  <text x="510" y="196" text-anchor="middle" class="lbl tiny">for oldCap 16, stride floors at 16 (one full bin range)</text>
+
+  <path class="flow" d="M 660 165 H 720"/>
+
+  <rect x="720" y="120" width="420" height="90" rx="6" class="boxR"/>
+  <text x="930" y="142" text-anchor="middle" class="lbl node">nextTable allocated: Node[32]</text>
+  <text x="930" y="162" text-anchor="middle" class="lbl body">ForwardingNode(nextTable) will replace moved bins</text>
+  <text x="930" y="180" text-anchor="middle" class="lbl tiny">sizeCtl set to negative-other (see D-171)</text>
+  <text x="930" y="196" text-anchor="middle" class="lbl tiny">triggered by addCount() crossing threshold</text>
+
+  <rect x="40" y="222" width="1100" height="80" rx="6" class="boxA"/>
+  <text x="54" y="242" class="lbl tiny" font-weight="700">CHANGED SINCE START: resize decided, transferIndex and stride set, new table allocated.</text>
+  <text x="54" y="260" class="lbl tiny">No bin has moved yet. Any thread that now touches this map (reader or writer) will notice</text>
+  <text x="54" y="278" class="lbl tiny">the resize is in progress via sizeCtl and can choose to help via helpTransfer().</text>
+
+  <!-- FRAME 2 -->
+  <rect x="20" y="340" width="1160" height="260" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="364" class="lbl h2">FRAME 2 &#8212; TWO THREADS CLAIM DISJOINT RANGES</text>
+
+  <rect x="40" y="384" width="500" height="100" rx="6" class="boxP"/>
+  <text x="290" y="406" text-anchor="middle" class="lbl node">restriction-apply-1</text>
+  <text x="290" y="426" text-anchor="middle" class="lbl body">CAS transferIndex 16 &#8594; 0</text>
+  <text x="290" y="444" text-anchor="middle" class="lbl tiny">claims range [0, 16) &#8212; bins 0..15</text>
+  <text x="290" y="462" text-anchor="middle" class="lbl tiny">begins transferring bin 15 downward</text>
+
+  <rect x="580" y="384" width="500" height="100" rx="6" class="boxP"/>
+  <text x="830" y="406" text-anchor="middle" class="lbl node">restriction-apply-2</text>
+  <text x="830" y="426" text-anchor="middle" class="lbl body">arrives after range exhausted at 0</text>
+  <text x="830" y="444" text-anchor="middle" class="lbl tiny">calls helpTransfer(); no unclaimed range left</text>
+  <text x="830" y="462" text-anchor="middle" class="lbl tiny">waits on next transfer() call to advance</text>
+
+  <path class="dotA" d="M 540 434 H 580"/>
+
+  <rect x="40" y="504" width="1100" height="80" rx="6" class="boxA"/>
+  <text x="54" y="524" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 1: transferIndex CAS'd from 16 to 0 by restriction-apply-1,</text>
+  <text x="54" y="542" class="lbl tiny">which now owns the whole 16-bin stride (stride == oldCap here, so one thread can claim it all).</text>
+  <text x="54" y="560" class="lbl tiny">restriction-apply-2 still finds sizeCtl's low bits incremented, showing 2 resizing threads + 1.</text>
+
+  <!-- FRAME 3 -->
+  <rect x="20" y="620" width="1160" height="320" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="644" class="lbl h2">FRAME 3 &#8212; A MOVED BIN BECOMES A ForwardingNode (MOVED = -1)</text>
+
+  <rect x="40" y="664" width="220" height="70" rx="6" class="boxD"/>
+  <text x="150" y="686" text-anchor="middle" class="lbl node">table[9]</text>
+  <text x="150" y="706" text-anchor="middle" class="lbl body">ForwardingNode</text>
+  <text x="150" y="722" text-anchor="middle" class="lbl tiny">hash = MOVED = -1</text>
+
+  <path class="dashG" d="M 260 699 H 320"/>
+  <text x="290" y="690" text-anchor="middle" class="lbl tiny">nextTable</text>
+
+  <rect x="320" y="664" width="240" height="70" rx="6" class="boxR"/>
+  <text x="440" y="686" text-anchor="middle" class="lbl node">nextTable[9] / nextTable[25]</text>
+  <text x="440" y="706" text-anchor="middle" class="lbl body">real moved nodes live here</text>
+  <text x="440" y="722" text-anchor="middle" class="lbl tiny">key C-702214, C-118940</text>
+
+  <rect x="620" y="664" width="240" height="90" rx="6" class="boxA"/>
+  <text x="740" y="684" text-anchor="middle" class="lbl tiny" font-weight="700">restriction-read-9 (reader)</text>
+  <text x="740" y="702" text-anchor="middle" class="lbl tiny">get() sees ForwardingNode,</text>
+  <text x="740" y="718" text-anchor="middle" class="lbl tiny">follows nextTable pointer,</text>
+  <text x="740" y="734" text-anchor="middle" class="lbl tiny">retries lookup there</text>
+  <path class="dotW" d="M 620 699 H 560"/>
+
+  <rect x="900" y="664" width="240" height="90" rx="6" class="boxA"/>
+  <text x="1020" y="684" text-anchor="middle" class="lbl tiny" font-weight="700">restriction-apply-2 (late writer)</text>
+  <text x="1020" y="702" text-anchor="middle" class="lbl tiny">put() sees ForwardingNode,</text>
+  <text x="1020" y="718" text-anchor="middle" class="lbl tiny">calls helpTransfer() instead</text>
+  <text x="1020" y="734" text-anchor="middle" class="lbl tiny">of blocking</text>
+  <path class="dotA" d="M 900 699 H 860"/>
+
+  <rect x="40" y="774" width="1100" height="80" rx="6" class="boxA"/>
+  <text x="54" y="794" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 2: bin 9 fully transferred; table[9] now holds a sentinel</text>
+  <text x="54" y="812" class="lbl tiny">ForwardingNode (hash MOVED = -1) instead of real entries. Any thread landing on it is</text>
+  <text x="54" y="830" class="lbl tiny">redirected: readers follow nextTable, writers call helpTransfer() and pitch in.</text>
+
+  <!-- FRAME 4 -->
+  <rect x="20" y="880" width="1160" height="440" rx="8" fill="none" stroke="#d1d5db" stroke-width="1.3"/>
+  <text x="36" y="904" class="lbl h2">FRAME 4 &#8212; LO/HI SPLIT: (hash &amp; oldCap) == 0 DECIDES i VS i + oldCap</text>
+
+  <rect x="40" y="924" width="1100" height="80" rx="6" class="boxA"/>
+  <text x="54" y="944" class="lbl tiny" font-weight="700">bin 5 in the old table (oldCap = 16) is split while transferring:</text>
+  <text x="54" y="962" class="lbl tiny">each node's hash is tested against oldCap (16 = 0b10000). If the bit at that position</text>
+  <text x="54" y="980" class="lbl tiny">is 0, the node stays at index 5 (the "lo" list); if 1, it moves to index 5+16=21 ("hi" list).</text>
+  <text x="54" y="998" class="lbl tiny">Worked hashes: C-118845 hash=0b...0000101 (bit16=0) &#8594; lo; C-702300 hash=0b...10101 (bit16=1) &#8594; hi.</text>
+
+  <rect x="60" y="1020" width="260" height="70" rx="6" class="boxP"/>
+  <text x="190" y="1042" text-anchor="middle" class="lbl node">old bin[5]</text>
+  <text x="190" y="1060" text-anchor="middle" class="lbl tiny">C-118845, C-702300</text>
+  <text x="190" y="1076" text-anchor="middle" class="lbl tiny">before split</text>
+
+  <path class="flow" d="M 190 1090 V 1110 H 190 V 1130"/>
+  <path class="flow" d="M 190 1090 V 1110 H 700 V 1130"/>
+
+  <rect x="60" y="1136" width="300" height="90" rx="6" class="boxR"/>
+  <text x="210" y="1158" text-anchor="middle" class="lbl node">lo list &#8594; table[5]</text>
+  <text x="210" y="1178" text-anchor="middle" class="lbl body">C-118845</text>
+  <text x="210" y="1196" text-anchor="middle" class="lbl tiny">hash &amp; 16 == 0</text>
+  <text x="210" y="1212" text-anchor="middle" class="lbl tiny">stays at index i = 5</text>
+
+  <rect x="560" y="1136" width="300" height="90" rx="6" class="boxH"/>
+  <text x="710" y="1158" text-anchor="middle" class="lbl node">hi list &#8594; table[21]</text>
+  <text x="710" y="1178" text-anchor="middle" class="lbl body">C-702300</text>
+  <text x="710" y="1196" text-anchor="middle" class="lbl tiny">hash &amp; 16 != 0</text>
+  <text x="710" y="1212" text-anchor="middle" class="lbl tiny">moves to i + oldCap = 5 + 16 = 21</text>
+
+  <rect x="900" y="1136" width="260" height="90" rx="6" class="boxA"/>
+  <text x="1030" y="1158" text-anchor="middle" class="lbl tiny" font-weight="700">worked hashes</text>
+  <text x="1030" y="1176" text-anchor="middle" class="lbl tiny">C-118845: (hash &amp; 16) == 0</text>
+  <text x="1030" y="1192" text-anchor="middle" class="lbl tiny">C-702300: (hash &amp; 16) == 16</text>
+  <text x="1030" y="1210" text-anchor="middle" class="lbl tiny">so 16 doubling never rehashes fully</text>
+
+  <rect x="40" y="1250" width="1100" height="60" rx="6" class="boxA"/>
+  <text x="54" y="1270" class="lbl tiny" font-weight="700">CHANGED SINCE FRAME 3: bin 5's two nodes partition without recomputing full hashes &#8212;</text>
+  <text x="54" y="1286" class="lbl tiny">only the new high bit (oldCap) is examined, so the lo/hi split is O(bin length), not O(n).</text>
+
+  <!-- Legend -->
+  <line x1="20" y1="1320" x2="1180" y2="1320" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="20" y="1338" class="lbl h2">LEGEND</text>
+  <rect x="20" y="1348" width="20" height="16" rx="3" class="boxH"/>
+  <text x="48" y="1361" class="lbl tiny">index / stride setup</text>
+  <rect x="200" y="1348" width="20" height="16" rx="3" class="boxP"/>
+  <text x="228" y="1361" class="lbl tiny">table slot / node, lo list</text>
+  <rect x="420" y="1348" width="20" height="16" rx="3" class="boxR"/>
+  <text x="448" y="1361" class="lbl tiny">nextTable / resolved destination</text>
+  <rect x="680" y="1348" width="20" height="16" rx="3" class="boxD"/>
+  <text x="708" y="1361" class="lbl tiny">ForwardingNode sentinel (MOVED)</text>
+  <rect x="960" y="1348" width="20" height="16" rx="3" class="boxA"/>
+  <text x="988" y="1361" class="lbl tiny">annotation / thread role</text>
+
+  <path class="flow" d="M 20 1380 H 60"/>
+  <text x="68" y="1385" class="lbl tiny">primary flow</text>
+  <path class="dashG" d="M 220 1380 H 260"/>
+  <text x="268" y="1385" class="lbl tiny">pointer to nextTable</text>
+  <path class="dotA" d="M 460 1380 H 500"/>
+  <text x="508" y="1385" class="lbl tiny">writer redirect (helpTransfer)</text>
+  <path class="dotW" d="M 760 1380 H 800"/>
+  <text x="808" y="1385" class="lbl tiny">reader redirect (follow nextTable)</text>
+</svg>

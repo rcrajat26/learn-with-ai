@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="The visibility harness on a PaymentRun worker's draining stop flag. Before: payment-run-controller
+     sets the plain field draining = true, but payment-run-worker-2's while (!draining) loop never observes it —
+     the -XX:+PrintCompilation log shows the method compiled by C2, which hoists the field read above the loop,
+     producing the equivalent of if (!draining) { for (;;) {} } — so the worker spins forever and the harness
+     times out after 30,000 ms. After: draining is declared volatile; the same PrintCompilation evidence shows
+     C2 cannot hoist the read, the loop re-reads the field every iteration, and the worker exits 3 ms after the
+     controller's write, because the volatile write and volatile read form a happens-before edge.">
+  <style>
+    .lbl    { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .h1     { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+    .h2     { font-size: 13px; font-weight: 700; letter-spacing: .3px; }
+    .node   { font-size: 15px; font-weight: 600; }
+    .body   { font-size: 13px; }
+    .sub    { font-size: 10.5px; fill: #4b5563; }
+    .tiny   { font-size: 11px; }
+    .tinyB  { font-size: 11px; font-weight: 700; }
+    .code   { font-size: 11px; fill: #1f2937; }
+
+    .boxP   { fill: #dbeafe; stroke: #2563eb; stroke-width: 1.6; }
+    .boxH   { fill: #fef3c7; stroke: #b45309; stroke-width: 1.6; }
+    .boxAnn { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.6; }
+    .boxBad { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.6; }
+    .boxOk  { fill: #dcfce7; stroke: #15803d; stroke-width: 1.6; }
+
+    .flow   { fill: none; stroke: #475569; stroke-width: 2; stroke-linejoin: round; marker-end: url(#tri); }
+  </style>
+  <defs>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="800" fill="#ffffff"/>
+
+  <text x="20" y="32" class="lbl h1">THE VISIBILITY HARNESS — draining STOP FLAG ON A PaymentRun WORKER</text>
+  <line x1="20" y1="42" x2="1100" y2="42" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <line x1="560" y1="50" x2="560" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <text x="280" y="63" text-anchor="middle" class="lbl h2">BEFORE — draining IS A PLAIN boolean FIELD</text>
+  <text x="840" y="63" text-anchor="middle" class="lbl h2">AFTER — draining IS volatile</text>
+
+  <!-- Row A: controller sets the flag -->
+  <rect x="40" y="80" width="480" height="56" rx="6" class="boxP"/>
+  <text x="280" y="101" text-anchor="middle" class="lbl node">payment-run-controller</text>
+  <text x="280" y="120" text-anchor="middle" class="lbl body">draining = true;</text>
+
+  <rect x="600" y="80" width="480" height="56" rx="6" class="boxP"/>
+  <text x="840" y="101" text-anchor="middle" class="lbl node">payment-run-controller</text>
+  <text x="840" y="120" text-anchor="middle" class="lbl body">draining = true;  // volatile write</text>
+
+  <path class="flow" d="M 280 136 V 180"/>
+  <path class="flow" d="M 840 136 V 180"/>
+
+  <!-- Row B: worker loop -->
+  <rect x="40" y="180" width="480" height="80" rx="6" class="boxH"/>
+  <text x="280" y="202" text-anchor="middle" class="lbl node">payment-run-worker-2</text>
+  <text x="280" y="223" text-anchor="middle" class="lbl body">while (!draining) { /* spin */ }</text>
+  <text x="280" y="242" text-anchor="middle" class="lbl sub">plain field read — no happens-before edge</text>
+
+  <rect x="600" y="180" width="480" height="80" rx="6" class="boxH"/>
+  <text x="840" y="202" text-anchor="middle" class="lbl node">payment-run-worker-2</text>
+  <text x="840" y="223" text-anchor="middle" class="lbl body">while (!draining) { /* spin */ }</text>
+  <text x="840" y="242" text-anchor="middle" class="lbl sub">volatile read — happens-before edge to the write above</text>
+
+  <path class="flow" d="M 280 260 V 300"/>
+  <path class="flow" d="M 840 260 V 300"/>
+
+  <!-- Row C: JIT evidence -->
+  <rect x="40" y="300" width="480" height="190" rx="6" class="boxAnn"/>
+  <text x="60" y="322" class="lbl tinyB">-XX:+PrintCompilation output:</text>
+  <text x="60" y="340" class="lbl code">409  312   4   quizstakes.PaymentRunWorker::drain (18 bytes)</text>
+  <text x="60" y="376" class="lbl tinyB">C2 hoisted form (draining not volatile):</text>
+  <text x="60" y="394" class="lbl code">if (!draining) {</text>
+  <text x="60" y="410" class="lbl code">    for (;;) { /* spin forever, field never re-read */ }</text>
+  <text x="60" y="426" class="lbl code">}</text>
+  <text x="60" y="452" class="lbl sub">the field load is moved above the loop; the loop body</text>
+  <text x="60" y="466" class="lbl sub">no longer contains any reference to draining at all</text>
+
+  <rect x="600" y="300" width="480" height="190" rx="6" class="boxAnn"/>
+  <text x="620" y="322" class="lbl tinyB">-XX:+PrintCompilation output:</text>
+  <text x="620" y="340" class="lbl code">398  298   4   quizstakes.PaymentRunWorker::drain (18 bytes)</text>
+  <text x="620" y="376" class="lbl tinyB">C2 form (volatile — hoisting forbidden):</text>
+  <text x="620" y="394" class="lbl code">while (!draining) {</text>
+  <text x="620" y="410" class="lbl code">    // volatile load reissued every iteration</text>
+  <text x="620" y="426" class="lbl code">}</text>
+  <text x="620" y="452" class="lbl sub">the JIT is barred from caching or reordering a</text>
+  <text x="620" y="466" class="lbl sub">volatile field's load across loop iterations</text>
+
+  <path class="flow" d="M 280 490 V 500"/>
+  <path class="flow" d="M 840 490 V 500"/>
+
+  <!-- Row D: outcome -->
+  <rect x="40" y="500" width="480" height="70" rx="6" class="boxBad"/>
+  <text x="280" y="524" text-anchor="middle" class="lbl node">NEVER EXITS</text>
+  <text x="280" y="544" text-anchor="middle" class="lbl body">elapsed: &gt; 30,000 ms — killed by the harness timeout</text>
+  <text x="280" y="560" text-anchor="middle" class="lbl sub">draining flipped to true at t=0 but never observed</text>
+
+  <rect x="600" y="500" width="480" height="70" rx="6" class="boxOk"/>
+  <text x="840" y="524" text-anchor="middle" class="lbl node">EXITS CLEANLY</text>
+  <text x="840" y="544" text-anchor="middle" class="lbl body">elapsed: 3 ms after payment-run-controller's write</text>
+  <text x="840" y="560" text-anchor="middle" class="lbl sub">volatile write/read pair delivers visibility, not just atomicity</text>
+
+  <!-- legend -->
+  <line x1="20" y1="690" x2="1100" y2="690" stroke="#d1d5db" stroke-width="1.5"/>
+
+  <rect x="20" y="702" width="22" height="16" rx="3" class="boxP"/>
+  <text x="50" y="715" class="lbl tiny">primary / control thread</text>
+
+  <rect x="260" y="702" width="22" height="16" rx="3" class="boxH"/>
+  <text x="290" y="715" class="lbl tiny">subject: the worker's stop-flag loop</text>
+
+  <rect x="580" y="702" width="22" height="16" rx="3" class="boxAnn"/>
+  <text x="610" y="715" class="lbl tiny">annotation: JIT compile log + hoisted/actual bytecode form</text>
+
+  <rect x="20" y="728" width="22" height="16" rx="3" class="boxBad"/>
+  <text x="50" y="741" class="lbl tiny">observed failure — loop never exits</text>
+
+  <rect x="300" y="728" width="22" height="16" rx="3" class="boxOk"/>
+  <text x="330" y="741" class="lbl tiny">observed success — loop exits promptly</text>
+
+  <path class="flow" d="M 580 736 H 620"/>
+  <text x="628" y="741" class="lbl tiny">A → B : B happens after A in program / thread order</text>
+</svg>
