@@ -687,24 +687,86 @@ factually wrong for Java 21.
 `prompt-builder` then batched `notes-generator` orchestration — a single-agent
 full-topic run will not fit.
 
+### 06 jvm-internals — syllabus pass, 2026-09-02 (`topic-enhancer-agent` Mode A)
+
+| Artefact | State |
+|---|---|
+| `src/topics/06-jvm-internals.md` | pre-existing, 323 lines — **untouched by this pass** |
+| `src/syllabus/06-jvm-internals.md` | written, 3,735 lines / **1,088 leaves** in 66 sections |
+| `src/metadata/prompts/06-jvm-internals-prompt.md` | not started |
+| `src/notes/detailed/06-jvm-internals/` | not started |
+
+Leaves per part: P1 basics 420 (§1.1–1.20), P2 intermediate 195 (§2.1–2.15),
+P3 under the hood 222 (§3.1–3.21), P4 build it 66 (§4.1–4.7), P5
+interview/retention 185 (§5.1–5.3). Target version **Java 21 LTS / 64-bit
+HotSpot**, Java 22–25 divergences marked `[VERSION-TRAP]`.
+
+**Tag counts audited against disk — the agent's self-report was low again**
+(same failure mode as topics 01 and 22). Reported `[RESEARCH]` 231 → actual
+**315**. Full inventory: `[PROVE]` 327, `[RESEARCH]` 315, `[NUM]` 231,
+`[TRAP]` 219, `[SOURCE]` 142, `[FLAG]` 108, `[DUMP]` 88, `[BUILD]` 71,
+`[VERSION-TRAP]` 68, `[ASM]` 21, `[BYTECODE]` 12, `[X-REF …]` 152. Section
+count 66 + 3 trailing (`Sources consulted`, `Gaps vs the current guide`,
+`Footer`) = 69 `##` headings on disk — reconciles.
+
+20 searches across all nine angles. Full fetches: **JVMS 21 chapter 5** (the
+12-step LC algorithm, all six resolution kinds, the nine `REF_*` handle kinds,
+the full error table), the **Oracle JDK 21 G1 tuning guide** (phases, flags,
+512-byte cards, the humongous rule), and **Shipilev's Anatomy Quarks** index,
+mined as a completeness checklist and the largest single source of PART 3
+leaves (heap parsability, implicit null checks, uncommon traps, compiler
+blackholes, identity hash code, frequency-based code layout).
+
+**Carried forward — do not write these unverified:** everything sourced from
+`openjdk.org/jeps/450`, `openjdk.org/jeps/519` and the HotSpot
+`RuntimeOverview`, all three of which returned HTTP 403. Recorded in
+`## Sources consulted`; every constant taken from them carries `[RESEARCH]`.
+
+**Gap table:** the 323-line guide covers ~7 of 66 sections. Missing outright:
+class file format, bytecode, linking/initialization, object layout and headers,
+safepoints, JIT internals, startup/CDS/AOT, the version delta, and all 66
+build-it leaves. **Two mandatory corrections for the write pass:** the guide's
+ZGC description is pre-Java-21 (non-generational, no store barrier), and its
+startup section stops at CDS with no Leyden AOT cache. Six passages flagged
+must-survive-verbatim: the runtime-area table, the OOM taxonomy table, the
+CNFE-vs-`NoClassDefFoundError` trap, the `top -H` CPU workflow, the MAT leak
+workflow and culprit list, the OOMKilled trap.
+
+**Scope exclusions, all cross-referenced not dropped** (152 `[X-REF]`s across
+10 guides): JMM-as-contract, monitor semantics and the virtual-thread API → 05
+(§1.19 and §3.18 state the implementation mechanism only); language substrate →
+03; collections → 02; OS/cgroup mechanics → 11; Kubernetes manifests → 19;
+metrics/tracing practice → 20. Valhalla is one forward-looking leaf (§1.10.22),
+not a section — nothing ships in 21–25.
+
+At 1,088 leaves this sits level with topic 22 and below topic 01, so the same
+scale decision applies before `prompt-builder`: batched `notes-generator`
+orchestration, not a single-agent full-topic run.
+
 ## Next in the per-topic pipeline
 
-18 topics remain (04–21). Topics 01 and 22 each have a guide and a syllabus;
-their next stage is `prompt-builder`, pending the scale decision noted above.
-Each remaining topic needs, in order: `topic-enhancer-agent`
-(syllabus pass) → `prompt-builder` → `notes-generator`. Topics 02 and 03 have a
-syllabus, a prompt and a complete note set.
+**No syllabus yet — 15 topics:** 07–20 and the rest of the un-started set. Each
+needs, in order: `topic-enhancer-agent` (syllabus pass) → `prompt-builder` →
+`notes-generator`.
+
+**Syllabus written, `prompt-builder` next:** 01, **06**, 22 — all three pending
+the scale decision noted above.
+
+**Syllabus + prompt + note set complete:** 02, 03, 04, 05, 21.
 
 ## Last update — per-topic pipeline
 
 - **Date:** 2026-09-02
-- **Last generated:** topic 01 dsa-fundamentals — syllabus pass only
-  (`src/syllabus/01-dsa-fundamentals.md`, 3,395 lines, 1,516 leaves, 80 sections).
+- **Last generated:** topic 06 jvm-internals — syllabus pass only
+  (`src/syllabus/06-jvm-internals.md`, 3,735 lines, 1,088 leaves, 66 sections).
   `src/topics/` untouched. No prompt, no notes.
-- **Open before the next stage:** scale decision for both 01 (1,516 leaves) and
-  22 (1,089) before `prompt-builder`; the seven unverified `[RESEARCH]` numbers
-  listed in the topic-01 block; prune-or-not on topic 22's 30 worked designs;
-  source or downgrade topic 22's §1.9 capacity constants.
+- **Open before the next stage:** scale decision for 01 (1,516 leaves), 06
+  (1,088) and 22 (1,089) before `prompt-builder`; the three 403-blocked sources
+  in the topic-06 block; the seven unverified `[RESEARCH]` numbers in the
+  topic-01 block; prune-or-not on topic 22's 30 worked designs; source or
+  downgrade topic 22's §1.9 capacity constants.
+- **Prior:** 2026-09-02 — topic 01 dsa-fundamentals, syllabus pass only
+  (3,395 lines, 1,516 leaves, 80 sections).
 - **Prior:** 2026-09-02 — topic 22 system-design, guide (937 lines) plus syllabus
   (3,435 lines, 1,089 leaves). Index counts and reading order updated.
 - **Prior:** 2026-08-29 — topic 03 java-core, complete (232 files, 149,074 lines,
