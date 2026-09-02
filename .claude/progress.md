@@ -743,28 +743,85 @@ At 1,088 leaves this sits level with topic 22 and below topic 01, so the same
 scale decision applies before `prompt-builder`: batched `notes-generator`
 orchestration, not a single-agent full-topic run.
 
+### 08 spring-data-jpa — syllabus pass, 2026-09-02 (`topic-enhancer-agent` Mode A)
+
+| Artefact | State |
+|---|---|
+| `src/topics/08-spring-data-jpa.md` | pre-existing, 403 lines — **untouched by this pass** |
+| `src/syllabus/08-spring-data-jpa.md` | written, 4,352 lines / **1,360 leaves** in 85 sections |
+| `src/metadata/prompts/08-spring-data-jpa-prompt.md` | not started |
+| `src/notes/detailed/08-spring-data-jpa/` | not started |
+
+Leaves per part (audited on disk): P1 basics 485 (§1.1–1.31), P2 intermediate
+296 (§2.1–2.23), P3 under the hood 208 (§3.1–3.16), P4 build it 83 (§4.1–4.12),
+P5 interview/retention 288 (§5.1–5.3). Target version **Jakarta Persistence 3.1
+/ Hibernate ORM 6.6.x / Spring Data JPA 3.5.x on Boot 3.5.x and Java 21**;
+Hibernate 7.0, JPA 3.2 and Spring Data 4.0 divergences marked `[VERSION-TRAP]`.
+
+**Self-report was wrong again — third occurrence of this failure mode** (topics
+01, 06, 22). Agent claimed 1,381 leaves / P2 316 / `[RESEARCH]` 164; disk says
+1,360 leaves / P2 296 / `[RESEARCH]` **258** (P1 98, P2 52, P3 70, P4 0, P5 35,
+front matter 3). **The footer table has been corrected in place** to the disk
+numbers. Full tag inventory on disk: `[PROVE]` 327, `[RESEARCH]` 258, `[TRAP]`
+230, `[SOURCE]` 150, `[NUM]` 127, `[BUILD]` 107, `[VERSION-TRAP]` 83, `[X-REF …]`
+128. 88 `##` headings = 85 sections + `Sources consulted` + `Gaps vs the current
+guide` + `Footer` — reconciles. 0 control bytes.
+
+10 searches across all nine angles. Full fetches: Spring Data JPA reference
+pages (query methods, projections, entity persistence, transactions), the
+Hibernate 6.6 Fetching chapter, and the 6.6 + 7.0 migration guides.
+
+**Carried forward — all of PART 3 is `[RESEARCH]` wholesale.** No Hibernate or
+Spring Data *source file* was opened, so every field name, map name, listener
+name, action-queue entry and optimizer constant in §3.2–§3.15 is unverified.
+Five highest-risk items named in the footer: `ActionQueue` order (§3.5.3),
+`StatefulPersistenceContext` fields (§3.2.2), `EntityEntry` fields (§3.2.4), the
+Spring Data repository advice-chain order (§3.15.3), `PartTree` regexes
+(§3.15.7). Also unfetched and therefore unverified: the Hibernate 7 "What's New"
+page and both Spring Data 4.0 pages (§3.1.4, §2.3.12, §3.15.23).
+
+**Gap table** covers all 85 sections against the 403-line guide, plus **4
+corrections the write pass must make to existing text** (`@LazyToOne` fix removed
+in Hibernate 7; the Hibernate 5→6 `hibernate_sequence` change; the
+`HHH000104`/`HHH90003004` dual log code; `@Query` startup validation lost under
+`bootstrap-mode=lazy`) and **9 must-survive-verbatim passages**.
+
+**Scope exclusions, cross-referenced not dropped** (128 `[X-REF]`s): isolation
+anomalies, MVCC, query plans, deadlocks, pool-sizing arithmetic → 09; container,
+proxy mechanics, `@Transactional` interceptor internals → 07; cache stores and
+stampede → 15; Testcontainers and Mockito → 16; heap/GC/OOM → 06; `HashSet`
+bucket mechanics → 02; API pagination contracts → 12.
+
+At 1,360 leaves this sits below topic 01 (1,516) and above 06/22 (~1,088), so the
+batched `notes-generator` orchestration decision applies here too.
+
 ## Next in the per-topic pipeline
 
-**No syllabus yet — 15 topics:** 07–20 and the rest of the un-started set. Each
+**No syllabus yet — 14 topics:** 09–20 and the rest of the un-started set. Each
 needs, in order: `topic-enhancer-agent` (syllabus pass) → `prompt-builder` →
 `notes-generator`.
 
-**Syllabus written, `prompt-builder` next:** 01, **06**, 22 — all three pending
-the scale decision noted above.
+**Syllabus written, `prompt-builder` next:** 01, 06, **08**, 22 — all four
+pending the scale decision noted above.
 
 **Syllabus + prompt + note set complete:** 02, 03, 04, 05, 21.
 
 ## Last update — per-topic pipeline
 
 - **Date:** 2026-09-02
-- **Last generated:** topic 06 jvm-internals — syllabus pass only
-  (`src/syllabus/06-jvm-internals.md`, 3,735 lines, 1,088 leaves, 66 sections).
-  `src/topics/` untouched. No prompt, no notes.
-- **Open before the next stage:** scale decision for 01 (1,516 leaves), 06
-  (1,088) and 22 (1,089) before `prompt-builder`; the three 403-blocked sources
+- **Last generated:** topic 08 spring-data-jpa — syllabus pass only
+  (`src/syllabus/08-spring-data-jpa.md`, 4,352 lines, 1,360 leaves, 85 sections).
+  `src/topics/` untouched. No prompt, no notes. Footer counts corrected in place
+  after a disk audit.
+- **Open before the next stage:** all of topic 08's PART 3 is unverified against
+  Hibernate/Spring Data source — read the five named files before writing it;
+  scale decision for 01 (1,516 leaves), 06 (1,088), 08 (1,360) and 22 (1,089)
+  before `prompt-builder`; the three 403-blocked sources
   in the topic-06 block; the seven unverified `[RESEARCH]` numbers in the
   topic-01 block; prune-or-not on topic 22's 30 worked designs; source or
   downgrade topic 22's §1.9 capacity constants.
+- **Prior:** 2026-09-02 — topic 06 jvm-internals, syllabus pass only
+  (3,735 lines, 1,088 leaves, 66 sections).
 - **Prior:** 2026-09-02 — topic 01 dsa-fundamentals, syllabus pass only
   (3,395 lines, 1,516 leaves, 80 sections).
 - **Prior:** 2026-09-02 — topic 22 system-design, guide (937 lines) plus syllabus
