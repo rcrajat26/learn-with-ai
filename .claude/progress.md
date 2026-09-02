@@ -62,7 +62,7 @@ Separate from the day/week plan above. Source of truth for scope is
 `src/metadata/prompts/<NN>-<slug>-prompt.md`; output is
 `src/notes/detailed/<topic-slug>/`.
 
-## Topics complete: 2 of 21
+## Topics complete: 2 of 22
 
 ### 04 modern-java — full pipeline run 2026-08-30 → 2026-08-31 (COMPLETE)
 
@@ -548,16 +548,166 @@ topic's `00-index.md`.
   matcher; use the Write tool for scratch files, absolute paths, no `cd`, one
   command per call. Never `jar xf` (it ignored `-C` and polluted the tree).
 
+### 22 system-design — guide + syllabus, 2026-09-02 (prompt and notes NOT started)
+
+New topic beyond the original 01–21 inventory, added on request.
+
+| Artefact | State |
+|---|---|
+| `src/topics/22-system-design.md` | written, 937 lines |
+| `src/syllabus/22-system-design.md` | written, 3,435 lines / 1,089 leaves |
+| `src/metadata/prompts/22-system-design-prompt.md` | not started |
+| `src/notes/detailed/22-system-design/` | not started |
+
+Positioned deliberately as the **composition layer**: component mechanisms stay
+in 09/10/12/14/15/18/19/20 and the guide cross-references them rather than
+restating them. 28 sections — interview scoring model and 45-minute budget,
+requirement extraction (the six numbers), back-of-envelope arithmetic, the
+scale-up ladder, API/data model, storage selection as a procedure, replication
+and replica-lag fixes, partitioning + consistent hashing + hot keys, CAP/PACELC
+and per-operation consistency, quorum `R+W>N`, cache tiers, async decision rule,
+idempotency and the outbox, ID generation, rate limiting and load shedding, load
+balancing, resilience, multi-region, read models/CQRS, blobs and CDN,
+observability/capacity, live-traffic migration, four worked designs (URL
+shortener, feed fan-out, chat/presence, payments ledger), scoring language,
+and the ten ways candidates lose the round.
+
+**Over the 250–450 line format contract at 937 lines**, same deviation topic 21
+took (~525) and for the same reason: the subject is an integrative round covering
+20 mechanisms plus four worked designs, not one library. The contract in
+`00-index.md` was left unchanged; two topics now exceed it, so it should be
+re-stated as a per-topic target rather than a rule when the next guide is written.
+
+`00-index.md` updated: count 21 → 22, new row 22, the system-design reading track
+now ends `→ 22` with a note to read it last, and the checklist line says 22 guides.
+
+#### Syllabus pass — `topic-enhancer-agent` Mode A, 2026-09-02
+
+3,435 lines, **1,089 leaves** in 85 sections: PART 1 basics 446 (§1.1–1.31),
+PART 2 intermediate 232 (§2.1–2.21), PART 3 under the hood 144 (§3.1–3.12),
+PART 4 build it 114 (§4.1–4.14), PART 5 interview/worked designs/retention 153
+(§5.1–5.7). Tags: 192 `[RESEARCH]`, 227 `[PROVE]`, 122 `[BUILD]`, 120 `[TRAP]`,
+110 `[NUM]`, 94 `[SAY]`, 87 `[SOURCE]`, 48 `[CURRENCY]`.
+
+**New tag `[CURRENCY]`**, invented by this run and documented in the file's tag
+legend: a vendor number, service limit or product capability that goes stale
+between releases, as distinct from `[RESEARCH]` ("verify this recall"). Worth
+adopting on 18 cloud-aws and 19 docker-kubernetes, which have the same problem.
+
+Header states the currency anchor: **Q3 2026** state of practice. A scope-boundary
+table in the header assigns component internals to siblings 03, 04, 05, 06, 08,
+09, 10, 11, 12, 13, 14, 15, 18, 19, 20 behind `[X-REF nn]`, with the contract
+"state the mechanism in one paragraph, then point".
+
+**Agent's self-reported line count was wrong** — it said 1,447, the file is 3,435.
+Leaf and tag counts did verify against the file. Audit against disk, as ever.
+
+**Carried forward to the write pass — do not write these unverified:**
+
+| Item | Why |
+|---|---|
+| AWS Builders' Library index | fetch failed (301 → shell page, no article list); that area rests on secondary summaries |
+| DDIA 2e O'Reilly page | fetch failed (403) |
+| DynamoDB ATC 2022 PDF | fetch returned unparseable binary |
+| HLL `1.04/√m` constant | unconfirmed |
+| H3 resolution table | unconfirmed |
+| Resilience4j ring-bit-buffer internal | unconfirmed |
+| §1.9 per-node capacity constants | **folklore — no authoritative source found.** These are also already in `src/topics/22-system-design.md`'s capacity table. Either source them or mark them as order-of-magnitude heuristics in both files. |
+| §3.12 postmortem details | unconfirmed |
+
+**Gap table: 75 rows, 31 areas entirely missing** from the 937-line guide — all
+five master tables, the dollar axis, the 18 estimation proofs, queueing theory,
+streaming/windows, geospatial, probabilistic structures, security/multi-tenancy,
+deployment/rollout, testing-a-design, postmortem case studies, all 14 build
+clusters, the ~92-question bank, retention drills. Cells/blast-radius,
+consensus/fencing, clocks, CRDTs and the Dynamo lineage exist only as single
+clauses. Worked designs go **4 → 30**. The table records the existing ~10
+`**Trap:**` markers and ~70 checklist assertions as a floor to preserve.
+
+**Scale decision still open before `prompt-builder` runs.** 1,089 leaves sits
+between topic 02 (1,895-line syllabus) and topic 03 (2,399 leaves → 232 files,
+149,074 lines). The topic-03 lesson block below records that a single-agent
+full-topic `notes-generator` run does not fit, so this needs the batched
+orchestration. Alternative raised with the user and not yet answered: prune the
+syllabus first — 30 worked designs may be more than is worth owning.
+
+### 01 dsa-fundamentals — syllabus pass, 2026-09-02 (`topic-enhancer-agent` Mode A)
+
+| Artefact | State |
+|---|---|
+| `src/topics/01-dsa-fundamentals.md` | pre-existing, 459 lines — **untouched by this pass** |
+| `src/syllabus/01-dsa-fundamentals.md` | written, 3,395 lines / **1,516 leaves** in 80 sections |
+| `src/metadata/prompts/01-dsa-fundamentals-prompt.md` | not started |
+| `src/notes/detailed/01-dsa-fundamentals/` | not started |
+
+Leaves per part: P1 basics 425 (§1.1–1.21), P2 intermediate 426 (§2.1–2.22),
+P3 under the hood 401 (§3.1–3.22), P4 build it 145 (§4.1–4.12), P5
+interview/retention 119 (§5.1–5.3). Target version **Java 21 LTS**, Java 22–25
+deltas marked inline.
+
+**Tag counts audited against disk — the agent's self-report was low on four of
+them.** Reported vs actual: `[RESEARCH]` 131 → **217**, `[PROVE]` ~250 → **503**,
+`[TRAP]` ~150 → **233**, `[BUILD]` 145 → **121**, `[VERSION-TRAP]` 9 → **11**,
+`[SOURCE]` ~30 → **28**, `[DRILL]` ~25 → **30**, plus `[NUM]` 223 and `[X-REF]`
+183. Leaf total 1,516 and the per-section tallies do reconcile. Same lesson as
+topic 22: **audit agent-reported counts against the file.**
+
+11 searches across all nine research angles, 7 primary/curriculum sources fetched.
+Highest-yield: cp-algorithms (produced most of §2.19, §3.13, §3.14, half of
+§3.8–3.9), MIT 6.006 lecture ordering + SRTBOT, Bloch's 2006 Google Research post
+(the 2³⁰ overflow threshold), the O/Ω/Θ-vs-worst/best/average correction (now
+§1.3.6, the file's most important notation trap), CVE-2011-4858 + VU#903934 for
+hash flooding, the ReDoS SoK (Stack Overflow 2016, Cloudflare 2019), Oracle 21/25
+release notes confirming `Math.clamp` overloads and that 22–25 added nothing to
+the algorithm surface. The amortization search corrected a number: the three
+methods are CLRS **chapter 17**, not 16.
+
+**Carried forward — do not write these unverified:** CLRS 4e chapter mapping
+(§1.1.7, §1.5.8 — TOC search returned only PDF mirrors), Hibbard-deletion √n
+(§1.15.4), Knuth's linear-probing probe formula (§3.2.6), average-O(1) heap
+insert (§3.3.8), Brent's cycle algorithm (§1.11.10), the `String.indexOf`
+intrinsic (§3.14.18), the JVM per-frame byte cost (§3.17.1). The
+`roadmap.sh/datastructures-and-algorithms` fetch returned only page chrome;
+nothing taken from it.
+
+**Gap table: 75 rows.** Of 1,516 leaves ~160 exist in the current guide at any
+depth, ~60 at a depth worth keeping, **1,356 missing outright**. Three structural
+gaps everything else leans on: **sorting has no section at all** (§1.18/§2.8/
+§3.5/§3.6, 86 leaves), **recurrences have no section at all** (§1.5, 24 leaves),
+and **there is no master cost table** (§2.1). Part 4 is entirely new — the guide
+has two snippets total, both surviving inside build leaves (4.5.9, 4.7.1). The
+guide's strongest sections, preserved and extended rather than rewritten: the
+16-row pattern-signal table (§2.21), sliding-window monotonicity, linked-list
+cycle-start, BST validation, BFS enqueue-marking, monotonic-stack amortization,
+binary-search conventions, union-find. No claim in the current guide is
+factually wrong for Java 21.
+
+**Same scale problem as topic 22.** At 1,516 leaves this is larger than topic 22
+(1,089) and two-thirds of topic 03 (2,399 leaves → 232 files / 149,074 lines).
+`prompt-builder` then batched `notes-generator` orchestration — a single-agent
+full-topic run will not fit.
+
 ## Next in the per-topic pipeline
 
-19 topics remain (01, 04–21). Each needs, in order: `topic-enhancer-agent`
+18 topics remain (04–21). Topics 01 and 22 each have a guide and a syllabus;
+their next stage is `prompt-builder`, pending the scale decision noted above.
+Each remaining topic needs, in order: `topic-enhancer-agent`
 (syllabus pass) → `prompt-builder` → `notes-generator`. Topics 02 and 03 have a
 syllabus, a prompt and a complete note set.
 
 ## Last update — per-topic pipeline
 
-- **Date:** 2026-08-29
-- **Last generated:** topic 03 java-core, complete (232 files, 149,074 lines,
+- **Date:** 2026-09-02
+- **Last generated:** topic 01 dsa-fundamentals — syllabus pass only
+  (`src/syllabus/01-dsa-fundamentals.md`, 3,395 lines, 1,516 leaves, 80 sections).
+  `src/topics/` untouched. No prompt, no notes.
+- **Open before the next stage:** scale decision for both 01 (1,516 leaves) and
+  22 (1,089) before `prompt-builder`; the seven unverified `[RESEARCH]` numbers
+  listed in the topic-01 block; prune-or-not on topic 22's 30 worked designs;
+  source or downgrade topic 22's §1.9 capacity constants.
+- **Prior:** 2026-09-02 — topic 22 system-design, guide (937 lines) plus syllabus
+  (3,435 lines, 1,089 leaves). Index counts and reading order updated.
+- **Prior:** 2026-08-29 — topic 03 java-core, complete (232 files, 149,074 lines,
   117 SVGs). Syllabus 2,398 lines / 933 leaves; prompt 3,096 lines.
 - **Verification:** all gates passing — 0 control bytes, 0 files over the ceiling,
   0 inline `<svg>`, 0 banned strings, 0 dead links, 0 unembedded SVGs, 0
