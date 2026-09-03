@@ -795,21 +795,156 @@ bucket mechanics → 02; API pagination contracts → 12.
 At 1,360 leaves this sits below topic 01 (1,516) and above 06/22 (~1,088), so the
 batched `notes-generator` orchestration decision applies here too.
 
+### 16 testing — syllabus pass, 2026-09-03 (`topic-enhancer-agent` Mode A)
+
+| Artefact | State |
+|---|---|
+| `src/topics/16-testing.md` | pre-existing, 408 lines / 13 sections — **untouched by this pass** |
+| `src/syllabus/16-testing.md` | written, **4,599 lines / 1,312 leaves / 55 sections** |
+| `src/metadata/prompts/16-testing-prompt.md` | not started |
+| `src/notes/detailed/16-testing/` | not started |
+
+Leaves per part: P1 basics 282 (12 sections), P2 intermediate 464 (24 sections),
+P3 under the hood 296 (16 sections), P4 build it 56 (1 block — 28 implementations
+each with a *Diff vs the real one* table), P5 interview/retention 214 (75
+questions + 128 traps + 11 recall). PART 3 also carries 28 proofs (§3.14) and a
+33-entry failure catalogue (§3.15). Leaf and section counts **audited on disk and
+they reconcile**; the agent's line self-report was 4,587 against an actual
+**4,599** — same low-by-a-little failure mode as topics 01, 06, 08 and 22, now
+five for five. Audit against disk, always.
+
+Tag inventory (self-reported, lines-containing-tag): `[PROVE]` 411, `[TRAP]` 337,
+`[API]` 200, `[TABLE]` 199, `[RESEARCH]` 183, `[X-REF]` 124, `[NUM]` 94,
+`[SOURCE]` 91, `[DIAG]` 89, `[BUILD]` 78, `[CFG]` 71, `[VERSION-TRAP]` 61,
+`[FLOW]` 57, `[CLI]` 23, `[SPEC]` 23, `[CURRENCY]` 16, `[METRIC]` 14, `[STUDY]`
+10, `[WIRE]` 3. **New tag `[STUDY]`** — cite the empirical study by author,
+venue, year and sample size — documented in the legend and worth adopting
+wherever a claim rests on research rather than docs.
+
+**The commissioned version anchor was wrong and the agent overrode it, correctly.**
+Three of the five libraries I named were a generation behind GA as of 2026-09, and
+the header says so:
+
+| Library | Commissioned | Actual current |
+|---|---|---|
+| JUnit | 5.14.x | **6.1.3** (7 Aug 2026); 6.0.0 GA 30 Sep 2025 |
+| Testcontainers | 1.21.x | **2.0.5** (20 Apr 2026); 1.21.4 is the last 1.x |
+| Spring Boot | 3.5.x | **4.1.1** (20 Aug 2026) / Framework 7.0.x |
+| Mockito | 5.x | 5.23.0 (12 Mar 2026) — as specified |
+| AssertJ | 3.27.x | 3.27.7 — as specified |
+
+Both generations are covered; 14 header `[VERSION-TRAP]`s carry the deltas. Two
+consequences worth carrying: JUnit 6's `@ParameterizedClass` makes the canonical
+Jupiter callback order **18 steps, not 14**, and **Testcontainers 2.0 is
+breaking** — artifacts renamed with a `testcontainers-` prefix, JUnit 4 support
+removed, no-arg container constructors removed, `getContainerIpAddress()` →
+`getHost()`, `DockerComposeContainer` → `ComposeContainer`.
+
+**Verified against fetched primary docs and defensible:** the ten
+`MergedContextConfiguration` cache-key attributes, `ContextCache` size **32** +
+LRU + `spring.test.context.cache.maxSize`, the twelve default Spring
+`TestExecutionListener`s in order, the `@Transactional`-on-tests supported-attribute
+table with the `RANDOM_PORT`-does-not-roll-back and `assertTimeoutPreemptively`
+caveats, all five parallel-execution properties and defaults, the 18-step callback
+order, the nineteen Boot test slices, JaCoCo's six counters and `v(G)=B−D+1`,
+PIT's eleven default mutators, Testcontainers' reuse contract.
+
+**Six sources failed to fetch; everything downstream is `[RESEARCH]`:**
+`xunitpatterns.com` test-smells page (socket closed twice — the §2.23 smell names
+and the Meszaros attribution are recall-based), the JUnit **extension-model** and
+**parameterized-tests** chapters (404 at three URL shapes each — the extension-point
+list and source-annotation attributes are recall-based), the Mockito 5.23.0
+javadoc (unreachable — verification modes and `Answers` came from an older
+javadoc). **Correct doc path shape for the write pass:**
+`docs.junit.org/<version>/<chapter>/<page>.html`, or the single-page export at
+`docs.junit.org/6.1.3/_exports/junit-user-guide-6.1.3.html`. No first-party
+attributable test-suite postmortem with citable figures exists (same shape as
+topics 14 and 15), so §3.15 is presented as mechanisms and invents nothing; no
+usable university syllabus either.
+
+**Carried forward — do not write these unverified** (35 listed in full at the end
+of `## Sources consulted`). Highest risk:
+
+1. The Jupiter extension-point list and `junit.jupiter.extensions.autodetection.enabled`'s
+   default (stated `false`).
+2. **Every Boot 4 / Framework 7 testing change came from rieckpil, not
+   docs.spring.io** — `ContextPausedEvent`, `SmartLifecycle#isPauseable()`,
+   `@SpringExtensionConfig(useTestClassScopedExtensionContext=true)`,
+   non-singleton bean-override support, `RestTestClient` replacing
+   `TestRestTemplate`.
+3. Mockito inline-maker internals (`MockMethodAdvice`, `MockMethodDispatcher`,
+   `WeakConcurrentMap`) read from source references and a PR, not official prose;
+   plus `@InjectMocks`'s three-stage resolution order.
+4. Testcontainers 2.0's exact rename list (migration blog + OpenRewrite recipe,
+   not the changelog), Ryuk's grace period and label keys, Docker-discovery order.
+5. **The Testcontainers startup-cost figures in §2.6.29 / §3.10.22 are
+   experience-level estimates, not measurements** — measure or relabel.
+6. Flaky-test root-cause percentages (async wait ~45% / concurrency ~20% / order
+   dependency ~12%) came via a search summary of Luo et al., not the paper text.
+   This is exactly the failure the `[STUDY]` tag exists to prevent — read the
+   paper before printing them.
+7. PIT `timeoutConstant`/`timeoutFactor` defaults and bytecode-level operators;
+   JaCoCo's probe-placement algorithm and overhead figure; Awaitility's
+   `pollDelay` default; jqwik's JUnit 6 compatibility; CVE-2026-24400's scope.
+
+**Gap table:** the 408-line guide is genuinely good where it exists — the
+test-doubles table, the flakiness table, the H2 critique and the CDC walkthrough
+beat typical, and **42 passages are must-survive-verbatim**. But **21 of 55
+sections are entirely absent**: JUnit architecture, the build surface, test data
+builders, the cost model, `@Transactional`-in-tests as a subject, advanced
+Mockito, HTTP stubbing, property-based testing, TDD/BDD, performance boundaries,
+CI, test observability, the named anti-pattern catalogue, and the whole of PART 3.
+
+**24 named corrections; the three that matter most are all in §8:**
+
+1. The Testcontainers code is 1.x and **will not compile on 2.x**.
+2. The reuse advice would lead a reader to enable reuse **in CI**, which the docs
+   explicitly warn against — it leaks containers.
+3. §8 says use Testcontainers while §9 says `@DataJpaTest` uses an embedded DB,
+   and the guide never names `@AutoConfigureTestDatabase(replace = NONE)` — the
+   two sections contradict each other.
+
+Also: the guide **states no target versions anywhere**, which is why several
+claims quietly aged. Fix that first in any write pass.
+
+**Split guidance:** `16-testing.md` (PARTS 1–2) + `16-testing-internals.md`
+(PARTS 3–5), cross-linked, checklist in each, with the `src/topics/00-index.md`
+scope-line update spelled out in the footer. Same shape as topics 12, 14 and 15.
+
+**Note for topic 08:** 08's syllabus X-REFs Testcontainers and Mockito out to 16,
+and 16 now owns them — that dependency is discharged.
+
+**Deliberately out of scope** (recorded so a later pass does not read these as
+gaps): UI and mobile automation — Selenium, Playwright, Appium — named only where
+a JVM backend suite touches them; the JUnit 3 API beyond the migration map;
+TestNG beyond a one-line placement; and load-testing tool mechanics, pointed at
+`22-system-design.md` and `20-observability-operations.md`.
+
 ## Next in the per-topic pipeline
 
-**No syllabus yet — 14 topics:** 09–20 and the rest of the un-started set. Each
-needs, in order: `topic-enhancer-agent` (syllabus pass) → `prompt-builder` →
-`notes-generator`.
+**No syllabus yet — 12 topics:** 10, 11, 13, 17–20 and the rest of the un-started
+set. Each needs, in order: `topic-enhancer-agent` (syllabus pass) →
+`prompt-builder` → `notes-generator`.
 
-**Syllabus written, `prompt-builder` next:** 01, 06, **08**, 09, 12, **14**, 22 —
-all pending the scale decision noted above.
+**Syllabus written, `prompt-builder` next:** 01, 06, **08**, 09, 12, **14**,
+**15**, **16**, 22 — all pending the scale decision noted above.
 
 **Syllabus + prompt + note set complete:** 02, 03, 04, 05, 21.
 
 ## Last update — per-topic pipeline
 
 - **Date:** 2026-09-03
-- **Last generated:** topic 14 messaging-queues — syllabus pass only
+- **Last generated:** topic 16 testing — syllabus pass only
+  (`src/syllabus/16-testing.md`, **4,599 lines / 1,312 leaves / 55 sections**,
+  target JUnit 6.1.3 / Mockito 5.23.0 / AssertJ 3.27.7 / Testcontainers 2.0.5 /
+  Spring Boot 4.1.1, with 5.14.x / 1.21.x / 3.5.x covered as the previous
+  generation). `src/topics/` untouched. **Leaves and sections disk-audited and
+  they reconcile; the line self-report was 12 low.**
+- **Prior:** 2026-09-03 — topic 15 caching — syllabus pass only
+  (`src/syllabus/15-caching.md`, **3,225 lines / 978 leaves / 50 sections**, target
+  Redis 8.6 / Caffeine 3.2.4 / Spring Boot 4.1.x). `src/topics/` untouched.
+  **Counts disk-audited and they reconcile.**
+- **Prior:** 2026-09-03 — topic 14 messaging-queues — syllabus pass only
   (`src/syllabus/14-messaging-queues.md`, 948 leaves, 53 sections, target Kafka
   4.3.0 / RabbitMQ 4.3.x / Spring Boot 4.0.x). `src/topics/` untouched. Leaf and
   tag counts are self-reported and still need a disk audit.
@@ -1036,3 +1171,92 @@ each, and add the new file to `src/topics/00-index.md`.
 the run did hit the cap once mid-PART-1 and resumed cleanly because the file already
 existed on disk. Confirms the rule: write early, append in parts, never shrink scope
 to fit.
+
+### 15 caching — syllabus, 2026-09-03 (prompt and notes NOT started)
+
+| Artefact | State |
+|---|---|
+| `src/topics/15-caching.md` | pre-existing, 679 lines / 14 sections / 53 checklist items — **untouched by this pass** |
+| `src/syllabus/15-caching.md` | written, **3,225 lines / 978 leaves** across 5 parts / 50 numbered sections |
+| `src/metadata/prompts/15-caching-prompt.md` | not started |
+| `src/notes/detailed/15-caching/` | not started |
+
+#### Syllabus pass — `topic-enhancer-agent` Mode A, 2026-09-03
+
+PART 1 basics 165 (§1.1–1.10), PART 2 intermediate 361 (§2.1–2.19), PART 3 under
+the hood 271 (§3.1–3.18), PART 4 build it 48 (24 implementations + 24 *Diff vs the
+real one* tables), PART 5 interview/retention 133 (§5.1–5.3).
+
+**Counts audited against disk and they reconcile** — first syllabus pass in this
+project where the self-report matched (topics 01, 06, 08, 14 and 22 all
+under-reported). Verified: `wc -l` 3,225, leaf grep 978, 52 `##` headings
+(50 sections + trailing blocks). Tag inventory, raw literal occurrences —
+`[PROVE]` 314, `[TRAP]` 192, `[NUM]` 130, `[X-REF]` 127, `[RESEARCH]` 115,
+`[TABLE]` 113, `[SOURCE]` 105, `[API]` 71, `[BUILD]` 46, `[CFG]` 44, `[DIAG]` 31,
+`[VERSION-TRAP]` 30, `[CURRENCY]` 30, `[SPEC]` 24, `[METRIC]` 21, `[CLI]` 19,
+`[FLOW]` 17, `[WIRE]` 14. Each count includes its legend row, and
+RESEARCH/CURRENCY/VERSION-TRAP/X-REF also include header-prose mentions — the
+footer states that caveat rather than implying leaf-level precision.
+
+**Currency anchor in the header:** Redis OSS **8.6** (Feb 2026), Valkey 9,
+Caffeine **3.2.4** (4 May 2026), memcached 1.6.x, Spring Boot **4.1.x** /
+Framework 7.0.x with 3.5.x deltas, Spring Data Redis 4.1.x, Hibernate 7.x,
+JCache 1.1 / Ehcache 3.10.x, RFC 9111 + 9110 + 5861 + 8246 + 9211 + 9213,
+Java 21. Eleven `[VERSION-TRAP]` deltas enumerated up front.
+
+**Three research finds recall would have got wrong:**
+
+1. Redis 8.6 adds `allkeys-lrm` / `volatile-lrm` — **ten** eviction policies now,
+   not eight — plus a first-class `HOTKEYS` command and `key-memory-histograms`.
+2. **Caffeine's window/main split is hill-climbed at runtime.** The widely-quoted
+   fixed 1% / 99% figure is wrong.
+3. Redis docs and the shipped `redis.conf` **disagree** on
+   `hash-max-listpack-entries` (512 vs 128). Flagged as resolve-with-`CONFIG GET`
+   at write time rather than asserted either way.
+
+**Research: primary-source-first**, 41 sources in `## Sources consulted` each with
+what it contributed. Redis docs fetched as raw reference text (eviction,
+memory-optimization, EXPIRE, client-side-caching intro + reference, cluster spec,
+8.6 what's-new), plus the Caffeine Design wiki, memcached `doc/new_lru.txt`,
+RFC 9111 plain text, the Spring Framework cache reference, Spring Data Redis and
+JSR-107 javadoc, the TinyLFU / SIEVE / XFetch papers, and both sides of the
+Redlock debate.
+
+**Carried forward — do not write these unverified.** 18 numbered entries, each
+naming the file or page to re-read. Clusters: Redis source constants
+(`activeExpireCycle` keys-per-loop and the 25% threshold, eviction pool size, LRU
+clock resolution and wraparound, `LFU_INIT_VAL`); Caffeine's timer-wheel bucket
+spans, sketch reset multiplier, and whether it ships a doorkeeper at all;
+memcached's `hot_lru_pct` family and item-header size; the 8.6 throughput/memory
+figures; `tracking-table-max-keys`; Boot 4.x package FQNs and provider
+auto-detection order; the exact XFetch inequality; and every `[CURRENCY]`
+commercial figure. **Two searches returned nothing usable and are declared as
+such** — no first-party caching-outage postmortem exists to cite (same shape as
+topic 14's `$2.3M` problem), and no standalone university caching syllabus.
+
+**Gap table:** every concept in the 679-line guide survives as a leaf, and **29
+passages are listed as must-survive-verbatim** — it is genuinely strong on
+cache-aside, the read/write race, TTL discipline and jitter, stampede, the pub/sub
+trap, and readiness gating. **Fifteen whole subjects are absent:** serialisation,
+the master cost model, the Spring Cache abstraction, Hibernate caching, memcached
+beyond two sentences, distributed topology and consistent hashing, sizing
+arithmetic, testing, cache security, the never-cache/invariant argument, and the
+entirety of PARTs 3, 4 and 5.
+
+**Twenty corrections the write pass must make to existing text.** The four that
+matter most:
+
+1. **Every example must be re-domained off `product:42` onto QuizStakes** — the
+   guide predates the shared scenario file.
+2. The eviction table is **two policies short** (the 8.6 `lrm` pair).
+3. The negative-caching sentinel comparison uses `==`, which is **broken across a
+   serialising cache** — it works in-process and silently fails on Redis.
+4. The HTTP section attributes RFC 5861 / 8246 / 9211 / 9213 material to nothing.
+
+**Split guidance recorded:** at 978 leaves, split into `15-caching.md` (PARTS 1–2)
+and `15-caching-internals.md` (PARTS 3–5), cross-linked, checklist in each,
+`src/topics/00-index.md` updated. Same shape as topics 12 and 14.
+
+Nothing judged out of scope. Sibling material sits behind `[X-REF nn]` for 02, 03,
+04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 16, 18, 19, 20 and 22, under a
+state-the-mechanism-in-one-paragraph-then-point-away rule.
