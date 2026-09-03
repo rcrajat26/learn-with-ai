@@ -1260,3 +1260,76 @@ and `15-caching-internals.md` (PARTS 3–5), cross-linked, checklist in each,
 Nothing judged out of scope. Sibling material sits behind `[X-REF nn]` for 02, 03,
 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 16, 18, 19, 20 and 22, under a
 state-the-mechanism-in-one-paragraph-then-point-away rule.
+### 19 docker-kubernetes — syllabus, 2026-09-03 (prompt and notes NOT started)
+
+| Artefact | State |
+|---|---|
+| `src/topics/19-docker-kubernetes.md` | pre-existing, 705 lines / 14 sections / 69 checklist items — **untouched by this pass** |
+| `src/syllabus/19-docker-kubernetes.md` | written, **5,189 lines / 1,201 leaves** across 5 parts / 94 numbered sections |
+| `src/metadata/prompts/19-docker-kubernetes-prompt.md` | not started |
+| `src/notes/detailed/19-docker-kubernetes/` | not started |
+
+#### Syllabus pass — `topic-enhancer-agent` Mode A, 2026-09-03
+
+PART 1 basics 436 (§1.1–1.31), PART 2 intermediate 393 (§2.1–2.31), PART 3 under
+the hood 236 (§3.1–3.22), PART 4 build it 52 (§4.1–4.7), PART 5
+interview/retention 84 (§5.1–5.3).
+
+**Counts audited against disk and they reconcile.** `wc -l` 5,189; `^N.N.N `
+leaf grep 1,201 and each part's grep matches its reported figure; 97 `##`
+headings (94 sections + trailing blocks). Tag inventory, raw literal
+occurrences — `[PROVE]` 344, `[RESEARCH]` 191, `[NUM]` 175, `[TRAP]` 170,
+`[SOURCE]` 128, `[CFG]` 127, `[BUILD]` 113, `[CMD]` 100, `[DIAG]` 70,
+`[VERSION-TRAP]` 28, `[KEP]` 15, `[YAML]` 13. (The agent self-reported
+`[RESEARCH]` 189 against 191 on disk — header-prose mentions account for the
+drift; not leaf-level precision.)
+
+**Currency anchor in the header:** Kubernetes **1.37 "Garhwal"** (26 Aug 2026,
+EOL 28 Oct 2027) with 1.33–1.36 deltas covered, Docker Engine **29.x**
+(containerd image store default, `overlay2` graph driver deprecated), Compose
+v2 / Compose Spec, BuildKit + buildx bake, containerd **2.2.x** (NRI and CDI
+default-enabled since 2.1), runc **1.4.x**, OCI image-spec 1.1.x /
+distribution-spec 1.1 / runtime-spec 1.3, **Gateway API 1.5** (27 Feb 2026) and
+1.6, Helm **4.x** (server-side apply), Karpenter v1, Istio ambient mode, cgroup
+v2 only, Java 21 LTS.
+
+**The headline correction:** `ingress-nginx` reached **EOL 24 Mar 2026** — no
+features, no bugfixes, **no CVE patches** — and `InGate`, its intended
+successor, was retired too. The guide's naming of nginx as an implementation and
+its "(Gateway API is its successor.)" parenthetical are both now wrong in a way
+that matters operationally. `ingress2gateway` 1.0 (Mar 2026) converts existing
+objects.
+
+**Twenty `[VERSION-TRAP]` deltas.** The largest: containerd image store default
+in Engine 29; nftables kube-proxy GA (1.33) with IPVS deprecated (1.35) while
+iptables remains the 1.37 default; in-place pod resize GA (1.35) via the
+`resize` subresource; native sidecars GA (1.33); pod-level `spec.resources`
+beta-on (1.34); user namespaces GA (1.36); `-XX:+UseContainerCpuShares` removed
+in JDK 21; Helm 4 server-side apply.
+
+**Carried forward — do not write these unverified.** Five clusters, each named
+in the footer with the page to re-read: the kubelet's refusal to start without
+cgroup v2 from 1.35 (single secondary source); the kubelet **soft** eviction
+defaults (the fetch asserted values the kubelet does not ship — verify against
+the `KubeletConfiguration` reference, not the eviction page); the truncated
+Restricted PSS control list; Docker Engine 29's release notes; the etcd limits
+(1.5 MiB request, 2 GiB default quota, 8 GiB recommended max — from recall); and
+the CFS-throttling throughput figures (**attribute, do not assert**).
+
+**Gap table is section-by-section**, with **six required corrections to existing
+text** (not additions) and **eleven passages flagged must-survive-verbatim** —
+the probe actor table and dependency-storm trap, the CPU/memory asymmetry table,
+the termination race and its fix chain, the BAD/GOOD Dockerfile pair, the
+exec-form trap, the ECS positioning, and the efficiency-is-fourth-not-first
+framing.
+
+**Split guidance recorded:** at 1,201 leaves, split at the PART 2/3 boundary into
+`19-docker-kubernetes.md` (PARTS 1–2) and `19-docker-kubernetes-internals.md`
+(PARTS 3–5), cross-linked, `## Atomic concept checklist` in **each**, the current
+guide's 56 checklist lines carried into the first, `src/topics/00-index.md`
+updated. Same shape as topics 12, 14 and 15.
+
+**Parked out of scope behind `[X-REF]`:** cloud primitives and IAM (18),
+Terraform runtime (23), kernel/OS internals as a subject (11), JVM heap and GC
+internals (06), HTTP/TCP/TLS protocol layers (10), metrics/tracing/SLO design
+(20), OWASP and end-user auth (13), Testcontainers mechanics (16).
