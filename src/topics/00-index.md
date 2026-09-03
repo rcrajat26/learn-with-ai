@@ -1,6 +1,6 @@
 # Topic Guides — Index
 
-Twenty-two mechanism-level guides for backend Java interview prep (3–4 YOE, FAANG/senior-tier bar).
+Twenty-three mechanism-level guides for backend Java interview prep (3–4 YOE, FAANG/senior-tier bar).
 Each guide explains *how the thing actually works*, not just how to use it, and ends with an
 `## Atomic concept checklist` you can self-quiz against.
 
@@ -14,7 +14,7 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
 3. Guides cross-reference each other. Concurrency mechanics live in 05 even when collections (02)
    or Spring (07) touch them.
 
-## The twenty-two guides
+## The twenty-three guides
 
 | # | File | Scope in one line |
 |---|---|---|
@@ -40,6 +40,7 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
 | 20 | `20-observability-operations.md` | The three pillars (metrics, logs, traces), structured logging, Micrometer and Prometheus, distributed tracing and context propagation, SLI/SLO/error budgets, alerting that does not page falsely, incident response, and postmortems. |
 | 21 | `21-ai-for-coding.md` | Claude Code as an engineered system: the agent loop and the context window as a budget, `.claude/` anatomy and settings precedence, the five channels that supply context (system prompt, CLAUDE.md, slash commands, skills, tool results), subagents as context isolation, hooks as the deterministic escape hatch, headless `claude -p` with turn/time/dollar ceilings, plugins and marketplaces, and the deterministic-vs-agentic decision rule. Worked against a real multi-agent SDLC harness. |
 | 22 | `22-system-design.md` | The composition layer: the 45-minute structure, requirement extraction and back-of-envelope arithmetic, the scale-up ladder, storage selection as a procedure, replication and replica-lag fixes, partitioning/consistent hashing/hot keys, CAP–PACELC and per-operation consistency, quorum `R+W>N`, idempotency and the outbox, ID generation, rate limiting and load shedding, resilience patterns, multi-region, read models, migration under live traffic, and four worked designs (shortener, feed, chat, ledger). |
+| 23 | `23-terraform.md` | Infrastructure as code runtime: the state file as the single authority (not a cache), the plan-graph-apply execution model, why state locking prevents concurrent-apply corruption, resource replace vs. update and why provider versions matter, for_each stability and drift detection, sensitive output redaction vs. state encryption, and debugging orphaned resources. |
 
 ## Reading order suggestions
 
@@ -61,7 +62,7 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
 
 ## Atomic concept checklist
 
-- [ ] I know which of the 22 guides owns each topic, so I do not hunt for concurrency in the collections guide.
+- [ ] I know which of the 23 guides owns each topic, so I do not hunt for concurrency in the collections guide.
 - [ ] I know the guides are mechanism-first: the answer to "how does it work" is the deliverable, not "how do I call it".
 - [ ] I treat every **Trap:** marker as a known past failure, not trivia.
 - [ ] I use the atomic concept checklists as the pre-interview review layer, not the full text.
