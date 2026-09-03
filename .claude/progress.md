@@ -801,15 +801,21 @@ batched `notes-generator` orchestration decision applies here too.
 needs, in order: `topic-enhancer-agent` (syllabus pass) → `prompt-builder` →
 `notes-generator`.
 
-**Syllabus written, `prompt-builder` next:** 01, 06, **08**, 22 — all four
-pending the scale decision noted above.
+**Syllabus written, `prompt-builder` next:** 01, 06, **08**, 09, 12, **14**, 22 —
+all pending the scale decision noted above.
 
 **Syllabus + prompt + note set complete:** 02, 03, 04, 05, 21.
 
 ## Last update — per-topic pipeline
 
-- **Date:** 2026-09-02
-- **Last generated:** topic 08 spring-data-jpa — syllabus pass only
+- **Date:** 2026-09-03
+- **Last generated:** topic 14 messaging-queues — syllabus pass only
+  (`src/syllabus/14-messaging-queues.md`, 948 leaves, 53 sections, target Kafka
+  4.3.0 / RabbitMQ 4.3.x / Spring Boot 4.0.x). `src/topics/` untouched. Leaf and
+  tag counts are self-reported and still need a disk audit.
+- **Prior:** 2026-09-03 — topic 12 api-design, syllabus pass only (3,631 lines,
+  939 leaves, 65 sections).
+- **Prior:** 2026-09-02 — topic 08 spring-data-jpa — syllabus pass only
   (`src/syllabus/08-spring-data-jpa.md`, 4,352 lines, 1,360 leaves, 85 sections).
   `src/topics/` untouched. No prompt, no notes. Footer counts corrected in place
   after a disk audit.
@@ -936,3 +942,97 @@ quoted-delimiter heredoc (`cat >> path <<'EOF'`) so backticks and `$` survive, a
 never to shrink scope to fit the cap — chunk more, not less. Recovery path when it
 does blow up: `SendMessage` to the same agent id, since the research context
 survives the API error.
+
+### 14 messaging-queues — syllabus, 2026-09-03 (prompt and notes NOT started)
+
+| Artefact | State |
+|---|---|
+| `src/topics/14-messaging-queues.md` | pre-existing, 690 lines — **untouched by this pass** |
+| `src/syllabus/14-messaging-queues.md` | written, **948 leaves** across 5 parts / 53 numbered sections |
+| `src/metadata/prompts/14-messaging-queues-prompt.md` | not started |
+| `src/notes/detailed/14-messaging-queues/` | not started |
+
+#### Syllabus pass — `topic-enhancer-agent` Mode A, 2026-09-03
+
+PART 1 basics 306 (§1.1–1.16), PART 2 intermediate 278 (§2.1–2.17), PART 3 under
+the hood 236 (§3.1–3.17), PART 4 build it 36 (18 implementations + 18 *Diff vs the
+real one* tables), PART 5 interview/retention 92 (§5.1–5.3, with 32 questions and a
+52-item consolidated trap list). Self-reported tags: 96 `[RESEARCH]`, 111 `[TRAP]`,
+78 `[PROVE]`, 47 `[VERSION-TRAP]`, 18 `[BUILD]`, 14 `[SOURCE]`. **Counts are
+self-reported and NOT audited against disk** — topics 01, 06, 08 and 22 all had
+low self-reports, so audit before `prompt-builder` runs.
+
+**Target version baseline stated in the header:** Kafka **4.3.0** (22 May 2026),
+RabbitMQ **4.3.x** (23 Apr 2026), AMQP 0-9-1 + AMQP 1.0, Jakarta Messaging 3.1,
+Spring Boot 4.0.x / Spring Kafka 4.1.x / Spring AMQP 4.0.x, AWS SQS/SNS/EventBridge
+as of Sept 2026, Debezium 3.3.x, Java 21.
+
+**Twelve `[VERSION-TRAP]` deltas are enumerated in the header**, of which two are
+outright factual errors in the existing guide:
+
+1. **SQS max payload is 1 MiB, not 256 KiB** (changed Aug 2025). The guide § 9 says
+   256 KB.
+2. **SQS default retention is 4 days, not 14** (14 is the max). The guide § 2 implies
+   14.
+3. SQS FIFO in-flight limit is **120,000**, not 20,000.
+4. `linger.ms` defaults to **5**, not 0 (KIP-1030, Kafka 4.0).
+5. Kafka 4.x has **no ZooKeeper**; KRaft only.
+6. KIP-848 is GA and the classic rebalance protocol is deprecated (KIP-1274), so
+   `session.timeout.ms` / `heartbeat.interval.ms` / `partition.assignment.strategy`
+   are inert under `group.protocol=consumer`.
+7. **Kafka has queues** — KIP-932 share groups are production-ready since 4.2.
+8. RabbitMQ classic mirrored queues were removed in 4.0; `ha-mode` is dead config.
+9. RabbitMQ's metadata store is **Khepri**, sole option since 4.3; Mnesia and CQv1
+   are gone and `cluster_partition_handling` has no effect.
+10. Spring Kafka 4.0 dropped Spring Retry — `@Backoff` → `@BackOff`,
+    `BinaryExceptionClassifier` → `ExceptionMatcher`.
+11. Spring AMQP 4.0 ships a second, AMQP-1.0 stack (`spring-rabbitmq-client`).
+12. SQS standard queues accept `MessageGroupId`, which enables **fair queues** and
+    orders nothing.
+
+An eight-item **corrections list** at the end of the syllabus names every passage in
+the existing guide that is wrong rather than merely thin.
+
+**Research: 20 searches across all nine angles, 14 primary sources fetched in full.**
+Highest-yield: the four Kafka release announcements (4.0/4.1/4.2/4.3) plus KIP-1030
+for the changed defaults; the Kafka 4.1 consumer-rebalance-protocol operations page
+for the KIP-848 config surface; **Conduktor's "11 Kafka production pitfalls"**, which
+produced the most obscure leaves in PART 3 (`effectiveMinIsr()` capping at
+`replication.factor`, `offsets.retention.minutes` expiry on *empty* groups,
+LSO stalls, future-timestamp segment immortalisation, segment rolling by message
+time, quota bypass of purgatory, pre-compression `max.request.size` check); the
+RabbitMQ quorum-queues and confirms docs for every `x-` argument and default; the SQS
+message-quotas and DLQ pages for the payload/retention/in-flight numbers and the
+obscure "standard queue moves a message to the back after 3 receives" and
+"FIFO DLQ resets the enqueue timestamp" rules.
+
+**Carried forward — do not write these unverified:**
+
+| Item | Why |
+|---|---|
+| The "$2.3M unreconciled transactions" unclean-leader-election incident | circulates only in secondary blog posts; **no first-party postmortem found.** Either source it or teach the mechanism without the number |
+| All of PART 3's client-internals leaves (§3.6, §3.7) | sourced from a third-party write-up, not from `org.apache.kafka.clients.*` source. Read `RecordAccumulator`, `Sender`, `Fetcher` before writing |
+| `min.cleanable.dirty.ratio` 0.5 / `delete.retention.ms` 24 h | taken from aggregator docs, not `kafka.apache.org`; the version-pinned docs page 404'd on three URL shapes |
+| Every consumer/producer/broker default not covered by KIP-1030 | the `kafka.apache.org/documentation/#producerconfigs` fetch returned a redirect shell. Re-fetch the versioned config page |
+| RabbitMQ 4.3 minimum Erlang version | not stated on the release-notes page |
+| SNS's "100 subscriptions per topic" | from a features page, not the quotas page |
+
+**Gap table: 41 rows.** Of 948 leaves, roughly 120 exist in the current guide at any
+depth. **Nine areas are entirely absent** and are the bulk of the work: RabbitMQ/AMQP
+in any form, JMS/Jakarta Messaging, message anatomy and schema evolution, sagas
+(which `00-index.md` already promises), event modelling/CQRS, security and
+multi-region ops, observability, the whole of PART 3 internals, and the whole of
+PART 4. The guide's strongest asset — **§ 2, the broker-lifecycle / "consumers down
+≠ DLQ" section** — is preserved and extended, not rewritten, and all 13 existing
+`**Trap:**` markers plus the 61-line atomic checklist are recorded as a floor.
+
+**Split guidance recorded in the footer:** at 948 leaves the bible exceeds ~2,500
+lines, so split into `14-messaging-queues.md` (PARTS 1–2) and
+`14-messaging-queues-internals.md` (PARTS 3–5), cross-link, keep a checklist in
+each, and add the new file to `src/topics/00-index.md`.
+
+**Chunked-write rule from the topic-12 block was applied** — header + PART 1 via
+`Write`, then PARTS 2, 3, and 4+5 appended via `Edit`. No output-cap failure, but
+the run did hit the cap once mid-PART-1 and resumed cleanly because the file already
+existed on disk. Confirms the rule: write early, append in parts, never shrink scope
+to fit.
