@@ -637,7 +637,7 @@ prove a `when` clause always evaluates to `true`, so it never treats a guarded l
 static String correct(Verdict v) {
     return switch (v) {
         case DocumentVerdict d when d.outcome() == DocumentOutcome.REFERRED -> "flag";  // must come first
-        case DocumentVerdict d -> "auto-clear";                                          // catches the rest
+        case DocumentVerdict d -> "auto-clear";                                          // catches the rest.md
         case ScreeningVerdict s -> "screening";
         case ReviewVerdict r -> "review";
         case WealthVerdict w -> "wealth";

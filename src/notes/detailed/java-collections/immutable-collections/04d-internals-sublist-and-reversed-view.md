@@ -343,7 +343,7 @@ from it.** Fix in all three cases is a defensive copy — `List.copyOf(sub)`, `S
 ```java
 List<byte[]> huge = List.copyOf(loadMillionBuffers());
 List<byte[]> firstTwo = huge.subList(0, 2);
-huge = null;                 // "the rest can be collected now"
+huge = null;                 // "the rest.md can be collected now"
 ```
 
 Nothing is collected: `SubList` holds `root`, and `root` holds the full million-element array.

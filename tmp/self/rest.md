@@ -1,0 +1,13 @@
+### My understanding
+- The REST is more of a guideline than a specification. A webservice developed using its guideline is said to be a restful webservice
+- For a webservice to be restful it must have urls which are resource based/centric; should use appropriate HTTP methods for each CRUD op - POST, GET, PUT/PATCH, DELETE; must return appropriate HTTP status codes; provide useful metadata
+- POST, PATCH are non-idempotent, while GET, DELETE, PUT are idempotent
+- Idempotency is behaviour where in even upon receiving multiple duplicate requests the state of the resource must remain same
+- 1xx - Informational codes, 2xx- success codes, 3xx- redirection codes, 4xx- client error, 5xx-server error
+- HATEOAS - states that the entire resources state must be readable from one call in HTTP which also supplies metadata to access related resources, we must not need any separate documentation.
+- Richardson maturity model says, the web service is
+  - Level 1: if we have single resource and single http method to get all the resources of the application by passing required details in the body
+  - Level 2: if we maintain one url per resource
+  - Level 3: if for a given resource we maintain respective HTTP methods for CRUD ops - POST,GET,PUT,DELETE
+  - Level 4: if we supply metadata/implement HATEOAS
+- Searching filtering and sorting must be done using query params

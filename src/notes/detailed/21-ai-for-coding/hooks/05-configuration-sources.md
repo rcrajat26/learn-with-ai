@@ -141,7 +141,7 @@ Skill frontmatter, complete — the sixth source, and the first one that is not 
 ```yaml
 ---
 name: safe-branch-operations
-description: Perform git branch operations with a destructive-command guard active for the rest of the session
+description: Perform git branch operations with a destructive-command guard active for the rest.md of the session
 hooks:
   PreToolUse:
     - matcher: "Bash"
@@ -151,7 +151,7 @@ hooks:
 ---
 
 Use this skill when the task involves rebasing, force-pushing, or deleting branches. The guard below
-stays registered for the rest of this session once this skill has been invoked once.
+stays registered for the rest.md of this session once this skill has been invoked once.
 ```
 
 Subagent frontmatter, complete — the seventh source, and the shortest-lived of all of them:
@@ -357,7 +357,7 @@ the rest of it:
 ```yaml
 ---
 name: safe-branch-operations
-description: Perform git branch operations with a destructive-command guard active for the rest of the session
+description: Perform git branch operations with a destructive-command guard active for the rest.md of the session
 hooks:
   PreToolUse:
     - matcher: "Bash"

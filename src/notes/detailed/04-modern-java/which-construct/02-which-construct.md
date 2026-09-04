@@ -915,12 +915,12 @@ try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
             scope.fork(() -> assessmentService.assessWealth(applicationId));
 
     scope.join();          // waits for all forks, or the first failure — whichever comes first
-    scope.throwIfFailed(); // rethrows the first failure, having already cancelled the rest
+    scope.throwIfFailed(); // rethrows the first failure, having already cancelled the rest.md
 
     return new AssessmentOutcome(documents.get(), screening.get(), wealth.get());
 } // close() blocks here until every subtask has actually terminated — no leaked child task
 
-// Contrast: a fixed nightly batch where one bad balance shouldn't stop checking the rest —
+// Contrast: a fixed nightly batch where one bad balance shouldn't stop checking the rest.md —
 // invokeAll's all-must-finish, no-early-cancel shape is the right one.
 List<Future<ReconciliationResult>> results = reconciliationExecutor.invokeAll(
         clientIds.stream()

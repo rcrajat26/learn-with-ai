@@ -208,7 +208,7 @@ public final class LedgerAuditRace {
         final AtomicLong formatWrong = new AtomicLong();
         final AtomicLong parseWrong = new AtomicLong();
         final Map<String, AtomicInteger> thrown = new ConcurrentHashMap<>();
-        /** One sample per distinct failure kind, so one loud kind cannot crowd out the rest. */
+        /** One sample per distinct failure kind, so one loud kind cannot crowd out the rest.md. */
         final Map<String, String> sampleByKind = new ConcurrentHashMap<>();
         /** One full stack trace per distinct exception type. */
         final Map<String, String> traceByType = new ConcurrentHashMap<>();

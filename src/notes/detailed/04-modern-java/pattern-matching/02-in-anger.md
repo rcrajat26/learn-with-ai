@@ -518,7 +518,7 @@ say) where `null` genuinely means "no verdict yet."
 ### How it works
 
 ```java
-// null falls through to the switch, handled with the rest of the dispatch
+// null falls through to the switch, handled with the rest.md of the dispatch
 String describe(Verdict verdict) {
     return switch (verdict) {
         case null -> "No verdict recorded yet";

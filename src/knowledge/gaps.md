@@ -1399,6 +1399,61 @@ destructive command · ECS+Fargate as the simpler default.
 
 ---
 
+## 21 — REST architecture & API fundamentals
+
+> **Understanding ledger:** `src/knowledge/understanding.md` §21 — score **L2**, measurement confidence **HIGH**. Self-assessed; verified against core REST principles and Richardson maturity model.
+
+**Status: SELF-ASSESSED.** REST foundations solid; one implementation gap and several depth misses identified.
+
+### Confirmed gaps
+
+**GAP: PUT vs PATCH distinction clarity**
+- Evidence: Self-assessment named both as update methods but conflated idempotency semantics (PUT idempotent, PATCH non-idempotent) with implementation details.
+- Severity: MEDIUM. Type: mechanism precision.
+- Remediation: OPEN. Clarify: PUT = full resource replacement (idempotent), PATCH = partial update (non-idempotent).
+
+**GAP: Safe vs idempotent as orthogonal concepts**
+- Evidence: Self-assessment mentioned idempotency correctly but did not distinguish GET as *both* safe and idempotent from POST as neither.
+- Severity: MEDIUM (architectural decision-making).
+- Remediation: OPEN. Safe = no side effects; idempotent = same effect on replay; GET and HEAD are both; DELETE idempotent but not safe.
+
+**GAP: Content negotiation and media types**
+- Evidence: Self-assessment covered HTTP methods and status codes; Accept headers, content negotiation, and media-type selection absent.
+- Severity: MEDIUM.
+- Remediation: OPEN.
+
+**GAP: Caching headers and HTTP conditional requests**
+- Evidence: Self-assessment silent on Cache-Control, ETag, Last-Modified, If-None-Match, If-Match, and their role in REST discoverability and bandwidth.
+- Severity: **HIGH** (core HTTP practice, interview-visible, caching is topic 15).
+- Remediation: OPEN.
+
+**GAP: Statelessness as architectural constraint**
+- Evidence: Self-assessment named REST principles but did not articulate statelessness: server stores no client context between requests; each request is self-contained.
+- Severity: MEDIUM (foundational, impacts session design).
+- Remediation: OPEN.
+
+**GAP: Versioning strategies and deprecation**
+- Evidence: Self-assessment did not mention URL-path, header-based, Accept-header, or query-param versioning; deprecation sequencing and `Deprecation`/`Sunset` headers absent.
+- Severity: MEDIUM (practical, interview-asked, API evolution).
+- Remediation: OPEN.
+
+### Verified non-gaps / strengths
+
+- Richardson Maturity Model Level 0 → Level 3 progression correctly described (numbered 1–4 vs 0–3, notation difference only).
+- HATEOAS concept and purpose well explained — returning resource state plus links to related resources.
+- Idempotency definition correct.
+- HTTP method-to-CRUD mapping: POST (create), GET (read), PUT/PATCH (update), DELETE (destroy) — all correct.
+- Query parameters for search, filtering, sorting — correct placement and rationale.
+- HTTP status code categories (1xx informational through 5xx server error) — correct.
+- Individual status codes (200 OK, 201 Created, 401 Unauthorized, 403 Forbidden, 404 Not Found, 500 Internal Server Error, 502 Bad Gateway) — all correct.
+- Resource-centric URLs (not action-centric) — mentioned and correct.
+
+### Unmeasured checklist items
+
+Safe vs idempotent as separate properties · 204 No Content, 202 Accepted, 206 Partial Content · `201 Created` + `Location` header · `202 Accepted` + status URL for async · 409 for state conflicts · 429 + `Retry-After` for rate limiting · never 200-with-error-body · modelling non-CRUD actions with verbs in path · **end-to-end idempotency keys** (client UUID dedup, insert-first pattern, atomicity with response) · server-side max page size and deterministic ordering · URI vs header vs query versioning strategies; additive changes avoid versioning · deprecation sequencing and communication · **RFC 7807 `application/problem+json`** with stable machine-readable types · HTTP conditional requests: `ETag`, `If-None-Match` → 304, `If-Match` → 412 · **Cache-Control, expires, must-revalidate, private vs public** · `Last-Modified` and `If-Modified-Since` · HATEOAS vs discoverability trade-offs · choosing polling vs SSE vs WebSocket vs webhooks · webhook delivery guarantees (retries, HMAC, idempotency keys, replay log) · token-bucket and distributed rate limiting · rate-limit key selection · never secrets in query strings · client-server architectural constraint · Uniform Interface: identification of resources in requests, manipulation through representations, self-descriptive messages, HATEOAS · Link header and common rel values · OPTIONS method and `Allow` header.
+
+---
+
 ## 20 — Observability & operations
 
 > **Understanding ledger:** `src/knowledge/understanding.md` §20 — score **—** (no level placed), measurement confidence **NONE**. Reconciliation: agrees; ledger accepts this file's reassignment of E3 Q20 and E4 Q18 here and still records no score.

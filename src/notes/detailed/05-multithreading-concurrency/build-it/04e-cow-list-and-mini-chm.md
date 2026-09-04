@@ -346,7 +346,7 @@ public final class MiniConcurrentMap<K, V> {
     private void unlink(Node<K, V>[] tab, int index, Node<K, V> first,
                          Node<K, V> target, Node<K, V> previous) {
         if (previous == null) {
-            // Removing the head: publish the rest of the chain (or null) as the new head.
+            // Removing the head: publish the rest.md of the chain (or null) as the new head.
             ARRAY_HANDLE.setRelease(tab, index, target.next);
         } else {
             previous.next = target.next;

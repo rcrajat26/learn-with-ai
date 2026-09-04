@@ -239,7 +239,7 @@ private void fixAfterDeletion(Entry<K,V> x) {
                 // Case C and case D (sibling black, at least one red
                 // child) continue in part 3 — this is a real method
                 // whose body is split across files; part 3 supplies the
-                // rest of this if/else and the loop's mirror branch.
+                // rest.md of this if/else and the loop's mirror branch.
                 // PLACEHOLDER — not valid standalone Java.
             }
         } else {

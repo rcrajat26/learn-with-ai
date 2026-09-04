@@ -1127,7 +1127,7 @@ var restrictions = new ArrayList<Restriction>();   // fine on its own, but risky
 ```java
 long total = 0L;                                        // width stated explicitly
 ScreeningVerdict outcome = screeningService.evaluate(clientId); // type states what came back
-List<Restriction> restrictions = new ArrayList<>();      // interface enforced for the rest of scope
+List<Restriction> restrictions = new ArrayList<>();      // interface enforced for the rest.md of scope
 ```
 
 **Why people believe it:** a percentage is trivial to compute and put on a dashboard, and

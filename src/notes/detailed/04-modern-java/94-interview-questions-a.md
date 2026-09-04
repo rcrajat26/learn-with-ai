@@ -493,7 +493,7 @@ reservations.stream().peek(r -> System.out.println("checking " + r.id())); // pr
 reservations.stream()
     .peek(r -> System.out.println("checking " + r.id()))
     .filter(r -> r.status() == ReservationStatus.SETTLED)
-    .findFirst(); // peek prints only up to and including the first SETTLED reservation, never the rest
+    .findFirst(); // peek prints only up to and including the first SETTLED reservation, never the rest.md
 ```
 
 **Case 3 — a stateful downstream operation can pull elements in a different pattern than one-in-one-out**, most visibly `sorted()`, which since it needs the whole source before it can emit anything, causes an upstream `peek` to run for *every* source element regardless of any downstream `filter`/`limit` — but a `peek` placed **after** a `sorted()` sees the fully-sorted sequence, which is a different order than source order.

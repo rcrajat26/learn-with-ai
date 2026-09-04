@@ -505,7 +505,7 @@ The syntax is assumed; the mechanism is not. **A static nested class holds no re
 public final class MoneyMath {
     private MoneyMath() { throw new AssertionError("no instances"); }
 
-    /** Bonus portion is 10% of the stake, rounded DOWN to the minor unit; cash covers the rest. */
+    /** Bonus portion is 10% of the stake, rounded DOWN to the minor unit; cash covers the rest.md. */
     public static StakeSplit splitStake(Money stake, Money bonusAvailable) {
         BigDecimal tenPercent = stake.amount()
                 .multiply(new BigDecimal("0.10"))

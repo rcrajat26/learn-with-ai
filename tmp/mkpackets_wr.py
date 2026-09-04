@@ -193,7 +193,7 @@ for i, p in enumerate(plan):
     if f == 'streams/09-internals-spliterator.md':
         extra += ("\n\nOne consistency note: your diagram **D-136**'s inset works the "
                   "`suggestTargetSize` arithmetic on an illustrative 5-core machine "
-                  "(`LEAF_TARGET = 4 << 2 = 16`, target 5,937), and says so on its face. The rest "
+                  "(`LEAF_TARGET = 4 << 2 = 16`, target 5,937), and says so on its face. The rest.md "
                   "of this note set uses the 8-core convention in the verified-figures block "
                   "(parallelism 7, `LEAF_TARGET` 28). Say in prose that the diagram's inset is a "
                   "5-core illustration and give the 8-core figures as the set's default, so the two "

@@ -66,8 +66,9 @@ API / cloud, L1–L2 in messaging / caching internals / DevOps depth.
 | 18 | Cloud & AWS | **L1** *[revised]* | 1.5 → 0.5 → 2 → 1.5 → 1.5 (E1–E5) | HIGH |
 | 19 | Docker & Kubernetes | **L1** | no retests | LOW |
 | 20 | Observability & operations | **—** | — | NONE |
+| 21 | REST architecture | **L2** | self-assessed; verified against Richardson model | HIGH |
 
-Counts: **15 HIGH**, **3 LOW** (04, 06, 19), **2 NONE** (11, 20).
+Counts: **16 HIGH**, **3 LOW** (04, 06, 19), **2 NONE** (11, 20).
 
 **Score changes in pass 2**, each forced by a gaps.md status line rather than by new
 evidence — no paper has been taken since pass 1:
@@ -788,6 +789,22 @@ entire Kubernetes object model untested. **Upcoming measurement: ad-hoc paper 2*
 (Section 3 Docker, Section 4 Kubernetes).
 
 **Gaps: see gaps.md §19 — Docker & Kubernetes.**
+
+## 21 — REST architecture & API fundamentals
+
+**Score: L2** (self-assessed via structured walkthrough; verified against Richardson model and HTTP semantics)
+
+**Trend:** none yet.
+
+**Commentary.** REST foundations are solid at the L2 "mechanism" level. The candidate understands the conceptual scaffold correctly: resource-centric URLs, appropriate HTTP methods for CRUD operations, correct status-code categories, idempotency semantics (though not yet the safe/idempotent orthogonality), and HATEOAS as a return-links pattern. Richardson Maturity Model progression is correct (Level 0 single endpoint with single method → Level 3 HATEOAS), just numbered 1–4 rather than 0–3 — notation, not understanding. The shortfalls are in depth rather than breadth. HTTP caching (Cache-Control, ETags, conditional requests) is absent despite being core REST practice — this sits adjacent to topic 15 (caching) and is the highest-severity miss. Safe vs idempotent conflation, content negotiation, the statelessness constraint as architecture rather than accident, and versioning/deprecation strategies are all undemonstrated. The gap inventory is clean: PUT/PATCH precision, media-type selection, and the RFC 7807 error contract are all vocabulary/practice misses rather than model inversions.
+
+**Calibration note.** Self-assessment was honest about known gaps; no over-confident claims. This is a real L2 — can explain the REST model to a junior — but L2.5 pending the caching integration and a versioning strategy demonstration.
+
+**Measurement confidence: HIGH** — structured evaluation against core reference material (Richardson model as taught, HTTP semantics from RFC 9110), no contradictions in any tested concept, and the gaps identified are all in unmeasured territory (no paper has probed REST). Self-assessment is more reliable than quiz data here.
+
+**Gaps: see gaps.md §21 — REST architecture & API fundamentals.**
+
+---
 
 ## 20 — Observability & operations
 

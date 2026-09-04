@@ -536,7 +536,7 @@ public PaymentRun buildRun(List<WithdrawalTransaction> pending) {
 An anonymous class has no name, so it cannot declare a constructor — a constructor's declaration *is* its class's name. The consequences are precise. Arguments in the `new` expression are passed to the **superclass** constructor, not to the anonymous class, so `new AssessmentService(jurisdiction) { }` selects a superclass constructor taking a `Jurisdiction`. Any setup you want *after* the superclass constructor runs must go in an instance initialiser block, which the compiler folds into the generated constructor after the `super` call and after field initialisers. An anonymous class can extend exactly one class **or** implement exactly one interface — never both, and never two interfaces — because the `new` expression names exactly one type. If you need two interfaces, or a constructor, or the type named anywhere else, you have outgrown the anonymous class and want a local or static nested one.
 
 ```java
-// Superclass constructor takes the Jurisdiction; the initialiser block does the rest.
+// Superclass constructor takes the Jurisdiction; the initialiser block does the rest.md.
 var strictScreening = new ScreeningService(jurisdiction) {
     private final Set<RestrictionKey> preapplied = new HashSet<>();
     {   // instance initialiser: the constructor you cannot declare

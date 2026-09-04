@@ -303,7 +303,7 @@ m.put(Day.FRI, "rest");
 m.put(Day.MON, "gym");
 m.put(Day.TUE, null);           // legal: a null VALUE is stored as the NULL sentinel
 
-System.out.println(m);                       // {MON=gym, TUE=null, FRI=rest}  ordinal order
+System.out.println(m);                       // {MON=gym, TUE=null, FRI=rest.md}  ordinal order
 System.out.println(m.get(Day.TUE));          // null  -- mapped to null
 System.out.println(m.get(Day.WED));          // null  -- absent
 System.out.println(m.containsKey(Day.TUE));  // true
@@ -475,7 +475,7 @@ List<Map.Entry<Day, String>> live = new ArrayList<>();
 for (Map.Entry<Day, String> e : m.entrySet())     // per-element add -> real Entry views
     live.add(e);
 
-System.out.println(live);                          // [MON=gym, WED=run, FRI=rest]
+System.out.println(live);                          // [MON=gym, WED=run, FRI=rest.md]
 System.out.println(live.get(0) == live.get(1));    // false -- distinct objects
 
 Map.Entry<Day, String> held = live.get(0);
@@ -570,7 +570,7 @@ map after remove    = {TUE=b}
 List<Map.Entry<Day, String>> live = new ArrayList<>();
 for (Map.Entry<Day, String> e : m.entrySet())
     live.add(e);
-System.out.println(live);                        // [MON=gym, WED=run, FRI=rest]  -- NOT aliased
+System.out.println(live);                        // [MON=gym, WED=run, FRI=rest.md]  -- NOT aliased
 System.out.println(live.get(0) == live.get(1));  // false
 ```
 

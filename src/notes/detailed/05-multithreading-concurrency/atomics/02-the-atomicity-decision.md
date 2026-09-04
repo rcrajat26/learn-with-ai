@@ -161,7 +161,7 @@ which, for QuizStakes, is exactly the cached wealth-score lookup used to gate a 
    no bin lock held during the slow part.
 
 ```java
-// Workaround 2: only one thread computes; the rest join.
+// Workaround 2: only one thread computes; the rest.md join.
 private final ConcurrentHashMap<ClientId, CompletableFuture<WealthVerdict>> wealthCache =
         new ConcurrentHashMap<>();
 

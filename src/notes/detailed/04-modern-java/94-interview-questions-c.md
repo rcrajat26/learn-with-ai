@@ -217,7 +217,7 @@ rest.
 static String status(Verdict v) {
     return switch (v) {
         case ScreeningVerdict s when s.outcome().equals("AA-599") -> "prohibited, escalate";
-        case ScreeningVerdict s -> "screening: " + s.outcome();   // reachable — catches the rest
+        case ScreeningVerdict s -> "screening: " + s.outcome();   // reachable — catches the rest.md
         case DocumentVerdict d -> "documents: " + d.outcome();
         default -> "other";
     };
@@ -959,7 +959,7 @@ place in the code — the scope's block — where "everything this unit of work 
 of fire-and-forget tasks scattered across an executor with no lexical anchor.
 
 ```java
-// AssessmentService fans out three independent checks for one application, cancels the rest on first failure
+// AssessmentService fans out three independent checks for one application, cancels the rest.md on first failure
 try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
     StructuredTaskScope.Subtask<DocumentVerdict>  docTask    = scope.fork(() -> documentVerification.verify(applicationId));
     StructuredTaskScope.Subtask<ScreeningVerdict> screenTask = scope.fork(() -> screeningService.screen(applicationId));
