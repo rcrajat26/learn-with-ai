@@ -1333,3 +1333,55 @@ updated. Same shape as topics 12, 14 and 15.
 Terraform runtime (23), kernel/OS internals as a subject (11), JVM heap and GC
 internals (06), HTTP/TCP/TLS protocol layers (10), metrics/tracing/SLO design
 (20), OWASP and end-user auth (13), Testcontainers mechanics (16).
+
+---
+
+### 23 terraform — syllabus, 2026-09-03 (prompt and notes NOT started)
+
+| Artefact | State |
+|---|---|
+| `src/topics/23-terraform.md` | pre-existing, 170 lines / 5 sections — **untouched by this pass** |
+| `src/syllabus/23-terraform.md` | written, **3,262 lines / 903 leaves** across 5 parts / 67 numbered sections |
+| `src/metadata/prompts/23-terraform-prompt.md` | not started |
+| `src/notes/detailed/23-terraform/` | not started |
+
+#### Syllabus pass — `topic-enhancer-agent` Mode A, 2026-09-03
+
+PART 1 basics 332, PART 2 intermediate 294, PART 3 under the hood 208, PART 4
+build it 16 (16 build artifacts + diff tables), PART 5 interview/retention 53.
+Ran in two invocations — the first went idle after PART 1 (§1.1–§1.20, 1,177
+lines) leaving a `<!-- CONTINUE-PART-2 -->` marker; a resume message completed
+PARTS 2–5 and removed the marker.
+
+**Counts audited against disk.** `wc -l` 3,262 (agent self-reported 3,259 —
+measured before its final tail edit); `^N.N.N ` leaf grep 903 (agent reported
+919; no 4-level leaves exist, so the drift is its own count, not a numbering
+scheme). Tag inventory, raw literal occurrences — `[PROVE]` 295, `[TRAP]` 178
+(222 including `[VERSION-TRAP]` as substring), `[RESEARCH]` 188, `[TABLE]` 173,
+`[SOURCE]` 89, `[NUM]` 83, `[HCL]` 68, `[VERSION-TRAP]` 44, `[CFG]` 44,
+`[DIAG]` 43, `[COST]` 41, `[CLI]` 38, `[SURGERY]` 32, `[TOFU]` 29,
+`[INCIDENT]` 24, `[FLOW]` 20, `[BUILD]` 18.
+
+**Currency anchor in the header:** Terraform CLI **1.16.1** (2 Sep 2026) and
+OpenTofu **1.12.6** (19 Aug 2026), with 1.5.x (last MPL-2.0), 1.9–1.12 and the
+OpenTofu 1.6–1.11 lines covered as the previous generation. Also pinned:
+tfplugin6 vs tfplugin5, plugin-framework vs SDKv2 (feature development stopped),
+plan/state JSON `format_version` 1.0, state file version 4, Terraform
+1.17.0-alpha (deferred actions), OpenTofu 1.13.0-beta1 (Symbol Libraries,
+`-lint`, WinRM provisioner removed). Licence row records BUSL-1.1 with **IBM as
+licensor** after the $6.4B HashiCorp acquisition closed 27 Feb 2025.
+
+**Two required corrections to existing guide text** (not additions): its
+DynamoDB TTL "default 0 = no expiry" claim is factually wrong, and its advice to
+`terraform destroy` resources you no longer want to manage is backwards — the
+mechanism is a `removed` block plus `destroy = false`. Gap table covers all 5
+existing sections plus 8 explicit corrections.
+
+**Fork divergence is now load-bearing, not cosmetic** — state encryption,
+provider `for_each`, early evaluation and `-exclude` are OpenTofu-only; Stacks,
+Actions and list resources are Terraform-only; **CDKTF was deprecated 10 Dec
+2025**. Hence 29 `[TOFU]` leaves that must state both behaviours.
+
+**Carried forward — verify in the write pass.** The agent's web-search budget ran
+out mid-research: the version rows for Terraform **1.6–1.10** are flagged for
+changelog re-fetch, and the state file `version` 4 row carries `[RESEARCH]`.
