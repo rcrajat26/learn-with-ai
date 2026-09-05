@@ -1551,3 +1551,349 @@ substitutes.
 
 **Also outstanding:** `src/topics/25-java-performance.md` (1196 lines) exists and is
 untracked in git but has no progress entry — it was generated without a log line.
+
+---
+
+## 2026-09-05 — Topic 27 (High-Level Design Drills), NEW topic guide
+
+Requested: "create topics for 27-high-level-design.md under src/topics/". Scope was
+ambiguous (HLD-as-work-document vs. more interview drilling vs. a building-block
+catalogue); asked, and the user chose **interview drilling**: more worked end-to-end
+designs at 22's level. Written inline in the main session (topics-lane write, not the
+per-topic pipeline).
+
+| File | State |
+|---|---|
+| `src/topics/27-high-level-design.md` | **written, 1,321 lines / 16 sections + checklist (73 items)** |
+| `src/topics/00-index.md` | updated — count 26 → 27, new row (placed after 26), design-track reading-order note, checklist line |
+
+**Design principle: zero overlap with 22.** 22 owns the method (45-minute budget, the
+six numbers, estimation constants, storage selection, partitioning, quorums, CAP,
+resilience) and four worked designs (shortener, feed, chat, payments ledger). 27 never
+re-teaches a mechanism — it cross-refs 22/09/10/14/15/18/20 and spends its lines on
+*new* systems only. Per the user's mid-run instruction ("if system design covers it then
+skip it"), every mechanism already in 22 appears only as a pointer.
+
+**Ten designs, each chosen for a different forcing function:** §4 rate limiter (atomic
+read-modify-write across a fleet; tiny state / huge op-rate inversion; lazy-refill token
+bucket; one Lua script; two-tier local slice with over-admission priced as
+`nodes × slice`; sub-bucket fix for a hot key) · §5 notification service (per-priority
+topics vs. head-of-line blocking; batch expander for a 10 M campaign; provider quota as
+the true ceiling; per-class retry TTLs; token/bounce suppression) · §6 typeahead
+(precomputed top-k per trie node; 10⁸ nodes ≈ 30 GB → prefix sharding/FST; edge-cached
+short prefixes; decay ranking + bounded top-50 re-rank; SymSpell) · §7 video
+(presigned multipart direct upload; GOP-aligned parallel transcode; hybrid bitrate
+ladder with the 90/1 skew; egress PB/day as the cost driver; storage tiering) · §8
+geo-proximity (125k writes/s of disposable data → ephemeral Redis + TTL-as-liveness;
+geohash precision table; the 3×3 neighbour-cell trap; client-side write reduction;
+CAS dispatch state machine) · §9 ad aggregation (lambda split — streaming dashboards vs.
+recomputable batch billing + reconciliation; event-time watermarks and late side
+outputs; two-phase aggregation; HLL) · §10 metrics store (delta-of-delta + XOR = 10×;
+**active series** as the binding resource; posting-list label index; cardinality-explosion
+defences; roll-ups keeping sum+count) · §11 job scheduler (`FOR UPDATE SKIP LOCKED`
+first with its ceiling stated, then partitioned ZSET + Lua pop + timing wheel + fencing
+leases; `(job_id, scheduled_epoch)` as the idempotency unit; misfire policy table;
+deterministic jitter; DST) · §12 seat booking (single conditional `UPDATE` +
+`rows_affected`; expiry evaluated in the predicate so correctness never depends on the
+sweeper; virtual waiting room; hot-seat contention mitigations; hot-shard consequence of
+`event_id` sharding) · §13 collaborative editing (OT vs. CRDT priced in a table;
+single-owner sequencer with snapshot + op-log-tail failover; client local-echo/rebase;
+per-user transformed undo; ephemeral presence).
+
+**Scaffolding sections:** §1 the drill protocol (45-min timer, then self-score) · §2 the
+nine-slot compressed template with minute budget, where slot 7 = "the one decision" ·
+§3 the **forcing-function map** — prompt → the decision it hides, the lookup table that
+is the real payload · §14 ten more prompts with *only* the fork named (file sync,
+crawler, object store, cache-as-a-service, leaderboard, multi-tenant gateway, payment
+reconciliation, feature flags, comment tree, outbound webhooks) · §15 L5-vs-L6 on the
+same drill · §16 a 10-criterion self-scoring rubric with a re-drill threshold.
+
+**Format notes:** every design follows the same nine slots and ends with "Probes you
+must survive" (the real follow-ups) plus a failure table with dies/slow/full columns.
+1,321 lines — well over the index's stale 250–450 clause, as 14/15/17/19/20/22/24/25/26
+already are.
+
+**Not done — next steps:** no `src/syllabus/27-*.md`, no
+`src/metadata/prompts/27-*-prompt.md`, no `src/notes/detailed/high-level-design/`. No
+`gaps.md` / `understanding.md` entry for topic 27; the §16 rubric plus per-drill scores
+are the intended substitute measurement, same argument as topic 26.
+
+---
+
+## 2026-09-05 — Topic 28 (Low-Level Design Drills), NEW topic guide
+
+Requested: "create topics for 28-low-level-design.md under src/topics". Same phrasing as
+topic 27, so the same reading was taken without re-asking: **28 is to 24 what 27 is to 22** —
+24 owns the patterns as mechanism, 28 is the drill file that makes you reach for them against
+a clock. Delegated to `topic-agent` (sonnet) with 27 named as the structural benchmark;
+index and this tracker updated in the main session.
+
+| File | State |
+|---|---|
+| `src/topics/28-low-level-design.md` | **written, 1,492 lines / 17 sections + checklist** |
+| `src/topics/00-index.md` | updated — count 27 → 28, new row 28, design-track reading order (`03 → 07 → 24 → 28 → 22`), two checklist lines including the 22/24/27/28 ownership split |
+
+**Design principle: zero overlap with 24 or 27.** The guide's own opening states the boundary —
+22/27 are boxes-and-arrows across machines, 28 is one process and one heap; 24 teaches the
+pattern's forces and consequences, 28 applies them. Any gap the reader finds that is *pattern
+mechanism* is explicitly routed back to 24 rather than re-taught.
+
+**The 11-slot LLD template** (§2) is the analogue of 27's nine slots: scope + explicit
+out-of-scope → actors → nouns-to-candidate-classes **and the rejections** → the invariant each
+class owns → **API signatures before data structures** (named as the slot most candidates get
+backwards) → records/sealed entities → legal-transition table → the concurrency guard →
+repository boundary → the unprompted extension test → what you deliberately did not build.
+Slot 10 is called out as the single highest-scoring sentence in the round, mirroring 27's slot 7.
+
+**§3 forcing-function map** is prompt-shape → "looks like" → what it actually tests → the fork,
+with the trap that candidates solve the *visible* problem (a beautiful `Spot`/`Level` hierarchy,
+no mention of two attendants double-assigning the last compact spot).
+
+**Ten designs, each a different fork:** §4 parking lot (allocation strategy + free-pool race) ·
+§5 elevator bank (per-car state machine vs fleet scheduler, direction-aware SCAN, request dedup) ·
+§6 vending machine (pure state machine, change-making, cents not doubles) · §7 library lending
+(the book vs the copy — two lifecycles, not one class doing double duty) · §8 Splitwise split
+(last-cent rounding, debt netting on a graph) · §9 chess/tic-tac-toe (polymorphic move legality
+without a switch-on-type god method, legality vs validity) · §10 in-process rate limiter (the
+concurrency primitive *is* the fork — lock vs CAS; deliberate contrast with 27 §4's distributed
+version) · §11 logging framework (logger → appender → formatter layering, async ring buffer,
+ordering under contention) · §12 cache with pluggable eviction (intrusive DLL + map vs
+`LinkedHashMap` access-order) · §13 transactional in-memory KV (nested begin/commit/rollback via
+an **undo journal**, not shadow copies).
+
+Every design carries the same nine slots: Prompt · Clarifications-to-ask (scored signal, said so) ·
+The fork in one sentence · Class model table with the **rejected** candidates · 2–4 Java 21 snippets
+incl. the one method where the fork resolves · state machine · concurrency (what is shared, the
+exact guard, the race without it) · extension test with the seam each requirement lands on ·
+`**Trap:**` lines.
+
+**Scaffolding:** §14 twelve more prompts with only the fork named (ATM, ride-hailing matcher,
+food-order state, hotel booking, snake-and-ladder, blackjack, file-system tree, spreadsheet
+recalc, notification dispatcher, meeting rooms, shortener object model, undo/redo editor) ·
+§15 L5-vs-L6 on the parking-lot drill · §16 machine-coding mechanics for the 60–90 min variant
+(build order: interfaces → in-memory repo → happy path → edge cases → tests; `main` as demo
+driver; JUnit 5 under time pressure, x-ref `16-testing.md`) · §17 10-criterion rubric.
+
+**Over-target and accepted:** brief was 900–1,300 lines, delivered 1,492. Breadth across the ten
+designs was declared non-negotiable and nothing was truncated; the writer flagged the overrun
+rather than cutting the later designs, which is the right call. The index's 250–450 clause is now
+stale for 14/15/17/19/20/22/24/25/26/27/28 — it should be restated as a per-topic target.
+
+**Not done — next steps:** no `src/syllabus/28-*.md`, no `src/metadata/prompts/28-*-prompt.md`,
+no `src/notes/detailed/low-level-design/`. No `gaps.md` / `understanding.md` entry; the §17
+rubric plus per-drill scores are the intended substitute measurement, same argument as 26 and 27.
+
+---
+
+## 2026-09-05 — Topic 24 syllabus (SYLLABUS pass, six-writer parallel orchestration)
+
+Requested: "Create a syllabus for 24-design-patterns-architecture". Topic 24's guide existed
+(1,063 lines, written 2026-09-05) but had no syllabus, so this is the per-topic pipeline's
+first stage for it.
+
+| Artefact | State |
+|---|---|
+| `src/topics/24-design-patterns-architecture.md` | pre-existing, 1,063 lines — **untouched by this pass** |
+| `src/syllabus/24-design-patterns-architecture.md` | written, **10,326 lines / 2,021 leaves / 103 sections** |
+| `src/metadata/prompts/24-design-patterns-architecture-prompt.md` | not started |
+| `src/notes/detailed/24-design-patterns-architecture/` | not started |
+
+Leaves per part: P1 basics **476** (§1.1–1.33), P2 intermediate **676** (§2.1–2.30), P3 under
+the hood **338** (§3.1–3.22), P4 build it **143** (§4.1–4.15), P5 interview/retention **388**
+(§5.1–5.3 — a 100-question bank, **263** traps, 25 drills). Diagram manifest **33** entries
+(`D-01`–`D-33`), all anchored to leaf level, 9 of them `table` type. Target baseline **Java 21
+LTS**, Spring Framework 6.2 / Boot 3.5.x, Hibernate ORM 6.6, Resilience4j 2.x, ArchUnit 1.3+.
+
+Tag occurrences **2,360** across 2,021 leaves (1.17/leaf): `[TRAP]` 470, `[API]` 277,
+`[PROVE]` 259, `[SOURCE]` 223, `[X-REF]` 189, `[DECIDE]` 166, `[BUILD]` 154, `[NUM]` 153,
+`[SAY]` 107, `[TABLE]` 82, `[SMELL]` 68, `[VERSION-TRAP]` 68, `[RESEARCH]` 57, `[INCIDENT]`
+40, `[DIAG]` 28, `[FLOW]` 19. (`[TRAP]` is high because §5.2 restates every lane's traps as
+one-liners by contract — 470 occurrences, not 470 distinct beliefs.) `[X-REF]` targets 03,04,05,06,07,08,09,10,12,13,14,15,16,17,18,
+19,20,22,25,26 — **zero self-referential pointers** after three sweeps (see below).
+
+### The orchestration, and why six lanes
+
+The topic-11 entry records that a single-agent `topic-enhancer-agent` run dies with
+`max_output_tokens` on a syllabus this size, having written **nothing**. This pass used the
+prescribed parallel structure, extended from five writers to **six** against a pre-fixed
+103-section outline, each writing its own `tmp/syllabus-24/part<A–F>.md`:
+
+| Lane | Scope | Leaves |
+|---|---|---|
+| A | front matter + §1.1–1.19 (frame, creational, structural) | 260 |
+| B | §1.20–1.33 + §2.1–2.5 (behavioural, vocabulary, selection) | 298 |
+| C | §2.6–2.14 (SOLID depth, principles, GRASP, component principles, anti-patterns) | 258 |
+| D | §2.15–2.30 (smells, refactoring, architecture, DDD, CQRS, integration, resilience) | 336 |
+| E | §3.1–3.22 (internals, source walks) | 338 |
+| F | §4.1–4.15 + §5.1–5.3 + diagram manifest | 375 → 531 |
+
+A shared `tmp/syllabus-24/BRIEF.md` carried the format contract, the tag legend, the example
+domain, the scope boundary and **the full 103-section inventory** so each blind lane could
+cross-reference sections it did not own. The orchestrator owned the totals table, the merged
+`## Sources consulted` and `## Gaps vs the current guide`, and the footer; lane notes were
+stripped to `tmp/syllabus-24/LANE-NOTES.md` rather than shipped in the deliverable.
+
+**Every count in the file is script-derived from the file**, never from a lane self-report —
+`/tmp/audit.py` re-derives all 103 `*(N leaves)*` markers from the leaf lines beneath them.
+**This is the first pass in this project where all lane self-reports survived a disk audit
+unchanged** (topics 01, 06, 08, 16 and 22 were each low by 12–86 leaves). The cause is
+attributable: the brief made counting-on-disk-before-reporting an explicit deliverable and
+named it as the defect this project catches every time.
+
+### The five defects the parallel structure introduced, and how each was caught
+
+1. **Intra-guide `[X-REF 24]` pointers — 50 of them**, pointing from topic 24 to topic 24.
+   Found by a tag audit over the merged file, not by any lane. Lane D had 43 (it flagged the
+   ambiguity and correctly refused to invent a tag), lane C 6, lane B 1. Convention settled:
+   `[X-REF nn]` is reserved for genuine sibling pointers, an intra-guide pointer is a bare
+   `(§N.M)`. **Stripping them left 6 leaves with no terminating tag** — lane C published an
+   explicit `*(untagged)* | 5` row rather than papering over it, and proposed tags justified
+   by each leaf's own obligation (`[API]` for a literal ArchUnit rule expression, `[SOURCE]`
+   where Meyer 1988 is quotable); lane B proposed `[TABLE]` for a five-way categorisation and
+   explicitly rejected `[TRAP]` because a categorisation leaf cannot carry a `**Trap:**`
+   marker. **The rule that emerged: a tag whose obligation the leaf cannot discharge is worse
+   than no tag**, because the write pass then fabricates a wrong belief to justify it.
+2. **A stale `§7.2` in the diagram manifest** — the flat guide's numbering, which does not
+   exist in a `§N.M` file. Lane F found it while upgrading manifest refs to leaf level, and
+   re-anchored to §2.17.3–§2.17.7.
+3. **Eight bare `§7.x` references to the *scenario* file**, five unqualified, which read as
+   intra-file pointers to sections that do not exist. Qualified to `scenario §7.x` by the
+   orchestrator (mechanical, so not worth three lane round-trips). **My own fix then
+   introduced a duplication** — "scenario §7.2 of the scenario", because the qualifier I
+   grepped for wrapped across two lines — caught on immediate re-read.
+4. **§5.2 could not be completed until the merge.** Its contract is that every `[TRAP]` from
+   any lane appears there as a one-liner, but lane F could only read the current guide. Lane F
+   **named the gap rather than writing around it**. Closed by scripting a 217-leaf cross-lane
+   trap extract (`tmp/syllabus-24/TRAPS-CROSS-LANE.md`) for lane F to dedupe against its own
+   107: **156 appended from `5.2.108` (append-only, nothing renumbered), 55 skipped as already
+   covered, 1 dropped by judgement** (§3.11.6's debug `ThreadLocal` pair has no
+   wrong-belief/right-answer shape and forcing one would be padding). Lane E's PART 3 traps
+   were 60-of-71 new, as predicted — mechanism-level traps have no counterpart in a flat guide.
+5. **A write race.** Lane E patched its lane *after* assembly while lane F was editing the live
+   file, and the orchestrator's splice rewrites the whole file. Resolved by serialising writers
+   (hold → verify → release) rather than by hoping. **The splice turned out to be unnecessary**
+   — assembly had run after the patch — and that was *verified* by diffing the live PART 3
+   region against the lane file (differed only by the separator line) plus a before/after
+   sha256, not reasoned out.
+
+### The process laws this run produced, in order of transferability
+
+- **A finding is not delivered until it is in the artefact; the message is only a notification
+  that it exists.** Lane E's words. Three of its reports were truncated and two lost entirely,
+  and in every case the content that survived was what it had written into `partE.md`. The
+  proof: its foldable-cuts note survived two lost messages to become the thing the orchestrator
+  actually ruled on. This generalises topic 02's "certify from final state, never from a
+  pre-write computation" and topic 21's three completeness reports filed while thirteen defects
+  stood — **into the communication layer**, which neither covered.
+- **The value of opening the file is rarely the thing you went in to check.** Lane E was sent
+  to verify one identifier in §3.11 and found a *different* leaf of its own was fabricated:
+  it had asserted `ApplicationFilterChain.ALLOCATE = 8` with doubling growth where the truth
+  is `public static final int INCREMENT = 10` with linear `n + INCREMENT`, identical at four
+  refs. Wrong name, wrong value, wrong growth policy, and it would have read as source-derived
+  forever.
+- **`[RESEARCH]` density is not a quality signal.** Lane E's count held flat at 13 while its
+  verification round *resolved* four items, because resolving them surfaced two new honest
+  unknowns. It tracks how hard a lane looked, so a lane that looks harder can score worse. Do
+  not rank lanes by it.
+- **A fetch that returns a partial enum is a wrong answer, not a partial one.** The
+  `TransactionalEventListener` javadoc returned three of four `TransactionPhase` constants,
+  silently omitting `BEFORE_COMMIT`. A diligent write pass re-fetching that URL will "correct"
+  the syllabus by deleting a phase that exists. Same family as topic 21's hook-schema incident.
+  **Lane E's mitigation is the reusable part: flag the *direction* of the likely error**, not
+  just the gap. It did the same for Boot 3.4's `@ConditionalOnBooleanProperty` rename, where
+  older sources show the same default under a different annotation.
+- **Judge a section against its own obligation mix, not a global band.** Applied three times:
+  lane F's PART 4 at 143 vs a ≈110 target (a `[BUILD]` section naming API + data structure +
+  policy constants + proof + edge cases + concurrency + diff table has a floor near seven
+  leaves), its §5.2 at 107 (the guide carries 37 `**Trap:**` markers, all required restated),
+  and lane E's 338 vs 290 (all eight extra leaves came from fixing real defects during
+  verification). **Compression to hit a number nobody derived is padding's mirror image.**
+  This is topic 21's row-size rule, now confirmed on a second topic.
+- **The gaps table's section coverage is verifiable and was verified.** All 103 sections have
+  at least one row across **365 rows** — 149 `missing`, 110 `shallow`, 13 `present`. Topic 21
+  shipped a "468 of 468 leaves owned" claim resting on a table that mapped leaves to 36
+  non-existent paths, covered only by luck; here every `§N.M` in the table resolves to a real
+  heading in the same file.
+
+### Cross-topic fix this pass produced — topic 04's inverted claim, now settled
+
+This project has twice mis-stated the exhaustive-switch failure mode. Lane E settled it against
+**JDK-8294285**, which carries the JEP 433 release note verbatim: an exhaustive enum switch
+"now throws `MatchException` rather than `IncompatibleClassChangeError`". The change is **JDK
+20** (fourth preview), **final in 21**, so `MatchException` is the Java 21 baseline answer for
+enum, sealed and pattern switches alike. **The reason it reads backwards in the wild:**
+`IncompatibleClassChangeError` still exists for **sealing violations** — a class naming a sealed
+supertype without appearing in its `PermittedSubclasses` fails verification with ICCE. §3.13.13
+holds that distinction.
+
+**Action still outstanding elsewhere:** `src/syllabus/04-modern-java.md` leaf 3.12.7 and
+`src/metadata/prompts/04-modern-java-prompt.md` still carry the claim inverted (the topic-04
+entry above records the notes correcting it while both upstream artefacts stayed wrong). Fix
+both with the enumerated form above — this is the third time the fact has been re-derived.
+
+Citation convention settled across lanes and worth reusing: **JVMS §5.5** for the
+class-initialisation lock and the LC state machine, **JLS §12.4.2** for first-active-use
+triggers, **JLS §17.4.4 / §17.5** for the memory model and final-field freeze. The current
+guide cites JLS §12.4.2 for the lock, which is the wrong spec for that half.
+
+### Corrections the write pass must make to `src/topics/24-design-patterns-architecture.md`
+
+1. **Lines 293–312 imply JDK dynamic proxy is Spring's default with CGLIB as fallback.** True
+   of plain Spring Framework, **false of Spring Boot**, where CGLIB has been the default since
+   2.0. Lane E pinned it at the **v3.5.0** tag: `AopAutoConfiguration`'s CGLIB branch is
+   `@ConditionalOnBooleanProperty(name = "spring.aop.proxy-target-class", matchIfMissing =
+   true)` carrying `@EnableAspectJAutoProxy(proxyTargetClass = true)`. §1.15.13 and front-matter
+   delta 8 exist to fix it.
+2. The class-init-lock citation (see above).
+3. §2.26.12's Resilience4j state count was **five** as drafted and is **six** — `CLOSED(0,true)`,
+   `OPEN(1,true)`, `HALF_OPEN(2,true)`, `DISABLED(3,false)`, `FORCED_OPEN(4,false)`,
+   `METRICS_ONLY(5,true)`. Corrected in the syllabus; `METRICS_ONLY` is the routinely-missed one.
+
+### Carried forward — do not write these unverified
+
+`[RESEARCH]` is **57 leaves**; every one names the source that settles it. The highest-risk
+clusters:
+
+| Item | Why |
+|---|---|
+| §2.18 architecture-style star grid | no reachable source transcribes Richards & Ford's full 1–5 scorecard; encoded from published reading notes, **every leaf tagged**. Quoting a star rating as a measurement is itself a recorded trap |
+| Martin's distance metric `D` | sources give both `\|A+I−1\|` and `\|A+I−1\|/√2`; his own paper failed to fetch (TLS: "unable to verify the first certificate"). §2.13.12 states **both forms** |
+| `A = Na/Nc` denominator | secondary sources split between *total* and *concrete* classes; total asserted (the only reading bounding `A` at 1) and the misstatement made a `[TRAP]` |
+| `automaticTransitionFromOpenToHalfOpenEnabled` default | not among `CircuitBreakerConfig`'s `DEFAULT_*` constants; §3.15.13 says "believed `false`". **§3.22.7's incident was moved off it** onto the confirmed `DEFAULT_WAIT_DURATION_IN_HALF_OPEN_STATE = 0`, which is the real never-closes mechanism |
+| `ALREADY_FILTERED_SUFFIX` = `".FILTERED"` | the only unverified identifier *value* left in PART 3; `OncePerRequestFilter.java` settles it in one fetch |
+| `TypeProfileWidth`'s declaring file | in neither globals file as fetched; §3.1.8 says unconfirmed rather than implying one |
+| §3.1 dispatch ns/op figures | JDK 8-era measurements; ordering structural, absolutes not a 21 baseline |
+| `Proxy.proxyClassCache` / `WeakCache` type, the `m0`–`m3` convention | unspecified, and `ProxyGenerator` was reimplemented for 21 |
+| Evans' seven distillation names; *Specification*'s `remainderUnsatisfiedBy`/`asQuery`/`subsumes` | `spec.pdf` returned unparseable binary |
+| Postel's law RFC (760 vs 761, both Jan 1980); "entity service" attribution; `LCOM4` tooling; four non-Fowler smells (Bumpy Road, Deep Nesting, Paragraph of Code, Variable with Long Scope) | attribution unconfirmed |
+
+**Confirmed the hard way and safe to write:** `DEFAULT_MINIMUM_NUMBER_OF_CALLS = 100` and
+`slidingWindowSize = 100` from `CircuitBreakerConfig.java`; `RingBitSet` appears **nowhere** in
+current Resilience4j source (`FixedSizeSlidingWindowMetrics` backs the count-based window in
+2.x); `INCREMENT = 10` with linear growth at four Tomcat refs; `internalDoFilter` present in
+Tomcat **9.0.x/10.1.x**, **absent in 11.0.x and `main`** (it existed only as the
+`AccessController.doPrivileged` target and died with SecurityManager support — an
+`internalDoFilter` frame **dates the server at ≤ 10.1.x**); `DoEscapeAnalysis`,
+`EliminateAllocations`, `EliminateLocks` and `EliminateAllocationArraySizeLimit = 64` from
+`c2_globals.hpp`, where **`PrintEscapeAnalysis` and `PrintEliminateAllocations` are `develop`,
+not `product`** — publishing them would send a reader into an "Unrecognized VM option" launch
+failure.
+
+**Fetch-shape findings, reusable:** `stackoverflow.com` is blocked (it was the canonical JDK
+pattern census, so §1.33's JDK column is flagged as community consensus rather than vendor
+claim); the Devinterview README returned 15 of a stated 85 questions, the rest paywalled;
+`openjdk.org` remains reachable via the **JBS issue pages** (JDK-8294285) where the JEP pages
+403.
+
+### Scale decision for `prompt-builder`
+
+At **2,021 leaves** this is the largest syllabus in the project — above topic 01 (1,516) and
+topic 08 (1,360). The topic-03 lesson (a single-agent full-topic `notes-generator` run does not
+fit) applies with more force, and the six-lane structure proved out here should be the default
+for both the prompt and the note run. PART 5 alone (388 leaves) is a plausible standalone
+dispatch; PART 4's 15 build-its are 15 natural row groups.
+
+**Two new sibling dependencies:** this file carries 12 `[X-REF 26]` and 16 `[X-REF 25]`
+pointers. Topics 25 and 26 have guides but **no syllabus**, so topic 24 is the first file to
+depend on them — the organisational anti-patterns (§2.14.67–77) and the performance-measurement
+material both point at unwritten stages.

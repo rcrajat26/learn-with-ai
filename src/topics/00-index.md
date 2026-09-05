@@ -1,6 +1,6 @@
 # Topic Guides — Index
 
-Twenty-six mechanism-level guides for backend Java interview prep (3–4 YOE, FAANG/senior-tier bar).
+Twenty-eight mechanism-level guides for backend Java interview prep (3–4 YOE, FAANG/senior-tier bar).
 Each guide explains *how the thing actually works*, not just how to use it, and ends with an
 `## Atomic concept checklist` you can self-quiz against.
 
@@ -14,7 +14,7 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
 3. Guides cross-reference each other. Concurrency mechanics live in 05 even when collections (02)
    or Spring (07) touch them.
 
-## The twenty-six guides
+## The twenty-eight guides
 
 | # | File | Scope in one line |
 |---|---|---|
@@ -44,6 +44,8 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
 | 24 | `24-design-patterns-architecture.md` | Patterns as forces and consequences: the creational family (incl. the JVM singleton idioms and why DCL needs `volatile`), the adapter/facade/proxy/decorator intent boundary, JDK proxy vs CGLIB and what neither can intercept, strategy/template/state trade-offs, visitor's double dispatch and its sealed-switch replacement, SOLID stated as mechanisms (LSP violations that compile, DIP as the enabler of hexagonal), the anti-pattern catalogue with failure mechanisms (anemic model, transaction script, fragile base class, cycles), architecture styles (layered, hexagonal/clean/onion, package-by-feature, DDD tactical patterns and the aggregate invariant boundary, CQRS/event sourcing, modular monolith vs microservices arithmetic), resilience patterns by the failure each was invented for, and refactoring smell → smallest safe move → protecting test. |
 | 25 | `25-java-performance.md` | Performance as a method, not a bag of tricks: goals stated as a percentile, why averages lie and coordinated omission corrupts load tests, USE/Amdahl/Little's-law arithmetic worked with numbers, why a naive `nanoTime` loop measures nothing and what each JMH construct defends against, JIT as a cost model (tiering, inlining budgets, mono/bi/megamorphic call sites, escape analysis, deopt storms, AOT/CRaC/native-image), allocation rate and write barriers and time-to-safepoint as latency sources, collector selection by SLO and GC-log arithmetic, object layout and the 32 GB compressed-oop cliff, cache lines and false sharing and the latency numbers table, contention cost curves and pool sizing, the application-layer costs that actually dominate (serialisation, logging, regex, boxing, DTO copying), sampling vs safepoint-biased profiling with async-profiler and JFR, flame-graph reading, and the ordered script for a p99 regression. |
 | 26 | `26-behavioral-leadership.md` | The non-coding half of the loop as a scored mechanism: the note→debrief→committee pipeline and why `no signal` (not a bad story) is the common failure, the five rubric axes, L4/L5/L6 calibration by blast radius of the decision you owned (one event re-told at all three levels), STAR-L with a per-part time budget, the "we for work / I for decisions" rule, deriving a metric from inputs you already have, the failure story that owns a decision error and ends in a systemic fix, the 20-story bank from 8–12 events with a coverage matrix, Amazon's 16 LPs with weak-answer signatures and the Google/Meta/HM mapping, question taxonomy with the real probe behind each, influence-without-authority and disagree-and-commit as mechanisms, surviving follow-up drilling, delivery/rehearsal mechanics, the anti-pattern catalogue, an 8-criterion self-scoring rubric, and the cadence mapped to the 28-week plan's behavioral milestones. |
+| 27 | `27-high-level-design.md` | Ten more end-to-end designs, drilled — each chosen because it forces a *different* decision than 22's four: rate limiter (atomic read-modify-write across a fleet, token bucket with lazy refill, local-slice approximation priced), notification/push service (priority-topic isolation vs head-of-line blocking, provider quota as the real ceiling, per-class retry TTLs), typeahead (precomputed top-k per trie node, 30 GB index arithmetic, edge-cached short prefixes, SymSpell typo handling), video upload/streaming (presigned multipart, GOP-aligned parallel transcode, hybrid bitrate ladder, egress PB/day as the cost driver), geo-proximity (125k location writes/s of disposable data, geohash precision table and the 3×3 neighbour-cell trap, CAS dispatch state machine), ad-click aggregation (speed layer vs recomputable batch billing, event-time watermarks, two-phase aggregation for hot keys, HLL uniques), metrics store (delta-of-delta + XOR giving 10×, active series as the binding resource, cardinality explosion defences), job scheduler (`SKIP LOCKED` first, then sharded timer wheels with fencing leases, `(job_id, scheduled_epoch)` idempotency, misfire policy, DST), seat booking (one conditional `UPDATE` and `rows_affected`, expiry-by-predicate, virtual waiting room, hot-seat contention), collaborative editing (OT vs CRDT priced, single-owner sequencer and snapshot+log failover, client rebase). Plus the forcing-function lookup table, ten more prompts with only the fork named, L5-vs-L6 framing, and a 10-criterion self-scoring rubric. |
+| 28 | `28-low-level-design.md` | The OOD / machine-coding round — one process, one heap, a class model plus compiling Java in 45–90 minutes. The 11-slot LLD template (scope + explicit out-of-scope → actors → nouns and the candidates you reject → the invariant each class owns → API signatures *before* data structures → records/sealed entities → legal-transition table → the concurrency guard → repository boundary → the unprompted extension test → what you did not build), a forcing-function map from prompt shape to the one decision being tested, and ten worked designs each picked for a different fork: parking lot (allocation strategy + the double-assigned last spot race), elevator bank (per-car state machine vs fleet scheduler, direction-aware SCAN, request dedup), vending machine (pure state machine, change-making, money as cents not doubles), library lending (the book vs the copy — two lifecycles, not one class doing double duty), Splitwise split (rounding the last cent, debt netting on a graph), chess/tic-tac-toe (polymorphic move legality without a switch-on-type god method), in-process rate limiter (the concurrency primitive as the fork — lock vs CAS — contrast 27 §4), logging framework (logger → appender → formatter layering, async ring buffer and ordering), cache with pluggable eviction (intrusive DLL + map vs `LinkedHashMap` access order), and a transactional KV store (nested begin/commit/rollback via an undo journal). Plus twelve more prompts with only the fork named, L5-vs-L6 on one drill, machine-coding build order under a 60–90 minute clock, and a 10-criterion rubric. |
 
 ## Reading order suggestions
 
@@ -53,9 +55,15 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
   top of them.
 - **Backend system design track:** 09 → 10 → 12 → 14 → 15 → 18 → 19 → 20 → **22**. Read 22 last —
   it assumes the component mechanisms from those guides and only teaches how to compose them.
+  Then **27** as pure repetition: 22 is the method, 27 is ten more systems drilled against a timer.
+  Do not read 27 straight through — read one prompt line, design it on paper for 45 minutes, then
+  read the section and score yourself.
 - **Framework track:** 07 → 08 → 16.
-- **Design / architecture track:** 03 → 07 → **24** → 22. Read 24 after 07 (it assumes the proxy
-  model) and before 22 (22 composes services; 24 is what happens inside one).
+- **Design / architecture track:** 03 → 07 → **24** → **28** → 22. Read 24 after 07 (it assumes the
+  proxy model) and before 22 (22 composes services; 24 is what happens inside one). Then **28** as the
+  drill layer for what happens inside one process — 24 teaches the patterns as mechanism, 28 makes you
+  reach for them against a 45-minute timer. Do not read 28 straight through: read the prompt line,
+  design on paper, then read the section and score yourself. 28 is to 24 what 27 is to 22.
 - **Algorithms are orthogonal:** run 01 in parallel with everything else, daily.
 - **Behavioral is orthogonal and slow-burning:** read **26** once in the first month, then spend
   1–1.5h/week on it for the rest of prep. Stories need months of rehearsal to sound unrehearsed, and
@@ -73,7 +81,8 @@ Each guide explains *how the thing actually works*, not just how to use it, and 
 
 ## Atomic concept checklist
 
-- [ ] I know which of the 26 guides owns each topic, so I do not hunt for concurrency in the collections guide.
+- [ ] I know which of the 28 guides owns each topic, so I do not hunt for concurrency in the collections guide.
+- [ ] I know the design split: 24 is pattern mechanism, 28 is the LLD drill (one process), 22 is the design method, 27 is the HLD drill (many machines).
 - [ ] I know the guides are mechanism-first: the answer to "how does it work" is the deliverable, not "how do I call it".
 - [ ] I treat every **Trap:** marker as a known past failure, not trivia.
 - [ ] I use the atomic concept checklists as the pre-interview review layer, not the full text.
