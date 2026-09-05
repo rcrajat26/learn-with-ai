@@ -1385,3 +1385,169 @@ Actions and list resources are Terraform-only; **CDKTF was deprecated 10 Dec
 **Carried forward — verify in the write pass.** The agent's web-search budget ran
 out mid-research: the version rows for Terraform **1.6–1.10** are flagged for
 changelog re-fetch, and the state file `version` 4 row carries `[RESEARCH]`.
+
+### 11 operating-systems-linux — syllabus, 2026-09-04 (parallel five-writer pass)
+
+| Artefact | State |
+|---|---|
+| `src/topics/11-operating-systems-linux.md` | pre-existing, 616 lines — **untouched by this pass** |
+| `src/syllabus/11-operating-systems-linux.md` | written, 7,889 lines / **1,271 leaves** in 92 sections |
+| `src/metadata/prompts/11-operating-systems-linux-prompt.md` | not started |
+| `src/notes/detailed/11-operating-systems-linux/` | not started |
+
+Leaves per part: P1 basics 441 (§1.1–1.33), P2 intermediate 363 (§2.1–2.27),
+P3 under the hood 234 (§3.1–3.19), P4 build it 72 (§4.1–4.10), P5
+interview/retention 161 (§5.1–5.3, 82 questions / 61 cold assertions / 18
+drills). Diagram manifest 28 entries (`D-01`–`D-28`). Target baseline **Linux
+6.12 LTS** (6.6 noted where EEVDF/PREEMPT differ), cgroup v2 unified, glibc
+2.39+, systemd 255+, **Java 21 LTS** with JDK 24/25 deltas, Spring Boot 3.5.x,
+K8s 1.31+ / AL2023 / EKS. 17 version deltas in the header.
+
+**Tag counts audited against disk, not self-reported:** `[TRAP]` 312,
+`[PROVE]` 271, `[DIAG]` 239, `[SOURCE]` 146, `[INCIDENT]` 80 leaves,
+`[VERSION-TRAP]` 83 leaves, `[RESEARCH]` 75 leaves. Every `*(N leaves)*` marker
+was parsed and reconciled against the actual leaf count — 1,271 both ways, no
+drift (first pass in this project where the markers were exact).
+
+**Process note — the single-agent syllabus pass no longer fits this size.** The
+first `topic-enhancer-agent` run died with `max_output_tokens` (64K) having
+written **nothing**; a ~3,400-line syllabus cannot be emitted in one agent turn.
+Rerun as five concurrent writers against a pre-fixed section outline (front
+matter + §1.1–1.16 / §1.17–1.32 / §2 / §3 / §4+§5+tail), each to its own
+`tmp/syllabus-11/part*.md`, then concatenated by the orchestrator, which also
+owns the `Overall leaf totals` table and the consolidated `Sources consulted`.
+**Do this for every remaining topic of this size.** Cost: the writers cannot
+see each other, so the orchestrator must supply the full section inventory to
+each and reconcile cross-part claims afterwards.
+
+**Two defects the parallel structure introduced and the orchestrator fixed:**
+(1) cron and SSH — 5 of the guide's 46 checklist lines — had no home in the
+outline. cron was recovered into §1.26.11; SSH got a new **§1.33** (13 leaves,
+written by the orchestrator) on the grounds that it is the transport for every
+diagnostic in §1.30. The gaps table records both placements. (2) §2.27's title
+said "twenty" incidents while the section shipped 24.
+
+**Carried forward — verify in the write pass.** The session's **WebSearch budget
+was exhausted (200/200) before the pass began**, so all discovery was direct
+`WebFetch` of canonical URLs. The curriculum, interview-surface and adversarial
+research angles were therefore covered from the existing guide, the sibling
+syllabi and primary docs alone — **re-run those three angles before writing.**
+75 leaves carry `[RESEARCH]`; Parts A, C and D each close their source block
+with an explicit re-check list naming the kernel file holding each constant
+(writeback `dirty_*`, `base_slice_ns`, `cfs_bandwidth_slice_us`,
+`tlb_single_page_flush_ceiling`, `fault_around_bytes`, `MEMCG_CHARGE_BATCH`,
+`EPOLL_MAX_NESTS`, `sched_rt_runtime_us`, `pid_max`, MGLRU/PSI introducing
+versions, K8s QoS `oom_score_adj`, `fs/eventpoll.c` field names).
+
+**Fetch-shape finding, reusable:** `docs.kernel.org` and
+`raw.githubusercontent.com/torvalds/linux/<tag>/<path>` both render for
+`WebFetch`; **`elixir.bootlin.com` does not** — it returns a version index. The
+`v6.12` `mm/oom_kill.c` fetch yielded the verbatim `oom_badness()` body, which
+anchors §3.7.
+
+**Two corrections to the current guide, mandatory for the write pass:**
+`vm.swappiness` is stated as 0–100 (line 554) and is **0–200** since 5.8; and
+`jdk.tracePinnedThreads` was **removed in JDK 24** (JEP 491 also removed
+`synchronized` pinning), so the guide's virtual-thread material is
+version-stale. Also newly explicit: `MinRAMPercentage` (50.0) applies only below
+250 MB physical memory, and `InitialRAMPercentage` is 1.5625.
+
+**Highest-value single leaf:** §3.13.10 traces `LockSupport.park` →
+`Unsafe.park` → `os::PlatformEvent::park` → `pthread_cond_wait` →
+`FUTEX_WAIT_PRIVATE` with every hop named at file level.
+
+At 1,271 leaves this is the second-largest syllabus after topic 01 (1,516), so
+`notes-generator` must be run batched, not as a single full-topic dispatch.
+
+---
+
+## 2026-09-05 — Topic 24 (Design Patterns & Application Architecture), NEW topic guide
+
+Requested: "create topic for 24-design-patterns-architecture.md under src/topics/".
+First guide added beyond the original 23. Written by `topic-agent` (single pass,
+no syllabus stage — this is a topics-lane write, not the per-topic pipeline).
+
+| File | State |
+|---|---|
+| `src/topics/24-design-patterns-architecture.md` | **written, 1063 lines / 10 sections + checklist (66 items)** |
+| `src/topics/00-index.md` | updated — count 23 → 24, new row, new "Design / architecture track" reading order, checklist line |
+
+**Sections:** 1 what a pattern is (problem/forces/structure/consequences) · 2 creational
+(factory family, builder vs records, JVM singleton idioms incl. DCL+`volatile`, prototype/copy,
+object pool as pessimization) · 3 structural (adapter/facade/proxy/decorator intent table,
+JDK proxy vs CGLIB and what neither intercepts, composite, bridge, flyweight) · 4 behavioural
+(strategy + `Map<String,Strategy>`, template/strategy/state table, state machine, observer
+failure modes, command, chain of responsibility, visitor double dispatch + sealed-switch
+replacement, iterator/mediator/memento/interpreter) · 5 SOLID as mechanisms (LSP violations
+that compile, DIP as hexagonal's enabler, fragile base class) · 6 anti-patterns with failure
+mechanism · 7 architecture (layered, hexagonal/clean/onion table, package-by-feature, DDD
+tactical + aggregate invariant boundary, CQRS/event sourcing, modular monolith vs
+microservices arithmetic) · 8 resilience patterns by originating failure mode (9-row table) ·
+9 refactoring: smell → smallest safe move → protecting test · 10 interview delivery.
+
+**Scope boundaries held.** Cross-references rather than re-teaching: 05 (memory model /
+`volatile`), 07 (proxy model, bean lifecycle), 08 (JPA), 12 (REST), 14 (outbox/saga), 15
+(caching), 16 (tests), 22 (CAP, partitioning, service composition). 24 is deliberately
+*intra-service* design; 22 remains the composition layer.
+
+**Two accepted overruns**, judged content not padding and left in place: 1063 lines vs the
+700–900 brief (≈60 named patterns + SOLID + anti-patterns + DDD + 4 architecture styles does
+not compress), and 66 checklist items vs the 35–50 aim (one item per distinct mechanism, so
+`gaps-analyzer-agent` sees full coverage). Both exceed the index's 250–450 line format
+contract, as 14/15/17/19/20/22 already do — that clause is now stale for large topics.
+
+**Not done — next steps for this topic:** no `src/syllabus/24-*.md`, no
+`src/metadata/prompts/24-*-prompt.md`, no `src/notes/detailed/design-patterns-architecture/`.
+If topic 24 is to enter the per-topic pipeline, run `topic-enhancer-agent` (SYLLABUS pass)
+first; `notes-generator` will hard-stop without the prompt. `src/knowledge/gaps.md` and
+`understanding.md` have no entry for topic 24 yet.
+
+---
+
+## 2026-09-05 — Topic 26 (Behavioral & Leadership Interviews), NEW topic guide
+
+Requested: "create topic for 26-behavioral-leadership.md under src/topics/".
+Written inline in the main session (topics-lane write, not the per-topic pipeline).
+Sourced from the master plan's Behavioral section (line 112), the Staff-Level
+Behavioral Story Bank (line 1282), Appendix A's L5-vs-L6 differentiator table, and
+Appendix B anti-pattern #4.
+
+| File | State |
+|---|---|
+| `src/topics/26-behavioral-leadership.md` | **written, 609 lines / 12 sections + checklist (20 items)** |
+| `src/topics/00-index.md` | updated — count 25 → 26, new row, behavioral reading-order note, checklist line |
+
+**Sections:** 1 what the round measures (note→debrief→committee pipeline, the five
+rubric axes, the four verdicts and why `no signal` is the common failure) · 2 L4/L5/L6
+calibration by blast radius, with one event re-told at all three levels · 3 story
+architecture (STAR-L per-part time budget, headline sentence, "we for work / I for
+decisions", a metric-derivation table for candidates who think they have no numbers,
+the five-step failure story) · 4 the bank — 20 stories from 8–12 events, the per-story
+storage format incl. 60-second version and pre-answered follow-ups, ten mining prompts,
+the coverage matrix and its two failure modes · 5 all 16 Amazon LPs with weak-answer
+signatures + Google/Meta/HM mapping · 6 question taxonomy (real probe per question),
+influence-without-authority as six mechanisms, disagree-and-commit shape · 7 follow-up
+survival · 8 delivery mechanics + 4-week rehearsal progression · 9 design round / HM
+round / questions-for-them · 10 anti-pattern catalogue (14 rows) · 11 eight-criterion
+self-scoring rubric · 12 cadence mapped to plan Days 16/21/26/31/40/85/108/141.
+
+**Deviation from the topics format, deliberate:** this is the first non-mechanism topic
+in the lane, so there is no source code or runtime to walk and no Java. The
+mechanism-first discipline is preserved by treating the *hiring process* as the
+mechanism (rubric, debrief, committee) and keeping **Trap:** markers on the specific
+misconceptions that fail candidates. 609 lines — over the index's 250–450 format contract, as 14/15/17/19/20/22/24/25
+already are; that clause remains stale for large topics.
+
+**Cross-references, not re-teaching:** 22 (design-round behavioral leakage, live
+migration as a delivery story), 24 (architectural-judgment vocabulary for technical
+direction stories), 20 (incident/postmortem material as the ownership story source).
+
+**Not done — next steps:** no `src/syllabus/26-*.md`, no
+`src/metadata/prompts/26-*-prompt.md`, no `src/notes/detailed/behavioral-leadership/`.
+`gaps.md` / `understanding.md` have no entry for topic 26 — note that behavioral
+"gaps" are not measurable by diagnostic paper the way technical topics are; the
+§ 11 self-scoring rubric and the story-count coverage tracker are the intended
+substitutes.
+
+**Also outstanding:** `src/topics/25-java-performance.md` (1196 lines) exists and is
+untracked in git but has no progress entry — it was generated without a log line.
